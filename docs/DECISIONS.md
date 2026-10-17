@@ -497,6 +497,24 @@ registered by TASK 0.2; each is decided in its own ADR task in `docs/MASTER_ROAD
 
 ## E.1 Resolved decisions
 
+### Audit 09 amendments applied to Stages 12–17 (2026-10-17)
+
+- **Decided by:** the owner, in chat, 2026-10-17: «Можешь внести эти правки в план, и наша цель составить окончательный план основываясь на аудит» [“apply these amendments to the plan; our goal is the final plan based on the audit”].
+- **Applied:** M1–M16 of `audit/09_COMPREHENSIVE_AUDIT.md` §H, in the existing Tasks of `refinement/POST_ROADMAP_PLAN.md` §5: the restore fix ahead of ADR-021 and truthful recovery wording (S14.3); a photo-first rig path (S14.2, S16.1); filter identity (S14.1, S14.10); testable walkthrough and review wording (shared UI rule, S14.1, S16.3, S16.7); FITS → rig per RG-03 Q1 (S14.5); unread RAW as storage evidence (S14.7); AstroBin numeric filter IDs (S16.5); forecast lead time and card hierarchy (S15.5); faithful review renders; planner density and the block editor's form factor (S14.6, S16.3); measured APK sizes (S17.6); a first-release update test (S17.5); the FITS-sample start rule (S14.1, S14.9, shared rules); register fixes; the storage display (S14.7).
+- **Not decided:** CA-OD1 (the brand in the UI tokens, before S16.6), CA-OD2 (APK packaging, at S17.6), CA-OD3 (Undo the last restore, at S14.1); the handling of S13V-01 / TD-109.
+- **Unchanged:** no Stage or Task added or renumbered; RA.D, C1–C6 and the AUD-01–AUD-17 integration stand; no product capability, provider or model added (M5 completes RG-03 Q1).
+- **Stage 12 closed** by its bounded closure (`refinement/STAGE_12_13_CLOSURE.md`, PASS). Stage 13 is blocked at closure on S13V-01.
+
+### Independent audit integrated into existing Stages 12–17 (2026-10-17)
+
+- **Decided by:** the owner's current instruction to incorporate the audit into the roadmap, with «Важно, что мы не должны придумывать что-то новое, мы доводим до ума существующие функции» [“Do not invent something new; finish and polish the existing functions”].
+- **Scope:** defect corrections and acceptance/dependency clarifications inside the existing 42 Tasks; no new product capability, Stage, Task, provider, parallel metadata path, plan store, research cycle or distribution channel. The approved RA.D scope and C1–C6 remain.
+- **Applied:** [audit dispositions](refinement/STAGES_12_17_AUDIT_AMENDMENTS.md), AUD-01–AUD-17; invalid restore / TD-106 → S14.3/S17.5, flat tuple warnings / TD-107 → S14.10, custom filter loss / TD-108 → S14.6; common metadata/storage/origins and O2b comparability in Stage 14; Moon coordinate-frame equivalence and CALC-32/forecast coverage in Stage 15; existing lifecycle/observed workflows/export/preference criteria in Stage 16; S16.8 before the final S16.7 sweep; native/signer/APK-hash verification within the existing Stage 17 order. TD-105 joins S16.8.
+- **Not approved by the audit integration:** AUD-04's proposed partial-rig mode or nullable equipment model. S14.1 reviews the existing required/derived inputs; any change to the earlier required-input invariant needs explicit owner acceptance of ADR-021. AUD-17 adds no variants: universal APK remains the default, splits only on owner request.
+- **Current-state reconciliation:** S12.1/S12.3/S12.4/S13.1/S13.2 are recorded done; S13.3 is implemented at 570581e, with named pre-12/reduced-motion evidence pending. R3-final approval and the later owner-approved held one-second splash govern; old briefs/timing interpretations are superseded.
+- **Authority/verification:** this instruction authorizes the documentation amendment to future acceptance criteria (V4), not application implementation, a claim that defects are fixed, or retroactive reopening of unrelated passed work. No implementation Task, commit or push is started by this change.
+
+
 ### S12.4 — Google Play services location: accept and state it (2026-10-17)
 
 - **Decided by:** the owner, in chat, 2026-10-17: option "(a) Принять и указать" ["(a) accept and state it"], from `refinement/research/S12.4_PLAY_SERVICES_LOCATION.md`.

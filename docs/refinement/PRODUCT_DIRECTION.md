@@ -259,6 +259,9 @@ A deferred item comes back only through the research and decision gate
 | RG-05: "Tonight puts the plan first, under a site · night context line" *(added 2026-10-17)* | §10 | Home leads with the night card, then Your plan; site and night as a subtitle; no New plan on Home (PD-03; S16.2) |
 | A store release (Play) and MASTER_ROADMAP §9's store items *(added 2026-10-17)* | §9 "Not superseded" | A signed APK on GitHub Releases; store-only requirements deferred, every quality, privacy, licensing and device requirement kept (E.1, "Distribution: GitHub Releases only"; S17.6, S17.8) |
 
+**Independent audit integration (owner, 2026-10-17):** [the disposition record](STAGES_12_17_AUDIT_AMENDMENTS.md) and the amended Stages 12–17 finish the existing capabilities and already approved work; no new feature, provider, equipment mode or research cycle is authorized. The audit's partial-rig proposal does not supersede ADR-011 or approve a nullable equipment migration: S14.1 first reviews existing required/derived inputs, and any changed invariant needs explicit ADR-021 owner acceptance. The current R3-final and held one-second splash decisions in DECISIONS E.1 govern identity; older briefs are historical. Current completion/evidence is in PROGRESS.
+
+
 **Not superseded.** These stay in force until an explicit owner decision or ADR changes
 them:
 - every accepted ADR, ADR-001 to ADR-016. That includes ADR-015 §2 (the planner keeps its

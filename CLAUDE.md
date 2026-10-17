@@ -55,7 +55,11 @@ Read on demand:
 
 ### Documentation and Git
 
-- **Language (owner, 2026-10-17; every task and session):** write all persistent project documentation in English: research reports, roadmaps and plans, ADRs and decisions, progress records, decision sheets, task prompts, technical findings and registers. Conversational replies to the owner stay in Russian by default. The owner's own words and historical source material (reviews, quotes) are kept in their original language, with an English gloss where a document relies on them.
+- **Language (owner, 2026-10-17; revised 2026-10-17):**
+  - English is preferred for new and substantially revised persistent project documentation: research reports, roadmaps and plans, ADRs and decisions, progress records, decision sheets, task prompts, technical findings and registers. A preference, not an absolute rule: the user's explicit instruction takes precedence.
+  - Conversational replies follow the ongoing conversation and the user's latest request; no language is the default for every chat. An English document or quoted prompt alone does not change the conversation language.
+  - User quotations and historical source material (reviews, quotes) stay in their original language, with an English explanation only where needed for understanding. Existing documents are not bulk-translated.
+  - This policy does not change the application's UI language or reopen the deferred localisation scope.
 - Update only documents whose statements the change invalidates; record stable finding/decision IDs without renumbering. Keep intent separate from actual state and preserve superseded history.
 - A code change may require FEATURE_STATUS/TECH_DEBT, architecture/data-model actual-state sections, scientific assumptions or ADRs; update the relevant ones in the same change, not every register indiscriminately.
 - Keep CLAUDE.md and docs tracked. Record resolved findings with date and available commit evidence, never fabricate a future hash.

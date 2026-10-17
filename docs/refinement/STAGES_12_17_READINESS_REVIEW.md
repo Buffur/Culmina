@@ -16,14 +16,11 @@
 > **Applied 2026-10-17:** the owner approved C1–C6; they are applied in `POST_ROADMAP_PLAN.md` §5 and
 > `PRODUCT_DIRECTION.md` §9 (DECISIONS E.1, "Stages 12–17 readiness review corrections approved").
 
+> **Later owner-requested integration, 2026-10-17:** the independent audit is now assigned to the same existing Tasks in [STAGES_12_17_AUDIT_AMENDMENTS.md](STAGES_12_17_AUDIT_AMENDMENTS.md). No new functionality or research cycle is added; C1–C6 remain. Sections 2–5 retain the original review evidence/corrections; the current sequence/status below and PROGRESS supersede old next-action assumptions.
+
 ## 1. Verdict
 
-**The roadmap is complete in scope and approved-requirement coverage, with one execution-order defect
-and four smaller gaps.** Every RA.D decision and every finding of the owner's review has a responsible
-Task or an explicit exclusion. The corrections in §5 are minimal: dependency and acceptance wording
-in Stages 14, 16 and 17 plus a documentation supersession note. None adds functionality or reopens a
-decision. They need the owner's approval before they are applied, because they amend frozen Task
-text (V4: a review does not add acceptance criteria by itself).
+**The amended roadmap is ready for bounded execution of the existing Tasks, subject to their decision gates and pending evidence.** C1–C6 resolve the original G1–G6 issues; the later independent audit adds defect fixes and precise acceptance/dependency wording inside the same 42 Tasks. It does not approve AUD-04's proposed partial-rig model, add APK variants or treat a plan edit as application verification. The owner authorized this documentation update; V3/V5 preserve unrelated prior PASS evidence.
 
 ## 2. Coverage of the approved requirements
 
@@ -89,39 +86,29 @@ are handled by S17.1 and S17.7 as DEFERRED; the S2V-06 and S3V-08 device items a
 
 ## 4. Dependencies, owner actions and risks
 
-**Critical path:** S12.3 (owner: email, rename, Pages) → S13.2 → S13.3 (also needs S13.1's approved
-artwork) · S14.1 (owner accepts ADR-021) → S14.3 → S14.4 → S14.7 → S14.8 → S14.9 → S14.10 → S14.13 ·
-S15.1 (owner accepts ADR-022) → S15.2 → S15.3 → S16.2 · S14.12 → S16.3 · S16.1–S16.6 → S16.7 →
-Stage 17. S13.1 depends only on ID-5 and can run while the owner works on S12.3.
+**Current critical path:** reconcile Stage 12–13 closure/pending S13.3 evidence → S14.1 (ADR-021 owner acceptance) → the existing Stage 14 data/metadata/storage/proposal Tasks; S15.1 (ADR-022) → S15.2/S15.3 → night/weather views; S16.1–S16.6 → **S16.8 → S16.7**. Stage 17: S17.1 → S17.2/S17.3/S17.4 → **S17.6 → S17.5** → S17.7 → S17.8. The former contact/rename/logo prerequisites are recorded complete; no new cycle is introduced.
 
-**Owner actions that can block:** the contact email (S12.3); the repository rename and Pages
-(S12.3, blocks S13.2); the S11P-03 choice (S12.4); the trademark check (S12.2, recommended); the logo
-approval (S13.1 → S13.3); acceptance of ADR-021 and ADR-022; **a real astro-camera FITS file**
-(S14.5, blocks Stage 14's close; the owner skipped FITS samples in S2.R2); render reviews in every UI
-Task; phone availability (S13.2, S13.3, S14.9, S15.6, S17.5); human rows (TalkBack, darkness);
-push authorizations for each required remote CI run; the release keystore (S17.6); go/no-go (S17.7);
-publishing (S17.8).
+**Remaining owner/environment prerequisites:** acceptance of ADR-021/ADR-022; a real astro-camera FITS file (S14.5's existing gate); owner render reviews and the existing phone/human checks; authorization for required pushes; release-key ownership (S17.6), go/no-go and publication. The S12.3 contact/Pages, S12.4 (a) and R3-final decisions are recorded complete. S12.2 is recommended/optional. No independent-usability participant is newly made a mandatory gate; missing evidence remains UNVERIFIED.
 
-**Main technical risks:** the id change (Gradle, Kotlin package, the metadata channel together); the
-v26 migration and snapshot/manifest keys; MF-c re-deriving ADR-013's vectors; the 16-night cache
-change; the release-key permanence from the first public release; volume (41 Tasks plus six Stage
-validations).
+**Main technical risks:** invalid restore activation (AUD-01 / TD-106), correlated calibration matching (TD-107), filter preservation (TD-108), v26 and provenance/storage evidence, the Moon coordinate-frame predicate, forecast coverage/cache invalidation and the final signed artifact/update path. There are 42 existing Tasks, with completion/pending evidence tracked in PROGRESS; the original 41-remaining count is historical.
 
 ## 5. Minimal corrections (approved and applied 2026-10-17)
 
 | # | Fixes | Correction |
 | --- | --- | --- |
-| C1 | G1 | S17.6 depends on S17.1–S17.4 (not S17.5); S17.6 adds "a green remote CI run on the release commit" (the release version and the APK check are in it). S17.5 depends on S17.6 and runs N5 and the other phone rows on the signed release-candidate APK. S17.6 item (6) (the owner's data) moves after S17.5. S17.7 unchanged. No renumbering. Any application change after S17.6 rebuilds the APK and re-runs the affected rows (V3) |
-| C2 | G2 | S17.5 adds: "the identity migration rehearsal on the release candidate: a backup from the old-id build at its shipped schema restored into the new-id build on test packages; counts and fields equal (`RA_D_IDENTITY_TRANSITION.md` §3, criteria 4–6); before S17.6's owner data step" |
+| C1 | G1 | S17.6 depends on S17.1–S17.4 (not S17.5); S17.6 adds "a green remote CI run on the release commit" (the release version and the APK check are in it). S17.5 depends on S17.6 and runs N5 and the other phone rows on the signed release-candidate APK. S17.6 item (6) (the owner's data) becomes the last step of S17.5. S17.7 unchanged. No renumbering. Any application change after S17.6 rebuilds the APK and re-runs the affected rows (V3) |
+| C2 | G2 | S17.5 adds: "the identity migration rehearsal on the release candidate: a backup from the old-id build at its shipped schema restored into the new-id build on test packages; counts and fields equal (`RA_D_IDENTITY_TRANSITION.md` §3, criteria 4–6); before S17.5's final owner data step" |
 | C3 | G3 | S14.9 depends on S14.7 and S14.8 as well. S14.7 (1) reads: "for the rig, or for a block once S14.9 provides the block's file". S14.1 states whether a block's measured size is persisted, and S14.3 (1) reads "the columns ADR-021 defines, including …" |
 | C4 | G4 | S16.8 adds "S12.4 (a): the About statement, if chosen" beside option (b) |
 | C5 | G5 | A dated supersession note in `PRODUCT_DIRECTION.md` (header and §9), pointing to DECISIONS E.1 for ID-1, PD-03, PD-06, PD-13, PD-20, Q1 and the GitHub-only distribution; historical text kept (documentation class) |
 | C6 | G6 | S16.8's re-check list adds TD-002; the open-TD list adds TD-099 → S12.3; the traceability table records RA-H03 language as deferred (`PRODUCT_DIRECTION.md` §8) and RA-C04's small animations as "within `AppMotion` per UI Task; no separate Task" |
 
+### Follow-up clarifications applied, 2026-10-17
+
+At the owner's request, the roadmap now reconciles the historical Stage 11 status with its closure at G3, distinguishes test-package migration rehearsals from production-signed APK checks in S17.5/S17.8, adds S15.3 as an explicit dependency of S15.5, and marks TD-104 resolved in the debt mapping. C2 above now points to S17.5's final owner data step. The preferred-English wording follows CLAUDE.md. No application scope or task numbering changed.
+
 ## 6. Next Task and remaining scope
 
-- **Recommended next Task:** **S12.3** (policy text), once the owner supplies the contact email,
-  with the owner's **S12.4** decision in the same exchange. If the email is not yet available,
-  **S13.1** (logo sketches; depends only on ID-5) is the unblocked alternative. The corrections in §5
-  can be applied in one documentation change before or alongside S12.3.
-- **Remaining:** six Stages (Stage 12 in progress: S12.2–S12.4; then Stages 13–17), 41 Tasks.
+- **Current sequence:** S12.1/S12.3/S12.4/S13.1/S13.2 are recorded done. S13.3 is implemented at 570581e; pre-12/reduced-motion device rows are still UNVERIFIED. Reconcile the Stage 12–13 closure record and named pending evidence, then S14.1 on the owner's start instruction. Do not restart contact, naming or logo work.
+- **Scope:** the same 42 Tasks. S12.2 is optional; no new Stage/Task/feature has been added. AUD-01–AUD-17 dispositions are in the integration record; the partial-rig proposal is not approved and ABI variants remain owner-requested only.
+- **This change:** documentation only. No implementation, new full gate, device run, commit or push is claimed.
