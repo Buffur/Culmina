@@ -7,7 +7,15 @@
 //     instead of leaving isLoading stuck forever
 //   - retryBootstrap() recovers once the repository stops failing
 //   - isDefaultLocation reflects whether a location has been resolved
+//   - a forecast or place-name lookup that never answers does not hold
+//     startup (TD-002's network barrier, rechecked by F24 A5)
 
+import 'dart:async';
+
+import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/domain/models/weather_snapshot.dart';
+import 'package:astroplan/domain/services/reverse_geocoder.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +35,33 @@ import '../../support/flaky_target_repository.dart';
 import '../../support/no_snapshot_weather.dart';
 
 class _MockWeather with NoSnapshotWeather implements WeatherRepository {}
+
+/// A forecast service that never answers, as on a stalled connection.
+class _HangingWeather implements WeatherRepository {
+  int calls = 0;
+
+  @override
+  Future<WeatherFetch> fetchSnapshot({
+    required double latitude,
+    required double longitude,
+    required DateTime startUtc,
+    required DateTime endUtc,
+  }) {
+    calls++;
+    return Completer<WeatherFetch>().future;
+  }
+}
+
+/// A place-name lookup that never answers.
+class _HangingGeocoder implements ReverseGeocoder {
+  int calls = 0;
+
+  @override
+  Future<ReverseGeocodeResult> placeNameFor(double latitude, double longitude) {
+    calls++;
+    return Completer<ReverseGeocodeResult>().future;
+  }
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +106,43 @@ void main() {
       expect(vm.selectedTarget?.catalogId, 'M42');
       expect(vm.selectedEquipment, isNotNull);
     });
+  });
+
+  // F24 A5 (TD-002): startup waits for the database and settings only. A
+  // forecast and a place-name lookup that never answer leave the first
+  // screen loaded; the forecast starts after the first frame.
+  testWidgets('a forecast and a place-name lookup that never answer do not '
+      'hold startup', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'transientLatitude': 46.05,
+      'transientLongitude': 14.51,
+    });
+    final weather = _HangingWeather();
+    final geocoder = _HangingGeocoder();
+    late PlannerHarness vm;
+    await tester.runAsync(() async {
+      vm = PlannerHarness(
+        DriftTargetRepository(database),
+        DriftEquipmentRepository(database),
+        weather,
+        DriftLocationRepository(database),
+        locationService: FakeLocationService(),
+        reverseGeocoder: geocoder,
+        clock: FixedClock(DateTime.utc(2026, 11, 10, 18)),
+      );
+      await vm.ready.timeout(const Duration(seconds: 5));
+    });
+    expect(vm.isLoading, isFalse);
+    expect(vm.hasBootstrapError, isFalse);
+    expect((vm.latitude, vm.longitude), (46.05, 14.51));
+    expect(geocoder.calls, 1, reason: 'the lookup was started, not awaited');
+    expect(weather.calls, 0, reason: 'no forecast before the first frame');
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    expect(weather.calls, greaterThan(0), reason: 'requested after it');
+    expect(vm.isLoading, isFalse);
+    expect(vm.hasBootstrapError, isFalse);
   });
 
   group('Bootstrap error handling (TASK 1.2)', () {

@@ -1,10 +1,20 @@
 # F24 — finite reproducibility and diagnostics checklist (evidence, partial)
 
-Environment: 2026-10-18 cloud container, Flutter 3.47.4 (Linux archive). Rows done so far:
+Environment: 2026-10-18 cloud containers (two sessions), Flutter 3.47.4 (Linux archive). Rows done so far:
 
 | Row | Result | Evidence |
 | --- | --- | --- |
 | A3 / TD-103 | IMPLEMENTED, TEST PASS | `app_database.dart` orphan cleanup logs through `AppLog.warning('database', …)`; `schema_migration_test.dart` M8 asserts both log lines; `no_empty_catch_test.dart` scans `lib` for `print`/`debugPrint` calls. Both checks fail with the old `print` (2 failures) and pass now |
 | A4 / TD-038 | IMPLEMENTED, analysis clean | `unawaited_futures: true`; 31 findings (5 in `lib`, 26 in tests). Each `lib` case is an intentional fire-and-forget: `context.push` navigation and list reloads (`_loadEquipment`, `_loadTargets`) that already catch and show their own failure (TASK 15.1); wrapped in `unawaited`. Tests wrapped the same way, behaviour unchanged: 396 tests of the touched files and their screens' areas pass; `flutter analyze --no-pub` → No issues |
 | A6 / UX32-03 | IMPLEMENTED, TEST PASS | Reproduced first: `target_search_race_test.dart` (6 cases, answers completed by hand in reverse order) fails 5 cases on the previous screen (late older answer replaced the newer list, older failure shown, older list under newer text, cleared query overwritten). `TargetSelectionScreen` now numbers requests and applies only the newest; while a newer search runs it shows "Searching for …" instead of the older list. With the fix all 14 tests in `test/presentation/screens/target` pass |
-| A1 / TD-096, A2 / TD-102 map, A5 / TD-002·020·025 | NOT STARTED | — |
+| A2 / TD-102 (map half) | IMPLEMENTED, TEST PASS (2026-10-18, second session) | `test/presentation/screens/location/location_picker_tiles_failing_test.dart`: probe P3 committed. An offline `HttpOverrides` client fails and counts every tile request (30+ requests, so the tiles really loaded); `plugins.flutter.io/path_provider` answers a temporary folder (flutter_map's built-in cache). The map, its tile layer, the OSM attribution, "Enter coordinates", "Use this point" and "Use current position" stay usable, nothing throws, typed 46.05/14.51 moves the marker while new tiles fail, and "Use this point" makes it the position and returns. Its own file: flutter_map's process-wide cache, first built by a fake-async test, never becomes ready, and no later map in that process requests a tile (seen: 0 requests in the shared file). Mutation-checked: an `errorTileCallback` that throws fails it. Three consecutive runs pass |
+| A5 / TD-002, TD-020, TD-025 | RECHECKED (2026-10-18, second session); TD-002 regression added | TD-002: both remainders gone (startup asks no GPS; `setLocation` no longer awaits the forecast); new `planner_bootstrap_test.dart` case: a forecast and a place-name lookup that never answer leave startup complete, the forecast starts only after a frame (mutation-checked: awaiting a lookup in `SettingsViewModel.load` → `TimeoutException`). TD-020: per-site zone, zone-aware formatter, UTC (`unixtime`) forecast instants, CI's host E2E zone/DST case; the ADR-007 §10 legacy-date mapping remains as designed. TD-025: each named gap has tests (cited in `TECH_DEBT.md`); obsolete. No reproduced violation, so no code change |
+| A1 / TD-096 | IN PROGRESS | Wall-clock sweep running (see below) |
+
+## Second session commands (A2, A5)
+
+- `flutter test --no-pub test/presentation/screens/location/` → `+9: All tests passed!` (three runs)
+- `flutter test --no-pub test/presentation/viewmodels/planner_bootstrap_test.dart` → `+6: All tests passed!`
+- The affected-area run listed in `../F23/README.md` (home, tonight, sites, location, shared,
+  lifecycle, navigation, viewmodels, data/services, core) covers both files.
+- `flutter analyze --no-pub` → `No issues found!`; changed-file format and encoding pass.
