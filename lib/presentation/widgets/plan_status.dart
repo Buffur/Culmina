@@ -71,7 +71,8 @@ class PlanStatus extends StatelessWidget {
           headline: needsRig,
           reason: rigReason,
           action: AppWords.chooseRig,
-          route: AppRouter.selectRig,
+          // D8 A: a rig created from this action becomes the plan's.
+          route: AppRouter.selectRigForPlan,
         )
       : null;
 

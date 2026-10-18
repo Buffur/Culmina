@@ -66,6 +66,10 @@ class AppRouter {
   static String results(int id) => '/session/$id/results';
   static const selectTarget = '/select/target';
   static const selectRig = '/select/rig';
+
+  /// [selectRig] from the plan's missing-rig action or onboarding (D8 A,
+  /// UXA-C2): a rig created there is chosen for the plan.
+  static const selectRigForPlan = '$selectRig?for=plan';
   static const selectSite = '/select/site';
   static const siteEdit = '/site/edit';
   static const sitePick = '/site/pick';
@@ -189,7 +193,9 @@ class AppRouter {
       GoRoute(
         path: selectRig,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const EquipmentSelectionScreen(),
+        builder: (context, state) => EquipmentSelectionScreen(
+          forPlanAction: state.uri.queryParameters['for'] == 'plan',
+        ),
       ),
       GoRoute(
         path: selectSite,
@@ -216,7 +222,9 @@ class AppRouter {
         GoRoute(
           path: metadata,
           parentNavigatorKey: rootNavigatorKey,
-          builder: (context, state) => const MetadataImportScreen(),
+          builder: (context, state) => MetadataImportScreen(
+            args: state.extra as NewRigArgs? ?? const NewRigArgs(),
+          ),
         ),
       GoRoute(
         path: welcome,

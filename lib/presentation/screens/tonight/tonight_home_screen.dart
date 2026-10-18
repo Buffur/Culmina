@@ -300,7 +300,8 @@ class _PlanCard extends StatelessWidget {
                   action: missing?.headline == PlanStatus.needsRig
                       ? OutlinedButton(
                           key: const Key('tonight.chooseRig'),
-                          onPressed: () => context.push(AppRouter.selectRig),
+                          onPressed: () =>
+                              context.push(AppRouter.selectRigForPlan),
                           child: const Text(AppWords.chooseRig),
                         )
                       : null,

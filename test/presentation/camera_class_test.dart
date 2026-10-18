@@ -81,12 +81,14 @@ void main() {
     expect(CameraClass.fromStorage(null), CameraClass.unknown);
   });
 
-  test('a new profile and the example rig are Unknown', () {
+  test('a new profile is Unknown; the example rig has its cited class', () {
     expect(_rig.cameraClass, CameraClass.unknown);
     expect(
       EquipmentSeeder.defaults.single.cameraClass,
-      CameraClass.unknown,
-      reason: 'the owner kept the example rig Unknown (RG-11)',
+      CameraClass.astroColour,
+      reason:
+          'PD-07 (RA.D 2A) superseded RG-11\'s "the example rig stays '
+          'Unknown": the ASI2600MC is ZWO\'s colour model (F05 A3)',
     );
   });
 

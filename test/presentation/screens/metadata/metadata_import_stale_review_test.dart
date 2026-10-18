@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 import '../../../support/fake_capture_file_access.dart';
 import '../../../support/jpeg_fixture.dart';
 import '../../../support/tiff_fixture.dart';
+import '../../../support/add_rig.dart';
 
 class _Planner extends ChangeNotifier implements SessionPlanViewModel {
   @override
@@ -114,7 +115,7 @@ Future<_App> _start(WidgetTester t) async {
   );
   await _settle(t);
   // Import the file once: the review matches the saved rig.
-  await t.tap(find.byKey(const Key('rigs.addFromPhoto')));
+  await startAddRig(t, fromPhoto: true);
   await _settle(t);
   await t.tap(find.byKey(const Key('metadata.pick')));
   await _settle(t);
@@ -159,7 +160,7 @@ void main() {
     await _editElsewhere(t, app, from: '30', to: '45');
     expect((await app.rig(t)).averageRawFileSizeMB, 45);
 
-    await t.tap(find.byKey(const Key('rigs.addFromPhoto')));
+    await startAddRig(t, fromPhoto: true);
     await _settle(t);
     await t.tap(find.byKey(const Key('import.open.1')));
     await _settle(t);
@@ -214,7 +215,7 @@ void main() {
     await _editElsewhere(t, app, from: '2.4', to: '2.5');
     expect((await app.rig(t)).pixelPitchUm, 2.5);
 
-    await t.tap(find.byKey(const Key('rigs.addFromPhoto')));
+    await startAddRig(t, fromPhoto: true);
     await _settle(t);
     expect(
       t.widget<SwitchListTile>(take).value,

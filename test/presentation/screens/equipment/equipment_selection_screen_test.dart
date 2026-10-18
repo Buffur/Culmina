@@ -12,6 +12,8 @@ import 'package:astroplan/presentation/shared/equipment_form_input.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
 
+import '../../../support/add_rig.dart';
+
 class MockEquipmentRepository implements EquipmentRepository {
   final List<EquipmentProfile> _profiles = [];
 
@@ -91,7 +93,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap FloatingActionButton to add equipment
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
 
     // Tap save without entering anything
@@ -109,7 +111,7 @@ void main() {
     await tester.pumpWidget(createTestWidget(repo, planner));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
 
     // Enter valid name
@@ -135,7 +137,7 @@ void main() {
     await tester.pumpWidget(createTestWidget(repo, planner));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
 
     await tester.enterText(
@@ -159,7 +161,7 @@ void main() {
     await tester.pumpWidget(createTestWidget(repo, planner));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
 
     // We must enter all required fields because they now validate
@@ -280,7 +282,7 @@ void main() {
     final repo = MockEquipmentRepository();
     await tester.pumpWidget(createTestWidget(repo, MockSessionPlanViewModel()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
 
     await fillSensor(tester);
@@ -333,7 +335,7 @@ void main() {
     final repo = MockEquipmentRepository();
     await tester.pumpWidget(createTestWidget(repo, MockSessionPlanViewModel()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
 
     await fillSensor(tester);
@@ -401,7 +403,7 @@ void main() {
       createTestWidget(MockEquipmentRepository(), MockSessionPlanViewModel()),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await tester.pumpAndSettle();
     await openMore(tester); // S7.6: the rare values, one tap away
     for (final label in [

@@ -15,7 +15,11 @@ import '../../shared/confirmation_patterns.dart';
 import '../../shared/delete_patterns.dart';
 import '../../shared/example_text.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/equipment_draft.dart';
 import '../../shared/list_mode.dart';
+import '../../shared/rig_input_text.dart';
+import '../metadata/metadata_import_screen.dart';
+import 'add_rig_panel.dart';
 import 'equipment_editor.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../../core/theme/app_palette.dart';
@@ -23,11 +27,21 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_radius.dart';
 
 /// The rigs (ADR-015; S9.1, D9-1): managed in the Library, chosen for the
-/// plan from `/select/rig`. Deleting confirms (RD-09 = M + S1).
+/// plan from `/select/rig`. Deleting confirms (RD-09 = M + S1). A new rig
+/// starts with its camera class, then From a photo or Enter by hand (F05).
 class EquipmentSelectionScreen extends StatefulWidget {
-  const EquipmentSelectionScreen({super.key, this.mode = ListMode.choose});
+  const EquipmentSelectionScreen({
+    super.key,
+    this.mode = ListMode.choose,
+    this.forPlanAction = false,
+  });
 
   final ListMode mode;
+
+  /// Opened from the plan's missing-rig action or onboarding (D8 A,
+  /// UXA-C2): a rig created here becomes the plan's rig and the screen
+  /// returns to its caller. Elsewhere a new rig is only saved.
+  final bool forPlanAction;
 
   @override
   State<EquipmentSelectionScreen> createState() =>
@@ -97,15 +111,86 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
   static String _trim(double value) =>
       value == value.roundToDouble() ? value.toInt().toString() : '$value';
 
-  /// Opens the metadata import; a rig saved there shows up on return.
-  Future<void> _importFromPhoto() async {
-    await context.push(AppRouter.metadata);
+  /// Opens the metadata import for a new rig of [cameraClass]; a rig saved
+  /// there shows up on return, and is chosen for a plan action (D8).
+  Future<void> _importFromPhoto(CameraClass cameraClass) async {
+    final id = await context.push<int>(
+      AppRouter.metadata,
+      extra: NewRigArgs(
+        cameraClass: cameraClass,
+        returnsNewRig: widget.forPlanAction,
+      ),
+    );
     if (!mounted) return;
     await _loadEquipment();
-    if (mounted) {
-      await context.read<SessionPlanViewModel>().refreshSelectedEquipment();
+    if (!mounted) return;
+    await context.read<SessionPlanViewModel>().refreshSelectedEquipment();
+    if (id != null) await _chooseCreated(id);
+  }
+
+  /// A new rig by hand, of the class chosen first.
+  Future<void> _addByHand(CameraClass cameraClass) async {
+    final id = await showEquipmentEditor(
+      context,
+      draft: EquipmentDraft.fromProfile(null).withCameraClass(cameraClass),
+    );
+    if (!mounted) return;
+    await _loadEquipment();
+    if (!mounted || id == null) return;
+    if (widget.forPlanAction) {
+      await _chooseCreated(id);
+    } else {
+      showDone(context, 'Rig saved');
     }
   }
+
+  /// D8 A: the rig just created from a plan action becomes the plan's rig,
+  /// once, and the screen returns to its caller with the result. Elsewhere
+  /// it is only saved (the list shows it).
+  Future<void> _chooseCreated(int id) async {
+    final created = _equipment.where((e) => e.id == id).firstOrNull;
+    if (!widget.forPlanAction || created == null) {
+      if (created != null) showDone(context, 'Rig saved');
+      return;
+    }
+    await context.read<SessionPlanViewModel>().setEquipment(created);
+    if (!mounted) return;
+    showDone(context, RigInputText.savedAndChosen);
+    context.pop();
+  }
+
+  /// The class-first choices in a sheet, over a list that already has rigs.
+  Future<void> _showAddRig() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheet) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            0,
+            AppSpacing.md,
+            AppSpacing.md,
+          ),
+          child: _panel(close: () => Navigator.of(sheet).pop()),
+        ),
+      ),
+    );
+  }
+
+  Widget _panel({VoidCallback? close}) => AddRigPanel(
+    onByHand: (c) {
+      close?.call();
+      _addByHand(c);
+    },
+    onFromPhoto: FeatureScope.metadataImport
+        ? (c) {
+            close?.call();
+            _importFromPhoto(c);
+          }
+        : null,
+  );
 
   /// Deletes [eq] after the shared confirmation (a stored record, RD-09):
   /// saved plans keep their own copy of it (ADR-014 §4). Returns whether it
@@ -141,7 +226,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
       onDelete: existing == null ? null : () => _delete(existing),
     );
     // S9.8 (D9-5): a save says so.
-    if (saved && mounted) showDone(context, 'Rig saved');
+    if (saved != null && mounted) showDone(context, 'Rig saved');
     // Always refresh list after dialog closes.
     unawaited(_loadEquipment());
     // TD-028: pick up an edit to the currently selected equipment instead of
@@ -170,7 +255,16 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
               onRetry: _loadEquipment,
             )
           : _equipment.isEmpty
-          ? const Center(child: Text(AppWords.noRigs))
+          // F05 A1: the empty list offers both ways to add a rig.
+          ? ListView(
+              key: const Key('rigs.empty'),
+              padding: const EdgeInsets.all(AppSpacing.md),
+              children: [
+                const Text(AppWords.noRigs),
+                const SizedBox(height: AppSpacing.md),
+                _panel(),
+              ],
+            )
           : ListView.builder(
               padding: const EdgeInsets.all(AppSpacing.md),
               itemCount: _equipment.length,
@@ -232,30 +326,15 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
                 );
               },
             ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          // S3.7 (ADR-018 §7): a rig proposed from a capture file's
-          // metadata; nothing is saved without the editor's Save.
-          if (FeatureScope.metadataImport) ...[
-            FloatingActionButton.small(
-              key: const Key('rigs.addFromPhoto'),
-              heroTag: 'rigs.addFromPhoto',
-              tooltip: 'Add from a photo',
-              onPressed: _importFromPhoto,
-              child: const Icon(Icons.add_photo_alternate_outlined),
+      floatingActionButton: _equipment.isEmpty || _initialLoading
+          ? null
+          : FloatingActionButton.extended(
+              key: const Key('rigs.add'),
+              heroTag: 'rigs.add',
+              onPressed: _showAddRig,
+              icon: const Icon(Icons.add),
+              label: const Text(AppWords.addRig),
             ),
-            const SizedBox(height: AppSpacing.md),
-          ],
-          FloatingActionButton(
-            heroTag: 'rigs.add',
-            tooltip: 'Add rig',
-            onPressed: () => _showEquipmentDialog(),
-            child: const Icon(Icons.add),
-          ),
-        ],
-      ),
     );
   }
 }

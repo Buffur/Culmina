@@ -32,3 +32,15 @@ Run: full final-plan group, second cloud session, 2026-10-18. Linux container, F
   test/presentation/screens/equipment` → `+1134 ~1: All other tests passed!`
 - `flutter test --no-pub test/domain/metadata/capture_metadata_f04_test.dart` → `+15`
 - `flutter analyze --no-pub` → `No issues found!`
+
+## Correction after the commit (`33c6da5`, 2026-10-18)
+
+F04's targeted run above did not include `test/presentation/shared`. There
+`metadata_text_test.dart`'s "every contract field has a row" failed: `CaptureMetadata.values`
+had grown to 27 fields, but the import review still listed 12. F05's broader run found it. The fix
+adds the 15 rows to `MetadataText.rows`, each value as recorded: a neutral vector is never called a
+colour temperature, and a compression code stays visible. It also pins the count at 27, adds a
+case for the new rows' wording, and updates `metadata_import_screen_test.dart`'s count of "Not in
+the file" (2 → 15: the lens rows plus the 13 F04 fields that the DNG fixture lacks). Result:
+`metadata_text_test.dart` `+9` and `metadata_import_screen_test.dart` `+6`. The F05 run then
+passed `test/presentation` in full.

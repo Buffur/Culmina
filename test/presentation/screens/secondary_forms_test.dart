@@ -25,6 +25,7 @@ import '../../support/fake_location_service.dart';
 import '../../support/fake_reverse_geocoder.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
+import '../../support/add_rig.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -84,7 +85,7 @@ void main() {
     tester,
   ) async {
     await start(tester, AppRouter.libraryRigs);
-    await tester.tap(find.byTooltip('Add rig'));
+    await startAddRig(tester);
     await settle(tester);
     expect(find.text('Add rig'), findsWidgets);
     expect(find.widgetWithText(FilledButton, 'Save'), findsOneWidget);

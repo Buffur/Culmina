@@ -1,4 +1,4 @@
-// S3.7 (ADR-018 §7): "Add from a photo" on the equipment screen opens the
+// S3.7 (ADR-018 §7), F05: "From a photo" on the rigs screen opens the
 // metadata import; a rig saved there appears when the user comes back.
 
 import 'package:astroplan/domain/models/equipment_profile.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../support/add_rig.dart';
 import '../../../support/in_memory_equipment_repository.dart';
 
 class _Planner extends ChangeNotifier implements SessionPlanViewModel {
@@ -76,13 +77,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('No rigs yet.'), findsOneWidget);
 
-    final button = find.byKey(const Key('rigs.addFromPhoto'));
-    expect(button, findsOneWidget);
-    expect(find.byTooltip('Add from a photo'), findsOneWidget);
-    expect(find.byTooltip('Add rig'), findsOneWidget, reason: 'Add stays');
-
-    await tester.tap(button);
-    await tester.pumpAndSettle();
+    // F05: the empty list offers both choices, after the camera class.
+    expect(find.byKey(const Key('addRig.fromPhoto')), findsOneWidget);
+    expect(find.byKey(const Key('addRig.byHand')), findsOneWidget);
+    await startAddRig(tester, fromPhoto: true);
     expect(find.text('Import stand-in'), findsOneWidget);
     await tester.tap(find.text('save a rig and return'));
     await tester.pumpAndSettle();

@@ -216,7 +216,8 @@ class HomeScreen extends StatelessWidget {
                           key: const Key('planner.noRig'),
                           text: 'No rig chosen.',
                           action: AppWords.chooseRig,
-                          onTap: () => context.push(AppRouter.selectRig),
+                          // D8 A: a rig created there becomes this plan's.
+                          onTap: () => context.push(AppRouter.selectRigForPlan),
                         ),
                       _SectionHeader(AppWords.capturePlan),
                       const CapturePlanWidget(),

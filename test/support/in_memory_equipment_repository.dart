@@ -45,6 +45,8 @@ class InMemoryEquipmentRepository implements EquipmentRepository {
         name: p.name,
         manufacturer: p.manufacturer,
         cameraModel: p.cameraModel,
+        cameraClass: p.cameraClass,
+        inCameraNoiseReduction: p.inCameraNoiseReduction,
         sensorWidthMm: p.sensorWidthMm,
         sensorHeightMm: p.sensorHeightMm,
         pixelPitchUm: p.pixelPitchUm,
@@ -64,5 +66,8 @@ class InMemoryEquipmentRepository implements EquipmentRepository {
         specProvenance: p.specProvenance,
         metadataMake: p.metadataMake,
         metadataModel: p.metadataModel,
+        captureFormat: p.captureFormat,
+        captureFormatSource: p.captureFormatSource,
+        rawFileSizeEvidence: p.rawFileSizeEvidence,
       );
 }

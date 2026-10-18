@@ -77,7 +77,7 @@ feature exists although its roadmap phase has not been reached in
 | F-42 | Planned-versus-actual logging | Implemented *(TASK 13.4)* | 13 (ahead) |
 | F-43 | Session execution mode | **Deprecated** *(removed from the UI in S8.4, 2026-09-29: the live tracker left the product; stored runs, events and results stay readable, and a run left in progress is recorded through the result form. Was Implemented, TASKs 13.2–13.4)* | 13, 15 |
 | F-44 | Export / interoperability manifest | Implemented *(v2 export; import deferred, TASK 14.3)* | 14 (ahead) |
-| F-45 | Metadata import (EXIF / FITS) | Implemented (Android; DNG, JPEG, HEIC; "Add from a photo", S3.7). FITS and RAW wait for samples | Stage 2–3 |
+| F-45 | Metadata import (EXIF / FITS) | Implemented (Android; DNG, JPEG, HEIC; "Add from a photo", S3.7; since F05 "From a photo" beside "Enter by hand" after the camera class, and a rig created from a plan's missing-rig action is chosen for it, D8). FITS and RAW wait for samples | Stage 2–3 |
 | F-46 | Field mode | Implemented *(TASK 12.4; summary corrected S1.15)* | 15 (ahead) |
 | F-47 | Custom dashboard | Missing by decision *(the fixed Tonight view that replaces it is Implemented, TASK 12.5)* | 12.5 |
 | F-48 | Automated tests | Partial | 1, 16 |

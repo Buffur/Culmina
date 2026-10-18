@@ -101,7 +101,7 @@ class WelcomeScreen extends StatelessWidget {
               actions: [
                 OutlinedButton.icon(
                   key: const Key('welcome.chooseRig'),
-                  onPressed: () => context.push(AppRouter.selectRig),
+                  onPressed: () => context.push(AppRouter.selectRigForPlan),
                   icon: const Icon(Icons.camera_alt_outlined),
                   label: const Text('Choose a rig'),
                 ),

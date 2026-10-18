@@ -4,6 +4,7 @@ import '../metadata/metadata_format.dart';
 import '../metadata/metadata_value.dart';
 import '../models/equipment_limits.dart';
 import '../models/spec_confidence.dart';
+import '../models/spec_provenance.dart';
 import 'sensor_geometry_estimate.dart';
 
 /// Why a candidate field has no proposed value (ADR-018 §4).
@@ -149,6 +150,19 @@ class EquipmentCandidate {
       const UnknownField(CandidateGap.neverFromMetadata);
   CandidateField<double> get maxExposureS =>
       const UnknownField(CandidateGap.neverFromMetadata);
+
+  /// The required rig inputs (ADR-021 C20) this file does not give. The
+  /// user types them in the rig editor; none is defaulted (F05 A3).
+  List<EquipmentSpec> get missingRequired => [
+    if (resolutionWidthPx is! ProposedField ||
+        resolutionHeightPx is! ProposedField)
+      EquipmentSpec.resolution,
+    if (pixelPitchUm is! ProposedField) EquipmentSpec.pixelPitch,
+    if (sensorWidthMm is! ProposedField || sensorHeightMm is! ProposedField)
+      EquipmentSpec.sensorSize,
+    if (focalLengthMm is! ProposedField) EquipmentSpec.focalLength,
+    if (focalRatio is! ProposedField) EquipmentSpec.focalRatio,
+  ];
 
   /// True when the file names a camera or gives its optics; false means
   /// there is nothing to propose a rig from.

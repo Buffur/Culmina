@@ -13,6 +13,7 @@ import 'package:astroplan/domain/models/spec_provenance.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_selection_screen.dart';
 import 'package:astroplan/presentation/screens/metadata/metadata_import_screen.dart';
+import 'package:astroplan/presentation/shared/rig_input_text.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/metadata_import_viewmodel.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
@@ -25,6 +26,7 @@ import 'package:provider/provider.dart';
 import '../../../support/fake_capture_file_access.dart';
 import '../../../support/jpeg_fixture.dart';
 import '../../../support/tiff_fixture.dart';
+import '../../../support/add_rig.dart';
 
 class _Planner extends ChangeNotifier implements SessionPlanViewModel {
   @override
@@ -167,7 +169,7 @@ Future<_App> _start(
   );
   await _settle(t);
   if (open) {
-    await t.tap(find.byKey(const Key('rigs.addFromPhoto')));
+    await startAddRig(t, fromPhoto: true);
     await _settle(t);
   }
   return _App(db, repo, files);
@@ -188,6 +190,43 @@ Future<void> _tapText(WidgetTester t, String text) async {
 }
 
 void main() {
+  // F05 A3: a file that lacks required inputs names them, with what needs
+  // each; nothing is defaulted, and Save waits for the user's values.
+  testWidgets('incomplete metadata names the missing inputs and their '
+      'reasons, without guessing', (t) async {
+    final app = await _start(t);
+    app.files.file('IMG.jpg', _phoneJpegNo35());
+    await t.tap(find.byKey(const Key('metadata.pick')));
+    await _settle(t);
+    expect(find.text(RigInputText.missingIntro), findsOneWidget);
+    for (final spec in [EquipmentSpec.pixelPitch, EquipmentSpec.sensorSize]) {
+      expect(
+        find.text('${RigInputText.name(spec)}: ${RigInputText.reason(spec)}.'),
+        findsOneWidget,
+        reason: spec.name,
+      );
+    }
+    for (final spec in [
+      EquipmentSpec.resolution,
+      EquipmentSpec.focalLength,
+      EquipmentSpec.focalRatio,
+    ]) {
+      expect(find.byKey(Key('import.missing.${spec.name}')), findsNothing);
+    }
+    await t.tap(find.byKey(const Key('import.new')));
+    await _settle(t);
+    await t.tap(find.byKey(const Key('rigEditor.save')));
+    await _settle(t);
+    expect(await app.counts(t), [0, 0, 0], reason: 'no guessed pixel size');
+    expect(find.text('Required'), findsWidgets);
+
+    // A complete phone JPEG lists nothing missing.
+    await t.tap(find.text('Cancel'));
+    await _settle(t);
+    await _pickPhone(t, app);
+    expect(find.text(RigInputText.missingIntro), findsNothing);
+  });
+
   testWidgets('Cancel at every step writes nothing: the picker, leaving the '
       'review, and Cancel in each editor it opens', (t) async {
     final app = await _start(t, saved: [_verifiedPhone, _tele]);
@@ -301,7 +340,7 @@ void main() {
     await _settle(t);
     expect(find.textContaining('TestMake TestPhone'), findsWidgets);
 
-    await t.tap(find.byKey(const Key('rigs.addFromPhoto')));
+    await startAddRig(t, fromPhoto: true);
     await _settle(t);
     expect(app.files.picks, 1, reason: 'no new pick');
     expect(_headline(t), startsWith('You already have this rig'));

@@ -43,6 +43,33 @@ class EquipmentFormTexts {
   final String rotation;
   final String maxExposure;
 
+  List<String> get _all => [
+    name,
+    manufacturer,
+    cameraModel,
+    resolutionWidth,
+    resolutionHeight,
+    pixelPitch,
+    sensorWidth,
+    sensorHeight,
+    focalLength,
+    focalRatio,
+    diameter,
+    rawFileSize,
+    rotation,
+    maxExposure,
+  ];
+
+  /// Whether every field reads as in [other], ignoring surrounding spaces:
+  /// the rig editor's "changed" test (F05 A6, UXA-C4).
+  bool sameAs(EquipmentFormTexts other) {
+    final a = _all, b = other._all;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i].trim() != b[i].trim()) return false;
+    }
+    return true;
+  }
+
   /// The texts that hold [spec]'s value (two for a size).
   List<String> of(EquipmentSpec spec) => switch (spec) {
     EquipmentSpec.resolution => [resolutionWidth, resolutionHeight],
@@ -406,13 +433,30 @@ class EquipmentDraft {
     );
   }
 
+  /// This draft for a new rig of the class the user chose before opening
+  /// it (F05: class first). Only a new rig takes it; an edited rig keeps
+  /// its own class.
+  EquipmentDraft withCameraClass(CameraClass chosen) => existing != null
+      ? this
+      : EquipmentDraft(
+          initial: initial,
+          trackingType: trackingType,
+          cameraClass: chosen,
+          inCameraNoiseReduction: inCameraNoiseReduction,
+          prefilled: prefilled,
+          metadataMake: metadataMake,
+          metadataModel: metadataModel,
+          withheldFromSavedRig: withheldFromSavedRig,
+        );
+
   /// The rig being edited; null for a new one.
   final EquipmentProfile? existing;
   final EquipmentFormTexts initial;
   final TrackingType trackingType;
 
-  /// The camera's class (ADR-020 §2): the rig's own when editing; always
-  /// [CameraClass.unknown] for an import, which never proposes one.
+  /// The camera's class (ADR-020 §2): the rig's own when editing; for a new
+  /// rig the class the user chose first ([withCameraClass]), else
+  /// [CameraClass.unknown]. An import never proposes one.
   final CameraClass cameraClass;
 
   /// In-camera noise reduction (ADR-020 §8): the rig's own when editing;

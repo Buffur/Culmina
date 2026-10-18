@@ -300,7 +300,15 @@ void main() {
     // on a device), type.
     AppRouter.router.go(AppRouter.libraryRigs);
     await settle(tester);
-    await watch('rigEditor.open', () => tap(tester, find.byTooltip('Add rig')));
+    // F05: the class first (Add rig's sheet over a list, or the empty
+    // list's panel); the timed step opens the editor.
+    final addRig = find.byKey(const Key('rigs.add'));
+    if (addRig.evaluate().isNotEmpty) await tap(tester, addRig);
+    await tap(tester, find.byKey(const Key('addRig.class.astroColour')));
+    await watch(
+      'rigEditor.open',
+      () => tap(tester, find.byKey(const Key('addRig.byHand'))),
+    );
     final pixel = find.byKey(const Key('equipmentEditor.pixelSize'));
     // The focus step opens the real soft keyboard on a device.
     await watch('rigEditor.focus', () async {

@@ -1,3 +1,4 @@
+import '../../domain/models/camera_class.dart';
 import '../../domain/models/equipment_profile.dart';
 import '../../domain/models/spec_confidence.dart';
 import '../../domain/repositories/equipment_repository.dart';
@@ -12,6 +13,14 @@ import '../../domain/repositories/equipment_repository.dart';
 ///   (https://www.zwoastro.com/product/asi2600mc-duo/, specification table
 ///   "ASI2600MC Pro", checked 2026-09-23). Resolution × pitch = 23.49 ×
 ///   15.70 mm, consistent with the stated size.
+/// - **Camera class — colour astro camera** (F05 A3). ZWO sells the
+///   ASI2600 as an MC (colour) and an MM (mono) model and lists separate
+///   colour/mono quantum efficiencies; the colour model has an IR-cut window
+///   (https://us.zwoastro.com/products/new-asi2600mc-mm-pro, and the ASI2600
+///   manual https://i.zwoastro.com/zwo-website/manuals/ZWO_ASI2600_Manual_EN.pdf,
+///   found 2026-10-18 by web search; the pages themselves were not reachable
+///   from the build container). Seeded only on an empty table, so it is set
+///   for new installs and changes no existing row.
 /// - **Optics — estimated.** A generic 72 mm f/5.6 refractor (400 mm), an
 ///   illustrative example rather than a specific product.
 /// - No RAW file size: it depends on the capture format, and an estimate
@@ -35,6 +44,7 @@ class EquipmentSeeder {
       name: 'ZWO ASI2600MC + example 72 mm f/5.6 refractor',
       manufacturer: 'ZWO',
       cameraModel: 'ASI2600MC',
+      cameraClass: CameraClass.astroColour,
       sensorWidthMm: 23.5,
       sensorHeightMm: 15.7,
       pixelPitchUm: 3.76,

@@ -4,22 +4,39 @@ import 'package:provider/provider.dart';
 import '../../../domain/equipment_import/equipment_candidate.dart';
 import '../../../domain/equipment_import/equipment_matcher.dart';
 import '../../../domain/metadata/capture_metadata.dart';
+import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/spec_provenance.dart';
 import '../../shared/equipment_draft.dart';
 import '../../shared/equipment_import_text.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/metadata_text.dart';
+import '../../shared/rig_input_text.dart';
 import '../../viewmodels/metadata_import_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../equipment/equipment_editor.dart';
 import '../../shared/app_messages.dart';
+
+/// How the import was opened (F05): the camera class chosen first, given to
+/// a new rig drafted here, and whether a new rig's Save returns its id to
+/// the caller (a plan's missing-rig action, D8 A) instead of staying.
+class NewRigArgs {
+  const NewRigArgs({
+    this.cameraClass = CameraClass.unknown,
+    this.returnsNewRig = false,
+  });
+
+  final CameraClass cameraClass;
+  final bool returnsNewRig;
+}
 
 /// Reads the metadata contract from one capture file (F-45; ADR-017) and
 /// proposes equipment from it (S3.6, ADR-018): the match against the saved
 /// rigs comes first, the file's values below. Nothing is stored except
 /// through the rig editor's Save, and nothing leaves the device.
 class MetadataImportScreen extends StatefulWidget {
-  const MetadataImportScreen({super.key});
+  const MetadataImportScreen({super.key, this.args = const NewRigArgs()});
+
+  final NewRigArgs args;
 
   @override
   State<MetadataImportScreen> createState() => _MetadataImportScreenState();
@@ -82,7 +99,12 @@ class _MetadataImportScreenState extends State<MetadataImportScreen> {
                   final match?,
                 )) ...[
                   const SizedBox(height: 16),
-                  _EquipmentCard(vm: vm, candidate: candidate, match: match),
+                  _EquipmentCard(
+                    vm: vm,
+                    candidate: candidate,
+                    match: match,
+                    args: widget.args,
+                  ),
                 ],
                 if (vm.reading case final reading?) ...[
                   const SizedBox(height: 16),
@@ -159,9 +181,11 @@ class _EquipmentCard extends StatelessWidget {
     required this.vm,
     required this.candidate,
     required this.match,
+    required this.args,
   });
 
   final MetadataImportViewModel vm;
+  final NewRigArgs args;
   final EquipmentCandidate candidate;
   final EquipmentMatch match;
 
@@ -196,8 +220,18 @@ class _EquipmentCard extends StatelessWidget {
   }
 
   Future<void> _edit(BuildContext context, EquipmentDraft draft) async {
-    final saved = await showEquipmentEditor(context, draft: draft);
-    if (!saved || !context.mounted) return;
+    final isNew = draft.existing == null;
+    final saved = await showEquipmentEditor(
+      context,
+      draft: isNew ? draft.withCameraClass(args.cameraClass) : draft,
+    );
+    if (saved == null || !context.mounted) return;
+    // D8 A: a new rig for a plan action goes back to the caller, which
+    // chooses it; an edited rig, or one from the Library, stays here.
+    if (isNew && args.returnsNewRig) {
+      Navigator.of(context).pop(saved);
+      return;
+    }
     if (draft.existing != null) {
       // TD-028: the planner may be showing the rig that was just changed.
       await context.read<SessionPlanViewModel>().refreshSelectedEquipment();
@@ -281,6 +315,23 @@ class _EquipmentCard extends StatelessWidget {
                     ),
                   ),
               ],
+            if (candidate.hasEnoughEvidence &&
+                candidate.missingRequired.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                RigInputText.missingIntro,
+                style: theme.textTheme.labelLarge,
+              ),
+              for (final spec in candidate.missingRequired)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    '${RigInputText.name(spec)}: '
+                    '${RigInputText.reason(spec)}.',
+                    key: Key('import.missing.${spec.name}'),
+                  ),
+                ),
+            ],
             if (candidate.hasEnoughEvidence) ...[
               const SizedBox(height: 12),
               FilledButton(
