@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_block.dart';
+import '../../../core/utils/quantity_text.dart';
+import '../../../domain/services/block_proposal.dart';
 import '../../../domain/services/calibration_match.dart';
 import '../../../domain/services/exposure_input.dart';
 import '../../shared/block_text.dart';
 import '../../shared/calibration_text.dart';
 import '../../shared/capture_settings_text.dart';
 import '../../shared/confirmation_patterns.dart';
+import '../../shared/failure_feedback.dart';
+import '../../shared/proposal_text.dart';
 
 const _filters = ['L', 'R', 'G', 'B', 'Ha', 'OIII', 'SII', 'OSC', 'None'];
 
@@ -47,6 +51,7 @@ Future<CaptureBlock?> showCaptureBlockDialog(
   List<CaptureBlock> blocks = const [],
   bool tipsShown = true,
   ValueChanged<bool>? onTipsShown,
+  Future<BlockProposal?> Function(int binning)? fromPhoto,
 }) {
   return showDialog<CaptureBlock>(
     context: context,
@@ -57,6 +62,7 @@ Future<CaptureBlock?> showCaptureBlockDialog(
       blocks: blocks,
       tipsShown: tipsShown,
       onTipsShown: onTipsShown,
+      fromPhoto: fromPhoto,
     ),
   );
 }
@@ -69,6 +75,7 @@ class _CaptureBlockDialog extends StatefulWidget {
     required this.blocks,
     required this.tipsShown,
     required this.onTipsShown,
+    required this.fromPhoto,
   });
 
   final CaptureBlock? initial;
@@ -77,6 +84,10 @@ class _CaptureBlockDialog extends StatefulWidget {
   final List<CaptureBlock> blocks;
   final bool tipsShown;
   final ValueChanged<bool>? onTipsShown;
+
+  /// F08: reads one file and proposes this block's values; null when the
+  /// user cancels. Absent where reading files is not available.
+  final Future<BlockProposal?> Function(int binning)? fromPhoto;
 
   @override
   State<_CaptureBlockDialog> createState() => _CaptureBlockDialogState();
@@ -126,6 +137,13 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   /// proposal, "Use other values"), with their origin. A field that still
   /// holds that value keeps the origin on submit; a changed one is entered.
   final Map<CaptureField, (Object?, FieldOrigin)> _seeds = {};
+
+  /// F08: the block's storage file (C6) and the latest file proposal, with
+  /// the fields it did not change because the user had typed them.
+  FileEvidence? _fileEvidence;
+  BlockProposal? _picked;
+  List<String> _keptYours = const [];
+  bool _reading = false;
 
   /// The dialog's state when it opened, for the discard guard (F06 A6).
   late final List<Object?> _opened;
@@ -206,6 +224,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
       text: wb?.tint == null ? '' : _trimZeros(wb!.tint!),
     );
     _focus = i?.focusMode;
+    _fileEvidence = i?.fileEvidence;
     final p = widget.proposal;
     if (p != null) {
       _exposureFromProposal = true;
@@ -251,6 +270,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     _focus,
     _sourceIndex,
     _inherit,
+    // F08 A2 (UXA-C4): an unsaved file proposal is a change.
+    _fileEvidence,
+    _picked,
   ];
 
   bool get _changed {
@@ -461,6 +483,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
       (CaptureField.binning, _showBinning ? binning : null, i?.binning),
       (CaptureField.wb, wb, i?.whiteBalance),
       (CaptureField.focusMode, focus, i?.focusMode),
+      (CaptureField.fileSize, _fileEvidence, i?.fileEvidence),
     ]) {
       // A hidden binning of an edited block keeps its origin.
       if (field == CaptureField.binning && !_showBinning && i != null) continue;
@@ -479,7 +502,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
       whiteBalance: wb,
       focusMode: focus,
       origins: origins,
-      fileEvidence: i?.fileEvidence,
+      fileEvidence: _fileEvidence,
     );
     return from == null
         ? block
@@ -488,6 +511,93 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
             from,
             origin: _sourceOrigin(from, OriginKind.inherited),
           );
+  }
+
+  /// F08 (ADR-021 C2/C4/C13): reads one file and applies its proposals to
+  /// the fields that still hold a value the user did not type (empty, the
+  /// block's own, or a source's); a typed value is kept and named. A later
+  /// pick replaces an earlier file's values the same way, so the outcome
+  /// does not depend on the order of picks. Nothing is stored before Apply.
+  Future<void> _takeFromPhoto() async {
+    final read = widget.fromPhoto;
+    if (read == null) return;
+    setState(() => _reading = true);
+    BlockProposal? got;
+    try {
+      // A failure to pick or open is said, and changes nothing (F08 A2).
+      await runWithFeedback(
+        context,
+        'read the file',
+        () async => got = await read(_binning),
+      );
+    } finally {
+      if (mounted) setState(() => _reading = false);
+    }
+    if (got == null || !mounted) return;
+    final p = got!;
+    if (p.unreadable) {
+      setState(() => _picked = p);
+      return;
+    }
+    final kept = <String>[];
+    setState(() {
+      _picked = p;
+      if (p.exposure case final e?) {
+        final now = ExposureInput.parse(_exposure.text);
+        if (_mayReplace(CaptureField.exposure, now)) {
+          _exposure.text = ExposureInput.format(e.value);
+          _exposureFromProposal = false;
+          _seeds[CaptureField.exposure] = (e.value, e.origin);
+        } else {
+          kept.add(
+            'exposure ${QuantityText.exposure(now!)} (the file says '
+            '${QuantityText.exposure(e.value)})',
+          );
+        }
+      }
+      if (p.iso case final iso?) {
+        final now = _typedGain();
+        if (_mayReplace(CaptureField.sensitivity, now)) {
+          _gainValue.text = _trimZeros(iso.value.value!);
+          _seeds[CaptureField.sensitivity] = (iso.value, iso.origin);
+        } else {
+          kept.add(
+            'ISO ${_gainValue.text.trim()} (the file says '
+            '${iso.value.value!.round()})',
+          );
+        }
+      }
+      if (p.whiteBalance case final wb?) {
+        final now = _wbOrNull();
+        if (_mayReplace(CaptureField.wb, now)) {
+          _wbMode = wb.value.mode;
+          _seeds[CaptureField.wb] = (wb.value, wb.origin);
+        } else {
+          kept.add('your white balance (the file says Auto)');
+        }
+      }
+      if (p.file case final file?) {
+        _fileEvidence = file;
+        _seeds[CaptureField.fileSize] = (
+          file,
+          FieldOrigin(OriginKind.file, p.label),
+        );
+      }
+      _keptYours = kept;
+    });
+  }
+
+  /// Whether a file may set [field] now holding [current]: nothing typed,
+  /// the edited block's own value, or a source's value (the proposal, an
+  /// earlier file).
+  bool _mayReplace(CaptureField field, Object? current) {
+    if (current == null) return true;
+    final i = widget.initial;
+    if (i != null && current == _initialValue(field)) return true;
+    return switch (_seeds[field]) {
+      (final seeded, _) => seeded == current,
+      null => false,
+    };
   }
 
   Future<void> _submit() async {
@@ -869,6 +979,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                     ),
                   ),
                 if (_showCameraRecords) ..._cameraRecords(muted),
+                if (widget.fromPhoto != null && isLight) ..._photoReview(muted),
                 if (kept.isNotEmpty)
                   Padding(
                     key: const Key('blockDialog.kept'),
@@ -948,6 +1059,57 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
         ],
       ),
     );
+  }
+
+  /// F08: "Take from a photo" and the inline review of what it read.
+  List<Widget> _photoReview(TextStyle? muted) {
+    final p = _picked;
+    final mode = p == null ? null : ProposalText.mode(p);
+    return [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          key: const Key('blockDialog.fromPhoto'),
+          onPressed: _reading ? null : _takeFromPhoto,
+          icon: const Icon(Icons.add_photo_alternate_outlined),
+          label: Text(p == null ? 'Take from a photo' : 'Another photo'),
+        ),
+      ),
+      if (p == null)
+        Text(
+          'Reads exposure, ISO and white balance from a DNG, JPEG or HEIC '
+          'on this device; nothing is saved until you apply the block.',
+          style: muted,
+        )
+      else
+        Container(
+          key: const Key('blockDialog.review'),
+          width: double.infinity,
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            [
+              ProposalText.title(p),
+              if (p.unreadable)
+                ProposalText.unreadable(p)
+              else ...[
+                ProposalText.proposed(p),
+                for (final e in p.evidence) ProposalText.evidence(e),
+                if (p.file case final f? when !f.read)
+                  'Its size counts for storage (mode not read; compressed '
+                      'sizes vary with content).',
+                ?mode,
+                if (_keptYours.isNotEmpty)
+                  'Kept what you typed: ${_keptYours.join('; ')}.',
+              ],
+            ].join('\n'),
+            style: muted,
+          ),
+        ),
+    ];
   }
 
   /// White balance and focus mode, optional records (ADR-021 C1, C3).

@@ -284,8 +284,12 @@ abstract final class EquipmentMatcher {
       if (!proposed.every((p) => p is ProposedField)) return;
       final values = [for (final p in proposed) p.valueOrNull!];
       final imported = values.length == 1 ? values.single : values;
+      // TD-072 (S3S-03): a size is the same in either orientation, as the
+      // mode check already treats it; the conflict no longer depends on
+      // the order the values were typed or stored in.
       final same = saved is List
-          ? _listEquals(saved, values)
+          ? _listEquals(saved, values) ||
+                _listEquals(saved, values.reversed.toList())
           : saved == values.single;
       if (same) return;
       final first = proposed.first as ProposedField<num>;

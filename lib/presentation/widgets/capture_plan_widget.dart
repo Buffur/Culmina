@@ -7,6 +7,8 @@ import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_palette.dart';
 import '../../domain/models/camera_class.dart';
 import '../../domain/models/capture_block.dart';
+import '../../core/config/feature_scope.dart';
+import '../../domain/services/block_proposal.dart';
 import '../../domain/services/calibration_match.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../shared/block_text.dart';
@@ -18,6 +20,7 @@ import '../shared/example_text.dart';
 import '../shared/failure_feedback.dart';
 import '../viewmodels/capture_analysis_viewmodel.dart';
 import '../viewmodels/disclosure_viewmodel.dart';
+import '../viewmodels/metadata_import_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import 'capture_plan/blocks_undo.dart';
 import 'capture_plan/capture_assumptions_panel.dart';
@@ -119,6 +122,18 @@ class _BlockListState extends State<_BlockList> {
       context.read<SessionPlanViewModel>().selectedEquipment?.cameraClass ??
       CameraClass.unknown;
 
+  /// F08: "Take from a photo" in the block editor, where files can be read.
+  Future<BlockProposal?> Function(int binning)? get _fromPhoto {
+    final files = context.read<MetadataImportViewModel?>();
+    if (files == null || !FeatureScope.metadataImport) return null;
+    final rig = context.read<SessionPlanViewModel>().selectedEquipment;
+    return (binning) => files.pickBlockFile(
+      cameraClass: _cameraClass,
+      rig: rig,
+      binning: binning,
+    );
+  }
+
   /// A new block from the dialog, starting from the plan's last light block
   /// as a proposal (S7.2b, ADR-020 §5).
   Future<void> _add() async {
@@ -129,6 +144,7 @@ class _BlockListState extends State<_BlockList> {
       blocks: context.read<SessionPlanViewModel>().captureBlocks,
       tipsShown: _tipsShown,
       onTipsShown: _setTipsShown,
+      fromPhoto: _fromPhoto,
     );
     if (block == null || !mounted) return;
     final plan = context.read<SessionPlanViewModel>();
@@ -151,6 +167,7 @@ class _BlockListState extends State<_BlockList> {
       blocks: context.read<SessionPlanViewModel>().captureBlocks,
       tipsShown: _tipsShown,
       onTipsShown: _setTipsShown,
+      fromPhoto: _fromPhoto,
     );
     if (edited == null || !mounted) return;
     final plan = context.read<SessionPlanViewModel>();

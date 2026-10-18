@@ -251,6 +251,17 @@ class EquipmentDraft {
         fileDims != null &&
         !EquipmentMatcher.samePixelCount(fileDims, rig);
     final geometryFrom = otherPixelCount ? null : rig;
+    // TD-072 (S3F-01): the file's pixels are stored long side first, so a
+    // copied sensor size takes the same orientation; without the file's
+    // pixel count the saved rig's own order stays.
+    final fromFile = c.resolutionWidthPx is ProposedField;
+    double? sensorSide({required bool first}) {
+      final g = geometryFrom;
+      if (g == null) return null;
+      final (w, h) = (g.sensorWidthMm, g.sensorHeightMm);
+      if (!fromFile) return first ? w : h;
+      return first ? (w >= h ? w : h) : (w >= h ? h : w);
+    }
 
     final texts = EquipmentFormTexts(
       name: c.suggestedName ?? '',
@@ -282,14 +293,14 @@ class EquipmentDraft {
         EquipmentSpec.sensorSize,
         c.sensorWidthMm,
         (v) => v.toStringAsFixed(EquipmentCandidate.sensorDecimals),
-        fallback: geometryFrom?.sensorWidthMm,
+        fallback: sensorSide(first: true),
         fallbackProvenance: from(EquipmentSpec.sensorSize),
       ),
       sensorHeight: fill(
         EquipmentSpec.sensorSize,
         c.sensorHeightMm,
         (v) => v.toStringAsFixed(EquipmentCandidate.sensorDecimals),
-        fallback: geometryFrom?.sensorHeightMm,
+        fallback: sensorSide(first: false),
         fallbackProvenance: from(EquipmentSpec.sensorSize),
       ),
       focalLength: fill(

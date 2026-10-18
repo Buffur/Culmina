@@ -8,8 +8,10 @@ import '../../domain/metadata/capture_metadata_reader.dart';
 import '../../domain/metadata/metadata_source.dart';
 import '../../domain/models/equipment_profile.dart';
 import '../../domain/models/spec_provenance.dart';
+import '../../domain/models/camera_class.dart';
 import '../../domain/models/capture_evidence.dart';
 import '../../domain/repositories/equipment_repository.dart';
+import '../../domain/services/block_proposal.dart';
 import '../../domain/services/storage_estimate.dart';
 import '../shared/equipment_draft.dart';
 
@@ -166,6 +168,27 @@ class MetadataImportViewModel extends ChangeNotifier {
           c.spec: (value: c.imported, provenance: c.importedProvenance),
       for (final spec in m.fillable) spec: ?_fillValue(spec),
     }, rawFileEvidence: _candidate?.rawFileEvidence);
+  }
+
+  /// F08 "Take from a photo" in the block editor (ADR-021 C2/C4/C6/C13):
+  /// what one file proposes for a light block of [rig] at [binning]; null
+  /// when the user cancels. Nothing is stored here or on the rig.
+  Future<BlockProposal?> pickBlockFile({
+    required CameraClass cameraClass,
+    EquipmentProfile? rig,
+    int binning = 1,
+  }) async {
+    final file = await _files.pick();
+    if (file == null) return null;
+    final (reading, length) = await _readFile(file);
+    return BlockProposal.of(
+      name: file.name,
+      reading: reading,
+      lengthBytes: length,
+      cameraClass: cameraClass,
+      rig: rig,
+      binning: binning,
+    );
   }
 
   /// F07 "Choose one file" (ADR-021 C6, C12): one file's size as storage
