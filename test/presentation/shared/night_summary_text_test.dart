@@ -105,4 +105,64 @@ void main() {
       'Moon up 2 h of the 7 h 30 min dark (3 % lit at midnight)',
     );
   });
+
+  // ADR-022 N4/N5 (F13): the moon-free text for every class, and the names.
+  test('the moon-free dark time, for every class', () {
+    final t0 = DateTime.utc(2026, 12, 15, 18);
+    String at(DateTime t) =>
+        '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+    MoonFreeNight m(MoonFreeKind kind, List<(int, int)> spans) => MoonFreeNight(
+      kind: kind,
+      intervals: [
+        for (final (a, b) in spans)
+          (t0.add(Duration(minutes: a)), t0.add(Duration(minutes: b))),
+      ],
+      moonFree: Duration(minutes: spans.fold(0, (sum, s) => sum + s.$2 - s.$1)),
+      dark: const Duration(hours: 8),
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.noDark, []), at),
+      'No dark time this night, so no moon-free time.',
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.none, []), at),
+      'No moon-free dark time: the Moon is up all the 8 h dark.',
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.allNight, [(0, 480)]), at),
+      'Moon-free all the dark time: 18:00–02:00 (8 h).',
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.evening, [(0, 150)]), at),
+      'Moon-free in the evening: 18:00–20:30 (2 h 30 min).',
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.morning, [(300, 480)]), at),
+      'Moon-free in the morning: 23:00–02:00 (3 h).',
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.middle, [(60, 120)]), at),
+      'Moon-free in the middle of the night: 19:00–20:00 (1 h).',
+    );
+    expect(
+      MoonText.moonFree(m(MoonFreeKind.mixed, [(0, 60), (300, 360)]), at),
+      'Moon-free: 18:00–19:00, 23:00–00:00 (2 h in all).',
+    );
+  });
+
+  test('the eight phase names', () {
+    expect(
+      [for (final p in MoonPhaseName.values) MoonText.phaseName(p)],
+      [
+        'New Moon',
+        'Waxing crescent',
+        'First quarter',
+        'Waxing gibbous',
+        'Full Moon',
+        'Waning gibbous',
+        'Last quarter',
+        'Waning crescent',
+      ],
+    );
+  });
 }

@@ -44,6 +44,10 @@ ImagingOpportunity _v3({OpportunityWeather? weather}) => Calc.fromSamples(
   gates: const OptionalGates(moonMinIlluminationPct: 50),
   moon: OpportunityMoon(
     altitudesDeg: _series((t) => _in(t, _t(21), _t(2)) ? 20 : -10),
+
+    up: [
+      for (final a in _series((t) => _in(t, _t(21), _t(2)) ? 20 : -10)) a > 0,
+    ],
     separationsDeg: _series((_) => 40),
     illumination: 0.85,
   ),

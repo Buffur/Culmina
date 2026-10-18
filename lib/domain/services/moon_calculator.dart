@@ -76,7 +76,8 @@ class MoonRiseSet {
 /// - ch. 25: the Sun's low-accuracy apparent longitude and distance (about
 ///   0.01°), used only for illumination and phase;
 /// - ch. 48: illuminated fraction from the phase angle;
-/// - ch. 15: the Moon's rise/set altitude h₀ = 0.7275 π − 0.5667°.
+/// - ch. 15: the Moon's rise/set altitude h₀ = 0.7275 π − 0.5667°, used in
+///   its topocentric form ([upThresholdDeg], ADR-022 N1).
 ///
 /// Time: ch. 47 uses Terrestrial Time. [deltaTSeconds] converts UTC (taken
 /// as UT1) to TT. Altitudes are geometric (airless) apart from the h₀
@@ -248,11 +249,13 @@ class MoonCalculator {
   /// The Moon's topocentric apparent RA and Dec of date, and its local hour
   /// angle, degrees, for a site on the ellipsoid at sea level (Meeus
   /// ch. 40: rigorous parallax correction; flattening b/a = 0.99664719).
-  static ({double raDeg, double decDeg, double hourAngleDeg}) topocentric(
-    DateTime utc,
-    double latitude,
-    double longitude,
-  ) {
+  static ({
+    double raDeg,
+    double decDeg,
+    double hourAngleDeg,
+    double parallaxDeg,
+  })
+  topocentric(DateTime utc, double latitude, double longitude) {
     final p = position(utc);
     final lst = _apparentLst(utc, longitude);
     final h = AstroMath.degreesToRadians(
@@ -283,6 +286,66 @@ class MoonCalculator {
       hourAngleDeg: AstroMath.normalizeDegrees(
         AstroMath.radiansToDegrees(h - dAlpha),
       ),
+      parallaxDeg: p.horizontalParallaxDeg,
+    );
+  }
+
+  /// ADR-022 N1 (MF-c): the topocentric altitude of the Moon's centre at
+  /// which its upper limb touches the apparent horizon with standard
+  /// refraction, degrees: −(s + R), with the topocentric semidiameter
+  /// s ≈ 0.2725 π (Meeus ch. 55) and R = 34′ = 0.5667°. Near the horizon
+  /// h_topo ≈ h_geo − π, so this is Meeus' geocentric h₀ = 0.7275 π − 0.5667°
+  /// (ch. 15) moved into the topocentric frame, not a copied number.
+  static double upThresholdDeg(double horizontalParallaxDeg) =>
+      -(0.2725 * horizontalParallaxDeg + 0.5667);
+
+  /// ADR-022 N1/N3: the one Moon-up predicate. Strict: a sample exactly at
+  /// the threshold is down.
+  static bool isUp(
+    double topocentricAltitudeDeg,
+    double horizontalParallaxDeg,
+  ) => topocentricAltitudeDeg > upThresholdDeg(horizontalParallaxDeg);
+
+  /// The classical form of the same event (Meeus ch. 15): the geocentric
+  /// geometric altitude of the centre above h₀ = 0.7275 π − 0.5667°. Not
+  /// used by the app; kept as the independent check that [isUp] is the same
+  /// event in the topocentric frame (ADR-022 M2).
+  static bool aboveGeocentricH0(
+    DateTime utc,
+    double latitude,
+    double longitude,
+  ) {
+    final p = position(utc);
+    final alt = VisibilityCalculator.calculateAltitude(
+      lha: AstroMath.normalizeDegrees(
+        _apparentLst(utc, longitude) - p.rightAscensionDeg,
+      ),
+      declination: p.declinationDeg,
+      latitude: latitude,
+    );
+    return alt > 0.7275 * p.horizontalParallaxDeg - 0.5667;
+  }
+
+  /// The Moon at one grid instant, as every Moon-up use reads it (ADR-022
+  /// N2/N3): topocentric RA/Dec of date, the centre's topocentric altitude
+  /// and whether it is up. The single-night and the batch computations both
+  /// call this, so their samples are identical (M5).
+  static ({double raDeg, double decDeg, double altitudeDeg, bool up}) sampleAt(
+    DateTime utc,
+    double latitude,
+    double longitude,
+  ) {
+    final t = topocentric(utc, latitude, longitude);
+    final altitude = VisibilityCalculator.calculateAltitude(
+      lha: t.hourAngleDeg,
+      declination: t.decDeg,
+      latitude: latitude,
+    );
+    return (
+      raDeg: t.raDeg,
+      decDeg: t.decDeg,
+      altitudeDeg: altitude,
+      up: isUp(altitude, t.parallaxDeg),
     );
   }
 
@@ -388,46 +451,34 @@ class MoonCalculator {
     return AstroMath.normalizeDegrees(p.eclipticLongitudeDeg - sunLon);
   }
 
-  /// Geocentric geometric altitude, degrees (for rise/set with h₀).
-  static (double, double) _geocentricAltitudeAndParallax(
-    DateTime utc,
-    double latitude,
-    double longitude,
-  ) {
-    final p = position(utc);
-    final alt = VisibilityCalculator.calculateAltitude(
-      lha: AstroMath.normalizeDegrees(
-        _apparentLst(utc, longitude) - p.rightAscensionDeg,
+  /// Moonrise and moonset within [night] on its 5-minute grid, from the
+  /// one predicate (ADR-022 N1/N2): a crossing is reported at the first
+  /// sample after it.
+  static MoonRiseSet riseSetForNight(SessionNight night) => _riseSet([
+    for (
+      var elapsed = Duration.zero;
+      elapsed <= SessionNight.length;
+      elapsed += VisibilityCalculator.sampleStep
+    )
+      (
+        night.startUtc.add(elapsed),
+        sampleAt(
+          night.startUtc.add(elapsed),
+          night.latitude,
+          night.longitude,
+        ).up,
       ),
-      declination: p.declinationDeg,
-      latitude: latitude,
-    );
-    return (alt, p.horizontalParallaxDeg);
-  }
+  ]);
 
-  /// Moonrise and moonset within [night], on its 5-minute grid (Meeus
-  /// ch. 15 convention: geocentric altitude = 0.7275 π − 0.5667°).
-  static MoonRiseSet riseSetForNight(SessionNight night) {
-    bool above(DateTime t) {
-      final (alt, pi) = _geocentricAltitudeAndParallax(
-        t,
-        night.latitude,
-        night.longitude,
-      );
-      return alt > 0.7275 * pi - 0.5667;
-    }
-
+  static MoonRiseSet _riseSet(List<(DateTime, bool)> samples) {
     final events = <MoonEvent>[];
-    var t = night.startUtc;
-    final aboveAtStart = above(t);
+    final aboveAtStart = samples.first.$2;
     var prev = aboveAtStart;
-    while (t.isBefore(night.endUtc)) {
-      t = t.add(VisibilityCalculator.sampleStep);
-      final now = above(t);
-      if (now != prev) {
-        events.add(MoonEvent(now ? MoonEventKind.rise : MoonEventKind.set, t));
+    for (final (t, up) in samples.skip(1)) {
+      if (up != prev) {
+        events.add(MoonEvent(up ? MoonEventKind.rise : MoonEventKind.set, t));
       }
-      prev = now;
+      prev = up;
     }
     return MoonRiseSet(
       events: List.unmodifiable(events),
@@ -449,12 +500,7 @@ class MoonCalculator {
       elapsed += VisibilityCalculator.sampleStep
     ) {
       final t = night.startUtc.add(elapsed);
-      final topo = topocentric(t, night.latitude, night.longitude);
-      final moonAlt = VisibilityCalculator.calculateAltitude(
-        lha: topo.hourAngleDeg,
-        declination: topo.decDeg,
-        latitude: night.latitude,
-      );
+      final moon = sampleAt(t, night.latitude, night.longitude);
       double? separation;
       double? targetAlt;
       if (target != null) {
@@ -463,14 +509,14 @@ class MoonCalculator {
           target.declination,
           AstronomicalEngine.calculateJulianDate(t),
         );
-        separation = angularSeparationDeg(topo.raDeg, topo.decDeg, ra, dec);
+        separation = angularSeparationDeg(moon.raDeg, moon.decDeg, ra, dec);
         targetAlt = VisibilityCalculator.calculateTargetAltitude(
           target,
           t,
           night.latitude,
           night.longitude,
         );
-        if (moonAlt > 0 &&
+        if (moon.up &&
             targetAlt > 0 &&
             (closest == null || separation < closest.separationDeg)) {
           closest = MoonApproach(separationDeg: separation, instantUtc: t);
@@ -479,7 +525,8 @@ class MoonCalculator {
       samples.add(
         MoonSample(
           instantUtc: t,
-          altitudeDeg: moonAlt,
+          altitudeDeg: moon.altitudeDeg,
+          up: moon.up,
           separationDeg: separation,
           targetAltitudeDeg: targetAlt,
         ),
@@ -488,8 +535,11 @@ class MoonCalculator {
     return MoonConditions(
       night: night,
       samples: List.unmodifiable(samples),
-      riseSet: riseSetForNight(night),
+      riseSet: _riseSet([for (final s in samples) (s.instantUtc, s.up)]),
       illuminationAtMidnight: illuminatedFraction(
+        night.startUtc.add(const Duration(hours: 12)),
+      ),
+      phaseLongitudeAtMidnightDeg: phaseLongitudeDeg(
         night.startUtc.add(const Duration(hours: 12)),
       ),
       closestApproachWhileBothUp: closest,

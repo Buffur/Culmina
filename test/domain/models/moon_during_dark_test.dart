@@ -35,6 +35,11 @@ void main() {
                   step * i < upTo
               ? 20
               : -20,
+          up:
+              upFrom != null &&
+              upTo != null &&
+              step * i >= upFrom &&
+              step * i < upTo,
           separationDeg: null,
           targetAltitudeDeg: null,
         ),

@@ -9,6 +9,7 @@ import '../shared/app_words.dart';
 import '../shared/collapsible_section.dart';
 import '../shared/light_pollution_map_link.dart';
 import 'planner_sections.dart';
+import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../../core/theme/app_palette.dart';
 import '../../../core/config/feature_scope.dart';
@@ -431,6 +432,36 @@ class MoonSection extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
+        if (conditionsVm.moonConditions?.phaseName case final phase?)
+          Padding(
+            padding: const EdgeInsets.only(left: AppSpacing.xl),
+            child: Text(
+              'Phase: ${MoonText.phaseName(phase)}',
+              key: const Key('sky.moonPhase'),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        if (conditionsVm.moonFree case final free?)
+          if (conditionsVm.moonConditions case final c?)
+            Padding(
+              padding: const EdgeInsets.only(
+                left: AppSpacing.xl,
+                top: AppSpacing.xs,
+              ),
+              child: Text(
+                MoonText.moonFree(
+                  free,
+                  (utc) => NightTimeFormatter.instant(
+                    context,
+                    utc,
+                    windowStartUtc: c.night.startUtc,
+                    zoneId: zoneId,
+                  ),
+                ),
+                key: const Key('sky.moonFree'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
         _MoonDetails(conditions: conditionsVm.moonConditions, zoneId: zoneId),
       ],
     );

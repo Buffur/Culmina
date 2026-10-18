@@ -74,6 +74,8 @@ ExcludedSegment _segmentAt(ImagingOpportunity o, DateTime t) =>
 /// target.
 OpportunityMoon _moon(double illumination) => OpportunityMoon(
   altitudesDeg: _series((t) => _in(t, _t(21), _t(2)) ? 20 : -10),
+
+  up: [for (final a in _series((t) => _in(t, _t(21), _t(2)) ? 20 : -10)) a > 0],
   separationsDeg: _series((_) => 40),
   illumination: illumination,
 );
@@ -105,6 +107,8 @@ void main() {
       final o = _run(
         moon: OpportunityMoon(
           altitudesDeg: _series((_) => -10),
+
+          up: [for (final a in _series((_) => -10)) a > 0],
           separationsDeg: _series((_) => 40),
           illumination: 0.5,
         ),
@@ -243,6 +247,8 @@ void main() {
       final o = _run(
         moon: OpportunityMoon(
           altitudesDeg: _series((_) => 30),
+
+          up: [for (final a in _series((_) => 30)) a > 0],
           separationsDeg: List.filled(Calc.gridCount, null),
           illumination: 0.9,
         ),
@@ -272,6 +278,7 @@ void main() {
         () => _run(
           moon: const OpportunityMoon(
             altitudesDeg: [0],
+            up: [false],
             separationsDeg: [null],
             illumination: 0.5,
           ),

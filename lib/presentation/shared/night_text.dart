@@ -96,6 +96,42 @@ abstract final class MoonText {
     return 'Moon up ${spans.join(', ')}.';
   }
 
+  /// ADR-022 N5: the night's phase name.
+  static String phaseName(MoonPhaseName p) => switch (p) {
+    MoonPhaseName.newMoon => 'New Moon',
+    MoonPhaseName.waxingCrescent => 'Waxing crescent',
+    MoonPhaseName.firstQuarter => 'First quarter',
+    MoonPhaseName.waxingGibbous => 'Waxing gibbous',
+    MoonPhaseName.full => 'Full Moon',
+    MoonPhaseName.waningGibbous => 'Waning gibbous',
+    MoonPhaseName.lastQuarter => 'Last quarter',
+    MoonPhaseName.waningCrescent => 'Waning crescent',
+  };
+
+  /// ADR-022 N4: when the dark time is moon-free, as intervals and a total,
+  /// with [at] formatting an instant in the night's zone. "No dark time" is a
+  /// known absence, never missing data.
+  static String moonFree(MoonFreeNight m, String Function(DateTime) at) {
+    String spans() =>
+        m.intervals.map((i) => '${at(i.$1)}–${at(i.$2)}').join(', ');
+    final total = QuantityText.duration(m.moonFree);
+    return switch (m.kind) {
+      MoonFreeKind.noDark => 'No dark time this night, so no moon-free time.',
+      MoonFreeKind.none =>
+        'No moon-free dark time: the Moon is up all the '
+            '${QuantityText.duration(m.dark)} dark.',
+      MoonFreeKind.allNight =>
+        'Moon-free all the dark time: ${spans()} '
+            '($total).',
+      MoonFreeKind.evening => 'Moon-free in the evening: ${spans()} ($total).',
+      MoonFreeKind.morning => 'Moon-free in the morning: ${spans()} ($total).',
+      MoonFreeKind.middle =>
+        'Moon-free in the middle of the night: '
+            '${spans()} ($total).',
+      MoonFreeKind.mixed => 'Moon-free: ${spans()} ($total in all).',
+    };
+  }
+
   /// The useful fact for Tonight (S6.13; UX-17), worded as the imaging
   /// windows' Moon note: "Moon down while dark (3 % lit at midnight)",
   /// "Moon up all the dark time (…)", or "Moon up 2 h of the 7 h 30 min

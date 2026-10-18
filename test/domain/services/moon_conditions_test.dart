@@ -149,10 +149,11 @@ void main() {
       final s = c.samples.firstWhere(
         (s) => s.instantUtc == approach.instantUtc,
       );
-      expect(s.altitudeDeg, greaterThan(0));
+      // ADR-022 N1/N2: "up" is the one predicate, not altitude > 0.
+      expect(s.up, isTrue);
       expect(s.targetAltitudeDeg, greaterThan(0));
       for (final x in c.samples) {
-        if (x.altitudeDeg > 0 && x.targetAltitudeDeg! > 0) {
+        if (x.up && x.targetAltitudeDeg! > 0) {
           expect(x.separationDeg, greaterThanOrEqualTo(approach.separationDeg));
         }
       }

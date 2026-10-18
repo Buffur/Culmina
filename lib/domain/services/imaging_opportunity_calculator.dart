@@ -32,6 +32,7 @@ class SunTrack {
 class OpportunityMoon {
   const OpportunityMoon({
     required this.altitudesDeg,
+    required this.up,
     required this.separationsDeg,
     required this.illumination,
   });
@@ -39,12 +40,17 @@ class OpportunityMoon {
   /// From [MoonCalculator.conditionsForNight] (same grid, same night).
   factory OpportunityMoon.fromConditions(MoonConditions c) => OpportunityMoon(
     altitudesDeg: [for (final s in c.samples) s.altitudeDeg],
+    up: [for (final s in c.samples) s.up],
     separationsDeg: [for (final s in c.samples) s.separationDeg],
     illumination: c.illuminationAtMidnight,
   );
 
   /// Topocentric airless altitude of the Moon's centre per grid instant.
   final List<double> altitudesDeg;
+
+  /// Whether the Moon is up per grid instant (ADR-022 N1): the gate G4 and
+  /// the windows' Moon note read this, never `altitudesDeg > 0`.
+  final List<bool> up;
 
   /// Moon–target separation per grid instant, degrees (null = unknown).
   final List<double?> separationsDeg;
@@ -147,7 +153,9 @@ abstract final class ImagingOpportunityCalculator {
       throw ArgumentError('expected $n samples per night');
     }
     if (moon != null &&
-        (moon.altitudesDeg.length != n || moon.separationsDeg.length != n)) {
+        (moon.altitudesDeg.length != n ||
+            moon.up.length != n ||
+            moon.separationsDeg.length != n)) {
       throw ArgumentError('Moon samples must be on the same $n-point grid');
     }
 
@@ -172,7 +180,7 @@ abstract final class ImagingOpportunityCalculator {
       // Unknown never excludes: without data an optional gate passes.
       if (moonGate != null &&
           moon != null &&
-          moon.altitudesDeg[i] > 0 &&
+          moon.up[i] &&
           moon.illumination * 100 >= moonGate) {
         failing.add(OpportunityGate.moon);
       }
@@ -289,7 +297,7 @@ abstract final class ImagingOpportunityCalculator {
       var up = 0;
       double? minSep;
       for (var k = from; k < to; k++) {
-        if (moon.altitudesDeg[k] <= 0) continue;
+        if (!moon.up[k]) continue;
         up++;
         final sep = moon.separationsDeg[k];
         if (sep != null && (minSep == null || sep < minSep)) minSep = sep;

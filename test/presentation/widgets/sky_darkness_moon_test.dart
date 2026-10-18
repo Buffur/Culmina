@@ -16,6 +16,7 @@ import '../../support/planner_harness.dart';
 
 import 'package:astroplan/presentation/widgets/sky_darkness_widget.dart';
 import 'package:drift/native.dart';
+import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -88,5 +89,12 @@ void main() {
     );
     expect(find.textContaining('%', findRichText: true), findsOneWidget);
     expect(find.textContaining('impact'), findsNothing);
+    // ADR-022 N4/N5 (F13): the phase name and the moon-free dark time.
+    expect(
+      find.text('Phase: ${MoonText.phaseName(c.phaseName!)}'),
+      findsOneWidget,
+    );
+    final free = tester.widget<Text>(find.byKey(const Key('sky.moonFree')));
+    expect(free.data, contains('oon-free'));
   });
 }

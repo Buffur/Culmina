@@ -201,6 +201,18 @@ class NightConditionsViewModel extends ChangeNotifier {
     null => null,
   };
 
+  /// The night's moon-free dark time at the user's limit (ADR-022 N4).
+  MoonFreeNight? get moonFree {
+    final night = _plan.sessionNight;
+    final moon = moonConditions;
+    if (night == null || moon == null) return null;
+    if (_sunTrack?.night != night) _sunTrack = SunTrack.forNight(night);
+    return moon.moonFree(
+      sunAltitudesDeg: _sunTrack!.altitudesDeg,
+      darknessLimitDeg: _settings.planningPreferences.darknessLimit.degrees,
+    );
+  }
+
   /// The forecast as the opportunity reads it (also the candidates').
   OpportunityWeather? get opportunityWeather {
     final weather = _nightWeather;

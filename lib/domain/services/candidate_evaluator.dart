@@ -20,6 +20,7 @@ class MoonTrack {
     this.raDeg,
     this.decDeg,
     this.altitudesDeg,
+    this.up,
     this.illumination,
   );
 
@@ -27,28 +28,25 @@ class MoonTrack {
     final ra = <double>[];
     final dec = <double>[];
     final alt = <double>[];
+    final up = <bool>[];
     for (var i = 0; i < ImagingOpportunityCalculator.gridCount; i++) {
-      final t = ImagingOpportunityCalculator.instantAt(night, i);
-      final topo = MoonCalculator.topocentric(
-        t,
+      // The same sample function as the single-night path (ADR-022 M5).
+      final m = MoonCalculator.sampleAt(
+        ImagingOpportunityCalculator.instantAt(night, i),
         night.latitude,
         night.longitude,
       );
-      ra.add(topo.raDeg);
-      dec.add(topo.decDeg);
-      alt.add(
-        VisibilityCalculator.calculateAltitude(
-          lha: topo.hourAngleDeg,
-          declination: topo.decDeg,
-          latitude: night.latitude,
-        ),
-      );
+      ra.add(m.raDeg);
+      dec.add(m.decDeg);
+      alt.add(m.altitudeDeg);
+      up.add(m.up);
     }
     return MoonTrack._(
       night,
       ra,
       dec,
       alt,
+      up,
       MoonCalculator.illuminatedFraction(
         night.startUtc.add(const Duration(hours: 12)),
       ),
@@ -59,11 +57,13 @@ class MoonTrack {
   final List<double> raDeg;
   final List<double> decDeg;
   final List<double> altitudesDeg;
+  final List<bool> up;
   final double illumination;
 
   /// The calculator's Moon input for [target].
   OpportunityMoon forTarget(AstroTarget target) => OpportunityMoon(
     altitudesDeg: altitudesDeg,
+    up: up,
     separationsDeg: [
       for (var i = 0; i < raDeg.length; i++) _separation(target, i),
     ],
