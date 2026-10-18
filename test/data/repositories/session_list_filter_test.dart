@@ -9,13 +9,15 @@ import 'package:astroplan/domain/models/session.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../support/test_clock.dart';
+
 void main() {
   late AppDatabase db;
   late DriftSessionRepository repo;
 
   setUp(() async {
     db = AppDatabase(NativeDatabase.memory());
-    repo = DriftSessionRepository(db);
+    repo = DriftSessionRepository(db, clock: testEvening);
     await db.customStatement('PRAGMA foreign_keys = OFF;');
     // A legacy log stored on 2026-01-10 (local), and four new sessions.
     final legacyDate = DateTime(2026, 1, 10, 22).millisecondsSinceEpoch ~/ 1000;

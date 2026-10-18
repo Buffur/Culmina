@@ -550,7 +550,10 @@ void main() {
       final restored = AppDatabase(
         NativeDatabase(File(p.join(newPhone.path, BackupStaging.database))),
       );
-      expect(await DriftSessionRepository(restored).list(), hasLength(3));
+      expect(
+        await DriftSessionRepository(restored, clock: _clock).list(),
+        hasLength(3),
+      );
       await restored.close();
     });
 

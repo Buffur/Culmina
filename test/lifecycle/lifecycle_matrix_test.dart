@@ -25,6 +25,7 @@ import 'package:astroplan/domain/models/location_profile.dart';
 import 'package:astroplan/domain/models/night_weather.dart';
 import 'package:astroplan/domain/models/session.dart';
 import 'package:astroplan/domain/models/session_result.dart';
+import 'package:astroplan/presentation/viewmodels/sessions_viewmodel.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/location_service.dart';
 import 'package:astroplan/domain/services/reverse_geocoder.dart';
@@ -46,6 +47,7 @@ import '../support/in_memory_first_run.dart';
 import '../support/no_snapshot_weather.dart';
 import '../support/planner_harness.dart';
 import '../support/legacy_run.dart';
+import '../support/test_clock.dart';
 
 /// No network: every forecast request fails as it does offline.
 class _Offline with NoSnapshotWeather implements WeatherRepository {}
@@ -304,6 +306,67 @@ void main() {
     expect((await again.execution(run.id)).completedFor(block.id), 8);
     await db.close();
   });
+  // F22 A3 (TD-102, S11H-07): the Stage 11 probe P1, committed. A plan's
+  // name and every result field (Not done with its reason, Partly with its
+  // count, As planned) survive kills, and the Logbook search finds the name.
+  test('L4b: a named plan and every result field survive kills', () async {
+    final file = _dbFile();
+    final clock = _Clock(DateTime.utc(2026, 11, 10, 18));
+
+    var db = AppDatabase(NativeDatabase(file));
+    var vm = await _boot(db, clock: clock);
+    await vm.site.saveSite(_ljubljana);
+    await vm.choosePlan();
+    final named = await vm.saveSession();
+    await vm.plan.idle;
+    await DriftSessionRepository(
+      db,
+      clock: clock,
+    ).rename(named.id, 'Orion trip');
+    await vm.newSession();
+    await vm.choosePlan(target: 'M31');
+    final partly = await vm.saveSession();
+    await vm.plan.idle;
+    await vm.newSession();
+    await vm.choosePlan(target: 'M45');
+    final asPlanned = await vm.saveSession();
+    await vm.plan.idle;
+    await db.close(); // killed during the night
+
+    clock.now = DateTime.utc(2026, 11, 11, 7); // after the night's dawn
+    db = AppDatabase(NativeDatabase(file));
+    await _boot(db, clock: clock);
+    var repo = DriftSessionRepository(db, clock: clock);
+    expect((await repo.get(named.id))!.name, 'Orion trip');
+    await repo.recordResult(
+      named.id,
+      const NotDone(reason: NotDoneReason.clouds),
+    );
+    final light = (await repo.get(partly.id))!.blocks
+        .firstWhere((b) => b.frameType == FrameType.light);
+    await repo.recordResult(partly.id, PartlyDone({light.id: 7}));
+    await repo.recordResult(asPlanned.id, const CompletedAsPlanned());
+    await db.close(); // killed again
+
+    db = AppDatabase(NativeDatabase(file));
+    await _boot(db, clock: clock);
+    repo = DriftSessionRepository(db, clock: clock);
+    final notDone = (await repo.get(named.id))!;
+    expect(notDone.name, 'Orion trip');
+    expect(notDone.status, SessionStatus.abandoned);
+    expect(notDone.notDoneReason, NotDoneReason.clouds);
+    final counted = (await repo.get(partly.id))!;
+    expect(counted.status, SessionStatus.completed);
+    expect(counted.resultKind, ResultKind.partly);
+    expect((await repo.execution(partly.id)).completedFor(light.id), 7);
+    final done = (await repo.get(asPlanned.id))!;
+    expect(done.status, SessionStatus.completed);
+    expect(done.resultKind, ResultKind.asPlanned);
+    final logbook = SessionsViewModel(repo, clock: clock)..setQuery('orion');
+    expect(logbook.searched(await repo.list()).map((s) => s.id), [named.id]);
+    await db.close();
+  });
+
   group('L5: rotation and theme changes keep the state', () {
     testWidgets('typed input survives rotation, dark mode and field mode', (
       tester,
@@ -431,7 +494,7 @@ void main() {
     await _settle(tester);
     expect(vm.site.displayZoneId, 'America/New_York');
     final entry = await tester.runAsync(
-      () => DriftSessionRepository(db).get(saved),
+      () => DriftSessionRepository(db, clock: testEvening).get(saved),
     );
     expect(entry!.planSnapshot!.timeZoneId, 'Europe/Ljubljana');
     expect(texts(), before);
@@ -489,7 +552,10 @@ void main() {
     await _settle(tester);
     expect(find.byKey(const Key('planner.autosaveFailure')), findsNothing);
     final stored = await tester.runAsync(
-      () => DriftSessionRepository(db).get(vm.plan.activeSessionId!),
+      () => DriftSessionRepository(
+        db,
+        clock: testEvening,
+      ).get(vm.plan.activeSessionId!),
     );
     expect(stored!.blocks.length, vm.plan.captureBlocks.length);
 
@@ -513,7 +579,7 @@ void main() {
     await tester.tap(find.byKey(const Key('results.save')));
     await _settle(tester);
     expect(find.textContaining("Couldn't save the result"), findsOneWidget);
-    final repo = DriftSessionRepository(db);
+    final repo = DriftSessionRepository(db, clock: testEvening);
     expect(
       (await tester.runAsync(() => repo.get(saved)))!.status,
       SessionStatus.planned,

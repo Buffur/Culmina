@@ -25,6 +25,8 @@ import 'support/no_snapshot_weather.dart';
 
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 
+import 'support/test_clock.dart';
+
 class MockWeatherRepository
     with NoSnapshotWeather
     implements WeatherRepository {}
@@ -67,7 +69,7 @@ void main() {
     });
 
     final weatherRepo = MockWeatherRepository();
-    final sessionRepo = DriftSessionRepository(database);
+    final sessionRepo = DriftSessionRepository(database, clock: testEvening);
     final locationRepo = MockLocationRepository();
 
     await tester.pumpWidget(
@@ -80,7 +82,9 @@ void main() {
           ChangeNotifierProvider(create: (_) => GearViewModel(eqRepo)),
           Provider<WeatherRepository>.value(value: weatherRepo),
           Provider<SessionRepository>.value(value: sessionRepo),
-          ChangeNotifierProvider(create: (_) => SessionsViewModel(sessionRepo)),
+          ChangeNotifierProvider(
+            create: (_) => SessionsViewModel(sessionRepo, clock: testEvening),
+          ),
           Provider<LocationRepository>.value(value: locationRepo),
           ...PlannerHarness(
             targetRepo,

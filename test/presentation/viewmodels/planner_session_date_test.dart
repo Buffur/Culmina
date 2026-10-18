@@ -260,8 +260,12 @@ void main() {
       );
     });
 
+    // F24 A1 (TD-096): fixed dates a year ahead of and 30 days before a
+    // fixed today, not the wall clock's.
+    final today = DateTime.utc(2026, 10, 18, 12);
+
     test('future date (1 year ahead) does not throw', () {
-      final futureDate = DateTime.now().toUtc().add(const Duration(days: 365));
+      final futureDate = today.add(const Duration(days: 365));
       expect(
         () => VisibilityCalculator.calculateNightTimeline(futureDate, lat, lon),
         returnsNormally,
@@ -269,9 +273,7 @@ void main() {
     });
 
     test('past date (30 days ago) does not throw', () {
-      final pastDate = DateTime.now().toUtc().subtract(
-        const Duration(days: 30),
-      );
+      final pastDate = today.subtract(const Duration(days: 30));
       expect(
         () => VisibilityCalculator.calculateNightTimeline(pastDate, lat, lon),
         returnsNormally,

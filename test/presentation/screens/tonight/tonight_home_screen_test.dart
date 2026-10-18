@@ -36,6 +36,9 @@ import '../../../support/in_memory_first_run.dart';
 import '../../../support/no_snapshot_weather.dart';
 import '../../../support/planner_harness.dart';
 
+/// The tests' now, for the planner and the saved plans alike (F24 A1).
+final _december = FixedClock(DateTime.utc(2026, 12, 15, 17));
+
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
 const _m42 = AstroTarget(
@@ -96,8 +99,8 @@ void main() {
         _NoForecast(),
         DriftLocationRepository(database),
         locationService: FakeLocationService(),
-        sessionRepository: DriftSessionRepository(database),
-        clock: FixedClock(DateTime.utc(2026, 12, 15, 17)),
+        sessionRepository: DriftSessionRepository(database, clock: _december),
+        clock: _december,
         firstRun: firstRun,
       );
       await vm.ready;
@@ -441,7 +444,10 @@ void main() {
       await tester.runAsync(() => vm.plan.idle);
       expect(vm.plan.eveningDate, CalendarDate(2026, 12, 20));
       final stored = await tester.runAsync(
-        () => DriftSessionRepository(database).get(vm.plan.activeSessionId!),
+        () => DriftSessionRepository(
+          database,
+          clock: _december,
+        ).get(vm.plan.activeSessionId!),
       );
       expect(stored!.eveningDate, CalendarDate(2026, 12, 20));
     });

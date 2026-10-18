@@ -35,6 +35,8 @@ import '../../support/route_paths.dart';
 
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 
+import '../../support/test_clock.dart';
+
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
 void main() {
@@ -61,7 +63,7 @@ void main() {
         ),
       );
       SharedPreferences.setMockInitialValues({'activeLocationId': siteId});
-      sessions = DriftSessionRepository(db);
+      sessions = DriftSessionRepository(db, clock: testEvening);
       vm = PlannerHarness(
         DriftTargetRepository(db),
         DriftEquipmentRepository(db),
@@ -94,7 +96,9 @@ void main() {
             value: DriftLocationRepository(db),
           ),
           Provider<SessionRepository>.value(value: sessions),
-          ChangeNotifierProvider(create: (_) => SessionsViewModel(sessions)),
+          ChangeNotifierProvider(
+            create: (_) => SessionsViewModel(sessions, clock: testEvening),
+          ),
           ...vm.providers,
         ],
         child: const AstroPlanApp(),

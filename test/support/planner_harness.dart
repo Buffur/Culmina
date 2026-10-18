@@ -61,6 +61,7 @@ import 'package:provider/single_child_widget.dart';
 import 'in_memory_display_preferences.dart';
 import 'in_memory_privacy_preferences.dart';
 import 'in_memory_first_run.dart';
+import 'test_clock.dart';
 
 /// One object over the app's ViewModels, for tests (TASK 12.3). It builds
 /// the same [AppViewModels] graph `main.dart` does and delegates to it, so
@@ -88,7 +89,9 @@ class PlannerHarness extends ChangeNotifier {
     CaptureFileAccess? captureFiles,
   }) : _targetRepository = targetRepository,
        _equipmentRepository = equipmentRepository {
-    final time = clock ?? const SystemClock();
+    // F24 A1 (TD-096): a fixed evening unless the test gives a clock, so
+    // its night never depends on the time of day it runs.
+    final time = clock ?? testEvening;
     vms = AppViewModels(
       targets: targetRepository,
       equipment: equipmentRepository,

@@ -35,6 +35,7 @@ import '../../../support/fake_location_service.dart';
 import '../../../support/fake_reverse_geocoder.dart';
 import '../../../support/no_snapshot_weather.dart';
 import '../../../support/planner_harness.dart';
+import '../../../support/test_clock.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -124,7 +125,10 @@ void main() {
     expect(find.text(ExampleText.plan), findsOneWidget);
     expect(offer, findsNothing);
     final stored = await tester.runAsync(
-      () => DriftSessionRepository(db).get(vm.activeSessionId!),
+      () => DriftSessionRepository(
+        db,
+        clock: testEvening,
+      ).get(vm.activeSessionId!),
     );
     expect(ExampleCapturePlan.matches(stored!.blocks), isTrue);
 

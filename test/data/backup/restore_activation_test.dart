@@ -161,7 +161,7 @@ void main() {
 
   FileBackupService service(Uint8List picked) => FileBackupService(
     AppDatabase(NativeDatabase.memory()),
-    DriftSessionRepository(AppDatabase(NativeDatabase.memory())),
+    DriftSessionRepository(AppDatabase(NativeDatabase.memory()), clock: _clock),
     clock: _clock,
     dataDir: () async => phone,
     tempDir: () async => tmp,
@@ -339,7 +339,7 @@ void main() {
       ],
       ['Dark site'],
     );
-    final sessions = await DriftSessionRepository(db).list();
+    final sessions = await DriftSessionRepository(db, clock: _clock).list();
     sessions.sort((a, b) => a.id.compareTo(b.id));
     expect(
       sessions.map(
@@ -588,7 +588,10 @@ void main() {
       var restarts = 0;
       FileBackupService withRestart(Directory dir) => FileBackupService(
         AppDatabase(NativeDatabase.memory()),
-        DriftSessionRepository(AppDatabase(NativeDatabase.memory())),
+        DriftSessionRepository(
+          AppDatabase(NativeDatabase.memory()),
+          clock: _clock,
+        ),
         clock: _clock,
         dataDir: () async => dir,
         tempDir: () async => tmp,

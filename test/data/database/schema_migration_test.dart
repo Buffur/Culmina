@@ -42,6 +42,9 @@ import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/domain/models/camera_class.dart';
 import 'package:astroplan/domain/models/session.dart'
     show SessionResults, SessionStatus;
+import 'package:astroplan/domain/models/execution.dart' show ExecutionEventKind;
+import 'package:astroplan/domain/models/session_result.dart'
+    show NotDoneReason, ResultKind;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
@@ -52,6 +55,8 @@ import 'package:astroplan/domain/models/tracking_type.dart';
 import 'package:astroplan/data/database/generated_migrations/schema.dart';
 import 'package:astroplan/data/database/generated_migrations/schema_v8.dart'
     show DatabaseAtV8;
+
+import '../../support/test_clock.dart';
 
 /// A minimal [GeneratedDatabase] with no tables, used only to stamp a file's
 /// `user_version` to an arbitrary value without going through [AppDatabase]'s
@@ -165,8 +170,61 @@ void main() {
         ('M42', 'partly', null),
         ('Old', null, null),
       ]);
-      final named = await DriftSessionRepository(db).rename(1, ' Orion ');
+      final named = await DriftSessionRepository(
+        db,
+        clock: testEvening,
+      ).rename(1, ' Orion ');
       expect(named.name, 'Orion');
+      await db.close();
+    });
+
+    // F22 A3 (TD-102, S11H-07): the Stage 11 probe P2, committed. Every
+    // result field written at v24 survives v24 -> v25: a Not done row's
+    // reason, an "as planned" row's kind, its `reported` and
+    // `framesConfirmed` events and the count they replay to; no name.
+    test('v24 -> v25: every result field and event is kept', () async {
+      final schema = await verifier.schemaAt(24);
+      final raw = schema.rawDatabase;
+      raw.execute(
+        "INSERT INTO session_logs (id, target_name, equipment_name, "
+        "session_date, planned_light_frames, status, legacy, evening_date, "
+        "result_kind, not_done_reason) VALUES "
+        "(1, 'M42', 'Rig', 1790000000, 10, 'abandoned', 0, '2026-12-15', "
+        "NULL, 'clouds'), "
+        "(2, 'M31', 'Rig', 1790000000, 10, 'completed', 0, '2026-12-16', "
+        "'asPlanned', NULL);",
+      );
+      raw.execute(
+        "INSERT INTO capture_blocks (id, session_log_id, frame_type, "
+        "exposure_time_seconds, frame_count, position, completed_frames, "
+        "rejected_frames) VALUES (1, 1, 'light', 60.0, 10, 0, 0, 0), "
+        "(2, 2, 'light', 60.0, 10, 0, 10, 0);",
+      );
+      raw.execute(
+        "INSERT INTO session_events (id, session_log_id, seq, at_utc_ms, "
+        "kind, block_id, delta, reason, clock_adjusted) VALUES "
+        "(1, 2, 1, 1790090000000, 'reported', NULL, NULL, NULL, 0), "
+        "(2, 2, 2, 1790090000000, 'framesConfirmed', 2, 10, NULL, 0);",
+      );
+      final db = AppDatabase(schema.newConnection());
+      final repo = DriftSessionRepository(db, clock: testEvening);
+
+      final notDone = (await repo.get(1))!;
+      expect(notDone.status, SessionStatus.abandoned);
+      expect(notDone.notDoneReason, NotDoneReason.clouds);
+      expect(notDone.resultKind, isNull);
+      expect(notDone.name, isNull);
+
+      final asPlanned = (await repo.get(2))!;
+      expect(asPlanned.status, SessionStatus.completed);
+      expect(asPlanned.resultKind, ResultKind.asPlanned);
+      expect(asPlanned.notDoneReason, isNull);
+      expect(asPlanned.name, isNull);
+      expect((await repo.events(2)).map((e) => (e.kind, e.blockId, e.delta)), [
+        (ExecutionEventKind.reported, null, null),
+        (ExecutionEventKind.framesConfirmed, 2, 10),
+      ]);
+      expect((await repo.execution(2)).completed[2], 10, reason: 'replayed');
       await db.close();
     });
   });
@@ -263,7 +321,7 @@ void main() {
         {'v': 1, 'takenAtUtcMs': 1},
         {'v': 1, 'takenAtUtcMs': 2},
       ]);
-      final open = await DriftSessionRepository(db).list(
+      final open = await DriftSessionRepository(db, clock: testEvening).list(
         statuses: {SessionStatus.draft, SessionStatus.planned},
         includeLegacy: false,
       );
@@ -307,7 +365,7 @@ void main() {
         (0, 0),
         (0, 0),
       ]);
-      final repo = DriftSessionRepository(db);
+      final repo = DriftSessionRepository(db, clock: testEvening);
       final replay = await repo.execution(1);
       expect((replay.completedFor(1), replay.rejectedFor(1)), (3, 1));
 
@@ -547,7 +605,10 @@ void main() {
       expect(row.status, 'planned');
       expect(row.eveningDate, '2026-12-15');
       expect(row.planSnapshot, {'v': 1, 'rig': null});
-      final session = (await DriftSessionRepository(db).get(1))!;
+      final session = (await DriftSessionRepository(
+        db,
+        clock: testEvening,
+      ).get(1))!;
       expect(session.trackingOverride, isNull);
       expect(session.blocks.single.frameCount, 10);
       await db.close();
@@ -762,7 +823,10 @@ void main() {
         expect(blocks.every((b) => b.rejectedFrames == 0), isTrue);
         expect(blocks.first.frameCount, 40);
 
-        final sessions = await DriftSessionRepository(db).list();
+        final sessions = await DriftSessionRepository(
+          db,
+          clock: testEvening,
+        ).list();
         expect(sessions.map((s) => s.record.targetName), ['M42', 'M31']);
         expect(sessions.every((s) => s.legacy), isTrue);
         expect(sessions.last.blocks, hasLength(2));
@@ -945,8 +1009,10 @@ void main() {
         await (db.update(db.sessionLogs)..where((t) => t.id.equals(id))).write(
           const SessionLogsCompanion(planSnapshot: Value({'v': 1})),
         );
-        await DriftSessionRepository(db)
-            .updateResults(id, const SessionResults(processingNotes: 'ok'));
+        await DriftSessionRepository(
+          db,
+          clock: testEvening,
+        ).updateResults(id, const SessionResults(processingNotes: 'ok'));
 
         final row = await read(id);
         expect(row.processingNotes, 'ok');

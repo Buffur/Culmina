@@ -30,6 +30,7 @@ import '../../support/fake_location_service.dart';
 import '../../support/fake_reverse_geocoder.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
+import '../../support/test_clock.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -210,7 +211,7 @@ void main() {
 
     await tester.runAsync(() => vm.saveSession());
     final stored = await tester.runAsync(
-      () => DriftSessionRepository(db).get(saved.id),
+      () => DriftSessionRepository(db, clock: testEvening).get(saved.id),
     );
     expect(stored!.blocks.last.frameCount, 7);
     final restarted = await tester.runAsync(() async {
@@ -222,7 +223,7 @@ void main() {
         locationService: FakeLocationService(),
         reverseGeocoder: FakeReverseGeocoder(),
         deviceTimeZone: FakeDeviceTimeZone(),
-        sessionRepository: DriftSessionRepository(db),
+        sessionRepository: DriftSessionRepository(db, clock: testEvening),
       );
       await again.ready;
       return again;

@@ -73,7 +73,7 @@ void main() {
   );
 
   test('can insert and retrieve expanded SessionLog', () async {
-    final date = DateTime.now();
+    final date = DateTime.utc(2026, 11, 10, 18); // F24 A1: no wall clock
     final id = await database
         .into(database.sessionLogs)
         .insert(

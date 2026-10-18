@@ -166,13 +166,13 @@ Future<({PlannerHarness vm, int running, int planned, int ended})> _pumpApp(
     // S8.4: an old run in progress (the tracker left); its result form.
     running = (await startLegacyRun(
       DriftSessionRepository(db, clock: clock),
-      (await DriftSessionRepository(db).get(planned))!,
+      (await DriftSessionRepository(db, clock: clock).get(planned))!,
     )).id;
     // TD-087: a Saved plan whose night (9 Nov) has ended, awaiting its
     // result, so the sweep sees the Saved-plan result form too.
     ended = (await _savedEndedPlan(
       DriftSessionRepository(db, clock: clock),
-      (await DriftSessionRepository(db).get(planned))!,
+      (await DriftSessionRepository(db, clock: clock).get(planned))!,
     )).id;
     if (theme == _Theme.field) await vm.theme.toggleFieldMode();
   });

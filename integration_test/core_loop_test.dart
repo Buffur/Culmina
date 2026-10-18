@@ -335,7 +335,7 @@ void main() {
     // Log: the Sessions list and the detail.
     expect(find.text('Logbook'), findsWidgets);
     final stored = await tester.runAsync(
-      () => DriftSessionRepository(device.db!).get(runId),
+      () => DriftSessionRepository(device.db!, clock: device.clock).get(runId),
     );
     expect(stored!.status, SessionStatus.completed);
     AppRouter.router.go(AppRouter.sessionDetail(runId));
@@ -441,7 +441,7 @@ void main() {
 
     // Exported instants are UTC; the zone travels with them.
     final all = await tester.runAsync(
-      () => DriftSessionRepository(device.db!).list(),
+      () => DriftSessionRepository(device.db!, clock: device.clock).list(),
     );
     final done = all!.firstWhere((s) => s.id == savedId);
     expect(done.status, SessionStatus.completed);

@@ -49,6 +49,8 @@ import '../../../support/no_snapshot_weather.dart';
 
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 
+import '../../../support/test_clock.dart';
+
 class _MockWeather with NoSnapshotWeather implements WeatherRepository {}
 
 /// Every forecast request fails, as when offline with nothing cached.
@@ -83,7 +85,7 @@ void main() {
     database = AppDatabase(NativeDatabase.memory());
     targetRepo = DriftTargetRepository(database);
     equipmentRepo = DriftEquipmentRepository(database);
-    sessionRepo = DriftSessionRepository(database);
+    sessionRepo = DriftSessionRepository(database, clock: testEvening);
     locationRepo = DriftLocationRepository(database);
   });
 
@@ -100,7 +102,9 @@ void main() {
         Provider<EquipmentRepository>.value(value: equipmentRepo),
         ChangeNotifierProvider(create: (_) => GearViewModel(equipmentRepo)),
         Provider<SessionRepository>.value(value: sessionRepo),
-        ChangeNotifierProvider(create: (_) => SessionsViewModel(sessionRepo)),
+        ChangeNotifierProvider(
+          create: (_) => SessionsViewModel(sessionRepo, clock: testEvening),
+        ),
         Provider<LocationRepository>.value(value: locationRepo),
         ...vm.providers,
       ],

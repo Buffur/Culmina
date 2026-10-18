@@ -44,11 +44,9 @@ void main() {
   /// Today is 31 Dec 2025.
   Future<void> seed(WidgetTester tester) => tester.runAsync(() async {
     db = AppDatabase(NativeDatabase.memory());
-    repo = DriftSessionRepository(db);
-    vm = SessionsViewModel(
-      repo,
-      clock: FixedClock(DateTime.utc(2025, 12, 31, 18)),
-    );
+    final today = FixedClock(DateTime.utc(2025, 12, 31, 18));
+    repo = DriftSessionRepository(db, clock: today);
+    vm = SessionsViewModel(repo, clock: today);
     await db.customStatement(
       "INSERT INTO session_logs (id, target_name, equipment_name, "
       "session_date, planned_light_frames, status, legacy, evening_date, "

@@ -32,6 +32,9 @@ import '../../support/in_memory_privacy_preferences.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
 
+/// The tests' now, for the planner and the saved plans alike (F24 A1).
+final _december = FixedClock(DateTime.utc(2026, 12, 15, 17));
+
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
 void main() {
@@ -60,9 +63,9 @@ void main() {
       locationService: gps,
       reverseGeocoder: geocoder ?? FakeReverseGeocoder(),
       privacyPreferences: InMemoryPrivacyPreferences(placeNameLookup: lookup),
-      sessionRepository: DriftSessionRepository(database),
+      sessionRepository: DriftSessionRepository(database, clock: _december),
       firstRun: InMemoryFirstRun(done: true),
-      clock: FixedClock(DateTime.utc(2026, 12, 15, 17)),
+      clock: _december,
     );
     await vm.ready;
     return vm;

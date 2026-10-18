@@ -28,6 +28,7 @@ import '../../support/fake_location_service.dart';
 import '../../support/in_memory_display_preferences.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
+import '../../support/test_clock.dart';
 
 class _Weather with NoSnapshotWeather implements WeatherRepository {}
 
@@ -50,7 +51,7 @@ void main() {
         _Weather(),
         DriftLocationRepository(database),
         locationService: FakeLocationService(),
-        sessionRepository: DriftSessionRepository(database),
+        sessionRepository: DriftSessionRepository(database, clock: testEvening),
         displayPreferences: store,
       );
       await vm.ready;

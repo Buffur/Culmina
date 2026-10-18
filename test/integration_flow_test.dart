@@ -134,7 +134,9 @@ void main() {
           Provider<EquipmentRepository>.value(value: equipmentRepo),
           ChangeNotifierProvider(create: (_) => GearViewModel(equipmentRepo)),
           Provider<SessionRepository>.value(value: sessionRepo),
-          ChangeNotifierProvider(create: (_) => SessionsViewModel(sessionRepo)),
+          ChangeNotifierProvider(
+            create: (_) => SessionsViewModel(sessionRepo, clock: _clock),
+          ),
           Provider<LocationRepository>.value(value: locationRepo),
           ...plannerViewModel.providers,
         ],
@@ -223,7 +225,7 @@ void main() {
             ChangeNotifierProvider(create: (_) => GearViewModel(equipmentRepo)),
             Provider<SessionRepository>.value(value: sessionRepo),
             ChangeNotifierProvider(
-              create: (_) => SessionsViewModel(sessionRepo),
+              create: (_) => SessionsViewModel(sessionRepo, clock: _clock),
             ),
             Provider<LocationRepository>.value(value: locationRepo),
             ...plannerViewModel.providers,

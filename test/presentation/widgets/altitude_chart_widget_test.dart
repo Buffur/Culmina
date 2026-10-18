@@ -24,6 +24,10 @@ const _pleiades = AstroTarget(
   declination: 24.11,
 );
 
+/// A fixed "now" outside every night drawn here (F24 A1, TD-096): with the
+/// wall clock, the 2026-12-20 night would have drawn a dot on that night.
+final _now = DateTime.utc(2026, 10, 18, 12);
+
 Future<void> pumpChart(
   WidgetTester tester, {
   required AstroTarget target,
@@ -48,7 +52,7 @@ Future<void> pumpChart(
             darknessLimitDeg: -18,
             minAltitudeDeg: minAltitude,
           ),
-          nowUtc: DateTime.now().toUtc(),
+          nowUtc: _now,
         ),
       ),
     ),
@@ -96,7 +100,7 @@ void main() {
   testWidgets('renders for a session date far from today (no "now" dot)', (
     tester,
   ) async {
-    // The night is nowhere near the real clock's "now", so the painter's
+    // The night is nowhere near the fixed "now", so the painter's
     // now-dot branch is skipped — this exercises that path without one.
     await pumpChart(
       tester,
