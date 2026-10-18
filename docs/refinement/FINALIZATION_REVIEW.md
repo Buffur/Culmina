@@ -1826,3 +1826,13 @@ The handoff is [`prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](prompts/CLAU
 | Final success | Every mandatory F/G condition including separately authorized published artifact must have actual evidence; a blocked handoff explicitly does not mean project completion |
 
 All authored source links, task IDs and criterion bindings are checked; staged whitespace is checked with the immutable source/history/raw-log exceptions recorded in §37. CI trigger-only syntax/selection checked without rerunning a local full application gate. The goal/evidence evaluator is not an independent owner/scientific/device reviewer. No key, owner database, live backup activation, app install/uninstall, F code, release tag or publication was performed.
+
+## 39. Emulator/render autonomy clarification and develop synchronization
+
+Owner, 2026-10-18: asks whether the whole project is pushed to develop and notes that a chat agent can independently emulate a device or make renders. Git live check confirmed local HEAD and remote develop both `af1148a5ba1c71c42f62e16f5ee188aa016daa75`, with no tracked/untracked pending changes. Ignored build outputs/tool caches/local configuration remain outside Git by design.
+
+Read-only runtime inventory used the existing Android SDK tools directly, rather than declaring them unavailable from PATH. `emulator -list-avds` exited 0 with no AVD; `emulator -accel-check` exited 0 with WHPX installed and usable; `adb devices -l` exited 0 with no device. No installed system image was found in the discovered SDK. No AVD was created/launched, no SDK package installed, and no application was built, tested, installed or activated by this documentation clarification.
+
+The goal brief, CLAUDE and PROGRESS now explicitly instruct the implementation agent to discover SDK paths, independently prepare/launch a dedicated test AVD (including task-required minimal provisioning where permitted), run actual Android interactions and make real-widget host renders. No-phone alone is not a blocker: execute the applicable HOST/EMULATOR checks and continue independent tasks. Keep the distinction between simulated keyboard insets, actual emulator IME and physical-device evidence; only the rows explicitly requiring a real phone retain that requirement. Existing owner-data and release boundaries remain.
+
+This is an execution clarification, not another product amendment, F-task start or waiver of acceptance. Roadmap version -07, all 26 tasks/127 A-CHK pairs, source/UX fingerprints and G1–G4 remain unchanged. Verify source links/IDs and whitespace; the prior successful remote CI is reused because only Markdown changes. Commit/push the clarification normally to develop as part of the same prepared-project handoff.

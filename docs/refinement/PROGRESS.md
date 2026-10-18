@@ -26,6 +26,7 @@
 | AM-01 | Simple Capture Plan, visual night/weather, Plan block removal, grouped Settings, consented GPS/name and early manual results. Historical -03 had118 criteria; AM-02 then brought it to 122 and AM-03 to the current 127 |
 | AM-02 | UX32-01–05 now accepted: stable Save, scoped block apply, newest-query search, honest settings retry/persistence, selected-night hierarchy (122 criteria at -04). The repeat Claude assessment ran on 2026-10-18 as FINALIZATION_REVIEW §34 (assessment only; UX32-03/04 reproduced on the host) |
 | Goal run | Prepared full-plan implementation prompt; not launched. One lead/writer, sequential eligible tasks, coherent task commits and develop pushes only when launched; BLOCKED handoff is not completion |
+| Emulator/render execution | Owner clarification 2026-10-18: agents independently use/provision isolated emulators and render actual production widgets during authorized implementation. Inventory: emulator/ADB available in SDK, WHPX usable, no AVD/system image or connected device found. No emulator app run performed. Absence of a phone does not block host/emulator implementation; explicitly physical G2 rows remain |
 | AM-04 | Familiar camera parameter hierarchy and optional AF/MF descriptive recording; F03/F06/F09/F12 and SP05. No new task, gate, calculation, hardware control or automatic metadata inference |
 | AM-03 | CRUX-01–04 accepted: one plan-night phrase for Planner/Home (F18 A6, F17 A5), honest place-name switch persistence (F21 A6), a position fix never overwrites edited coordinates (F23 A6), no “Current position” label for a remembered position (F23 A7). 26 F tasks / 127 criteria. AM03-T decided B: the tab stays “Tonight”, the page title follows the plan's night (F17 A5; version -06). CRUX-05/06 not selected |
 | Current document fingerprint | AM-04, P6-2026-10-18-07, SHA-256 `7e75d60bbc8d97c444318fc8eb1c6285e32d850c9e2019e3854351661d0c51fa`; §20 UX SHA-256 `80dbab0a0f484a461b78d9bd809dc75912bea1534b84fc7a2530e8a586afb7f6`. Earlier fingerprints in FINALIZATION_REVIEW remain historical; no new app acceptance claim |
@@ -74,6 +75,7 @@ Every RG and RD not listed here is decided, answered or lapsed: `POST_ROADMAP_PL
 ## Owner actions outstanding
 
 These block the release, not documentation or planning.
+- **Agents handle emulator/renders independently:** discover existing SDK tools even when missing from PATH; reuse/create an isolated AVD and provision minimal required tooling/image where permitted; generate actual-widget host renders and emulator captures. See the goal prompt's execution procedure. These are implementation/testing actions, not owner-only phone prerequisites.
 - **A physical phone** for the carried device rows (G2, alias S17.5): S13V-02, S13V-03, the Stage 11
   matrix's phone and human rows (`STAGE_11_MATRIX.md`, `STAGE_11_DEVICE_RUNBOOK.md`), S2V-06, S3V-08
   and S10V-04's profile run. Emulator evidence does not replace a physical-phone or human check. An

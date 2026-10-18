@@ -389,6 +389,7 @@ registered by TASK 0.2; each is decided in its own ADR task in `docs/MASTER_ROAD
 
 ### Full-plan goal handoff — launch boundary (owner, 2026-10-18)
 
+- **Execution clarification:** the owner states agents can independently emulate a device or produce renders. The authorized implementation run includes discovering/provisioning/launching an isolated test emulator and actual-widget renders; lack of a physical phone alone is not an implementation blocker. Existing explicitly physical-phone acceptance rows are preserved. No F task starts from clarifying these instructions.
 - **Request:** commit/push the prepared project to develop, then provide a detailed implementation prompt for Claude goal agents and check that execution scenario.
 - **Delivered preparation:** baseline commit `2b467b8` pushed to develop; current plan AM-04/P6-2026-10-18-07. `refinement/prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md` contains the launch command, complete finite task/gate map and source/verification/coordination/continuation rules.
 - **Boundary:** no F task starts from preparing or publishing the prompt. The owner's later submission activates the explicitly named group and its normal task commits/develop pushes. No repeated task-start approval inside that launched group; required local ADR/resource/visual/signing/D6/release decisions remain. Main, force-push, owner data and publication are not implicitly authorized.
