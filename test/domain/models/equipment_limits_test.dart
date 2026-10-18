@@ -101,7 +101,7 @@ void main() {
       expect(focal('400'), isNull);
       expect(focal('400,5'), isNull);
       expect(focal(''), 'Required');
-      expect(focal('abc'), 'Invalid');
+      expect(focal('abc'), 'Enter a number');
       expect(focal('0'), 'Must be 1–20000 mm');
       final pitch = EquipmentFormInput.required(
         EquipmentLimits.pixelPitchUm,
@@ -126,7 +126,10 @@ void main() {
         EquipmentFormInput.validateResolution('0'),
         'Must be 100–30000 px',
       );
-      expect(EquipmentFormInput.validateResolution('62.5'), 'Invalid');
+      expect(
+        EquipmentFormInput.validateResolution('62.5'),
+        'Enter whole pixels, e.g. 6248',
+      );
     });
   });
 }

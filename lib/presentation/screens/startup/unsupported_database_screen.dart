@@ -67,7 +67,7 @@ class _UnsupportedDatabaseScreenState extends State<UnsupportedDatabaseScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Start with fresh data?'),
         content: const Text(
-          'Your old sites, rigs, targets and sessions will no longer be shown '
+          'Your old sites, rigs, targets and plans will no longer be shown '
           'in the app. The old data file is kept on this device, renamed, '
           'and is not deleted.',
         ),

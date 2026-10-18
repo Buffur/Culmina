@@ -42,8 +42,14 @@ abstract final class WeatherText {
   static String failure(WeatherFailure failure) => switch (failure) {
     WeatherFailure.unavailable => 'Offline or the service did not answer.',
     WeatherFailure.malformed => 'The forecast could not be read.',
-    WeatherFailure.outOfRange => 'Beyond the forecast horizon.',
+    WeatherFailure.outOfRange => 'Beyond the 16-day forecast.',
   };
+
+  /// The same words wherever the forecast loads or is out of range.
+  static const loading = 'Loading the forecast…';
+  static const outOfRange =
+      'No forecast yet: the forecast covers only the next 16 days. '
+      'Planning works without weather.';
 
   /// One line for a summary row (S6.5): the night's cloud range with the
   /// forecast's age (and its aging or stale wording), or why there is no
@@ -51,9 +57,8 @@ abstract final class WeatherText {
   static String summary(NightWeather state, NightWeatherSummary? s) =>
       switch (state) {
         NightWeatherIdle() => 'Set a site to see the forecast.',
-        NightWeatherLoading() => 'Loading the forecast…',
-        NightWeatherOutOfRange() =>
-          'No forecast yet: this night is beyond the forecast horizon.',
+        NightWeatherLoading() => loading,
+        NightWeatherOutOfRange() => outOfRange,
         NightWeatherUnavailable(:final failure) =>
           'No forecast. ${WeatherText.failure(failure)}',
         NightWeatherAvailable() =>

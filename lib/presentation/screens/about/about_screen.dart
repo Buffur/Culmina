@@ -132,11 +132,11 @@ class AboutScreen extends StatelessWidget {
           gap,
           const Text(
             'No account, no ads, no analytics and no tracking. Your sites, '
-            'rigs, plans and sessions stay on this device. The app sends a '
-            'position only to fetch the weather (Open-Meteo), to show map '
-            'tiles (OpenStreetMap) and — if you switch it on in Settings — '
-            'to look up a place name (Nominatim). Location permission is '
-            'asked only when you choose "use current position".',
+            'rigs, targets, plans and results stay on this device. The app '
+            'sends a position only to fetch the weather (Open-Meteo), to '
+            'show map tiles (OpenStreetMap) and — if you switch it on in '
+            'Settings — to look up a place name (Nominatim). Location '
+            'permission is asked only when you tap "Use current position".',
             key: Key('about.privacy'),
           ),
           const _LinkButton(

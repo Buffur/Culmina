@@ -22,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
     // next start; say so, and still close it now.
     await runWithFeedback(
       context,
-      'remember that the setup is done',
+      'save your setup',
       context.read<TonightViewModel>().finishFirstRun,
     );
     if (context.mounted) context.go(AppRouter.tonight);

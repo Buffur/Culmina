@@ -209,10 +209,10 @@ void main() {
         .controller
         .text;
     expect(textOf('Exposure (seconds)'), '300');
-    expect(textOf('Frame Count'), '');
+    expect(textOf('Frame count'), '');
     expect(textOf('Gain (for your records)'), '100');
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame Count'),
+      find.widgetWithText(TextFormField, 'Frame count'),
       '20',
     );
     await submit(tester);

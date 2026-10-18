@@ -368,7 +368,7 @@ void main() {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessionDetail(completedId));
     expect(find.text('This target so far'), findsOneWidget);
-    expect(find.text('50 min over 1 session'), findsOneWidget);
+    expect(find.text('50 min from 1 result'), findsOneWidget);
     expect(find.text('L: 50 min'), findsOneWidget);
     AppRouter.router.go(AppRouter.logbookProgress);
     await settle(tester);

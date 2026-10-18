@@ -280,7 +280,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         today: siteVm.today,
       );
     } on ArgumentError catch (e) {
-      showFailure(context, 'Invalid site: ${e.message}');
+      showFailure(context, SiteFormInput.refused(e));
       return;
     }
     setState(() => _saving = true);

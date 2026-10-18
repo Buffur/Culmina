@@ -61,7 +61,7 @@ class TonightHomeScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Couldn't load your data."),
+            const Text("Couldn't load your site, settings and current plan."),
             TextButton(
               onPressed: startupVm.retryBootstrap,
               child: const Text('Retry'),
@@ -316,7 +316,7 @@ class _PlanCard extends StatelessWidget {
               key: const Key('tonight.chooseTarget'),
               icon: Icons.search,
               label: 'Choose a target',
-              lines: const ['Any object in the catalogue'],
+              lines: const ['Any object in the catalog'],
               onTap: () => context.push(AppRouter.selectTarget),
             ),
             const Divider(height: 1, indent: AppSpacing.md),
@@ -486,10 +486,8 @@ class _NightCard extends StatelessWidget {
   /// is never shown as 0 (SI-008).
   static List<String> _weatherLines(NightConditionsViewModel c) =>
       switch (c.nightWeather) {
-        NightWeatherIdle() || NightWeatherLoading() => ['Loading forecast…'],
-        NightWeatherOutOfRange() => [
-          'No forecast yet: this night is beyond the forecast horizon.',
-        ],
+        NightWeatherIdle() || NightWeatherLoading() => [WeatherText.loading],
+        NightWeatherOutOfRange() => [WeatherText.outOfRange],
         NightWeatherUnavailable(:final failure) => [
           'No forecast. ${WeatherText.failure(failure)}',
         ],

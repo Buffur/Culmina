@@ -174,9 +174,12 @@ void main() {
 
     await tester.tap(find.text('Ha · 300 s × 20 · 1 h 40 min'));
     await settle(tester);
-    expect(find.text('Edit Capture Block'), findsOneWidget);
+    expect(
+      find.widgetWithText(AlertDialog, 'Edit capture block'),
+      findsOneWidget,
+    );
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame Count'),
+      find.widgetWithText(TextFormField, 'Frame count'),
       '7',
     );
     await tester.tap(find.byKey(const Key('blockDialog.submit')));
@@ -277,7 +280,7 @@ void main() {
         '60',
       );
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Frame Count'),
+        find.widgetWithText(TextFormField, 'Frame count'),
         '7',
       );
       await tester.tap(find.byKey(const Key('blockDialog.submit')));

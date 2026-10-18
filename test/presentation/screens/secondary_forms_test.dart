@@ -97,7 +97,7 @@ void main() {
     await tester.tap(find.byTooltip('Add a target'));
     await settle(tester);
     expect(find.text('Add a target'), findsWidgets);
-    expect(find.widgetWithText(TextFormField, 'Name *'), findsOneWidget);
+    expect(find.widgetWithText(TextFormField, 'Name'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, 'Save'), findsOneWidget);
     expect(find.byType(ElevatedButton), findsNothing);
   });

@@ -67,7 +67,7 @@ void main() {
     expect(find.textContaining('not scientific laws'), findsOneWidget);
     // S1.8 (UX-20): overheads are applied since TASK 5.4.
     expect(
-      find.textContaining("included in the capture plan's budget"),
+      find.textContaining("added to the capture plan's budget"),
       findsOneWidget,
     );
     expect(find.textContaining('later update'), findsNothing);

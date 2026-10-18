@@ -96,7 +96,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.pickOnly ? 'Pick on map' : 'Select Location'),
+        title: Text(widget.pickOnly ? 'Pick on map' : 'Choose a position'),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_location_alt),
@@ -173,7 +173,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _isLoadingLocation ? null : _getCurrentLocation,
         icon: const Icon(Icons.my_location),
-        label: const Text('Current Location'),
+        label: const Text('Use current position'),
       ),
     );
   }

@@ -136,7 +136,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     final prefs = _settings.planningPreferences;
     final String noWindowReason;
     if (_plan.sessionNight == null) {
-      noWindowReason = "Choose a location to see tonight's windows.";
+      noWindowReason = "Set a site to see tonight's windows.";
     } else if (_plan.selectedTarget == null) {
       noWindowReason = "Choose a target to see tonight's windows.";
     } else if (_conditions.imagingOpportunity?.noWindowReason ==

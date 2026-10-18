@@ -77,7 +77,7 @@ void main() {
     );
     expect(
       WeatherText.summary(const NightWeatherOutOfRange(), null),
-      contains('beyond the forecast horizon'),
+      contains('only the next 16 days'),
     );
     expect(
       WeatherText.summary(const NightWeatherLoading(), null),

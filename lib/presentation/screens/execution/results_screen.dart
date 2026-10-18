@@ -189,7 +189,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
               ),
               if (_outcome == ResultOutcome.asPlanned)
                 Text(
-                  'Every light block as planned, reported by you.',
+                  'Records every light block as fully taken. This is your '
+                  'report, not a frame count.',
                   key: const Key('results.asPlannedNote'),
                   style: theme.textTheme.bodySmall,
                 ),
@@ -362,12 +363,11 @@ class _NotYet extends StatelessWidget {
     final end = vm.endsAt;
     final zone = vm.review?.timeZoneId ?? vm.session?.timeZoneId;
     final when = end == null
-        ? 'after its night'
-        : 'after its night ends, from '
-              '${NightTimeFormatter.clockTime(context, end, zoneId: zone)} '
+        ? 'after it ends'
+        : 'from ${NightTimeFormatter.clockTime(context, end, zoneId: zone)} '
               '(${NightTimeFormatter.zoneCaption(end, zoneId: zone)})';
     return Text(
-      "This night hasn't ended yet. You can record how it went $when.",
+      "This night hasn't ended yet. You can record the result $when.",
       key: const Key('results.notYet'),
     );
   }

@@ -49,6 +49,6 @@ class FieldModeTile extends StatelessWidget {
 /// then says it will not survive a restart (TASK 15.4).
 Future<void> _toggle(BuildContext context) => runWithFeedback(
   context,
-  'remember field mode for the next start',
+  'save the field mode setting',
   context.read<ThemeViewModel>().toggleFieldMode,
 );

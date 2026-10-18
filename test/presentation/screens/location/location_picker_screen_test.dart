@@ -63,7 +63,7 @@ void main() {
   }
 
   Future<void> tapCurrentLocation(WidgetTester tester) async {
-    await tester.tap(find.text('Current Location'));
+    await tester.tap(find.text('Use current position'));
     await tester.pump();
     // Let the snack bar finish sliding in.
     await tester.pump(const Duration(seconds: 1));

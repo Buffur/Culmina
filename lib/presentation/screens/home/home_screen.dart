@@ -231,7 +231,7 @@ class HomeScreen extends StatelessWidget {
                         _SectionHeader(TonightOpportunityWidget.title),
                         const _NoSiteCard(
                           message:
-                              "Set your site to see tonight's altitude chart.",
+                              "Set a site to see tonight's altitude chart.",
                         ),
                       ] else if (target != null) ...[
                         _SectionHeader(TonightOpportunityWidget.title),
@@ -282,7 +282,10 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ] else
                         PlannerSummaryCard(
-                          title: 'Location: ${siteVm.locationName ?? "Custom"}',
+                          // Only while the default position is in use.
+                          title:
+                              '${AppWords.site}: '
+                              '${siteVm.locationName ?? 'not set (default position)'}',
                           data: {
                             'Latitude': siteVm.latitude.toStringAsFixed(4),
                             'Longitude': siteVm.longitude.toStringAsFixed(4),
@@ -391,7 +394,7 @@ class _BootstrapErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              "Couldn't load your data.",
+              "Couldn't load your site, settings and current plan.",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16),
             ),

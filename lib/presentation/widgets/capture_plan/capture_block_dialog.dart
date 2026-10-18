@@ -277,12 +277,6 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     widget.onTipsShown?.call(shown);
   }
 
-  /// The frame types as the dropdown names them.
-  static String _typeLabel(FrameType t) => switch (t) {
-    FrameType.darkFlat => 'DARK FLAT',
-    _ => t.name.toUpperCase(),
-  };
-
   /// The recorded values a light block keeps without showing them (ADR-020
   /// §3): named, so nothing is hidden silently.
   List<String> _kept() {
@@ -315,7 +309,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     final takesFilter = from != null && _type == FrameType.flat;
     return AlertDialog(
       title: Text(
-        widget.initial == null ? 'Add Capture Block' : 'Edit Capture Block',
+        widget.initial == null ? 'Add capture block' : 'Edit capture block',
       ),
       content: Form(
         key: _formKey,
@@ -337,10 +331,10 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
               DropdownButtonFormField<FrameType>(
                 initialValue: _type,
                 isExpanded: true, // S7.2b: wraps at 200 % text
-                decoration: const InputDecoration(labelText: 'Frame Type'),
+                decoration: const InputDecoration(labelText: 'Frame type'),
                 items: [
                   for (final t in FrameType.values)
-                    DropdownMenuItem(value: t, child: Text(_typeLabel(t))),
+                    DropdownMenuItem(value: t, child: Text(BlockText.type(t))),
                 ],
                 onChanged: (v) {
                   if (v != null) {
@@ -472,7 +466,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
               TextFormField(
                 controller: _count,
                 decoration: const InputDecoration(
-                  labelText: 'Frame Count',
+                  labelText: 'Frame count',
                   hintText: 'e.g. 30',
                 ),
                 keyboardType: TextInputType.number,
@@ -506,7 +500,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                     ),
                     DropdownMenuItem(
                       value: CalibrationPolicy.library,
-                      child: Text('From my library (no time)'),
+                      child: Text('From your library (no window time)'),
                     ),
                   ],
                   onChanged: (v) {

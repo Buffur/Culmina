@@ -555,7 +555,7 @@ interim safeguard. The normal guard and Save/Start ordering remain implemented.
 > `deleteBlockWithUndo` (`widgets/capture_plan/blocks_undo.dart`), which records it as a `BlocksEdit`:
 > the Undo owns that block only, so edits made since stay; the example badge returns only while
 > `BlocksEdit.isCurrent` holds, and a replaced plan (`BlocksEdit.inPlan` fails) is left alone with
-> "Not undone". `SessionPlanViewModel.effectiveTracking`
+> "Can't undo" (worded "Not undone" until the 2026-10-18 copy pass). `SessionPlanViewModel.effectiveTracking`
 > is the tracking the guidance uses: the rig's default until Stage 7 adds the plan's override; the
 > rows read unknown tracking from `RigCapability.recommendationIsConditional`. *Since S7.1
 > (RD-08 = T3)* the plan holds `trackingOverride` (a plan edit, autosaved in

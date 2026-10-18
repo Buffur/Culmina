@@ -29,6 +29,18 @@ abstract final class SiteFormInput {
     return null;
   }
 
+  /// A value the site refused (`LocationProfile` throws [ArgumentError] for
+  /// one out of range), in the validators' words, never the raw error. The
+  /// validators normally catch it first.
+  static String refused(ArgumentError e) => switch (e.name) {
+    'latitude' => 'Latitude must be between -90 and 90',
+    'longitude' => 'Longitude must be between -180 and 180',
+    'elevation' => 'Elevation must be between -500 and 9000 m',
+    'bortleClass' => 'Bortle class must be between 1 and 9',
+    'sqm' => 'SQM must be between 15 and 23',
+    _ => "The site can't be saved: check its values.",
+  };
+
   /// The light-pollution map at the typed coordinates (RG-09 = M2, S7.5),
   /// or null until both are valid.
   static Uri? mapLink(String latitude, String longitude) {

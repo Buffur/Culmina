@@ -180,7 +180,7 @@ class CaptureBudgetSummary extends StatelessWidget {
           ],
         const SizedBox(height: 12),
         _Line(
-          'Estimated Storage',
+          'Estimated storage',
           budget.storageMB != null
               ? '${budget.storageMB!.toStringAsFixed(1)} MB'
               : 'Unknown',

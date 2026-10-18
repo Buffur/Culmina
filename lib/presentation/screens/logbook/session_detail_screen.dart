@@ -278,7 +278,7 @@ class _SnapshotSections extends StatelessWidget {
           key: const Key('detail.site'),
           title: 'Site',
           rows: {
-            'Name': snap.siteName ?? 'transient position',
+            'Name': snap.siteName ?? 'Not a saved site',
             'Position':
                 '${deg(snap.siteLatitudeDeg ?? night?.latitude, 3)}, '
                 '${deg(snap.siteLongitudeDeg ?? night?.longitude, 3)}',
@@ -338,7 +338,7 @@ class _SnapshotSections extends StatelessWidget {
       'Source': snap.weatherSource ?? 'unknown',
       if (snap.weatherFetchedAtUtc case final t?) 'Fetched': at(t),
     },
-    'outOfRange' => {'Forecast': 'beyond the forecast horizon'},
+    'outOfRange' => {'Forecast': 'beyond the 16-day forecast'},
     'unavailable' => {'Forecast': 'unavailable'},
     _ => {'Forecast': 'none recorded'},
   };
@@ -388,7 +388,7 @@ class _PlanVsActual extends StatelessWidget {
 
   static String _label(CaptureBlock b) =>
       '${b.filterName ?? switch (b.frameType) {
-            FrameType.light => 'Light',
+            FrameType.light => 'Lights',
             FrameType.dark => 'Darks',
             FrameType.flat => 'Flats',
             FrameType.bias => 'Bias',
@@ -690,7 +690,7 @@ class _NameDialogState extends State<_NameDialog> {
       autofocus: true,
       maxLength: SessionRepository.maxNameLength,
       decoration: const InputDecoration(
-        helperText: 'Leave it empty to show target · night.',
+        helperText: 'Leave empty to show the target and night.',
       ),
     ),
     actions: [

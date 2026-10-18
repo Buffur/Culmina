@@ -71,7 +71,7 @@ Future<void> deleteBlockWithUndo(
 
 /// Said when Undo comes after another edit to the blocks (TD-079), or,
 /// for a delete, after the plan was replaced (TD-082).
-const notUndone = 'Not undone: the capture plan was changed again since.';
+const notUndone = "Can't undo: the capture plan has changed since.";
 
 /// Undo may run after the screen that offered it has gone, so it reports
 /// through the [messenger] it was given (trap 18: a failed write is said).

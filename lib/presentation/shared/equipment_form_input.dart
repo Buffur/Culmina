@@ -11,6 +11,9 @@ abstract final class EquipmentFormInput {
     return (value != null && value.isFinite) ? value : null;
   }
 
+  /// A field that does not parse: says what to type instead of "Invalid".
+  static const notANumber = 'Enter a number';
+
   static String _fmt(double v) =>
       v == v.roundToDouble() ? v.toInt().toString() : '$v';
 
@@ -21,7 +24,7 @@ abstract final class EquipmentFormInput {
       (text) {
         if (text == null || text.trim().isEmpty) return 'Required';
         final value = parse(text);
-        if (value == null) return 'Invalid';
+        if (value == null) return notANumber;
         return range.contains(value) ? null : _rangeMessage(range, unit);
       };
 
@@ -29,7 +32,7 @@ abstract final class EquipmentFormInput {
       (text) {
         if (text == null || text.trim().isEmpty) return null;
         final value = parse(text);
-        if (value == null) return 'Invalid';
+        if (value == null) return notANumber;
         return range.contains(value) ? null : _rangeMessage(range, unit);
       };
 
@@ -37,7 +40,7 @@ abstract final class EquipmentFormInput {
   static String? validateResolution(String? text) {
     if (text == null || text.trim().isEmpty) return 'Required';
     final value = int.tryParse(text.trim());
-    if (value == null) return 'Invalid';
+    if (value == null) return 'Enter whole pixels, e.g. 6248';
     return EquipmentLimits.resolutionPx.contains(value.toDouble())
         ? null
         : _rangeMessage(EquipmentLimits.resolutionPx, 'px');

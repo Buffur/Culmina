@@ -99,11 +99,8 @@ void main() {
   // expect the old "Must be a number" / "Must be 0.0 to 360.0" messages; they
   // now check the same rules (garbage, RA out of range, Dec out of range,
   // valid input saves) in the new format.
-  final raField = find.widgetWithText(
-    TextFormField,
-    'Right ascension (J2000) *',
-  );
-  final decField = find.widgetWithText(TextFormField, 'Declination (J2000) *');
+  final raField = find.widgetWithText(TextFormField, 'Right ascension (J2000)');
+  final decField = find.widgetWithText(TextFormField, 'Declination (J2000)');
   const raError = 'Use hours: 05h35m17s, 5:35:17 or 5.588 (or degrees: 83.82°)';
   const decError = 'Use −05°23′28″, -5:23:28 or -5.391 (within ±90°)';
 
@@ -116,7 +113,7 @@ void main() {
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name *'),
+      find.widgetWithText(TextFormField, 'Name'),
       'Test Target',
     );
   }
@@ -211,7 +208,7 @@ void main() {
     expect(find.widgetWithText(TextFormField, '05h35m17.0s'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, '−05°23′28″'), findsOneWidget);
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name *'),
+      find.widgetWithText(TextFormField, 'Name'),
       'Renamed',
     );
     await tester.tap(find.text('Save'));
@@ -243,7 +240,7 @@ void main() {
     await tester.tap(find.byTooltip('Edit target'));
     await tester.pumpAndSettle();
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name *'),
+      find.widgetWithText(TextFormField, 'Name'),
       'Great Orion Nebula',
     );
     await tester.tap(find.text('Save'));

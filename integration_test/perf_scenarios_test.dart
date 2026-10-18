@@ -348,7 +348,7 @@ void main() {
         .first;
     await watch('planner.blockDialog', () async {
       await tap(tester, firstBlock);
-      final count = find.widgetWithText(TextFormField, 'Frame Count');
+      final count = find.widgetWithText(TextFormField, 'Frame count');
       await tap(tester, count);
       await type(tester, count, '36');
       await tap(tester, find.byKey(const Key('blockDialog.submit')));

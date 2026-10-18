@@ -354,7 +354,7 @@ void main() {
       expect(
         find.descendant(
           of: choose,
-          matching: find.text('Any object in the catalogue'),
+          matching: find.text('Any object in the catalog'),
         ),
         findsOneWidget,
       );

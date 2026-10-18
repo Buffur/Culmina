@@ -107,12 +107,11 @@ class WeatherForecastWidget extends StatelessWidget {
                 children: [
                   LinearProgressIndicator(),
                   SizedBox(height: AppSpacing.sm),
-                  Text("Loading the night's forecast…"),
+                  Text(WeatherText.loading),
                 ],
               ),
               NightWeatherOutOfRange() => const Text(
-                'No forecast yet: this night is beyond the forecast '
-                'horizon (16 days). Planning works without weather.',
+                WeatherText.outOfRange,
                 key: Key('weather.outOfRange'),
               ),
               NightWeatherUnavailable(:final failure) => Row(
@@ -124,7 +123,7 @@ class WeatherForecastWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Couldn't load weather."),
+                        const Text('No forecast.'),
                         Text(WeatherText.failure(failure), style: small),
                       ],
                     ),

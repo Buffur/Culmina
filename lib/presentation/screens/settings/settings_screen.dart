@@ -117,8 +117,8 @@ class SettingsScreen extends StatelessWidget {
             key: const Key('settings.margin'),
             title: 'Feasibility margin',
             help:
-                'A plan that leaves less than this share of the available '
-                'time free is marked "tight".',
+                'A plan that leaves less than this share of the usable time '
+                'free shows as Tight.',
             value: p.feasibilityMarginPercent,
             range: PlanningPreferences.marginRange,
             divisions: 50,
@@ -130,11 +130,11 @@ class SettingsScreen extends StatelessWidget {
             // S7.2b (ADR-020 §4, I1): the one interval concept, relabelled.
             title: 'Time between frames',
             help:
-                'From the end of one frame to the start of the next: the '
-                'download or processing, plus any delay you set. A camera '
-                'timer counted start to start gives its interval minus the '
-                'exposure. Settling after a dither is the Dither overhead, '
-                'not this. An assumption — measure your rig.',
+                'From the end of one frame to the start of the next: '
+                'download, processing and any delay you set (a camera '
+                "timer's start-to-start interval minus the exposure). "
+                'Dither settling is counted separately. An assumption — '
+                'measure your rig.',
             value: p.perFrameOverheadSeconds,
             // S9.4: the model's range (0–120 s), not a narrower one.
             range: PlanningPreferences.perFrameRange,
@@ -144,9 +144,10 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Optional overheads. Off means "not included" in the plan — '
-            'not zero. When on, it is included in the capture plan\'s '
-            'budget and fit; the values are assumptions — measure your rig.',
+            'Optional overheads. Off: the plan leaves this time out, so '
+            'your night may take longer than shown. On: it is added to the '
+            'capture plan\'s budget and fit. The values are assumptions — '
+            'measure your rig.',
             style: small,
           ),
           _OptionalOverhead(

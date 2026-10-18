@@ -225,7 +225,7 @@ void main() {
 
     // An unknown that weakens a result: storage and the sky, as unknown.
     expect(vm.captureBudget.storageMB, isNull);
-    expect(find.text('Estimated Storage'), findsOneWidget);
+    expect(find.text('Estimated storage'), findsOneWidget);
     expect(find.text('Unknown'), findsWidgets);
     expect(
       find.descendant(

@@ -198,7 +198,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
                       TextFormField(
                         controller: nameCtrl,
                         decoration: const InputDecoration(
-                          labelText: 'Name *',
+                          labelText: 'Name',
                           hintText: 'e.g. Andromeda Galaxy',
                         ),
                         validator: (v) =>
@@ -230,7 +230,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
                       TextFormField(
                         controller: raCtrl,
                         decoration: const InputDecoration(
-                          labelText: 'Right ascension (J2000) *',
+                          labelText: 'Right ascension (J2000)',
                           hintText: '05h35m17s, 5:35:17 or 5.588 h',
                         ),
                         validator: TargetFormInput.validateRightAscension,
@@ -239,7 +239,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
                       TextFormField(
                         controller: decCtrl,
                         decoration: const InputDecoration(
-                          labelText: 'Declination (J2000) *',
+                          labelText: 'Declination (J2000)',
                           hintText: '−05°23′28″, -5:23:28 or -5.39',
                         ),
                         validator: TargetFormInput.validateDeclination,
@@ -364,7 +364,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search target (e.g., Andromeda)',
+                hintText: 'Search targets, e.g. Andromeda',
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Theme.of(context)

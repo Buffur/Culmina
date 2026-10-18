@@ -214,7 +214,7 @@ class SessionsViewModel extends ChangeNotifier {
     for (final s in await saved()) {
       if (s.targetId case final id?) targets[id] ??= s.record.targetName;
       if (s.siteId case final id?) {
-        sites[id] ??= s.record.locationName ?? 'Site $id';
+        sites[id] ??= s.record.locationName ?? 'Unnamed site';
       }
     }
     return (targets: targets, sites: sites);

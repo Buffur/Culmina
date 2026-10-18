@@ -8,6 +8,7 @@ import 'package:astroplan/domain/models/tracking_type.dart';
 import 'package:astroplan/domain/models/spec_confidence.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
 
+import 'package:astroplan/presentation/shared/equipment_form_input.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
 
@@ -123,8 +124,8 @@ void main() {
     await tester.tap(find.text('Save'));
     await tester.pump();
 
-    // Validation error should appear
-    expect(find.text('Invalid'), findsWidgets);
+    // Validation error should appear, saying what to type
+    expect(find.text('Enter whole pixels, e.g. 6248'), findsWidgets);
   });
 
   testWidgets('zero is rejected where invalid', (WidgetTester tester) async {
@@ -194,7 +195,8 @@ void main() {
 
     // Dialog should close, no validation errors
     expect(find.text('Required'), findsNothing);
-    expect(find.text('Invalid'), findsNothing);
+    expect(find.text('Enter whole pixels, e.g. 6248'), findsNothing);
+    expect(find.text(EquipmentFormInput.notANumber), findsNothing);
     expect(find.text('> 0'), findsNothing);
     expect(find.text('Must be > 0'), findsNothing);
 

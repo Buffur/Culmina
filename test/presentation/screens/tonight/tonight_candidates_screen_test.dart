@@ -138,7 +138,7 @@ void main() {
         .widget<Text>(find.byKey(const Key('tonight.header')))
         .data!;
     // S6.14 (RD-10 = O1): the header names the order.
-    expect(header, contains('sorted by usable time, then frame fill'));
+    expect(header, contains('sorted by usable time, then size in frame'));
     expect(header, isNot(contains('(no score)')));
     // S1.8: the planner's frame-fill wording (SCI-06); no "Home" (UX-20).
     expect(find.textContaining("of the frame's short side"), findsWidgets);

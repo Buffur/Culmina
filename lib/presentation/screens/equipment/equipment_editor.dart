@@ -420,7 +420,7 @@ class _EquipmentEditor {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Auto-calculated from Resolution × Pixel Size',
+                          'Auto-calculated from resolution × pixel size',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: AppPalette.of(context).textTertiary,

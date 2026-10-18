@@ -58,7 +58,7 @@ class _MetadataImportScreenState extends State<MetadataImportScreen> {
                   "Reads a few kilobytes of a photo's or RAW file's header, on "
                   'this device, and proposes a rig from it. Nothing is saved '
                   'until you press Save in the rig editor, and nothing leaves '
-                  'the phone.',
+                  'this device.',
                 ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
@@ -255,7 +255,7 @@ class _EquipmentCard extends StatelessWidget {
                         EquipmentImportText.conflict(c),
                         if (c.spec == EquipmentSpec.focalRatio &&
                             r.rig.apertureDiameterMm != null)
-                          'Taking it clears the saved diameter.',
+                          'Using it clears the saved aperture diameter.',
                       ].join(' '),
                     ),
                     value: vm.takesImported(r.rig, c.spec),

@@ -79,7 +79,7 @@ void main() {
       );
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
-      final note = find.text('Auto-calculated from Resolution × Pixel Size');
+      final note = find.text('Auto-calculated from resolution × pixel size');
       expect(note, findsOneWidget);
       // The derived fields sit below the fold: the guideline checks only
       // what is on screen.

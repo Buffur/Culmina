@@ -209,7 +209,7 @@ void main() {
   ) async {
     weather.failWith = WeatherFailure.unavailable;
     await pump(tester);
-    expect(find.text("Couldn't load weather."), findsOneWidget);
+    expect(find.text('No forecast.'), findsOneWidget);
     expect(find.text('Retry'), findsOneWidget);
   });
 

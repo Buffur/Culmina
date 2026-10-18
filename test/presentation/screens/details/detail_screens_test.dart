@@ -266,7 +266,7 @@ void main() {
       findsOneWidget,
     );
     await open(tester, weatherRow);
-    expect(find.text("Couldn't load weather."), findsOneWidget);
+    expect(find.text('No forecast.'), findsOneWidget);
     expect(find.text('Retry'), findsOneWidget);
   });
 

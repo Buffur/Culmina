@@ -93,7 +93,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // The dialog is still open (validation failed) and no block was added.
-    expect(find.text('Add Capture Block'), findsOneWidget);
+    expect(
+      find.widgetWithText(AlertDialog, 'Add capture block'),
+      findsOneWidget,
+    );
     expect(find.text('Enter a positive number of seconds'), findsOneWidget);
     expect(find.text('Enter a whole number of at least 1'), findsOneWidget);
     expect(vm.captureBlocks, isEmpty);
@@ -109,13 +112,16 @@ void main() {
       '0',
     );
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame Count'),
+      find.widgetWithText(TextFormField, 'Frame count'),
       '10',
     );
     await tester.tap(find.widgetWithText(FilledButton, 'Add'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add Capture Block'), findsOneWidget);
+    expect(
+      find.widgetWithText(AlertDialog, 'Add capture block'),
+      findsOneWidget,
+    );
     expect(vm.captureBlocks, isEmpty);
   });
 
@@ -129,13 +135,13 @@ void main() {
       '120',
     );
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame Count'),
+      find.widgetWithText(TextFormField, 'Frame count'),
       '15',
     );
     await tester.tap(find.widgetWithText(FilledButton, 'Add'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Add Capture Block'), findsNothing);
+    expect(find.widgetWithText(AlertDialog, 'Add capture block'), findsNothing);
     expect(vm.captureBlocks, hasLength(1));
     expect(vm.captureBlocks.single.exposureTimeSeconds, 120.0);
     expect(vm.captureBlocks.single.frameCount, 15);
@@ -160,18 +166,24 @@ void main() {
       await tester.tap(find.text('L · 60 s × 30 · 30 min'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Edit Capture Block'), findsOneWidget);
+      expect(
+        find.widgetWithText(AlertDialog, 'Edit capture block'),
+        findsOneWidget,
+      );
       expect(find.text('60'), findsOneWidget);
       expect(find.text('30'), findsOneWidget);
 
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Frame Count'),
+        find.widgetWithText(TextFormField, 'Frame count'),
         '45',
       );
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Edit Capture Block'), findsNothing);
+      expect(
+        find.widgetWithText(AlertDialog, 'Edit capture block'),
+        findsNothing,
+      );
       expect(vm.captureBlocks, hasLength(1));
       expect(vm.captureBlocks.single.frameCount, 45);
       expect(vm.captureBlocks.single.exposureTimeSeconds, 60.0);
@@ -231,9 +243,9 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('LIGHT').last);
+    await tester.tap(find.byType(DropdownButtonFormField<FrameType>));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('DARK').last);
+    await tester.tap(find.text('Dark').last);
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('blockDialog.policy')));
@@ -258,7 +270,7 @@ void main() {
       '60',
     );
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame Count'),
+      find.widgetWithText(TextFormField, 'Frame count'),
       '10',
     );
     await tester.tap(find.widgetWithText(FilledButton, 'Add'));

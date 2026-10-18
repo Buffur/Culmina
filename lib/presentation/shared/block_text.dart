@@ -13,16 +13,20 @@ abstract final class BlockText {
   static String identity(CaptureBlock b) {
     final name = b.filterName?.trim();
     final filter = name == null || name.isEmpty ? null : name;
-    final type = switch (b.frameType) {
-      FrameType.light => 'Light',
-      FrameType.dark => 'Dark',
-      FrameType.flat => 'Flat',
-      FrameType.bias => 'Bias',
-      FrameType.darkFlat => 'Dark flat',
-    };
+    final type = BlockText.type(b.frameType);
     if (b.frameType == FrameType.light) return filter ?? type;
     return filter == null ? type : '$type ($filter)';
   }
+
+  /// A frame type's name: "Light", "Dark flat" (also the block editor's
+  /// choices).
+  static String type(FrameType t) => switch (t) {
+    FrameType.light => 'Light',
+    FrameType.dark => 'Dark',
+    FrameType.flat => 'Flat',
+    FrameType.bias => 'Bias',
+    FrameType.darkFlat => 'Dark flat',
+  };
 
   /// The row: identity · exposure × count · the block's exposure time, or
   /// "from your library" for library calibration (no time, ADR-009 §3).

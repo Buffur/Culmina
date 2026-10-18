@@ -39,11 +39,11 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
   /// breaks ties by frame fill; every order falls back to the name. The
   /// no-score rule stays in ADR-013, not in the header.
   static const _orderLabels = {
-    CandidateSort.usableTime: 'usable time, then frame fill',
+    CandidateSort.usableTime: 'usable time, then size in frame',
     CandidateSort.windowStart: 'window start',
     CandidateSort.maxAltitude: 'max altitude',
     CandidateSort.moonSeparation: 'Moon separation',
-    CandidateSort.frameFill: 'frame fill',
+    CandidateSort.frameFill: 'size in frame',
     CandidateSort.name: 'name',
   };
 
@@ -52,7 +52,7 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     CandidateSort.windowStart: 'Window start',
     CandidateSort.maxAltitude: 'Max altitude',
     CandidateSort.moonSeparation: 'Moon separation',
-    CandidateSort.frameFill: 'Frame fill',
+    CandidateSort.frameFill: 'Size in frame',
     CandidateSort.name: 'Name',
   };
 
@@ -81,7 +81,7 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Re-evaluate',
+            tooltip: 'Refresh candidates',
             onPressed: () => setState(_load),
           ),
         ],
@@ -91,8 +91,8 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
-                  'Set a site first: candidates are evaluated for a night '
-                  'at a site.',
+                  "Set a site to see tonight's candidates: they are worked "
+                  'out for a night at a site.',
                   key: Key('tonight.noSite'),
                 ),
               ),
@@ -213,7 +213,7 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
               ),
               FilterChip(
                 key: const Key('tonight.own'),
-                label: const Text('My own targets'),
+                label: const Text('Targets you added'),
                 selected: _ownOnly,
                 onSelected: (v) => setState(() => _ownOnly = v),
               ),

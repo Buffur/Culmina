@@ -297,7 +297,7 @@ class NightTimelineSection extends StatelessWidget {
     final theme = Theme.of(context);
     if (timeline == null) {
       return Text(
-        'Set your site to see the night.',
+        'Set a site to see the night.',
         style: theme.textTheme.bodyMedium?.copyWith(
           color: AppPalette.of(context).textSecondary,
         ),

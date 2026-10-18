@@ -308,12 +308,12 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(row);
       await tester.pumpAndSettle();
-      expect(find.text("Couldn't load weather."), findsOneWidget);
+      expect(find.text('No forecast.'), findsOneWidget);
       await tester.ensureVisible(find.text('Retry'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Retry'));
       await tester.pumpAndSettle();
-      expect(find.text("Couldn't load weather."), findsOneWidget);
+      expect(find.text('No forecast.'), findsOneWidget);
       expect(throwingWeather.calls, greaterThan(1));
     },
   );
@@ -350,7 +350,10 @@ void main() {
     await tester.pumpWidget(wrap(vm));
     await tester.pumpAndSettle();
 
-    expect(find.text("Couldn't load your data."), findsOneWidget);
+    expect(
+      find.text("Couldn't load your site, settings and current plan."),
+      findsOneWidget,
+    );
     expect(
       find.text('Select a Target and Equipment profile to begin planning.'),
       findsNothing,
@@ -360,7 +363,10 @@ void main() {
     await tester.runAsync(() => vm.retryBootstrap());
     await tester.pumpAndSettle();
 
-    expect(find.text("Couldn't load your data."), findsNothing);
+    expect(
+      find.text("Couldn't load your site, settings and current plan."),
+      findsNothing,
+    );
   });
 
   testWidgets('a saved site shows the correct evening date, not the UTC one '
@@ -494,12 +500,12 @@ void main() {
     // S6.16 (ADR-019 §6 as amended): the chart's place follows the capture
     // plan; the lazy list is scrolled to it.
     await tester.scrollUntilVisible(
-      find.text("Set your site to see tonight's altitude chart."),
+      find.text("Set a site to see tonight's altitude chart."),
       300,
       scrollable: find.byType(Scrollable).first,
     );
     expect(
-      find.text("Set your site to see tonight's altitude chart."),
+      find.text("Set a site to see tonight's altitude chart."),
       findsOneWidget,
     );
     expect(find.text('Save plan'), findsNothing);

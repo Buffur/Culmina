@@ -82,8 +82,8 @@ class TargetProgressCard extends StatelessWidget {
           children: [
             Text(p.label, style: theme.textTheme.titleMedium),
             Text(
-              '${OpportunityText.duration(p.integration)} over '
-              '${p.sessionCount} ${p.sessionCount == 1 ? 'session' : 'sessions'}',
+              '${OpportunityText.duration(p.integration)} from '
+              '${p.sessionCount} ${p.sessionCount == 1 ? 'result' : 'results'}',
               key: Key('progress.total.${p.targetId}'),
               style: theme.textTheme.titleSmall,
             ),

@@ -96,7 +96,7 @@ void main() {
     }
 
     Future<void> pickType(WidgetTester tester, String label) async {
-      await tester.tap(find.text('LIGHT'));
+      await tester.tap(find.byType(DropdownButtonFormField<FrameType>));
       await tester.pumpAndSettle();
       await tester.tap(find.text(label).last);
       await tester.pumpAndSettle();
@@ -132,14 +132,14 @@ void main() {
 
     // S7V-01 / TD-083 (S7.V1): changing inheritance never replaces a value
     // the user owns.
-    for (final item in [('FLAT', '2'), ('BIAS', '0.001')]) {
+    for (final item in [('Flat', '2'), ('Bias', '0.001')]) {
       testWidgets('"Use other values" keeps a ${item.$1} block\'s own '
           'exposure, count and policy', (tester) async {
         final result = <CaptureBlock?>[];
         await open(tester, result, blocks: [_ha]);
         await pickType(tester, item.$1);
         await enter(tester, 'Exposure (seconds)', item.$2);
-        await enter(tester, 'Frame Count', '20');
+        await enter(tester, 'Frame count', '20');
         final policy = find.byKey(const Key('blockDialog.policy'));
         await tester.ensureVisible(policy);
         await tester.tap(policy);
@@ -154,7 +154,7 @@ void main() {
         expect(b.frameCount, 20);
         expect(b.calibrationPolicy, CalibrationPolicy.inWindow);
         expect(b.binning, 2, reason: 'binning still comes from the light');
-        if (item.$1 == 'BIAS') {
+        if (item.$1 == 'Bias') {
           expect(b.gain, CaptureGain.gain(100), reason: 'inherited, shown');
         } else {
           expect(b.filterName, 'Ha');
@@ -165,9 +165,9 @@ void main() {
     testWidgets('a source change keeps an edited flat gain', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, _oiii]);
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await enter(tester, 'Gain (for your records)', '77');
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
@@ -178,9 +178,9 @@ void main() {
     testWidgets('a source change keeps a cleared flat gain', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, _oiii]);
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await enter(tester, 'Gain (for your records)', '');
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
@@ -192,9 +192,9 @@ void main() {
     ) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, _oiii]);
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
       expect(result.single!.gain, CaptureGain.gain(120));
@@ -203,9 +203,9 @@ void main() {
     testWidgets('"Use other values" keeps an edited flat gain', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha]);
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await enter(tester, 'Gain (for your records)', '77');
       await useOther(tester);
       await submit(tester);
@@ -222,9 +222,9 @@ void main() {
         blocks: [_ha, _oiii],
         cameraClass: CameraClass.unknown,
       );
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       final kind = find.byKey(const Key('blockDialog.gainKind'));
       await tester.ensureVisible(kind);
       await tester.tap(kind);
@@ -251,11 +251,11 @@ void main() {
       );
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, flat]);
-      await pickType(tester, 'DARK FLAT');
+      await pickType(tester, 'Dark flat');
       await useOther(tester);
       final exposure = find.widgetWithText(TextFormField, 'Exposure (seconds)');
       expect(tester.widget<TextFormField>(exposure).controller!.text, '2.5');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await submit(tester);
       final d = result.single!;
       expect(
@@ -268,7 +268,7 @@ void main() {
         'light, shown with its origin, at 200 % text', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, _oiii]);
-      await pickType(tester, 'DARK');
+      await pickType(tester, 'Dark');
       expect(
         tester
             .widget<Text>(find.byKey(const Key('blockDialog.inherited')))
@@ -282,7 +282,7 @@ void main() {
       expect(find.byKey(const Key('blockDialog.gainValue')), findsNothing);
       expect(find.byKey(const Key('blockDialog.binning')), findsNothing);
       expect(tester.takeException(), isNull, reason: 'no overflow');
-      await enter(tester, 'Frame Count', '30');
+      await enter(tester, 'Frame count', '30');
       await submit(tester);
       final d = result.single!;
       expect(
@@ -296,7 +296,7 @@ void main() {
         'fields the user\'s', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, _oiii]);
-      await pickType(tester, 'DARK');
+      await pickType(tester, 'Dark');
       await tester.tap(find.byKey(const Key('blockDialog.source')));
       await tester.pumpAndSettle();
       await tester.tap(find.text('OIII · 180 s × 20').last);
@@ -308,7 +308,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('blockDialog.inherited')), findsNothing);
       await enter(tester, 'Exposure (seconds)', '200');
-      await enter(tester, 'Frame Count', '10');
+      await enter(tester, 'Frame count', '10');
       await submit(tester);
       final d = result.single!;
       expect(d.exposureTimeSeconds, 200);
@@ -319,13 +319,13 @@ void main() {
         'proposed and its exposure is its own', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha]);
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       expect(
         find.text('From Ha · 300 s × 20: filter Ha, 2 × 2 binning'),
         findsOneWidget,
       );
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await submit(tester);
       final f = result.single!;
       expect(
@@ -338,10 +338,10 @@ void main() {
         'gain and binning come from the light', (tester) async {
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha]);
-      await pickType(tester, 'BIAS');
+      await pickType(tester, 'Bias');
       expect(find.text('The shortest your camera allows.'), findsOneWidget);
       await enter(tester, 'Exposure (seconds)', '0.001');
-      await enter(tester, 'Frame Count', '50');
+      await enter(tester, 'Frame count', '50');
       await submit(tester);
       final b = result.single!;
       expect(
@@ -362,9 +362,9 @@ void main() {
       );
       final result = <CaptureBlock?>[];
       await open(tester, result, blocks: [_ha, flat]);
-      await pickType(tester, 'DARK FLAT');
+      await pickType(tester, 'Dark flat');
       expect(find.textContaining('From Flat (Ha) · 2.5 s × 20'), findsOne);
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await submit(tester);
       final d = result.single!;
       expect(
@@ -377,7 +377,7 @@ void main() {
       tester,
     ) async {
       await open(tester, []);
-      await pickType(tester, 'DARK');
+      await pickType(tester, 'Dark');
       expect(find.byKey(const Key('blockDialog.source')), findsNothing);
       expect(
         find.widgetWithText(TextFormField, 'Exposure (seconds)'),
@@ -389,7 +389,7 @@ void main() {
         'no field', (tester) async {
       final changes = <bool>[];
       await open(tester, [], blocks: [_ha], tipsChanges: changes);
-      await pickType(tester, 'DARK');
+      await pickType(tester, 'Dark');
       final (line, more) = CalibrationText.tip(FrameType.dark)!;
       expect(
         tester.widget<Text>(find.byKey(const Key('blockDialog.tip'))).data,
@@ -434,10 +434,10 @@ void main() {
       );
       final sens = iso ? 'ISO 800' : 'gain 100';
       for (final (label, type) in [
-        ('DARK', FrameType.dark),
-        ('FLAT', FrameType.flat),
-        ('BIAS', FrameType.bias),
-        ('DARK FLAT', FrameType.darkFlat),
+        ('Dark', FrameType.dark),
+        ('Flat', FrameType.flat),
+        ('Bias', FrameType.bias),
+        ('Dark flat', FrameType.darkFlat),
       ]) {
         testWidgets('${c.label}, ${type.name}: the matrix cell', (
           tester,
@@ -513,7 +513,7 @@ void main() {
         blocks: [legacy],
         cameraClass: CameraClass.astroMono,
       );
-      await pickType(tester, 'FLAT');
+      await pickType(tester, 'Flat');
       final value = tester.widget<TextField>(
         find.descendant(
           of: find.byKey(const Key('blockDialog.gainValue')),
@@ -522,7 +522,7 @@ void main() {
       );
       expect(value.controller!.text, isEmpty, reason: 'not "gain 800"');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame Count', '20');
+      await enter(tester, 'Frame count', '20');
       await submit(tester);
       expect(result.single!.gain, CaptureGain.none);
     });
