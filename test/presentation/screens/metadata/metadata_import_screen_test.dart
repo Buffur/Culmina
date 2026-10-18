@@ -64,7 +64,9 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('DNG · IFD0 · ExposureTime (33434)'), findsOneWidget);
-    expect(find.text('Not in the file'), findsNWidgets(2)); // lens make, model
+    // Lens make and model, and the 13 F04 fields this DNG does not carry
+    // (it carries bits per sample and compression).
+    expect(find.text('Not in the file'), findsNWidgets(15));
     expect(find.text('0 s'), findsNothing, reason: 'unknown is never zero');
   });
 

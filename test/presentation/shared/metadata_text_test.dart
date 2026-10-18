@@ -60,12 +60,12 @@ void main() {
   });
 
   test('every contract field has a row', () {
-    // 12 since S3.1 added image dimensions (ADR-018 §3).
+    // 12 since S3.1 added image dimensions (ADR-018 §3); 27 since F04.
     expect(
       MetadataText.rows(const CaptureMetadata()),
       hasLength(const CaptureMetadata().values.length),
     );
-    expect(const CaptureMetadata().values, hasLength(12));
+    expect(const CaptureMetadata().values, hasLength(27));
   });
 
   test('image size reads as stored, in pixels', () {
@@ -143,5 +143,32 @@ void main() {
       MetadataText.unsupported(MetadataFormat.unknown),
       "This file's format is not recognised.",
     );
+  });
+
+  test('F04 fields read as recorded, with their kind in words', () {
+    String valueOf(CaptureMetadata m, String label) =>
+        MetadataText.rows(m).firstWhere((r) => r.label == label).value;
+    final m = CaptureMetadata(
+      asShotNeutral: KnownValue(
+        NeutralVector([0.5, 1, 0.7]),
+        raw: '1/2 1/1 7/10',
+        origin: _o,
+      ),
+      compression: const KnownValue(PixelCompression(7), raw: '7', origin: _o),
+      lightSource: const KnownValue(LightSource(21), raw: '21', origin: _o),
+      whiteBalance: const KnownValue(
+        ExifWhiteBalance.manual,
+        raw: '1',
+        origin: _o,
+      ),
+    );
+    expect(
+      valueOf(m, 'As-shot neutral'),
+      '0.5 · 1 · 0.7 (a neutral vector, not a colour temperature)',
+    );
+    expect(valueOf(m, 'Compression'), 'Lossless (code 7)');
+    expect(valueOf(m, 'Light source'), 'D65');
+    expect(valueOf(m, 'White balance'), 'Manual');
+    expect(valueOf(m, 'Binning'), 'Not in the file');
   });
 }

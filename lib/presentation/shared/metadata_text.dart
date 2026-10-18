@@ -67,7 +67,67 @@ abstract final class MetadataText {
     _row('Unique camera model', m.uniqueCameraModel, (v) => v),
     _row('Lens make', m.lensMake, (v) => v),
     _row('Lens model', m.lensModel, (v) => v),
+    // F04 (ADR-021 C2, C6, C10, C21): as the file records them; none is a
+    // rig or block value until an import proposes it (F08, F10).
+    _row('Bits per sample', m.bitsPerSample, (v) => '$v bits'),
+    _row('Compression', m.compression, compression),
+    _row(
+      'As-shot neutral',
+      m.asShotNeutral,
+      (v) =>
+          '${v.values.map(QuantityText.number).join(' · ')} '
+          '(a neutral vector, not a colour temperature)',
+    ),
+    _row(
+      'White balance',
+      m.whiteBalance,
+      (v) => switch (v) {
+        ExifWhiteBalance.auto => 'Auto',
+        ExifWhiteBalance.manual => 'Manual',
+      },
+    ),
+    _row('Light source', m.lightSource, (v) => v.name),
+    _row(
+      'Pixel size',
+      m.pixelSizeUm,
+      (v) => v.isSquare
+          ? '${QuantityText.number(v.xUm)} µm'
+          : '${QuantityText.number(v.xUm)} × ${QuantityText.number(v.yUm)} µm',
+    ),
+    _row('Binning', m.binning, (v) => '${v.x} × ${v.y}'),
+    _row('Gain setting', m.acquisitionGain, QuantityText.number),
+    _row(
+      'Conversion gain',
+      m.conversionGainElectronsPerAdu,
+      (v) => '${QuantityText.number(v)} e⁻/ADU',
+    ),
+    _row('Offset', m.offset, QuantityText.number),
+    _row(
+      'Sensor temperature',
+      m.sensorTemperatureC,
+      (v) => '${QuantityText.number(v)} °C',
+    ),
+    _row(
+      'Cooler setpoint',
+      m.setpointTemperatureC,
+      (v) => '${QuantityText.number(v)} °C (not the measured temperature)',
+    ),
+    _row('Filter', m.filterName, (v) => v),
+    _row('Telescope', m.telescope, (v) => v),
+    _row(
+      'Pixel layout',
+      m.sampleLayout,
+      (v) => 'BITPIX ${v.bitpix}, ${v.axes.join(' × ')}',
+    ),
   ];
+
+  /// A compression code in words; the code itself stays visible.
+  static String compression(PixelCompression c) => switch (c.kind) {
+    PixelCompressionKind.none => 'Uncompressed (code ${c.code})',
+    PixelCompressionKind.lossless => 'Lossless (code ${c.code})',
+    PixelCompressionKind.lossy => 'Lossy (code ${c.code})',
+    PixelCompressionKind.unknown => 'Code ${c.code} (not recognised)',
+  };
 
   static ({String label, String value, String? source}) _row<T>(
     String label,
