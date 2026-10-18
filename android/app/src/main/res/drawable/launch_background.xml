@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Splash before Android 12 (TASK 16.1): night navy with the icon. -->
+<!-- Splash before Android 12 (TASK 16.1; F02, TD-109): night navy with the
+     approved mark. The mark is the launcher icon's vector foreground at its
+     own 108 dp size. A bitmap element cannot draw the launcher mipmap, which
+     is an adaptive-icon XML on API 26-30 (mipmap-anydpi-v26), so the window
+     had no splash there. Layer gravity needs API 23; minSdk is 24. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_background" />
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@mipmap/ic_launcher" />
-    </item>
+    <item
+        android:drawable="@drawable/ic_launcher_foreground"
+        android:gravity="center" />
 </layer-list>

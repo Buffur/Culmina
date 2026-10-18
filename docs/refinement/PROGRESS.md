@@ -60,7 +60,8 @@ exists (the row of the next task's commit carries the previous one).
 
 | Task | State | Criteria | Verification (this run) | Carry / attention |
 | --- | --- | --- | --- | --- |
-| F01 | IMPLEMENTED-ACCEPTANCE-PENDING | A1–A3 PASS (TEST); A4/A5 host PASS, phone rows carried | 283 targeted tests + 23 source-rule tests, analyze clean, format/encoding ([evidence](evidence/finalization/F01/README.md)) | REL-10 phone rehearsal (Recents during activation, literal outcome) at G2; U/visual in F25 |
+| F01 (`8ad566d`, not pushed) | IMPLEMENTED-ACCEPTANCE-PENDING | A1–A3 PASS (TEST); A4/A5 host PASS, phone rows carried | 283 targeted tests + 23 source-rule tests, analyze clean, format/encoding ([evidence](evidence/finalization/F01/README.md)) | REL-10 phone rehearsal (Recents during activation, literal outcome) at G2; U/visual in F25 |
+| F02 | IMPLEMENTED; A2/A3 NEEDS ATTENTION | A1 PASS (TEST, fails on the old resources); A2/A3 not observable here | `app_identity_test.dart` ([evidence](evidence/finalization/F02/README.md)) | No Android SDK/emulator in this container (network policy refuses dl.google.com) |
 
 ## Next allowed action
 
@@ -87,6 +88,8 @@ The run is prepared, not launched: no actual task is classified as failed or ski
 
 | Item / F-G-CHK | Implemented versus missing | Reason / attempt / evidence / severity | Affected dependencies | Resumption action / responsible input | State |
 | --- | --- | --- | --- | --- | --- |
+| Git push (all tasks) | Commits are made on local `develop`; none reach origin | `git push -u origin develop` → HTTP 403 "Claude doesn't have GitHub access to Buffur/Culmina for your organization" (twice, 2026-10-18). Severity: high (unpushed work is lost if the container is reclaimed; remote CI cannot run) | Every task's push; G1/F26 remote CI | Owner reconnects GitHub (claude.ai/connect-github) and/or installs the Claude GitHub App on Buffur/Culmina; then push develop | OPEN |
+| F02 A2/A3; every native Android/emulator row (G1 REL-02, F26, F22 process death) | F02 resources fixed and host-tested; no native build, launch or capture | The container has no Android SDK and cannot get one: `dl.google.com` (SDK repository; `maven.google.com` redirects there) is refused by the network policy (403, 2026-10-18). Remote CI builds no Android. Severity: blocks F02 VERIFIED and native gate rows, not host implementation | F02 close; G1 REL-02; F26 | Run in an environment with the Android SDK (owner machine with the existing SDK, or a cloud environment whose network policy allows dl.google.com): API 26–30 emulator launch capture, Android 12+ animation-off observation | OPEN |
 
 ## Owner actions outstanding
 

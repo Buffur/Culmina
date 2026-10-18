@@ -24,7 +24,7 @@
 | TD-009 | Critical | Relative-gain wording: remainder recorded in the row (partly resolved) | Not scheduled; re-verify | — |
 | TD-107 | High | Flat warnings check filter and binning separately | S14.10 | F09 (with F03) |
 | TD-108 | High | Saving an existing custom filter can erase it | S14.6 | F06 |
-| TD-109 | High | The splash before Android 12 cannot draw its icon (S13V-01) | S13.V1 or a carry to S16.8/S17.5 (owner) | F02 |
+| TD-109 | High | The splash before Android 12 cannot draw its icon (S13V-01). **Resources fixed by F02 (2026-10-18); the API 26–30 launch is not yet observed** | S13.V1 or a carry to S16.8/S17.5 (owner) | F02 (implemented; launch NEEDS ATTENTION) |
 | TD-020 | High | Site time model: progress recorded, recheck | S16.8 | F24 (A5) |
 | TD-025 | High | Named historical test gaps: recheck | S16.8 | F24 (A5) |
 | TD-013 | High | Unknown vs default: remainder recorded in the row (partly resolved) | Not scheduled; re-verify | — |

@@ -75,9 +75,24 @@ void main() {
       expect(styles, contains('windowSplashScreenAnimationDuration">1000<'));
     }
     for (final d in ['drawable', 'drawable-v21']) {
+      final launch = _read('$_res/$d/launch_background.xml');
+      expect(launch, contains('@color/splash_background'));
+      // F02 (S13V-01, TD-109): on API 26-30 @mipmap/ic_launcher is the
+      // adaptive-icon XML, which a <bitmap> cannot draw; the mark is the
+      // vector foreground instead, centred.
       expect(
-        _read('$_res/$d/launch_background.xml'),
-        contains('@color/splash_background'),
+        File('$_res/mipmap-anydpi-v26/ic_launcher.xml').existsSync(),
+        isTrue,
+      );
+      expect(launch, isNot(contains('<bitmap')));
+      expect(launch, isNot(contains('@mipmap/')));
+      expect(
+        RegExp(
+          r'<item\s+android:drawable="@drawable/ic_launcher_foreground"'
+          r'\s+android:gravity="center"\s*/>',
+        ).hasMatch(launch),
+        isTrue,
+        reason: '$d: the centred mark over the navy colour',
       );
     }
     expect(File('assets/branding/icon_512.png').lengthSync(), greaterThan(0));
