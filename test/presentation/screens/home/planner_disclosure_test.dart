@@ -146,7 +146,8 @@ void main() {
       PlannerSections.budgetDetails: CaptureBudgetSummary.budgetSummary(
         vm.captureBudget,
       ),
-      PlannerSections.gainHelp: 'Per filter and exposure, against one frame',
+      PlannerSections.gainHelp: CaptureBudgetSummary.gainSummary,
+      PlannerSections.gainCurve: 'Per group, relative to your plan',
       PlannerSections.assumptions: CaptureAssumptionsPanel.summary(
         vm.planningPreferences,
       ),

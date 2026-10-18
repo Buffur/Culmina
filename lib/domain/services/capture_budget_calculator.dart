@@ -2,6 +2,7 @@ import '../models/altitude_curve.dart';
 import '../models/capture_block.dart';
 import '../models/planning_preferences.dart';
 import '../models/visibility_window.dart';
+import 'calibration_match.dart';
 import 'optical_calculator.dart';
 import 'stacking_gain_curve.dart';
 
@@ -98,27 +99,45 @@ class BudgetEvent {
       '${blockIndex == null ? '' : ', block $blockIndex'})';
 }
 
-/// Light frames sharing one filter and one exposure length (ADR-009 §7).
-/// √N is meaningful only within such a group: it is never summed across
-/// groups and never an absolute SNR (SI-003, CALC-15).
+/// Light frames that can share one relative stacking gain (ADR-009 §7;
+/// ADR-021 C16): one normalized filter (C15: trimmed, case-folded, no
+/// aliases), one exposure, one recorded ISO or gain (kind and value) and one
+/// binning. A block whose ISO or gain is not recorded as one or the other is
+/// a group of its own ([comparable] false): an unknown setting never proves
+/// two blocks alike, and a block's own frames are alike by definition. √N is
+/// meaningful only within a group: it is never summed across groups and
+/// never an absolute SNR (SI-003, CALC-15).
 class LightGroup {
   const LightGroup({
     required this.filterName,
     required this.exposureMs,
     required this.frames,
+    this.sensitivity = CaptureGain.none,
+    this.binning = 1,
   });
 
+  /// The first block's spelling.
   final String? filterName;
   final int exposureMs;
   final int frames;
+  final CaptureGain sensitivity;
+  final int binning;
+
+  /// Whether the ISO or gain is recorded as one or the other, so that equal
+  /// blocks could be grouped (C16).
+  bool get comparable => sensitivity.kind != GainKind.unknown;
+
+  /// T = N · t (O2b), in milliseconds.
+  int get integrationMs => frames * exposureMs;
 
   /// Relative stacking gain vs one frame of this group: √N.
   double get relativeStackingGain =>
       OpticalCalculator.calculateRelativeStackingGain(frames);
 
-  /// How that gain grows with the frame count, for the group's graph
-  /// (S6.11, CALC-42); its marked value is [relativeStackingGain].
-  StackingGainCurve get gainCurve => StackingGainCurve.of(frames);
+  /// How the gain grows with integration time, for the group's graph
+  /// (S6.11, CALC-42, O2b); its marked value is [relativeStackingGain].
+  StackingGainCurve get gainCurve =>
+      StackingGainCurve.of(frames, exposureMs: exposureMs);
 }
 
 /// Where a block's time is counted (ADR-009 §2–§3).
@@ -402,18 +421,28 @@ class CaptureBudgetCalculator {
   }
 
   static List<LightGroup> _lightGroups(List<CaptureBlock> blocks) {
-    final order = <(String?, int)>[];
-    final frames = <(String?, int), int>{};
-    for (final b in blocks) {
-      if (b.frameType != FrameType.light) continue;
-      final key = (b.filterName, (b.exposureTimeSeconds * 1000).round());
-      if (!frames.containsKey(key)) order.add(key);
-      frames[key] = (frames[key] ?? 0) + b.frameCount;
+    final groups = <Object, LightGroup>{};
+    for (final (i, b) in blocks.indexed) {
+      if (!b.isLight) continue;
+      final ms = (b.exposureTimeSeconds * 1000).round();
+      final Object key = b.gain.kind == GainKind.unknown
+          ? i
+          : (
+              CalibrationMatch.normalizedFilter(b.filterName),
+              ms,
+              b.gain,
+              b.binning,
+            );
+      final g = groups[key];
+      groups[key] = LightGroup(
+        filterName: g?.filterName ?? b.filterName,
+        exposureMs: ms,
+        frames: (g?.frames ?? 0) + b.frameCount,
+        sensitivity: b.gain,
+        binning: b.binning,
+      );
     }
-    return [
-      for (final k in order)
-        LightGroup(filterName: k.$1, exposureMs: k.$2, frames: frames[k]!),
-    ];
+    return groups.values.toList();
   }
 
   /// The target's upper transit: its highest sample on the night's

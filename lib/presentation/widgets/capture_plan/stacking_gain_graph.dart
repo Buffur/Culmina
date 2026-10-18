@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/utils/quantity_text.dart';
+import '../../../domain/services/capture_budget_calculator.dart';
 import '../../../domain/services/stacking_gain_curve.dart';
 import '../../shared/app_words.dart';
+import '../../shared/calibration_text.dart';
 
-/// "How does relative √N change as the frame count grows?" (S6.11; P6.10),
-/// for one (filter, exposure) group: the curve from one frame to twice the
-/// planned count, with the planned count marked. It draws the domain's
-/// points ([StackingGainCurve], CALC-42) and computes nothing; the figure
-/// itself stays in the row above it. Relative only (SI-003).
+/// "How does the relative improvement change with integration time?"
+/// (S6.11; P6.10; PD-05 O2b; F11), for one comparable group (ADR-021 C16):
+/// the curve from one frame to twice the planned count against integration
+/// time T = N · t, normalized to the plan: √(T / T_plan), 1.00x at the plan.
+/// It draws the domain's points ([StackingGainCurve], CALC-42) and computes
+/// nothing; the group's √N against one frame stays in the line above, out
+/// of Details. Relative only (SI-003).
 ///
-/// S6.16 (TD-076): the plan's own point is named — "Your plan", its count
-/// and value, beside a swatch drawn like the dot — and the curve's end is
+/// S6.16 (TD-076): the plan's own point is named — "Your plan", its time and
+/// value, beside a swatch drawn like the dot — and the curve's end is
 /// named as a comparison, so it never reads as a target or a recommendation.
 class StackingGainGraph extends StatelessWidget {
   const StackingGainGraph({
@@ -23,26 +28,54 @@ class StackingGainGraph extends StatelessWidget {
 
   final StackingGainCurve curve;
 
-  /// The group, e.g. "Ha · 60 s", for the text alternative.
+  /// The group, e.g. "Ha · 60 s · gain 100", for the text alternative.
   final String groupLabel;
 
-  static String _x(double gain) => '${gain.toStringAsFixed(1)}x';
+  /// The group's name in the plan's outputs (C16): filter, exposure, the
+  /// recorded ISO or gain and, above 1, binning, so that groups split by a
+  /// setting say which.
+  static String groupName(LightGroup g) => [
+    g.filterName ?? 'No filter',
+    QuantityText.exposure(g.exposureMs / 1000),
+    CalibrationText.sensitivity(g.sensitivity),
+    if (g.binning > 1) 'bin ${g.binning}',
+  ].join(' · ');
 
-  /// The plan's point, as its label says it: "Your plan: 100 frames ·
-  /// 10.0x" (TD-076).
+  static String _x(double? relative) =>
+      relative == null ? 'Unknown' : '${relative.toStringAsFixed(2)}x';
+
+  static String _time(StackingGainCurve c, int frames) {
+    final n = '$frames frame${frames == 1 ? '' : 's'}';
+    return c.exposureMs > 0
+        ? '${QuantityText.duration(Duration(milliseconds: c.integrationAt(frames)))} ($n)'
+        : n;
+  }
+
+  /// The plan's point, as its label says it: "Your plan: 2 h (120 frames)
+  /// · 1.00x" (TD-076; O2b).
   static String planLabel(StackingGainCurve c) =>
-      '${AppWords.yourPlan}: ${c.frames} frames · ${_x(c.markedGain)}';
+      '${AppWords.yourPlan}: ${_time(c, c.frames)} · '
+      '${_x(c.relativeAt(GainPoint(c.frames, c.markedGain)))}';
 
   /// The curve's end, named as a comparison (TD-076).
   static String comparisonLabel(StackingGainCurve c) =>
-      'For comparison: ${c.maxFrames} frames · ${_x(c.endGain)}';
+      'For comparison: ${_time(c, c.maxFrames)} · ${_x(c.relativeAt(c.points.last))}';
 
-  /// The text alternative: the group's value (the plan's point), and where
-  /// the curve ends, for comparison.
-  static String describe(StackingGainCurve c, String groupLabel) =>
-      'Relative stacking gain graph, $groupLabel: ${_x(c.markedGain)} at '
-      '${c.frames} frames, your plan; rising more slowly to '
-      '${_x(c.endGain)} at ${c.maxFrames} frames, for comparison.';
+  /// The text alternative: the plan's point, half its time (R-O2-1) and
+  /// where the curve ends, for comparison; relative to the plan only.
+  static String describe(StackingGainCurve c, String groupLabel) {
+    final half = c.planIntegrationMs > 0
+        ? StackingGainCurve.relativeToPlan(
+            c.planIntegrationMs ~/ 2,
+            c.planIntegrationMs,
+          )
+        : StackingGainCurve.relativeToPlan(c.frames, c.frames * 2);
+    return 'Relative improvement over integration time, $groupLabel: '
+        '1.00x at your plan, ${_time(c, c.frames)}; ${_x(half)} at half '
+        'that time; ${_x(c.relativeAt(c.points.last))} at '
+        '${_time(c, c.maxFrames)}, for comparison. Relative to your plan, '
+        'not a signal-to-noise ratio.';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +97,7 @@ class StackingGainGraph extends StatelessWidget {
             // The axis' ends, as text so it scales and wraps (200 %).
             Row(
               children: [
-                Expanded(child: Text('1 frame', style: small)),
+                Expanded(child: Text(_time(curve, 1), style: small)),
                 Flexible(
                   child: Text(
                     comparisonLabel(curve),
@@ -115,9 +148,10 @@ class PlanPointSwatch extends CustomPainter {
   bool shouldRepaint(PlanPointSwatch old) => old.palette != palette;
 }
 
-/// Paints [curve]: frames along x (from 1 to its end), relative √N along y
-/// (from 0); the planned count as a guide line and a dot. Public for tests,
-/// which check that it draws exactly the domain's points.
+/// Paints [curve]: integration time along x (from one frame to its end;
+/// one exposure, so in proportion to the frame count), √(T / T_plan) along y
+/// (from 0); the plan as a guide line and a dot. Public for tests, which
+/// check that it draws exactly the domain's points.
 class StackingGainPainter extends CustomPainter {
   StackingGainPainter(this.curve, this.palette);
 
@@ -127,10 +161,11 @@ class StackingGainPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final span = (curve.maxFrames - 1).toDouble();
-    final top = curve.endGain;
-    Offset at(int frames, double gain) => Offset(
-      span <= 0 ? 0 : (frames - 1) / span * size.width,
-      size.height - (top <= 0 ? 0 : gain / top) * (size.height - 4),
+    final top = curve.relativeAt(curve.points.last) ?? 0;
+    Offset at(GainPoint p) => Offset(
+      span <= 0 ? 0 : (p.frames - 1) / span * size.width,
+      size.height -
+          (top <= 0 ? 0 : (curve.relativeAt(p) ?? 0) / top) * (size.height - 4),
     );
 
     canvas.drawLine(
@@ -142,7 +177,7 @@ class StackingGainPainter extends CustomPainter {
     );
     final path = Path();
     for (final (i, p) in curve.points.indexed) {
-      final o = at(p.frames, p.gain);
+      final o = at(p);
       i == 0 ? path.moveTo(o.dx, o.dy) : path.lineTo(o.dx, o.dy);
     }
     canvas.drawPath(
@@ -153,7 +188,7 @@ class StackingGainPainter extends CustomPainter {
         ..strokeWidth = 2,
     );
     if (curve.frames >= 1) {
-      final mark = at(curve.frames, curve.markedGain);
+      final mark = at(GainPoint(curve.frames, curve.markedGain));
       canvas.drawLine(
         Offset(mark.dx, size.height),
         mark,
@@ -174,5 +209,7 @@ class StackingGainPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(StackingGainPainter old) =>
-      old.curve.frames != curve.frames || old.palette != palette;
+      old.curve.frames != curve.frames ||
+      old.curve.exposureMs != curve.exposureMs ||
+      old.palette != palette;
 }

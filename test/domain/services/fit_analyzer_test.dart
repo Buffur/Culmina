@@ -419,13 +419,18 @@ void main() {
     });
   });
 
+  // F11 (ADR-021 C16): with one recorded gain; an unrecorded ISO or gain
+  // keeps each block apart (light_groups_test.dart).
   test('light groups: same filter and exposure are grouped, in order', () {
     final b = CaptureBudgetCalculator.calculate(
       blocks: [
-        _light(300, 20, filter: 'Ha'),
-        _light(300, 16, filter: 'OIII'),
-        _light(300, 5, filter: 'Ha'),
-        _light(120, 4, filter: 'Ha'),
+        for (final l in [
+          _light(300, 20, filter: 'Ha'),
+          _light(300, 16, filter: 'OIII'),
+          _light(300, 5, filter: 'Ha'),
+          _light(120, 4, filter: 'Ha'),
+        ])
+          l.copyWith(gain: CaptureGain.gain(100)),
       ],
     );
     expect(b.lightGroups.map((g) => (g.filterName, g.exposureMs, g.frames)), [

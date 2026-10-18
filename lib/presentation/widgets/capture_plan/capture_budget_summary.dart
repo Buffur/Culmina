@@ -145,38 +145,66 @@ class CaptureBudgetSummary extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         // The √N values stay visible and relative (SI-003); the long
-        // explanation is one tap away.
+        // explanation is one tap away. F11 (ADR-021 C16): one line per
+        // comparable group, never combined.
         CollapsibleSection(
           sectionKey: PlannerSections.gainHelp,
           title: AppWords.relativeStackingGain,
-          summary: 'Per filter and exposure, against one frame',
+          summary: gainSummary,
           child: Text(
             '√N compares the random noise of a stack with one frame of the '
-            'same filter and exposure. It only applies within such a group, '
-            'is not a signal-to-noise ratio of your image, and ignores sky '
+            'same filter, exposure, ISO or gain and binning. It only applies '
+            'within such a group, assumes equal frames, is not a '
+            'signal-to-noise ratio of your image, and ignores sky '
             'brightness, the target and your camera.',
             key: const Key('capturePlan.gainHelp'),
             style: theme.textTheme.bodySmall,
           ),
         ),
         if (budget.lightGroups.isEmpty)
-          Text('No light frames.', style: theme.textTheme.bodySmall)
-        else
-          for (final g in budget.lightGroups) ...[
+          Text(
+            noLightGroups,
+            key: const Key('capturePlan.noGain'),
+            style: theme.textTheme.bodySmall,
+          )
+        else ...[
+          for (final (i, g) in budget.lightGroups.indexed)
             _Line(
-              '${g.filterName ?? 'No filter'} · '
-                  '${_seconds(g.exposureMs)} × ${g.frames}',
+              '${StackingGainGraph.groupName(g)} × ${g.frames}',
               '${g.relativeStackingGain.toStringAsFixed(1)}x',
+              key: Key('capturePlan.gain.$i'),
             ),
-            // S6.11 (P6.10): how the gain grows with more frames, per group
-            // (never combined); the number stays in the line above.
-            StackingGainGraph(
-              key: Key('capturePlan.gainGraph.${g.filterName}.${g.exposureMs}'),
-              curve: g.gainCurve,
-              groupLabel:
-                  '${g.filterName ?? 'No filter'} · ${_seconds(g.exposureMs)}',
+          if (budget.lightGroups.any((g) => !g.comparable))
+            Text(
+              notComparable,
+              key: const Key('capturePlan.gainNotComparable'),
+              style: theme.textTheme.bodySmall,
             ),
-          ],
+          // S6.11 (P6.10) and O2b (PD-05): how the gain grows with
+          // integration time, per group, normalized to the plan; in
+          // Details, so the plan shows numbers before Save, not graphs.
+          CollapsibleSection(
+            sectionKey: PlannerSections.gainCurve,
+            title: 'Over integration time',
+            summary: 'Per group, relative to your plan',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (i, g) in budget.lightGroups.indexed) ...[
+                  Text(
+                    StackingGainGraph.groupName(g),
+                    style: theme.textTheme.labelMedium,
+                  ),
+                  StackingGainGraph(
+                    key: Key('capturePlan.gainGraph.$i'),
+                    curve: g.gainCurve,
+                    groupLabel: StackingGainGraph.groupName(g),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
         const SizedBox(height: 12),
         // F07 (ADR-021 C8–C12): each block's frame size from its first
         // compatible evidence; the total only when every block's is known.
@@ -225,10 +253,16 @@ class CaptureBudgetSummary extends StatelessWidget {
       '${AppWords.timeNeeded} ${formatBudgetDuration(budget.windowLoadMs)} · '
       '${AppWords.totalTime} ${formatBudgetDuration(budget.sessionBudgetMs)}';
 
-  static String _seconds(int ms) {
-    final s = ms / 1000;
-    return s == s.roundToDouble() ? '${s.round()} s' : '$s s';
-  }
+  /// The gain section's collapsed summary: what a group's one frame is.
+  static const gainSummary = 'Per group, against one of its frames';
+
+  static const noLightGroups =
+      'No light frames yet: add light frames to see their relative gain.';
+
+  /// C16: an unknown setting never proves two blocks alike.
+  static const notComparable =
+      'ISO or gain not recorded: each such block is shown on its own, never '
+      'combined with another.';
 }
 
 class _Line extends StatelessWidget {

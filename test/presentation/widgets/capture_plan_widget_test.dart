@@ -325,7 +325,11 @@ void main() {
 
     // S6.7: the breakdown and the √N help are one tap away; the √N values
     // stay visible. The lines carry the glossary's names (RD-14).
-    expect(find.text('Ha · 300 s × 20'), findsOneWidget);
+    // F11 (C16): the group names its ISO or gain, here not recorded.
+    expect(
+      find.text('Ha · 300 s · ISO or gain not recorded × 20'),
+      findsOneWidget,
+    );
     expect(find.text('Integration (light exposure)'), findsNothing);
     await tester.tap(find.text('Budget details'));
     await tester.pumpAndSettle();

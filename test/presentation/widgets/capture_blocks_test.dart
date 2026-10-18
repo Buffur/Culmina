@@ -196,9 +196,34 @@ void main() {
     bool warning(Widget w) =>
         w.key is ValueKey<String> &&
         (w.key! as ValueKey<String>).value.startsWith('capture.mismatch.');
+    // F11 (ADR-021 C16): the outputs' gain lines name the ISO or gain of
+    // their group, so a split says why; they are not block rows.
+    final gainLines = {
+      for (final e
+          in find
+              .byWidgetPredicate(
+                (w) =>
+                    w.key is ValueKey<String> &&
+                    (w.key! as ValueKey<String>).value.startsWith(
+                      'capturePlan.gain',
+                    ),
+              )
+              .evaluate())
+        for (final t
+            in find
+                .descendant(
+                  of: find.byWidget(e.widget),
+                  matching: find.byType(Text),
+                )
+                .evaluate())
+          t.widget,
+      ...tester.widgetList(
+        find.byKey(const Key('capturePlan.gainNotComparable')),
+      ),
+    };
     final rowTexts = [
       for (final t in tester.widgetList<Text>(find.byType(Text)))
-        if (!warning(t)) t.data ?? '',
+        if (!warning(t) && !gainLines.contains(t)) t.data ?? '',
     ];
     expect(rowTexts.where((t) => t.contains('ISO')), isEmpty);
     expect(rowTexts.where((t) => t.contains('bin')), isEmpty);

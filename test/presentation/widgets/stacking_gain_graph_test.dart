@@ -1,6 +1,8 @@
-// S6.11 (P6.10): one relative √N graph per (filter, exposure) group, drawn
-// from the domain's points, its marked value the budget's group value, the
-// label unchanged, a text alternative giving each group's value, and no
+// S6.11 (P6.10) and F11 (PD-05 O2b; ADR-021 C16): one relative √N line per
+// comparable group stays in the plan's outputs; the graph, one per group,
+// is in Details (collapsed, so no graph before Save). Each draws the
+// domain's points against integration time, normalized to the plan (1.00x
+// at the plan), names its points, gives a text alternative, and does not
 // overflow at 200 % text in the light, dark and field themes.
 
 import 'package:astroplan/core/theme/app_theme.dart';
@@ -11,8 +13,10 @@ import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/presentation/shared/app_words.dart';
+import 'package:astroplan/presentation/widgets/capture_plan/capture_budget_summary.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/stacking_gain_graph.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
+import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,12 +29,14 @@ import '../../support/planner_harness.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
-CaptureBlock _light(double s, int n, String? filter) => CaptureBlock(
-  frameType: FrameType.light,
-  filterName: filter,
-  exposureTimeSeconds: s,
-  frameCount: n,
-);
+CaptureBlock _light(double s, int n, String? filter, [CaptureGain? gain]) =>
+    CaptureBlock(
+      frameType: FrameType.light,
+      filterName: filter,
+      exposureTimeSeconds: s,
+      frameCount: n,
+      gain: gain ?? CaptureGain.none,
+    );
 
 void main() {
   late AppDatabase db;
@@ -51,11 +57,12 @@ void main() {
         locationService: FakeLocationService(),
       );
       await vm.ready;
+      final g100 = CaptureGain.gain(100);
       for (final b in [
-        _light(60, 100, 'Ha'),
-        _light(60, 20, 'Ha'), // same group: 120 frames
-        _light(300, 12, 'Ha'), // another exposure: another group
-        _light(30, 1, null),
+        _light(60, 100, 'Ha', g100),
+        _light(60, 20, ' HA', g100), // same group (C15 filter): 120 frames
+        _light(300, 12, 'Ha', g100), // another exposure: another group
+        _light(30, 1, null), // gain not recorded: on its own
       ]) {
         await vm.plan.addCaptureBlock(b);
       }
@@ -76,9 +83,19 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
   }
 
+  Future<void> openCurves(WidgetTester tester) async {
+    await tester.tap(
+      find.byKey(const Key('section.${PlannerSections.gainCurve}')),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+  }
+
   testWidgets('one graph per group, never combined; each draws the domain\'s '
       'points and marks the group\'s value', (tester) async {
     await start(tester);
+    expect(find.byType(StackingGainGraph), findsNothing, reason: 'Details');
+    await openCurves(tester);
     final groups = vm.captureBudget.lightGroups;
     expect(groups, hasLength(3));
     final graphs = tester
@@ -110,25 +127,49 @@ void main() {
     expect(groups.first.frames, 120, reason: 'the two Ha 60 s blocks');
   });
 
-  testWidgets('the label is unchanged and the number stays; the text '
-      'alternative gives each group\'s value', (tester) async {
+  testWidgets('the label is unchanged and the number stays, per group with '
+      'its reference; the text alternative is relative to the plan', (
+    tester,
+  ) async {
     await start(tester);
     final handle = tester.ensureSemantics();
     expect(find.text(AppWords.relativeStackingGain), findsOneWidget);
     expect(find.textContaining('SNR'), findsNothing);
-    for (final g in vm.captureBudget.lightGroups) {
-      final value = '${g.relativeStackingGain.toStringAsFixed(1)}x';
-      expect(find.text(value), findsOneWidget, reason: 'the number stays');
+    final rows = [
+      ('Ha · 60 s · gain 100 × 120', '11.0x'),
+      ('Ha · 300 s · gain 100 × 12', '3.5x'),
+      ('No filter · 30 s · ISO or gain not recorded × 1', '1.0x'),
+    ];
+    for (final (i, (label, value)) in rows.indexed) {
+      final row = find.byKey(Key('capturePlan.gain.$i'));
       expect(
-        find.bySemanticsLabel(
-          RegExp(
-            'Relative stacking gain graph, .*: ${RegExp.escape(value)} '
-            'at ${g.frames} frames',
-          ),
-        ),
+        find.descendant(of: row, matching: find.text(label)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: row, matching: find.text(value)),
         findsOneWidget,
       );
     }
+    expect(
+      find.text(CaptureBudgetSummary.notComparable),
+      findsOneWidget,
+      reason: 'the unrecorded block says why it stands alone',
+    );
+    await openCurves(tester);
+    expect(
+      find.bySemanticsLabel(
+        RegExp(
+          RegExp.escape(
+            'Relative improvement over integration time, Ha · 60 s · gain 100: '
+            '1.00x at your plan, 2 h (120 frames); 0.71x at half that time; '
+            '1.41x at 4 h (240 frames), for comparison. Relative to your plan, '
+            'not a signal-to-noise ratio.',
+          ),
+        ),
+      ),
+      findsOneWidget,
+    );
     handle.dispose();
   });
 
@@ -136,33 +177,49 @@ void main() {
   // beside a swatch drawn like the dot; the curve's end is a comparison,
   // never a target or a recommendation. √N and the points are unchanged.
   testWidgets("each graph names the plan's point, and its end as a "
-      'comparison', (tester) async {
+      'comparison, in integration time', (tester) async {
     await start(tester);
-    final handle = tester.ensureSemantics();
+    await openCurves(tester);
     final graphs = tester
         .widgetList<StackingGainGraph>(find.byType(StackingGainGraph))
         .toList();
-    for (final (i, g) in vm.captureBudget.lightGroups.indexed) {
-      final curve = graphs[i].curve;
+    final labels = [
+      (
+        'Your plan: 2 h (120 frames) · 1.00x',
+        'For comparison: 4 h (240 frames) · 1.41x',
+      ),
+      (
+        'Your plan: 1 h (12 frames) · 1.00x',
+        'For comparison: 2 h (24 frames) · 1.41x',
+      ),
+      (
+        'Your plan: 30 s (1 frame) · 1.00x',
+        'For comparison: 2 min (4 frames) · 2.00x',
+      ),
+    ];
+    for (final (i, (plan, comparison)) in labels.indexed) {
       final graph = find.byWidget(graphs[i]);
-      final value = '${g.relativeStackingGain.toStringAsFixed(1)}x';
-      final plan = find.descendant(
-        of: graph,
-        matching: find.byKey(const Key('gainGraph.plan')),
+      expect(
+        tester
+            .widget<Text>(
+              find.descendant(
+                of: graph,
+                matching: find.byKey(const Key('gainGraph.plan')),
+              ),
+            )
+            .data,
+        plan,
       );
       expect(
-        tester.widget<Text>(plan).data,
-        '${AppWords.yourPlan}: ${g.frames} frames · $value',
-      );
-      expect(StackingGainGraph.planLabel(curve), contains(value));
-      final comparison = find.descendant(
-        of: graph,
-        matching: find.byKey(const Key('gainGraph.comparison')),
-      );
-      expect(
-        tester.widget<Text>(comparison).data,
-        'For comparison: ${curve.maxFrames} frames · '
-        '${curve.endGain.toStringAsFixed(1)}x',
+        tester
+            .widget<Text>(
+              find.descendant(
+                of: graph,
+                matching: find.byKey(const Key('gainGraph.comparison')),
+              ),
+            )
+            .data,
+        comparison,
       );
       // The swatch beside the plan's label draws the plan's dot.
       expect(
@@ -170,15 +227,6 @@ void main() {
           of: graph,
           matching: find.byWidgetPredicate(
             (w) => w is CustomPaint && w.painter is PlanPointSwatch,
-          ),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.bySemanticsLabel(
-          RegExp(
-            '${RegExp.escape(value)} at ${g.frames} frames, your plan; .* '
-            'at ${curve.maxFrames} frames, for comparison',
           ),
         ),
         findsOneWidget,
@@ -194,7 +242,6 @@ void main() {
         reason: word,
       );
     }
-    handle.dispose();
   });
 
   for (final (name, theme) in [
@@ -206,6 +253,7 @@ void main() {
       tester.platformDispatcher.textScaleFactorTestValue = 2;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       await start(tester, theme: theme);
+      await openCurves(tester);
       expect(find.byType(StackingGainGraph), findsNWidgets(3));
       expect(tester.takeException(), isNull);
     });

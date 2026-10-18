@@ -274,7 +274,6 @@ class PlannerHarness extends ChangeNotifier {
   int? get fillWindowFrameCount => analysis.fillWindowFrameCount;
   Future<bool> fillWindow() => analysis.fillWindow();
   double? get estimatedStorageMB => analysis.estimatedStorageMB;
-  double get relativeStackingGain => analysis.relativeStackingGain;
   double? get pixelScale => analysis.pixelScale;
   RigCapability? get rigCapability => analysis.rigCapability;
   Future<Session> saveSession() => analysis.saveSession();

@@ -235,12 +235,6 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   /// Storage for every frame taken; null when the file size is unknown.
   double? get estimatedStorageMB => captureBudget.storageMB;
 
-  /// √N of light frames — a relative stacking gain, not an SNR (SI-003).
-  double get relativeStackingGain =>
-      OpticalCalculator.calculateRelativeStackingGain(
-        captureBudget.lightFrameCount,
-      );
-
   double? get pixelScale => switch (_plan.selectedEquipment) {
     final rig? => OpticalCalculator.calculatePixelScale(
       pixelPitch: rig.pixelPitchUm,

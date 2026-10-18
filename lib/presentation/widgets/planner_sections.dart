@@ -4,9 +4,17 @@
 abstract final class PlannerSections {
   static const budgetDetails = 'planner.budgetDetails';
   static const gainHelp = 'planner.gainHelp';
+  static const gainCurve = 'planner.gainCurve';
   static const assumptions = 'planner.assumptions';
   static const rigDetails = 'planner.rigDetails';
   static const sky = 'planner.sky';
 
-  static const all = [budgetDetails, gainHelp, assumptions, rigDetails, sky];
+  static const all = [
+    budgetDetails,
+    gainHelp,
+    gainCurve,
+    assumptions,
+    rigDetails,
+    sky,
+  ];
 }
