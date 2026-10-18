@@ -96,6 +96,76 @@ void main() {
     },
   );
 
+  // F23 A1 (TD-097): the place-name keys in their documented precedence
+  // (Nominatim `addressdetails`: city, town, village and municipality are
+  // one group, then county and state). The first non-empty text wins; an
+  // absent, empty or non-text value falls through to the next.
+  group('the place name, by key precedence', () {
+    Future<ReverseGeocodeResult> answer(Map<String, Object?> address) => build(
+      (_) async => http.Response(json.encode({'address': address}), 200),
+    ).placeNameFor(46.05, 14.5);
+
+    String? nameOf(ReverseGeocodeResult r) =>
+        r is PlaceNameFound ? r.name : null;
+
+    test('a municipality-only answer names the place (Ljubljana, '
+        'S11.4 S11P-01)', () async {
+      final r = await answer({'municipality': 'Ljubljana', 'country': 'SI'});
+      expect(nameOf(r), 'Ljubljana');
+      expect((r as PlaceNameFound).attribution, '© OpenStreetMap contributors');
+    });
+
+    test('a settlement name comes before the municipality', () async {
+      expect(
+        nameOf(await answer({'village': 'Ig', 'municipality': 'Ig obcina'})),
+        'Ig',
+      );
+      expect(
+        nameOf(await answer({'town': 'Kamnik', 'municipality': 'Kamnik M'})),
+        'Kamnik',
+      );
+    });
+
+    test('the municipality comes before the county and the state', () async {
+      expect(
+        nameOf(
+          await answer({
+            'municipality': 'Ljubljana',
+            'county': 'Central Slovenia',
+            'state': 'Slovenia S',
+          }),
+        ),
+        'Ljubljana',
+      );
+    });
+
+    test('the existing precedence is unchanged', () async {
+      expect(
+        nameOf(await answer({'city': 'C', 'town': 'T', 'village': 'V'})),
+        'C',
+      );
+      expect(nameOf(await answer({'town': 'T', 'village': 'V'})), 'T');
+      expect(nameOf(await answer({'county': 'K', 'state': 'S'})), 'K');
+      expect(nameOf(await answer({'state': 'S'})), 'S');
+    });
+
+    test('an empty or non-text value falls through to the next key', () async {
+      expect(
+        nameOf(await answer({'city': '  ', 'municipality': 'Ljubljana'})),
+        'Ljubljana',
+      );
+      expect(nameOf(await answer({'city': 42, 'town': 'Kamnik'})), 'Kamnik');
+    });
+
+    test('no usable key: no name, so the coordinates are shown', () async {
+      expect(
+        await answer({'country': 'Slovenia', 'municipality': ''}),
+        isA<PlaceNameNotFound>(),
+      );
+      expect(await answer({'road': 'Main St'}), isA<PlaceNameNotFound>());
+    });
+  });
+
   test('"no name here" is cached', () async {
     final geocoder = build(
       (_) async => http.Response('{"error":"Unable to geocode"}', 200),

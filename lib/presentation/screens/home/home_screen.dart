@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../shared/site_label.dart';
 import '../../navigation/app_router.dart';
 import '../../viewmodels/startup_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
@@ -83,11 +84,7 @@ class HomeScreen extends StatelessWidget {
                         key: const Key('planner.context'),
                         child: ContextLine(
                           framed: true,
-                          siteName: siteVm.isDefaultLocation
-                              ? null
-                              : siteVm.activeSite?.name ??
-                                    siteVm.locationName ??
-                                    'Current position',
+                          siteName: SiteLabel.of(siteVm),
                           night: planVm.eveningDate,
                           zoneId: siteVm.displayZoneId,
                           nightStartUtc: planVm.sessionNight?.startUtc,

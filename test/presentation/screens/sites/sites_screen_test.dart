@@ -16,8 +16,10 @@ import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/services/location_service.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/location/location_picker_screen.dart';
 import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
 import 'package:astroplan/presentation/screens/sites/sites_screen.dart';
+import 'package:astroplan/presentation/shared/site_label.dart';
 
 import '../../../support/planner_harness.dart';
 
@@ -25,6 +27,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -88,6 +91,13 @@ void main() {
           path: AppRouter.siteEdit,
           builder: (_, state) => SiteEditorScreen(
             args: state.extra as SiteEditorArgs? ?? const SiteEditorArgs(),
+          ),
+        ),
+        GoRoute(
+          path: AppRouter.sitePick,
+          builder: (_, state) => LocationPickerScreen(
+            pickOnly: true,
+            initial: state.extra as LatLng?,
           ),
         ),
       ],
@@ -182,7 +192,9 @@ void main() {
 
     expect(vm.sites, isEmpty);
     expect(vm.activeSite, isNull);
-    expect(find.textContaining('not saved'), findsOneWidget);
+    // F23 A7: an unnamed unsaved position reads as one, with coordinates.
+    expect(find.text(SiteLabel.unsaved), findsOneWidget);
+    expect(find.text('46.0500, 14.5100'), findsOneWidget);
     expect(find.text('Save as site'), findsOneWidget);
     expect(find.text('No saved sites yet.'), findsOneWidget);
   });
@@ -411,6 +423,152 @@ void main() {
       );
       await save(tester);
       expect(vm.sites.single.latitude, 45.8123);
+    });
+
+    // F23 A6 (CRUX-03): a fix fills the coordinates only if neither changed
+    // while it was found; otherwise the edit is kept and the fix offered.
+    group('a fix that arrives after an edit', () {
+      late Completer<LocationResult> fix;
+      const found = LocationFound(
+        DeviceLocation(latitude: 45.8123, longitude: 15.9771),
+      );
+
+      Future<void> startLocating(WidgetTester tester) async {
+        fix = Completer<LocationResult>();
+        await build(
+          tester,
+          locationService: FakeLocationService(answer: () => fix.future),
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await tester.tap(
+          find.byKey(const Key('siteEditor.useCurrentPosition')),
+        );
+        await tester.pump();
+        expect(gps.calls, 1);
+      }
+
+      Future<void> answer(WidgetTester tester) async {
+        fix.complete(found);
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        await tester.pumpAndSettle();
+      }
+
+      testWidgets('unchanged coordinates are filled', (tester) async {
+        await startLocating(tester);
+        await answer(tester);
+        expect(find.widgetWithText(TextFormField, '45.81230'), findsOneWidget);
+        expect(find.byKey(const Key('siteEditor.positionFound')), findsNothing);
+      });
+
+      testWidgets('a typed edit is kept, typing and Save stay available, and '
+          'the fix is used only on request', (tester) async {
+        await startLocating(tester);
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Latitude (°)'),
+          '46.1',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Longitude (°)'),
+          '14.2',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Name'),
+          'Typed',
+        );
+        expect(
+          tester
+              .widget<FilledButton>(find.byKey(const Key('siteEditor.save')))
+              .onPressed,
+          isNotNull,
+          reason: 'Save while locating',
+        );
+
+        await answer(tester);
+        expect(find.widgetWithText(TextFormField, '46.1'), findsOneWidget);
+        expect(find.widgetWithText(TextFormField, '14.2'), findsOneWidget);
+        expect(
+          find.byKey(const Key('siteEditor.positionFound')),
+          findsOneWidget,
+        );
+
+        await tester.tap(find.text('Use position'));
+        await tester.pumpAndSettle();
+        expect(find.widgetWithText(TextFormField, '45.81230'), findsOneWidget);
+        expect(find.widgetWithText(TextFormField, '15.97710'), findsOneWidget);
+        expect(vm.sites, isEmpty, reason: 'still nothing saved');
+      });
+
+      testWidgets('the edit is saved as typed when the offer is closed', (
+        tester,
+      ) async {
+        await startLocating(tester);
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Latitude (°)'),
+          '46.1',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Longitude (°)'),
+          '14.2',
+        );
+        await answer(tester);
+        await tester.tap(
+          find.descendant(
+            of: find.byKey(const Key('siteEditor.positionFound')),
+            matching: find.byIcon(Icons.close),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Name'),
+          'Typed',
+        );
+        await save(tester);
+        expect(vm.sites.single.latitude, 46.1);
+        expect(vm.sites.single.longitude, 14.2);
+      });
+
+      testWidgets('a map pick is kept', (tester) async {
+        await startLocating(tester);
+        await tester.tap(find.text('Pick on map'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Enter coordinates'));
+        await tester.pumpAndSettle();
+        final fields = find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.byType(TextFormField),
+        );
+        await tester.enterText(fields.at(0), '44.5');
+        await tester.enterText(fields.at(1), '13.5');
+        await tester.tap(find.text('Use'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Use this point'));
+        await tester.pumpAndSettle();
+        expect(find.widgetWithText(TextFormField, '44.50000'), findsOneWidget);
+
+        await answer(tester);
+        expect(find.widgetWithText(TextFormField, '44.50000'), findsOneWidget);
+        expect(find.widgetWithText(TextFormField, '13.50000'), findsOneWidget);
+        expect(
+          find.byKey(const Key('siteEditor.positionFound')),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets('a fix after leaving the editor writes nothing', (
+        tester,
+      ) async {
+        await startLocating(tester);
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+        expect(find.byType(SiteEditorScreen), findsNothing);
+        final before = (vm.site.latitude, vm.site.longitude);
+
+        await answer(tester);
+        expect(tester.takeException(), isNull);
+        expect(find.byKey(const Key('siteEditor.positionFound')), findsNothing);
+        expect(vm.sites, isEmpty);
+        expect((vm.site.latitude, vm.site.longitude), before);
+      });
     });
 
     testWidgets('a GPS failure says why and changes no field', (tester) async {

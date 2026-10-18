@@ -21,6 +21,7 @@ import '../../shared/location_feedback.dart';
 import '../../shared/site_form_input.dart';
 import '../../viewmodels/disclosure_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
+import '../../shared/app_messages.dart';
 import '../../shared/failure_feedback.dart';
 import 'zone_picker_dialog.dart';
 import '../../navigation/app_router.dart';
@@ -197,17 +198,24 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
 
   /// "Use current position" (S7.5): the device position fills the
   /// coordinates, asked for only on this tap; nothing is stored until Save
-  /// (trap 2: a GPS fix is transient).
+  /// (trap 2: a GPS fix is transient). F23 A6 (CRUX-03): the fix fills them
+  /// only if neither coordinate changed while it was found; a typed edit or
+  /// a map pick meanwhile is kept, and the fix is offered, not applied. A
+  /// fix that arrives after the editor closed writes nothing.
   Future<void> _useCurrentPosition() async {
     final siteVm = context.read<SiteViewModel>();
+    final asked = (_latitude.text, _longitude.text);
     setState(() => _locating = true);
     try {
       final result = await siteVm.locateDevice();
       if (!mounted) return;
       switch (result) {
         case LocationFound(:final location):
-          _latitude.text = _coordinate(location.latitude);
-          _longitude.text = _coordinate(location.longitude);
+          if ((_latitude.text, _longitude.text) == asked) {
+            _fillCoordinates(location.latitude, location.longitude);
+          } else {
+            _offerFix(location.latitude, location.longitude);
+          }
         case LocationUnavailable(:final reason):
           showLocationFailure(context, siteVm, reason);
       }
@@ -219,6 +227,33 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     } finally {
       if (mounted) setState(() => _locating = false);
     }
+  }
+
+  void _fillCoordinates(double latitude, double longitude) {
+    _latitude.text = _coordinate(latitude);
+    _longitude.text = _coordinate(longitude);
+  }
+
+  /// The coordinates were edited while the fix was found: they stay, and
+  /// the fix is the user's choice, until they use it or close the message.
+  void _offerFix(double latitude, double longitude) {
+    ScaffoldMessenger.of(context).showMessage(
+      SnackBar(
+        key: const Key('siteEditor.positionFound'),
+        content: Text(
+          'Position found: ${_coordinate(latitude)}, '
+          '${_coordinate(longitude)}. Your edited coordinates are kept.',
+        ),
+        persist: true,
+        showCloseIcon: true,
+        action: SnackBarAction(
+          label: 'Use position',
+          onPressed: () {
+            if (mounted) _fillCoordinates(latitude, longitude);
+          },
+        ),
+      ),
+    );
   }
 
   Future<void> _openMap() async {

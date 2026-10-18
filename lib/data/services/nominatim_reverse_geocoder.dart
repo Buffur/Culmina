@@ -39,6 +39,20 @@ class NominatimReverseGeocoder implements ReverseGeocoder {
 
   static const String attribution = '© OpenStreetMap contributors';
 
+  /// The `address` keys that name the place, most specific first (F23 A1,
+  /// TD-097). Nominatim's `addressdetails` labels list municipality, city,
+  /// town and village as one group, then county and state above them; a
+  /// settlement's own name is preferred to its municipality's. The first
+  /// non-empty text wins; none means no name, and the coordinates are shown.
+  static const List<String> placeNameKeys = [
+    'city',
+    'town',
+    'village',
+    'municipality',
+    'county',
+    'state',
+  ];
+
   final http.Client _client;
   final Clock _clock;
   final Future<void> Function(Duration) _delay;
@@ -128,16 +142,13 @@ class NominatimReverseGeocoder implements ReverseGeocoder {
 
     final address = data['address'];
     if (address is! Map<String, dynamic>) return const PlaceNameNotFound();
-    final name =
-        address['city'] ??
-        address['town'] ??
-        address['village'] ??
-        address['county'] ??
-        address['state'];
-    if (name is! String || name.trim().isEmpty) {
-      return const PlaceNameNotFound();
+    for (final key in placeNameKeys) {
+      final name = address[key];
+      if (name is String && name.trim().isNotEmpty) {
+        return PlaceNameFound(name, attribution: attribution);
+      }
     }
-    return PlaceNameFound(name, attribution: attribution);
+    return const PlaceNameNotFound();
   }
 
   void _remember(String key, ReverseGeocodeResult result) {

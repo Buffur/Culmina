@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/site_label.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../domain/models/night_timeline.dart';
@@ -142,11 +143,7 @@ class _Context extends StatelessWidget {
       key: const Key('tonight.context'),
       child: ContextLine(
         framed: true,
-        siteName: siteVm.isDefaultLocation
-            ? null
-            : siteVm.activeSite?.name ??
-                  siteVm.locationName ??
-                  'Current position',
+        siteName: SiteLabel.of(siteVm),
         night: planVm.eveningDate,
         zoneId: siteVm.displayZoneId,
         nightStartUtc: planVm.sessionNight?.startUtc,

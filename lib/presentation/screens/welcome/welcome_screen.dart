@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/site_label.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/example_text.dart';
 import '../../shared/failure_feedback.dart';
@@ -66,9 +67,7 @@ class WelcomeScreen extends StatelessWidget {
               key: const Key('welcome.site'),
               number: 1,
               title: 'Your observing site',
-              status: siteVm.isDefaultLocation
-                  ? 'Not set'
-                  : siteVm.locationName ?? 'Current position',
+              status: SiteLabel.of(siteVm) ?? 'Not set',
               explanation:
                   'Night times, the Moon and target altitudes are computed '
                   'for your site. ${AppIdentity.appName} asks for location permission '

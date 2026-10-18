@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/site_label.dart';
 import '../../../domain/models/location_profile.dart';
 import '../../shared/app_words.dart';
 import '../../shared/confirmation_patterns.dart';
@@ -23,9 +24,6 @@ class SitesScreen extends StatelessWidget {
   const SitesScreen({super.key, this.mode = ListMode.choose});
 
   final ListMode mode;
-
-  static String _coordinates(double lat, double lon) =>
-      '${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)}';
 
   Future<void> _confirmDelete(
     BuildContext context,
@@ -78,10 +76,12 @@ class SitesScreen extends StatelessWidget {
               margin: const EdgeInsets.all(AppSpacing.md),
               child: ListTile(
                 leading: const Icon(Icons.my_location),
-                title: Text(siteVm.locationName ?? 'Current position'),
+                title: Text(SiteLabel.of(siteVm, withCoordinates: false)!),
                 subtitle: Text(
-                  '${_coordinates(siteVm.latitude, siteVm.longitude)}'
-                  ' · not saved',
+                  siteVm.locationName == null
+                      ? SiteLabel.coordinates(siteVm.latitude, siteVm.longitude)
+                      : '${SiteLabel.coordinates(siteVm.latitude, siteVm.longitude)}'
+                            ' · not saved',
                 ),
                 trailing: TextButton(
                   onPressed: () => context.push(
@@ -171,7 +171,7 @@ class SitesScreen extends StatelessWidget {
                 ),
                 title: Text(site.name),
                 subtitle: Text(
-                  '${_coordinates(site.latitude, site.longitude)} · '
+                  '${SiteLabel.coordinates(site.latitude, site.longitude)} · '
                   '${site.timeZoneId ?? 'zone unknown'}',
                 ),
                 selected: site.id == activeId,

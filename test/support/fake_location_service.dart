@@ -9,10 +9,15 @@ class FakeLocationService implements LocationService {
   FakeLocationService({
     this.location,
     this.failure = LocationFailure.permissionDenied,
+    this.answer,
   });
 
   final DeviceLocation? location;
   final LocationFailure failure;
+
+  /// When set, each request waits for this answer instead (a fix that takes
+  /// time; the test completes it).
+  final Future<LocationResult> Function()? answer;
 
   /// How many times `getCurrentLocation()` has been called.
   int calls = 0;
@@ -24,6 +29,7 @@ class FakeLocationService implements LocationService {
   @override
   Future<LocationResult> getCurrentLocation() async {
     calls++;
+    if (answer case final pending?) return pending();
     final found = location;
     return found != null ? LocationFound(found) : LocationUnavailable(failure);
   }
