@@ -13,7 +13,8 @@
 >   aliases. S13V-01 is handled by its F02; CA-OD1 and CA-OD3 were answered with D1–D5 and D7–D9
 >   ([E.1](#final-completion-roadmap-d1-to-d9-and-ux-s-answered-p6-2026-10-18)).
 > - **Not decided here:** CA-OD2 (= D6, deferred to the measured F26 sizes). ADR-021 (capture contract,
->   F03) and ADR-022 (night conditions, F13) are planned and not yet written. Current open items:
+>   F03) and ADR-022 (night conditions, F13) were accepted by the owner on 2026-10-18 (their sections
+>   below). Current open items:
 >   `refinement/PROGRESS.md`.
 > - **Update log:** the dated header notes that used to open this file are kept verbatim at the end
 >   ("Appendix — Update log").
@@ -42,8 +43,8 @@
 | [ADR-018](#adr-018-metadata-assisted-equipment-import-stage-3) | Metadata-assisted equipment import | Accepted 2026-09-26 (S3.D) | Implementation notes S3.V7, S3.V8, S8.8; D4 extended by PD-06 (RA.D round 2A) |
 | [ADR-019](#adr-019-product-flow-and-information-architecture-stage-4) | Product flow and information architecture | Accepted 2026-09-27 (S4.D) | Superseded in part by the tracker's retirement (2026-09-27); §6 order amended 2026-09-28; §5's order superseded by PD-03 and §6's contents amended by PD-04 ([RA.D round 2B/2C](#rad-round-2b2c--resolved-from-the-owners-direction-2026-10-17)) |
 | [ADR-020](#adr-020-capture-parameters-and-calibration-workflows-stage-7) | Capture parameters and calibration workflows | Accepted 2026-09-29 (S7.D) | §2's "example rig stays Unknown", §3's W1 and §5's rejection of P3 superseded by PD-07, PD-09 and PD-11; §5's presentation by PD-08 ([RA.D round 2A](#rad-round-2a--capture-plan-2026-10-17)) |
-| ADR-021 | Capture contract and v26 persistence | **Planned**, not written (F03; alias S14.1). Its D3–D5 semantics accepted 2026-10-18 ([E.1](#final-completion-roadmap-d1-to-d9-and-ux-s-answered-p6-2026-10-18)); exact encoding and vectors still need its acceptance | — |
-| ADR-022 | Night conditions (Moon-up definition, forecast overview) | **Planned**, not written (F13; alias S15.1). Its D9 browse/adopt rule accepted 2026-10-18 ([E.1](#final-completion-roadmap-d1-to-d9-and-ux-s-answered-p6-2026-10-18)); the derivation and vectors still need its acceptance | — |
+| [ADR-021](#adr-021-capture-contract-and-v26-persistence) | Capture contract and v26 persistence | Accepted 2026-10-18 (F03 A1; the owner accepted the decision sheet in full) | Amends ADR-009 §7/L6, ADR-020's calibration identity, the snapshot and the manifest additively |
+| [ADR-022](#adr-022-night-conditions-one-moon-up-predicate-moon-free-intervals-forecast-conventions) | Night conditions (Moon-up definition, forecast overview) | Accepted 2026-10-18 (F13 A1–A5; the owner accepted the decision sheet in full) | Amends ADR-010, ADR-012 §4/§6, ADR-013 G4 |
 
 ## Superseded and amended decisions
 
@@ -5217,6 +5218,24 @@ fields, §2 and §8 below). **Implementation:** Stage 7, S7.2a, S7.2b, S7.3a and
   and CALC-26 input change when S7.3b lands.
 
 ---
+
+## ADR-021: Capture contract and v26 persistence
+
+- **Status:** Accepted 2026-10-18 (F03 A1; alias S14.1).
+- **Decided by:** the owner, in chat, 2026-10-18, answering the numbered decision sheet with the option «Прийняти все (Recommended)» [“Accept all (Recommended)”]: every recommendation C1–C21 and the reference vectors V1–V15, without changes.
+- **Accepted text:** [`refinement/ADR_021_DECISION_SHEET.md`](refinement/ADR_021_DECISION_SHEET.md), verbatim, SHA-256 `8b62b54726edef224bf237c3c04f87ea73101b56dde6efb0828cd9709f516ff5` at acceptance. Its "Recommendation (R)" column is the decision; the "Alternative considered" column is rejected as stated there.
+- **Builds on:** D3–D5 and AM-04 (E.1, 2026-10-18), RA.D round 2A (PD-05–PD-14, PD-21), `RA_R2B_CAPTURE_SCIENCE.md` §3.2 and R-O2.
+- **Amends:** ADR-009 §7/L6 (storage: the evidence order C8 and the theoretical payload C10 replace the single average-size rule); ADR-020's calibration identity (C15); the snapshot (ADR-014 §4) and export manifest (`EXPORT_MANIFEST.md`) additively (C17, C18).
+- **Consequences:** F03 implements C19 (schema v26, nullable columns only, every existing row unrecorded); F04–F12 use C1–C16 and C20–C21. No new provider, partial rig, hardware control, numeric focus, absolute SNR or class-derived sensor fact. The FITS sample gate (F03 A5, F10) is separate.
+
+## ADR-022: Night conditions (one Moon-up predicate, moon-free intervals, forecast conventions)
+
+- **Status:** Accepted 2026-10-18 (F13 A1–A5; alias S15.1).
+- **Decided by:** the owner, in chat, 2026-10-18, answering the numbered decision sheet with the option «Прийняти все (Recommended)» [“Accept all (Recommended)”]: every recommendation N1–N12 and the vectors M1–M7, W1–W3, without changes.
+- **Accepted text:** [`refinement/ADR_022_DECISION_SHEET.md`](refinement/ADR_022_DECISION_SHEET.md), verbatim, SHA-256 `c858669b2f82636c72fc3420702b18e7562c02cd3c66ecc9b9252c46b7c8d1b2` at acceptance.
+- **Builds on:** MF-c (RA.D Q2, 2026-10-17) and D9 A (E.1, 2026-10-18), which are not reopened.
+- **Amends:** ADR-010 (the Moon is up when its topocentric centre altitude exceeds −(0.2725 π + 0.5667°), N1, everywhere N2 lists), ADR-012 §4/§6 (forecast slicing N6, horizon N7, cache identity N8, time labels N9) and ADR-013 G4 (the Moon gate uses N1).
+- **Consequences:** F13 changes the Moon calculations and night text; F14/F15/F17/F18 implement N6–N11. No new provider, seeing/transparency score, universal "good night" threshold, simulator or astronomy engine.
 
 # Appendix — Update log (moved from the file header on 2026-10-18)
 

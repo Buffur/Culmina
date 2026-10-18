@@ -1,7 +1,7 @@
 # ADR-022 decision sheet — night conditions (F13, with F14/F15 conventions)
 
-**Status: PROPOSED for the owner's local acceptance (F13 A1–A5). Not an accepted ADR, not
-implemented.** Prepared 2026-10-18 in the full final-plan run. MF-c (owner, RA.D Q2, 2026-10-17)
+**Status: ACCEPTED by the owner in full, 2026-10-18 (chat answer «Прийняти все (Recommended)»; recorded in `docs/DECISIONS.md`). The text below is unchanged from the proposal.** *Proposal note:* PROPOSED for the owner's local acceptance (F13 A1–A5). Not an accepted ADR, not
+implemented. Prepared 2026-10-18 in the full final-plan run. MF-c (owner, RA.D Q2, 2026-10-17)
 and D9 A (owner, 2026-10-18) are accepted semantics and are not asked again; this sheet asks for the
 exact predicate derivation, interval/phase rules, weather conventions, caches and the D9 control
 matrix. On acceptance it is recorded as ADR-022 in `docs/DECISIONS.md`, amending ADR-010, ADR-012

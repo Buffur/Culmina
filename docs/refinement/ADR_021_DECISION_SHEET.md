@@ -1,7 +1,7 @@
 # ADR-021 decision sheet — capture contract and v26 persistence (F03)
 
-**Status: PROPOSED for the owner's local acceptance (F03 A1). Not an accepted ADR, not
-implemented.** Prepared 2026-10-18 in the full final-plan run. The semantics D3–D5 (owner,
+**Status: ACCEPTED by the owner in full, 2026-10-18 (chat answer «Прийняти все (Recommended)»; recorded in `docs/DECISIONS.md`). The text below is unchanged from the proposal.** *Proposal note:* PROPOSED for the owner's local acceptance (F03 A1). Not an accepted ADR, not
+implemented. Prepared 2026-10-18 in the full final-plan run. The semantics D3–D5 (owner,
 2026-10-18, DECISIONS E.1) and AM-04 are already accepted and are not asked again; this sheet
 asks only for the exact encodings, rules and reference vectors that implement them. On acceptance
 the text below is recorded as ADR-021 in `docs/DECISIONS.md` and F03's v26 migration starts.
