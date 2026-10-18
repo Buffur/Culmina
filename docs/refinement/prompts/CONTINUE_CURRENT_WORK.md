@@ -11,11 +11,17 @@
    references, then the relevant code and tests. Do not re-audit the repository or reread earlier
    Stages' history.
 3. If the action is a frozen Task, the frozen sequence is the approval: `READ → VERIFY → PLAN →
-   IMPLEMENT → VERIFY → SELF-REVIEW → DOCS → COMMIT → STOP`. Verify by change class and reuse
+   IMPLEMENT → VERIFY → SELF-REVIEW → DOCS → COMMIT → CHECKPOINT`. A single-task scope stops
+   here; an explicitly authorized finite group continues to its next dependency-ready task under
+   its launch brief (for the full plan, `CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`). A prompt file's
+   presence does not activate a grouped run. Verify by change class and reuse
    valid evidence (Verification Policy V1–V3): a high-risk Task ends with one full-gate pass after
    its last code change; a shared-behaviour Task ends with its affected regression checks, and
    escalates to the full gate only as V1 says.
 4. If the action is a research or owner-decision gate, do not implement; prepare the decision.
 5. If the action is a Stage validation, use `INDEPENDENT_STAGE_VALIDATION.md`.
-6. Update `PROGRESS.md` by its "How to update this file" rules, commit once, and STOP. Never start
-   the next Task or Stage.
+6. Update `PROGRESS.md` by its "How to update this file" rules and commit if authorized. Stop at the
+   end of the named scope or a genuine unresolved gate/resource; do not start another Task or Stage
+   outside that scope. Within the owner's explicitly launched finite group, checkpoint and continue
+   eligible independent work without asking for duplicate start approval. Git permissions follow the
+   current owner instruction rather than this reusable template.

@@ -387,6 +387,14 @@ registered by TASK 0.2; each is decided in its own ADR task in `docs/MASTER_ROAD
 
 ## E.1 Resolved decisions
 
+### Full-plan goal handoff — launch boundary (owner, 2026-10-18)
+
+- **Request:** commit/push the prepared project to develop, then provide a detailed implementation prompt for Claude goal agents and check that execution scenario.
+- **Delivered preparation:** baseline commit `2b467b8` pushed to develop; current plan AM-04/P6-2026-10-18-07. `refinement/prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md` contains the launch command, complete finite task/gate map and source/verification/coordination/continuation rules.
+- **Boundary:** no F task starts from preparing or publishing the prompt. The owner's later submission activates the explicitly named group and its normal task commits/develop pushes. No repeated task-start approval inside that launched group; required local ADR/resource/visual/signing/D6/release decisions remain. Main, force-push, owner data and publication are not implicitly authorized.
+- **Recovery:** PROGRESS remains the sole current ledger; a true missing owner/resource dependency yields an evidenced blocked handoff after independent work is exhausted, never fabricated completion or endless audit/retry loops.
+
+
 ### AM-04 — familiar capture parameters (owner, 2026-10-18)
 
 - **Authority:** owner screenshot and instruction to prioritize exposure, ISO, WB and AF and avoid mandatory binning plus ISO/GAIN selection; followed by the request to publish develop and prepare the full-plan implementation prompt.

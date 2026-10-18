@@ -1,6 +1,6 @@
 # Culmina visual references
 
-Owner-provided references for AM-01 (2026-10-18). Paths below resolve inside this directory; the project-root reference is `docs/Examples/`. These are visual/interaction examples, not Culmina runtime screenshots or acceptance evidence. Use existing Culmina tokens, real fonts, field-mode contrast conventions and accessible text alternatives.
+Owner-provided references for AM-01 and AM-04 (2026-10-18). Paths below resolve inside this directory; the project-root reference is `docs/Examples/`. These are visual/interaction examples, not Culmina runtime screenshots or acceptance evidence. Use existing Culmina tokens, real fonts, field-mode contrast conventions and accessible text alternatives.
 
 | Reference | Applicable principle / task | Boundary |
 | --- | --- | --- |

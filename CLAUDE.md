@@ -41,6 +41,7 @@ Read on demand:
 - A new unresolved product/scientific/architecture/provider decision or material scope expansion needs the appropriate decision gate. Ordinary implementation difficulty does not justify stopping.
 - Research, planning and validation do not authorize application changes. Record adjacent findings without opportunistic fixes. Reassessment may challenge past product choices without reopening unrelated passed criteria.
 - Do not start another Task/Stage automatically. A grouped run must explicitly name its authorized Tasks and stop conditions. Closing a Task and advancing the next-action record is not authorization to execute it.
+- Full-plan goal launch procedure: `docs/refinement/prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`. Only the owner's submission activates its finite F01–F26/G1–G4 group and Git permissions; a checked-in prompt is not a start. Within the launched group, checkpoint and continue eligible tasks, preserving local owner/resource gates and this Verification Policy.
 - Each Task has one behavioral objective, dependencies, exclusions, acceptance criteria and a complete validation loop. Decompose incoherent large tasks; no line-count quotas.
 - Never remove or weaken tests to force a pass. Verification requirements are defined below, not duplicated in prompts or skills.
 
