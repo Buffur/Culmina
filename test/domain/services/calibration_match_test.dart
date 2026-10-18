@@ -187,10 +187,9 @@ void main() {
         [ha],
         _astro,
       ),
-      [
-        CalibrationMismatch.filterUnused,
-        CalibrationMismatch.binningMatchesNoLight,
-      ],
+      // F09 A1 (TD-107): the tuple is checked together; an unused filter
+      // is the one reason (no light to compare its binning with).
+      [CalibrationMismatch.filterUnused],
     );
   });
 

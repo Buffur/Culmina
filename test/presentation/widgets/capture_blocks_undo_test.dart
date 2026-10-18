@@ -197,23 +197,31 @@ void main() {
     expect(await storedFrames(tester), [10, 20]);
   });
 
-  testWidgets('"Start from the example plan" has Undo back to the empty plan '
-      'without the badge', (tester) async {
-    await build(tester);
-    expect(vm.captureBlocks, isEmpty);
-
-    await tester.tap(find.byKey(const Key('capturePlan.useExample')));
+  // F09 A4 (CAL-1): confirmed calibration blocks come with Undo back to
+  // the lights alone; the example shortcut this test once covered is gone
+  // (A6), and the example stays a fixture.
+  testWidgets('"Build calibration frames" has Undo back to the lights', (
+    tester,
+  ) async {
+    await build(tester, blocks: [_ha(10)]);
+    await tester.tap(find.byKey(const Key('capturePlan.buildCalibration')));
     await settle(tester);
-    expect(vm.captureBlocks, hasLength(3));
-    expect(vm.plan.isExampleCapturePlan, isTrue);
-    expect(find.text(ExampleText.plan), findsOneWidget);
-    expect(find.text('Started from the example plan'), findsOneWidget);
+    for (final key
+        in tester
+            .widgetList<TextFormField>(find.byType(TextFormField))
+            .map((f) => f.key)
+            .whereType<ValueKey<String>>()
+            .where((k) => k.value.startsWith('calibration.exposure.'))) {
+      await tester.enterText(find.byKey(key), '2');
+    }
+    await tester.tap(find.byKey(const Key('calibration.confirm')));
+    await settle(tester);
+    expect(vm.captureBlocks.length, greaterThan(1));
+    expect(find.textContaining('calibration blocks'), findsOneWidget);
 
     await tapUndo(tester);
-    expect(vm.captureBlocks, isEmpty);
-    expect(vm.plan.isExampleCapturePlan, isFalse);
-    expect(find.byKey(const Key('capturePlan.useExample')), findsOneWidget);
-    expect(await storedFrames(tester), isEmpty);
+    expect(vm.captureBlocks.single.frameCount, 10);
+    expect(await storedFrames(tester), [10]);
   });
 
   testWidgets('Undo after another edit to the blocks changes nothing and says '

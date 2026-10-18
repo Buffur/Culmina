@@ -254,8 +254,30 @@ Future<void> chooseTargetAndRig(WidgetTester tester) async {
   expect(find.text('Choose a rig'), findsOneWidget);
   await tap(tester, find.textContaining('ASI2600MC').first);
 
-  await scrollTo(tester, find.byKey(const Key('capturePlan.useExample')));
-  await tap(tester, find.byKey(const Key('capturePlan.useExample')));
+  // F09 A6 (UXA-C5): the empty plan's next step, then CAL-1 from the
+  // lights (the example shortcut is gone; it stays a fixture).
+  await scrollTo(tester, find.byKey(const Key('capturePlan.addLights')));
+  await tap(tester, find.byKey(const Key('capturePlan.addLights')));
+  await tester.enterText(find.byKey(const Key('blockDialog.exposure')), '60');
+  await tester.enterText(find.byKey(const Key('blockDialog.count')), '100');
+  await tap(tester, find.byKey(const Key('blockDialog.submit')));
+  await scrollTo(tester, find.byKey(const Key('capturePlan.buildCalibration')));
+  await tap(tester, find.byKey(const Key('capturePlan.buildCalibration')));
+  for (final key
+      in tester
+          .widgetList<TextFormField>(find.byType(TextFormField))
+          .map((f) => f.key)
+          .whereType<ValueKey<String>>()
+          .where((k) => k.value.startsWith('calibration.exposure.'))
+          .toList()) {
+    await tester.enterText(find.byKey(key), '2');
+  }
+  await tap(tester, find.byKey(const Key('calibration.confirm')));
+  expect(
+    find.byKey(const Key('capturePlan.empty')),
+    findsNothing,
+    reason: 'the plan has its lights and calibration',
+  );
 }
 
 void main() {

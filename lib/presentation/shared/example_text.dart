@@ -4,7 +4,6 @@ import '../../domain/models/equipment_profile.dart';
 /// capture plan and the example rig never look like the user's own.
 abstract final class ExampleText {
   static const plan = 'Example plan';
-  static const startFromExample = 'Start from the example plan';
   static const rig = 'Example rig';
 
   /// Said where the example rig is chosen: what is real and what is not.

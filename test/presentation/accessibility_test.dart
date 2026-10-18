@@ -381,12 +381,12 @@ void main() {
         if (open.isNotEmpty) {
           report.add('planner, sections open:\n${open.join('\n')}');
         }
-        // S6.8: a new plan: no target, and an empty capture plan with the
-        // offer of the example.
+        // S6.8: a new plan: no target, and an empty capture plan with its
+        // next step (F09 A6, UXA-C5).
         await tester.runAsync(app.vm.newSession);
         AppRouter.router.go(AppRouter.session());
         await _settle(tester);
-        expect(find.byKey(const Key('capturePlan.useExample')), findsOneWidget);
+        expect(find.byKey(const Key('capturePlan.addLights')), findsOneWidget);
         final fresh = await _audit(tester, contrast: theme != _Theme.field);
         if (fresh.isNotEmpty) {
           report.add('planner, new plan:\n${fresh.join('\n')}');

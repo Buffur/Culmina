@@ -738,7 +738,9 @@ void main() {
           calibrationPolicy: CalibrationPolicy.outsideWindow,
         ),
       ]);
-      expect(find.text('No flats for: OIII'), findsOneWidget);
+      // F09 A1: the group, with its binning on an astro rig.
+      expect(find.textContaining('No flats for: '), findsOneWidget);
+      expect(find.textContaining('OIII'), findsWidgets);
     });
 
     testWidgets('a dark flat round-trips through the store, Discard\'s '

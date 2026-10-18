@@ -5228,6 +5228,18 @@ fields, §2 and §8 below). **Implementation:** Stage 7, S7.2a, S7.2b, S7.3a and
 - **Amends:** ADR-009 §7/L6 (storage: the evidence order C8 and the theoretical payload C10 replace the single average-size rule); ADR-020's calibration identity (C15); the snapshot (ADR-014 §4) and export manifest (`EXPORT_MANIFEST.md`) additively (C17, C18).
 - **Consequences:** F03 implements C19 (schema v26, nullable columns only, every existing row unrecorded); F04–F12 use C1–C16 and C20–C21.
 - **Implemented (F04, 2026-10-18):** the ADR-017 metadata contract gains BitsPerSample (258) and Compression (259) of a DNG's main image, AsShotNeutral (50728) as a vector, EXIF WhiteBalance (41987) and LightSource (37384), each with its tag in the origin, plus the common FITS types of C21 (`PixelSize`, `SensorBinning`, acquisition vs conversion gain, offset, measured vs setpoint temperature, filter, telescope, `SampleLayout`) for F10's reader; `lib/domain/metadata/capture_metadata.dart`, `exif_structure.dart`. No new provider, partial rig, hardware control, numeric focus, absolute SNR or class-derived sensor fact. The FITS sample gate (F03 A5, F10) is separate.
+- **Implemented (F09, 2026-10-18):** C15 and CAL-1 (PD-12).
+  - **Warnings and missing flats** use the whole tuple (TD-107). Filters compare trimmed and case-folded.
+  - **Coverage:** `CalibrationMatch.covers` is strict; an unknown never proves coverage of a known value, and WB and focus are never part of it.
+  - **`CalibrationBuilder.propose`:**
+    - darks per (exposure, sensitivity, binning) of the lights, none under in-camera noise reduction;
+    - flats per (filter, binning), the recorded spelling kept;
+    - bias per (sensitivity, binning) for phones, cameras and Unknown;
+    - dark flats per flat for astro cameras (RG-10 §3.3–§3.4).
+    - A proven duplicate is left out.
+  - **The preview** (the labelled "Build calibration frames" and the missing-flat warning's shortcut): counts are editable proposals; a flat's or bias's exposure is entered; a row can be left out.
+  - **On confirm:** the blocks are added as one edit with Undo, which refuses after a newer edit.
+  - **The example plan's UI action** is replaced by the empty plan's next step ("Add light frames", "Take from a photo" where F08 supports the class); `ExampleCapturePlan` remains a test fixture (UXA-C5).
 - **Implemented (F08, 2026-10-18):** C2, C4, C6 and C13 for a light block's file proposal (`lib/domain/services/block_proposal.dart`).
   - **Proposed (class-applicable fields only):** exposure; ISO only for an ISO class (never as a gain; Unknown gets none); white balance only as Auto, from EXIF Auto; the file as the block's storage evidence.
   - **Shown as evidence only:** Manual white balance, the light source, the as-shot neutral vector and the sensitivity kind.

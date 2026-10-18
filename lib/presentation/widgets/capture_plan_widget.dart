@@ -9,6 +9,7 @@ import '../../domain/models/camera_class.dart';
 import '../../domain/models/capture_block.dart';
 import '../../core/config/feature_scope.dart';
 import '../../domain/services/block_proposal.dart';
+import '../../domain/services/calibration_builder.dart';
 import '../../domain/services/calibration_match.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../shared/block_text.dart';
@@ -24,6 +25,7 @@ import '../viewmodels/metadata_import_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import 'capture_plan/blocks_undo.dart';
 import 'capture_plan/capture_assumptions_panel.dart';
+import 'capture_plan/calibration_preview_dialog.dart';
 import 'capture_plan/capture_block_dialog.dart';
 import 'capture_plan/capture_budget_summary.dart';
 import 'plan_tracking.dart';
@@ -134,11 +136,35 @@ class _BlockListState extends State<_BlockList> {
     );
   }
 
+  /// "Build calibration frames" (CAL-1, F09): the preview of what the
+  /// lights need; confirmed blocks are added at once, with Undo.
+  Future<void> _buildCalibration() async {
+    final plan = context.read<SessionPlanViewModel>();
+    final proposal = CalibrationBuilder.propose(
+      plan.captureBlocks,
+      plan.selectedEquipment,
+    );
+    final added = await showCalibrationPreview(context, proposal);
+    if (added == null || added.isEmpty || !mounted) return;
+    await runWithFeedback(
+      context,
+      'add the calibration blocks',
+      () => editBlocksWithUndo(
+        context,
+        message: added.length == 1
+            ? 'Added 1 calibration block'
+            : 'Added ${added.length} calibration blocks',
+        change: () => plan.addCaptureBlocks(added),
+      ),
+    );
+  }
+
   /// A new block from the dialog, starting from the plan's last light block
   /// as a proposal (S7.2b, ADR-020 §5).
-  Future<void> _add() async {
+  Future<void> _add({bool pickPhoto = false}) async {
     final block = await showCaptureBlockDialog(
       context,
+      pickOnOpen: pickPhoto,
       cameraClass: _cameraClass,
       proposal: context.read<SessionPlanViewModel>().lightProposal,
       blocks: context.read<SessionPlanViewModel>().captureBlocks,
@@ -200,7 +226,7 @@ class _BlockListState extends State<_BlockList> {
     final fillIndex = measured ? analysis.fillWindowBlockIndex : null;
     // S7.3a (ADR-020 §6): warnings in words; they never block the plan.
     final mismatches = analysis.calibrationMismatches;
-    final flatsMissing = analysis.lightFiltersWithoutFlats;
+    final flatsMissing = analysis.lightsWithoutFlats;
     final fresh = _built;
     _built = true;
     return Column(
@@ -243,30 +269,41 @@ class _BlockListState extends State<_BlockList> {
             ),
           ],
         ),
-        // RD-04 (S6.8): a plan starts empty; the example is one tap away
-        // and never looks like the user's own (TASK 4.4's badge).
+        // RD-04 (S6.8): a plan starts empty. F09 A6 (UXA-C5): the next step
+        // in words, with labelled actions; the example shortcut is gone
+        // (it stays a test fixture).
         if (blocks.isEmpty)
           Padding(
+            key: const Key('capturePlan.empty'),
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Wrap(
-              spacing: 12,
-              runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('No blocks yet.'),
-                OutlinedButton(
-                  key: const Key('capturePlan.useExample'),
-                  // TD-079 (S6.16): with Undo back to the empty plan.
-                  onPressed: () => runWithFeedback(
-                    context,
-                    'start from the example plan',
-                    () => editBlocksWithUndo(
-                      context,
-                      message: 'Started from the example plan',
-                      change: viewModel.useExamplePlan,
+                const Text(
+                  'No blocks yet. Start with your light frames; the '
+                  'calibration frames can be built from them afterwards.',
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
+                  children: [
+                    FilledButton.tonalIcon(
+                      key: const Key('capturePlan.addLights'),
+                      onPressed: _add,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add light frames'),
                     ),
-                  ),
-                  child: const Text(ExampleText.startFromExample),
+                    if (_fromPhoto != null &&
+                        _cameraClass != CameraClass.astroColour &&
+                        _cameraClass != CameraClass.astroMono)
+                      OutlinedButton.icon(
+                        key: const Key('capturePlan.addFromPhoto'),
+                        onPressed: () => _add(pickPhoto: true),
+                        icon: const Icon(Icons.add_photo_alternate_outlined),
+                        label: const Text('Take from a photo'),
+                      ),
+                  ],
                 ),
               ],
             ),
@@ -402,9 +439,28 @@ class _BlockListState extends State<_BlockList> {
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              CalibrationText.flatsMissing(flatsMissing),
+              CalibrationText.flatsMissing(
+                flatsMissing,
+                withBinning: _cameraClass.offersLightBinning,
+              ),
               key: const Key('capture.flatsMissing'),
               style: TextStyle(color: palette.statusTight),
+            ),
+          ),
+        // CAL-1 (F09 A2): the labelled entry, also the missing-flat
+        // warning's shortcut.
+        if (blocks.any((b) => b.isLight))
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              key: const Key('capturePlan.buildCalibration'),
+              onPressed: _buildCalibration,
+              icon: const Icon(Icons.auto_awesome_motion_outlined),
+              label: Text(
+                flatsMissing.isEmpty
+                    ? 'Build calibration frames'
+                    : 'Build calibration frames, with the missing flats',
+              ),
             ),
           ),
       ],

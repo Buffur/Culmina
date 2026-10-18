@@ -88,7 +88,8 @@ void main() {
   final status = find.byKey(const Key('planner.status'));
   Finder inStatus(String text) =>
       find.descendant(of: status, matching: find.text(text));
-  final offer = find.byKey(const Key('capturePlan.useExample'));
+  // F09 A6 (UXA-C5): the empty plan's next step replaced the example.
+  final offer = find.byKey(const Key('capturePlan.addLights'));
 
   testWidgets('a fresh install: no target, no rig, an empty capture plan '
       'with the offer, and a neutral status', (tester) async {
@@ -111,10 +112,13 @@ void main() {
     }
   });
 
-  testWidgets('the offer fills exactly the example plan, badged until the '
-      'first edit (TASK 4.4)', (tester) async {
+  // The example is a fixture since F09 A6 (its UI shortcut was replaced by
+  // the empty plan's next step); its badge rule (TASK 4.4) stands.
+  testWidgets('the example plan is badged until the first edit (TASK 4.4)', (
+    tester,
+  ) async {
     await start(tester);
-    await tester.tap(offer);
+    await tester.runAsync(vm.plan.useExamplePlan);
     await settle(tester);
     await tester.runAsync(() => vm.plan.idle);
 

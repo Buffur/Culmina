@@ -30,8 +30,13 @@ abstract final class CalibrationText {
       type == FrameType.darkFlat ? 'Match the flats' : 'Match the lights';
 
   /// The light filters without flats, when the plan has flats.
-  static String flatsMissing(List<String?> filters) =>
-      'No flats for: ${[for (final f in filters) f ?? 'no filter'].join(', ')}';
+  /// The light groups without flats (F09 A1): the filter, with its binning
+  /// where the camera bins ([withBinning]).
+  static String flatsMissing(
+    List<({String? filter, int binning})> groups, {
+    bool withBinning = false,
+  }) =>
+      'No flats for: ${[for (final g in groups) '${g.filter ?? 'no filter'}${withBinning ? ' (${g.binning} × ${g.binning})' : ''}'].join(', ')}';
 
   /// The values a new calibration block takes from [source] (ADR-020 §6).
   static String inherited(

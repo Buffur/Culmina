@@ -220,6 +220,9 @@ class SessionPlanViewModel extends ChangeNotifier {
 
   Future<void> addCaptureBlock(CaptureBlock block) =>
       _editBlocks((b) => b.add(block));
+  // CAL-1 (F09 A4): several blocks as one edit, so one Undo.
+  Future<void> addCaptureBlocks(List<CaptureBlock> blocks) =>
+      _editBlocks((b) => b.addAll(blocks));
 
   Future<void> updateCaptureBlock(int index, CaptureBlock block) async {
     if (_valid(index)) await _editBlocks((b) => b[index] = block);

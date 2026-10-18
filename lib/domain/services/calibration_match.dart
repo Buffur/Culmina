@@ -48,6 +48,40 @@ abstract final class CalibrationMatch {
   static bool _sameExposure(CaptureBlock a, CaptureBlock b) =>
       _ms(a.exposureTimeSeconds) == _ms(b.exposureTimeSeconds);
 
+  /// A filter name for comparison (ADR-021 C15): trimmed and case-folded,
+  /// with no alias table ("Ha" = " HA ", "H-alpha" ≠ "Ha"); none is "".
+  /// The recorded spelling is never changed.
+  static String normalizedFilter(String? name) =>
+      (name ?? '').trim().toLowerCase();
+
+  static bool sameFilter(String? a, String? b) =>
+      normalizedFilter(a) == normalizedFilter(b);
+
+  /// C15 coverage, stricter than the advisory [matches]: an ISO or gain
+  /// counts as the same only when both sides record the same value, or
+  /// neither records one; an unknown never proves coverage of a known one.
+  static bool provenSameSensitivity(CaptureGain a, CaptureGain b) =>
+      _known(a) == _known(b) && (!_known(a) || a == b);
+
+  /// Whether calibration [block] is proof that it covers [source] (a light,
+  /// or a flat for a dark flat): the whole modeled tuple (C15), with
+  /// [provenSameSensitivity]. White balance and focus mode are never part
+  /// of it.
+  static bool covers(CaptureBlock block, CaptureBlock source, CameraClass c) {
+    final binning = sameBinning(block, source, c);
+    return switch (block.frameType) {
+      FrameType.dark || FrameType.darkFlat =>
+        binning &&
+            _sameExposure(block, source) &&
+            provenSameSensitivity(block.gain, source.gain),
+      FrameType.bias =>
+        binning && provenSameSensitivity(block.gain, source.gain),
+      FrameType.flat =>
+        binning && sameFilter(block.filterName, source.filterName),
+      FrameType.light => false,
+    };
+  }
+
   /// Whether [block] (a dark, bias or dark flat) matches [source] (a light,
   /// or a flat for a dark flat) in every value it inherits.
   static bool matches(CaptureBlock block, CaptureBlock source, CameraClass c) {
@@ -59,7 +93,8 @@ abstract final class CalibrationMatch {
       FrameType.darkFlat => common && _sameExposure(block, source),
       FrameType.bias => common,
       FrameType.flat =>
-        block.filterName == source.filterName && sameBinning(block, source, c),
+        sameFilter(block.filterName, source.filterName) &&
+            sameBinning(block, source, c),
       FrameType.light => true,
     };
   }
@@ -99,10 +134,12 @@ abstract final class CalibrationMatch {
         else if (noiseReduction && block.frameType == FrameType.dark)
           CalibrationMismatch.darksTwice,
       ],
+      // TD-107 (AUD-02, F09 A1): one light must match the whole flat
+      // tuple; a filter used at another binning is not enough.
       FrameType.flat => [
-        if (!lights.any((l) => l.filterName == block.filterName))
-          CalibrationMismatch.filterUnused,
-        if (!lights.any((l) => sameBinning(block, l, c)))
+        if (!lights.any((l) => sameFilter(l.filterName, block.filterName)))
+          CalibrationMismatch.filterUnused
+        else if (!lights.any((l) => matches(block, l, c)))
           CalibrationMismatch.binningMatchesNoLight,
       ],
       FrameType.darkFlat => [
@@ -112,22 +149,46 @@ abstract final class CalibrationMatch {
     };
   }
 
-  /// The light filters no flat covers, when the plan has flats (a plan
-  /// without flats says nothing: flats may come from a library). Null is
-  /// "no filter".
-  static List<String?> lightFiltersWithoutFlats(List<CaptureBlock> blocks) {
-    final flatFilters = {
+  /// The light groups (filter, binning) no flat covers, when the plan has
+  /// flats (a plan without flats says nothing: flats may come from a
+  /// library), each once, in the lights' order and spelling (F09 A1: the
+  /// same tuple rule as the warnings). Binning counts only where [rig]'s
+  /// class offers it.
+  static List<({String? filter, int binning})> lightsWithoutFlats(
+    List<CaptureBlock> blocks, [
+    EquipmentProfile? rig,
+  ]) {
+    final c = rig?.cameraClass ?? CameraClass.unknown;
+    final flats = [
       for (final b in blocks)
-        if (b.frameType == FrameType.flat) b.filterName,
-    };
-    if (flatFilters.isEmpty) return const [];
-    return [
-      for (final f in {
-        for (final b in blocks)
-          if (b.frameType == FrameType.light) b.filterName,
-      })
-        if (!flatFilters.contains(f)) f,
+        if (b.frameType == FrameType.flat) b,
     ];
+    if (flats.isEmpty) return const [];
+    final out = <({String? filter, int binning})>[];
+    for (final l in blocks.where((b) => b.isLight)) {
+      if (flats.any((f) => matches(f, l, c))) continue;
+      final binning = c.offersLightBinning ? l.binning : 1;
+      if (out.any(
+        (o) => sameFilter(o.filter, l.filterName) && o.binning == binning,
+      )) {
+        continue;
+      }
+      out.add((filter: l.filterName, binning: binning));
+    }
+    return out;
+  }
+
+  /// The light filters no flat covers ([lightsWithoutFlats]' filters, each
+  /// once). Null is "no filter".
+  static List<String?> lightFiltersWithoutFlats(
+    List<CaptureBlock> blocks, [
+    EquipmentProfile? rig,
+  ]) {
+    final out = <String?>[];
+    for (final g in lightsWithoutFlats(blocks, rig)) {
+      if (!out.any((f) => sameFilter(f, g.filter))) out.add(g.filter);
+    }
+    return out;
   }
 
   /// The blocks [type] may inherit from: the plan's lights, or its flats for
@@ -155,7 +216,7 @@ abstract final class CalibrationMatch {
     if (block.frameType == FrameType.flat) {
       final missing = lightFiltersWithoutFlats(blocks);
       for (final s in sources) {
-        if (missing.contains(s.filterName)) return s;
+        if (missing.any((m) => sameFilter(m, s.filterName))) return s;
       }
     }
     return sources.first;

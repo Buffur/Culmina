@@ -173,9 +173,12 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   List<List<CalibrationMismatch>> get calibrationMismatches =>
       CalibrationMatch.ofPlan(_plan.captureBlocks, _plan.selectedEquipment);
 
-  /// The light filters no flat covers, when the plan has flats (S7.3a).
-  List<String?> get lightFiltersWithoutFlats =>
-      CalibrationMatch.lightFiltersWithoutFlats(_plan.captureBlocks);
+  /// The light groups no flat covers, when the plan has flats (F09 A1).
+  List<({String? filter, int binning})> get lightsWithoutFlats =>
+      CalibrationMatch.lightsWithoutFlats(
+        _plan.captureBlocks,
+        _plan.selectedEquipment,
+      );
 
   /// The light block "Fill tonight's window" adjusts: the last one.
   int? get fillWindowBlockIndex {
@@ -238,16 +241,13 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
         captureBudget.lightFrameCount,
       );
 
-  double? get pixelScale {
-    final rig = _plan.selectedEquipment;
-    if (rig == null) return null;
-    return OpticalCalculator.calculatePixelScale(
+  double? get pixelScale => switch (_plan.selectedEquipment) {
+    final rig? => OpticalCalculator.calculatePixelScale(
       pixelPitch: rig.pixelPitchUm,
-      effectiveFocalLength: OpticalCalculator.calculateEffectiveFocalLength(
-        focalLength: rig.focalLengthMm,
-      ),
-    );
-  }
+      effectiveFocalLength: rig.focalLengthMm,
+    ),
+    null => null,
+  };
 
   /// The rig's capability and exposure guidance (TASK 8.6, PD-11).
   RigCapability? get rigCapability {

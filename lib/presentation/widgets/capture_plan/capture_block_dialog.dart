@@ -52,6 +52,7 @@ Future<CaptureBlock?> showCaptureBlockDialog(
   bool tipsShown = true,
   ValueChanged<bool>? onTipsShown,
   Future<BlockProposal?> Function(int binning)? fromPhoto,
+  bool pickOnOpen = false,
 }) {
   return showDialog<CaptureBlock>(
     context: context,
@@ -63,6 +64,7 @@ Future<CaptureBlock?> showCaptureBlockDialog(
       tipsShown: tipsShown,
       onTipsShown: onTipsShown,
       fromPhoto: fromPhoto,
+      pickOnOpen: pickOnOpen && fromPhoto != null,
     ),
   );
 }
@@ -76,6 +78,7 @@ class _CaptureBlockDialog extends StatefulWidget {
     required this.tipsShown,
     required this.onTipsShown,
     required this.fromPhoto,
+    this.pickOnOpen = false,
   });
 
   final CaptureBlock? initial;
@@ -88,6 +91,10 @@ class _CaptureBlockDialog extends StatefulWidget {
   /// F08: reads one file and proposes this block's values; null when the
   /// user cancels. Absent where reading files is not available.
   final Future<BlockProposal?> Function(int binning)? fromPhoto;
+
+  /// The empty plan's "Take from a photo" (F09 A6): pick as the dialog
+  /// opens; a cancelled pick leaves an empty light block to fill.
+  final bool pickOnOpen;
 
   @override
   State<_CaptureBlockDialog> createState() => _CaptureBlockDialogState();
@@ -237,6 +244,11 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
       if (shown) _seeds[CaptureField.sensitivity] = (p.gain, origin);
     }
     _opened = _state();
+    if (widget.pickOnOpen) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _takeFromPhoto();
+      });
+    }
   }
 
   /// A new block's filter by class (F06 A3): a mono astro camera's
