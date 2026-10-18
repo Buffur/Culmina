@@ -1,5 +1,9 @@
 # AstroPlan Product Specification
 
+> **Status (2026-10-18 navigation note):** the Phase 0 product specification, preserved as design intent.
+> The current product direction is `refinement/PRODUCT_DIRECTION.md`; its §9 lists what was superseded
+> (for example this file's "Core Workflow"). The app is now named Culmina.
+
 ## Product Identity
 
 AstroPlan is a mobile astrophotography session planner and computational

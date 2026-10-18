@@ -11,6 +11,899 @@
 > same way.
 > **Exception, 2026-09-29 (Stage 8 planning):** Stage 7's entries were moved here verbatim in the
 > same way.
+> **Exception, 2026-10-18 (documentation cleanup):** every `PROGRESS.md` entry from Stage 8 planning to the
+> Stage 12–13 closure, its superseded header and next action, its superseded evidence rows and its
+> register copies were moved here verbatim (first section below).
+
+## Moved at the documentation cleanup, 2026-10-18 (verbatim)
+
+> Moved from `PROGRESS.md` on 2026-10-18 so that `PROGRESS.md` is a short handoff again. Nothing in this
+> section was rewritten; only these headings were added. Where a statement here conflicts with the current
+> `PROGRESS.md`, the current file wins: these entries are dated evidence, and their "Next" and "Next allowed
+> action" lines are superseded (the S12.3/S12.4 and "Stage 11 remains open" items below were already done or
+> superseded when they were moved: S12.3 and S12.4 done, Stage 11 closed as superseded by Stage 17 at G3).
+
+### Header and "Current state" as of 2026-10-17 (superseded)
+
+> The handoff contract for post-roadmap refinement: where work stands, what still binds it, what
+> evidence can be reused, and the one next allowed action. Strategy lives in `POST_ROADMAP_PLAN.md`,
+> direction in `PRODUCT_DIRECTION.md`, verification rules in `CLAUDE.md` ("Verification Policy"),
+> and history in [`PROGRESS_HISTORY.md`](PROGRESS_HISTORY.md) and the `STAGE_N_*.md` reports.
+> **Last updated:** 2026-10-17 (audit 09 amendments M1–M16 applied to Stages 12–17; Stage 12–13 closure recorded; documentation only).
+> **Next:** the owner's choice for Stage 13's blocker S13V-01 / TD-109 (corrective S13.V1, recommended, or a carry to S16.8 and S17.5); then **S14.1** (ADR-021) on the owner's start instruction, with the FITS-sample request and the CA-OD3 question. S12.2 stays optional.
+
+**Audit 09 applied and Stage 12–13 closure, 2026-10-17** (documentation only; at the owner's request «Можешь внести эти правки в план» [“apply these amendments to the plan”]):
+- [`audit/09_COMPREHENSIVE_AUDIT.md`](../audit/09_COMPREHENSIVE_AUDIT.md) §H, M1–M16, written into the Stage 12–17 Tasks (`POST_ROADMAP_PLAN.md` §5, marked "Audit 09"; disposition table "Comprehensive audit 09 disposition"). No Stage or Task added or renumbered; C1–C6 and AUD-01–AUD-17 kept.
+- Open owner decisions: CA-OD1 (the brand in the UI tokens, before S16.6), CA-OD2 (APK packaging, at S17.6), CA-OD3 (Undo the last restore, at S14.1).
+- [`STAGE_12_13_CLOSURE.md`](STAGE_12_13_CLOSURE.md): **Stage 12 PASS, closed**; **Stage 13 BLOCKED** on S13V-01 (TD-109, the pre-12 splash). S13V-02 (reduced motion) and S13V-03 (final cold-start numbers) carried to S17.5. Run in the session that wrote audit 09 at the owner's request (not a fresh session, disclosed).
+- Registers: TD-106 moved to Critical, TD-107/TD-108 to High, TD-109 added (High); RD-17's §8 row marked resolved.
+- **Verification:** V1 documentation class: references and IDs checked, `git diff --check` clean. No application test, gate, build or device change.
+
+**Audit integration, 2026-10-17:** [dispositions](STAGES_12_17_AUDIT_AMENDMENTS.md) record AUD-01–AUD-17 in the existing 42 Tasks. The owner's instruction is to finish existing functions; no new Stage, Task, provider, equipment mode or research cycle. AUD-01/02/03 remain open as TD-106/107/108. C1–C6 stay; S16.8 precedes the final S16.7 sweep. AUD-04 does not approve a partial-rig model; S14.1 first reviews the existing required-input contract.
+
+#### Current state (table as of 2026-10-17)
+
+| Item | State |
+| --- | --- |
+| Phase | Post-roadmap refinement: Stages 0–11 done or closed; **Culmina release roadmap, Stages 12–17** (`POST_ROADMAP_PLAN.md` §5, approved G3 2026-10-17) |
+| Current Stage | **Stage 12 closed** (bounded closure PASS, [report](STAGE_12_13_CLOSURE.md)). **Stage 13 in validation, BLOCKED** on S13V-01 / TD-109 (the splash before Android 12). Stage 11 stays superseded by Stage 17 |
+| Current Task | **None in progress.** Audit 09 amendments M1–M16 applied to the plan (documentation only); no application Task started; no defect is marked fixed |
+| Next Task | The owner's choice for S13V-01 (corrective **S13.V1**, recommended, or a carry to S16.8 and S17.5); then **S14.1** (ADR-021), with the FITS-sample request and CA-OD3. S12.2 optional |
+| Code baseline | **`570581e`**: Culmina identity and owner-approved held one-second splash. The independent audit read remote CI run [39042823307](https://github.com/Buffur/Culmina/actions/runs/39042823307) as successful at that commit on 2026-10-17; this documentation amendment neither re-runs nor newly claims that evidence. `Buffur/Culmina` is the source repository |
+| Schema | **v25** (S8.6) |
+| Toolchain | Flutter **3.47.4** (the CI's pinned version; Dart 3.13.3) at `C:\flutter` (checked 2026-10-17; the earlier `C:\tools\flutter-3.47.4` path no longer exists). Linux reproduction: WSL Ubuntu with the official 3.47.4 Linux archive at `~/ci/flutter` (S12.1) |
+
+**Stages 12–13 implementation/evidence summary (2026-10-17):** the earlier grouped owner authorization covered these Tasks. Current status below supersedes the old header's email/logo prerequisites; it does not assert a formal Stage close or authorize Stage 14 implementation.
+- **S12.3 — done:** repository `Buffur/Culmina`, Pages contact/policy and project index are published. HTTP 200 for project/privacy/source is recorded in S13.2 evidence and the independent audit at `570581e`. S15.4/S17.4 will check policy consistency with the already approved forecast change; no new contact or repository-rename action is pending.
+- **S12.4 — decided (a)** (DECISIONS E.1): Play services location accepted; a GPL-3.0 §7 additional permission stated in `COMPLIANCE.md` and `README.md`; the About statement follows in S16.8 (C4). Options: [`research/S12.4_PLAY_SERVICES_LOCATION.md`](research/S12.4_PLAY_SERVICES_LOCATION.md). **S12.4 done.**
+- **S12.2:** the owner's optional trademark check; not started.
+- **S13.1 — done — R3-final approved:** round 1 (V1–V4) rejected; round 2 ([`evidence/identity/round2/`](evidence/identity/round2/README.md)) offered five concepts and the owner chose **C4 Orbit C** (DECISIONS E.1). Round 3 ([`evidence/identity/round3/`](evidence/identity/round3/README.md)): R1 Balanced, R2 Pure, R3 Ice star, R4 Crescent orbit. At the owner's request C5 Star trails was refined too ([`evidence/identity/round3-c5/`](evidence/identity/round3-c5/README.md): T1 Refined trails, T2 Bold trails, T3 Trails forming a C, T4 Comet heads). The owner kept C4 and asked to refine R1, R3 and R4 after studying logo principles: [`research/S13.1_LOGO_PRINCIPLES.md`](research/S13.1_LOGO_PRINCIPLES.md) and round 4 ([`evidence/identity/round4/`](evidence/identity/round4/README.md): R1, R3, R4, R4b with one construction, a curved sparkle and optical centring). The owner chose **R3** and noted it looks off-centre: confirmed (round 4 centred the ink centroid, moving the orbit 1.6 right and 2.4 up); round 5 ([`evidence/identity/round5/`](evidence/identity/round5/README.md)) centres the orbit, adds the splash-animation concept (720 ms AVD storyboard and draft) and the assessment. **S13.1 done:** the owner approved `R3-final` (orbit centred) and the splash-animation concept (DECISIONS E.1). Acceptance 4 is satisfied by the owner's recorded approval; no new artwork vote is pending.
+- **S13.2 — done — code (`b29ec34`) and recorded device checks:** id `io.github.buffur.culmina`, label Culmina, Kotlin package and metadata channel renamed together, `AppIdentity` on the Buffur/Culmina URLs (TD-088 resolved), the restore confirmation shows the backup's date (TD-093 resolved); new tests (no earlier id anywhere; one channel name; a backup carries no application id); docs (trap 20, COMPLIANCE, RELEASE "Moving from Astro Planner", README, runbook, ARCHITECTURE, FEATURE_STATUS, TEST_PLAN). **Verification:** full gate PASS after the last code change (1,847 tests, 2 skips; host E2E 2 + 1; Flutter 3.47.4); Kotlin unit tests PASS (`:app:testDebugUnitTest`); debug APK badging `io.github.buffur.culmina`, label `Culmina`. **Device checks PASS (2026-10-17, [evidence](evidence/S13_2_DEVICE_CHECKS.md)):** M1/M4 "Add from a photo" with a DNG and a HEIC on `io.github.buffur.culmina.s2check`, rig saved; backup on the old-id test package → restore on the new-id one: all 9 tables equal, preferences restored; the restore confirmation shows the date (TD-093). Owner apps unchanged; test packages removed. Follow-ups: TD-105 (the confirmation names the current app; "1 sessions"); the owner's IDE installed a debug build under `io.github.buffur.culmina` (uninstall before a release APK). Pushed `d42f053..31ff9bf` (owner-authorized); CI run 39038933720 **success** and Pages build success on `31ff9bf`; `https://buffur.github.io/Culmina/`, `…/privacy/` and `https://github.com/Buffur/Culmina` answer 200 (criterion 7). **S13.2 done; S12.3 done.** The historical next Task S13.3 is now implemented (below).
+- **S13.3 — launcher icon and splash:** the approved R3-final mark in `ic_launcher_foreground.xml` and `tool/make_launcher_icons.py` (legacy PNGs, `icon_512.png` regenerated), a separate one-colour `ic_launcher_monochrome.xml`, the animated splash `splash_icon_animated.xml` on Android 12+ (**1,000 ms, held until it has played**, by the owner's decision 2026-10-17 amending ID-6; the 380 ms interim is superseded); the mark fades on navy before the background fades, so it never shows over the app. **Verification of this last change** (owner, 2026-10-17: run only the tests related to the Task, not the full gate every time): `app_identity_test.dart` and `startup_mark_test.dart` PASS, release build and phone recording; the last full gate PASS was on `f89c7c3` (1,851 tests), the static icon before 12, and `StartupMark` on Tonight while startup loads (breathing star; still under reduced motion; no new package). The 272 → 290 ms first-frame comparison belongs to the earlier **non-held** splash; the final held second's visible-content delay is separate (about 1.0–1.2 s in the recorded observation), per the owner's choice. The audit later read remote CI on `570581e` as successful. [Evidence](evidence/S13_3_DEVICE_CHECKS.md). UNVERIFIED on a device: pre-12 splash, reduced motion. The `.s2check` test app is left installed for the owner's look.
+- **Verification:** V1 documentation class for the Markdown; the SVG/HTML/PNG assets are outside every gate input (V3); `git diff --check` clean.
+
+### "Current state" entries from Stage 8 planning to the Stage 12–13 closure (newest first)
+
+**Language policy revised, 2026-10-17** (documentation and agent instructions only, at the owner's request): CLAUDE.md now prefers English (not an absolute rule; the user's explicit instruction wins) for new and substantially revised persistent documentation; conversational replies follow the ongoing conversation and the user's latest request, with no fixed default language (this replaces "replies stay in Russian by default" in the "Language correction" entry below, which stays as history); quotations and historical sources stay in their original language; no bulk translation; the application's UI language and the deferred localisation are unchanged. `POST_ROADMAP_PLAN.md`'s shared rule "All in English" now refers to the CLAUDE.md policy. No roadmap Task started.
+
+**Roadmap readiness review, 2026-10-17** (documentation only; [report](STAGES_12_17_READINESS_REVIEW.md)): Stages 12–17 cover every RA.D decision and every finding of the owner's review. One order defect (G1: S17.5 and S17.6 depend on each other; no remote CI run on the release commit) and smaller gaps (G2: the cross-id, cross-schema backup rehearsal on the final build; G3: S14.9's dependencies on S14.7/S14.8; G4: S12.4 option (a)'s About change; G5: `PRODUCT_DIRECTION.md` still states superseded direction; G6: register omissions). Corrections C1–C6 **approved by the owner and applied** the same day (DECISIONS E.1, "Stages 12–17 readiness review corrections approved"): `POST_ROADMAP_PLAN.md` §5 (S14.1, S14.3, S14.7, S14.9, S16.8, S17.5, S17.6, traceability) and `PRODUCT_DIRECTION.md` §9. Next Task unchanged (S12.3 with S12.4; S13.1 is the unblocked alternative). No application checks run (V1 documentation class).
+
+**Documentation correction, 2026-10-17:** CLAUDE.md condensed with V1–V8 retained; numbered traps moved to `docs/ENGINEERING_GUARDRAILS.md`; old full text archived. Duplicate approval in `.agents/rules/00-project-governance.md` corrected; optional skills and animation scope clarified. Product Reassessment scope added without approving UI implementation or closing Stage 11. Application checks were not run (V1 documentation class); reference/consistency checks and `git diff --check` passed; V1–V8 text preserved except for the relocated guardrails reference, all 22 trap numbers and nine review coverage groups retained. The pre-existing modified macOS plugin registrant is outside this Task; no new claim of full-gate evidence reuse is made for the working tree.
+
+**RA.R1 complete, 2026-10-17:** read-only assessment of code at HEAD `b1df679` plus the existing working-tree documentation amendment; all nine review areas covered (RA-A through RA-I); the report is preserved in [`research/RA_R1_PHASE_A_ASSESSMENT.md`](research/RA_R1_PHASE_A_ASSESSMENT.md) (it replaces the earlier chat-only report). Six original reference images were recovered and viewed; the Moon concept project (Moonlit) was inspected too (its own code carries no licence: concept only); the prior generated prompt remains unavailable. Code findings: Welcome is pushed after the first Tonight frame (RA-B01; duration/device reproduction unverified); Home keeps an action-only toolbar (RA-D01); Open planner and New plan have distinct lifecycle effects (RA-D06). ADR-020 explains absent WB/focus, camera-class fields, previous-light proposals and calibration copying (RA-F05–RA-F10); weather already has wind/humidity in detail, but Home summarizes cloud/age (RA-E02). Core capture outputs and record-management surfaces exist; usability is not proven by source/tests. No app/test changes or runs, no fresh gate/phone/CI PASS, no new product decisions. Remaining research: minimum onboarding; Home priorities; compact night/weather presentation; camera parameter intent and proposal clarity; naming/logo/assets; record/settings discoverability. Reuse RG-10/RG-11 and S9.3 before new research. The old "device or emulator" owner-action wording below is historical drift: emulator evidence does not replace the outstanding physical-phone/human checks. Next RA.R2 only on request; do not start implementation. Documentation whitespace check passed; source/test evidence was inspected, not executed.
+
+**Distribution aligned, 2026-10-17** (documentation only; DECISIONS E.1, "Distribution: GitHub Releases only"): Culmina ships as a signed APK on GitHub Releases. Deferred (store distribution): Play upload key and App Signing, the AAB and `check_bundle` as a release requirement, the Data Safety form, the store listing, the Play closed test, Play-only rules. Changed: S12.2 recommended, not a gate (S12.3 and S13.2 no longer wait for it); S13.1 drops the Play icon; S17.4 drops Data Safety; S17.5's N5 becomes "install the release APK and an update"; **S17.6 becomes GitHub release packaging** (release keystore, signed APK, an APK check, `RELEASE.md` with versioning, checksums, install and update instructions); **S17.8 added** (the owner publishes the GitHub Release). Unchanged: privacy, terms, licences (S11P-03 still open), signing, id and update compatibility, backup/restore, accessibility, device validation. `RELEASE.md`, `COMPLIANCE.md` and the identity plan carry deferral notes.
+
+**S12.1 done, 2026-10-17** (TD-104 resolved; commit `461e38c`; remote CI run 39020770255 (https://github.com/Buffur/Astro-Planner/actions/runs/39020770255) PASS on `461e38c`, every step success, after the owner-authorized push `b1df679..461e38c`):
+- **Cause, reproduced:** on Linux `equipment_editor_fit_test.dart`'s `setUpAll` could not find `roboto-regular.ttf`: the Flutter 3.47.4 Linux SDK names it `Roboto-Regular.ttf`, the Windows SDK `roboto-regular.ttf`, and only Windows names are case-insensitive. Reproduced in WSL (Ubuntu 26.04, the official 3.47.4 archive, sha256 checked, a fresh LF clone) with the CI's exact count "+1840 ~2 -1".
+- **Fix:** `test/support/sdk_fonts.dart` (a case-insensitive lookup) used by the fit test and the opt-in render gallery; `.github/workflows/ci.yml` pins `ubuntu-24.04` and uses `actions/checkout@v5`.
+- **Verification (high-risk class: tests and CI steps):** the full gate PASS on **Linux** (WSL, CI-equivalent) and on **Windows**: Encoding, Format, Analyze, 1,844 tests with 2 skips, host E2E 2 + 1. The failing test alone on Linux 4/4; the render gallery on Linux 15 images.
+- **Remote:** the owner authorized the push of `main`; the GitHub Actions run on `461e38c` passed (run 39020770255 (https://github.com/Buffur/Astro-Planner/actions/runs/39020770255)). Acceptance 1–7 met; TD-104 and RD-17 closed.
+
+**G3 approved, 2026-10-17** (documentation only): the owner approved the RA.P roadmap, Stages 12–17 (`POST_ROADMAP_PLAN.md` §5; DECISIONS E.1, "RA.P — the Culmina release roadmap approved (G3)"). Stage 11 is closed as superseded by Stage 17 (S11.6 → S17.5, S11.7 → S17.7). The Product Reassessment is complete. Nothing is implemented; S12.1 waits for the owner's start instruction.
+
+**RA.D complete and RA.P proposed, 2026-10-17** (documentation only): the owner answered Q1–Q4 (scope kept, demoted; MF-c; no seeing/transparency provider, a link; the AstroBin CSV export included). RA.P adds **Stages 12–17** to `POST_ROADMAP_PLAN.md` §5 (release foundation; identity; Capture Plan completeness with ADR-021 and v26; night conditions with ADR-022; screens and flow; final validation folding in S11.6 and S11.7), each Task with dependencies, acceptance, its V1 class and stop conditions, and a traceability table for every RA.R1 finding and open TD item. **Awaiting the owner's approval (G3);** nothing is implemented. Starting Task after G3: **S12.1** (TD-104).
+
+**RA.D round 2, 2026-10-17** (documentation only): the owner's release scope principle recorded (a complete release; essential Capture Plan work not deferred for effort); round 2A approved (PD-05 to PD-14, PD-21); PD-02, PD-03, PD-04, PD-16, PD-17, PD-19, PD-20 resolved from the owner's review direction; SI-015 recorded (two Moon-up definitions). Four questions open for the owner ([`research/RA_D_ROUND2_PACKAGE.md`](research/RA_D_ROUND2_PACKAGE.md) Part C: Q1 scope, Q2 Moon definition, Q3 seeing/transparency, Q4 AstroBin CSV). Next: the owner's answers, then RA.P.
+
+**RA.D round 1 complete, 2026-10-17** (documentation only): ID-2 = B (Buffur; RD-01 decided), ID-3 = `io.github.buffur.culmina` (intended), ID-4 = `Buffur/Culmina` (intended), ID-5 = A + C hybrid direction (artwork not approved), ID-6 = S2 (DECISIONS E.1, "RA.D — round 1 identity"). Preparation in [`research/RA_D_IDENTITY_TRANSITION.md`](research/RA_D_IDENTITY_TRANSITION.md): id-migration acceptance criteria with backup and restore across ids, the repository and policy-URL checklist, the logo review step, and the release order (the formal "Culmina" trademark search before the id change). Nothing implemented: the app, id, icon, splash and repository are unchanged.
+
+**RA.D round 1 started, 2026-10-17** (documentation only): **ID-1 decided — Culmina** (DECISIONS E.1, "RA.D — ID-1"), pending formal trademark clearance before store publication; a product-direction decision, no code, application id or repository change. ID-2 to ID-6 are presented to the owner; round 2 not started.
+
+**Language correction, 2026-10-17** (documentation only, at the owner's request): CLAUDE.md now requires English for all persistent project documentation, with replies to the owner in Russian; the RA.R1 report, the RA.R2 plan, the R2a–R2e reports and the decision sheet were translated into English with their findings, IDs, numbers and references unchanged (structure compared against `8e267a6`); the owner's own Russian words are kept as quotes with English glosses. The decision sheet now names the source of each recommendation (R2e's ST2-lite and PD-11 differ from R2b's; ID-2/ID-3 come from R2e). No decision made.
+
+**RA.R2 complete, 2026-10-17** (documentation only; V1 documentation class: links resolve, `git diff --check` clean; no gate): four research steps in parallel, each with dated primary sources and its decision-critical claims spot-checked by the main session (Open-Meteo terms, 7Timer ASTRO, N.I.N.A. row defaults, `com.twtapp` = Stargazing Hub, the Android splash limits, App Store name collisions, a sky-rate vector, the rig's stored fields and the Moon predicates in code). Findings: the capture-plan-before-the-night niche is unoccupied among the mobile planners found (inference from listings); absolute SNR cannot be estimated honestly from the stored inputs (O2, √N over integration time, recommended); the Moon-up predicate of CALC-29/33/43 (centre above 0°, airless) differs from the displayed rise/set (Meeus h₀) by 5–10 min per event (a candidate SI finding); a 16-night overview costs one Open-Meteo request per site; no seeing/transparency provider recommended for 1.0; renaming before the first upload recommended ("Astro Planner" is crowded), shortlist Culmina, AltArc, Astrarc, Arcwindow. No probes run and no screenshots supplied (the plan's §6 permissions were not given): RA-F05, RA-G03 and K12 go to RA.P as verify-then-fix. Next: RA.D.
+
+**RA.R1 follow-up, 2026-10-17 (documentation only):** K2/K3 corrected here: the code is pushed (`origin/main` = `b1df679`) and the repository is public; every CI run failed (`836bbdf`: 1,730 passed, 1 failed; `718c19b` and `b1df679`: 1,840 passed, 1 failed; 2 skipped), recorded as **TD-104** (`TECH_DEBT.md`; the failing test needs the signed-in log; the local gate at S11.C2 stays valid evidence on its inputs, V3). The owner approved the RA.R2 plan (G0).
+
+**S11.C2 done, 2026-09-30** (corrective; S11H-01 to S11H-03; V5):
+- The rig editor's derived sensor size uses `AppPalette.textSecondary` and its note `textTertiary` (both
+  AA), not the disabled colour and a half-transparent onSurface; "Altitude now" and "Max altitude in
+  windows" go through `QuantityText.degrees` (the typographic minus, never "-0.0°"); the zone picker
+  adds a check to the current zone (not colour alone; red on red in field mode).
+- `stage11_host_fixes_test.dart` (4: the editor's contrast in light and dark, scrolled to the derived
+  fields; the minus below the horizon; the check), each mutation-checked.
+- **Verification:** shared presentation: the full gate after the change, **PASS** (1,844 tests, 2 skips;
+  host E2E 2 + 1; Flutter 3.47.4).
+
+**S11.2 done, 2026-09-30** ([evidence](evidence/STAGE_11_HOST_EVIDENCE.md); the gate at `9668a13` reused, V3):
+- **70 HOST rows: 67 PASS**, each with its test, code location or validation citation; five probes run and
+  deleted (a name and results through two kills and v24 → v25; the map with every tile failing; the
+  editors and the filter panel in the sweep's audit, three themes at 100 % and 200 %; Roboto checks).
+- **Blockers (V4 A, each against a frozen row):** **S11H-01** the rig editor's auto-calculated sensor size
+  and its note fail AA contrast (2.66:1 and 2.81:1 in light; `disabledColor`, `onSurface.withAlpha(128)`;
+  H1); **S11H-02** "Altitude now" formatted by hand (`home_screen.dart:128`): a hyphen-minus and a
+  possible "-0.0°", not `QuantityText.degrees` (C8); **S11H-03** the zone picker marks the current zone by
+  colour alone (`ListTile.selected`; red on red in field mode; H5). → **S11.C2**.
+- Follow-ups: TD-100 (sweep coverage; the target editor's dropdown), TD-101 (hand-formatted quantities),
+  TD-102 (probe-only checks), TD-103 (a `print`).
+- Documentation drift corrected: `TEST_PLAN.md` (the lifecycle header, L2's button, L7's schema, the 15.3
+  and 12.4 checklists, the E2E section) and CLAUDE.md traps 18 and 19.
+- **Verification:** the documentation class (V1).
+
+**S11.4 done, 2026-09-30** ([evidence](evidence/STAGE_11_PROVIDERS_COMPLIANCE.md); no blocker):
+- **PASS:** N10 (target API 36; 16 KB pages), O5 (the providers' terms re-read), O7 (no secrets; HTTPS
+  only; no cleartext), O8 (`COMPLIANCE.md` and the policy against the code, after three factual
+  corrections to `COMPLIANCE.md`), Q2 (Play's rules, cited: a new personal account needs a closed test
+  with at least 12 testers for 14 days before production; API 36 from 31 Aug 2026; 16 KB pages).
+- **UNVERIFIED on this machine, carried to the phone (S11.6):** O1 Open-Meteo, O2 Nominatim, O3 OSM
+  tiles, O4 the light-pollution link, G6 About's page loads: the emulator's HTTPS is intercepted by the
+  host's antivirus ("Trust anchor … not found"); one host request each confirmed the request contract
+  (O2: see TD-097).
+- **PARTIAL:** O6 licences: the 114 runtime Dart packages are GPL-compatible and on the licence page;
+  the Android libraries' notices are not (TD-098); **S11P-03: `geolocator_android` bundles Google Play
+  services location (proprietary) in the GPL-3.0 app — an owner decision** (accept and state it, or use
+  the platform location manager: a code change).
+- **NOT MET (owner):** O9 the policy is unpublished (404) with `<CONTACT EMAIL>` (TD-088, RD-01).
+- Follow-ups: TD-097 (`municipality`), TD-098 (notices), TD-099 (the policy's weather wording). The
+  emulator's automatic time is back on.
+- **Verification:** documentation and evidence only; `COMPLIANCE.md` restamped.
+
+**S11.5 done, 2026-09-30** ([`STAGE_11_DEVICE_RUNBOOK.md`](STAGE_11_DEVICE_RUNBOOK.md); documentation only):
+every PHONE, HUMAN and OWNER row of the matrix has an entry: how phone runs are done (`.s2check`, never
+the owner's data); the agent rows for S11.6 (★ L10, M3, M4, E5–E7); the person rows (★ H6 TalkBack,
+H7, I2/I3 darkness, A8–A10, ★ Q3 dogfooding); the owner actions (★ N4, N5, N7, N8, N9, O9, O10, O11,
+Q5; N6, M6, P2, L7, M5). ★ marks the mandatory rows.
+- **Verification:** the documentation class (V1).
+
+**S11.C1 done, 2026-09-30** (corrective; S11F-01 / TD-092 resolved; V5):
+- `LogbookScreen` re-reads its list whenever it comes back into view (its tickers enabled again: a tab
+  switch, or the planner or another root page closing over it), besides the revision bump of S8.6.
+  `logbook_comes_back_test.dart` (2: a plan saved while another tab is shown; a plan saved in the
+  planner opened over the Logbook), mutation-checked (both fail without the change). Re-checked on the
+  emulator with a release build: the saved plan appears at once.
+- The gate also exposed a time-of-day failure: `integration_flow_test.dart`'s "Save twice" case used
+  the wall clock and failed between dawn and noon (the night had ended, so the second Save made a copy,
+  D8-1). Given a fixed evening clock; the wider sweep is **TD-096** (FOLLOW-UP).
+- **Verification:** shared behaviour (the Logbook screen): the full gate after the last change,
+  **PASS** (1,840 tests, 2 skips; host E2E 2 + 1; Flutter 3.47.4); the emulator re-check (V5: the
+  original finding, its criterion, the correction's own tests).
+
+**S11.3 done, 2026-09-30** (the emulator rows; [runs](evidence/STAGE_11_EMULATOR_RUNS.md); RUNTIME
+VERIFIED, emulator, D11-1):
+- **Passed:** L1 (fresh install offline), L2 (location denied, denied forever, services off), L3 (the
+  data), L4 (a kill during the saved night: Tonight's result line, one copy), L5 (rotation, dark mode),
+  L6 (a zone change after the night), L8 (a full disk, with notes), L9 (the core-loop E2E), B6 (2.4's
+  Los Angeles evening), F13 (backup, reinstall, restore; a newer backup refused), F14 (Auto Backup
+  through the local transport, release build), F15 (Share and Export), F16 (a newer database explained
+  with no reset; a below-floor file reset with `.v7.bak` kept), G7 (identity; the splash not captured),
+  J5 (offline with data), N2 (the whole session on the release build), N3 (the bundle check, failing
+  only on the debug signer, as designed). `TEST_PLAN.md` records them.
+- The E2E needed two test changes to run on a device (`1af00be`): the test's text input registered,
+  the view-size override kept on the host.
+- **Blocker S11F-01 = TD-092:** a saved plan is missing from an already-open Logbook until a restart
+  → **S11.C1**. **Follow-ups:** TD-093 (the restore confirmation lacks the backup's date), TD-094 (the
+  screen is not restored after a process death), TD-095 (the autosave banner after a successful Save);
+  wording notes in the runs file.
+- **Verification:** documentation of runs (the runs themselves are the evidence); no code changed in
+  this commit.
+
+**S11.1 done, 2026-09-30** (the validation matrix, [`STAGE_11_MATRIX.md`](STAGE_11_MATRIX.md); documentation only):
+- 130 rows in 17 groups (A core answer … Q owner decisions and go/no-go), each with its source, the
+  evidence level it needs, its environment (HOST, EMULATOR, PHONE, HUMAN, OWNER) and whether it is
+  mandatory for beta readiness (D11-2): **28 mandatory**. 62 rows already hold evidence at their level
+  (mostly TEST VERIFIED through the Stage 6–10 validations and S10.6's gate; M1–M3 DEVICE VERIFIED).
+  No EMULATOR, PHONE, HUMAN or OWNER row has evidence yet.
+- Coverage: every Appendix B item with Stage 11 as its destination and every Scope and "What it
+  checks" bullet maps to rows or to a stated exclusion (16.5 per D11-6; the beta run itself; the
+  retired tracker's device checks; the low-end phone kept as UNVERIFIED row M5).
+- Drift noted for S11.2: `TEST_PLAN.md`'s lifecycle header ("no emulator"), L7's "v17" (the schema is
+  v25), and the 15.3 and 12.4 checklists still walking the tracker.
+- **Verification:** the documentation class (V1): references resolve; `git diff --check`.
+
+**S10.C1, 2026-09-30** (a correction to Stage 10's record, found by S11.3's first emulator E2E attempt;
+V6 (a): new evidence; [record](evidence/STAGE_10_MEASUREMENTS.md), "Correction: typing on a device"):
+- In profile mode a test's typed text never reached the field (the framework drops the test's client
+  id without asserts; on a device the real keyboard also overwrites it). Stage 10's profile rows that
+  type recorded taps and animation only; they are superseded. The host counts, the focus step with the
+  real keyboard, the ViewModel edits and the timings were unaffected.
+- `perf_scenarios_test.dart` registers the test's text input after the focus step and asserts every
+  typed text arrived. Two new runs: typing in the rig editor, the block dialog and the Logbook stays
+  within the frame (build averages 1–3.5 ms); the search has 2–3 frames over per run (worst 19–30 ms).
+- The emulator's second session is far faster than the first (seed 121 ms vs 1.7–2.5 s): numbers are
+  comparable only within a session. ENG-12 re-checked within it: 815 ms without the transaction, 121–122
+  ms with it (6.7×). Stage 10's conclusions stand.
+- **Verification:** test code only: analyze clean; the suite passes on the host; two emulator runs in
+  profile mode, plus one with the seed's transaction temporarily reverted (restored; `lib/` unchanged).
+
+**Stage 11 planned, 2026-09-30** (documentation only; the plan's "Stage 11 — frozen Task sequence"):
+- Inputs verified at `e6b6172` and on this machine: the emulator (Android 16, Google Play image, TalkBack
+  installed, Backup Manager off, 4.8 GB free) can carry the E2E, most lifecycle rows, the refused
+  database, backup and restore, permissions, offline, live providers and a release install as RUNTIME
+  VERIFIED (emulator); the phone rows (Stage 10's phone runs, TalkBack, red mode in darkness) and the
+  human rows (the walkthrough, comprehension, the go/no-go) wait for the phone and the owner.
+  `TEST_PLAN.md`'s E2E text still describes the tracker (S11.2 corrects it).
+- **Frozen:** S11.1 matrix → S11.2 host, S11.3 emulator, S11.4 providers and compliance → S11.5 phone and
+  owner runbook → S11.6 phone runs (when connected) → S11.7 readiness record and final validation.
+  Decisions D11-1 to D11-6 (E.1): evidence by environment; what is mandatory for readiness; the phone
+  through `.s2check` only; **RD-15: no diagnostics export in the beta**; RD-17 stays the owner's; 16.5
+  only on a release decision.
+- **Verification:** the documentation class (V1). S10.6's gate is Stage 11's baseline (V3).
+
+**Stage 10 closed, 2026-09-30** (validation PASS, [report](STAGE_10_VALIDATION.md), `08652ca`; fresh
+independent session; S10.6's gate reused, V3; its own probes P1–P4 run and deleted):
+- No V4 blocker. Four follow-ups, handled at once (the owner's standing request to fix every finding):
+  - **S10V-01:** the suite's section step used a wrong key and skipped silently, and no exposure was
+    edited. Fixed; one emulator run recorded (both within the frame).
+  - **S10V-02:** the suite's header command gains `--no-dds`.
+  - **S10V-03:** the two arm64 APK sizes differ by build command (`--target-platform` also packs
+    other ABIs' plugin libraries, 209,032 bytes); D10-3's "what a phone receives" is the
+    `--split-per-abi` proxy. Recorded in the evidence file.
+  - **S10V-04:** "responsive on representative hardware" stays UNVERIFIED (D10-1). **Carried to
+    Stage 11:** phone runs of `perf_scenarios_test.dart` (the rig editor's focus, the planner and
+    timeline, the Logbook at 300 sessions, first-run seeding).
+- Notes kept: large text not profiled (nothing changed); ENG-11 closed for the session list; at a
+  future dependency upgrade check that `sqlite3_flutter_libs` 0.5.x does not return (N3); the gate
+  runs no E2E step if `integration_test/` were empty (N4).
+- **Verification (the follow-ups):** test code only: format and analyze clean; the suite passes on the
+  host and ran on the emulator. The gate's other inputs are unchanged since S10.6's PASS.
+
+**S10.7 done, 2026-09-30** (build and release options; [record](evidence/STAGE_10_MEASUREMENTS.md) §S10.7):
+- Measured on an arm64 release APK: `--split-debug-info` −1.31 MB (−5.2 %), `--obfuscate` −0.20 MB
+  more. **Not adopted:** the first makes release stack traces unreadable without a per-release symbols
+  file (a release-procedure and RD-15 matter for the owner); the second hides nothing in an
+  open-source app. `RELEASE.md` gains a "Size" section (the baseline and the option) and "Build notes"
+  (the antivirus TLS and the cross-drive Kotlin workarounds). No build configuration changed.
+- **Stage 10's size result:** the release baseline stands (24.8 MB per arm64 phone, 27.8 MB
+  installed); no reduction claimed; the 277 MB was a debug install.
+- **Verification:** the documentation class (V1): no build file changed; references resolve;
+  `git diff --check`. S10.6's gate stays valid (V3).
+
+**S10.6 done, 2026-09-30** (dependencies and assets; [record](evidence/STAGE_10_MEASUREMENTS.md) §S10.6):
+- Every runtime dependency checked against its use: all used except **`sqlite3_flutter_libs
+  0.6.0+eol`**, an empty end-of-life package (its README asks for removal after `sqlite3` 3.x; this app
+  resolves 3.5.2, whose build hook supplies `libsqlite3.so`). **Removed** (RD-02's dependency part,
+  D10-5). The arm64 APK's native libraries are unchanged without it (the APK −12 bytes, in
+  `NOTICES.Z`); the scenario suite ran on the emulator on the new build.
+- Assets: the catalog, its notice, the icon and splash, Material Icons (6 KiB) and `NOTICES.Z`; all
+  referenced, 0.6 % of the APK; nothing to remove. `icon_512.png` is not shipped.
+- **Verification:** dependencies and the lockfile (high-risk): the full gate after the change,
+  **PASS** (1,838 tests, 2 skips; host E2E 2 + 1; Flutter 3.47.4); one emulator run.
+
+**S10.5 done, 2026-09-30** (ENG-12 fixed; ENG-11 and the Logbook measured;
+[record](evidence/STAGE_10_MEASUREMENTS.md) §S10.5):
+- **ENG-12:** `TargetRepository.inOneTransaction`; `CatalogSeeder` seeds inside it: one commit instead
+  of 164. Emulator: 11.9–14.8 s (four runs) → **1.7–2.5 s** (two runs) before the first frame. The
+  per-row failure handling and retry (S1.2) are unchanged; `catalog_seeder_test.dart` passes unchanged;
+  `catalog_seeder_transaction_test.dart` (mutation-checked) asserts one transaction.
+- **ENG-11:** 300 sessions listed in 48–75 ms; no N+1 in today's code. **Closed as measured.** The
+  Logbook at 300 sessions is practical (build averages 2.4–8.1 ms); no change.
+- **Verification:** persistence (high-risk): the full gate after the change, **PASS** (1,838 tests,
+  2 skips; host E2E 2 + 1; Flutter 3.47.4); two emulator runs of the scenarios.
+
+**S10.4 done, 2026-09-30** (measured, no change needed; [record](evidence/STAGE_10_MEASUREMENTS.md) §S10.4):
+the planner's edits, night and target changes and the detail screens build in 1.7–6.2 ms on average
+on the emulator; the only overruns are a new screen's first frame. A temporary host probe (deleted)
+showed no planner section rebuilding on keyboard frames, and one block edit rebuilding only the
+sections that show the plan (1,268 elements). Trap 16's memoization holds; no cache added; sampling and
+calculations untouched.
+- **Verification:** the documentation class (V1); no code changed. S10.3's gate stays valid (V3).
+
+**S10.3 done, 2026-09-30** (form lag, 08 §22; [record](evidence/STAGE_10_MEASUREMENTS.md) §S10.3):
+- **Cause (verified):** the rig editor read the screen width with `MediaQuery.of`, so its whole form
+  (about 600 elements) rebuilt on every frame of the keyboard opening. **Change:**
+  `MediaQuery.sizeOf`. Host: 7,500 → 456 elements rebuilt while the keyboard opens, the form 12 → 0
+  times. Emulator (indicative): the worst build frame while focusing 73/48 → 35/11 ms.
+- Checked and kept (measured cheap): the derived sensor size and focal ratio rebuild the form once
+  per keystroke; Flutter's `Form` rebuilds its fields on any change. The other editors have no such
+  dependency. `media_query_aspects_test.dart` keeps `MediaQuery.of` out of `lib/`; the rebuild test
+  asserts the counts (mutation-checked). CLAUDE.md trap 16 records the rule.
+- A phone trace is Stage 11's; the owner's lag may also have come from a debug build (S10.1).
+- **Verification:** one presentation file (localized): the full gate after the change, **PASS**
+  (1,837 tests, 2 skips; host E2E core_loop 2 and perf_scenarios 1; Flutter 3.47.4).
+
+**S10.2 done, 2026-09-30** (the performance scenarios and their baselines;
+[`evidence/STAGE_10_MEASUREMENTS.md`](evidence/STAGE_10_MEASUREMENTS.md) §S10.2):
+- `integration_test/perf_scenarios_test.dart` (the rig editor, the planner's edits, the detail screens,
+  the Logbook with 300 sessions, first-run seeding, the list query, the candidates) with
+  `test_driver/perf_driver.dart`: frame timings and elapsed times in profile mode on a device; a smoke
+  test on the host inside the gate. `test/presentation/performance/rig_editor_rebuilds_test.dart`: the
+  editor's rebuild counts on the host. `android/.gitignore` ignores Kotlin's `.kotlin/`.
+- Two emulator runs (profile, indicative). **Verified:** (1) first-run catalog seeding takes 13–15 s
+  before the first frame (ENG-12; 164 autocommit inserts) → S10.5; (2) the rig editor's whole form
+  (about 600 elements) rebuilds on every frame of the keyboard opening (host: 12 of 12 frames; its
+  `MediaQuery.of`) → S10.3. **Not bottlenecks:** ENG-11 (300 sessions listed in 48–52 ms), the
+  candidates (313–501 ms), the planner's edits and changes, the detail screens. Raster times are
+  high while the keyboard animates, but this emulator's GPU is emulated: not claimed without a device.
+- **Verification:** test and tooling files only (the suite, the driver, a probe; `.gitignore`):
+  format, encoding and analyze clean; both new tests pass on the host; the suite passed twice on the
+  emulator. The full gate runs at S10.3's end, after its code change.
+- *Correction (found by that gate, 2026-09-30):* with two files in one host E2E run, flutter-tester
+  cannot start the second app ("The log reader failed unexpectedly"), so the gate failed from
+  `c93ecd9`. `tool/check.dart` now runs each `integration_test` file as its own step; the full gate
+  then passed (1,837 tests, 2 skips; host E2E: `core_loop_test.dart` 2, `perf_scenarios_test.dart` 1).
+
+**S10.1 done, 2026-09-30** (the size baseline; measurement only, no code;
+[`evidence/STAGE_10_MEASUREMENTS.md`](evidence/STAGE_10_MEASUREMENTS.md) §S10.1):
+- Built at `8b62b87` on this machine and measured on the emulator (Android 16, x86_64). Release
+  bundle 68.5 MB (three ABIs plus symbols Play keeps); **the arm64-v8a release APK 24.8 MB**; universal
+  release APK 71.9 MB; debug APK 183.6 MB.
+- The arm64 APK: the Flutter engine 47 %, compiled Dart 40 % (the app's own code 1.4 MiB), SQLite 7 %;
+  assets 0.15 MiB. No asset, font or image is a material contributor.
+- **Installed:** release **27.8 MB**; debug **314 MB** (184 MB app, 130 MB data: the debug build's
+  extracted 118 MB JIT kernel and 11.6 MB snapshot; the database 0.1 MB).
+- **The 277 MB (08 §26) is classified as consistent with a debug build's installed total**, not a
+  release size; the exact figure stays the owner's unreproduced observation. No size target (none set);
+  the release size is reasonable, so no reduction is claimed.
+- Machine notes (nothing in the repository changed): Avast's HTTPS interception blocks the JBR's
+  downloads (the first Gradle run used JDK 25 with the Windows trust store), and Kotlin's incremental
+  compiler fails across drives (`-Pkotlin.incremental=false`).
+- **Verification:** the documentation class (V1): references resolve; `git diff --check`. No gate
+  input changed.
+
+**Stage 10 planned, 2026-09-30** (documentation only; the plan's "Stage 10 — frozen Task sequence"):
+- Inputs verified at `1aeee63` (§9.7). Most important: the 277 MB has no recorded build type (the only
+  builds recorded on the owner's phone are debug); **an Android emulator now exists on this machine**
+  (Android 16, x86_64, 2 GB); the rig editor rebuilds its whole dialog on each keystroke in seven of its fourteen fields (a candidate,
+  not a verified cause); first-run seeding still inserts entry by entry (ENG-12).
+- **Frozen:** S10.1 → S10.7, then the Stage 10 validation. Decisions D10-1 to D10-6 (DECISIONS E.1,
+  "Stage 10 decisions (delegated by the owner)"): emulator numbers are indicative, device evidence stays
+  Stage 11's; no new budgets; the user-relevant size is the arm64-v8a split and its install; one
+  measurement record (`evidence/STAGE_10_MEASUREMENTS.md`).
+- **Verification:** the documentation class (V1): references and IDs resolve; `git diff --check`.
+  The TD-089–TD-091 gate (`0f09608`) is Stage 10's baseline (V3).
+
+**Stage 9 closed, 2026-09-30** (the owner, in chat: "defer all three decisions, move on to Stage 10"):
+- **S9.10** (the logo), **S9.11** (RG-12, the licence) and **S9.12** (RD-01, the identity) are
+  **deferred by the owner**. Their research stays as prepared; nothing was built from them. Today's
+  icon, GPL-3.0 and the `chacha12` identity stay as they are.
+- The Stage's exit ("done or deferred by the owner; Stage 9 validation passes") is met: S9.1–S9.9
+  PASS ([report](STAGE_9_VALIDATION.md)) and every finding fixed (TD-089 to TD-091).
+- **Carried:** TD-088 (the 404 source and policy links) stays open with RD-01; both block a store
+  upload, not refinement (Stage 11's release checks). RG-12 stays open for the owner.
+- **Verification:** the documentation class (V1): references resolve; `git diff --check`.
+
+**TD-089 to TD-091 fixed, 2026-09-29** (the Stage 9 validation's findings; the owner asked in chat
+to fix every finding): TD-089's four checks are committed tests (the cloud gate against a forecast;
+the cloud bar's unknown hour; no twilight bar without a sunset and a 59.9° N June night; the target's
+delete and the site's cancelled swipe); **TD-090** (decided under D9-1): the Library's Sites hides the
+position actions and adds sites without making them active, `/select/site` unchanged; **TD-091**: the
+export's share text states its local time and offset. TD-088 stays for RD-01.
+- The core-loop E2E now adds its first site where a site is chosen for planning (`/select/site`,
+  Tonight's "Set site") instead of the Library, whose added sites no longer become active (trap 19;
+  the gate's first run caught it).
+- **Verification:** shared behaviour (the site list and editor, the exporter): the full gate after the
+  last code change, **PASS** (1,833 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**Stage 9 validation of S9.1–S9.9, 2026-09-29: PASS** (fresh session, independent;
+[report](STAGE_9_VALIDATION.md); verified at `8e53479`, application code as at `0a0c95e`):
+- Every frozen item passes (scope, the Task rules, S9.1–S9.9's acceptance, D9-1 to D9-6, RD-07,
+  RD-09, RD-11, the shared rules, traps 12–22); no V4 blocker. S9.10–S9.12 were prepared as their
+  scope says and nothing depends on a guess. **The Stage stays open** until the owner decides or
+  defers them.
+- Findings (non-blocking, recorded, not fixed): **TD-089** (four acceptance checks established by
+  probes, not committed tests), **TD-090** (the Library's Sites still has actions that change the
+  active site), **TD-091** (an export's share text does not state its stamp's zone). Notes: the
+  site's Delete sits in the row (RD-09 allows it); About's author shown as "Buffur" (optional owner
+  confirmation).
+- **Evidence:** the S9.9 gate reused (V3); five temporary probes (P1–P5) run and deleted.
+
+**S9.10–S9.12 prepared, 2026-09-29** (owner gates; documentation only):
+- **S9.10** (`research/S9.10_LOGO.md`): where the icon appears; five problems with today's execution
+  (the star floats above the arc, three stroke weights, the themed icon is the colour drawing tinted,
+  the mark sits high, error red); four alternatives that keep the concept (A corrected, B the window as
+  an area, C minimal, D today's with its defects fixed), each checked against the 66 dp safe zone; a
+  dedicated themed layer; a splash proposal that never delays startup. **The owner chooses.**
+- **S9.11** (`research/S9.11_LICENCE.md`, RG-12): from the GPL FAQ, the Open Source Definition, the
+  CC BY-SA 4.0 legal code and the PolyForm texts: GPL-3.0 meets "free" but not "no monetisation" or
+  "no modification without permission", and no open-source licence can; the options (keep GPL; PolyForm
+  Noncommercial; PolyForm Strict; all rights reserved), and what follows (earlier copies stay GPL, every
+  copyright holder must agree, the catalog stays CC BY-SA 4.0, the dependencies are permissive). Not
+  legal advice. **The owner decides.**
+- **S9.12** (`research/S9.12_PROJECT_IDENTITY.md`, RD-01): the app's source and privacy-policy links
+  (`chacha12`) return 404 while the public repository is `Buffur/Astro-Planner`; recorded as **TD-088**
+  (a blocker for any store upload, not for Stage 9). Options C, B and B′. **The owner decides.**
+- **Verification:** the documentation class (V1): references resolve; `git diff --check`.
+
+**S9.9 done, 2026-09-29** (final visual consistency): the secondary screens use the text roles and
+spacing tokens only (list titles `titleSmall`, "Saved sites" a header, every numeric inset a token;
+12 became `md`). `secondary_consistency_test.dart` (2) keeps ad hoc styles out of the thirteen files;
+the sweep covers them in every theme at 100 % and 200 %. No content changed. Also corrected: S9.8's
+FEATURE_STATUS banner named F-42 for backups (F-42 is planned-versus-actual logging).
+- **Verification:** shared behaviour (thirteen presentation files): the full gate after the last code
+  change, **PASS** (1,825 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**S9.8 done, 2026-09-29** (D9-5; TD-081 resolved): feedback, messages and export polish.
+- `showDone` after a rig, target or site saved, a name saved or removed, an export or backup file
+  created, a restore prepared or cancelled (deletes since S9.1). None for settings (visible in place).
+- **TD-081:** every message through `AppMessages.showMessage` with `AppMotion`'s style; none slides
+  under reduced motion. A test keeps `showSnackBar` out of the rest of `lib/presentation`.
+- File names in local time (`astroplan-entry-…`, `astroplan-logbook-…`, `astroplan-backup-…`), the
+  backup's share text with its UTC offset; "Export all as file" a labelled item in the Logbook's menu.
+- **Tests:** `app_messages_test.dart` (3; the reduced-motion case mutation-checked),
+  `file_names_test.dart` (3), the new messages in the library, detail and backup tests; the Export
+  all test goes through the menu.
+- **Verification:** shared behaviour (every message, two data-layer file names): the full gate after
+  the last code change, **PASS** (1,823 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**S9.7 done, 2026-09-29** (08 §13): sky darkness made readable.
+- Each value first, its source and a readable date under it (`NightTimeFormatter.recordedDate`,
+  "Aug 1, 2026"); "Unknown" with the way to set it; "Not saved" for a transient position. The map
+  link names lightpollutionmap.app and what to do there, in the text roles. The site editor's captions
+  use the same date. No inference, no conversion (trap 6).
+- **Tests:** `sky_darkness_context_test.dart` updated deliberately (the new readings by key, no ISO
+  date, the link's words); the formatter's date (+1); the planner and disclosure tests' link text.
+- **Verification:** shared behaviour (the planner's sky detail, the site editor, a formatter): the
+  full gate after the last code change, **PASS** (1,816 tests, 2 skips; 2 host E2E; Flutter
+  3.47.4).
+
+**S9.6 done, 2026-09-29** (the detail screens' secondary presentation; 08 §12): Weather and Night & Moon.
+- Night & Moon: a twilight bar from sunset to sunrise (`TwilightBands`, pure, from the domain's
+  crossings; bands shaded by depth), above the unchanged table of times, which is its text.
+- Weather: a cloud-cover bar under each hour's number (unknown draws nothing); dew-risk hours marked
+  by an icon as well as colour; "Tap to set location" gone where nothing can be tapped. Age, stale
+  state, unknowns, units, attribution and the horizontal-visibility wording unchanged (ADR-012).
+- **Tests:** `twilight_bands_test.dart` (5: a mid-latitude night, no astronomical darkness, no
+  sunset, clipping, and the calculator's real night); `detail_screens_test.dart` +2 (cloud bars at
+  40 %, the dew icon, no "Tap to set location"; the bar's seven bands). The sweep already opens both
+  details with a full forecast.
+- **Verification:** shared behaviour (two detail screens, a shared helper): the full gate after the
+  last code change, **PASS** (1,815 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**S9.5 done, 2026-09-29** (08 §23; D9-4): About.
+- An author block first: the app, its version, "Made by Buffur" (the owner's public handle from 08
+  §23; the git history records two author names, so no personal name is inferred), Reddit as the
+  prominent button and the GitHub profile. Then each data source's credit with its link (OpenNGC,
+  openstreetmap.org/copyright, open-meteo.com, lightpollutionmap.app), privacy, the licence.
+  Source-code and policy links unchanged pending RD-01. `pubspec.yaml`'s template description
+  replaced. `COMPLIANCE.md` noted; the privacy policy needs no change (nothing new leaves the device).
+- **Tests:** `about_screen_test.dart` +2 (the author block first with both links and the version;
+  every source linked); two counts relaxed deliberately (the catalog's credit now appears in the
+  notice and in its linked line).
+- **Verification:** localized plus `pubspec.yaml` (a gate input): the full gate, **PASS** (1,808
+  tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**S9.4 done, 2026-09-29** (P9.3; RD-11 = S9; TD-050 resolved; D9-3): Settings rebuilt.
+- "Settings", in RG-13's sections: Imaging window (minimum altitude, darkness limit, **Moon gate**,
+  **cloud gate**), Fit and capture time (margin, time between frames now to the model's 120 s, the
+  optional overheads with editable values), Guidance (NPF k, dew margin), Display, Privacy, Data,
+  About; each row value-first with its consequence. No default and no meaning changed.
+- Every setting write, Back up, preparing and cancelling a restore through `runWithFeedback`;
+  Restore through `confirmDestructive`; a pick error through `showFailure`.
+- **Tests:** `settings_rebuilt_test.dart` (5: the sections in order; the Moon gate at 0 % shrinks the
+  usable time on a full-Moon night and both gates persist; 120 s reached; an overhead's steppers
+  persist, change the budget and stop at the floor; a failed save says so); the sweep adds Settings
+  with every gate and overhead on; titles and dialog keys updated deliberately in the navigation,
+  settings and backup tests.
+- **Verification:** shared behaviour (Settings, preferences feeding every planner value): the full
+  gate after the last code change, **PASS** (1,806 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**S9.3 done, 2026-09-29** (RG-13 answered; documentation only): `research/S9.3_SETTINGS.md`.
+- Every visible setting classed (A–F), with what it changes, its unit, range and default, the need
+  (N.I.N.A. and PHD2 documentation for dithering, refocus and meridian-flip practice; CALC-17 for
+  NPF; the twilight definitions), and where it belongs. The Moon and cloud gates are placed in
+  Settings (RD-11 = S9). Decisions for S9.4 recorded in E.1 (D9-3).
+- Found: the "Time between frames" slider stops at 60 s while the model allows 120 s (fixed in S9.4).
+- **Verification:** the documentation class (V1): references resolve; `git diff --check`. The S9.2
+  gate stays the baseline (V3).
+
+**S9.2 done, 2026-09-29** (P9.2): secondary forms and the vocabulary completed.
+- The rig, target and site editors: sentence-case titles and labels from `AppWords`, one primary
+  `FilledButton` Save (the target editor's `ElevatedButton` replaced; the site editor's app-bar check
+  replaced by "Save site" at its foot); `AppSpacing` in the lists and the site form; the site editor's
+  ad hoc SnackBars through the new `showFailure`. "No equipment profiles found." → "No rigs yet."
+- **The retired-terms baseline is empty**, and a test now requires it (P9.2's acceptance).
+- **Tests:** `secondary_forms_test.dart` (3); labels updated deliberately in the rig, target, site,
+  metadata, camera-class and noise-reduction tests and the E2E ("Save Changes" → "Save", "Target Name *"
+  → "Name *", the site editor's Save by key `siteEditor.save`).
+- **Verification:** shared behaviour (three editors, a shared helper): the full gate after the last
+  code change, **PASS** (1,801 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**S9.1 done, 2026-09-29** (P9.1; RD-07, TD-053 resolved; D9-1, D9-2): the Library manages.
+- `ListMode` (manage in the Library, choose from `/select/…`): a Library tap opens the rig, target or
+  site and never changes the plan or the active site; choosing is unchanged. Titles by mode ("Rigs",
+  "Choose a rig", …); no plan highlight in the Library; the Library tab describes itself.
+- **Plan this target** in a target opened from the Library: the leave guard, a new plan with the
+  target, "New plan for …", the planner.
+- Rigs, targets and sites: a visible Delete (rig and target editors, the site row) and a swipe, both
+  through `confirmDestructive` (one message shape), then "Rig deleted" etc. The ad hoc dialogs and raw
+  `Dismissible`s are gone. Acceptance (4)'s "refusal for a rig in use" was dropped: no such refusal
+  exists (saved plans keep their snapshots).
+- **Tests:** `library_manage_mode_test.dart` (6; mutation-checked: with the Library routes in choose
+  mode four fail); the sweep adds `/select/rig`, `/select/target`, `/select/site`; titles and tooltips
+  updated deliberately in the navigation, Tonight, planner, metadata, target, sites and E2E tests
+  ("Select Equipment" → "Choose a rig", "Select Target" → "Choose a target", "Edit" → "Edit rig" /
+  "Edit target", the site dialog's wording).
+- **Verification:** shared behaviour (three lists, the router, the editors): the full gate after the
+  last code change, **PASS** (1,797 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**Stage 9 planned, 2026-09-29** (documentation only; the plan's "Stage 9 — frozen Task sequence"):
+- Inputs verified against the code at `b378f16` (§9.7). Most important: the Library still chooses for
+  the plan and the active site (TD-053); the Moon and cloud gates have no control anywhere (TD-050);
+  About has no authorship; `AppIdentity` names `chacha12` while the remote is `Buffur` (RD-01); rigs,
+  targets, sites and Restore confirm with ad hoc dialogs.
+- **Frozen:** S9.1 → S9.9, then the Stage 9 validation. S9.10 (logo), S9.11 (licence, RG-12) and S9.12
+  (identity, RD-01) are **owner gates**: the agent prepares them, the owner decides.
+- Decisions D9-1 to D9-6 (E.1, "Stage 9 decisions (delegated by the owner)"); TD-074 deferred to
+  after Stage 11 (D9-6).
+- **Verification:** the documentation class (V1): references and IDs resolve; `git diff --check`.
+  The TD-087 fix's gate is Stage 9's baseline (V3).
+
+**TD-087 fixed, 2026-09-29** (S8V-03; tests only): the three Stage 8 acceptance checks the
+validation established by probes are committed tests.
+- S8.1 acceptance 6: `schema_migration_test.dart`'s v23 → v24 test adds a never-saved draft, a
+  Saved and a Saved · changed plan with blocks.
+- S8.4 acceptance 2: `live_runs_survive_test.dart` (new; the shape of the validation's P2).
+- S8.2 and trap 17: the accessibility sweep opens the Saved plan's result form before its night
+  ends, after it with no outcome chosen, and with Not done's reason chips (all three themes, 100 %
+  and 200 %).
+- **Verification:** test code only: the full gate after the change, **PASS** (1,791 tests, 2
+  skips; 2 host E2E; Flutter 3.47.4).
+
+**TD-086 fixed, 2026-09-29** (S8V-02; the owner asked in chat to fix every Stage 8 finding; I-4,
+CALC-44, SI-008): the unreadable Saved · changed path.
+- `ResultsViewModel.savedPlanUnreadable`: the form's review lists no planned blocks and shows the
+  night and target as unknown, instead of the working row's (only Not done is offered, as before).
+- CALC-44's fallback takes the later of the row's night key and the evening date the unreadable
+  snapshot still names (`Session.unreadableSnapshotNight`, read by `DriftSessionRepository`): a
+  working night moved earlier no longer lets Not done be recorded before the saved night can have
+  ended. Only ever later; never shown. No schema change.
+- **Tests:** `results_unreadable_plan_test.dart` (new), `drift_session_results_test.dart` +2; both
+  mutation-checked (each fails without its half of the fix).
+- **Verification:** high-risk (time and night semantics, CALC-44): the full gate after the change,
+  **PASS** (1,790 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+
+**TD-085 fixed, 2026-09-29** (S8V-01; the owner asked in chat; D8-2): Save no longer rewrites a
+saved plan whose night ended since the last night check.
+- `CurrentSession.save` takes the time (`PlanLifecycleViewModel.savePlan` passes the clock) and,
+  inside its step of the autosave chain, never saves over a saved plan whose night has ended
+  (CALC-44): a Saved one stays as it was and the plan is saved as a new one; a Saved · changed one is
+  settled first (`settleSavedPlan`, as S8.3's transition does) and its copy is saved. The ended entry
+  keeps its snapshot, blocks and night. No repository or schema change.
+- A first attempt ran the night check (`followNight`) before Save; the gate's S1.12 race test
+  (`save_start_race_test.dart`) caught that an edit tapped right after Save then landed before it,
+  so the decision moved into the chain, where the snapshot and plan of the tap are kept.
+- **Tests:** `saved_plan_transition_test.dart` +2 (P5's sequence for a Saved and a Saved · changed
+  plan: after dawn, no tick, Save → the entry unchanged, a new saved plan from the working copy);
+  both failed before the fix.
+- **Verification:** shared behaviour (`CurrentSession` and a ViewModel's Save, used by the planner and the E2E):
+  the full gate after the change, **PASS** (1,787 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+  It does not reopen the Stage 8 PASS (V6): it resolves a recorded FOLLOW-UP.
+
+**Stage 8 validation PASS, 2026-09-29** (a separate agent in the implementing session, without its context; [report](STAGE_8_VALIDATION.md)):
+- Every frozen item passes (the Stage's constraints and exit, S8.1–S8.9's acceptance, D8-1 to D8-4,
+  I-1 to I-10, the traps it touches). No V4 blocker; **Stage 8 closed**.
+- Gate reused (V3): S8.9's full gate at `690b94a` (1,785 tests, 2 skips; 2 host E2E); the code diff
+  since is empty. Fresh evidence: probes P1 (v23 → v25 keeps rows in every status), P2 (S8.4
+  acceptance 2: an in-progress, a corrected completed and an abandoned run list, export, back up
+  and record) and two mutations (P3: the TD-063 test fails without the re-read; P4: three S8.9 tests
+  fail without the settings restore); all temporary and removed.
+- Non-blocking findings recorded, not fixed: S8V-01 / **TD-085** (Save in the minute after a saved
+  night ends rewrites its snapshot; reproduced by P5), S8V-02 / **TD-086** (the unreadable Saved ·
+  changed path shows and times working state), S8V-03 / **TD-087** (three acceptance checks rest on
+  the validation's probes, not committed tests).
+- **Verification:** documentation class (V1): references and IDs resolve; `git diff --check`.
+
+**S8.9 done, 2026-09-29** (TD-056 and ENG-14 resolved; I-10): preferences in the backup; stale ids.
+- **Probe first:** ENG-14 reproduced on the host before any change: a staged restore applied as
+  `main.dart` runs it left `activeLocationId` 7 and the plan ids in place (FAIL). The same probe,
+  unchanged, passes after the change; it is now a committed test in `backup_restore_test.dart`.
+- The archive is `format_version` 2: `preferences.json` (`BackupPreferences`) holds the planning
+  preferences, the display preferences (field mode, section states), `activeLocationId` and
+  `firstRunDone`, grouped by type; never the transient position, the catalog seed marker, the plan
+  ids or the place-name opt-in. A version 2 file must carry readable settings; only carried keys
+  are ever read from it. Staged beside the database and applied just before the swap (redone if a
+  start is interrupted): the carried keys are replaced as a whole. A version 1 archive still
+  restores; it keeps the device's settings but drops its active site. A restore and a confirmed
+  reset clear `targetId`, `equipmentId` and `editedSessionId`; the reset drops the active site too.
+- The repositories expose their keys (`keys`, `fieldModeKey`, `activeLocationIdKey`, `planIdKeys`,
+  `doneKey`) so the backup never restates them. CLAUDE.md trap 5 notes it.
+- Privacy: the backup stays a local file the user shares; the policy now says it holds the
+  settings too. The Data Safety draft (`COMPLIANCE.md`) is unchanged: nothing leaves the device
+  except where the user sends it.
+- **Tests:** `backup_restore_test.dart` +7 (what is carried, by type; a round trip; the ENG-14
+  probe; a version 1 archive restores; staging and cancel of the settings; a version 2 without or
+  with bad settings refused; uncarried keys never applied) and the setup's in-memory preferences;
+  `unsupported_database_test.dart`: a reset leaves no stale id. Mutation-checked: without the
+  restore hook three tests fail.
+- **Verification:** high-risk (backup format, persistence): the full gate after the last code
+  change, **PASS** (1,785 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.8 done, 2026-09-29** (TD-070 resolved; ADR-018 §5): per-field provenance in new snapshots.
+- `SessionSnapshotBuilder` adds `rig.provenance`: each valued spec (`EquipmentSpec` name; the RAW
+  size only when set) → `{source, confidence}` from `provenanceOf`, or null when unknown. The group
+  pairs (S3.V7) stay; `v` stays 1; an older snapshot has no key and reads as stored. Nothing is
+  recorded as `user` unless it was typed; an explicitly unknown field stays null. The export embeds
+  snapshots as stored (manifest unchanged). No screen change.
+- **Tests:** `session_snapshot_builder_test.dart` +3 (an imported rig's estimates and file values; a
+  typed rig per field with one explicitly unknown field; a snapshot without the key still reads,
+  `SavedPlanReader` included); the legacy case now pins every field null.
+- **Verification:** high-risk (snapshot, provenance): the full gate after the last code change,
+  **PASS** (1,778 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.7 done, 2026-09-29** (P8.7; D8-4, I-6; 08 §24): the Logbook entry, Share and Export as file.
+- The entry is a `DetailScaffold`: the identity (name, or target · night) with the site and zone;
+  the result first (state, how it was reported, planned against actual, or when a result can be
+  recorded); the name; the night, site, target and rig from the snapshot (budget words: Integration,
+  Time needed, Total time); planned against actual per block; notes; conditions; then the actions
+  its state allows (Open in planner before the night ends; Record result after it; Edit result with
+  a result; Copy to another night for all but an old log), Share and Export as file. An old log
+  offers Share and Export only. No tracker anywhere.
+- Share (`EntryShareText`, pure; entry and list row): structured, only what the entry holds, never
+  the notes or the coordinates. The download action is the one-entry manifest v2 export, kept and
+  named Export as file. `SessionLog.toShareableText` removed with its two tests.
+- The entry's retired terms are gone (the baseline lowered).
+- **Tests:** `entry_share_text_test.dart` (3); Copy to another night (VM); the entry's actions by
+  state; two detail assertions updated deliberately (the result summary repeats the integration;
+  notes and conditions are two sections; Copy replaces ""Plan again (copy)"").
+- **Verification:** shared behaviour (the entry, the list, a ViewModel): the full gate after the
+  last code change, **PASS** (1,775 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.6 done, 2026-09-29** (08 §24; P8.6): an optional plan name.
+- Schema v25: `session_logs.name` (nullable). `SessionRepository.rename` (trimmed, up to 80
+  characters, empty removes it; legacy refused; the plan, status and snapshot never change). Never
+  asked at Save plan; set on the entry (""Name (optional)""); the Logbook shows it, else target ·
+  night, and searches it; a working copy never takes it. Export key `name` (additive); the backup
+  keeps it.
+- Found on the way: the name dialog disposed its field while closing (fixed: the dialog owns it); the
+  open Logbook did not re-read an entry changed elsewhere (fixed: `SessionsViewModel.revision`).
+- **Tests:** the v25 migration group; `rename` and copy cases; the export round trip; the backup
+  acceptance with a named plan; a UI test (set, list, search, remove). Pins v24 → v25 moved
+  deliberately.
+- **Verification:** high-risk (schema): the full gate after the last code change, **PASS** (1,773
+  tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.5 done, 2026-09-29** (ADR-019 §2, §8, §10; UX-30; RD-07; I-9): the Logbook list.
+- The tab and screen are Logbook; Upcoming (saved plans whose night has not ended) and Past; rows
+  with the identity (target · night), `PlanStateLabel`, rig and site, planned against actual,
+  Record result or Edit result. Search over the target, site and notes (in memory). Filters in one
+  panel with a count, held by `SessionsViewModel` (survive navigation), combining with the search.
+  Delete: swipe or the entry's visible Delete, after `confirmDestructive`. Progress by target moved
+  from the Library to the Logbook (`/sessions/progress`). The list's retired terms are gone.
+- `SessionsViewModel` moved to its own file (re-exported); `ProgressScreen` moved to the Logbook.
+- **Tests:** `logbook_screen_test.dart` rewritten (5: listing and groups, search, the filter panel
+  with search and persistence, delete cancel and confirm); the filter, legacy-row, tab-label and
+  route tests updated deliberately (the chips, ""Sessions"", ""Legacy log"" and ""Planned"" are what
+  S8.5 changes).
+- **Verification:** shared behaviour (the router, a ViewModel, several screens): the full gate after
+  the last code change, **PASS** (1,751 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.4 done, 2026-09-29** (the owner's direction of 2026-09-27; ADR-016 §13): the live tracker retired.
+- **The audit (A–E)** is in `ARCHITECTURE.md` (S8.4). Removed (A): the tracker screen and route, its
+  ViewModel, the resume prompt, Start/Track live, Tonight's run card, the entry's Open tracker,
+  keep-screen-on and the `wakelock_plus` dependency (no Dart use; the lockfile loses two packages),
+  CALC-35 and CALC-36. Kept (B, C): the events, the fold and the counters' invariant, the
+  repository's stored-run API, every stored run, the export and the backup; no migration.
+- A run left in progress by an older version is offered on Tonight's line and in the Logbook and is
+  recorded through the result form. **TD-063 resolved:** `openSession` re-reads the session; one
+  deleted meanwhile opens as a copy (`stale_detail_open_test.dart`, fails on the old code).
+  **TD-073 resolved** (the Start message left). **UX-13 and UX-26 closed.**
+- Found and fixed on the way (S8.2's own acceptance, I-7): after a failed result write the form kept
+  no choice; it now reloads only for a stale entry and otherwise keeps the input.
+- **Tests (D, E):** retired with their reasons in the audit (the tracker's screen, prompt, outlook,
+  estimate and running-time cases, Start-then-edit, the Track live menu case); lifecycle rows L4, L6,
+  L8 replaced by the saved-night lifecycle; the E2E is Save → the night (a restart) → Tonight's line
+  → result → export, and records a result across a DST change.
+- **Verification:** a dependency change (high-risk): the full gate after the last code change,
+  **PASS** (1,750 tests, 2 skips — fewer because the tracker's tests were retired; 2 host E2E;
+  Flutter 3.47.4).
+**S8.3 done, 2026-09-29** (ADR-019 §3.1, D1 delivered; D8-1, D8-2, I-3, I-8): the saved-plan
+transition and Tonight's line.
+- Once a saved plan's night has ended (CALC-44), it stays on its night with its snapshot, and the
+  planner continues on one working copy, with the app open (`NightClock`) and at a restart
+  (`CurrentSession.leaveEndedSavedPlan`): an untouched copy for Saved, a settlement for Saved ·
+  changed (the edits in the copy, unsaved). The copy's night is the working night if still ahead,
+  else tonight. Idempotent; a failure is logged and retried at the next check. A never-saved draft
+  still rolls forward; a run keeps its copy rule. Opening an ended saved plan opens a copy.
+- D8-2 tested: Save before the night ends replaces the snapshot, a changed night included.
+- Tonight's line (`_ResultDue`): ""Last night: M42. How did it go?"" or the entry's date, from
+  `SessionsViewModel.dueResult` (refreshed after each night check and each recorded result).
+- **Tests:** `saved_plan_transition_test.dart` (8); two S6.4 rollover tests updated deliberately
+  (their D1 ""saved plan stays current"" expectation is what S8.3 changes).
+- **Verification:** time and night semantics (high-risk): the full gate after the last code change,
+  **PASS** (1,789 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.2 done, 2026-09-29** (ADR-019 §3.1, §4; UX-25 resolved; I-6, I-7): the result form.
+- `/session/:id/results` is ""How did it go?"": the saved plan's review (snapshot night, target, site,
+  rig, planned light blocks), Completed as planned · Partly (typed counts per light block) · Not done
+  (optional reason), notes, conditions, Save result (`showDone`). Nothing preselected for a new
+  result; a tracker run opens as Partly with its confirmed counts; an edit opens with its outcome.
+- Back writes nothing; a stale form is refused and reloaded; a night not yet ended offers no result
+  and says when it can. A Saved · changed entry is settled first (`CurrentSession.settle`); the
+  planner keeps its edits on the copy with no prompt.
+- The Logbook row and entry offer Record result (`ResultAction`, CALC-44) and Edit result. The
+  tracker's Abandon became Not done in the form. `PlanState` shows Partly.
+- **Tests:** `results_screen_test.dart` rewritten (11: run, checks, Not done, not yet, as planned,
+  Partly with 0, Back, stale, Saved · changed, Record result, Edit result); the E2E's Finish step now
+  saves through the form (""Result saved."").
+- **Verification:** shared behaviour on the E2E path: the full gate after the last code change,
+  **PASS** (1,781 tests, 2 skips; 2 host E2E; Flutter 3.47.4).
+**S8.1 done, 2026-09-29** (ADR-019 §3.1, §4; D8-1, D8-3, I-1 to I-5, I-7): results without a run,
+domain and data.
+- **CALC-44** `SavedNightEnd`: a saved night ends at dawn at its snapshot's darkness limit, else at
+  the night's end; without a readable snapshot, at the latest end of its night key.
+- **Schema v24:** `session_logs.result_kind` and `not_done_reason`; `session_events` rebuilt to
+  accept the `reported` kind (every event kept). `ExecutionMachine`: `reported` ends a run that
+  never started.
+- `SessionRepository.recordResult` (Completed as planned · Partly · Not done, for a Saved plan after
+  its night, a run in progress and an edit of a result; stale forms refused) and `settleSavedPlan`
+  (a Saved · changed plan → its saved entry plus a never-saved copy; idempotent).
+- The export carries `result_kind`, `not_done_reason` and `reported` (manifest v2, additive).
+- RD-13 built as notes on CALC-37/38. No screen changed (the form is S8.2).
+- **Tests:** 17 repository tests (`drift_session_results_test.dart`), 2 machine tests, the v24
+  migration group (16 schema tests and a data-preservation test), a manifest round trip. Deliberate
+  changes: the backup and unsupported-database pins move from v23 to v24.
+- **Verification:** high-risk (schema, persistence, a calculation): the full gate after the last code
+  change, **PASS** (below).
+**Stage 8 planned, 2026-09-29** (documentation only; the plan's "Stage 8 — frozen Task sequence"):
+- **Verified against the code at `836bbdf` (§9.7).** Notable: a result can be recorded only through the
+  tracker (`complete` accepts `inProgress` only); no Partly, Not done reason or name is stored; snapshot
+  blocks have no ids and `capture_blocks` are re-inserted on every plan write, but a Saved row's blocks
+  equal its snapshot's; saved plans keep a past night in the row while the planner shows tonight (D1);
+  TD-063's mechanism is still present; the backup holds no preferences.
+- **Decisions:** the owner delegated them to the agent in chat ("do not ask me; decide yourself").
+  D8-1 (S4-DEF-02): a saved night ends at dawn at its snapshot's darkness limit, else at the night's end
+  (CALC-44). D8-2 (S4-DEF-01): Save again before the night ends. D8-3 (RD-13): "Reported as planned";
+  old estimates not relabelled. D8-4: Share without notes or coordinates. I-1 to I-10: the `reported`
+  event, `result_kind` and `not_done_reason` (v24), results for legacy runs, settlement of Saved ·
+  changed rows, unreadable snapshots, entry actions, stale forms, Tonight's line, the Logbook, the
+  backup (DECISIONS E.1, "Stage 8 decisions").
+- **Frozen:** S8.1 → S8.2 → S8.3 → S8.4 → S8.5 → S8.6 → S8.7 → S8.8 → S8.9 → Stage 8 validation. No
+  gate is open.
+- Stage 7's "Current state" entries moved verbatim to `PROGRESS_HISTORY.md`.
+- **Verification:** the documentation class (V1): references and IDs resolve; `git diff --check`. No
+  gate input changed, so S7.V2's gate is Stage 8's baseline (below).
+
+**Before this:** Stage 7 closed on 2026-09-29 at `21e9cb1` ([report](STAGE_7_VALIDATION.md)); its
+entries, from its planning to its closure, are in `PROGRESS_HISTORY.md`.
+
+### Reusable validation evidence as of 2026-10-17 (superseded rows included)
+
+Per `CLAUDE.md`, Verification Policy V3: reuse while the inputs are unchanged.
+
+| Evidence | Ran at | Still valid because |
+| --- | --- | --- |
+| **Remote CI PASS** (run 39020770255 (https://github.com/Buffur/Astro-Planner/actions/runs/39020770255)): the workflow's gate on `ubuntu-24.04`, Flutter 3.47.4 | **`461e38c`** | The same inputs as the row below |
+| **Full quality gate PASS on Linux and Windows** (S12.1): Encoding; Format; Analyze (no issues); 1,844 tests, 2 expected skips; host E2E `core_loop_test.dart` (2) and `perf_scenarios_test.dart` (1). Linux: WSL Ubuntu 26.04, Flutter 3.47.4 Linux archive (CI-equivalent, not a GitHub run) | **`461e38c`** | Ran after S12.1's last change; supersedes the S11.C2 row below. Reusable while `git diff --stat 461e38c HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (S11.C2): Encoding; Format; Analyze (no issues); 1,844 tests, 2 expected skips; host E2E `core_loop_test.dart` (2) and `perf_scenarios_test.dart` (1) | **S11.C2's commit**, on Flutter 3.47.4 | Ran after S11.C2's last change; supersedes the S11.C1 row below. Reusable while `git diff --stat <S11.C2 commit> HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (S11.C1): Encoding; Format; Analyze (no issues); 1,840 tests, 2 expected skips; host E2E `core_loop_test.dart` (2) and `perf_scenarios_test.dart` (1) | **S11.C1's commit**, on Flutter 3.47.4 | Ran after S11.C1's last change; supersedes the S10.6 row below. Reusable while `git diff --stat <S11.C1 commit> HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (S10.6): Encoding; Format; Analyze (no issues); 1,838 tests, 2 expected skips; host E2E `core_loop_test.dart` (2) and `perf_scenarios_test.dart` (1) | **S10.6's commit** (the lockfile without `sqlite3_flutter_libs`), on Flutter 3.47.4 | Ran after S10.6's last change; supersedes the S10.5 row below. Reusable while `git diff --stat <S10.6 commit> HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (S10.5): Encoding; Format; Analyze (no issues); 1,838 tests, 2 expected skips; host E2E `core_loop_test.dart` (2) and `perf_scenarios_test.dart` (1) | **S10.5's commit**, on Flutter 3.47.4 | Ran after S10.5's last code change; supersedes the S10.3 row below. Reusable while `git diff --stat <S10.5 commit> HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (S10.3): Encoding; Format; Analyze (no issues); 1,837 tests, 2 expected skips; host E2E `core_loop_test.dart` (2) and `perf_scenarios_test.dart` (1), one step each | **S10.3's commit** (inputs as at `80dfadd` plus S10.3's editor change), on Flutter 3.47.4 | Ran after S10.3's last code change; supersedes the TD-089–TD-091 row below. Reusable while `git diff --stat <S10.3 commit> HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (TD-089–TD-091): Encoding; Format; Analyze (no issues); 1,833 tests, 2 expected skips; 2 host E2E | **`0f09608`**, on Flutter 3.47.4 | The last code change before Stage 10; supersedes the S9.9 row below. Stage 10's baseline. Reusable while `git diff --stat 0f09608 HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` stays empty |
+| **Full quality gate PASS** (S9.9): Encoding; Format; Analyze (no issues); 1,825 tests, 2 expected skips; 2 host E2E | **`0a0c95e`**, S9.9's final inputs, on Flutter 3.47.4 | Ran after S9.9's last code change, the last code change of S9.1–S9.9; supersedes S9.1–S9.8's gates and S8.9's below. Reused by the Stage 9 validation: `git diff --stat 0a0c95e HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` empty at `8e53479`. Reusable while that diff stays empty |
+| **Stage 9 validation probes PASS**: P1 (target and site delete paths, "Target deleted"), P2 (the cloud gate's threshold changes the usable time), P3 (an unknown cloud hour draws no bar), P4 and P5 (Night & Moon without sunset, without astronomical darkness) | Stage 9 validation, application code `0a0c95e` | Temporary, deleted; application code unchanged since. TD-089 asks for them as committed tests |
+| **Full quality gate PASS** (S8.9): Encoding; Format (463 files, 0 changed); Analyze (no issues); 1,785 tests, 2 expected skips; 2 host E2E | **`690b94a`**, S8.9's final inputs, on Flutter 3.47.4 | Ran after S8.9's last code change, the last code change of Stage 8; supersedes S8.1–S8.8's gates. Reused by the Stage 8 validation: `git diff --stat 690b94a HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` empty. Reusable while that diff stays empty. Supersedes S7.V2's gate at `d28f5a8` (1,734), kept below as Stage 7's closing evidence |
+| **Full quality gate PASS**: Encoding; Format (461 files, 0 changed); Analyze (no issues); 1,734 tests, 2 expected skips (the local real samples; the opt-in S5.9 render test); 2 host E2E | **`d28f5a8`**, S7.V2's final inputs | Ran after S7.V2's last code change; covers both corrections. Reused by the V5 revalidation: `git diff --stat d28f5a8 HEAD -- . ':!docs' ':!CLAUDE.md' ':!README.md'` empty at `21e9cb1`. Supersedes S7.V1's gate at `46e7688` (1,719) and S7.6's at `d13fdab` (1,710) |
+| **Stage 8 validation probes PASS**: P1 (v23 → v25 preservation, every status), P2 (S8.4 acceptance 2), P3 and P4 (mutations: the TD-063 and ENG-14 tests fail without their fixes) | Stage 8 validation at `690b94a` | Temporary, removed; application code unchanged since. P5 reproduced TD-085 (not a pass) |
+| **Pinned catalog regeneration PASS**: 164 objects (109 Messier), output matches committed text after line-ending normalization | Stage 7 validation at `d13fdab` | Tool/asset unchanged; temporary source CSVs removed, original asset bytes restored |
+| **Six Stage 7 probes PASS** (FAIL at `d13fdab`): the two patches applied unchanged to the `099531b` test files, run against the corrected `lib/` | V5 revalidation at `21e9cb1` | Application code unchanged since `d28f5a8`; the same cases are committed tests in the gate above. Six fresh probes (V5-P1..P6) also PASS; temporary, removed |
+| Local real-sample metadata test PASS (DNG, JPEG, HEIC) | After S3.V4 (`2447962`) | Metadata code unchanged since; environment-dependent (the owner's sample folder) |
+| Device checks M1–M4 PASS (owner's Xiaomi 14T Pro, `.s2check` build) | `79f392c`, `237c55f`, `2b045eb` | Device evidence; valid for the flows it covered until those flows change. S3V-08 and S2V-06's checks remain unverified |
+| **Focused probe PASS after S6.V1** (was FAIL at the validation, application code `d7e1477`): `evidence/S6V_01_DELETE_UNDO_PROBE.patch` applied unchanged, run (`--plain-name "S6V probe"`), then removed; "4 blocks, last count 7, example badge false" | S6.V1's final inputs | The same inputs as the gate above. Its sequence is also a committed test now (`capture_blocks_undo_test.dart`) |
+
+### Registers, owner actions, blockers, next action and carried items as of 2026-10-17 (superseded)
+
+#### Open research gates
+
+All defined in `POST_ROADMAP_PLAN.md` §7.
+
+| ID | Topic | Stage | Status |
+| --- | --- | --- | --- |
+| RG-01 | Metadata formats, libraries, file selection and samples (resolves PD-21) | 2 | **Decided** 2026-09-26 (ADR-017), **amended** the same day (the owner's priorities, ADR-017 §13). JPEG and HEIC samples exist (S2.8, S2.9); FITS, PNG and proprietary RAW still need samples, and are out of Stage 2 |
+| RG-02 | Metadata → equipment identity, derivability, matching, provenance and conflicts | 3 | **Decided** 2026-09-26 (S3.D; ADR-018), after S3.R1 (`research/RG-02_EQUIPMENT_IDENTITY.md`) |
+| RG-03 | Sourcing equipment specifications (catalog or none; licence; the verified-seed policy) | 3 (7) | **Deferred by the owner** 2026-09-26 (S3.D, D2): no source in Stage 3. **Researched** 2026-09-29 (S7.R5, `research/RG-03_EQUIPMENT_SPECS.md`); **decided 2026-09-29: Q1** (no source; lensfun crop factors the candidate with RG-12, Stage 9) |
+| RG-04 | Execution's role and how actuals are captured | 4 | **Decided** 2026-09-27 (S4.R2; E.1): B, the Logbook first and the tracker optional; G2 post-session results. Its optional tracker is **superseded** 2026-09-27 (the tracker leaves the target product; P8.4) |
+| RG-05 | Home/Tonight hierarchy, drill-downs and a possible Analytics destination | 4 | **Decided** 2026-09-27 (S4.R4; E.1): Tonight plan-first with a context line; detail screens; no new tab |
+| RG-06 | Basic/Advanced modes against progressive disclosure | 4 | **Decided** 2026-09-27 (S4.R4; E.1): progressive disclosure; no modes |
+| RG-07 | Target catalog expansion, names and search | 7 | **Decided** 2026-09-29 (S7.R3; DECISIONS E.1, "RG-07 decided"): T1 only |
+| RG-08 | Site elevation: an automatic source, optional, or dropped | 7 | **Decided** 2026-09-29 (S7.R4; DECISIONS E.1): E2, optional and Unknown by default |
+| RG-09 | Bortle/SQM sources, whether SQM stays a field, and the light-pollution map provider | 7 | **Decided** 2026-09-29 (S7.R4; DECISIONS E.1): S3 (manual, optional, collapsed), M2 (lightpollutionmap.app) |
+| RG-10 | Calibration-frame workflows and inheritance | 7 | **Decided** 2026-09-29 (S7.R2; DECISIONS E.1, "RG-10 decided"): L1, D1, T0, O0, N1, H1; ADR-020 |
+| RG-11 | Capture parameters (ISO or gain, binning, white balance, focus, interval) and their labels | 7 | **Decided** 2026-09-29 (S7.R1; DECISIONS E.1, "RG-11 decided"): C1, B1, W1, F1, I1, P2; ADR-020 |
+| RG-12 | Licence requirements against GPL-3.0 | 9 | **Researched** 2026-09-29 (S9.11, `research/S9.11_LICENCE.md`); **deferred by the owner** 2026-09-30 (GPL-3.0 stays; P9.5 waits for a decision) |
+| RG-13 | Settings: real-world needs and where each setting belongs | 9 | **Answered** 2026-09-29 (S9.3, `research/S9.3_SETTINGS.md`; DECISIONS E.1, D9-3); built by S9.4 |
+| RG-14 | Proprietary RAW compatibility and libraries (no ad hoc parsers) | 2 (S2.R3) | **Decided** 2026-09-26 (DECISIONS E.1): none in Stage 2; per-format adapters later, with samples; `ExifInterface` and LibRaw rejected |
+
+#### Open owner decisions
+
+All defined in `POST_ROADMAP_PLAN.md` §8.
+
+| ID | Decision | Stage | Status |
+| --- | --- | --- | --- |
+| RD-01 | The GitHub account behind the app identity: `chacha12` or `Buffur` | Before any upload | **Decided 2026-10-17 (RA.D ID-2): B, Buffur** (DECISIONS E.1, "RA.D — round 1 identity"); intended id `io.github.buffur.culmina` and repository `Buffur/Culmina`; not implemented (TD-088 open until then) |
+| RD-02 | The TASK 0.3 holdovers (ADK skill, `skills-lock.json`, `docs/archive/`, `sqlite3_flutter_libs`) | 1 / 10 | Open, except the dependency: **`sqlite3_flutter_libs` removed** by S10.6 (2026-09-30, under the owner's delegation, D10-5) |
+| RD-03 | Wording rulings: the SCI-05 ISO label; the SCI-04 time-resolution caveat | 1 | **Resolved** 2026-09-25: a neutral label (S1.8); SCI-04 documented only (S1.13). DECISIONS E.1 |
+| RD-04 | New-draft defaults and the example plan | 4 | **Decided** 2026-09-27 (S4.R3; E.1): nothing preselected on the first run; New keeps the site and rig; an empty plan with "Start from the example plan" |
+| RD-05 | Drafts and "New session" semantics (Stage 1 may decide an interim safeguard) | 4 (1) | **Decided** 2026-09-27 (S4.R3; E.1): L1 (Draft internal; Save explicit), Y2, U1. The S1.6 interim stands until Stage 6 builds U1. **Clarified** 2026-09-27 (S4.V2; E.1, "S4R-01 and S4R-02 decided"): saved snapshots are immutable per night; results without Save plan; Stage 8 delivers the saved-plan transition at once |
+| RD-06 | The planner's section order; integrity text one tap away | 4 | **Decided** 2026-09-27 (S4.R4; E.1): answer first, decision order; detail one tap away |
+| RD-07 | The Library's role and pickers; where Progress lives | 4 | **Decided** 2026-09-27 (S4.R5; E.1): the Library manages; choosing in context; Progress in the Logbook |
+| RD-08 | Tracking per rig or per session; the seeded rig's tracking | 7 (before Stage 6's capture-plan work, P6.8 = S6.9) | **Decided** 2026-09-28 (owner): **T3**, the rig's default with a per-plan override; the seeded rig stays unknown (DECISIONS E.1, "RD-08 decided"). Built in Stage 7 by **S7.1** (ungated) |
+| RD-09 | Destructive interactions: confirm or undo | 5 | **Decided** 2026-09-27 (owner): **M + S1**, undo for edits inside a plan, confirm for stored records; a visible Delete with swipe as a shortcut (DECISIONS E.1, "RD-09 decided"; `IA_WIREFRAMES.md` §3 amended for plan edits). Built by S5.8 |
+| RD-10 | Ordering Tonight's candidates without a score | 6 (S6.14) | **Decided** 2026-09-28 (owner): **O1**, usable time, then frame fill, then the name (DECISIONS E.1). Built by S6.14 |
+| RD-11 | Where the Moon and cloud gate controls live (TD-050) | 6 or 9 (S6.15 or P9.3) | **Decided** 2026-09-28 (owner): **S9**, Stage 9's Settings (P9.3, with RG-13); S6.15 not built (DECISIONS E.1) |
+| RD-12 | The resume prompt's Finish | 8 | **Lapsed** 2026-09-27: the resume prompt goes with the tracker (E.1, "Stages 6–11 amended after Stage 5"); P8.4's audit covers a run still in progress at the upgrade |
+| RD-13 | Provenance of an accepted estimate | 8 | **Decided** 2026-09-29 (Stage 8 planning, delegated by the owner; E.1, "Stage 8 decisions", D8-3): "Reported as planned"; old estimates not relabelled. Built by S8.1 |
+| RD-14 | Vocabulary (rig or equipment; Sessions or Logbook; window names) | 4 | **Decided** 2026-09-27 (S4.R5; E.1): Rig, Plan, Logbook; the glossary |
+| RD-15 | A local diagnostics export for the beta | 11 | **Decided** 2026-09-30 (Stage 11 planning, delegated; E.1, D11-4): not for the beta; revisit if triage lacks information |
+| RD-16 | When the metadata feature becomes visible (PD-06 gate) | 2 (3) | **Resolved** 2026-09-26 (S3.D, ADR-018 §7): visible at the end of Stage 3 (S3.7), as "Add from a photo" on the equipment screen. It stayed hidden throughout Stage 2 |
+| RD-17 | Push the CI workflow to the remote and observe a first run | 1 (optional) / 11 | **Pushed by the owner** (observed 2026-10-17: `origin/main` = `b1df679`, PR #1 merged 2026-10-16). Three CI runs failed (TD-104); after S12.1 the owner-authorized push produced the first passing run, run 39020770255 (https://github.com/Buffur/Astro-Planner/actions/runs/39020770255). **Resolved 2026-10-17** |
+
+Answered in part by Stage 0: the direction part of 07 §6 item 11 (the primary 1.0 user), in
+`PRODUCT_DIRECTION.md` §2. Modes stay open as RG-06.
+
+#### Owner actions outstanding
+
+These block a release, not refinement. *Aligned 2026-10-17 (GitHub-only distribution): store items are deferred; the release is a signed APK on GitHub (S17.6, S17.8).*
+
+- TASK 16.2 (now S17.6): create the **release** keystore and `android/key.properties` (no Play upload key); install the SDK cmdline-tools;
+  build and check a signed release APK (S17.6; the AAB is deferred, store distribution).
+- TASK 16.3: publish the privacy policy with the contact email filled in; confirm the URL is
+  live (S12.3); ~~make the repository public~~ (public, observed 2026-10-17); the Data Safety form is **deferred** (store distribution).
+- OD-07: a formal trademark search for "Culmina" (S12.2) — recommended, no longer a store gate; RD-01 is decided (B).
+- A device or emulator for the device rows (`TEST_PLAN.md` L1–L8, and the other checks in
+  `POST_ROADMAP_PLAN.md` Appendix B).
+- Stage 3: say which cameras and optics you use besides the phone (a DSLR/mirrorless JPEG, or a
+  FITS file, would let Stage 3 check those classes on real files). The phone is needed for S3.7's
+  device check M4. *(M4 passed at `2b045eb`; the phone is now needed only for the optional S3V-08
+  recheck and S2V-06's checks. Noted at the Stage 3 final sign-off.)*
+  Samples for FITS, PNG, AVIF or RAW, when available, enable their readers later. The DNG,
+  JPEG and HEIC samples stay outside Git.
+
+#### Known blockers
+
+- **Stage 1 (closed by waiver):** X2 is done (S1.V6, 2026-09-26). TD-063 is in Stage 8. W1 was
+  decided with RD-05's U1, and S6.3 builds it.
+- **Stage 2 (closed by waiver):** nothing blocks. The carried items are listed under "Next
+  allowed action".
+- **Stage 3 (closed by the final sign-off PASS, 2026-09-27):** nothing blocks. Carried: S3V-08
+  (device recheck, `.s2check` only), TD-072 with S3F-01, S3F-02, TD-070's Stage 8 remainder.
+  Equipment identity for dedicated astro cameras still needs a FITS sample (S2.6).
+- **Stage 4:**
+  - **closed 2026-09-27** (the final, bounded validation passed). Carried to Stages 6 and 8:
+    S4-DEF-01 to S4-DEF-08;
+  - S4.E stays optional; Stage 6 carries the five-second test as S6.E;
+  - S4V-02's script correction: **done 2026-09-28** as S6.E's first step.
+- **Stage 5 (closed 2026-09-27):** nothing blocks.
+  - Carried: TD-073 (two messages with an action persist: the site prompt's in S6.13, the Start
+    message's in P8.4); UX-39's field-mode card borders (Stage 11 darkness test); the stale CLAUDE.md test count (removed from permanent instructions on 2026-10-17).
+  - Optional: the owner's review of the S5.9 images.
+  - The adoption plan (`DESIGN_SYSTEM.md` §9) feeds Stages 6, 8 and 9.
+- **Stage 6 (closed 2026-09-28):** nothing blocks. S6V-01 / TD-082 was resolved by S6.V1 and its
+  V5 revalidation passed ([report](STAGE_6_VALIDATION.md)). Product gates decided: S4-DEF-04 (R),
+  RD-08 (T3, the override built in Stage 7), RD-10 (O1), RD-11 (S9).
+  - Carried: S6.E UNVERIFIED (the owner accepts the missing independent participant); the tracker
+    until P8.4; TD-074 (allocated to Stage 9's planning at Stage 7 planning); TD-050 (Stage 9,
+    P9.3); TD-081 (Stage 9 or 11); the validation's DEFERRED items (Stage 7's are now in its frozen
+    sequence; Stage 8: saved-plan working copy and results, P8.1–P8.4, P8.7; Stage 9: richer detail
+    screens).
+- **Stage 7 (closed 2026-09-29):** nothing blocks. S7V-01 / TD-083 and S7V-02 / TD-084 were
+  resolved by S7.V1/S7.V2 and the V5 revalidation passed ([report](STAGE_7_VALIDATION.md)).
+  Carried: TD-074 (Stage 9 planning); RG-03 = Q1 with lensfun as the RG-12 candidate (Stage 9);
+  the device and real-sample gaps listed under "Carried". All Stage 7 research
+  and owner gates are decided; no new decision blocks these corrections. Other criteria retain PASS.
+- **Stage 8 (closed 2026-09-29):** nothing blocks. Validation PASS ([report](STAGE_8_VALIDATION.md)).
+  Carried: TD-085, TD-086, TD-087 (non-blocking follow-ups); the lifecycle device rows L1–L8 (Stage 11).
+- **Stage 9 (closed 2026-09-30):** nothing blocks. S9.1–S9.9 PASS ([report](STAGE_9_VALIDATION.md));
+  TD-089 to TD-091 fixed; S9.10–S9.12 deferred by the owner. Carried: TD-088 (with RD-01, before any
+  upload), RG-12 (the owner), the logo (P9.4, the owner), TD-074 (after Stage 11, D9-6).
+- **Device evidence:** M1 seekable providers and M2 non-backup/cancel paths were
+  recorded at `79f392c`. Native streaming and real-backup preview cancellation
+  remain unverified on-device. S2.V3 adds host JVM streaming tests; these do not
+  upgrade device evidence. Stage 11 lifecycle rows remain open.
+- **Release:** RD-01; the 16.2 upload key; the 16.3 policy. These do not block refinement.
+
+#### Next allowed action
+
+1. Each on its own start instruction: **S12.3** (the agent drafts the policy text with the owner's contact email; the owner renames the repository and publishes Pages) and **S12.4** (the owner's S11P-03 decision); **S12.2** (the owner's trademark search) is recommended before the rename but gates nothing (GitHub-only distribution). Then Stage 13. S12.1 is done. **RA.D**: record only the owner's answers on the [decision sheet](research/RA_D_DECISION_SHEET.md) in DECISIONS E.1 (with the ADR amendments they imply); then **RA.P** after G2. Do not start implementation; TD-104 needs the CI log from the owner.
+2. **Stage 11 remains open:** S11.6 phone checks when connected; S11.7 readiness against the existing matrix and named baseline when requested. RA.P must carry all unresolved release checks and decide their scheduling after the product decisions; no previous PASS is reopened without V3/V6 grounds.
+3. **Owner actions** remain: phone, signing/upload key, published privacy policy/contact, RD-01/TD-088, S11P-03, go/no-go and deferred identity/logo/provider gates. The reassessment does not silently resolve any of them.
+
+**Carried:**
+- Stage 10's phone runs (S10V-04): `integration_test/perf_scenarios_test.dart` on a physical
+  phone in profile mode (Stage 11); until then "responsive on representative hardware" is UNVERIFIED;
+- S4-DEF-04 decided (R) and built by S6.3; S4-DEF-01 to S4-DEF-03 and S4-DEF-05 to S4-DEF-08 decided
+  at Stage 8 planning (E.1, "Stage 8 decisions") and built by S8.1–S8.7;
+- S4V-02: done (S6.E step 1, 2026-09-28);
+- S3V-08: a device recheck of the corrected Stage 3 flow (unverified; separate);
+- TD-072 (S3S-03, deferred by the owner) with its S3F-01 addendum; S3F-02 (a note on TD-071, no
+  Task proposed);
+- TD-070: resolved (S8.8); snapshots saved before S8.8 keep their group pairs and are read as stored;
+- W1 (decided with RD-05's U1): built by S6.3;
+- TD-063: resolved (S8.4);
+- TD-057 and TD-058: resolved (S6.4, S6.2);
+- TD-074: allocated to Stage 9's planning (not data entry); the owner may pull it into Stage 7;
+- RD-17 (pushed; CI red, TD-104);
+- the S1.5 and S1.11 device checks (Stage 11);
+- S2V-06's device checks (a non-seekable provider; a real backup's preview cancel): the next
+  time the phone is connected, or Stage 11;
+- the stale id-holding preferences after a reset: resolved with TD-056/ENG-14 (S8.9);
+- TD-085, TD-086, TD-087: the Stage 8 validation's non-blocking follow-ups, for a later Task that
+  touches the saved-plan boundary, the result form or these tests.
 
 ## Earlier "Current state" entries (newest first, up to Stage 8 planning)
 

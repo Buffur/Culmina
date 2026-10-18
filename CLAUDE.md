@@ -5,6 +5,7 @@
 ## Product and architecture
 
 - AstroPlan is a planning-first Flutter/Dart astrophotography organizer: construct a realistic Capture Plan, understand integration time, acquisition/session time, storage and fit within an imaging opportunity, then save and organize the result.
+- Owner AM-01 (2026-10-18): Capture Plan basic entry is simple frames → estimated time/storage/relative stacking gain → Save. Advanced fields/charts are reachable detail; preserve valid domain calculations and source/data safety. Normative project paths are repository-relative; visual references are in `docs/Examples/README.md`. Apply the accepted AM-01/AM-02/AM-03/AM-04 roadmap amendments; AM-04 makes Phone/DSLR exposure/count/ISO/WB and optional AF/MF basic, with astro-only advanced binning and explicit class-based sensitivity; UX32-01–05 and CRUX-01–04 are selected, with Home title choice AM03-T = B. Other review findings remain proposals until owner selection.
 - Weather, Moon, execution history, Logbook, export and backup support planning. Do not turn the app into a planetarium or telescope/camera controller.
 - Preserve useful scientific capabilities through clear hierarchy and progressive disclosure. An explicitly approved reassessment may propose removal or changed prominence; implementation still needs the resulting product decision.
 - Use Provider/ViewModels, go_router and Drift/SQLite. Keep presentation → ViewModels → repositories → data/services, with astronomy and capture calculations independent of Flutter.
@@ -16,18 +17,18 @@
 
 1. Follow the owner's current explicit scope; an implementation prompt authorizes the complete named Task. Report conflicts with older decisions; do not silently invent approval for unrelated work.
 2. `docs/refinement/PROGRESS.md`: current work, blockers, evidence and next allowed action. Read the current summary and next action first, not its whole history.
-3. `docs/refinement/PRODUCT_DIRECTION.md`: accepted product direction; `docs/refinement/POST_ROADMAP_PLAN.md`: Stage dependencies and approved scope; the named session prompt: Task boundaries and acceptance criteria.
+3. `docs/refinement/PRODUCT_DIRECTION.md`: accepted product direction; `docs/refinement/FINAL_COMPLETION_ROADMAP.md`: the approved execution queue (owner, 2026-10-18; F01–F26, G1–G4) with each Task's contract, dependencies and acceptance criteria; `docs/refinement/POST_ROADMAP_PLAN.md`: the RG/RD registers, workflow rules and the earlier Stage 12–17 clauses that the roadmap's S-ID aliases trace to; the named session prompt: Task boundaries and acceptance criteria.
 4. Code is evidence of actual behavior. ADRs and approved decisions define intended behavior. Record implementation deviations; never rewrite historical intent to match code.
 5. Relevant `.agents/rules/*.md` supplement this file. This file's scope/approval rules and canonical Verification Policy resolve conflicting older generic rules or skills. Do not assume `.agents/rules` or `.agents/skills` are automatically loaded by Claude Code: explicitly read only the relevant files.
 6. Auto-memory and old chat summaries are navigation hints, not current task authority. Verify remembered stages, test counts and next actions against PROGRESS and code; do not let stale memory restart a completed Stage.
-7. Historical roadmaps, audits and `docs/archive/` are evidence of their dated baseline, never the current task queue. `docs/PROJECT_HANDOFF.md` is an orientation/history source; use refinement documents for current work.
+7. Historical roadmaps, audits and `docs/archive/` are evidence of their dated baseline, never the current task queue. The documentation map is `docs/README.md`; the takeover-era `PROJECT_HANDOFF.md` is archived in `docs/archive/master-roadmap/` as history; use refinement documents for current work.
 
 Read on demand:
 - `docs/ENGINEERING_GUARDRAILS.md`: required relevant traps before changing persistence, lifecycle, time, weather, metadata, UI, tests, privacy, signing or release. “CLAUDE.md trap N” in older documents resolves there, with numbering preserved.
 - `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/DECISIONS.md`: relevant architecture, schema and accepted ADR sections.
 - `docs/FEATURE_STATUS.md`, `docs/TECH_DEBT.md`, `docs/SCIENTIFIC_INTEGRITY.md`: relevant feature/finding/calculation IDs.
 - `docs/DESIGN_SYSTEM.md`: UI tokens, accessibility and interaction patterns; `docs/EXPORT_MANIFEST.md`: export contract, updated with SessionManifestCodec and versioned for incompatible changes.
-- `docs/refinement/prompts/PRODUCT_REASSESSMENT.md`: bounded reassessment scope and complete review coverage, when that Task is active.
+- `docs/archive/refinement-prompts/PRODUCT_REASSESSMENT.md`: the bounded reassessment's scope and review coverage (historical: RA.R1–RA.P completed 2026-10-17).
 
 ## Post-Roadmap Workflow Governance
 

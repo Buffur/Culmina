@@ -6,9 +6,10 @@
 
 1. Read `docs/refinement/PROGRESS.md`: current state, reusable validation evidence, blockers and
    the **Next allowed action**. That action is the whole scope of this session.
-2. Read only what that action names: its definition in `POST_ROADMAP_PLAN.md`, the ADRs, finding
-   IDs and files it references, then the relevant code and tests. Do not re-audit the repository
-   or reread earlier Stages' history.
+2. Read only what that action names: its definition in the active queue (`FINAL_COMPLETION_ROADMAP.md`,
+   approved 2026-10-18; older S-IDs resolve through its §4), the ADRs, finding IDs and files it
+   references, then the relevant code and tests. Do not re-audit the repository or reread earlier
+   Stages' history.
 3. If the action is a frozen Task, the frozen sequence is the approval: `READ → VERIFY → PLAN →
    IMPLEMENT → VERIFY → SELF-REVIEW → DOCS → COMMIT → STOP`. Verify by change class and reuse
    valid evidence (Verification Policy V1–V3): a high-risk Task ends with one full-gate pass after

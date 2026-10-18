@@ -1,14 +1,20 @@
-# AstroPlan — Product Direction (post-roadmap refinement)
+# Culmina (formerly AstroPlan) — Product Direction (post-roadmap refinement)
+
+> **Owner AM-04 (2026-10-18):** familiar capture parameters and optional descriptive AF/MF extend the prior focus reminder; the current roadmap F03/F06/F09/F12 and DECISIONS E.1 govern. No numeric focus, hardware control or calibration-model expansion.
+>
+> **Read §9 first (2026-10-18 navigation note):** later owner decisions (the tracker's retirement on 2026-09-27;
+> RA.D, the rename and GitHub-only distribution on 2026-10-17) supersede parts of §1, §3–§4, §8 and §10; §9
+> lists each superseded statement with its decision. Current status: `PROGRESS.md`.
 
 > **Status:** the authoritative product direction for post-roadmap refinement, set by
 > **Stage 0 — Refinement Baseline** on 2026-09-25. Changing it needs the owner's approval.
 > **Authority:** the owner's Stage 0 prompt
-> (`docs/refinement/prompts/STAGE_0_REFINEMENT_BASELINE.md`, §4–§8 and §10) and the
+> (`docs/archive/refinement-prompts/STAGE_0_REFINEMENT_BASELINE.md`, §4–§8 and §10; archived 2026-10-18) and the
 > post-roadmap governance in `CLAUDE.md`.
 > **Verified against:** `main` @ `becae04` (2026-09-24, the last roadmap commit). Audits
 > 01–07 in `docs/audit/` were captured against that commit, this statement describes that historical baseline, not the current checkout.
-> **Read with:** `POST_ROADMAP_PLAN.md` (Stages, gates, workflow rules) and `PROGRESS.md`
-> (current state).
+> **Read with:** `FINAL_COMPLETION_ROADMAP.md` (the approved execution queue, 2026-10-18),
+> `POST_ROADMAP_PLAN.md` (registers, workflow rules, earlier Stages) and `PROGRESS.md` (current state).
 > **History is not rewritten.** Where this direction replaces an older product statement,
 > §9 says so. The older documents stay unchanged as evidence of how the baseline was built.
 > **Updated 2026-09-27 (S4.R2, owner-approved):** §4 records the RG-04 decision (Execution's
@@ -26,7 +32,10 @@
 
 ## 1. Primary product job
 
-AstroPlan (shipped as **Astro Planner**, `AppIdentity.appName`) is primarily a
+**Owner amendment AM-01 (2026-10-18):** the primary simple feature is Capture Plan: enter the intended frame blocks, see estimated integration/total duration, storage and relative stacking gain, then save. Advanced calculations/settings/charts are accessible detail, not required steps in basic entry. Preserve valid science and data behind this simpler presentation. The existing comparable-frame gain is an estimate of relative stacking improvement, never an invented absolute physical SNR. Supporting night/weather views use readable timelines/hourly graphics; Plan temporarily omits Tonight for this target for this release while keeping its fit/window calculations. Accepted details: FINAL_COMPLETION_ROADMAP §4 AM-01, DECISIONS E.1 and FINALIZATION_REVIEW §31. The owner subsequently accepted the five §32 actions in AM-02; further repeat-assessment findings remain proposals until selected.
+
+
+Culmina (`AppIdentity.appName`; earlier AstroPlan/Astro Planner) is primarily a
 **user-friendly planner for upcoming astrophotography sessions**. It should answer these
 questions with as little friction as possible:
 

@@ -1,6 +1,6 @@
 # RA.R2c — Night conditions: weather and Moon (R2, R3 — presentation)
 
-> Research for RA.R2, step R2c ([plan](../prompts/RA_R2_RESEARCH_PLAN.md) §3 "R2c"), 2026-10-17.
+> Research for RA.R2, step R2c ([plan](../../archive/refinement-prompts/RA_R2_RESEARCH_PLAN.md) §3 "R2c"), 2026-10-17.
 > Coverage: RA-E01, E02, E03, E05, E06 and the weather part of RA-D03 ([Phase A](RA_R1_PHASE_A_ASSESSMENT.md)).
 > **Research only.** Nothing here is decided. Every option in §7 is an input to RA.D. A new
 > provider is possible only as an option for the owner's decision (ADR-012 §2, trap 22).

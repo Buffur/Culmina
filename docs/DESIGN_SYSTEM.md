@@ -1,51 +1,10 @@
-# AstroPlan — Design System
+# Culmina (formerly AstroPlan) — Design System
 
-> **S9.9, 2026-09-29:** the secondary screens (the Library lists and editors, sites, About, Settings, backup, the detail screens, sky darkness, weather, results) use the text roles and `AppSpacing`/`AppRadius` only: the list titles' bold `TextStyle`s became `titleSmall`, "Saved sites" a header in `titleSmall`, every numeric `EdgeInsets` a spacing token (12 → `md`, the FAB clearance 88 as a token sum). `secondary_consistency_test.dart` keeps ad hoc styles out of those files. The planner and Tonight stay Stage 6's.
-
-> **S9.8, 2026-09-29:** messages: every `SnackBar` through `AppMessages.showMessage` (motion from `AppMotion`, none under reduced motion; TD-081). `showDone` after a save, delete, rename, export, backup, or a restore prepared or cancelled; none for a setting whose effect shows on the same screen (D9-5).
-
-> **S9.6, 2026-09-29:** two visualisations under the shared rules. "When is it dark tonight?": the twilight bar on Night & Moon (bands shaded from `chartTwilight` to `chartDark` by depth; the table of times is its text). "How cloudy is each hour?": a cloud bar under each hour's number on Weather (`muted` fill in a `chartGrid` frame; the number is its text). Neither computes a planning value; colour never carries the dew risk alone (an icon marks it).
-
-> **S9.4, 2026-09-29:** Settings adopts section headings (`titleMedium`, marked as headers for screen readers) each with a one-line consequence (`bodySmall`), value-first rows (the value with its unit as the trailing text), a stepper (− value +, tooltips "<label>: less/more") for bounded counts and durations, and `confirmDestructive` for Restore ("Restore at next start").
-
-> **S9.2, 2026-09-29:** the rig, target and site editors follow one form pattern: a sentence-case title from `AppWords` (Add rig / Edit rig, Add a target / Edit target, New site / Edit site), sentence-case labels, and one primary `FilledButton` labelled "Save" ("Save site" at the foot of the site editor, which loses its app-bar check). `showFailure` is the failure twin of `showDone` for a failure caught outside `runWithFeedback`. **The retired-terms baseline is empty** (§9.3), and the test now requires it.
-
-> **S9.1, 2026-09-29:** the Library lists adopt `SwipeToDelete`, `DeleteButton` (the rig and target editors, the site row) and `confirmDestructive` ("Delete this rig?", "Delete this target?", "Delete this site?", one message shape: what is deleted, that saved plans keep what they recorded, that it can't be undone), `showDone` after a delete, and `AppWords` (Rigs, Targets, Sites; Choose a rig, a target, a site; Plan this target).
-
-> **S8.2, 2026-09-29:** the result form adopts `PlanStateLabel` (its review) and `showDone` ("Result saved."); its outcomes and Not done reasons are `ChoiceChip`s in a `Wrap`, its counts typed fields (no ±1). §9's P8.5 rows for the entry now point to P8.7, as the plan's Stage 8 amendment already said.
-> **S7.6, 2026-09-29:** `CollapsibleSection` gains a controlled use (`open` + `onToggle`): the caller holds the state and no `DisclosureViewModel` is read (the rig editor's "More (optional)", not remembered). The rig editor's "Equipment profile" title is gone (§9.3), with `AppWords.addRig`/`editRig` and Save as the primary (`FilledButton`). The site editor (S7.5) uses the remembered form for "Sky darkness (optional)".
-
-> **S6.16, 2026-09-28:** §3 records the page title's headline role (Tonight); §7a the status block's key numbers and the planner's status edge, the framed context line, the √N graph's labels, and Undo for one-tap block changes; §9.1's Tonight and planner rows note the core screens' finish.
-
-> **S6.13, 2026-09-28:** §9's Tonight and site-prompt rows are done; "Draft" left the baseline.
-
-> **S6.12, 2026-09-28:** §7a adds the night and opportunity timeline.
-
-> **S6.11, 2026-09-28:** §7a adds the stacking-gain graph.
-
-> **S6.10, 2026-09-28:** §7a adds the change mark (`ChangeMark`); Budget details' summary uses the glossary's words.
-
-> **S6.9, 2026-09-28:** §6.2 adds `AppMotion.highlight`; §9.1's capture-plan row is done.
-
-> **S6.8, 2026-09-28:** §7 notes the examples' words (`ExampleText`).
-
-> **S6.7, 2026-09-28:** §7a records the planner's five collapsible sections and the Bortle picker; §9's P6.4 rows are done.
-
-> **Status:** living, built by Stage 5 (Design System Foundation; `refinement/POST_ROADMAP_PLAN.md`,
-> "Stage 5 — frozen Task sequence"). It describes the **code as built**. Each Stage 5 Task adds its
-> part; Stages 6–9 adopt it on the screens (see "Adoption", written by S5.9).
-> **Updated:** 2026-09-27, S5.1 (foundation tokens: text roles, surfaces, type scale, spacing,
-> radius; the gallery test), S5.2 (controls: buttons, fields, dialogs, sheets, menus, messages,
-> icons; states and motion), S5.3 (words: `AppWords` and the retired-terms test), S5.4 (status
-> tokens, the status block, the plan-state label), S5.5 (the collapsible section), S5.6 (the
-> context line and the night picker), S5.7 (the detail-screen template), S5.8 (confirmation,
-> feedback and destructive-action patterns, RD-09 = M + S1) and S5.9 (the adoption plan, §9, and
-> rendered evidence). 2026-09-27, Stage 6 planning: §9's Stage 6 P-Tasks mapped to the frozen
-> S6-Tasks (documentation only; the code is unchanged).
-> **Code:** `lib/core/theme/` (`app_colors.dart`, `app_palette.dart`, `app_typography.dart`,
-> `app_spacing.dart`, `app_radius.dart`, `app_motion.dart`, `app_button_styles.dart`,
-> `app_theme.dart`).
-> **Tests:** `test/core/theme/` (tokens) and `test/presentation/design_system/` (the gallery).
+> **How to read this file (2026-10-18 documentation cleanup; no content changed).** Sections 1–9 are the
+> design system as built in Stage 5 and adopted in Stages 6–9 (tokens in `lib/core/theme/`). The dated
+> notes that opened this file until 2026-10-18 record later adoption steps (S6–S9); they are kept verbatim
+> at the end ("Appendix — Update log"). Open UI decisions: CA-OD1, the brand in the UI tokens (before S16.6;
+> `refinement/PROGRESS.md`).
 
 ## 1. Principles
 
@@ -643,3 +602,56 @@ non-blocking): `refinement/evidence/stage5/` and
 by the opt-in `test/presentation/design_system/render_gallery_test.dart`
 (`ASTROPLAN_RENDER_GALLERY`), which stays outside the gate. Host renders only: they are not device
 evidence.
+
+---
+
+# Appendix — Update log (moved from the file header on 2026-10-18)
+
+*The dated notes that opened this file until 2026-10-18, verbatim (newest first).*
+
+> **S9.9, 2026-09-29:** the secondary screens (the Library lists and editors, sites, About, Settings, backup, the detail screens, sky darkness, weather, results) use the text roles and `AppSpacing`/`AppRadius` only: the list titles' bold `TextStyle`s became `titleSmall`, "Saved sites" a header in `titleSmall`, every numeric `EdgeInsets` a spacing token (12 → `md`, the FAB clearance 88 as a token sum). `secondary_consistency_test.dart` keeps ad hoc styles out of those files. The planner and Tonight stay Stage 6's.
+
+> **S9.8, 2026-09-29:** messages: every `SnackBar` through `AppMessages.showMessage` (motion from `AppMotion`, none under reduced motion; TD-081). `showDone` after a save, delete, rename, export, backup, or a restore prepared or cancelled; none for a setting whose effect shows on the same screen (D9-5).
+
+> **S9.6, 2026-09-29:** two visualisations under the shared rules. "When is it dark tonight?": the twilight bar on Night & Moon (bands shaded from `chartTwilight` to `chartDark` by depth; the table of times is its text). "How cloudy is each hour?": a cloud bar under each hour's number on Weather (`muted` fill in a `chartGrid` frame; the number is its text). Neither computes a planning value; colour never carries the dew risk alone (an icon marks it).
+
+> **S9.4, 2026-09-29:** Settings adopts section headings (`titleMedium`, marked as headers for screen readers) each with a one-line consequence (`bodySmall`), value-first rows (the value with its unit as the trailing text), a stepper (− value +, tooltips "<label>: less/more") for bounded counts and durations, and `confirmDestructive` for Restore ("Restore at next start").
+
+> **S9.2, 2026-09-29:** the rig, target and site editors follow one form pattern: a sentence-case title from `AppWords` (Add rig / Edit rig, Add a target / Edit target, New site / Edit site), sentence-case labels, and one primary `FilledButton` labelled "Save" ("Save site" at the foot of the site editor, which loses its app-bar check). `showFailure` is the failure twin of `showDone` for a failure caught outside `runWithFeedback`. **The retired-terms baseline is empty** (§9.3), and the test now requires it.
+
+> **S9.1, 2026-09-29:** the Library lists adopt `SwipeToDelete`, `DeleteButton` (the rig and target editors, the site row) and `confirmDestructive` ("Delete this rig?", "Delete this target?", "Delete this site?", one message shape: what is deleted, that saved plans keep what they recorded, that it can't be undone), `showDone` after a delete, and `AppWords` (Rigs, Targets, Sites; Choose a rig, a target, a site; Plan this target).
+
+> **S8.2, 2026-09-29:** the result form adopts `PlanStateLabel` (its review) and `showDone` ("Result saved."); its outcomes and Not done reasons are `ChoiceChip`s in a `Wrap`, its counts typed fields (no ±1). §9's P8.5 rows for the entry now point to P8.7, as the plan's Stage 8 amendment already said.
+> **S7.6, 2026-09-29:** `CollapsibleSection` gains a controlled use (`open` + `onToggle`): the caller holds the state and no `DisclosureViewModel` is read (the rig editor's "More (optional)", not remembered). The rig editor's "Equipment profile" title is gone (§9.3), with `AppWords.addRig`/`editRig` and Save as the primary (`FilledButton`). The site editor (S7.5) uses the remembered form for "Sky darkness (optional)".
+
+> **S6.16, 2026-09-28:** §3 records the page title's headline role (Tonight); §7a the status block's key numbers and the planner's status edge, the framed context line, the √N graph's labels, and Undo for one-tap block changes; §9.1's Tonight and planner rows note the core screens' finish.
+
+> **S6.13, 2026-09-28:** §9's Tonight and site-prompt rows are done; "Draft" left the baseline.
+
+> **S6.12, 2026-09-28:** §7a adds the night and opportunity timeline.
+
+> **S6.11, 2026-09-28:** §7a adds the stacking-gain graph.
+
+> **S6.10, 2026-09-28:** §7a adds the change mark (`ChangeMark`); Budget details' summary uses the glossary's words.
+
+> **S6.9, 2026-09-28:** §6.2 adds `AppMotion.highlight`; §9.1's capture-plan row is done.
+
+> **S6.8, 2026-09-28:** §7 notes the examples' words (`ExampleText`).
+
+> **S6.7, 2026-09-28:** §7a records the planner's five collapsible sections and the Bortle picker; §9's P6.4 rows are done.
+
+> **Status:** living, built by Stage 5 (Design System Foundation; `refinement/POST_ROADMAP_PLAN.md`,
+> "Stage 5 — frozen Task sequence"). It describes the **code as built**. Each Stage 5 Task adds its
+> part; Stages 6–9 adopt it on the screens (see "Adoption", written by S5.9).
+> **Updated:** 2026-09-27, S5.1 (foundation tokens: text roles, surfaces, type scale, spacing,
+> radius; the gallery test), S5.2 (controls: buttons, fields, dialogs, sheets, menus, messages,
+> icons; states and motion), S5.3 (words: `AppWords` and the retired-terms test), S5.4 (status
+> tokens, the status block, the plan-state label), S5.5 (the collapsible section), S5.6 (the
+> context line and the night picker), S5.7 (the detail-screen template), S5.8 (confirmation,
+> feedback and destructive-action patterns, RD-09 = M + S1) and S5.9 (the adoption plan, §9, and
+> rendered evidence). 2026-09-27, Stage 6 planning: §9's Stage 6 P-Tasks mapped to the frozen
+> S6-Tasks (documentation only; the code is unchanged).
+> **Code:** `lib/core/theme/` (`app_colors.dart`, `app_palette.dart`, `app_typography.dart`,
+> `app_spacing.dart`, `app_radius.dart`, `app_motion.dart`, `app_button_styles.dart`,
+> `app_theme.dart`).
+> **Tests:** `test/core/theme/` (tokens) and `test/presentation/design_system/` (the gallery).

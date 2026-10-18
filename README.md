@@ -10,22 +10,9 @@ while calculations, assumptions, units and data provenance remain visible.
 
 ## Current status
 
-**As of 2026-09-29:** the project is in post-roadmap refinement, with substantial
-working application code. Stages 0–6 are closed; **Stage 7 — Data Entry &
-Automation is in validation**. Closure history, including earlier owner waivers,
-is recorded in [Refinement Progress](docs/refinement/PROGRESS.md).
-
-Stage 7's original implementation tasks are committed. Independent validation
-found two form defects: calibration controls overwriting independent input, and
-the site editor missing the discard prompt for some single-field edits.
-Both corrections are committed: **S7.V1** at `46e7688` and **S7.V2** at `d28f5a8`.
-The next allowed action is **bounded Stage 7 revalidation**; the stage has not
-yet closed. See the [Stage 7 validation report](docs/refinement/STAGE_7_VALIDATION.md).
-
-Release readiness is not complete. Later stages cover the result/Logbook workflow,
-secondary UX, performance and beta validation. Device checks and release-owner
-actions remain tracked in the progress document. This README describes committed
-milestones; that document is the ongoing handoff for the next allowed action.
+Culmina is in post-roadmap refinement toward its first GitHub release; release readiness is not
+claimed. The current Stage, blockers, device checks, owner actions and the next allowed action are
+kept only in [Refinement Progress](docs/refinement/PROGRESS.md), so this README does not repeat them.
 
 ## What the application includes
 
@@ -56,9 +43,8 @@ Site / Rig / Target → Night & Opportunity → Capture Plan → Fit → Save
                                               Image outside the app → Result / Logbook
 ```
 
-The dedicated live tracker still exists in the current implementation. Stage 8
-will retire its UI after the replacement result workflow is available, preserving
-existing records. See [Product Direction](docs/refinement/PRODUCT_DIRECTION.md).
+The dedicated live tracker's UI was retired in Stage 8 (S8.4); its existing records stay
+readable. See [Product Direction](docs/refinement/PRODUCT_DIRECTION.md).
 
 Scientific outputs keep their limits explicit: unknown values remain unknown,
 thresholds are preferences, and √N describes relative stacking gain rather than
@@ -78,7 +64,7 @@ flutter run -d <device-id>
 ```
 
 The application uses Provider with screen-scoped ViewModels, `go_router`, and
-SQLite through Drift (**schema v23**). Presentation, domain logic and data access
+SQLite through Drift (**schema v25**; see [the data model](docs/DATA_MODEL.md)). Presentation, domain logic and data access
 are separated; astronomy calculations remain independent of Flutter UI code.
 
 Run the full quality gate with:
@@ -98,12 +84,15 @@ For Android signing, bundles and release checks, follow
 
 ## Documentation
 
-Start with the active refinement sources:
+The [documentation map](docs/README.md) says what to read first and where each kind of fact
+lives. Start with the active refinement sources:
 
 - [Progress](docs/refinement/PROGRESS.md) — current stage, blockers, validation
   evidence and next allowed action.
-- [Post-roadmap plan](docs/refinement/POST_ROADMAP_PLAN.md) — stages, frozen tasks
-  and research/owner-decision gates.
+- [Final completion roadmap](docs/refinement/FINAL_COMPLETION_ROADMAP.md) — the approved
+  execution queue to the first release (owner, 2026-10-18): Tasks F01–F26 and gates G1–G4.
+- [Post-roadmap plan](docs/refinement/POST_ROADMAP_PLAN.md) — the research/owner-decision
+  registers, workflow rules and the earlier Stages 12–17, now the roadmap's aliases.
 - [Product direction](docs/refinement/PRODUCT_DIRECTION.md) — planning-first
   workflow and product constraints.
 

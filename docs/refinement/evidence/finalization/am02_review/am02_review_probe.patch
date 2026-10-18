@@ -1,0 +1,763 @@
+diff --git a/build/finalization/am02_review/am02_review_probe_test.dart b/build/finalization/am02_review/am02_review_probe_test.dart
+new file mode 100644
+index 0000000..9857699
+--- /dev/null
++++ b/build/finalization/am02_review/am02_review_probe_test.dart
+@@ -0,0 +1,757 @@
++// AM-02 repeat UI/UX review: observation probe only (FINALIZATION_REVIEW §34).
++// Synthetic fixtures, in-memory database, mocked preferences, fake GPS and
++// geocoder; production main() is never invoked; no owner data, network,
++// device or backup activation. Several cases assert the CURRENT behaviour in
++// order to record it; a passing case is an observation, not a fix.
++//
++// Run from the repository root:
++//   flutter test --no-pub --reporter expanded build/finalization/am02_review/am02_review_probe_test.dart
++import 'dart:async';
++import 'dart:convert';
++import 'dart:io';
++import 'dart:ui' as ui;
++
++import 'package:astroplan/core/theme/app_theme.dart';
++import 'package:astroplan/core/time/clock.dart';
++import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
++import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
++import 'package:astroplan/data/repositories/drift_location_repository.dart';
++import 'package:astroplan/data/repositories/drift_session_repository.dart';
++import 'package:astroplan/data/repositories/drift_target_repository.dart';
++import 'package:astroplan/data/repositories/shared_prefs_planning_preferences_repository.dart';
++import 'package:astroplan/domain/models/astro_target.dart';
++import 'package:astroplan/domain/models/calendar_date.dart';
++import 'package:astroplan/domain/models/camera_class.dart';
++import 'package:astroplan/domain/models/equipment_profile.dart';
++import 'package:astroplan/domain/models/planning_preferences.dart';
++import 'package:astroplan/domain/models/weather_snapshot.dart';
++import 'package:astroplan/domain/repositories/planning_preferences_repository.dart';
++import 'package:astroplan/domain/repositories/storage_failure.dart';
++import 'package:astroplan/domain/repositories/target_repository.dart';
++import 'package:astroplan/domain/repositories/weather_repository.dart';
++import 'package:astroplan/domain/services/location_service.dart';
++import 'package:astroplan/domain/services/opt_in_reverse_geocoder.dart';
++import 'package:astroplan/presentation/screens/home/home_screen.dart';
++import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
++import 'package:astroplan/presentation/screens/target/target_selection_screen.dart';
++import 'package:astroplan/presentation/screens/tonight/tonight_home_screen.dart';
++import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
++import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
++import 'package:astroplan/presentation/viewmodels/settings_viewmodel.dart';
++import 'package:drift/native.dart';
++import 'package:flutter/material.dart';
++import 'package:flutter/rendering.dart';
++import 'package:flutter/services.dart';
++import 'package:flutter_test/flutter_test.dart';
++import 'package:go_router/go_router.dart';
++import 'package:provider/provider.dart';
++import 'package:shared_preferences/shared_preferences.dart';
++import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
++
++import '../../../test/support/fake_device_time_zone.dart';
++import '../../../test/support/fake_reverse_geocoder.dart';
++import '../../../test/support/in_memory_first_run.dart';
++import '../../../test/support/in_memory_privacy_preferences.dart';
++import '../../../test/support/planner_harness.dart';
++import '../../../test/support/sdk_fonts.dart';
++
++const out = 'docs/refinement/evidence/finalization/am02_review';
++const shot = Key('am02-shot');
++final observations = <Map<String, Object?>>[];
++
++void record(String id, Map<String, Object?> facts) {
++  observations.add({'id': id, ...facts});
++  // ignore: avoid_print
++  print('AM02_OBSERVATION $id ${jsonEncode(facts)}');
++  Directory(out).createSync(recursive: true);
++  File(
++    '$out/observations.json',
++  ).writeAsStringSync(const JsonEncoder.withIndent('  ').convert(observations));
++}
++
++AstroTarget target(int id, String catalog, String name) => AstroTarget(
++  id: id,
++  catalogId: catalog,
++  commonName: name,
++  type: 'Galaxy',
++  rightAscension: 10,
++  declination: 41,
++);
++
++// ---------------------------------------------------------------- UX32-03
++
++/// Every search waits until the test completes its query's completer.
++class ControlledTargets implements TargetRepository {
++  final pending = <String, Completer<List<AstroTarget>>>{};
++  final calls = <String>[];
++
++  @override
++  Future<List<AstroTarget>> searchTargets(String query) {
++    calls.add(query);
++    return (pending[query] = Completer<List<AstroTarget>>()).future;
++  }
++
++  @override
++  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
++}
++
++class PlanDouble extends ChangeNotifier implements SessionPlanViewModel {
++  AstroTarget? chosen;
++
++  @override
++  AstroTarget? get selectedTarget => chosen;
++
++  @override
++  Future<void> setTarget(AstroTarget target) async {
++    chosen = target;
++    notifyListeners();
++  }
++
++  @override
++  Future<void> refreshSelectedTarget() async {}
++
++  @override
++  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
++}
++
++List<String> listedTitles(WidgetTester t) => [
++  for (final tile in t.widgetList<ListTile>(find.byType(ListTile)))
++    if (tile.title case final Text text) text.data ?? '',
++];
++
++/// A progress indicator never settles: pump a fixed second of frames.
++Future<void> frames(WidgetTester t) async {
++  for (var i = 0; i < 10; i++) {
++    await t.pump(const Duration(milliseconds: 100));
++  }
++}
++
++Future<GoRouter> mountSearch(
++  WidgetTester t,
++  ControlledTargets repo,
++  PlanDouble plan,
++) async {
++  final router = GoRouter(
++    initialLocation: '/',
++    routes: [
++      GoRoute(
++        path: '/',
++        builder: (_, _) => const Scaffold(body: Text('planner')),
++      ),
++      GoRoute(
++        path: '/select',
++        builder: (_, _) => const TargetSelectionScreen(),
++      ),
++    ],
++  );
++  await t.pumpWidget(
++    MultiProvider(
++      providers: [
++        ChangeNotifierProvider(create: (_) => TargetsViewModel(repo)),
++        ChangeNotifierProvider<SessionPlanViewModel>.value(value: plan),
++      ],
++      child: MaterialApp.router(routerConfig: router),
++    ),
++  );
++  router.push('/select');
++  await frames(t);
++  repo.pending['']!.complete([target(1, 'M1', 'Crab Nebula')]);
++  await frames(t);
++  return router;
++}
++
++// ---------------------------------------------------------------- UX32-04
++
++/// Planning preferences whose writes can fail or wait for the test.
++class ControlledPreferences implements PlanningPreferencesRepository {
++  PlanningPreferences durable = PlanningPreferences();
++  bool fail = false;
++  bool hold = false;
++  final gates = <Completer<void>>[];
++
++  @override
++  Future<PlanningPreferences> load() async => durable;
++
++  @override
++  Future<void> save(PlanningPreferences preferences) async {
++    if (hold) {
++      final gate = Completer<void>();
++      gates.add(gate);
++      await gate.future;
++    }
++    if (fail) throw const StorageFailure('save the planning preferences');
++    durable = preferences;
++  }
++}
++
++class FailingPrivacy extends InMemoryPrivacyPreferences {
++  FailingPrivacy() : super(placeNameLookup: true);
++  bool fail = false;
++
++  @override
++  Future<void> savePlaceNameLookup(bool on) async {
++    if (fail) throw const StorageFailure('save the place-name setting');
++    await super.savePlaceNameLookup(on);
++  }
++}
++
++/// An in-memory platform store that throws while writing one key.
++class TearingStore extends InMemorySharedPreferencesStore {
++  TearingStore(super.data) : super.withData();
++  String? failKey;
++
++  @override
++  Future<bool> setValue(String valueType, String key, Object value) {
++    if (key == failKey) {
++      return Future.error(PlatformException(code: 'write-failed'));
++    }
++    return super.setValue(valueType, key, value);
++  }
++}
++
++// ------------------------------------------------------- GPS / site editor
++
++class ControlledLocation implements LocationService {
++  final pending = <Completer<LocationResult>>[];
++
++  @override
++  Future<LocationResult> getCurrentLocation() {
++    final c = Completer<LocationResult>();
++    pending.add(c);
++    return c.future;
++  }
++
++  @override
++  Future<bool> openLocationSettings() async => true;
++
++  @override
++  Future<bool> openAppSettings() async => true;
++}
++
++class NoWeather implements WeatherRepository {
++  @override
++  Future<WeatherFetch> fetchSnapshot({
++    required double latitude,
++    required double longitude,
++    required DateTime startUtc,
++    required DateTime endUtc,
++  }) async => const WeatherFetchFailed(WeatherFailure.unavailable);
++}
++
++// --------------------------------------------------------- shared helpers
++
++Future<void> fonts() async {
++  Future<ByteData> bytes(String f) async =>
++      ByteData.sublistView(await sdkMaterialFont(f)!.readAsBytes());
++  final loader = FontLoader('Roboto');
++  for (final f in [
++    'roboto-regular.ttf',
++    'roboto-medium.ttf',
++    'roboto-bold.ttf',
++  ]) {
++    loader.addFont(bytes(f));
++  }
++  await loader.load();
++  await (FontLoader(
++    'MaterialIcons',
++  )..addFont(bytes('materialicons-regular.otf'))).load();
++}
++
++ThemeData realFont(ThemeData t) => t.copyWith(
++  textTheme: t.textTheme.apply(fontFamily: 'Roboto'),
++  primaryTextTheme: t.primaryTextTheme.apply(fontFamily: 'Roboto'),
++  appBarTheme: t.appBarTheme.copyWith(
++    titleTextStyle: t.appBarTheme.titleTextStyle?.copyWith(
++      fontFamily: 'Roboto',
++    ),
++  ),
++);
++
++/// Pumps the fake-zone frames and the real event loop until [action] ends
++/// (Drift runs on real I/O; the P2 probe's orchestration).
++Future<void> work(WidgetTester t, Future<void> Function() action) async {
++  var done = false;
++  Object? failure;
++  StackTrace? trace;
++  await t.runAsync(() async {
++    action().then(
++      (_) => done = true,
++      onError: (Object e, StackTrace st) {
++        failure = e;
++        trace = st;
++        done = true;
++      },
++    );
++  });
++  for (var i = 0; i < 300 && !done; i++) {
++    await t.pump(const Duration(milliseconds: 20));
++    await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 5)));
++  }
++  if (!done) throw StateError('probe work did not settle');
++  if (failure != null) Error.throwWithStackTrace(failure!, trace!);
++}
++
++Future<void> settle(WidgetTester t) async {
++  for (var i = 0; i < 8; i++) {
++    await t.runAsync(() => Future<void>.delayed(Duration.zero));
++    await t.pump(const Duration(milliseconds: 100));
++  }
++}
++
++List<String> texts(WidgetTester t) => [
++  for (final w in t.widgetList<Text>(find.byType(Text)))
++    w.data ?? w.textSpan?.toPlainText() ?? '',
++];
++
++Future<void> capture(WidgetTester t, String name) async {
++  final boundary = t.renderObject<RenderRepaintBoundary>(find.byKey(shot));
++  await work(t, () async {
++    final image = await boundary.toImage();
++    final png = await image.toByteData(format: ui.ImageByteFormat.png);
++    image.dispose();
++    Directory(out).createSync(recursive: true);
++    await File('$out/$name.png').writeAsBytes(png!.buffer.asUint8List());
++  });
++}
++
++Future<(AppDatabase, PlannerHarness)> harness(
++  WidgetTester t, {
++  LocationService? location,
++}) async {
++  late AppDatabase db;
++  late PlannerHarness vm;
++  await work(t, () async {
++    db = AppDatabase(NativeDatabase.memory());
++    final targets = DriftTargetRepository(db);
++    final rigs = DriftEquipmentRepository(db);
++    await targets.insertTarget(
++      const AstroTarget(
++        id: 1,
++        catalogId: 'M42',
++        commonName: 'Orion Nebula',
++        type: 'Nebula',
++        rightAscension: 83.82,
++        declination: -5.39,
++      ),
++    );
++    await rigs.insertEquipment(
++      const EquipmentProfile(
++        id: 1,
++        name: 'Fixture refractor 400',
++        cameraClass: CameraClass.dslrMirrorless,
++        focalRatio: 5,
++        focalLengthMm: 400,
++        sensorWidthMm: 23.5,
++        sensorHeightMm: 15.6,
++        resolutionWidthPx: 6000,
++        resolutionHeightPx: 4000,
++        pixelPitchUm: 3.76,
++        averageRawFileSizeMB: 50,
++      ),
++    );
++    final clock = FixedClock(DateTime.utc(2026, 12, 15, 17));
++    vm = PlannerHarness(
++      targets,
++      rigs,
++      NoWeather(),
++      DriftLocationRepository(db),
++      locationService: location ?? ControlledLocation(),
++      reverseGeocoder: FakeReverseGeocoder(),
++      deviceTimeZone: FakeDeviceTimeZone('Europe/Ljubljana'),
++      clock: clock,
++      sessionRepository: DriftSessionRepository(db, clock: clock),
++      firstRun: InMemoryFirstRun(done: true),
++    );
++    await vm.ready;
++    await vm.tonight.load();
++    await vm.site.setLocation(46.05, 14.5);
++    await vm.plan.idle;
++    await vm.conditions.idle;
++  });
++  addTearDown(() => t.runAsync(db.close));
++  return (db, vm);
++}
++
++Widget shell(PlannerHarness vm, Widget home) => RepaintBoundary(
++  key: shot,
++  child: MultiProvider(
++    providers: vm.providers,
++    child: MaterialApp(
++      debugShowCheckedModeBanner: false,
++      theme: realFont(AppTheme.dark),
++      home: home,
++    ),
++  ),
++);
++
++void main() {
++  setUp(() => SharedPreferences.setMockInitialValues({}));
++
++  group('UX32-03 target search', () {
++    testWidgets('an older success that ends last replaces the newer list', (
++      t,
++    ) async {
++      final repo = ControlledTargets();
++      final plan = PlanDouble();
++      final router = await mountSearch(t, repo, plan);
++      await t.enterText(find.byType(TextField), 'An');
++      await t.pump();
++      await t.enterText(find.byType(TextField), 'And');
++      await t.pump();
++      repo.pending['And']!.complete([target(31, 'M31', 'Andromeda Galaxy')]);
++      await frames(t);
++      final afterNewer = listedTitles(t);
++      repo.pending['An']!.complete([target(4038, 'NGC 4038', 'Antennae')]);
++      await frames(t);
++      final afterOlder = listedTitles(t);
++      await t.tap(find.text(afterOlder.first));
++      await frames(t);
++      record('UX32-03.success-reverse', {
++        'evidence': 'HOST TEST EXECUTED (controlled completers)',
++        'queries': repo.calls,
++        'fieldText': 'And',
++        'listAfterNewerQueryCompleted': afterNewer,
++        'listAfterOlderQueryCompletedLast': afterOlder,
++        'selectedAfterTappingFirstRow': plan.chosen?.catalogId,
++        'route': router.state.uri.toString(),
++      });
++      expect(afterOlder, ['Antennae (NGC 4038)']);
++    });
++
++    testWidgets('an older failure that ends last replaces the newer list', (
++      t,
++    ) async {
++      final repo = ControlledTargets();
++      await mountSearch(t, repo, PlanDouble());
++      await t.enterText(find.byType(TextField), 'Ve');
++      await t.pump();
++      await t.enterText(find.byType(TextField), 'Veil');
++      await t.pump();
++      repo.pending['Veil']!.complete([target(6960, 'NGC 6960', 'Veil')]);
++      await frames(t);
++      final afterNewer = listedTitles(t);
++      repo.pending['Ve']!.completeError(
++        const StorageFailure('read the targets'),
++      );
++      await frames(t);
++      final failure = find.byKey(const Key('loadFailure.message'));
++      record('UX32-03.error-reverse', {
++        'evidence': 'HOST TEST EXECUTED (controlled completers)',
++        'queries': repo.calls,
++        'fieldText': 'Veil',
++        'listAfterNewerQueryCompleted': afterNewer,
++        'failureViewShownAfterOlderFailure': failure.evaluate().isNotEmpty,
++        'failureText': failure.evaluate().isEmpty
++            ? null
++            : t.widget<Text>(failure).data,
++        'listAfterOlderFailure': listedTitles(t),
++      });
++      expect(failure, findsOneWidget);
++    });
++
++    testWidgets('a reply after leaving the screen raises nothing', (t) async {
++      final repo = ControlledTargets();
++      final router = await mountSearch(t, repo, PlanDouble());
++      await t.enterText(find.byType(TextField), 'Or');
++      await t.pump();
++      router.pop();
++      await frames(t);
++      repo.pending['Or']!.complete([target(42, 'M42', 'Orion Nebula')]);
++      await frames(t);
++      final error = t.takeException();
++      record('UX32-03.dispose', {
++        'evidence': 'HOST TEST EXECUTED',
++        'exceptionAfterLateReply': error?.toString(),
++      });
++      expect(error, isNull);
++    });
++  });
++
++  group('UX32-04 settings persistence', () {
++    test('a failed write leaves the new value shown; a reload shows the old', () async {
++      final repo = ControlledPreferences();
++      final privacy = InMemoryPrivacyPreferences();
++      final vm = SettingsViewModel(
++        repo,
++        privacy,
++        OptInReverseGeocoder(FakeReverseGeocoder()),
++      );
++      await vm.load();
++      final before = vm.minAltitude;
++      repo.fail = true;
++      Object? error;
++      try {
++        await vm.setMinAltitude(before + 10);
++      } catch (e) {
++        error = e;
++      }
++      final shown = vm.minAltitude;
++      final reloaded = SettingsViewModel(
++        repo,
++        privacy,
++        OptInReverseGeocoder(FakeReverseGeocoder()),
++      );
++      await reloaded.load();
++      record('UX32-04.failure', {
++        'evidence': 'HOST TEST EXECUTED (injected repository failure)',
++        'durableBefore': before,
++        'requested': before + 10,
++        'errorType': error.runtimeType.toString(),
++        'valueShownAfterFailure': shown,
++        'valueAfterReload': reloaded.minAltitude,
++        'viewModelPendingOrUnsavedState': 'none exposed by SettingsViewModel',
++      });
++      expect(shown, before + 10);
++      expect(reloaded.minAltitude, before);
++    });
++
++    test('overlapping writes are not ordered by the ViewModel', () async {
++      final repo = ControlledPreferences()..hold = true;
++      final vm = SettingsViewModel(
++        repo,
++        InMemoryPrivacyPreferences(),
++        OptInReverseGeocoder(FakeReverseGeocoder()),
++      );
++      await vm.load();
++      final first = vm.setMinAltitude(35);
++      final second = vm.setMinAltitude(45);
++      await Future<void>.delayed(Duration.zero);
++      final writesInFlight = repo.gates.length;
++      repo.gates[1].complete();
++      await Future<void>.delayed(Duration.zero);
++      repo.gates[0].complete();
++      await Future.wait([first, second]);
++      record('UX32-04.reverse-completion-fake-store', {
++        'evidence':
++            'HOST TEST EXECUTED; fake repository that commits on completion',
++        'writesInFlightTogether': writesInFlight,
++        'valueShown': vm.minAltitude,
++        'valueDurable': repo.durable.minAltitudeDeg,
++      });
++    });
++
++    test('the real repository: rapid writes and a write failing midway', () async {
++      SharedPreferences.setMockInitialValues({});
++      final vm = SettingsViewModel(
++        SharedPrefsPlanningPreferencesRepository(),
++        InMemoryPrivacyPreferences(),
++        OptInReverseGeocoder(FakeReverseGeocoder()),
++      );
++      await vm.load();
++      await Future.wait([vm.setMinAltitude(35), vm.setMinAltitude(45)]);
++      SharedPreferences.resetStatic();
++      final afterRapid = await SharedPrefsPlanningPreferencesRepository()
++          .load();
++
++      final store = TearingStore({
++        'flutter.minAltitude': 30.0,
++        'flutter.refocusSeconds': 60.0,
++        'flutter.dewPointThreshold': 2.0,
++      });
++      SharedPreferencesStorePlatform.instance = store;
++      SharedPreferences.resetStatic();
++      final repo = SharedPrefsPlanningPreferencesRepository();
++      final start = await repo.load();
++      store.failKey = 'flutter.refocusSeconds';
++      Object? error;
++      try {
++        await repo.save(
++          start.copyWith(
++            minAltitudeDeg: 40,
++            refocusSeconds: 90,
++            dewMarginC: 4,
++          ),
++        );
++      } catch (e) {
++        error = e;
++      }
++      store.failKey = null;
++      SharedPreferences.resetStatic();
++      final reloaded = await repo.load();
++      record('UX32-04.real-repository', {
++        'evidence':
++            'HOST TEST EXECUTED; production repository over an in-memory '
++            'platform store (no device storage)',
++        'rapidWrites35Then45_reloaded': afterRapid.minAltitudeDeg,
++        'midwayFailureError': error.runtimeType.toString(),
++        'requested': {'minAltitude': 40, 'refocusSeconds': 90, 'dewMargin': 4},
++        'reloadedAfterMidwayFailure': {
++          'minAltitude': reloaded.minAltitudeDeg,
++          'refocusSeconds': reloaded.refocusSeconds,
++          'dewMargin': reloaded.dewMarginC,
++        },
++      });
++    });
++
++    test('place-name opt-out whose write fails returns after a reload', () async {
++      final privacy = FailingPrivacy();
++      final names = OptInReverseGeocoder(FakeReverseGeocoder());
++      final vm = SettingsViewModel(ControlledPreferences(), privacy, names);
++      await vm.load();
++      final before = vm.placeNameLookup;
++      privacy.fail = true;
++      Object? error;
++      try {
++        await vm.setPlaceNameLookup(false);
++      } catch (e) {
++        error = e;
++      }
++      final shown = vm.placeNameLookup;
++      privacy.fail = false;
++      final names2 = OptInReverseGeocoder(FakeReverseGeocoder());
++      final reloaded = SettingsViewModel(ControlledPreferences(), privacy, names2);
++      await reloaded.load();
++      record('CRUX-privacy-opt-out-failure', {
++        'evidence': 'HOST TEST EXECUTED (injected privacy-store failure)',
++        'lookupBefore': before,
++        'errorType': error.runtimeType.toString(),
++        'switchShownAfterFailure': shown,
++        'lookupEnabledAfterReload': reloaded.placeNameLookup,
++        'geocoderEnabledAfterReload': names2.enabled,
++      });
++      expect(shown, isFalse);
++      expect(reloaded.placeNameLookup, isTrue);
++    });
++  });
++
++  group('Site editor GPS', () {
++    testWidgets('a GPS reply after a typed coordinate replaces it', (t) async {
++      final gps = ControlledLocation();
++      final (_, vm) = await harness(t, location: gps);
++      await t.pumpWidget(shell(vm, const SiteEditorScreen()));
++      await settle(t);
++      await t.tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
++      await t.pump();
++      final latitude = find.widgetWithText(TextFormField, 'Latitude (°)');
++      final name = find.widgetWithText(TextFormField, 'Name');
++      await t.enterText(latitude, '10.00000');
++      await t.enterText(name, 'My field');
++      await t.pump();
++      gps.pending.single.complete(
++        const LocationFound(DeviceLocation(latitude: 46.05, longitude: 14.5)),
++      );
++      await settle(t);
++      String fieldText(Finder f) => t
++          .widget<EditableText>(
++            find.descendant(of: f, matching: find.byType(EditableText)),
++          )
++          .controller
++          .text;
++      record('GPS.typed-then-reply', {
++        'evidence': 'HOST TEST EXECUTED (controlled GPS completer)',
++        'typedLatitude': '10.00000',
++        'latitudeAfterReply': fieldText(latitude),
++        'nameAfterReply': fieldText(name),
++        'placeNameProposed': false,
++      });
++      expect(fieldText(latitude), '46.05000');
++    });
++
++    testWidgets('a GPS reply after leaving the editor raises nothing', (
++      t,
++    ) async {
++      final gps = ControlledLocation();
++      final (_, vm) = await harness(t, location: gps);
++      await t.pumpWidget(shell(vm, const SiteEditorScreen()));
++      await settle(t);
++      await t.tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
++      await t.pump();
++      await t.pumpWidget(shell(vm, const Scaffold(body: Text('left'))));
++      await settle(t);
++      gps.pending.single.complete(
++        const LocationFound(DeviceLocation(latitude: 46.05, longitude: 14.5)),
++      );
++      await settle(t);
++      final error = t.takeException();
++      record('GPS.reply-after-leaving', {
++        'evidence': 'HOST TEST EXECUTED',
++        'exception': error?.toString(),
++        'transientPositionChanged': vm.site.latitude != 46.05
++            ? false
++            : 'equal to fixture',
++      });
++      expect(error, isNull);
++    });
++  });
++
++  group('Planner and Home context', () {
++    testWidgets('Save visibility, current versus selected night wording', (
++      t,
++    ) async {
++      await t.runAsync(fonts);
++      t.view.physicalSize = const Size(412, 915);
++      t.view.devicePixelRatio = 1;
++      addTearDown(t.view.reset);
++      final (_, vm) = await harness(t);
++
++      // Target chosen, no rig.
++      await work(t, () async {
++        final m42 = (await vm.vms.targetList.search('M42')).first;
++        await vm.plan.setTarget(m42);
++        await vm.plan.idle;
++      });
++      await t.pumpWidget(shell(vm, const HomeScreen()));
++      await settle(t);
++      record('UX32-01.no-rig', {
++        'evidence': 'HOST RENDER + TEXT TREE (412x915, 100%, dark)',
++        'saveButtonPresent': find
++            .byKey(const Key('planner.save'))
++            .evaluate()
++            .isNotEmpty,
++        'statusTexts': texts(t)
++            .where((s) => s.contains('Needs') || s.contains('rig is needed'))
++            .toList(),
++      });
++      await capture(t, 'planner_no_rig_dark_100');
++
++      // A complete plan for tonight, then for a later night.
++      await work(t, () async {
++        await vm.choosePlan();
++      });
++      await settle(t);
++      final tonightTexts = texts(t);
++      await work(t, () async {
++        await vm.plan.setEveningDate(CalendarDate(2026, 12, 18));
++        await vm.plan.idle;
++        await vm.conditions.idle;
++      });
++      await t.pumpWidget(shell(vm, const HomeScreen()));
++      await settle(t);
++      final later = texts(t);
++      bool tonightWord(String s) => s.toLowerCase().contains('tonight');
++      record('CRUX-01.planner-later-night', {
++        'evidence': 'HOST RENDER + TEXT TREE (412x915, 100%, dark)',
++        'clockUtc': '2026-12-15T17:00:00Z',
++        'tonightKey': vm.plan.tonightKey.toString(),
++        'planEveningDate': vm.plan.eveningDate.toString(),
++        'saveButtonPresent': find
++            .byKey(const Key('planner.save'))
++            .evaluate()
++            .isNotEmpty,
++        'identityAndContext': later
++            .where((s) => s.contains('Night of') || s.contains('Dec'))
++            .toList(),
++        'tonightWordingInBuiltTree': later.where(tonightWord).toList(),
++        'altitudeNowShown': later.contains('Altitude now'),
++        'tonightWordingWhenPlanIsTonight': tonightTexts
++            .where(tonightWord)
++            .toList(),
++      });
++      await capture(t, 'planner_later_night_dark_100');
++      await t.drag(find.byType(ListView).first, const Offset(0, -900));
++      await settle(t);
++      await capture(t, 'planner_later_night_scrolled_dark_100');
++
++      await t.pumpWidget(shell(vm, const TonightHomeScreen()));
++      await settle(t);
++      final home = texts(t);
++      record('CRUX-01.home-later-night', {
++        'evidence': 'HOST RENDER + TEXT TREE (412x915, 100%, dark)',
++        'title': home.contains('Tonight') ? 'Tonight' : null,
++        'context': home.where((s) => s.contains('Dec')).toList(),
++        'tonightWordingInBuiltTree': home.where(tonightWord).toList(),
++      });
++      await capture(t, 'home_later_night_dark_100');
++    });
++  });
++}

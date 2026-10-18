@@ -115,5 +115,6 @@ background location, no storage, camera, contacts or notification permission.
 2. Make the source repository public at <https://github.com/Buffur/Culmina> (done; the
    About screen links it; GPL-3.0 asks that the source be offered).
 3. Fill in the Data Safety form from the draft above and the store listing's contact
-   details (the OSM policy asks that the contact be published there too).
+   details (the OSM policy asks that the contact be published there too). *(Deferred with the
+   GitHub-only distribution, 2026-10-17: see the note under "Google Play: Data Safety form".)*
 4. Re-check the three services' terms and update the dates above.

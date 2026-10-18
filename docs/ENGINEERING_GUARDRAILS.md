@@ -3,6 +3,8 @@
 > Updated 2026-10-17: extracted from CLAUDE.md; known stale statements corrected against the current repository. This is a topic reference, not an automatically imported instruction file. Read relevant entries before touching their surface. Historical dates and Task IDs are provenance, not current status. Verification requirements remain exclusively in CLAUDE.md.
 > Compatibility: historical references to “CLAUDE.md trap N” resolve to the same numbered entry below. Historical `vm.*` shorthand means the current screen-scoped owner in trap 11, never a new monolithic PlannerViewModel. Verify signatures in code.
 
+**Planned owner amendment AM-01 (2026-10-18):** F19 will allow explicit result reporting for the current saved night before dawn, with UI/repository parity and preserved history; current code remains the older eligibility until implemented. This amends reporting eligibility, not astronomical/rollover semantics. F23 will propose a name for an explicitly GPS-picked draft position only through the existing consented lookup, respecting manual edits and never silently looking up/changing a stored site. DECISIONS E.1/roadmap AM-01 govern; neither change is implemented by documentation.
+
 **Commands** (prefer `--no-pub` to avoid unintended `pubspec.lock` changes):
 
 - **`dart run tool/check.dart`** — the full quality gate: an encoding check (`tool/check_encoding.dart`), `dart format --set-exit-if-changed`, `flutter analyze --no-pub`, `flutter test --no-pub` (format checks `lib/`, `test/`, `integration_test/`; analysis covers the package; host E2E runs once per test file), and since TASK 15.5 the end-to-end suite on the host (`flutter test --no-pub integration_test -d flutter-tester`; plain `flutter test integration_test` asks for a device), in one command. Runs all steps regardless of an earlier failure, then prints a pass/fail summary and exits non-zero if any failed. When it is required, and when an earlier pass may be reused, is decided by the Verification Policy (V1–V3) (TASK 1.3, TD-046; encoding step added TASK 4.3, TD-015).
@@ -19,7 +21,7 @@
 **Owner directives currently in force** (`docs/DECISIONS.md` Part C plus post-roadmap refinement governance):
 
 - Historical roadmap directives remain valid for the work they governed and remain evidence of prior owner decisions.
-- **Stage 0 is complete:** active strategic scope is `docs/refinement/POST_ROADMAP_PLAN.md`; current operational state is `docs/refinement/PROGRESS.md`; current session scope is the explicitly approved planning/research/implementation/validation prompt.
+- **Stage 0 is complete:** active strategic scope is `docs/refinement/FINAL_COMPLETION_ROADMAP.md` (approved 2026-10-18; `POST_ROADMAP_PLAN.md` keeps the registers, workflow rules and the S-ID aliases' clauses); current operational state is `docs/refinement/PROGRESS.md`; current session scope is the explicitly approved planning/research/implementation/validation prompt.
 - Work one coherent implementation Task per cycle unless the approved prompt explicitly defines a smaller grouped operation.
 - Never start the next Task or Stage automatically.
 - An implementation prompt explicitly supplied by the owner is authorization to execute that Task completely. Do not require another approval merely because implementation is multi-file, architectural, database-related, or cross-layer **when those changes are already within the approved Task scope**.

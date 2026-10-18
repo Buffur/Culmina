@@ -2,7 +2,7 @@
 
 > **Status: APPROVED by the owner 2026-10-17 (gate G0):** «Approve G0: make the two documentation commits as proposed, then run RA.R2 (R2a–R2d in parallel, then R2e) and stop at the decision package.» The optional permissions in §6 were not granted.
 > Prepared 2026-10-17 after RA.R1
-> ([Phase A report](../research/RA_R1_PHASE_A_ASSESSMENT.md)). Details RA.R2, RA.D and RA.P from
+> ([Phase A report](../../refinement/research/RA_R1_PHASE_A_ASSESSMENT.md)). Details RA.R2, RA.D and RA.P from
 > [PRODUCT_REASSESSMENT.md](PRODUCT_REASSESSMENT.md); does not replace the active plan and does not change decisions.
 > Verification rules are
 > only in CLAUDE.md (V1–V8); they are not duplicated here.

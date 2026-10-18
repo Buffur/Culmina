@@ -1,113 +1,13 @@
-# AstroPlan — Scientific Integrity Register
+# Culmina (formerly AstroPlan) — Scientific Integrity Register
 
-> **TD-086 fix (2026-09-29):** CALC-44's no-readable-snapshot fallback now takes the later of the row's night key and the evening date the unreadable plan snapshot still names, if any (a Saved · changed row's key is its working night). Later, never earlier: the rule stays conservative. No other formula changed.
-
-> **S8.4 (2026-09-29):** CALC-35 (the frame estimate and running time) and CALC-36 (the tracker's countdowns) are retired with the live tracker (ADR-016 §13); their rows and history stay. No other formula changed.
-
-> **S8.1 (2026-09-29; D8-1, D8-3):** CALC-44 added: when a saved night ends (dawn at the snapshot's darkness limit, else the night's end). CALC-37 and CALC-38 note that counts may be reported after the night ("Reported as planned" is a user statement); SCI-07 closed as documented (RD-13: older accepted estimates are not relabelled). No existing formula changed.
-
-> **S7.3b (2026-09-29; ADR-020 §8):** CALC-25 and CALC-26 gain one input, the rig's in-camera noise reduction where it applies (DSLR/mirrorless and Unknown). When on, each light frame's atomic event is exposure + an in-camera dark of the same exposure + the per-frame overhead; the dark's time is in-window calibration. Integration, acquisition and √N are unchanged. E8, E8b and E8c are reproduced to the millisecond from values derived by hand (`in_camera_noise_reduction_test.dart`); E1–E7 unchanged. Assumption (documented in ADR-020 §8): the processing takes the exposure's length, with no extra overhead; the user states the setting, it is never inferred. Implementation decision: the dark's time counts toward the refocus interval, like every other elapsed in-window event.
-
-> **S7.3a (2026-09-29):** calibration match checks (ADR-020 §6) are pure and warn only: exposures compare in ADR-009's integer milliseconds; an ISO or gain not recorded on either side, and binning where the class does not show it, never fail. SI-004 holds: a value of the kind a class does not record is never relabelled as the other kind. The dark flat is calibration on its policy's line; ADR-009's E1–E7 unchanged (a dark-flat vector is in `calibration_match_test.dart`). No formula changed.
-
-> **S7.2b (2026-09-29):** SI-004 holds: ISO and gain stay records, never converted into each other, never called "sensitivity"; a class shows one of them (ADR-020 §3). The per-frame overhead is relabelled "Time between frames" (ADR-020 §4); no formula, input or vector changed (ADR-009 E1–E7 unchanged).
-
-> **S7.1 (2026-09-29; RD-08 = T3):** CALC-31's tracking input is the plan's effective tracking (the plan's override, else the rig's default, else unknown). An input-source change decided by RD-08; no formula changed (DECISIONS E.1, "RD-08 decided").
-
-> **S6.16 (2026-09-28):** CALC-42's display only (TD-076): the graph names the plan's point and marks its end as a comparison, never a target. No formula, input or point changed; SI-003 holds.
-
-> **S6.13 (2026-09-28):** CALC-43 added: the Moon during the dark span, for Tonight's Moon row (UX-17). No existing formula changed.
-
-> **S6.11 (2026-09-28):** CALC-42 added: the relative stacking-gain curve (√N, CALC-15's formula) sampled for the planner's per-group graph. No existing formula changed; SI-003 holds.
-
-> **S6.5 (2026-09-28):** CALC-41 added: the dark span at the user's darkness limit, the span the imaging opportunity counts as dark (TD-051). No existing formula changed.
-
-> **S3.V8 (2026-09-27):** SI-014 resolved (no camera-spec copy across pixel counts). No formula changed.
-
-> **Stage 3 sign-off validation (2026-09-27):** SI-014 recorded (a copied pixel pitch can belong to another output mode; S3S-02, TD-071). No formula changed.
-
-> **S3.V4 (2026-09-27):** CALC-39's image dimensions have a sanity bound: a side over 65,535 px is unparseable (S3V-05). No formula changed.
-
-> **S3.9 (2026-09-26):** CALC-40's proposed values are rounded to the editor's precision (TD-068). The formula is unchanged.
-
-> **S3.2 (2026-09-26):** CALC-40 added. It is a new estimate of sensor geometry from the 35 mm
-> equivalent (ADR-018 §4), with its assumptions and limits in its row. No existing formula changed.
-
-> **S3.1 (2026-09-26):** CALC-39 gains the image-dimension conversion (ADR-018 §3). It is a copy of
-> stored pixel counts, not a calculation. No formula changed.
-
-> **Metadata verification, 2026-09-26 (S2.V1):** CALC-39's formulas and units
-> are unchanged. Shared EXIF extraction now refuses unsupported integer counts
-> and malformed sensitivity-kind tags as unparseable; no pointer is presented
-> as ISO or focal length. DNG/JPEG regression and external sample tests pass.
-> See `refinement/STAGE_2_CORRECTIONS.md`.
-
-> **Verification stamp:** verified against code at commit `900b82a` (2026-09-20),
-> audited 2026-09-21. Application code changed since only by TASK 1.1 (commit
-> `2357755`); the only spot it touches here is the integration-test RA fixture
-> below. TASKs 1.2–1.3 changed application code without touching any calculation
-> recorded here. **2026-09-22 (TASK 2.1):** SI-010 gained a decision note (ADR-007);
-> no calculation changed. **TASK 2.2:** new calculation CALC-21 (the session-night
-> window), which is not yet used by the app; SI-010 progress noted. **TASK 2.3
-> (commit `de1792a`):** CALC-10/CALC-11 reimplemented as wrappers over new
-> calculations CALC-22/CALC-23/CALC-24 (SessionNight-based timeline, windows,
-> altitude curve); same formulas, not yet used by the app either; SI-010 progress
-> extended. **TASK 2.4 (2026-09-22, commit `1e58fcf`):** SI-010 resolved — the
-> ViewModel now resolves a real `SessionNight` (see `docs/TECH_DEBT.md` TD-001).
-> `PlannerViewModel.lunarIllumination` (CALC-09's caller) now evaluates at
-> `sessionNight.startUtc + 12h` (mean solar midnight) instead of the old
-> `_sessionDate`; this is ADR-007 §9's suggested **candidate** instant for
-> night-level scalars, used here as an interim, documented choice — **G6 has not
-> formally decided the canonical evaluation instant**, so this is not a closed
-> scientific decision. See SI-002's update below. **TASK 4.1 (2026-09-22, commit
-> `f5b29cc`):** the "Invalid capture-block input" SI-008 evidence row below is
-> resolved — no calculation changed. **TASK 4.4 (2026-09-22, commit
-> `514dcc5`):** SI-003's label, SI-005's seed value, and several SI-008 UI
-> presentation cases (storage, pixel scale, example plan, RA/Dec sentinel) are
-> resolved; SI-006's sky-warning wording is resolved (its thresholds are not).
-> No calculation formula changed — only labels, seed data and a null-vs-zero
-> return-value fix in `estimateStorageRequirement`. **TASK 5.1 (2026-09-22, docs
-> only):** ADR-009 defines the capture-budget semantics. Planned calculations
-> CALC-25 (budget) and CALC-26 (fit) were registered; CALC-18, CALC-19 and CALC-20
-> are marked for replacement. No calculation changed.
-> **Nothing else in this document has been fixed.** It records issues and the
-> required future action for each. See `docs/TECH_DEBT.md` for the work items.
-> **TASK 5.2 (2026-09-22):** SI-006 progress (thresholds are preferences); CALC-18 takes a configurable margin (default unchanged). No formula changed.
-> **TASK 5.3 (2026-09-22):** SI-004 progress (typed, descriptive-only gain). No calculation changed.
-> **TASK 5.4 (2026-09-22):** CALC-25 implemented and verified against ADR-009 E1–E7; CALC-19 deleted; CALC-20 budget part replaced; SI-013 progress. The budget semantics are ADR-009, not a silent formula change.
-> **TASK 5.5 (2026-09-22):** CALC-26 implemented; CALC-18 deleted. The E1b vector erratum is recorded in ADR-009 §8.
-> **TASK 5.6 (2026-09-22):** SI-003 and SI-004 progress (per-group √N with help text; descriptive-only gain in the editor). No calculation changed.
-> **TASK 6.1 (2026-09-22, docs only):** ADR-010 decision notes on SI-002, SI-009 and SI-012. No calculation changed.
-> **TASK 6.2 (2026-09-22):** CALC-07/CALC-08 now reference-tested; new CALC-27 (precession) — a recorded formula change (ADR-010, TASK 6.2 decisions); SI-009 and SI-012 progress.
-> **TASK 6.3 (2026-09-22):** new CALC-28 (Moon, ADR-010) with reference results; SI-002 progress. No existing calculation changed.
-> **TASK 6.4 (2026-09-22):** CALC-09 deleted, new CALC-29 (MoonConditions and separation, reference-tested); SI-002 resolved for precision and geometry.
-> **TASK 6.5 (2026-09-22):** CALC-17 corrected to the primary source (recorded formula change); SI-001 resolved for the formula (still hidden).
-> **TASK 7.1 (2026-09-23):** SI-007 and SI-010 progress (unknown Bortle; IANA site zone). No calculation formula changed.
-> **TASK 7.3 (2026-09-23):** SI-010 progress: a site's IANA zone is set in the editor (device zone pre-filled, "Unknown" allowed, then mean solar time). The zone data set is now `latest_all` (includes link ids; canonical zones' rules unchanged). No formula changed.
-> **TASK 7.4 (2026-09-23):** SI-007 resolved: no scraper, no default; Bortle/SQM are user-entered with source and date, or unknown; no Bortle↔SQM conversion (none is sourced); the sky warning uses a known Bortle class only.
-> **TASK 8.1 (2026-09-23):** SI-012 largely resolved: epoch stored (J2000 only), source stored, moving types hidden/labelled, RA/Dec entered in sexagesimal or hours through pure, tested parsers (CALC-30). No formula changed.
-> **TASK 8.2 (2026-09-23):** SI-012 progress: the seeded targets are now sourced (OpenNGC v20260501, per-object original text kept in the asset; every object's degrees re-derived from its text in tests; 7 independent spot checks within 0.02°) and carry size and magnitude. No formula changed.
-> **TASK 8.3 (2026-09-23, documentation only):** SI-005 decided by ADR-011 (implemented in TASK 8.4): required focal ratio N plus optional diameter D in mm, N = f/D, 1 % agreement; existing values never reinterpreted, N > 32 flagged for review.
-> **TASK 8.4 (2026-09-23):** SI-005 resolved (ADR-011 implemented: unit-explicit names, focal ratio N plus optional diameter D with N = f / D and 1 % agreement, bounds, review flag for N > 32; no stored value changed).
-> **TASK 8.5 (2026-09-23):** SI-011 resolved for shipped seeds: one seed, camera specs verified against ZWO's page, optics labelled estimated, provenance stored per row; unverified phone seeds dropped (existing rows untouched, provenance unknown).
-> **TASK 8.6 (2026-09-23):** SI-001 fully resolved (NPF surfaced per PD-11, at the field-minimum |δ|); new CALC-31 (capability summary). No existing formula changed; the NPF call now receives the field-minimum declination instead of the target's centre (a decided input change, DECISIONS PD-11).
-> **TASK 9.1 (2026-09-23, documentation only):** ADR-012 decides the weather part of SI-010 (UTC timestamps sliced to the chosen night) and the variable semantics (visibility is horizontal visibility, not transparency; gusts are a preceding-hour maximum; missing values unknown). Implementation: TASKs 9.2–9.4.
-> **TASK 9.2 (2026-09-23):** SI-010 (weather part) progress: forecast instants are now parsed as UTC from GMT+0 epoch seconds in the new snapshot path; the display still uses the legacy path until TASK 9.4.
-> **TASK 9.3 (2026-09-23):** no calculation changed; forecast age is computed from UTC instants with the injected Clock (freshness thresholds documented as assumptions, ADR-012 §6).
-> **TASK 9.4 (2026-09-23, commit `48d7a8c`):** CALC-32 registered (night weather summary and dew-spread heuristic). SI-010 weather part resolved (UTC hours sliced to the night, shown in the site zone). SI-006: the cloud colour bands are removed and the weather horizon is the night within 16 days; the dew margin is now shown in use.
-> **TASK 10.1 (2026-09-23, documentation only):** ADR-013 decides the opportunity semantics: the sky-warning thresholds of SI-006 (Moon > 0.8 or Bortle ≥ 7) are to be replaced by annotations (TASK 10.2); optional Moon/cloud gates have user thresholds (assumptions, default 50 %); the culmination-based max altitude (TD-023 part) is replaced by the maximum inside the windows. No formula changed.
-> **TASK 10.2 (2026-09-23, commit `613b32f`):** CALC-33 registered (imaging opportunity). Windows are identical to CALC-23 while the optional gates are off (tested); max altitude inside the windows is now computed (CALC-20's culmination value remains in the UI until TASK 10.3). No existing formula changed.
-> **TASK 10.3 (2026-09-23, commit `e732a0e`):** SI-006's sky warning is removed (its thresholds with it); CALC-20's culmination-based `maxAltitude` is removed — the UI shows CALC-33's max altitude inside the windows. CALC-33 is now shown. No formula changed.
-> **TASK 10.4 (2026-09-23, commit `6bb596f`):** CALC-34 registered (batch candidates). It reuses CALC-33 per target with shared Sun and Moon samples; results equal the single-target view exactly (tested). No formula changed.
-> **TASK 13.2 (2026-09-24, commit `14467e7`):** execution state machine and persistence (ADR-016). A pure `ExecutionMachine` (domain) validates every transition per phase (not started, running on a block, paused, finished, abandoned), folds a run's events into its state, measures running time from UTC timestamps, stamps an event taken with a clock behind the last one at that event and flags it, estimates frames (CALC-35) and detects a run past its night. Schema v17 adds the append-only `session_events` table. `SessionRepository.start` records the start on the first light block and refuses a second session in progress; `record` stores an event and its counter projection in one transaction; `complete`/`abandon` close the run with an event. A resume prompt at start (Tonight) offers keep going, pause now, finish or abandon (confirmed), flags a finished night and a clock that went back, and changes nothing without an answer. No tracking screen yet (TASK 13.3). TD-055 recorded.
-> **TASK 13.3 (2026-09-24, commit `c8e2240`):** the tracking screen (`/session/:id/run`, ADR-016). The current block with confirmed and estimated counts; +1, −1, Reject, Accept estimate, Pause (plain or with a reason: clouds, wind, dew, equipment, other) / Resume, a block switcher and Finish / Abandon (confirmed) — all in the lower half, 56 dp, labelled for screen readers; countdowns to astronomical dawn, the target below its limit and moonrise; remaining window vs remaining plan (CALC-36). The tracker reads its night, target and Moon from the execution-start snapshot (`ExecutionOutlook`, pure), never from the planner. Owner decisions: Start is in the planner and on Tonight, with the same requirements as Save; after Start the planner goes on with a draft copy, and on a restart it resumes a copy when the most recent open session is running (TD-055 resolved). Tonight shows the run in progress; the resume prompt's Keep going opens the tracker. Opt-in keep-screen-on (off by default, persisted as `keepScreenOnWhileTracking`, only while the tracker is visible and a run is active) behind a `ScreenWake` interface, implemented with `wakelock_plus` 1.8.0 (BSD-3-Clause, verified on pub.dev; a screen wakelock only, no Android permission).
-> **TASK 13.4 (2026-09-24, commit `c1e52ce`):** end-of-session reconciliation. A results page (`/session/:id/results`) with per-block confirmed and rejected steppers (each change a stored event), notes, optional conditions (temperature, humidity, cloud cover — empty means unknown, range-checked) and planned vs actual light integration (`SessionReconciliation`, CALC-37); Complete or Abandon. Owner decisions: the tracker's Finish opens this page and completes nothing by itself; after completion the counts may be corrected, each correction a timestamped confirm/reject event after `finished` (the only events allowed then; ADR-016 §11); Sessions shows planned vs actual integration and "Edit results" for completed sessions. `complete()` and every correction write the actual/rejected light-frame totals in the same transaction. No schema change (the condition columns existed). **Group G13 is complete.**
-> **TASK 14.2 (2026-09-24, commit `4274175`):** integration so far per target (owner: build it, although it was a roadmap cut line). `TargetProgress` (pure, CALC-38) sums confirmed light frames × exposure of completed, non-legacy sessions with a target, per filter, with the last imaged night and the session count; Library → Progress (`/library/progress`) lists every target, newest first, and a session's detail shows "This target so far". No project goals (out of scope); no schema change.
-> **S1.3 (2026-09-25, Stage 1, commit `2007dc5`):** audit SCI-01 (= ENG-01, RT-01) resolved: the forecast's age class is recomputed against the clock through `WeatherFreshness` (thresholds unchanged: aging after 3 h, stale after 12 h, ADR-012 §6), and a snapshot records the age at the time of saving. No calculation changed.
-> **S1.13 (2026-09-25, Stage 1, commit `f179013`):** labels and documentation, no calculation changed. SCI-02: CALC-32 corrected (precipitation probability covers the preceding hour) and the weather card says so. SCI-03: CALC-28/CALC-29 state that the displayed rise/set (h₀) and the "Moon up" of windows and the Moon gate (topocentric > 0°) differ by 5–10 min; no displayed text claims they coincide, so no UI change. SCI-09: night-level illumination is labelled "at midnight" (Tonight, the sky card, window annotations). SCI-04 (RD-03): the grid bias is accepted as documented (SI-009, CALC-08). TASK 6.2 citation gap: the tests of CALC-01 to CALC-06 cite their sources, and CALC-03 has a direct test.
-> **S1.9 (2026-09-25, Stage 1, commit `705b764`):** CALC-26 (fit) gains the state `needsInput` for a plan with no site or target (the same empty-window path as `noWindow`, flagged by the caller); no placement or margin arithmetic changed.
-> **S1.8 (2026-09-25, Stage 1, commit `b03dda9`):** audit SCI-05 resolved (the ISO/gain label, RD-03; SI-004 progress) and SCI-06 resolved (Tonight's candidates word the CALC-31 frame fill as "% of the frame's short side", like the planner, through `CapabilityText.frameFillOf`). No calculation changed.
-> **S1.4 (2026-09-25, Stage 1, commit `db2702f`):** audit SCI-11 (= ENG-05, RT-06) resolved: without a site the draft's night key comes from `SessionNightResolver` at the default position, not the UTC date (CALC-21 unchanged; owner decision in DECISIONS E.1).
+> **How to read this file (2026-10-18 documentation cleanup).** Part A is the issue register (SI-001 to
+> SI-015; the Index lists open and closed issues separately), Part B the calculation register (CALC-##),
+> Part C the working rules for any scientific change. Planned scientific work: SI-013 (storage, PD-06) and
+> SI-015 (one Moon-up definition, MF-c) in `refinement/POST_ROADMAP_PLAN.md` §5 (S14.7, S15.1–S15.2; the
+> **PROPOSED** `refinement/FINAL_COMPLETION_ROADMAP.md` F07, F13). Status changes made by this cleanup:
+> SI-005's index row aligned with its section (Resolved, TASK 8.4) and SI-008 resolved after a code check
+> (elevation can be unknown since S7.5). The dated update notes that opened this file until 2026-10-18 are
+> at the end ("Appendix — Update log").
 
 ## Purpose and authority
 
@@ -131,23 +31,34 @@ Correct Interpretation → Required Future Action.**
 
 ## Index
 
+Split on 2026-10-18 into open and closed issues; each row's text is unchanged except SI-005 and SI-008,
+whose status now matches its section's evidence. "Open" includes "Partial", "Prototype" and "Largely
+resolved" with a recorded remainder.
+
+### Open
+
+| ID | Topic | Status of the underlying feature | Work item |
+| --- | --- | --- | --- |
+| SI-004 | ISO / gain limitations | Prototype (descriptive text only) | TD-009 |
+| SI-006 | Hard-coded astronomy and planning thresholds | Partial (sky warning removed TASK 10.3; planning thresholds are preferences since TASK 5.2; the conventional twilight altitudes remain fixed definitions) | TD-033, TD-043 |
+| SI-010 | "Night" definition and date/time-zone semantics | Resolved (default path; TASK 2.4; weather part TASK 9.4) — site-zone display still open | TD-020 |
+| SI-012 | Target coordinates, epoch and object types | **Largely resolved** (TASK 8.1) | TD-016 |
+| SI-013 | Storage estimate assumptions | Partial | TD-013 |
+| SI-015 | Two definitions of "the Moon is up" (displayed rise/set vs the Moon-up predicate) | **Open** (found 2026-10-17, RA.R2b); decided MF-c (RA.D Q2) | S15.2 |
+
+### Closed
+
 | ID | Topic | Status of the underlying feature | Work item |
 | --- | --- | --- | --- |
 | SI-001 | NPF exposure formula deviates from the published formula | **Resolved** (formula TASK 6.5; surfaced per PD-11 in TASK 8.6) | TD-007 (resolved) |
 | SI-002 | Moon: mean-phase precision limit, no Moon geometry | **Resolved 2026-09-22 (TASK 6.3–6.4)** for precision and geometry; the sky warning's use of it stays with SI-006 / G10 | TD-032 (resolved), TD-033 |
 | SI-003 | Relative stacking gain (√N) vs physical SNR | **Resolved** (label TASK 4.4; per-group √N with its assumptions in the help text, TASK 5.6; index corrected S1.15); the principle stays in force (Part C) | TD-009 |
-| SI-004 | ISO / gain limitations | Prototype (descriptive text only) | TD-009 |
-| SI-005 | Aperture semantics and unit problem | Partial (seed value fixed TASK 4.4; field-naming/unit model still open) | TD-008 |
-| SI-006 | Hard-coded astronomy and planning thresholds | Partial (sky warning removed TASK 10.3; planning thresholds are preferences since TASK 5.2; the conventional twilight altitudes remain fixed definitions) | TD-033, TD-043 |
+| SI-005 | Aperture semantics and unit problem | **Resolved** (TASK 8.4, as its section's Status says; this row read "Partial (seed value fixed TASK 4.4; field-naming/unit model still open)" until the 2026-10-18 cleanup aligned it with the section) | TD-008 (resolved) |
 | SI-007 | Bortle default vs unknown | **Resolved** (TASK 7.4) | TD-006 |
-| SI-008 | Unknown treated as zero / default presented as fact | **Largely resolved** (TASK 4.4 cases; the default position became a "no site" state, TASK 7.3; Bortle is never defaulted, TASK 7.4; corrected S1.15). Open: elevation cannot be recorded as unknown (SCI-08, RG-08) | TD-013 |
+| SI-008 | Unknown treated as zero / default presented as fact | **Resolved** (TASK 4.4 cases; the default position became a "no site" state, TASK 7.3; Bortle is never defaulted, TASK 7.4; corrected S1.15; the last open case, elevation, closed by S7.5: RG-08 = E2, schema v23, verified in code on 2026-10-18, see the section) | TD-013 |
 | SI-009 | Astronomical model simplifications | **Resolved** (documented on each function and reference-tested, TASK 6.2; the grid bias accepted as documented, S1.13; corrected S1.15) | TD-036 (resolved) |
-| SI-010 | "Night" definition and date/time-zone semantics | Resolved (default path; TASK 2.4; weather part TASK 9.4) — site-zone display still open | TD-020 |
 | SI-011 | Seed equipment data provenance and internal consistency | **Resolved** for shipped seeds (TASK 8.5) | TD-008 |
-| SI-012 | Target coordinates, epoch and object types | **Largely resolved** (TASK 8.1) | TD-016 |
-| SI-013 | Storage estimate assumptions | Partial | TD-013 |
 | SI-014 | Camera specs copied into another output mode (equipment import) | **Resolved 2026-09-27 (S3.V8)** | TD-071 (resolved) |
-| SI-015 | Two definitions of "the Moon is up" (displayed rise/set vs the Moon-up predicate) | **Open** (found 2026-10-17, RA.R2b); decided MF-c (RA.D Q2) | S15.2 |
 
 ---
 
@@ -535,7 +446,10 @@ Adopt and enforce the rule "no domain default may masquerade as a measurement":
 nullable values with explicit UI states, and labelled assumptions. Record it as a
 decision in `docs/DECISIONS.md` when approved.
 
-**Status:** **Largely resolved** *(corrected S1.15, 2026-09-25: the default position became a "no site" state in TASK 7.3 and Bortle is never defaulted since TASK 7.4, SI-007; open: elevation cannot be recorded as unknown, SCI-08, RG-08. Was: Partial, Bortle default and GPS-default-location cases remain open.)* **Work item:** TD-013 (resolved; and SI-007).
+**Status:** **Resolved** *(documentation cleanup, 2026-10-18, verified in code: the one open case is
+closed. Elevation can be unknown since S7.5 (RG-08 = E2, optional and Unknown by default; schema v23):
+`locations_table.dart` declares `elevation` nullable, `LocationProfile.elevation` is `double?`, and the
+site editor leaves it empty when unknown.)* Earlier status, kept: **Largely resolved** *(corrected S1.15, 2026-09-25: the default position became a "no site" state in TASK 7.3 and Bortle is never defaulted since TASK 7.4, SI-007; open: elevation cannot be recorded as unknown, SCI-08, RG-08. Was: Partial, Bortle default and GPS-default-location cases remain open.)* **Work item:** TD-013 (resolved; and SI-007).
 
 ---
 
@@ -919,3 +833,118 @@ already carries purpose/units/assumptions. All times are UTC unless noted.
    sensitivity (SI-004).
 7. Time handling: store and compute in UTC; define the site time base explicitly;
    never derive a night from the UTC calendar date (SI-010).
+
+---
+
+# Appendix — Update log (moved from the file header on 2026-10-18)
+
+*The dated notes that opened this file until 2026-10-18, verbatim (newest first).*
+
+> **TD-086 fix (2026-09-29):** CALC-44's no-readable-snapshot fallback now takes the later of the row's night key and the evening date the unreadable plan snapshot still names, if any (a Saved · changed row's key is its working night). Later, never earlier: the rule stays conservative. No other formula changed.
+
+> **S8.4 (2026-09-29):** CALC-35 (the frame estimate and running time) and CALC-36 (the tracker's countdowns) are retired with the live tracker (ADR-016 §13); their rows and history stay. No other formula changed.
+
+> **S8.1 (2026-09-29; D8-1, D8-3):** CALC-44 added: when a saved night ends (dawn at the snapshot's darkness limit, else the night's end). CALC-37 and CALC-38 note that counts may be reported after the night ("Reported as planned" is a user statement); SCI-07 closed as documented (RD-13: older accepted estimates are not relabelled). No existing formula changed.
+
+> **S7.3b (2026-09-29; ADR-020 §8):** CALC-25 and CALC-26 gain one input, the rig's in-camera noise reduction where it applies (DSLR/mirrorless and Unknown). When on, each light frame's atomic event is exposure + an in-camera dark of the same exposure + the per-frame overhead; the dark's time is in-window calibration. Integration, acquisition and √N are unchanged. E8, E8b and E8c are reproduced to the millisecond from values derived by hand (`in_camera_noise_reduction_test.dart`); E1–E7 unchanged. Assumption (documented in ADR-020 §8): the processing takes the exposure's length, with no extra overhead; the user states the setting, it is never inferred. Implementation decision: the dark's time counts toward the refocus interval, like every other elapsed in-window event.
+
+> **S7.3a (2026-09-29):** calibration match checks (ADR-020 §6) are pure and warn only: exposures compare in ADR-009's integer milliseconds; an ISO or gain not recorded on either side, and binning where the class does not show it, never fail. SI-004 holds: a value of the kind a class does not record is never relabelled as the other kind. The dark flat is calibration on its policy's line; ADR-009's E1–E7 unchanged (a dark-flat vector is in `calibration_match_test.dart`). No formula changed.
+
+> **S7.2b (2026-09-29):** SI-004 holds: ISO and gain stay records, never converted into each other, never called "sensitivity"; a class shows one of them (ADR-020 §3). The per-frame overhead is relabelled "Time between frames" (ADR-020 §4); no formula, input or vector changed (ADR-009 E1–E7 unchanged).
+
+> **S7.1 (2026-09-29; RD-08 = T3):** CALC-31's tracking input is the plan's effective tracking (the plan's override, else the rig's default, else unknown). An input-source change decided by RD-08; no formula changed (DECISIONS E.1, "RD-08 decided").
+
+> **S6.16 (2026-09-28):** CALC-42's display only (TD-076): the graph names the plan's point and marks its end as a comparison, never a target. No formula, input or point changed; SI-003 holds.
+
+> **S6.13 (2026-09-28):** CALC-43 added: the Moon during the dark span, for Tonight's Moon row (UX-17). No existing formula changed.
+
+> **S6.11 (2026-09-28):** CALC-42 added: the relative stacking-gain curve (√N, CALC-15's formula) sampled for the planner's per-group graph. No existing formula changed; SI-003 holds.
+
+> **S6.5 (2026-09-28):** CALC-41 added: the dark span at the user's darkness limit, the span the imaging opportunity counts as dark (TD-051). No existing formula changed.
+
+> **S3.V8 (2026-09-27):** SI-014 resolved (no camera-spec copy across pixel counts). No formula changed.
+
+> **Stage 3 sign-off validation (2026-09-27):** SI-014 recorded (a copied pixel pitch can belong to another output mode; S3S-02, TD-071). No formula changed.
+
+> **S3.V4 (2026-09-27):** CALC-39's image dimensions have a sanity bound: a side over 65,535 px is unparseable (S3V-05). No formula changed.
+
+> **S3.9 (2026-09-26):** CALC-40's proposed values are rounded to the editor's precision (TD-068). The formula is unchanged.
+
+> **S3.2 (2026-09-26):** CALC-40 added. It is a new estimate of sensor geometry from the 35 mm
+> equivalent (ADR-018 §4), with its assumptions and limits in its row. No existing formula changed.
+
+> **S3.1 (2026-09-26):** CALC-39 gains the image-dimension conversion (ADR-018 §3). It is a copy of
+> stored pixel counts, not a calculation. No formula changed.
+
+> **Metadata verification, 2026-09-26 (S2.V1):** CALC-39's formulas and units
+> are unchanged. Shared EXIF extraction now refuses unsupported integer counts
+> and malformed sensitivity-kind tags as unparseable; no pointer is presented
+> as ISO or focal length. DNG/JPEG regression and external sample tests pass.
+> See `refinement/STAGE_2_CORRECTIONS.md`.
+
+> **Verification stamp:** verified against code at commit `900b82a` (2026-09-20),
+> audited 2026-09-21. Application code changed since only by TASK 1.1 (commit
+> `2357755`); the only spot it touches here is the integration-test RA fixture
+> below. TASKs 1.2–1.3 changed application code without touching any calculation
+> recorded here. **2026-09-22 (TASK 2.1):** SI-010 gained a decision note (ADR-007);
+> no calculation changed. **TASK 2.2:** new calculation CALC-21 (the session-night
+> window), which is not yet used by the app; SI-010 progress noted. **TASK 2.3
+> (commit `de1792a`):** CALC-10/CALC-11 reimplemented as wrappers over new
+> calculations CALC-22/CALC-23/CALC-24 (SessionNight-based timeline, windows,
+> altitude curve); same formulas, not yet used by the app either; SI-010 progress
+> extended. **TASK 2.4 (2026-09-22, commit `1e58fcf`):** SI-010 resolved — the
+> ViewModel now resolves a real `SessionNight` (see `docs/TECH_DEBT.md` TD-001).
+> `PlannerViewModel.lunarIllumination` (CALC-09's caller) now evaluates at
+> `sessionNight.startUtc + 12h` (mean solar midnight) instead of the old
+> `_sessionDate`; this is ADR-007 §9's suggested **candidate** instant for
+> night-level scalars, used here as an interim, documented choice — **G6 has not
+> formally decided the canonical evaluation instant**, so this is not a closed
+> scientific decision. See SI-002's update below. **TASK 4.1 (2026-09-22, commit
+> `f5b29cc`):** the "Invalid capture-block input" SI-008 evidence row below is
+> resolved — no calculation changed. **TASK 4.4 (2026-09-22, commit
+> `514dcc5`):** SI-003's label, SI-005's seed value, and several SI-008 UI
+> presentation cases (storage, pixel scale, example plan, RA/Dec sentinel) are
+> resolved; SI-006's sky-warning wording is resolved (its thresholds are not).
+> No calculation formula changed — only labels, seed data and a null-vs-zero
+> return-value fix in `estimateStorageRequirement`. **TASK 5.1 (2026-09-22, docs
+> only):** ADR-009 defines the capture-budget semantics. Planned calculations
+> CALC-25 (budget) and CALC-26 (fit) were registered; CALC-18, CALC-19 and CALC-20
+> are marked for replacement. No calculation changed.
+> **Nothing else in this document has been fixed.** It records issues and the
+> required future action for each. See `docs/TECH_DEBT.md` for the work items.
+> **TASK 5.2 (2026-09-22):** SI-006 progress (thresholds are preferences); CALC-18 takes a configurable margin (default unchanged). No formula changed.
+> **TASK 5.3 (2026-09-22):** SI-004 progress (typed, descriptive-only gain). No calculation changed.
+> **TASK 5.4 (2026-09-22):** CALC-25 implemented and verified against ADR-009 E1–E7; CALC-19 deleted; CALC-20 budget part replaced; SI-013 progress. The budget semantics are ADR-009, not a silent formula change.
+> **TASK 5.5 (2026-09-22):** CALC-26 implemented; CALC-18 deleted. The E1b vector erratum is recorded in ADR-009 §8.
+> **TASK 5.6 (2026-09-22):** SI-003 and SI-004 progress (per-group √N with help text; descriptive-only gain in the editor). No calculation changed.
+> **TASK 6.1 (2026-09-22, docs only):** ADR-010 decision notes on SI-002, SI-009 and SI-012. No calculation changed.
+> **TASK 6.2 (2026-09-22):** CALC-07/CALC-08 now reference-tested; new CALC-27 (precession) — a recorded formula change (ADR-010, TASK 6.2 decisions); SI-009 and SI-012 progress.
+> **TASK 6.3 (2026-09-22):** new CALC-28 (Moon, ADR-010) with reference results; SI-002 progress. No existing calculation changed.
+> **TASK 6.4 (2026-09-22):** CALC-09 deleted, new CALC-29 (MoonConditions and separation, reference-tested); SI-002 resolved for precision and geometry.
+> **TASK 6.5 (2026-09-22):** CALC-17 corrected to the primary source (recorded formula change); SI-001 resolved for the formula (still hidden).
+> **TASK 7.1 (2026-09-23):** SI-007 and SI-010 progress (unknown Bortle; IANA site zone). No calculation formula changed.
+> **TASK 7.3 (2026-09-23):** SI-010 progress: a site's IANA zone is set in the editor (device zone pre-filled, "Unknown" allowed, then mean solar time). The zone data set is now `latest_all` (includes link ids; canonical zones' rules unchanged). No formula changed.
+> **TASK 7.4 (2026-09-23):** SI-007 resolved: no scraper, no default; Bortle/SQM are user-entered with source and date, or unknown; no Bortle↔SQM conversion (none is sourced); the sky warning uses a known Bortle class only.
+> **TASK 8.1 (2026-09-23):** SI-012 largely resolved: epoch stored (J2000 only), source stored, moving types hidden/labelled, RA/Dec entered in sexagesimal or hours through pure, tested parsers (CALC-30). No formula changed.
+> **TASK 8.2 (2026-09-23):** SI-012 progress: the seeded targets are now sourced (OpenNGC v20260501, per-object original text kept in the asset; every object's degrees re-derived from its text in tests; 7 independent spot checks within 0.02°) and carry size and magnitude. No formula changed.
+> **TASK 8.3 (2026-09-23, documentation only):** SI-005 decided by ADR-011 (implemented in TASK 8.4): required focal ratio N plus optional diameter D in mm, N = f/D, 1 % agreement; existing values never reinterpreted, N > 32 flagged for review.
+> **TASK 8.4 (2026-09-23):** SI-005 resolved (ADR-011 implemented: unit-explicit names, focal ratio N plus optional diameter D with N = f / D and 1 % agreement, bounds, review flag for N > 32; no stored value changed).
+> **TASK 8.5 (2026-09-23):** SI-011 resolved for shipped seeds: one seed, camera specs verified against ZWO's page, optics labelled estimated, provenance stored per row; unverified phone seeds dropped (existing rows untouched, provenance unknown).
+> **TASK 8.6 (2026-09-23):** SI-001 fully resolved (NPF surfaced per PD-11, at the field-minimum |δ|); new CALC-31 (capability summary). No existing formula changed; the NPF call now receives the field-minimum declination instead of the target's centre (a decided input change, DECISIONS PD-11).
+> **TASK 9.1 (2026-09-23, documentation only):** ADR-012 decides the weather part of SI-010 (UTC timestamps sliced to the chosen night) and the variable semantics (visibility is horizontal visibility, not transparency; gusts are a preceding-hour maximum; missing values unknown). Implementation: TASKs 9.2–9.4.
+> **TASK 9.2 (2026-09-23):** SI-010 (weather part) progress: forecast instants are now parsed as UTC from GMT+0 epoch seconds in the new snapshot path; the display still uses the legacy path until TASK 9.4.
+> **TASK 9.3 (2026-09-23):** no calculation changed; forecast age is computed from UTC instants with the injected Clock (freshness thresholds documented as assumptions, ADR-012 §6).
+> **TASK 9.4 (2026-09-23, commit `48d7a8c`):** CALC-32 registered (night weather summary and dew-spread heuristic). SI-010 weather part resolved (UTC hours sliced to the night, shown in the site zone). SI-006: the cloud colour bands are removed and the weather horizon is the night within 16 days; the dew margin is now shown in use.
+> **TASK 10.1 (2026-09-23, documentation only):** ADR-013 decides the opportunity semantics: the sky-warning thresholds of SI-006 (Moon > 0.8 or Bortle ≥ 7) are to be replaced by annotations (TASK 10.2); optional Moon/cloud gates have user thresholds (assumptions, default 50 %); the culmination-based max altitude (TD-023 part) is replaced by the maximum inside the windows. No formula changed.
+> **TASK 10.2 (2026-09-23, commit `613b32f`):** CALC-33 registered (imaging opportunity). Windows are identical to CALC-23 while the optional gates are off (tested); max altitude inside the windows is now computed (CALC-20's culmination value remains in the UI until TASK 10.3). No existing formula changed.
+> **TASK 10.3 (2026-09-23, commit `e732a0e`):** SI-006's sky warning is removed (its thresholds with it); CALC-20's culmination-based `maxAltitude` is removed — the UI shows CALC-33's max altitude inside the windows. CALC-33 is now shown. No formula changed.
+> **TASK 10.4 (2026-09-23, commit `6bb596f`):** CALC-34 registered (batch candidates). It reuses CALC-33 per target with shared Sun and Moon samples; results equal the single-target view exactly (tested). No formula changed.
+> **TASK 13.2 (2026-09-24, commit `14467e7`):** execution state machine and persistence (ADR-016). A pure `ExecutionMachine` (domain) validates every transition per phase (not started, running on a block, paused, finished, abandoned), folds a run's events into its state, measures running time from UTC timestamps, stamps an event taken with a clock behind the last one at that event and flags it, estimates frames (CALC-35) and detects a run past its night. Schema v17 adds the append-only `session_events` table. `SessionRepository.start` records the start on the first light block and refuses a second session in progress; `record` stores an event and its counter projection in one transaction; `complete`/`abandon` close the run with an event. A resume prompt at start (Tonight) offers keep going, pause now, finish or abandon (confirmed), flags a finished night and a clock that went back, and changes nothing without an answer. No tracking screen yet (TASK 13.3). TD-055 recorded.
+> **TASK 13.3 (2026-09-24, commit `c8e2240`):** the tracking screen (`/session/:id/run`, ADR-016). The current block with confirmed and estimated counts; +1, −1, Reject, Accept estimate, Pause (plain or with a reason: clouds, wind, dew, equipment, other) / Resume, a block switcher and Finish / Abandon (confirmed) — all in the lower half, 56 dp, labelled for screen readers; countdowns to astronomical dawn, the target below its limit and moonrise; remaining window vs remaining plan (CALC-36). The tracker reads its night, target and Moon from the execution-start snapshot (`ExecutionOutlook`, pure), never from the planner. Owner decisions: Start is in the planner and on Tonight, with the same requirements as Save; after Start the planner goes on with a draft copy, and on a restart it resumes a copy when the most recent open session is running (TD-055 resolved). Tonight shows the run in progress; the resume prompt's Keep going opens the tracker. Opt-in keep-screen-on (off by default, persisted as `keepScreenOnWhileTracking`, only while the tracker is visible and a run is active) behind a `ScreenWake` interface, implemented with `wakelock_plus` 1.8.0 (BSD-3-Clause, verified on pub.dev; a screen wakelock only, no Android permission).
+> **TASK 13.4 (2026-09-24, commit `c1e52ce`):** end-of-session reconciliation. A results page (`/session/:id/results`) with per-block confirmed and rejected steppers (each change a stored event), notes, optional conditions (temperature, humidity, cloud cover — empty means unknown, range-checked) and planned vs actual light integration (`SessionReconciliation`, CALC-37); Complete or Abandon. Owner decisions: the tracker's Finish opens this page and completes nothing by itself; after completion the counts may be corrected, each correction a timestamped confirm/reject event after `finished` (the only events allowed then; ADR-016 §11); Sessions shows planned vs actual integration and "Edit results" for completed sessions. `complete()` and every correction write the actual/rejected light-frame totals in the same transaction. No schema change (the condition columns existed). **Group G13 is complete.**
+> **TASK 14.2 (2026-09-24, commit `4274175`):** integration so far per target (owner: build it, although it was a roadmap cut line). `TargetProgress` (pure, CALC-38) sums confirmed light frames × exposure of completed, non-legacy sessions with a target, per filter, with the last imaged night and the session count; Library → Progress (`/library/progress`) lists every target, newest first, and a session's detail shows "This target so far". No project goals (out of scope); no schema change.
+> **S1.3 (2026-09-25, Stage 1, commit `2007dc5`):** audit SCI-01 (= ENG-01, RT-01) resolved: the forecast's age class is recomputed against the clock through `WeatherFreshness` (thresholds unchanged: aging after 3 h, stale after 12 h, ADR-012 §6), and a snapshot records the age at the time of saving. No calculation changed.
+> **S1.13 (2026-09-25, Stage 1, commit `f179013`):** labels and documentation, no calculation changed. SCI-02: CALC-32 corrected (precipitation probability covers the preceding hour) and the weather card says so. SCI-03: CALC-28/CALC-29 state that the displayed rise/set (h₀) and the "Moon up" of windows and the Moon gate (topocentric > 0°) differ by 5–10 min; no displayed text claims they coincide, so no UI change. SCI-09: night-level illumination is labelled "at midnight" (Tonight, the sky card, window annotations). SCI-04 (RD-03): the grid bias is accepted as documented (SI-009, CALC-08). TASK 6.2 citation gap: the tests of CALC-01 to CALC-06 cite their sources, and CALC-03 has a direct test.
+> **S1.9 (2026-09-25, Stage 1, commit `705b764`):** CALC-26 (fit) gains the state `needsInput` for a plan with no site or target (the same empty-window path as `noWindow`, flagged by the caller); no placement or margin arithmetic changed.
+> **S1.8 (2026-09-25, Stage 1, commit `b03dda9`):** audit SCI-05 resolved (the ISO/gain label, RD-03; SI-004 progress) and SCI-06 resolved (Tonight's candidates word the CALC-31 frame fill as "% of the frame's short side", like the planner, through `CapabilityText.frameFillOf`). No calculation changed.
+> **S1.4 (2026-09-25, Stage 1, commit `db2702f`):** audit SCI-11 (= ENG-05, RT-06) resolved: without a site the draft's night key comes from `SessionNightResolver` at the default position, not the UTC date (CALC-21 unchanged; owner decision in DECISIONS E.1).

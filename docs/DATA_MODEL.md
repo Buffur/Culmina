@@ -1,141 +1,15 @@
-# AstroPlan Data Model
+# Culmina (formerly AstroPlan) — Data Model
 
-> **TD-086 fix (2026-09-29):** `Session.unreadableSnapshotNight` (domain only, no schema change): the evening date an unreadable `plan_snapshot` still names under `night.eveningDate`, read by `DriftSessionRepository` without trusting the rest; used only by CALC-44 to end a saved night later.
-
-> **S8.9 (2026-09-29; TD-056, ENG-14 resolved):** the backup archive is `format_version` 2 and adds `preferences.json` (B8a). A restore applies it before the restored database opens and clears the plan ids; a confirmed reset clears the active site and the plan ids. No schema change.
-
-> **S8.8 (2026-09-29; TD-070 resolved):** a new session snapshot's `rig` gains `provenance`: one entry per valued spec (`resolution`, `pixelPitch`, `sensorSize`, `rawFileSize` when set, `focalLength`, `focalRatio`), each `{source, confidence}` as `EquipmentProfile.provenanceOf` reads it, or null (unknown). An imported rig's estimates read `derived:calc-40/metadata:<format>` · `estimated` and its file values `metadata:<format>` · `reported`; nothing is recorded as `user` unless it is. Additive: `v` stays 1, the group pairs stay beside it, and a snapshot taken earlier has no key and reads as before. No schema change; the export embeds snapshots as stored.
-
-> **S8.6 (2026-09-29): schema v25.** `session_logs.name` (text, nullable; the plan's optional name, NULL = none). The v24→v25 step adds the column; every existing row reads as unnamed. Not in the snapshot; not copied by Copy or a working copy.
-
-> **S8.1 (2026-09-29): schema v24** (ADR-019 §4; DECISIONS E.1, "Stage 8 decisions", I-1). `session_logs` +
-> `result_kind` (`asPlanned` | `partly`; NULL for a live or pre-v24 completion) and `not_done_reason`
-> (clouds, wind, dew, equipment, other; NULL = not given); `session_events.kind` accepts `reported` (a
-> result without a run: not started → finished, then the counts as `framesConfirmed`). The v23→v24
-> step adds the two columns and rebuilds `session_events` (a CHECK cannot change in place), every
-> event kept. `SessionRepository.recordResult` records a result after the saved night (CALC-44) in
-> one transaction; `settleSavedPlan` splits a Saved · changed plan into its saved entry and a
-> never-saved working copy. No row is migrated into a result.
-> **S7.5 (2026-09-29): schema v23** (RG-08 = E2). `location_profiles.elevation` is nullable: NULL is
-> unknown, never 0; the migration rebuilds the table and keeps every stored value (a legacy 0 stays
-> 0) and the plans' site references. `LocationProfile.elevation` is `double?`; a new plan snapshot
-> records `site.elevationM` as null when unknown.
-
-> **S7.4 (2026-09-29): schema v22** (RG-07 = T1). `target_aliases` (id, catalog_id, alias, kind
-> `designation`/`name`, catalog_version) holds the bundled catalog's other designations and names,
-> keyed by the catalog id and never by a row: an alias applies to the catalog row with that id while
-> one exists, and no target row changes. The table is created empty by the migration and rebuilt by
-> the catalog seeder whenever its `catalog_version` differs from the asset's (version 3).
-
-> **S7.3b (2026-09-29): schema v21** (ADR-020 §8). `camera_modules.in_camera_noise_reduction`
-> (bool, default false) holds the user's statement of the camera's long-exposure noise reduction,
-> off for every existing camera. `EquipmentProfile.inCameraNoiseReduction`; counted only where
-> `noiseReductionApplies` (DSLR/mirrorless or Unknown). A new plan snapshot's rig gains
-> `inCameraNoiseReduction`.
-
-> **S7.3a (2026-09-29): no schema change** (ADR-020 §6, D1). A fifth frame type, `darkFlat`, stored
-> as its enum name in `capture_blocks.frame_type`, the snapshot's `frameType` and the export's
-> `frame_type`; every reader parses frame types case-insensitively. A calibration block's inherited
-> values are copied into the block when it is created (L1), so nothing new is stored.
-
-> **S7.2a (2026-09-29): schema v20** (ADR-020 §2). `camera_modules.camera_class` holds the camera's
-> class, `unknown` by default and for every existing camera. `EquipmentProfile.cameraClass`; a new
-> plan snapshot's rig gains `cameraClass`. Never inferred: an import proposes none.
-
-> **S7.1 (2026-09-29): schema v19** (RD-08 = T3). `session_logs.tracking_override` holds the plan's
-> tracking override (NULL = the rig's default). A new plan snapshot gains `tracking` =
-> {`effective`, `source` (`rig` | `plan`)}; `rig.tracking` stays the rig's default; an older
-> snapshot without the key reads as the rig's default. `SavedPlanReader` restores the override
-> for Discard. The export manifest's session gains `tracking_override`.
-
-> **S6.3 (2026-09-28; S4-DEF-04 = R):** two `SessionRepository` writes, no schema change. `deleteDraft` deletes only a never-saved draft (`draft` without `planned_at_utc_ms`) with its blocks, and refuses any other row. `revertToSaved` turns a Saved · changed row (`draft` with `planned_at_utc_ms`) back to `planned`, rewriting its plan columns and blocks from `plan_snapshot`; `plan_snapshot` and `planned_at_utc_ms` are not written. A new lifecycle transition (ADR-014 §3 as amended in DECISIONS E.1).
-
-> **S5.5 (2026-09-27):** display preferences (SharedPreferences, not the database) gain one boolean per collapsible section, under the key `section.<sectionKey>` (open = true). They stay on the device, like field mode; no schema change.
-
-> **S3.V7 (2026-09-27):** a new session snapshot's rig provenance is the provenance every spec of a group shares, else null (never the group pair alone). No schema or snapshot-format change.
-
-> **S3.V2 (2026-09-27):** an equipment spec's own pair may hold the source id `unknown` with NULL confidence: the field's origin is known to be unknown, and the group's provenance does not cover it. No schema change.
-
-> **S3.4 (2026-09-26): schema v18.** It adds per-field equipment provenance and the metadata
-> identity (ADR-018 §5), on `camera_modules` and `optical_rigs`. See the tables and the migration
-> history below.
-
-> **Superseded 2026-09-26 (S1.V6, finding X2):** S1.V1–S1.V4 (`3067658`, `b34c9ad`, `ed628f8`, `ea65231`) resolved TD-059–TD-062, confirmed by the repeat independent validation at `c99bd7f`. The note below is kept as history.
->
-> **Independent Stage 1 validation, 2026-09-25, code `4e653fb`:** schema remains
-> v17; no model or migration changed. S1.5's closure is contradicted by TD-059/060
-> (background refusal type and seed state after reset); TD-061 records incomplete
-> reconstruction of unsaved-plan state. See [validation](refinement/STAGE_1_VALIDATION.md).
-
-> **Verification stamp:** verified against code at commit `900b82a` (2026-09-20),
-> audited 2026-09-21. Application code changed since by TASKs 1.1–1.3 (no entity
-> changes). **TASK 2.2 (2026-09-22):** three non-persisted domain types were added to
-> B3 (`CalendarDate`, `SiteTimeContext`, `SessionNight`); no schema change. **TASK 3.1
-> (2026-09-22, docs only):** ADR-008 decided the persistence baseline and the
-> provenance convention; Part D rules 5 and 6 now point to it. B8 gained a note
-> (v4–v7 never committed). No schema change. **TASK 2.3
-> (2026-09-22, commit `de1792a`):** two more non-persisted types added
-> (`NightTimeline`/`SunThresholdResult`, `AltitudeCurve`/`AltitudeSample`);
-> `VisibilityWindow` gained two fields; no schema change. **TASK 2.4 (2026-09-22,
-> commit `1e58fcf`):** `CalendarDate` and `SessionNight` are now used by the running
-> app (`PlannerViewModel._pickedEveningDate`); still no schema change — a legacy
-> `SessionLog.sessionDate` instant maps to its device-local evening date at read
-> time (ADR-007 §10), it is not stored as a `CalendarDate` yet (G11, PD-18).
-> **TASK 3.2 (2026-09-22, commit `3c25e8c`):** implements ADR-008's migration
-> workflow — the v1–v7 upgrade steps are removed, replaced by a floor guard
-> (v8) and a downgrade guard; Drift schema snapshots (`drift_schemas/`) and
-> generated verification code (`lib/data/database/generated_migrations/`)
-> exist for v8 and v9; a migration test suite covers the matrix in B8a below.
-> `schemaVersion` stays at 9 — no table changed. TD-004 resolved; TD-047
-> resolved for the app-database guard (the bootstrap-level reset UI is a
-> separate, not-yet-scheduled follow-up). **TASK 3.3 (2026-09-22, commit
-> `e580d03`):** `schemaVersion` is now **10**. `equipment_profiles` is
-> dropped (Dart class and table); `camera_modules`/`optical_rigs`/
-> `capture_blocks` are rebuilt with real `ON DELETE` actions and, for the
-> first two, without the legacy `bit_depth`/`optical_multiplier` columns;
-> foreign keys are enforced on every connection. TD-005 resolved; TD-026
-> resolved in part (the unconditional-delete half). B2, B8 and DEV-D6
-> updated below.
->
-> This document keeps **three things separate** on purpose:
-> - **Part A — Design intent** (approved Phase 0 baseline, preserved verbatim).
-> - **Part B — CURRENT ENTITIES** (what actually exists in code, verified).
-> - **Part C — REQUIRED FUTURE DOMAIN CONCEPTS** (do **not** create in code
->   without a design review and owner approval).
->
-> Status vocabulary: **Intended / Planned**, **Actual / Implemented**, **Partial**,
-> **Broken**, **Missing**, **Deprecated**, **Unknown**.
-> Where the implementation deviates from the approved design it is marked
-> **IMPLEMENTATION DEVIATION** (intended behavior / actual behavior / consequence).
-> **TASK 5.2 (2026-09-22):** planning preferences (`PlanningPreferences` + repository) and a Settings screen; the planner selection state moved behind `PlannerStateRepository`; `PlannerViewModel` no longer imports SharedPreferences. B6 keys and one B3 row added; no schema change.
-> **TASK 5.3 (2026-09-22):** `CaptureBlock` validates at the domain boundary and gains a calibration policy and a typed, descriptive-only gain; schema v11 adds block `position`, `calibration_policy`, `gain_kind`/`gain_value` and drops the free-text `gain_iso` (owner-approved); migrations now use generated per-version step shapes (`schema_versions.dart`).
-> **TASK 7.1 (2026-09-23):** site semantics in schema v12 (nullable Bortle with source and date, SQM, IANA zone, notes; default Bortle 4 cleared with a note); a map pick or GPS fix is a transient, remembered position that never writes into a saved site; the `timezone` package (0.11.1, BSD) backs an `IanaTimeContext`, so a site's zone drives its night (ADR-007 L1 fixed for sites with a zone) and the display.
-> **TASK 7.3 (2026-09-23):** no schema change. Sites are now written only by the site editor (`LocationProfile.userEdit`): a Bortle/SQM value the user changed is stored with source `user` and the date; an unchanged value keeps its source and date; a cleared value loses both. Deleting the active site stores its coordinates as the transient position (`transientLatitude`/`transientLongitude` preferences) and clears `activeLocationId`. Elevation still cannot be unknown (non-null column), and nothing uses it.
-> **TASK 7.4 (2026-09-23):** no schema change. `SkyDarkness` (domain) is a read-only view of a site's Bortle/SQM with their source and date (or unknown); no value is fetched or derived. PD-05 resolved (DECISIONS E.1).
-> **TASK 8.1 (2026-09-23):** schema v13 — `astro_targets` + `epoch` (default `J2000`), `source`, `angular_size_arcmin`, `magnitude`; partial unique index on `catalog_id` for catalog entries. See B2 and B8.
-> **TASK 8.2 (2026-09-23):** no schema change. Catalog rows carry `source = catalog:openngc@v20260501`; the applied catalog version is the preference `catalogSeedVersion` (int; 2 after this task; absent = never applied). The asset format (`assets/catalog/catalog_v2.json`: version, source, licence, epoch, objects with id, name, type, ra/dec degrees, sizeArcmin, vMag, since, and the OpenNGC name and original RA/Dec text) is documented in `lib/data/services/catalog_seeder.dart`.
-> **TASK 8.3 (2026-09-23, documentation only):** ADR-011 decides the 1.0 equipment model: flat profile kept over the three tables; TASK 8.4 adds nullable `optical_rigs.aperture_diameter_mm` and `optical_rigs.max_exposure_s` (schema v14), reads `optical_rigs.aperture` as the focal ratio N, uses `tracking_state` for {untracked, tracked, guided, unknown}, and removes the dormant catalog repository. DEV-D2 updated.
-> **TASK 8.4 (2026-09-23):** schema v14 (`optical_rigs` + `aperture_diameter_mm`, `max_exposure_s`); `EquipmentProfile` renamed to unit-explicit fields with tracking type and maximum exposure; the dormant domain models removed. See B2, B3, B8.
-> **TASK 8.5 (2026-09-23):** schema v15 — `camera_modules` and `optical_rigs` + `source`, `confidence` (ADR-008 §6); legacy rows NULL. Seeded rows use source `seed:equipment@2`.
-> **TASK 8.6 (2026-09-23):** no schema change. New preference `npfK` (double, 1–3, default 1; `SharedPrefsPlanningPreferencesRepository`).
-> **TASK 9.2 (2026-09-23):** new domain `WeatherSnapshot` / `WeatherHour` (UTC, nullable per variable, provider/model/fetch time); not persisted yet (cache: TASK 9.3). `WeatherConditions` remains for the legacy path.
-> **TASK 9.3 (2026-09-23):** weather snapshots are cached in SharedPreferences under `weather:<lat 2dp>:<lon 2dp>:<model>:<night start UTC ms>` (JSON format version 1: provider, model, fetch time and hour times as UTC epoch ms, nullable values). The legacy `weather_cache_<lat>_<lon>` keys remain until TASK 9.4.
-> **TASK 9.4 (2026-09-23, commit `48d7a8c`):** `WeatherConditions`/`HourlyForecast` removed (owner decision) and the legacy `weather_cache_<lat>_<lon>` keys are no longer read or written (existing entries stay on upgraded devices, TD-049). New derived (not persisted) domain type `NightWeatherSummary` (interval, span kind, hourly slots with dew spread/risk, per-variable ranges).
-> **TASK 10.2 (2026-09-23, commit `613b32f`):** no schema change. New preferences `moonGateEnabled` (bool, false), `moonGateMinIlluminationPct` (0–100, 50), `cloudGateEnabled` (bool, false), `cloudGateMaxPct` (0–100, 50). New derived (not persisted) domain `ImagingOpportunity` (C8 now Partial).
-> **TASK 10.4 (2026-09-23, commit `6bb596f`):** no schema change. New derived (not persisted) domain types `TonightCandidate` and `MoonTrack`.
-> **TASK 11.1 (2026-09-23, documentation only):** ADR-014 decides C4 Session, C9 ExecutionState and C10 LogbookEntry (see DECISIONS Part F for the entity diagram); no schema change yet (TASK 11.2 evolves `session_logs` in place).
-> **TASK 11.2 (2026-09-23, commit `428f673`):** schema v16 (ADR-014 §5). `session_logs` evolved in place into the Session root: `status` (draft/planned/inProgress/completed/abandoned, CHECK, default draft), `legacy`, the night key (`evening_date`, `time_zone_id`), nullable references `site_id`/`target_id`/`rig_id` with ON DELETE SET NULL, UTC-ms lifecycle timestamps and two versioned JSON snapshot columns (`JsonMapConverter`); `capture_blocks` + `completed_frames`, `rejected_frames` (planned = `frame_count`); indexes on status, evening date and target id. Every existing log became a completed legacy session (no references guessed). `DriftLogbookRepository.updateLog` now writes only its own columns (a full-row replace would reset the v16 columns). No domain or repository API change.
-> **TASK 11.3 (2026-09-23, commit `ad6609c`):** no schema change. New domain types `Session`, `SessionStatus`, `SessionPlan`, `SessionResults`, `SessionSnapshot` (versioned JSON, v1) and the pure `SessionSnapshotBuilder`; `SessionRepository` replaces `LogbookRepository`. New rows write display labels into the pre-v16 text columns (ADR-014 §10). DEV-D3 resolved for new sessions.
-> **TASK 11.4 (2026-09-23, commit `628fda6`):** no schema change. The working plan and the selected target/rig ids moved from SharedPreferences (`captureBlocks`, `targetId`, `equipmentId`) into the current draft session (migrated once, then removed). DEV-D4 resolved for the plan; the active site id and the transient position stay in preferences by the TASK 7.1/7.3 owner decisions.
-> **TASK 13.2 (2026-09-24, commit `14467e7`):** execution state machine and persistence (ADR-016). A pure `ExecutionMachine` (domain) validates every transition per phase (not started, running on a block, paused, finished, abandoned), folds a run's events into its state, measures running time from UTC timestamps, stamps an event taken with a clock behind the last one at that event and flags it, estimates frames (CALC-35) and detects a run past its night. Schema v17 adds the append-only `session_events` table. `SessionRepository.start` records the start on the first light block and refuses a second session in progress; `record` stores an event and its counter projection in one transaction; `complete`/`abandon` close the run with an event. A resume prompt at start (Tonight) offers keep going, pause now, finish or abandon (confirmed), flags a finished night and a clock that went back, and changes nothing without an answer. No tracking screen yet (TASK 13.3). TD-055 recorded.
-> **TASK 13.3 (2026-09-24, commit `c8e2240`):** the tracking screen (`/session/:id/run`, ADR-016). The current block with confirmed and estimated counts; +1, −1, Reject, Accept estimate, Pause (plain or with a reason: clouds, wind, dew, equipment, other) / Resume, a block switcher and Finish / Abandon (confirmed) — all in the lower half, 56 dp, labelled for screen readers; countdowns to astronomical dawn, the target below its limit and moonrise; remaining window vs remaining plan (CALC-36). The tracker reads its night, target and Moon from the execution-start snapshot (`ExecutionOutlook`, pure), never from the planner. Owner decisions: Start is in the planner and on Tonight, with the same requirements as Save; after Start the planner goes on with a draft copy, and on a restart it resumes a copy when the most recent open session is running (TD-055 resolved). Tonight shows the run in progress; the resume prompt's Keep going opens the tracker. Opt-in keep-screen-on (off by default, persisted as `keepScreenOnWhileTracking`, only while the tracker is visible and a run is active) behind a `ScreenWake` interface, implemented with `wakelock_plus` 1.8.0 (BSD-3-Clause, verified on pub.dev; a screen wakelock only, no Android permission).
-> **TASK 13.4 (2026-09-24, commit `c1e52ce`):** end-of-session reconciliation. A results page (`/session/:id/results`) with per-block confirmed and rejected steppers (each change a stored event), notes, optional conditions (temperature, humidity, cloud cover — empty means unknown, range-checked) and planned vs actual light integration (`SessionReconciliation`, CALC-37); Complete or Abandon. Owner decisions: the tracker's Finish opens this page and completes nothing by itself; after completion the counts may be corrected, each correction a timestamped confirm/reject event after `finished` (the only events allowed then; ADR-016 §11); Sessions shows planned vs actual integration and "Edit results" for completed sessions. `complete()` and every correction write the actual/rejected light-frame totals in the same transaction. No schema change (the condition columns existed). **Group G13 is complete.**
-> **TASK 14.1 (2026-09-24, commit `e212f6a`):** Sessions list and detail. Filters by status (chips), target and site (pickers built from the saved sessions) and night date range, run in the query (`SessionRepository.list` gains `siteId`, `from`, `to`); legacy rows match a date range by their stored date and never a site or target filter, and carry a Legacy badge. Owner decisions: a tap opens the read-only detail (`/sessions/:id`); a started session shows its execution-start snapshot, a planned one its plan snapshot, labelled with when it was taken. The detail shows the night (window, zone, darkness limit, minimum altitude, usable time, windows), site (with Bortle/SQM), target, rig, budget, weather source, plan vs actual per block (CALC-37), notes and conditions, and the actions Open tracker / Edit results / Open in planner (a copy for frozen sessions) / Share. Legacy logs show their stored text only; a missing snapshot says so. Typed `SessionSnapshot` readers keep JSON out of widgets. No schema change.
-> **TASK 14.3 (2026-09-24, commit `a234ff6`):** export manifest v2 (schema in `docs/EXPORT_MANIFEST.md`). `SessionManifestCodec` (data layer) writes UTC epoch-ms instants, the night key and zone, status, the snapshots as stored, blocks with confirmed/rejected counts replayed from the events, results and conditions, and the run's event log (owner decision); it reads v1 as a legacy log and refuses unknown versions. `ShareSessionExporter` shares a `.json` file plus a text summary; owner decision: Export file on a session's detail and Export all in the Sessions app bar. Import deferred. `AppIdentity.version` stays in step with `pubspec.yaml` (tested).
-> **S1.5 (2026-09-25, Stage 1, commit `07d55e2`):** `refusedSchemaVersion` and `resetRefusedDatabase` (`app_database.dart`) wire the ADR-008 §2 reset into startup: below the floor only, after the user confirms, the file kept as `.v<N>.bak`; a newer database is never reset. No schema change.
-> **TASK 14.4 (2026-09-24, commit `a847f87`):** backup and restore. Owner decisions: one `.astroplan` file (ZIP: header with format, schema and app version, time and session count; a consistent database copy made with `VACUUM INTO`; the v2 manifest) shared to a place the user picks; restore picked with `file_picker` 13.1.0 (MIT), checked (AstroPlan backup, header = the file's SQLite `user_version`, newer schema refused, below the v8 floor refused — older supported schemas are upgraded by the existing migrations), confirmed with a preview, staged, and applied at the next start before the database opens, the replaced database and its WAL kept as a safety copy. New dependencies `file_picker` 13.1.0 and `archive` 4.3.0 (both MIT, checked on pub.dev). Android Auto Backup: documented, not changed (owner decision). TD-056 recorded (preferences are not in the backup).
-
----
+> **How to read this file (2026-10-18 documentation cleanup; no content changed).** **Current schema: v25**
+> (`lib/data/database/app_database.dart`, `schemaVersion`, checked 2026-10-18; generated snapshots in
+> `drift_schemas/`). A v26 migration is planned (ADR-021; `refinement/POST_ROADMAP_PLAN.md` S14.1/S14.3, or
+> F03 in the **PROPOSED** `refinement/FINAL_COMPLETION_ROADMAP.md`); nothing of it exists yet. Part A is the
+> Phase 0 design intent, preserved verbatim; Part B describes the entities as built (some headings still name
+> the version at which they were first written, such as "Drift schema v10"; their text and B8's history
+> continue to later versions); Part C lists required future domain concepts as written at the takeover. The
+> dated notes that opened this file until 2026-10-18 record each schema and data change Task by Task; they
+> are kept verbatim at the end ("Appendix — Update log"). The backup format is in B8a; the export contract in
+> `EXPORT_MANIFEST.md`.
 
 # Part A — Design intent (Phase 0 baseline, preserved verbatim)
 
@@ -809,3 +683,144 @@ this file, covering the full ADR-008 §7 matrix through M9 (M10 is the rest of
    - **Timing.** Added by TASKs 7.1, 8.1 and 8.5.
    - **Legacy rows.** They stay NULL, meaning unknown, never guessed.
 7. **Do not create the Part C concepts in code** without an approved design.
+
+---
+
+# Appendix — Update log (moved from the file header on 2026-10-18)
+
+*The dated notes that opened this file until 2026-10-18, verbatim (newest first).*
+
+> **TD-086 fix (2026-09-29):** `Session.unreadableSnapshotNight` (domain only, no schema change): the evening date an unreadable `plan_snapshot` still names under `night.eveningDate`, read by `DriftSessionRepository` without trusting the rest; used only by CALC-44 to end a saved night later.
+
+> **S8.9 (2026-09-29; TD-056, ENG-14 resolved):** the backup archive is `format_version` 2 and adds `preferences.json` (B8a). A restore applies it before the restored database opens and clears the plan ids; a confirmed reset clears the active site and the plan ids. No schema change.
+
+> **S8.8 (2026-09-29; TD-070 resolved):** a new session snapshot's `rig` gains `provenance`: one entry per valued spec (`resolution`, `pixelPitch`, `sensorSize`, `rawFileSize` when set, `focalLength`, `focalRatio`), each `{source, confidence}` as `EquipmentProfile.provenanceOf` reads it, or null (unknown). An imported rig's estimates read `derived:calc-40/metadata:<format>` · `estimated` and its file values `metadata:<format>` · `reported`; nothing is recorded as `user` unless it is. Additive: `v` stays 1, the group pairs stay beside it, and a snapshot taken earlier has no key and reads as before. No schema change; the export embeds snapshots as stored.
+
+> **S8.6 (2026-09-29): schema v25.** `session_logs.name` (text, nullable; the plan's optional name, NULL = none). The v24→v25 step adds the column; every existing row reads as unnamed. Not in the snapshot; not copied by Copy or a working copy.
+
+> **S8.1 (2026-09-29): schema v24** (ADR-019 §4; DECISIONS E.1, "Stage 8 decisions", I-1). `session_logs` +
+> `result_kind` (`asPlanned` | `partly`; NULL for a live or pre-v24 completion) and `not_done_reason`
+> (clouds, wind, dew, equipment, other; NULL = not given); `session_events.kind` accepts `reported` (a
+> result without a run: not started → finished, then the counts as `framesConfirmed`). The v23→v24
+> step adds the two columns and rebuilds `session_events` (a CHECK cannot change in place), every
+> event kept. `SessionRepository.recordResult` records a result after the saved night (CALC-44) in
+> one transaction; `settleSavedPlan` splits a Saved · changed plan into its saved entry and a
+> never-saved working copy. No row is migrated into a result.
+> **S7.5 (2026-09-29): schema v23** (RG-08 = E2). `location_profiles.elevation` is nullable: NULL is
+> unknown, never 0; the migration rebuilds the table and keeps every stored value (a legacy 0 stays
+> 0) and the plans' site references. `LocationProfile.elevation` is `double?`; a new plan snapshot
+> records `site.elevationM` as null when unknown.
+
+> **S7.4 (2026-09-29): schema v22** (RG-07 = T1). `target_aliases` (id, catalog_id, alias, kind
+> `designation`/`name`, catalog_version) holds the bundled catalog's other designations and names,
+> keyed by the catalog id and never by a row: an alias applies to the catalog row with that id while
+> one exists, and no target row changes. The table is created empty by the migration and rebuilt by
+> the catalog seeder whenever its `catalog_version` differs from the asset's (version 3).
+
+> **S7.3b (2026-09-29): schema v21** (ADR-020 §8). `camera_modules.in_camera_noise_reduction`
+> (bool, default false) holds the user's statement of the camera's long-exposure noise reduction,
+> off for every existing camera. `EquipmentProfile.inCameraNoiseReduction`; counted only where
+> `noiseReductionApplies` (DSLR/mirrorless or Unknown). A new plan snapshot's rig gains
+> `inCameraNoiseReduction`.
+
+> **S7.3a (2026-09-29): no schema change** (ADR-020 §6, D1). A fifth frame type, `darkFlat`, stored
+> as its enum name in `capture_blocks.frame_type`, the snapshot's `frameType` and the export's
+> `frame_type`; every reader parses frame types case-insensitively. A calibration block's inherited
+> values are copied into the block when it is created (L1), so nothing new is stored.
+
+> **S7.2a (2026-09-29): schema v20** (ADR-020 §2). `camera_modules.camera_class` holds the camera's
+> class, `unknown` by default and for every existing camera. `EquipmentProfile.cameraClass`; a new
+> plan snapshot's rig gains `cameraClass`. Never inferred: an import proposes none.
+
+> **S7.1 (2026-09-29): schema v19** (RD-08 = T3). `session_logs.tracking_override` holds the plan's
+> tracking override (NULL = the rig's default). A new plan snapshot gains `tracking` =
+> {`effective`, `source` (`rig` | `plan`)}; `rig.tracking` stays the rig's default; an older
+> snapshot without the key reads as the rig's default. `SavedPlanReader` restores the override
+> for Discard. The export manifest's session gains `tracking_override`.
+
+> **S6.3 (2026-09-28; S4-DEF-04 = R):** two `SessionRepository` writes, no schema change. `deleteDraft` deletes only a never-saved draft (`draft` without `planned_at_utc_ms`) with its blocks, and refuses any other row. `revertToSaved` turns a Saved · changed row (`draft` with `planned_at_utc_ms`) back to `planned`, rewriting its plan columns and blocks from `plan_snapshot`; `plan_snapshot` and `planned_at_utc_ms` are not written. A new lifecycle transition (ADR-014 §3 as amended in DECISIONS E.1).
+
+> **S5.5 (2026-09-27):** display preferences (SharedPreferences, not the database) gain one boolean per collapsible section, under the key `section.<sectionKey>` (open = true). They stay on the device, like field mode; no schema change.
+
+> **S3.V7 (2026-09-27):** a new session snapshot's rig provenance is the provenance every spec of a group shares, else null (never the group pair alone). No schema or snapshot-format change.
+
+> **S3.V2 (2026-09-27):** an equipment spec's own pair may hold the source id `unknown` with NULL confidence: the field's origin is known to be unknown, and the group's provenance does not cover it. No schema change.
+
+> **S3.4 (2026-09-26): schema v18.** It adds per-field equipment provenance and the metadata
+> identity (ADR-018 §5), on `camera_modules` and `optical_rigs`. See the tables and the migration
+> history below.
+
+> **Superseded 2026-09-26 (S1.V6, finding X2):** S1.V1–S1.V4 (`3067658`, `b34c9ad`, `ed628f8`, `ea65231`) resolved TD-059–TD-062, confirmed by the repeat independent validation at `c99bd7f`. The note below is kept as history.
+>
+> **Independent Stage 1 validation, 2026-09-25, code `4e653fb`:** schema remains
+> v17; no model or migration changed. S1.5's closure is contradicted by TD-059/060
+> (background refusal type and seed state after reset); TD-061 records incomplete
+> reconstruction of unsaved-plan state. See [validation](refinement/STAGE_1_VALIDATION.md).
+
+> **Verification stamp:** verified against code at commit `900b82a` (2026-09-20),
+> audited 2026-09-21. Application code changed since by TASKs 1.1–1.3 (no entity
+> changes). **TASK 2.2 (2026-09-22):** three non-persisted domain types were added to
+> B3 (`CalendarDate`, `SiteTimeContext`, `SessionNight`); no schema change. **TASK 3.1
+> (2026-09-22, docs only):** ADR-008 decided the persistence baseline and the
+> provenance convention; Part D rules 5 and 6 now point to it. B8 gained a note
+> (v4–v7 never committed). No schema change. **TASK 2.3
+> (2026-09-22, commit `de1792a`):** two more non-persisted types added
+> (`NightTimeline`/`SunThresholdResult`, `AltitudeCurve`/`AltitudeSample`);
+> `VisibilityWindow` gained two fields; no schema change. **TASK 2.4 (2026-09-22,
+> commit `1e58fcf`):** `CalendarDate` and `SessionNight` are now used by the running
+> app (`PlannerViewModel._pickedEveningDate`); still no schema change — a legacy
+> `SessionLog.sessionDate` instant maps to its device-local evening date at read
+> time (ADR-007 §10), it is not stored as a `CalendarDate` yet (G11, PD-18).
+> **TASK 3.2 (2026-09-22, commit `3c25e8c`):** implements ADR-008's migration
+> workflow — the v1–v7 upgrade steps are removed, replaced by a floor guard
+> (v8) and a downgrade guard; Drift schema snapshots (`drift_schemas/`) and
+> generated verification code (`lib/data/database/generated_migrations/`)
+> exist for v8 and v9; a migration test suite covers the matrix in B8a below.
+> `schemaVersion` stays at 9 — no table changed. TD-004 resolved; TD-047
+> resolved for the app-database guard (the bootstrap-level reset UI is a
+> separate, not-yet-scheduled follow-up). **TASK 3.3 (2026-09-22, commit
+> `e580d03`):** `schemaVersion` is now **10**. `equipment_profiles` is
+> dropped (Dart class and table); `camera_modules`/`optical_rigs`/
+> `capture_blocks` are rebuilt with real `ON DELETE` actions and, for the
+> first two, without the legacy `bit_depth`/`optical_multiplier` columns;
+> foreign keys are enforced on every connection. TD-005 resolved; TD-026
+> resolved in part (the unconditional-delete half). B2, B8 and DEV-D6
+> updated below.
+>
+> This document keeps **three things separate** on purpose:
+> - **Part A — Design intent** (approved Phase 0 baseline, preserved verbatim).
+> - **Part B — CURRENT ENTITIES** (what actually exists in code, verified).
+> - **Part C — REQUIRED FUTURE DOMAIN CONCEPTS** (do **not** create in code
+>   without a design review and owner approval).
+>
+> Status vocabulary: **Intended / Planned**, **Actual / Implemented**, **Partial**,
+> **Broken**, **Missing**, **Deprecated**, **Unknown**.
+> Where the implementation deviates from the approved design it is marked
+> **IMPLEMENTATION DEVIATION** (intended behavior / actual behavior / consequence).
+> **TASK 5.2 (2026-09-22):** planning preferences (`PlanningPreferences` + repository) and a Settings screen; the planner selection state moved behind `PlannerStateRepository`; `PlannerViewModel` no longer imports SharedPreferences. B6 keys and one B3 row added; no schema change.
+> **TASK 5.3 (2026-09-22):** `CaptureBlock` validates at the domain boundary and gains a calibration policy and a typed, descriptive-only gain; schema v11 adds block `position`, `calibration_policy`, `gain_kind`/`gain_value` and drops the free-text `gain_iso` (owner-approved); migrations now use generated per-version step shapes (`schema_versions.dart`).
+> **TASK 7.1 (2026-09-23):** site semantics in schema v12 (nullable Bortle with source and date, SQM, IANA zone, notes; default Bortle 4 cleared with a note); a map pick or GPS fix is a transient, remembered position that never writes into a saved site; the `timezone` package (0.11.1, BSD) backs an `IanaTimeContext`, so a site's zone drives its night (ADR-007 L1 fixed for sites with a zone) and the display.
+> **TASK 7.3 (2026-09-23):** no schema change. Sites are now written only by the site editor (`LocationProfile.userEdit`): a Bortle/SQM value the user changed is stored with source `user` and the date; an unchanged value keeps its source and date; a cleared value loses both. Deleting the active site stores its coordinates as the transient position (`transientLatitude`/`transientLongitude` preferences) and clears `activeLocationId`. Elevation still cannot be unknown (non-null column), and nothing uses it.
+> **TASK 7.4 (2026-09-23):** no schema change. `SkyDarkness` (domain) is a read-only view of a site's Bortle/SQM with their source and date (or unknown); no value is fetched or derived. PD-05 resolved (DECISIONS E.1).
+> **TASK 8.1 (2026-09-23):** schema v13 — `astro_targets` + `epoch` (default `J2000`), `source`, `angular_size_arcmin`, `magnitude`; partial unique index on `catalog_id` for catalog entries. See B2 and B8.
+> **TASK 8.2 (2026-09-23):** no schema change. Catalog rows carry `source = catalog:openngc@v20260501`; the applied catalog version is the preference `catalogSeedVersion` (int; 2 after this task; absent = never applied). The asset format (`assets/catalog/catalog_v2.json`: version, source, licence, epoch, objects with id, name, type, ra/dec degrees, sizeArcmin, vMag, since, and the OpenNGC name and original RA/Dec text) is documented in `lib/data/services/catalog_seeder.dart`.
+> **TASK 8.3 (2026-09-23, documentation only):** ADR-011 decides the 1.0 equipment model: flat profile kept over the three tables; TASK 8.4 adds nullable `optical_rigs.aperture_diameter_mm` and `optical_rigs.max_exposure_s` (schema v14), reads `optical_rigs.aperture` as the focal ratio N, uses `tracking_state` for {untracked, tracked, guided, unknown}, and removes the dormant catalog repository. DEV-D2 updated.
+> **TASK 8.4 (2026-09-23):** schema v14 (`optical_rigs` + `aperture_diameter_mm`, `max_exposure_s`); `EquipmentProfile` renamed to unit-explicit fields with tracking type and maximum exposure; the dormant domain models removed. See B2, B3, B8.
+> **TASK 8.5 (2026-09-23):** schema v15 — `camera_modules` and `optical_rigs` + `source`, `confidence` (ADR-008 §6); legacy rows NULL. Seeded rows use source `seed:equipment@2`.
+> **TASK 8.6 (2026-09-23):** no schema change. New preference `npfK` (double, 1–3, default 1; `SharedPrefsPlanningPreferencesRepository`).
+> **TASK 9.2 (2026-09-23):** new domain `WeatherSnapshot` / `WeatherHour` (UTC, nullable per variable, provider/model/fetch time); not persisted yet (cache: TASK 9.3). `WeatherConditions` remains for the legacy path.
+> **TASK 9.3 (2026-09-23):** weather snapshots are cached in SharedPreferences under `weather:<lat 2dp>:<lon 2dp>:<model>:<night start UTC ms>` (JSON format version 1: provider, model, fetch time and hour times as UTC epoch ms, nullable values). The legacy `weather_cache_<lat>_<lon>` keys remain until TASK 9.4.
+> **TASK 9.4 (2026-09-23, commit `48d7a8c`):** `WeatherConditions`/`HourlyForecast` removed (owner decision) and the legacy `weather_cache_<lat>_<lon>` keys are no longer read or written (existing entries stay on upgraded devices, TD-049). New derived (not persisted) domain type `NightWeatherSummary` (interval, span kind, hourly slots with dew spread/risk, per-variable ranges).
+> **TASK 10.2 (2026-09-23, commit `613b32f`):** no schema change. New preferences `moonGateEnabled` (bool, false), `moonGateMinIlluminationPct` (0–100, 50), `cloudGateEnabled` (bool, false), `cloudGateMaxPct` (0–100, 50). New derived (not persisted) domain `ImagingOpportunity` (C8 now Partial).
+> **TASK 10.4 (2026-09-23, commit `6bb596f`):** no schema change. New derived (not persisted) domain types `TonightCandidate` and `MoonTrack`.
+> **TASK 11.1 (2026-09-23, documentation only):** ADR-014 decides C4 Session, C9 ExecutionState and C10 LogbookEntry (see DECISIONS Part F for the entity diagram); no schema change yet (TASK 11.2 evolves `session_logs` in place).
+> **TASK 11.2 (2026-09-23, commit `428f673`):** schema v16 (ADR-014 §5). `session_logs` evolved in place into the Session root: `status` (draft/planned/inProgress/completed/abandoned, CHECK, default draft), `legacy`, the night key (`evening_date`, `time_zone_id`), nullable references `site_id`/`target_id`/`rig_id` with ON DELETE SET NULL, UTC-ms lifecycle timestamps and two versioned JSON snapshot columns (`JsonMapConverter`); `capture_blocks` + `completed_frames`, `rejected_frames` (planned = `frame_count`); indexes on status, evening date and target id. Every existing log became a completed legacy session (no references guessed). `DriftLogbookRepository.updateLog` now writes only its own columns (a full-row replace would reset the v16 columns). No domain or repository API change.
+> **TASK 11.3 (2026-09-23, commit `ad6609c`):** no schema change. New domain types `Session`, `SessionStatus`, `SessionPlan`, `SessionResults`, `SessionSnapshot` (versioned JSON, v1) and the pure `SessionSnapshotBuilder`; `SessionRepository` replaces `LogbookRepository`. New rows write display labels into the pre-v16 text columns (ADR-014 §10). DEV-D3 resolved for new sessions.
+> **TASK 11.4 (2026-09-23, commit `628fda6`):** no schema change. The working plan and the selected target/rig ids moved from SharedPreferences (`captureBlocks`, `targetId`, `equipmentId`) into the current draft session (migrated once, then removed). DEV-D4 resolved for the plan; the active site id and the transient position stay in preferences by the TASK 7.1/7.3 owner decisions.
+> **TASK 13.2 (2026-09-24, commit `14467e7`):** execution state machine and persistence (ADR-016). A pure `ExecutionMachine` (domain) validates every transition per phase (not started, running on a block, paused, finished, abandoned), folds a run's events into its state, measures running time from UTC timestamps, stamps an event taken with a clock behind the last one at that event and flags it, estimates frames (CALC-35) and detects a run past its night. Schema v17 adds the append-only `session_events` table. `SessionRepository.start` records the start on the first light block and refuses a second session in progress; `record` stores an event and its counter projection in one transaction; `complete`/`abandon` close the run with an event. A resume prompt at start (Tonight) offers keep going, pause now, finish or abandon (confirmed), flags a finished night and a clock that went back, and changes nothing without an answer. No tracking screen yet (TASK 13.3). TD-055 recorded.
+> **TASK 13.3 (2026-09-24, commit `c8e2240`):** the tracking screen (`/session/:id/run`, ADR-016). The current block with confirmed and estimated counts; +1, −1, Reject, Accept estimate, Pause (plain or with a reason: clouds, wind, dew, equipment, other) / Resume, a block switcher and Finish / Abandon (confirmed) — all in the lower half, 56 dp, labelled for screen readers; countdowns to astronomical dawn, the target below its limit and moonrise; remaining window vs remaining plan (CALC-36). The tracker reads its night, target and Moon from the execution-start snapshot (`ExecutionOutlook`, pure), never from the planner. Owner decisions: Start is in the planner and on Tonight, with the same requirements as Save; after Start the planner goes on with a draft copy, and on a restart it resumes a copy when the most recent open session is running (TD-055 resolved). Tonight shows the run in progress; the resume prompt's Keep going opens the tracker. Opt-in keep-screen-on (off by default, persisted as `keepScreenOnWhileTracking`, only while the tracker is visible and a run is active) behind a `ScreenWake` interface, implemented with `wakelock_plus` 1.8.0 (BSD-3-Clause, verified on pub.dev; a screen wakelock only, no Android permission).
+> **TASK 13.4 (2026-09-24, commit `c1e52ce`):** end-of-session reconciliation. A results page (`/session/:id/results`) with per-block confirmed and rejected steppers (each change a stored event), notes, optional conditions (temperature, humidity, cloud cover — empty means unknown, range-checked) and planned vs actual light integration (`SessionReconciliation`, CALC-37); Complete or Abandon. Owner decisions: the tracker's Finish opens this page and completes nothing by itself; after completion the counts may be corrected, each correction a timestamped confirm/reject event after `finished` (the only events allowed then; ADR-016 §11); Sessions shows planned vs actual integration and "Edit results" for completed sessions. `complete()` and every correction write the actual/rejected light-frame totals in the same transaction. No schema change (the condition columns existed). **Group G13 is complete.**
+> **TASK 14.1 (2026-09-24, commit `e212f6a`):** Sessions list and detail. Filters by status (chips), target and site (pickers built from the saved sessions) and night date range, run in the query (`SessionRepository.list` gains `siteId`, `from`, `to`); legacy rows match a date range by their stored date and never a site or target filter, and carry a Legacy badge. Owner decisions: a tap opens the read-only detail (`/sessions/:id`); a started session shows its execution-start snapshot, a planned one its plan snapshot, labelled with when it was taken. The detail shows the night (window, zone, darkness limit, minimum altitude, usable time, windows), site (with Bortle/SQM), target, rig, budget, weather source, plan vs actual per block (CALC-37), notes and conditions, and the actions Open tracker / Edit results / Open in planner (a copy for frozen sessions) / Share. Legacy logs show their stored text only; a missing snapshot says so. Typed `SessionSnapshot` readers keep JSON out of widgets. No schema change.
+> **TASK 14.3 (2026-09-24, commit `a234ff6`):** export manifest v2 (schema in `docs/EXPORT_MANIFEST.md`). `SessionManifestCodec` (data layer) writes UTC epoch-ms instants, the night key and zone, status, the snapshots as stored, blocks with confirmed/rejected counts replayed from the events, results and conditions, and the run's event log (owner decision); it reads v1 as a legacy log and refuses unknown versions. `ShareSessionExporter` shares a `.json` file plus a text summary; owner decision: Export file on a session's detail and Export all in the Sessions app bar. Import deferred. `AppIdentity.version` stays in step with `pubspec.yaml` (tested).
+> **S1.5 (2026-09-25, Stage 1, commit `07d55e2`):** `refusedSchemaVersion` and `resetRefusedDatabase` (`app_database.dart`) wire the ADR-008 §2 reset into startup: below the floor only, after the user confirms, the file kept as `.v<N>.bak`; a newer database is never reset. No schema change.
+> **TASK 14.4 (2026-09-24, commit `a847f87`):** backup and restore. Owner decisions: one `.astroplan` file (ZIP: header with format, schema and app version, time and session count; a consistent database copy made with `VACUUM INTO`; the v2 manifest) shared to a place the user picks; restore picked with `file_picker` 13.1.0 (MIT), checked (AstroPlan backup, header = the file's SQLite `user_version`, newer schema refused, below the v8 floor refused — older supported schemas are upgraded by the existing migrations), confirmed with a preview, staged, and applied at the next start before the database opens, the replaced database and its WAL kept as a safety copy. New dependencies `file_picker` 13.1.0 and `archive` 4.3.0 (both MIT, checked on pub.dev). Android Auto Backup: documented, not changed (owner decision). TD-056 recorded (preferences are not in the backup).

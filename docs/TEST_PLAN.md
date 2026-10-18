@@ -929,7 +929,7 @@ and L7 waits for a beta.)*
 Record each device run below the table (date, device, Android version, build, result).
 *2026-09-30 (S11.3):* the development machine now has an Android 16 emulator; L1–L6 and L8 were
 run on it (below). An emulator run is RUNTIME VERIFIED, not device evidence (Stage 11, D11-1); the
-phone rows stay for S11.6.
+phone rows stay for S11.6 (folded into S17.5 at G3, 2026-10-17).
 
 | Row | Scenario | Host (automated) | Device steps (manual) | Device result |
 | --- | --- | --- | --- | --- |
