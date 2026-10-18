@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/services/capture_budget_calculator.dart';
-import '../../../domain/models/equipment_profile.dart';
-import '../../../domain/models/spec_confidence.dart';
-import '../../../domain/models/spec_provenance.dart';
-import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
 import '../../shared/change_mark.dart';
 import '../../shared/collapsible_section.dart';
 import '../../shared/context_line.dart';
 import '../../shared/night_time_formatter.dart';
+import '../../shared/storage_text.dart';
+import '../../viewmodels/metadata_import_viewmodel.dart';
+import 'storage_actions.dart';
 import '../planner_sections.dart';
 import 'stacking_gain_graph.dart';
 import '../../viewmodels/capture_analysis_viewmodel.dart';
@@ -40,6 +38,7 @@ class CaptureBudgetSummary extends StatelessWidget {
     final analysis = context.watch<CaptureAnalysisViewModel>();
     final plan = context.watch<SessionPlanViewModel>();
     final budget = analysis.captureBudget;
+    final frames = analysis.frameStorage;
     final fit = analysis.fitAnalysis;
     final night = plan.sessionNight;
     final windows = context.watch<NightConditionsViewModel>().visibilityWindows;
@@ -179,10 +178,12 @@ class CaptureBudgetSummary extends StatelessWidget {
             ),
           ],
         const SizedBox(height: 12),
+        // F07 (ADR-021 C8–C12): each block's frame size from its first
+        // compatible evidence; the total only when every block's is known.
         _Line(
           'Estimated storage',
           budget.storageMB != null
-              ? '${budget.storageMB!.toStringAsFixed(1)} MB'
+              ? QuantityText.storage(budget.storageMB! * 1e6)
               : 'Unknown',
           key: const Key('capturePlan.storage'),
           emphasis: true,
@@ -190,15 +191,29 @@ class CaptureBudgetSummary extends StatelessWidget {
         // S6.10 (P6.9; the trace's case C): a known value says what it
         // rests on; an unknown one says why, and how to supply it.
         Text(
-          storageNote(plan.selectedEquipment, known: budget.storageMB != null),
+          StorageText.plan(plan.captureBlocks, frames, [
+            for (final b in budget.blocks)
+              b.placement != BudgetPlacement.library,
+          ], rig: plan.selectedEquipment),
           key: const Key('capturePlan.storageNote'),
           style: theme.textTheme.bodySmall,
         ),
-        if (budget.storageMB == null && plan.selectedEquipment != null)
-          TextButton(
-            key: const Key('capturePlan.setFileSize'),
-            onPressed: () => context.push(AppRouter.selectRig),
-            child: const Text('Set the RAW file size'),
+        if (plan.selectedEquipment != null && frames.any((f) => !f.known))
+          Wrap(
+            spacing: 8,
+            children: [
+              if (context.watch<MetadataImportViewModel?>() != null)
+                TextButton(
+                  key: const Key('capturePlan.chooseFile'),
+                  onPressed: () => chooseStorageFile(context),
+                  child: const Text('Choose one file'),
+                ),
+              TextButton(
+                key: const Key('capturePlan.setFileSize'),
+                onPressed: () => enterStorageSize(context),
+                child: const Text('Enter a size'),
+              ),
+            ],
           ),
       ],
     );
@@ -209,23 +224,6 @@ class CaptureBudgetSummary extends StatelessWidget {
   static String budgetSummary(CaptureBudget budget) =>
       '${AppWords.timeNeeded} ${formatBudgetDuration(budget.windowLoadMs)} · '
       '${AppWords.totalTime} ${formatBudgetDuration(budget.sessionBudgetMs)}';
-
-  /// What the storage figure rests on, or why there is none (S6.10).
-  static String storageNote(EquipmentProfile? rig, {required bool known}) {
-    if (!known) {
-      return rig == null
-          ? 'Unknown: no rig chosen, so the file size is not known.'
-          : 'Unknown: the RAW file size is not known for this rig. Enter it '
-                "in the rig's editor, or read it from a DNG photo with "
-                '"Add from a photo".';
-    }
-    final estimated =
-        rig?.provenanceOf(EquipmentSpec.rawFileSize)?.confidence ==
-        SpecConfidence.estimated;
-    return "An estimate from the rig's average RAW file size; binning and "
-        'compression are ignored.'
-        "${estimated ? " The rig's RAW size is itself an estimate, from one file." : ''}";
-  }
 
   static String _seconds(int ms) {
     final s = ms / 1000;

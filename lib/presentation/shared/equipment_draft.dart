@@ -2,6 +2,7 @@ import '../../domain/equipment_import/equipment_candidate.dart';
 import '../../domain/equipment_import/equipment_matcher.dart';
 import '../../domain/metadata/capture_metadata.dart';
 import '../../domain/models/camera_class.dart';
+import '../../domain/models/capture_evidence.dart';
 import '../../domain/models/equipment_limits.dart';
 import '../../domain/models/equipment_profile.dart';
 import '../../domain/models/spec_confidence.dart';
@@ -153,6 +154,7 @@ class EquipmentDraft {
     this.metadataMake,
     this.metadataModel,
     this.withheldFromSavedRig,
+    this.rawFileSizeEvidence,
   });
 
   /// The editor for [existing] (null: a blank new rig), as before S3.5.
@@ -329,6 +331,7 @@ class EquipmentDraft {
       prefilled: prefilled,
       metadataMake: c.evidence.cameraMake,
       metadataModel: c.evidence.cameraModel,
+      rawFileSizeEvidence: c.rawFileEvidence,
       withheldFromSavedRig: withheld.isEmpty
           ? null
           : WithheldCameraSpecs(
@@ -350,8 +353,9 @@ class EquipmentDraft {
   /// derived from a diameter otherwise (ADR-011 §4); D is never back-filled.
   factory EquipmentDraft.forRig(
     EquipmentProfile rig,
-    Map<EquipmentSpec, ({Object value, SpecProvenance provenance})> taken,
-  ) {
+    Map<EquipmentSpec, ({Object value, SpecProvenance provenance})> taken, {
+    FileEvidence? rawFileEvidence,
+  }) {
     final base = EquipmentDraft.fromProfile(rig);
     if (taken.isEmpty) return base;
     final t = base.initial;
@@ -393,6 +397,9 @@ class EquipmentDraft {
       prefilled: prefilled,
       metadataMake: rig.metadataMake,
       metadataModel: rig.metadataModel,
+      rawFileSizeEvidence: taken.containsKey(EquipmentSpec.rawFileSize)
+          ? rawFileEvidence
+          : null,
       initial: EquipmentFormTexts(
         name: t.name,
         manufacturer: t.manufacturer,
@@ -447,6 +454,7 @@ class EquipmentDraft {
           metadataMake: metadataMake,
           metadataModel: metadataModel,
           withheldFromSavedRig: withheldFromSavedRig,
+          rawFileSizeEvidence: rawFileSizeEvidence,
         );
 
   /// The rig being edited; null for a new one.
@@ -472,6 +480,10 @@ class EquipmentDraft {
 
   /// A saved rig's camera specs not copied (S3.V8); null when none were.
   final WithheldCameraSpecs? withheldFromSavedRig;
+
+  /// The file a pre-filled RAW size comes from (ADR-021 C7, F07): saved with
+  /// the rig while that size is unchanged.
+  final FileEvidence? rawFileSizeEvidence;
 
   /// [spec]'s pre-fill while [texts] still hold the pre-filled value; null
   /// once the user changed it (or it was not pre-filled).
@@ -524,6 +536,7 @@ class EquipmentDraft {
     TrackingType trackingType, {
     CameraClass? cameraClass,
     bool? inCameraNoiseReduction,
+    CaptureFormat? Function()? captureFormat,
   }) {
     // S3.V3: while a pre-filled value's texts are unchanged, its exact value
     // is saved, never the (possibly rounded) text.
@@ -551,6 +564,7 @@ class EquipmentDraft {
     }
 
     final e = existing;
+    final format = captureFormat == null ? e?.captureFormat : captureFormat();
     String? optionalText(String s) => s.trim().isEmpty ? null : s.trim();
     final profile = EquipmentProfile(
       id: e?.id ?? 0,
@@ -601,14 +615,22 @@ class EquipmentDraft {
       metadataModel: metadataModel,
       // ADR-021 C7: the rig's format is kept; the measured file stays
       // associated with the size only while that size is unchanged.
-      captureFormat: e?.captureFormat,
-      captureFormatSource: e?.captureFormatSource,
+      // A format the user chose here is declared (C7); an unchanged one
+      // keeps its source.
+      captureFormat: format,
+      captureFormatSource: format == e?.captureFormat
+          ? e?.captureFormatSource
+          : (format == null ? null : 'declared'),
     );
     final rawSize = profile.averageRawFileSizeMB;
-    final kept =
-        e != null && rawSize != null && rawSize == e.averageRawFileSizeMB
-        ? e.rawFileSizeEvidence
+    final fromFile = unchangedPrefill(EquipmentSpec.rawFileSize, texts) != null
+        ? rawFileSizeEvidence
         : null;
+    final kept =
+        fromFile ??
+        (e != null && rawSize != null && rawSize == e.averageRawFileSizeMB
+            ? e.rawFileSizeEvidence
+            : null);
     return EquipmentDraftResult._(
       profile
           .withCaptureEvidence(rawFileSizeEvidence: () => kept)

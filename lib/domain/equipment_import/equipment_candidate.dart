@@ -5,6 +5,8 @@ import '../metadata/metadata_value.dart';
 import '../models/equipment_limits.dart';
 import '../models/spec_confidence.dart';
 import '../models/spec_provenance.dart';
+import '../models/capture_evidence.dart';
+import '../services/storage_estimate.dart';
 import 'sensor_geometry_estimate.dart';
 
 /// Why a candidate field has no proposed value (ADR-018 §4).
@@ -97,6 +99,7 @@ class EquipmentCandidate {
     required this.sensorHeightMm,
     required this.pixelPitchUm,
     required this.averageRawFileSizeMB,
+    this.rawFileEvidence,
     required this.evidence,
   });
 
@@ -127,6 +130,10 @@ class EquipmentCandidate {
   /// `metadata:dng:file-size` (ADR-018 §4, D4). A JPEG or HEIC size is not a
   /// RAW size, so it is never proposed from them.
   final CandidateField<double> averageRawFileSizeMB;
+
+  /// The file [averageRawFileSizeMB] comes from (ADR-021 C7, F07): kept
+  /// with the rig's size while that size is unchanged; null otherwise.
+  final FileEvidence? rawFileEvidence;
 
   /// The source id of [averageRawFileSizeMB].
   static const rawFileSizeSource = 'metadata:dng:file-size';
@@ -179,6 +186,7 @@ class EquipmentCandidate {
   factory EquipmentCandidate.fromReading(
     MetadataRead reading, {
     int? fileLengthBytes,
+    String? fileName,
   }) {
     final m = reading.metadata;
     final source = 'metadata:${reading.format.name}';
@@ -225,6 +233,7 @@ class EquipmentCandidate {
         };
 
     final estimate = _estimate(m, focal, dims, source);
+    final rawSize = _rawFileSize(reading.format, fileLengthBytes);
     final make = field(m.cameraMake);
     final model = field(m.cameraModel);
 
@@ -245,7 +254,10 @@ class EquipmentCandidate {
       sensorWidthMm: estimate.width,
       sensorHeightMm: estimate.height,
       pixelPitchUm: estimate.pitch,
-      averageRawFileSizeMB: _rawFileSize(reading.format, fileLengthBytes),
+      averageRawFileSizeMB: rawSize,
+      rawFileEvidence: rawSize is ProposedField
+          ? StorageEstimate.evidenceOf(fileName, reading, fileLengthBytes)
+          : null,
       evidence: EquipmentEvidence(
         cameraMake: m.cameraMake.valueOrNull,
         cameraModel: m.cameraModel.valueOrNull,

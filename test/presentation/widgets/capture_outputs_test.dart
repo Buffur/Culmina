@@ -197,11 +197,16 @@ void main() {
             )
             .last
             .data,
-        '1500.0 MB',
+        // F07: decimal units, two decimals (QuantityText.storage).
+        '1.50 GB',
       );
       expect(
         textOf(tester, const Key('capturePlan.storageNote')),
-        allOf(contains('average RAW file size'), isNot(contains('itself'))),
+        allOf(
+          contains("The rig's RAW size: 50.00 MB a frame"),
+          contains('which file it came from was not recorded'),
+          isNot(contains('itself')),
+        ),
       );
       expect(find.byKey(const Key('capturePlan.setFileSize')), findsNothing);
     });
@@ -223,7 +228,7 @@ void main() {
       expect(vm.captureBudget.storageMB, 100);
       expect(
         textOf(tester, const Key('capturePlan.storageNote')),
-        contains("The rig's RAW size is itself an estimate, from one file."),
+        contains('It is itself an estimate, from one file.'),
       );
     });
 
@@ -235,12 +240,14 @@ void main() {
       expect(
         textOf(tester, const Key('capturePlan.storageNote')),
         allOf(
-          contains('RAW file size is not known for this rig'),
+          contains('no file measured and no capture format declared'),
+          contains('Choose one file'),
           contains("rig's editor"),
-          contains('Add from a photo'),
         ),
       );
+      // F07 A3: a file or a size, never an assumption by camera class.
       expect(find.byKey(const Key('capturePlan.setFileSize')), findsOneWidget);
+      expect(find.text('Enter a size'), findsOneWidget);
     });
 
     testWidgets('unknown without a rig: says there is none', (tester) async {

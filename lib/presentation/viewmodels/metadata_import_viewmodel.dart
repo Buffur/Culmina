@@ -8,7 +8,9 @@ import '../../domain/metadata/capture_metadata_reader.dart';
 import '../../domain/metadata/metadata_source.dart';
 import '../../domain/models/equipment_profile.dart';
 import '../../domain/models/spec_provenance.dart';
+import '../../domain/models/capture_evidence.dart';
 import '../../domain/repositories/equipment_repository.dart';
+import '../../domain/services/storage_estimate.dart';
 import '../shared/equipment_draft.dart';
 
 /// The metadata import (F-45; ADR-017 §10, ADR-018 §2): the user picks one
@@ -63,6 +65,7 @@ class MetadataImportViewModel extends ChangeNotifier {
         final MetadataRead read => EquipmentCandidate.fromReading(
           read,
           fileLengthBytes: length,
+          fileName: file.name,
         ),
         _ => null,
       };
@@ -162,7 +165,20 @@ class MetadataImportViewModel extends ChangeNotifier {
         if (takesImported(m.rig, c.spec))
           c.spec: (value: c.imported, provenance: c.importedProvenance),
       for (final spec in m.fillable) spec: ?_fillValue(spec),
-    });
+    }, rawFileEvidence: _candidate?.rawFileEvidence);
+  }
+
+  /// F07 "Choose one file" (ADR-021 C6, C12): one file's size as storage
+  /// evidence, read on this device; null when the user cancels, and a pick
+  /// without evidence for a file that cannot serve. Nothing is stored here.
+  Future<({String? name, FileEvidence? evidence})?> pickStorageFile() async {
+    final file = await _files.pick();
+    if (file == null) return null;
+    final (reading, length) = await _readFile(file);
+    return (
+      name: file.name,
+      evidence: StorageEstimate.evidenceOf(file.name, reading, length),
+    );
   }
 
   ({Object value, SpecProvenance provenance})? _fillValue(EquipmentSpec s) =>

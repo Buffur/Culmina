@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_palette.dart';
 
 import '../../../domain/models/camera_class.dart';
+import '../../../domain/models/capture_evidence.dart';
 import '../../../domain/models/equipment_limits.dart';
 import '../../../domain/models/equipment_profile.dart';
 import '../../../domain/models/spec_confidence.dart';
@@ -87,16 +88,31 @@ class _EquipmentEditor {
   static final _decimal = const TextInputType.numberWithOptions(decimal: true);
 
   /// The "More (optional)" summary: what is set, in words (S7.6).
-  static String _moreSummary(String maxExposure, String raw, String rotation) {
+  static String _moreSummary(
+    String maxExposure,
+    String raw,
+    String rotation,
+    CaptureFormat? format,
+  ) {
     final set = [
       if (maxExposure.trim().isNotEmpty) 'maximum ${maxExposure.trim()} s',
       if (raw.trim().isNotEmpty) 'RAW ${raw.trim()} MB',
+      if (format != null) captureFormatLabel(format),
       if (rotation.trim().isNotEmpty) 'rotation ${rotation.trim()}°',
     ];
     return set.isEmpty
-        ? 'Maximum exposure, RAW size, rotation: not set'
+        ? 'Maximum exposure, RAW size, format, rotation: not set'
         : set.join(' · ');
   }
+
+  /// A capture format in words (ADR-021 C7).
+  static String captureFormatLabel(CaptureFormat f) => switch (f) {
+    CaptureFormat.dngUncompressed16 => 'Uncompressed DNG, 16-bit',
+    CaptureFormat.fits16 => 'FITS, 16-bit integer',
+    CaptureFormat.fits32float => 'FITS, 32-bit float',
+    CaptureFormat.compressedRaw => 'Compressed RAW (CR3, NEF, ARW …)',
+    CaptureFormat.jpegHeic => 'JPEG or HEIC',
+  };
 
   /// ADR-011 §6: a stored focal ratio above f/32 is shown for review, never
   /// converted. The f/ field's own bounds make the user fix it on save.
@@ -142,6 +158,9 @@ class _EquipmentEditor {
     var trackingType = form.trackingType;
     var cameraClass = form.cameraClass;
     var noiseReduction = form.inCameraNoiseReduction;
+    // ADR-021 C7 (F07): the format the user declares, for a theoretical
+    // size; a file's format is never set from here.
+    var captureFormat = form.existing?.captureFormat;
     String? apertureError;
     int? savedId;
 
@@ -167,7 +186,8 @@ class _EquipmentEditor {
         !currentTexts().sameAs(t) ||
         trackingType != form.trackingType ||
         cameraClass != form.cameraClass ||
-        noiseReduction != form.inCameraNoiseReduction;
+        noiseReduction != form.inCameraNoiseReduction ||
+        captureFormat != form.existing?.captureFormat;
 
     /// Why a required input is asked for (F05 A3; ADR-021 C20).
     Widget reasonNote(BuildContext context, EquipmentSpec spec) => Padding(
@@ -252,6 +272,7 @@ class _EquipmentEditor {
         trackingType,
         cameraClass: cameraClass,
         inCameraNoiseReduction: noiseReduction,
+        captureFormat: () => captureFormat,
       );
       final recorded = result.profile;
       if (recorded == null) {
@@ -667,6 +688,7 @@ class _EquipmentEditor {
                                 maxExposureCtrl.text,
                                 averageRawFileSizeMBCtrl.text,
                                 rotationCtrl.text,
+                                captureFormat,
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -701,6 +723,32 @@ class _EquipmentEditor {
                                   prefillNote(
                                     context,
                                     EquipmentSpec.rawFileSize,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  DropdownButtonFormField<CaptureFormat?>(
+                                    key: const Key('rigEditor.captureFormat'),
+                                    initialValue: captureFormat,
+                                    isExpanded: true,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Capture format (optional)',
+                                      helperText:
+                                          'Gives a theoretical file size when no file is measured; '
+                                          'compressed formats have none.',
+                                      helperMaxLines: 3,
+                                    ),
+                                    items: [
+                                      const DropdownMenuItem(
+                                        value: null,
+                                        child: Text('Not set'),
+                                      ),
+                                      for (final f in CaptureFormat.values)
+                                        DropdownMenuItem(
+                                          value: f,
+                                          child: Text(captureFormatLabel(f)),
+                                        ),
+                                    ],
+                                    onChanged: (f) =>
+                                        setDialogState(() => captureFormat = f),
                                   ),
                                   const SizedBox(height: 12),
                                   TextFormField(

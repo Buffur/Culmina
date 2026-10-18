@@ -235,6 +235,8 @@ class CaptureBlock {
   /// ADR-021 C6: the file this block's storage was measured from, if any.
   final FileEvidence? fileEvidence;
 
+  bool get isLight => frameType == FrameType.light;
+
   /// A validated copy. Changing [frameType] to light drops the policy;
   /// changing it to a calibration type applies the default.
   /// A nullable setting is changed with a function, so it can also be

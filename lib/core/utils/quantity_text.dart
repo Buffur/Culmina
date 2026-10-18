@@ -56,4 +56,10 @@ abstract final class QuantityText {
   /// [value] without a trailing ".0": "60", "2.5", "0.25".
   static String number(double value) =>
       value == value.roundToDouble() ? '${value.round()}' : '$value';
+
+  /// A storage size in decimal units (ADR-021, F07: 1 MB = 10⁶ bytes,
+  /// 1 GB = 10⁹ bytes), two decimals: "25.17 MB", "12.00 GB".
+  static String storage(double bytes) => bytes >= 1e9
+      ? '${(bytes / 1e9).toStringAsFixed(2)} GB'
+      : '${(bytes / 1e6).toStringAsFixed(2)} MB';
 }

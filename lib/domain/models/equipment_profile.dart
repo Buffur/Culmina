@@ -255,6 +255,47 @@ class EquipmentProfile {
         : rawFileSizeEvidence(),
   );
 
+  /// This rig with its RAW size taken from one measured [file] (ADR-021 C7,
+  /// F07 "Choose one file"): the file's length in MB (two decimals; the
+  /// storage estimate uses the exact bytes), `estimated` (one file is one
+  /// sample), and the file recorded with it. The capture format is kept.
+  EquipmentProfile withMeasuredFile(FileEvidence file) => EquipmentProfile(
+    id: id,
+    name: name,
+    manufacturer: manufacturer,
+    cameraModel: cameraModel,
+    cameraClass: cameraClass,
+    inCameraNoiseReduction: inCameraNoiseReduction,
+    sensorWidthMm: sensorWidthMm,
+    sensorHeightMm: sensorHeightMm,
+    pixelPitchUm: pixelPitchUm,
+    resolutionWidthPx: resolutionWidthPx,
+    resolutionHeightPx: resolutionHeightPx,
+    focalLengthMm: focalLengthMm,
+    focalRatio: focalRatio,
+    apertureDiameterMm: apertureDiameterMm,
+    averageRawFileSizeMB: double.parse((file.bytes / 1e6).toStringAsFixed(2)),
+    rotationDeg: rotationDeg,
+    trackingType: trackingType,
+    maxExposureS: maxExposureS,
+    cameraSource: cameraSource,
+    cameraConfidence: cameraConfidence,
+    opticsSource: opticsSource,
+    opticsConfidence: opticsConfidence,
+    specProvenance: {
+      ...specProvenance,
+      EquipmentSpec.rawFileSize: SpecProvenance(
+        'file-size:${file.format}',
+        SpecConfidence.estimated,
+      ),
+    },
+    metadataMake: metadataMake,
+    metadataModel: metadataModel,
+    captureFormat: captureFormat,
+    captureFormatSource: captureFormatSource,
+    rawFileSizeEvidence: file,
+  );
+
   /// This profile as an explicit user edit of [original] (null for a new
   /// profile) records it (TASK 8.5): a new profile, or a changed group of
   /// specs, becomes source `user` with confidence `reported`; an unchanged

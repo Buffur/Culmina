@@ -134,7 +134,7 @@ void main() {
   testWidgets('a new rig: nothing set', (tester) async {
     await open(tester);
     expect(
-      find.text('Maximum exposure, RAW size, rotation: not set'),
+      find.text('Maximum exposure, RAW size, format, rotation: not set'),
       findsOneWidget,
     );
   });

@@ -11,6 +11,7 @@ import '../../domain/services/capture_budget_calculator.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../../domain/services/optical_calculator.dart';
 import '../../domain/services/session_snapshot_builder.dart';
+import '../../domain/services/storage_estimate.dart';
 import '../../domain/services/visibility_calculator.dart';
 import 'night_conditions_viewmodel.dart';
 import 'plan_lifecycle_viewmodel.dart';
@@ -47,8 +48,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   final NightConditionsViewModel _conditions;
   final Clock _clock;
 
-  /// Bumped on every input change; the cache below is valid for one
-  /// generation and one night.
+  /// Bumped on every input change; the cache is valid for one generation
+  /// and one night.
   int _generation = 0;
   Object? _cacheKey;
   CaptureBudget? _budget;
@@ -88,9 +89,13 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
           _conditions.visibilityWindows.any(
             (w) => !transit.isBefore(w.start) && transit.isBefore(w.end),
           ),
-      averageRawFileSizeMB: _plan.selectedEquipment?.averageRawFileSizeMB,
+      frameBytes: [for (final f in frameStorage) f.bytes],
     );
   }
+
+  /// Each block's frame size and what it rests on (ADR-021 C8, F07).
+  List<FrameStorage> get frameStorage =>
+      StorageEstimate.ofPlan(_plan.captureBlocks, _plan.selectedEquipment);
 
   /// The settings' overheads, with the rig's in-camera noise reduction when
   /// it applies (ADR-020 §8); a rig edit notifies through the plan.
@@ -174,11 +179,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
 
   /// The light block "Fill tonight's window" adjusts: the last one.
   int? get fillWindowBlockIndex {
-    final blocks = _plan.captureBlocks;
-    for (var i = blocks.length - 1; i >= 0; i--) {
-      if (blocks[i].frameType == FrameType.light) return i;
-    }
-    return null;
+    final i = _plan.captureBlocks.lastIndexWhere((b) => b.isLight);
+    return i < 0 ? null : i;
   }
 
   /// The frame count for [fillWindowBlockIndex] that fills tonight's windows
@@ -211,13 +213,12 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     return spare > 0 ? spare : null;
   }
 
-  /// Applies [fillWindowFrameCount]; false (no change) when nothing fits.
+  /// Applies [fillWindowFrameCount] as the user's edit of the count (its
+  /// origin entered, ADR-021 C4); false (no change) when nothing fits.
   Future<bool> fillWindow() async {
-    final index = fillWindowBlockIndex;
-    final count = fillWindowFrameCount;
+    final index = fillWindowBlockIndex, count = fillWindowFrameCount;
     if (index == null || count == null || count < 1) return false;
     final block = _plan.captureBlocks[index];
-    // ADR-021 C4: the user's edit of the count; other origins stay.
     await _plan.updateCaptureBlock(
       index,
       block.copyWith(

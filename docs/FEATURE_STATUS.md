@@ -60,7 +60,7 @@ feature exists although its roadmap phase has not been reached in
 | F-25 | Field of view (FOV) | Implemented | 6 |
 | F-26 | NPF exposure recommendation | Implemented | 6 |
 | F-27 | Optical multipliers (reducer / Barlow) | Prototype | 6 |
-| F-28 | Storage estimate | Partial | 9 |
+| F-28 | Storage estimate | Implemented *(F07, 2026-10-18: compatible evidence first, theoretical second, else Unknown with a file or size action)* | 9 |
 | F-29 | Weather fetch and offline cache | Implemented | 10 |
 | F-30 | Weather forecast display | Implemented | 10 |
 | F-31 | Dew warning | Implemented | 10 |
@@ -360,6 +360,7 @@ see DATA_MODEL.md B2/B8.)
 
 ## F-28 — Storage estimate
 - **Status:** Partial
+- **F07 (2026-10-18, ADR-021 C8–C12):** each block's frame size comes from `StorageEstimate.of`. The order is: the block's measured file, the rig's measured file or its RAW size, the theoretical payload of a declared or evidenced uncompressed DNG/FITS, then Unknown. The plan's total is known only when every counted block's size is. The note under it states the basis and its assumption, or the reason, and names any file not used. Unknown offers "Choose one file" (confirmed, then recorded with the rig as `raw_file_size_evidence`) and "Enter a size" (the rig's editor, where the capture format is declared in More). Sizes are decimal MB/GB. *Superseded:*
 - **Current implementation:** `averageRawFileSizeMB × total frames (all types)`, shown as `Estimated storage` (sentence case since the 2026-10-18 copy pass). **TASK 4.4:** `estimateStorageRequirement` returns `null` (not `0.0`) when the average size is unknown, and the widget shows "Unknown".
 - **Relevant files:** `optical_calculator.dart:52-57`, `planner_viewmodel.dart:493-500`, `capture_plan_widget.dart:223-225`.
 - **Known issues:** no theoretical payload figure; bit depth no longer stored (SI-013). *Resolved (TASK 4.4):* used to show a fabricated **`0.0 MB`** when the size was unknown (all seeds) (SI-008; TD-013).

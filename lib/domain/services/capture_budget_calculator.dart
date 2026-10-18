@@ -241,13 +241,17 @@ class CaptureBudgetCalculator {
   /// [targetTransitsInWindow]: whether the target's upper transit falls in
   /// an available window; the flip (when enabled) is then counted once,
   /// conservatively (ADR-009 §4). [averageRawFileSizeMB]: per frame, or
-  /// null when unknown.
+  /// null when unknown. [frameBytes] (ADR-021 C8, F07), when given, is each
+  /// block's own size of one frame (null: unknown) and replaces it; the
+  /// total is known only when every counted block's is.
   static CaptureBudget calculate({
     required List<CaptureBlock> blocks,
     CaptureOverheads overheads = const CaptureOverheads(),
     bool targetTransitsInWindow = false,
     double? averageRawFileSizeMB,
+    List<double?>? frameBytes,
   }) {
+    assert(frameBytes == null || frameBytes.length == blocks.length);
     final perFrame = overheads.perFrameMs;
     final sequence = <BudgetEvent>[];
     final blockBudgets = <BlockBudget>[];
@@ -289,9 +293,14 @@ class CaptureBudgetCalculator {
           perFrameOverheadMs: counted ? b.frameCount * perFrame : 0,
           storageMB: !counted
               ? 0
-              : averageRawFileSizeMB == null
-              ? null
-              : averageRawFileSizeMB * b.frameCount,
+              : switch (frameBytes) {
+                  final sizes? => switch (sizes[i]) {
+                    final bytes? => bytes * b.frameCount / 1e6,
+                    null => null,
+                  },
+                  null when averageRawFileSizeMB == null => null,
+                  null => averageRawFileSizeMB! * b.frameCount,
+                },
         ),
       );
 
@@ -368,7 +377,11 @@ class CaptureBudgetCalculator {
 
     final sequenceTotal = sequence.fold(0, (s, e) => s + e.durationMs);
     double? storage;
-    if (averageRawFileSizeMB != null) {
+    // Never a fabricated 0: with no known frame size the total is unknown.
+    final anySize = frameBytes != null
+        ? frameBytes.any((b) => b != null)
+        : averageRawFileSizeMB != null;
+    if (anySize && blockBudgets.every((b) => b.storageMB != null)) {
       storage = blockBudgets.fold<double>(0, (s, b) => s + b.storageMB!);
     }
 
