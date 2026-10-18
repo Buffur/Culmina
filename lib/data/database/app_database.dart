@@ -85,6 +85,29 @@ class CaptureBlocks extends Table {
   // legacy sessions (session_logs.legacy) they carry no information.
   IntColumn get completedFrames => integer().withDefault(const Constant(0))();
   IntColumn get rejectedFrames => integer().withDefault(const Constant(0))();
+
+  // ADR-021 (F03, v26). Every column is nullable: NULL = unrecorded, the
+  // value of every block saved before v26 (C19).
+  /// C1: `auto`, `preset`, `kelvin` or `custom`.
+  TextColumn get wbMode => text().nullable()();
+
+  /// C1: the preset name, for `preset` only.
+  TextColumn get wbPreset => text().nullable()();
+
+  /// C1: kelvins, for `kelvin` only.
+  IntColumn get wbKelvin => integer().nullable()();
+
+  /// C1: the tint as the camera shows it, no unit claimed.
+  RealColumn get wbTint => real().nullable()();
+
+  /// C3 (AM-04): `af` or `mf`.
+  TextColumn get focusMode => text().nullable()();
+
+  /// C4: JSON `{field: {k, d, e?}}`.
+  TextColumn get fieldOrigins => text().nullable()();
+
+  /// C6: JSON file evidence for the block's storage.
+  TextColumn get fileEvidence => text().nullable()();
 }
 
 /// The Session aggregate root (ADR-014; evolved in place in v16, TASK
@@ -267,7 +290,7 @@ class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 25;
+  int get schemaVersion => 26;
 
   @override
   MigrationStrategy get migration {
@@ -605,6 +628,31 @@ class AppDatabase extends _$AppDatabase {
                 // S8.6: the optional plan name. Additive only; every
                 // existing plan has none (NULL), shown as target · night.
                 await m.addColumn(schema.sessionLogs, schema.sessionLogs.name);
+              },
+              from25To26: (m, schema) async {
+                // ADR-021 C19 (F03): the capture contract. Additive and
+                // nullable only; no data is rewritten, so every existing
+                // block and rig reads its new values as unrecorded.
+                final blocks = schema.captureBlocks;
+                for (final column in [
+                  blocks.wbMode,
+                  blocks.wbPreset,
+                  blocks.wbKelvin,
+                  blocks.wbTint,
+                  blocks.focusMode,
+                  blocks.fieldOrigins,
+                  blocks.fileEvidence,
+                ]) {
+                  await m.addColumn(blocks, column);
+                }
+                final cameras = schema.cameraModules;
+                for (final column in [
+                  cameras.captureFormat,
+                  cameras.captureFormatSource,
+                  cameras.rawFileSizeEvidence,
+                ]) {
+                  await m.addColumn(cameras, column);
+                }
               },
             ),
           );

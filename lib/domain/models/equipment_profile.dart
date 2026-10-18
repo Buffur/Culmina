@@ -1,4 +1,5 @@
 import 'camera_class.dart';
+import 'capture_evidence.dart';
 import 'equipment_limits.dart';
 import 'spec_confidence.dart';
 import 'spec_provenance.dart';
@@ -73,6 +74,16 @@ class EquipmentProfile {
   final String? metadataMake;
   final String? metadataModel;
 
+  /// ADR-021 C7 (PD-06): the rig's capture format; null = unknown.
+  final CaptureFormat? captureFormat;
+
+  /// Where [captureFormat] came from: `file:<basename>` or `declared`.
+  final String? captureFormatSource;
+
+  /// The file [averageRawFileSizeMB] was measured from (C6 form); null =
+  /// the association is unrecorded (every rig saved before v26).
+  final FileEvidence? rawFileSizeEvidence;
+
   const EquipmentProfile({
     required this.id,
     required this.name,
@@ -99,6 +110,9 @@ class EquipmentProfile {
     this.specProvenance = const {},
     this.metadataMake,
     this.metadataModel,
+    this.captureFormat,
+    this.captureFormatSource,
+    this.rawFileSizeEvidence,
   });
 
   /// Whether the budget and the fit count an in-camera dark after each light
@@ -200,6 +214,47 @@ class EquipmentProfile {
     return result;
   }
 
+  /// This profile with its ADR-021 C7 capture evidence changed (a function
+  /// returning null clears it); every other value is kept as it is.
+  EquipmentProfile withCaptureEvidence({
+    CaptureFormat? Function()? captureFormat,
+    String? Function()? captureFormatSource,
+    FileEvidence? Function()? rawFileSizeEvidence,
+  }) => EquipmentProfile(
+    id: id,
+    name: name,
+    manufacturer: manufacturer,
+    cameraModel: cameraModel,
+    cameraClass: cameraClass,
+    inCameraNoiseReduction: inCameraNoiseReduction,
+    sensorWidthMm: sensorWidthMm,
+    sensorHeightMm: sensorHeightMm,
+    pixelPitchUm: pixelPitchUm,
+    resolutionWidthPx: resolutionWidthPx,
+    resolutionHeightPx: resolutionHeightPx,
+    focalLengthMm: focalLengthMm,
+    focalRatio: focalRatio,
+    apertureDiameterMm: apertureDiameterMm,
+    averageRawFileSizeMB: averageRawFileSizeMB,
+    rotationDeg: rotationDeg,
+    trackingType: trackingType,
+    maxExposureS: maxExposureS,
+    cameraSource: cameraSource,
+    cameraConfidence: cameraConfidence,
+    opticsSource: opticsSource,
+    opticsConfidence: opticsConfidence,
+    specProvenance: specProvenance,
+    metadataMake: metadataMake,
+    metadataModel: metadataModel,
+    captureFormat: captureFormat == null ? this.captureFormat : captureFormat(),
+    captureFormatSource: captureFormatSource == null
+        ? this.captureFormatSource
+        : captureFormatSource(),
+    rawFileSizeEvidence: rawFileSizeEvidence == null
+        ? this.rawFileSizeEvidence
+        : rawFileSizeEvidence(),
+  );
+
   /// This profile as an explicit user edit of [original] (null for a new
   /// profile) records it (TASK 8.5): a new profile, or a changed group of
   /// specs, becomes source `user` with confidence `reported`; an unchanged
@@ -238,6 +293,9 @@ class EquipmentProfile {
       specProvenance: _editedSpecProvenance(original, keepCamera, keepOptics),
       metadataMake: metadataMake ?? original?.metadataMake,
       metadataModel: metadataModel ?? original?.metadataModel,
+      captureFormat: captureFormat,
+      captureFormatSource: captureFormatSource,
+      rawFileSizeEvidence: rawFileSizeEvidence,
     );
   }
 

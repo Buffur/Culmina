@@ -656,6 +656,14 @@ class DriftSessionRepository implements SessionRepository {
               calibrationPolicy: Value(block.calibrationPolicy?.name),
               gainKind: Value(block.gain.kind.name),
               gainValue: Value(block.gain.value),
+              // ADR-021 C1/C3/C4/C6: NULL = unrecorded.
+              wbMode: Value(block.whiteBalance?.mode.name),
+              wbPreset: Value(block.whiteBalance?.preset?.name),
+              wbKelvin: Value(block.whiteBalance?.kelvinK),
+              wbTint: Value(block.whiteBalance?.tint),
+              focusMode: Value(block.focusMode?.name),
+              fieldOrigins: Value(block.origins.encode()),
+              fileEvidence: Value(block.fileEvidence?.encode()),
             ),
           );
     }
@@ -885,6 +893,15 @@ class DriftSessionRepository implements SessionRepository {
         calibrationPolicy: type == domain.FrameType.light
             ? null
             : domain.CalibrationPolicy.tryParse(b.calibrationPolicy),
+        whiteBalance: domain.WhiteBalance.fromStored(
+          b.wbMode,
+          b.wbPreset,
+          b.wbKelvin,
+          b.wbTint,
+        ),
+        focusMode: domain.FocusMode.tryParse(b.focusMode),
+        origins: domain.FieldOrigins.decode(b.fieldOrigins),
+        fileEvidence: domain.FileEvidence.decode(b.fileEvidence),
       );
     } on ArgumentError catch (e) {
       AppLog.warning(

@@ -123,6 +123,9 @@ abstract final class SessionSnapshotBuilder {
       'focalRatio': r.focalRatio,
       'apertureDiameterMm': r.apertureDiameterMm,
       'averageRawFileSizeMB': r.averageRawFileSizeMB,
+      'captureFormat': r.captureFormat?.name, // ADR-021 C17
+      'captureFormatSource': r.captureFormatSource,
+      'rawFileSizeEvidence': r.rawFileSizeEvidence?.toJson(),
       'rotationDeg': r.rotationDeg,
       'tracking': r.trackingType.name,
       'maxExposureS': r.maxExposureS,
@@ -172,6 +175,12 @@ abstract final class SessionSnapshotBuilder {
     'gainKind': b.gain.kind.name,
     'gainValue': b.gain.value,
     'calibrationPolicy': b.calibrationPolicy?.name,
+    // ADR-021 C17 (additive, version 1): absent in an older snapshot, read
+    // there as unrecorded.
+    'wb': b.whiteBalance?.toJson(),
+    'focusMode': b.focusMode?.name,
+    'origins': b.origins.isEmpty ? null : b.origins.toJson(),
+    'fileEvidence': b.fileEvidence?.toJson(),
   };
 
   static Map<String, Object?> _budget(CaptureBudget b) => {

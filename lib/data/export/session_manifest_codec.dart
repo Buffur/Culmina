@@ -132,6 +132,30 @@ abstract final class SessionManifestCodec {
             'calibration_policy': b.calibrationPolicy?.name,
             'confirmed_frames': state?.completedFor(b.id),
             'rejected_frames': state?.rejectedFor(b.id),
+            // ADR-021 C18 (additive): null = unrecorded. Origins carry kind
+            // and descriptor only, no evidence values.
+            'white_balance': b.whiteBalance?.toJson(),
+            'focus_mode': b.focusMode?.name,
+            'field_origins': b.origins.isEmpty
+                ? null
+                : {
+                    for (final e in b.origins.all.entries)
+                      e.key.name: {
+                        'k': e.value.kind.name,
+                        'd': e.value.descriptor,
+                      },
+                  },
+            'file_evidence': switch (b.fileEvidence) {
+              null => null,
+              final f => {
+                'format': f.format,
+                'read': f.read,
+                'width': f.width,
+                'height': f.height,
+                'bytes': f.bytes,
+                'label': f.label,
+              },
+            },
           },
       ],
       'results': {
@@ -273,6 +297,11 @@ abstract final class SessionManifestCodec {
       calibrationPolicy: type == FrameType.light
           ? null
           : CalibrationPolicy.tryParse(b['calibration_policy'] as String?),
+      // ADR-021 C18: a manifest written before v26 has none of these keys.
+      whiteBalance: WhiteBalance.fromJson(b['white_balance']),
+      focusMode: FocusMode.tryParse(b['focus_mode']),
+      origins: FieldOrigins.fromJson(b['field_origins']),
+      fileEvidence: FileEvidence.fromJson(b['file_evidence']),
     );
   }
 

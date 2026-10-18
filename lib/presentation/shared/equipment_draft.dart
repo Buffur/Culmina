@@ -555,8 +555,22 @@ class EquipmentDraft {
       },
       metadataMake: metadataMake,
       metadataModel: metadataModel,
+      // ADR-021 C7: the rig's format is kept; the measured file stays
+      // associated with the size only while that size is unchanged.
+      captureFormat: e?.captureFormat,
+      captureFormatSource: e?.captureFormatSource,
     );
-    return EquipmentDraftResult._(profile.withEditProvenance(e), null);
+    final rawSize = profile.averageRawFileSizeMB;
+    final kept =
+        e != null && rawSize != null && rawSize == e.averageRawFileSizeMB
+        ? e.rawFileSizeEvidence
+        : null;
+    return EquipmentDraftResult._(
+      profile
+          .withCaptureEvidence(rawFileSizeEvidence: () => kept)
+          .withEditProvenance(e),
+      null,
+    );
   }
 }
 

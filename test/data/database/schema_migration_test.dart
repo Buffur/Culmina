@@ -139,6 +139,211 @@ void main() {
     });
   });
 
+  group('F03: v26 (the capture contract, ADR-021 C19)', () {
+    for (final from in [
+      8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, //
+    ]) {
+      test('v$from -> v26 matches the v26 snapshot exactly', () async {
+        final connection = await verifier.startAt(from);
+        final db = AppDatabase(connection);
+        await verifier.migrateAndValidate(db, 26);
+        await db.close();
+      });
+    }
+
+    // CHK-F03.A2: every kind of stored content survives, value for value,
+    // and the new values read as unrecorded (never a default).
+    test('v25 -> v26: rigs, targets and aliases, sites, plans with their '
+        'snapshots, blocks, results and events kept; the new values '
+        'unrecorded', () async {
+      final schema = await verifier.schemaAt(25);
+      final raw = schema.rawDatabase;
+      const planSnapshot =
+          '{"v":1,"takenAtUtcMs":1790000000000,'
+          '"night":{"eveningDate":"2026-12-15","timeZoneId":"Europe/Ljubljana"},'
+          '"blocks":[{"frameType":"light","filterName":"Ha","exposureS":300.0,'
+          '"frameCount":12,"binning":2,"gainKind":"gain","gainValue":100.0,'
+          '"calibrationPolicy":null}],"rig":{"id":1,"name":"Refractor"}}';
+      const startSnapshot =
+          '{"v":1,"takenAtUtcMs":1790000100000,'
+          '"night":{"eveningDate":"2026-12-15","timeZoneId":"Europe/Ljubljana"}}';
+      raw.execute(
+        "INSERT INTO devices (id, name, manufacturer) VALUES "
+        "(1, 'Refractor', 'ZWO');",
+      );
+      raw.execute(
+        "INSERT INTO camera_modules (id, device_id, name, manufacturer, model, "
+        "sensor_width_mm, sensor_height_mm, resolution_width_px, "
+        "resolution_height_px, pixel_pitch_um, average_raw_file_size_m_b, "
+        "source, confidence, raw_file_size_source, raw_file_size_confidence, "
+        "camera_class, in_camera_noise_reduction) VALUES (1, 1, "
+        "'Refractor Camera', 'ZWO', 'ASI2600MM', 23.5, 15.7, 6248, 4176, 3.76, "
+        "52.19, 'user', 'reported', 'user', 'reported', 'astroMono', 0);",
+      );
+      raw.execute(
+        "INSERT INTO optical_rigs (id, name, camera_module_id, focal_length_mm, "
+        "aperture, tracking_state, aperture_diameter_mm, source, confidence) "
+        "VALUES (1, 'Refractor', 1, 480.0, 6.0, 'tracked', 80.0, 'user', "
+        "'reported');",
+      );
+      raw.execute(
+        "INSERT INTO location_profiles (id, name, latitude, longitude, "
+        "elevation, bortle_class, time_zone) VALUES (1, 'Dark site', 46.05, "
+        "14.51, 300.0, 4, 'Europe/Ljubljana');",
+      );
+      raw.execute(
+        "INSERT INTO astro_targets (id, catalog_id, common_name, "
+        "right_ascension, declination, type, source) VALUES (7, 'NGC 7000', "
+        "'North America', 314.75, 44.33, 'Nebula', "
+        "'catalog:openngc@v20260501');",
+      );
+      raw.execute(
+        "INSERT INTO target_aliases (id, catalog_id, alias, kind, "
+        "catalog_version) VALUES (1, 'NGC 7000', 'Caldwell 20', 'designation', "
+        "3);",
+      );
+      raw.execute(
+        "INSERT INTO session_logs (id, target_name, equipment_name, "
+        "session_date, planned_light_frames, status, legacy, evening_date, "
+        "time_zone_id, site_id, target_id, rig_id, created_at_utc_ms, "
+        "updated_at_utc_ms, planned_at_utc_ms, started_at_utc_ms, "
+        "completed_at_utc_ms, plan_snapshot, execution_start_snapshot, "
+        "result_kind, not_done_reason, name, environmental_notes) VALUES "
+        "(1, 'North America', 'Refractor', 1790000000, 12, 'completed', 0, "
+        "'2026-12-15', 'Europe/Ljubljana', 1, 7, 1, 1789000000000, "
+        "1790090000000, 1790000000000, 1790000100000, 1790090000000, "
+        "'$planSnapshot', '$startSnapshot', 'partly', NULL, 'Cygnus wall', "
+        "'Dew at 2 am'), "
+        "(2, 'Old', 'Old rig', 1690000000, 7, 'completed', 1, NULL, NULL, "
+        "NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, "
+        "NULL, NULL, 'Legacy notes');",
+      );
+      raw.execute(
+        "INSERT INTO capture_blocks (id, session_log_id, frame_type, "
+        "filter_name, exposure_time_seconds, frame_count, binning, position, "
+        "calibration_policy, gain_kind, gain_value, completed_frames, "
+        "rejected_frames) VALUES "
+        "(1, 1, 'light', 'Ha', 300.0, 12, 2, 0, NULL, 'gain', 100.0, 9, 1), "
+        "(2, 1, 'dark', NULL, 300.0, 10, 2, 1, 'library', 'gain', 100.0, 0, 0);",
+      );
+      raw.execute(
+        "INSERT INTO session_events (id, session_log_id, seq, at_utc_ms, kind, "
+        "block_id, delta, reason, clock_adjusted) VALUES "
+        "(1, 1, 1, 1790090000000, 'reported', NULL, NULL, NULL, 0), "
+        "(2, 1, 2, 1790090000000, 'framesConfirmed', 1, 10, NULL, 0), "
+        "(3, 1, 3, 1790090000000, 'framesRejected', 1, 1, NULL, 0);",
+      );
+
+      final db = AppDatabase(schema.newConnection());
+      // Raw rows, column by column, for every pre-v26 column.
+      Future<List<Map<String, Object?>>> rows(String table) async => [
+        for (final r
+            in await db.customSelect('SELECT * FROM $table ORDER BY id').get())
+          r.data,
+      ];
+      final blocks = await rows('capture_blocks');
+      expect(
+        blocks.map(
+          (b) => (
+            b['filter_name'],
+            b['frame_type'],
+            b['binning'],
+            b['gain_value'],
+            b['calibration_policy'],
+            b['completed_frames'],
+            b['rejected_frames'],
+          ),
+        ),
+        [
+          ('Ha', 'light', 2, 100.0, null, 9, 1),
+          (null, 'dark', 2, 100.0, 'library', 0, 0),
+        ],
+      );
+      for (final b in blocks) {
+        for (final c in [
+          'wb_mode',
+          'wb_preset',
+          'wb_kelvin',
+          'wb_tint',
+          'focus_mode',
+          'field_origins',
+          'file_evidence',
+        ]) {
+          expect(b.containsKey(c), isTrue, reason: c);
+          expect(b[c], isNull, reason: c);
+        }
+      }
+      final camera = (await rows('camera_modules')).single;
+      expect(
+        (
+          camera['model'],
+          camera['average_raw_file_size_m_b'],
+          camera['camera_class'],
+          camera['raw_file_size_source'],
+        ),
+        ('ASI2600MM', 52.19, 'astroMono', 'user'),
+      );
+      for (final c in [
+        'capture_format',
+        'capture_format_source',
+        'raw_file_size_evidence',
+      ]) {
+        expect(camera.containsKey(c), isTrue, reason: c);
+        expect(camera[c], isNull, reason: c);
+      }
+      final logs = await rows('session_logs');
+      expect(logs.first['plan_snapshot'], planSnapshot);
+      expect(logs.first['execution_start_snapshot'], startSnapshot);
+      expect(
+        (
+          logs.first['name'],
+          logs.first['result_kind'],
+          logs.first['environmental_notes'],
+        ),
+        ('Cygnus wall', 'partly', 'Dew at 2 am'),
+      );
+      expect(
+        (logs.last['legacy'], logs.last['environmental_notes']),
+        (1, 'Legacy notes'),
+      );
+      expect((await rows('target_aliases')).single['alias'], 'Caldwell 20');
+      expect((await rows('location_profiles')).single['elevation'], 300.0);
+      expect(await rows('session_events'), hasLength(3));
+
+      // Through the repositories: the same content, the new values
+      // unrecorded.
+      final rig = (await DriftEquipmentRepository(db).getAllEquipment()).single;
+      expect(
+        (rig.cameraModel, rig.averageRawFileSizeMB, rig.focalLengthMm),
+        ('ASI2600MM', 52.19, 480.0),
+      );
+      expect(
+        (rig.captureFormat, rig.captureFormatSource, rig.rawFileSizeEvidence),
+        (null, null, null),
+      );
+      final repo = DriftSessionRepository(db, clock: testEvening);
+      final plan = (await repo.get(1))!;
+      expect(plan.name, 'Cygnus wall');
+      expect(plan.resultKind, ResultKind.partly);
+      expect(plan.planSnapshot!.json['blocks'], isA<List>());
+      for (final b in plan.blocks) {
+        expect(
+          (b.whiteBalance, b.focusMode, b.fileEvidence),
+          (null, null, null),
+        );
+        expect(b.origins.isEmpty, isTrue);
+      }
+      expect(plan.blocks.map((b) => (b.filterName, b.binning, b.gain.value)), [
+        ('Ha', 2, 100.0),
+        (null, 2, 100.0),
+      ]);
+      final state = await repo.execution(1);
+      expect((state.completedFor(1), state.rejectedFor(1)), (10, 1));
+      expect((await repo.get(2))!.legacy, isTrue);
+      await db.close();
+    });
+  });
+
   group('S8.6: v25 (the optional plan name)', () {
     for (final from in [
       8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, //

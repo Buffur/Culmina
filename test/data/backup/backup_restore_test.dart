@@ -155,7 +155,7 @@ void main() {
       // The new phone: a clean install stages the checked backup ...
       final checked = service.check(bytes);
       expect(checked.preview.sessionCount, 3);
-      expect(checked.preview.schemaVersion, 25); // the app schema (S8.6)
+      expect(checked.preview.schemaVersion, 26); // the app schema (F03)
       expect(checked.preview.appVersion, AppIdentity.version);
       await service.stage(checked);
       expect(await BackupStaging.isStaged(newPhone), isTrue);
@@ -251,7 +251,7 @@ void main() {
     await db.close();
     // The archive is a ZIP; the manifest is readable without the app.
     expect(String.fromCharCodes(bytes.sublist(0, 2)), 'PK');
-    expect(BackupArchive.sqliteUserVersion(service.check(bytes).database), 25);
+    expect(BackupArchive.sqliteUserVersion(service.check(bytes).database), 26);
   });
 
   test('restoring over existing data keeps a safety copy', () async {
@@ -537,7 +537,7 @@ void main() {
       });
       final checked = service.check(v1);
       expect(checked.preferences, isNull);
-      expect(checked.preview.schemaVersion, 25);
+      expect(checked.preview.schemaVersion, 26);
       await service.stage(checked);
       await BackupStaging.apply(newPhone, nowUtc: _clock.nowUtc());
 

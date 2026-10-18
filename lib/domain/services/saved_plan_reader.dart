@@ -89,6 +89,12 @@ abstract final class SavedPlanReader {
               (b['gainValue'] as num?)?.toDouble(),
             ),
             calibrationPolicy: policy,
+            // ADR-021 C17: absent (an older snapshot) or unreadable =
+            // unrecorded, never guessed.
+            whiteBalance: WhiteBalance.fromJson(b['wb']),
+            focusMode: FocusMode.tryParse(b['focusMode']),
+            origins: FieldOrigins.fromJson(b['origins']),
+            fileEvidence: FileEvidence.fromJson(b['fileEvidence']),
           ),
         );
       } on ArgumentError {

@@ -59,6 +59,17 @@ class CameraModules extends Table {
   /// the DSLR/mirrorless and Unknown classes; kept, and ignored, otherwise.
   BoolColumn get inCameraNoiseReduction =>
       boolean().withDefault(const Constant(false))();
+
+  /// ADR-021 C7 (F03, v26): the capture format (`dngUncompressed16`,
+  /// `fits16`, `fits32float`, `compressedRaw`, `jpegHeic`); NULL = unknown.
+  TextColumn get captureFormat => text().nullable()();
+
+  /// C7: `file:<basename>` or `declared`.
+  TextColumn get captureFormatSource => text().nullable()();
+
+  /// C7: JSON evidence (C6 form) of the file `average_raw_file_size_mb`
+  /// came from; NULL = the association is unrecorded (every rig before v26).
+  TextColumn get rawFileSizeEvidence => text().nullable()();
 }
 
 class OpticalRigs extends Table {

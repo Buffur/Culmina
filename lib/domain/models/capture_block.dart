@@ -1,3 +1,18 @@
+import 'capture_evidence.dart';
+
+export 'capture_evidence.dart'
+    show
+        WhiteBalance,
+        WhiteBalanceMode,
+        WhiteBalancePreset,
+        FocusMode,
+        FieldOrigins,
+        FieldOrigin,
+        OriginKind,
+        CaptureField,
+        FileEvidence,
+        FileCompression;
+
 /// A block's frame type. [darkFlat] (S7.3a, ADR-020 §6, RG-10 = D1): darks
 /// taken at the flats' exposure and ISO or gain.
 enum FrameType { light, dark, flat, bias, darkFlat }
@@ -116,6 +131,10 @@ class CaptureBlock {
     int binning = 1,
     CaptureGain gain = CaptureGain.none,
     CalibrationPolicy? calibrationPolicy,
+    WhiteBalance? whiteBalance,
+    FocusMode? focusMode,
+    FieldOrigins? origins,
+    FileEvidence? fileEvidence,
   }) {
     if (!exposureTimeSeconds.isFinite ||
         exposureTimeSeconds <= 0 ||
@@ -159,6 +178,10 @@ class CaptureBlock {
       calibrationPolicy: frameType == FrameType.light
           ? null
           : (calibrationPolicy ?? CalibrationPolicy.outsideWindow),
+      whiteBalance: whiteBalance,
+      focusMode: focusMode,
+      origins: origins ?? FieldOrigins.none,
+      fileEvidence: fileEvidence,
     );
   }
 
@@ -172,6 +195,10 @@ class CaptureBlock {
     required this.binning,
     required this.gain,
     required this.calibrationPolicy,
+    required this.whiteBalance,
+    required this.focusMode,
+    required this.origins,
+    required this.fileEvidence,
   });
 
   /// Sanity bound for one sub-exposure, seconds (1 h). Not a physical limit.
@@ -196,8 +223,22 @@ class CaptureBlock {
   /// Null for lights; never null for calibration frames.
   final CalibrationPolicy? calibrationPolicy;
 
+  /// ADR-021 C1: the white balance as recorded; null = unrecorded.
+  final WhiteBalance? whiteBalance;
+
+  /// ADR-021 C3 (AM-04): AF or MF as recorded; null = unrecorded.
+  final FocusMode? focusMode;
+
+  /// ADR-021 C4: how each field got its value; empty = unrecorded.
+  final FieldOrigins origins;
+
+  /// ADR-021 C6: the file this block's storage was measured from, if any.
+  final FileEvidence? fileEvidence;
+
   /// A validated copy. Changing [frameType] to light drops the policy;
   /// changing it to a calibration type applies the default.
+  /// A nullable setting is changed with a function, so it can also be
+  /// cleared: `whiteBalance: () => null`.
   CaptureBlock copyWith({
     int? id,
     int? sessionLogId,
@@ -208,6 +249,10 @@ class CaptureBlock {
     int? binning,
     CaptureGain? gain,
     CalibrationPolicy? calibrationPolicy,
+    WhiteBalance? Function()? whiteBalance,
+    FocusMode? Function()? focusMode,
+    FieldOrigins? origins,
+    FileEvidence? Function()? fileEvidence,
   }) {
     final type = frameType ?? this.frameType;
     return CaptureBlock(
@@ -222,12 +267,13 @@ class CaptureBlock {
       calibrationPolicy: type == FrameType.light
           ? null
           : (calibrationPolicy ?? this.calibrationPolicy),
+      whiteBalance: whiteBalance == null ? this.whiteBalance : whiteBalance(),
+      focusMode: focusMode == null ? this.focusMode : focusMode(),
+      origins: origins ?? this.origins,
+      fileEvidence: fileEvidence == null ? this.fileEvidence : fileEvidence(),
     );
   }
 
-  /// Parses a stored frame type case-insensitively (older data and fixtures
-  /// used upper case). Unknown text returns null — callers decide; it is
-  /// never silently read as a light frame.
   static FrameType? tryParseFrameType(String? text) {
     final t = text?.trim().toLowerCase();
     for (final f in FrameType.values) {

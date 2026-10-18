@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../../domain/models/capture_evidence.dart';
 import '../../domain/models/camera_class.dart';
 import '../../domain/repositories/equipment_repository.dart';
 import '../../domain/models/equipment_profile.dart' as domain;
@@ -25,6 +26,10 @@ class DriftEquipmentRepository implements EquipmentRepository {
       cameraModel: cam.model,
       cameraClass: CameraClass.fromStorage(cam.cameraClass),
       inCameraNoiseReduction: cam.inCameraNoiseReduction,
+      // ADR-021 C7: unknown or unreadable values read as unrecorded.
+      captureFormat: CaptureFormat.tryParse(cam.captureFormat),
+      captureFormatSource: cam.captureFormatSource,
+      rawFileSizeEvidence: FileEvidence.decode(cam.rawFileSizeEvidence),
       sensorWidthMm: cam.sensorWidthMm,
       sensorHeightMm: cam.sensorHeightMm,
       pixelPitchUm: cam.pixelPitchUm,
@@ -155,6 +160,9 @@ class DriftEquipmentRepository implements EquipmentRepository {
               averageRawFileSizeMB: Value(profile.averageRawFileSizeMB),
               cameraClass: Value(profile.cameraClass.name),
               inCameraNoiseReduction: Value(profile.inCameraNoiseReduction),
+              captureFormat: Value(profile.captureFormat?.name),
+              captureFormatSource: Value(profile.captureFormatSource),
+              rawFileSizeEvidence: Value(profile.rawFileSizeEvidence?.encode()),
               source: Value(profile.cameraSource),
               confidence: Value(profile.cameraConfidence?.name),
               resolutionSource: _source(profile, EquipmentSpec.resolution),
@@ -313,6 +321,9 @@ class DriftEquipmentRepository implements EquipmentRepository {
             averageRawFileSizeMB: Value(profile.averageRawFileSizeMB),
             cameraClass: Value(profile.cameraClass.name),
             inCameraNoiseReduction: Value(profile.inCameraNoiseReduction),
+            captureFormat: Value(profile.captureFormat?.name),
+            captureFormatSource: Value(profile.captureFormatSource),
+            rawFileSizeEvidence: Value(profile.rawFileSizeEvidence?.encode()),
             source: Value(profile.cameraSource),
             confidence: Value(profile.cameraConfidence?.name),
             resolutionSource: _source(profile, EquipmentSpec.resolution),

@@ -635,6 +635,39 @@ class $CameraModulesTable extends CameraModules
         ),
         defaultValue: const Constant(false),
       );
+  static const VerificationMeta _captureFormatMeta = const VerificationMeta(
+    'captureFormat',
+  );
+  @override
+  late final GeneratedColumn<String> captureFormat = GeneratedColumn<String>(
+    'capture_format',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _captureFormatSourceMeta =
+      const VerificationMeta('captureFormatSource');
+  @override
+  late final GeneratedColumn<String> captureFormatSource =
+      GeneratedColumn<String>(
+        'capture_format_source',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _rawFileSizeEvidenceMeta =
+      const VerificationMeta('rawFileSizeEvidence');
+  @override
+  late final GeneratedColumn<String> rawFileSizeEvidence =
+      GeneratedColumn<String>(
+        'raw_file_size_evidence',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -662,6 +695,9 @@ class $CameraModulesTable extends CameraModules
     metadataModel,
     cameraClass,
     inCameraNoiseReduction,
+    captureFormat,
+    captureFormatSource,
+    rawFileSizeEvidence,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -893,6 +929,33 @@ class $CameraModulesTable extends CameraModules
         ),
       );
     }
+    if (data.containsKey('capture_format')) {
+      context.handle(
+        _captureFormatMeta,
+        captureFormat.isAcceptableOrUnknown(
+          data['capture_format']!,
+          _captureFormatMeta,
+        ),
+      );
+    }
+    if (data.containsKey('capture_format_source')) {
+      context.handle(
+        _captureFormatSourceMeta,
+        captureFormatSource.isAcceptableOrUnknown(
+          data['capture_format_source']!,
+          _captureFormatSourceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('raw_file_size_evidence')) {
+      context.handle(
+        _rawFileSizeEvidenceMeta,
+        rawFileSizeEvidence.isAcceptableOrUnknown(
+          data['raw_file_size_evidence']!,
+          _rawFileSizeEvidenceMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1002,6 +1065,18 @@ class $CameraModulesTable extends CameraModules
         DriftSqlType.bool,
         data['${effectivePrefix}in_camera_noise_reduction'],
       )!,
+      captureFormat: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}capture_format'],
+      ),
+      captureFormatSource: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}capture_format_source'],
+      ),
+      rawFileSizeEvidence: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_file_size_evidence'],
+      ),
     );
   }
 
@@ -1053,6 +1128,17 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
   /// user's statement of a camera setting, off by default. Counted only for
   /// the DSLR/mirrorless and Unknown classes; kept, and ignored, otherwise.
   final bool inCameraNoiseReduction;
+
+  /// ADR-021 C7 (F03, v26): the capture format (`dngUncompressed16`,
+  /// `fits16`, `fits32float`, `compressedRaw`, `jpegHeic`); NULL = unknown.
+  final String? captureFormat;
+
+  /// C7: `file:<basename>` or `declared`.
+  final String? captureFormatSource;
+
+  /// C7: JSON evidence (C6 form) of the file `average_raw_file_size_mb`
+  /// came from; NULL = the association is unrecorded (every rig before v26).
+  final String? rawFileSizeEvidence;
   const CameraModule({
     required this.id,
     required this.deviceId,
@@ -1079,6 +1165,9 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
     this.metadataModel,
     required this.cameraClass,
     required this.inCameraNoiseReduction,
+    this.captureFormat,
+    this.captureFormatSource,
+    this.rawFileSizeEvidence,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1138,6 +1227,15 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
     }
     map['camera_class'] = Variable<String>(cameraClass);
     map['in_camera_noise_reduction'] = Variable<bool>(inCameraNoiseReduction);
+    if (!nullToAbsent || captureFormat != null) {
+      map['capture_format'] = Variable<String>(captureFormat);
+    }
+    if (!nullToAbsent || captureFormatSource != null) {
+      map['capture_format_source'] = Variable<String>(captureFormatSource);
+    }
+    if (!nullToAbsent || rawFileSizeEvidence != null) {
+      map['raw_file_size_evidence'] = Variable<String>(rawFileSizeEvidence);
+    }
     return map;
   }
 
@@ -1198,6 +1296,15 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
           : Value(metadataModel),
       cameraClass: Value(cameraClass),
       inCameraNoiseReduction: Value(inCameraNoiseReduction),
+      captureFormat: captureFormat == null && nullToAbsent
+          ? const Value.absent()
+          : Value(captureFormat),
+      captureFormatSource: captureFormatSource == null && nullToAbsent
+          ? const Value.absent()
+          : Value(captureFormatSource),
+      rawFileSizeEvidence: rawFileSizeEvidence == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawFileSizeEvidence),
     );
   }
 
@@ -1246,6 +1353,13 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
       inCameraNoiseReduction: serializer.fromJson<bool>(
         json['inCameraNoiseReduction'],
       ),
+      captureFormat: serializer.fromJson<String?>(json['captureFormat']),
+      captureFormatSource: serializer.fromJson<String?>(
+        json['captureFormatSource'],
+      ),
+      rawFileSizeEvidence: serializer.fromJson<String?>(
+        json['rawFileSizeEvidence'],
+      ),
     );
   }
   @override
@@ -1279,6 +1393,9 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
       'metadataModel': serializer.toJson<String?>(metadataModel),
       'cameraClass': serializer.toJson<String>(cameraClass),
       'inCameraNoiseReduction': serializer.toJson<bool>(inCameraNoiseReduction),
+      'captureFormat': serializer.toJson<String?>(captureFormat),
+      'captureFormatSource': serializer.toJson<String?>(captureFormatSource),
+      'rawFileSizeEvidence': serializer.toJson<String?>(rawFileSizeEvidence),
     };
   }
 
@@ -1308,6 +1425,9 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
     Value<String?> metadataModel = const Value.absent(),
     String? cameraClass,
     bool? inCameraNoiseReduction,
+    Value<String?> captureFormat = const Value.absent(),
+    Value<String?> captureFormatSource = const Value.absent(),
+    Value<String?> rawFileSizeEvidence = const Value.absent(),
   }) => CameraModule(
     id: id ?? this.id,
     deviceId: deviceId ?? this.deviceId,
@@ -1355,6 +1475,15 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
     cameraClass: cameraClass ?? this.cameraClass,
     inCameraNoiseReduction:
         inCameraNoiseReduction ?? this.inCameraNoiseReduction,
+    captureFormat: captureFormat.present
+        ? captureFormat.value
+        : this.captureFormat,
+    captureFormatSource: captureFormatSource.present
+        ? captureFormatSource.value
+        : this.captureFormatSource,
+    rawFileSizeEvidence: rawFileSizeEvidence.present
+        ? rawFileSizeEvidence.value
+        : this.rawFileSizeEvidence,
   );
   CameraModule copyWithCompanion(CameraModulesCompanion data) {
     return CameraModule(
@@ -1423,6 +1552,15 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
       inCameraNoiseReduction: data.inCameraNoiseReduction.present
           ? data.inCameraNoiseReduction.value
           : this.inCameraNoiseReduction,
+      captureFormat: data.captureFormat.present
+          ? data.captureFormat.value
+          : this.captureFormat,
+      captureFormatSource: data.captureFormatSource.present
+          ? data.captureFormatSource.value
+          : this.captureFormatSource,
+      rawFileSizeEvidence: data.rawFileSizeEvidence.present
+          ? data.rawFileSizeEvidence.value
+          : this.rawFileSizeEvidence,
     );
   }
 
@@ -1453,7 +1591,10 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
           ..write('metadataMake: $metadataMake, ')
           ..write('metadataModel: $metadataModel, ')
           ..write('cameraClass: $cameraClass, ')
-          ..write('inCameraNoiseReduction: $inCameraNoiseReduction')
+          ..write('inCameraNoiseReduction: $inCameraNoiseReduction, ')
+          ..write('captureFormat: $captureFormat, ')
+          ..write('captureFormatSource: $captureFormatSource, ')
+          ..write('rawFileSizeEvidence: $rawFileSizeEvidence')
           ..write(')'))
         .toString();
   }
@@ -1485,6 +1626,9 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
     metadataModel,
     cameraClass,
     inCameraNoiseReduction,
+    captureFormat,
+    captureFormatSource,
+    rawFileSizeEvidence,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1514,7 +1658,10 @@ class CameraModule extends DataClass implements Insertable<CameraModule> {
           other.metadataMake == this.metadataMake &&
           other.metadataModel == this.metadataModel &&
           other.cameraClass == this.cameraClass &&
-          other.inCameraNoiseReduction == this.inCameraNoiseReduction);
+          other.inCameraNoiseReduction == this.inCameraNoiseReduction &&
+          other.captureFormat == this.captureFormat &&
+          other.captureFormatSource == this.captureFormatSource &&
+          other.rawFileSizeEvidence == this.rawFileSizeEvidence);
 }
 
 class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
@@ -1543,6 +1690,9 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
   final Value<String?> metadataModel;
   final Value<String> cameraClass;
   final Value<bool> inCameraNoiseReduction;
+  final Value<String?> captureFormat;
+  final Value<String?> captureFormatSource;
+  final Value<String?> rawFileSizeEvidence;
   const CameraModulesCompanion({
     this.id = const Value.absent(),
     this.deviceId = const Value.absent(),
@@ -1569,6 +1719,9 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
     this.metadataModel = const Value.absent(),
     this.cameraClass = const Value.absent(),
     this.inCameraNoiseReduction = const Value.absent(),
+    this.captureFormat = const Value.absent(),
+    this.captureFormatSource = const Value.absent(),
+    this.rawFileSizeEvidence = const Value.absent(),
   });
   CameraModulesCompanion.insert({
     this.id = const Value.absent(),
@@ -1596,6 +1749,9 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
     this.metadataModel = const Value.absent(),
     this.cameraClass = const Value.absent(),
     this.inCameraNoiseReduction = const Value.absent(),
+    this.captureFormat = const Value.absent(),
+    this.captureFormatSource = const Value.absent(),
+    this.rawFileSizeEvidence = const Value.absent(),
   }) : deviceId = Value(deviceId),
        name = Value(name),
        sensorWidthMm = Value(sensorWidthMm),
@@ -1629,6 +1785,9 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
     Expression<String>? metadataModel,
     Expression<String>? cameraClass,
     Expression<bool>? inCameraNoiseReduction,
+    Expression<String>? captureFormat,
+    Expression<String>? captureFormatSource,
+    Expression<String>? rawFileSizeEvidence,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1663,6 +1822,11 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
       if (cameraClass != null) 'camera_class': cameraClass,
       if (inCameraNoiseReduction != null)
         'in_camera_noise_reduction': inCameraNoiseReduction,
+      if (captureFormat != null) 'capture_format': captureFormat,
+      if (captureFormatSource != null)
+        'capture_format_source': captureFormatSource,
+      if (rawFileSizeEvidence != null)
+        'raw_file_size_evidence': rawFileSizeEvidence,
     });
   }
 
@@ -1692,6 +1856,9 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
     Value<String?>? metadataModel,
     Value<String>? cameraClass,
     Value<bool>? inCameraNoiseReduction,
+    Value<String?>? captureFormat,
+    Value<String?>? captureFormatSource,
+    Value<String?>? rawFileSizeEvidence,
   }) {
     return CameraModulesCompanion(
       id: id ?? this.id,
@@ -1721,6 +1888,9 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
       cameraClass: cameraClass ?? this.cameraClass,
       inCameraNoiseReduction:
           inCameraNoiseReduction ?? this.inCameraNoiseReduction,
+      captureFormat: captureFormat ?? this.captureFormat,
+      captureFormatSource: captureFormatSource ?? this.captureFormatSource,
+      rawFileSizeEvidence: rawFileSizeEvidence ?? this.rawFileSizeEvidence,
     );
   }
 
@@ -1814,6 +1984,19 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
         inCameraNoiseReduction.value,
       );
     }
+    if (captureFormat.present) {
+      map['capture_format'] = Variable<String>(captureFormat.value);
+    }
+    if (captureFormatSource.present) {
+      map['capture_format_source'] = Variable<String>(
+        captureFormatSource.value,
+      );
+    }
+    if (rawFileSizeEvidence.present) {
+      map['raw_file_size_evidence'] = Variable<String>(
+        rawFileSizeEvidence.value,
+      );
+    }
     return map;
   }
 
@@ -1844,7 +2027,10 @@ class CameraModulesCompanion extends UpdateCompanion<CameraModule> {
           ..write('metadataMake: $metadataMake, ')
           ..write('metadataModel: $metadataModel, ')
           ..write('cameraClass: $cameraClass, ')
-          ..write('inCameraNoiseReduction: $inCameraNoiseReduction')
+          ..write('inCameraNoiseReduction: $inCameraNoiseReduction, ')
+          ..write('captureFormat: $captureFormat, ')
+          ..write('captureFormatSource: $captureFormatSource, ')
+          ..write('rawFileSizeEvidence: $rawFileSizeEvidence')
           ..write(')'))
         .toString();
   }
@@ -6560,6 +6746,79 @@ class $CaptureBlocksTable extends CaptureBlocks
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _wbModeMeta = const VerificationMeta('wbMode');
+  @override
+  late final GeneratedColumn<String> wbMode = GeneratedColumn<String>(
+    'wb_mode',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wbPresetMeta = const VerificationMeta(
+    'wbPreset',
+  );
+  @override
+  late final GeneratedColumn<String> wbPreset = GeneratedColumn<String>(
+    'wb_preset',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wbKelvinMeta = const VerificationMeta(
+    'wbKelvin',
+  );
+  @override
+  late final GeneratedColumn<int> wbKelvin = GeneratedColumn<int>(
+    'wb_kelvin',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wbTintMeta = const VerificationMeta('wbTint');
+  @override
+  late final GeneratedColumn<double> wbTint = GeneratedColumn<double>(
+    'wb_tint',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _focusModeMeta = const VerificationMeta(
+    'focusMode',
+  );
+  @override
+  late final GeneratedColumn<String> focusMode = GeneratedColumn<String>(
+    'focus_mode',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fieldOriginsMeta = const VerificationMeta(
+    'fieldOrigins',
+  );
+  @override
+  late final GeneratedColumn<String> fieldOrigins = GeneratedColumn<String>(
+    'field_origins',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fileEvidenceMeta = const VerificationMeta(
+    'fileEvidence',
+  );
+  @override
+  late final GeneratedColumn<String> fileEvidence = GeneratedColumn<String>(
+    'file_evidence',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -6575,6 +6834,13 @@ class $CaptureBlocksTable extends CaptureBlocks
     gainValue,
     completedFrames,
     rejectedFrames,
+    wbMode,
+    wbPreset,
+    wbKelvin,
+    wbTint,
+    focusMode,
+    fieldOrigins,
+    fileEvidence,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -6686,6 +6952,54 @@ class $CaptureBlocksTable extends CaptureBlocks
         ),
       );
     }
+    if (data.containsKey('wb_mode')) {
+      context.handle(
+        _wbModeMeta,
+        wbMode.isAcceptableOrUnknown(data['wb_mode']!, _wbModeMeta),
+      );
+    }
+    if (data.containsKey('wb_preset')) {
+      context.handle(
+        _wbPresetMeta,
+        wbPreset.isAcceptableOrUnknown(data['wb_preset']!, _wbPresetMeta),
+      );
+    }
+    if (data.containsKey('wb_kelvin')) {
+      context.handle(
+        _wbKelvinMeta,
+        wbKelvin.isAcceptableOrUnknown(data['wb_kelvin']!, _wbKelvinMeta),
+      );
+    }
+    if (data.containsKey('wb_tint')) {
+      context.handle(
+        _wbTintMeta,
+        wbTint.isAcceptableOrUnknown(data['wb_tint']!, _wbTintMeta),
+      );
+    }
+    if (data.containsKey('focus_mode')) {
+      context.handle(
+        _focusModeMeta,
+        focusMode.isAcceptableOrUnknown(data['focus_mode']!, _focusModeMeta),
+      );
+    }
+    if (data.containsKey('field_origins')) {
+      context.handle(
+        _fieldOriginsMeta,
+        fieldOrigins.isAcceptableOrUnknown(
+          data['field_origins']!,
+          _fieldOriginsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('file_evidence')) {
+      context.handle(
+        _fileEvidenceMeta,
+        fileEvidence.isAcceptableOrUnknown(
+          data['file_evidence']!,
+          _fileEvidenceMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -6747,6 +7061,34 @@ class $CaptureBlocksTable extends CaptureBlocks
         DriftSqlType.int,
         data['${effectivePrefix}rejected_frames'],
       )!,
+      wbMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wb_mode'],
+      ),
+      wbPreset: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wb_preset'],
+      ),
+      wbKelvin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wb_kelvin'],
+      ),
+      wbTint: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}wb_tint'],
+      ),
+      focusMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}focus_mode'],
+      ),
+      fieldOrigins: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}field_origins'],
+      ),
+      fileEvidence: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_evidence'],
+      ),
     );
   }
 
@@ -6770,6 +7112,27 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
   final double? gainValue;
   final int completedFrames;
   final int rejectedFrames;
+
+  /// C1: `auto`, `preset`, `kelvin` or `custom`.
+  final String? wbMode;
+
+  /// C1: the preset name, for `preset` only.
+  final String? wbPreset;
+
+  /// C1: kelvins, for `kelvin` only.
+  final int? wbKelvin;
+
+  /// C1: the tint as the camera shows it, no unit claimed.
+  final double? wbTint;
+
+  /// C3 (AM-04): `af` or `mf`.
+  final String? focusMode;
+
+  /// C4: JSON `{field: {k, d, e?}}`.
+  final String? fieldOrigins;
+
+  /// C6: JSON file evidence for the block's storage.
+  final String? fileEvidence;
   const CaptureBlock({
     required this.id,
     required this.sessionLogId,
@@ -6784,6 +7147,13 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
     this.gainValue,
     required this.completedFrames,
     required this.rejectedFrames,
+    this.wbMode,
+    this.wbPreset,
+    this.wbKelvin,
+    this.wbTint,
+    this.focusMode,
+    this.fieldOrigins,
+    this.fileEvidence,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -6807,6 +7177,27 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
     }
     map['completed_frames'] = Variable<int>(completedFrames);
     map['rejected_frames'] = Variable<int>(rejectedFrames);
+    if (!nullToAbsent || wbMode != null) {
+      map['wb_mode'] = Variable<String>(wbMode);
+    }
+    if (!nullToAbsent || wbPreset != null) {
+      map['wb_preset'] = Variable<String>(wbPreset);
+    }
+    if (!nullToAbsent || wbKelvin != null) {
+      map['wb_kelvin'] = Variable<int>(wbKelvin);
+    }
+    if (!nullToAbsent || wbTint != null) {
+      map['wb_tint'] = Variable<double>(wbTint);
+    }
+    if (!nullToAbsent || focusMode != null) {
+      map['focus_mode'] = Variable<String>(focusMode);
+    }
+    if (!nullToAbsent || fieldOrigins != null) {
+      map['field_origins'] = Variable<String>(fieldOrigins);
+    }
+    if (!nullToAbsent || fileEvidence != null) {
+      map['file_evidence'] = Variable<String>(fileEvidence);
+    }
     return map;
   }
 
@@ -6831,6 +7222,27 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
           : Value(gainValue),
       completedFrames: Value(completedFrames),
       rejectedFrames: Value(rejectedFrames),
+      wbMode: wbMode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wbMode),
+      wbPreset: wbPreset == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wbPreset),
+      wbKelvin: wbKelvin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wbKelvin),
+      wbTint: wbTint == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wbTint),
+      focusMode: focusMode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(focusMode),
+      fieldOrigins: fieldOrigins == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fieldOrigins),
+      fileEvidence: fileEvidence == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileEvidence),
     );
   }
 
@@ -6857,6 +7269,13 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
       gainValue: serializer.fromJson<double?>(json['gainValue']),
       completedFrames: serializer.fromJson<int>(json['completedFrames']),
       rejectedFrames: serializer.fromJson<int>(json['rejectedFrames']),
+      wbMode: serializer.fromJson<String?>(json['wbMode']),
+      wbPreset: serializer.fromJson<String?>(json['wbPreset']),
+      wbKelvin: serializer.fromJson<int?>(json['wbKelvin']),
+      wbTint: serializer.fromJson<double?>(json['wbTint']),
+      focusMode: serializer.fromJson<String?>(json['focusMode']),
+      fieldOrigins: serializer.fromJson<String?>(json['fieldOrigins']),
+      fileEvidence: serializer.fromJson<String?>(json['fileEvidence']),
     );
   }
   @override
@@ -6876,6 +7295,13 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
       'gainValue': serializer.toJson<double?>(gainValue),
       'completedFrames': serializer.toJson<int>(completedFrames),
       'rejectedFrames': serializer.toJson<int>(rejectedFrames),
+      'wbMode': serializer.toJson<String?>(wbMode),
+      'wbPreset': serializer.toJson<String?>(wbPreset),
+      'wbKelvin': serializer.toJson<int?>(wbKelvin),
+      'wbTint': serializer.toJson<double?>(wbTint),
+      'focusMode': serializer.toJson<String?>(focusMode),
+      'fieldOrigins': serializer.toJson<String?>(fieldOrigins),
+      'fileEvidence': serializer.toJson<String?>(fileEvidence),
     };
   }
 
@@ -6893,6 +7319,13 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
     Value<double?> gainValue = const Value.absent(),
     int? completedFrames,
     int? rejectedFrames,
+    Value<String?> wbMode = const Value.absent(),
+    Value<String?> wbPreset = const Value.absent(),
+    Value<int?> wbKelvin = const Value.absent(),
+    Value<double?> wbTint = const Value.absent(),
+    Value<String?> focusMode = const Value.absent(),
+    Value<String?> fieldOrigins = const Value.absent(),
+    Value<String?> fileEvidence = const Value.absent(),
   }) => CaptureBlock(
     id: id ?? this.id,
     sessionLogId: sessionLogId ?? this.sessionLogId,
@@ -6909,6 +7342,13 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
     gainValue: gainValue.present ? gainValue.value : this.gainValue,
     completedFrames: completedFrames ?? this.completedFrames,
     rejectedFrames: rejectedFrames ?? this.rejectedFrames,
+    wbMode: wbMode.present ? wbMode.value : this.wbMode,
+    wbPreset: wbPreset.present ? wbPreset.value : this.wbPreset,
+    wbKelvin: wbKelvin.present ? wbKelvin.value : this.wbKelvin,
+    wbTint: wbTint.present ? wbTint.value : this.wbTint,
+    focusMode: focusMode.present ? focusMode.value : this.focusMode,
+    fieldOrigins: fieldOrigins.present ? fieldOrigins.value : this.fieldOrigins,
+    fileEvidence: fileEvidence.present ? fileEvidence.value : this.fileEvidence,
   );
   CaptureBlock copyWithCompanion(CaptureBlocksCompanion data) {
     return CaptureBlock(
@@ -6939,6 +7379,17 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
       rejectedFrames: data.rejectedFrames.present
           ? data.rejectedFrames.value
           : this.rejectedFrames,
+      wbMode: data.wbMode.present ? data.wbMode.value : this.wbMode,
+      wbPreset: data.wbPreset.present ? data.wbPreset.value : this.wbPreset,
+      wbKelvin: data.wbKelvin.present ? data.wbKelvin.value : this.wbKelvin,
+      wbTint: data.wbTint.present ? data.wbTint.value : this.wbTint,
+      focusMode: data.focusMode.present ? data.focusMode.value : this.focusMode,
+      fieldOrigins: data.fieldOrigins.present
+          ? data.fieldOrigins.value
+          : this.fieldOrigins,
+      fileEvidence: data.fileEvidence.present
+          ? data.fileEvidence.value
+          : this.fileEvidence,
     );
   }
 
@@ -6957,7 +7408,14 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
           ..write('gainKind: $gainKind, ')
           ..write('gainValue: $gainValue, ')
           ..write('completedFrames: $completedFrames, ')
-          ..write('rejectedFrames: $rejectedFrames')
+          ..write('rejectedFrames: $rejectedFrames, ')
+          ..write('wbMode: $wbMode, ')
+          ..write('wbPreset: $wbPreset, ')
+          ..write('wbKelvin: $wbKelvin, ')
+          ..write('wbTint: $wbTint, ')
+          ..write('focusMode: $focusMode, ')
+          ..write('fieldOrigins: $fieldOrigins, ')
+          ..write('fileEvidence: $fileEvidence')
           ..write(')'))
         .toString();
   }
@@ -6977,6 +7435,13 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
     gainValue,
     completedFrames,
     rejectedFrames,
+    wbMode,
+    wbPreset,
+    wbKelvin,
+    wbTint,
+    focusMode,
+    fieldOrigins,
+    fileEvidence,
   );
   @override
   bool operator ==(Object other) =>
@@ -6994,7 +7459,14 @@ class CaptureBlock extends DataClass implements Insertable<CaptureBlock> {
           other.gainKind == this.gainKind &&
           other.gainValue == this.gainValue &&
           other.completedFrames == this.completedFrames &&
-          other.rejectedFrames == this.rejectedFrames);
+          other.rejectedFrames == this.rejectedFrames &&
+          other.wbMode == this.wbMode &&
+          other.wbPreset == this.wbPreset &&
+          other.wbKelvin == this.wbKelvin &&
+          other.wbTint == this.wbTint &&
+          other.focusMode == this.focusMode &&
+          other.fieldOrigins == this.fieldOrigins &&
+          other.fileEvidence == this.fileEvidence);
 }
 
 class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
@@ -7011,6 +7483,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
   final Value<double?> gainValue;
   final Value<int> completedFrames;
   final Value<int> rejectedFrames;
+  final Value<String?> wbMode;
+  final Value<String?> wbPreset;
+  final Value<int?> wbKelvin;
+  final Value<double?> wbTint;
+  final Value<String?> focusMode;
+  final Value<String?> fieldOrigins;
+  final Value<String?> fileEvidence;
   const CaptureBlocksCompanion({
     this.id = const Value.absent(),
     this.sessionLogId = const Value.absent(),
@@ -7025,6 +7504,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
     this.gainValue = const Value.absent(),
     this.completedFrames = const Value.absent(),
     this.rejectedFrames = const Value.absent(),
+    this.wbMode = const Value.absent(),
+    this.wbPreset = const Value.absent(),
+    this.wbKelvin = const Value.absent(),
+    this.wbTint = const Value.absent(),
+    this.focusMode = const Value.absent(),
+    this.fieldOrigins = const Value.absent(),
+    this.fileEvidence = const Value.absent(),
   });
   CaptureBlocksCompanion.insert({
     this.id = const Value.absent(),
@@ -7040,6 +7526,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
     this.gainValue = const Value.absent(),
     this.completedFrames = const Value.absent(),
     this.rejectedFrames = const Value.absent(),
+    this.wbMode = const Value.absent(),
+    this.wbPreset = const Value.absent(),
+    this.wbKelvin = const Value.absent(),
+    this.wbTint = const Value.absent(),
+    this.focusMode = const Value.absent(),
+    this.fieldOrigins = const Value.absent(),
+    this.fileEvidence = const Value.absent(),
   }) : sessionLogId = Value(sessionLogId),
        frameType = Value(frameType),
        exposureTimeSeconds = Value(exposureTimeSeconds),
@@ -7058,6 +7551,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
     Expression<double>? gainValue,
     Expression<int>? completedFrames,
     Expression<int>? rejectedFrames,
+    Expression<String>? wbMode,
+    Expression<String>? wbPreset,
+    Expression<int>? wbKelvin,
+    Expression<double>? wbTint,
+    Expression<String>? focusMode,
+    Expression<String>? fieldOrigins,
+    Expression<String>? fileEvidence,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -7074,6 +7574,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
       if (gainValue != null) 'gain_value': gainValue,
       if (completedFrames != null) 'completed_frames': completedFrames,
       if (rejectedFrames != null) 'rejected_frames': rejectedFrames,
+      if (wbMode != null) 'wb_mode': wbMode,
+      if (wbPreset != null) 'wb_preset': wbPreset,
+      if (wbKelvin != null) 'wb_kelvin': wbKelvin,
+      if (wbTint != null) 'wb_tint': wbTint,
+      if (focusMode != null) 'focus_mode': focusMode,
+      if (fieldOrigins != null) 'field_origins': fieldOrigins,
+      if (fileEvidence != null) 'file_evidence': fileEvidence,
     });
   }
 
@@ -7091,6 +7598,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
     Value<double?>? gainValue,
     Value<int>? completedFrames,
     Value<int>? rejectedFrames,
+    Value<String?>? wbMode,
+    Value<String?>? wbPreset,
+    Value<int?>? wbKelvin,
+    Value<double?>? wbTint,
+    Value<String?>? focusMode,
+    Value<String?>? fieldOrigins,
+    Value<String?>? fileEvidence,
   }) {
     return CaptureBlocksCompanion(
       id: id ?? this.id,
@@ -7106,6 +7620,13 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
       gainValue: gainValue ?? this.gainValue,
       completedFrames: completedFrames ?? this.completedFrames,
       rejectedFrames: rejectedFrames ?? this.rejectedFrames,
+      wbMode: wbMode ?? this.wbMode,
+      wbPreset: wbPreset ?? this.wbPreset,
+      wbKelvin: wbKelvin ?? this.wbKelvin,
+      wbTint: wbTint ?? this.wbTint,
+      focusMode: focusMode ?? this.focusMode,
+      fieldOrigins: fieldOrigins ?? this.fieldOrigins,
+      fileEvidence: fileEvidence ?? this.fileEvidence,
     );
   }
 
@@ -7153,6 +7674,27 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
     if (rejectedFrames.present) {
       map['rejected_frames'] = Variable<int>(rejectedFrames.value);
     }
+    if (wbMode.present) {
+      map['wb_mode'] = Variable<String>(wbMode.value);
+    }
+    if (wbPreset.present) {
+      map['wb_preset'] = Variable<String>(wbPreset.value);
+    }
+    if (wbKelvin.present) {
+      map['wb_kelvin'] = Variable<int>(wbKelvin.value);
+    }
+    if (wbTint.present) {
+      map['wb_tint'] = Variable<double>(wbTint.value);
+    }
+    if (focusMode.present) {
+      map['focus_mode'] = Variable<String>(focusMode.value);
+    }
+    if (fieldOrigins.present) {
+      map['field_origins'] = Variable<String>(fieldOrigins.value);
+    }
+    if (fileEvidence.present) {
+      map['file_evidence'] = Variable<String>(fileEvidence.value);
+    }
     return map;
   }
 
@@ -7171,7 +7713,14 @@ class CaptureBlocksCompanion extends UpdateCompanion<CaptureBlock> {
           ..write('gainKind: $gainKind, ')
           ..write('gainValue: $gainValue, ')
           ..write('completedFrames: $completedFrames, ')
-          ..write('rejectedFrames: $rejectedFrames')
+          ..write('rejectedFrames: $rejectedFrames, ')
+          ..write('wbMode: $wbMode, ')
+          ..write('wbPreset: $wbPreset, ')
+          ..write('wbKelvin: $wbKelvin, ')
+          ..write('wbTint: $wbTint, ')
+          ..write('focusMode: $focusMode, ')
+          ..write('fieldOrigins: $fieldOrigins, ')
+          ..write('fileEvidence: $fileEvidence')
           ..write(')'))
         .toString();
   }
@@ -8541,6 +9090,9 @@ typedef $$CameraModulesTableCreateCompanionBuilder =
       Value<String?> metadataModel,
       Value<String> cameraClass,
       Value<bool> inCameraNoiseReduction,
+      Value<String?> captureFormat,
+      Value<String?> captureFormatSource,
+      Value<String?> rawFileSizeEvidence,
     });
 typedef $$CameraModulesTableUpdateCompanionBuilder =
     CameraModulesCompanion Function({
@@ -8569,6 +9121,9 @@ typedef $$CameraModulesTableUpdateCompanionBuilder =
       Value<String?> metadataModel,
       Value<String> cameraClass,
       Value<bool> inCameraNoiseReduction,
+      Value<String?> captureFormat,
+      Value<String?> captureFormatSource,
+      Value<String?> rawFileSizeEvidence,
     });
 
 final class $$CameraModulesTableReferences
@@ -8741,6 +9296,21 @@ class $$CameraModulesTableFilterComposer
 
   ColumnFilters<bool> get inCameraNoiseReduction => $composableBuilder(
     column: $table.inCameraNoiseReduction,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get captureFormat => $composableBuilder(
+    column: $table.captureFormat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get captureFormatSource => $composableBuilder(
+    column: $table.captureFormatSource,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawFileSizeEvidence => $composableBuilder(
+    column: $table.rawFileSizeEvidence,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8922,6 +9492,21 @@ class $$CameraModulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get captureFormat => $composableBuilder(
+    column: $table.captureFormat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get captureFormatSource => $composableBuilder(
+    column: $table.captureFormatSource,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawFileSizeEvidence => $composableBuilder(
+    column: $table.rawFileSizeEvidence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$DevicesTableOrderingComposer get deviceId {
     final $$DevicesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -9067,6 +9652,21 @@ class $$CameraModulesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get captureFormat => $composableBuilder(
+    column: $table.captureFormat,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get captureFormatSource => $composableBuilder(
+    column: $table.captureFormatSource,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get rawFileSizeEvidence => $composableBuilder(
+    column: $table.rawFileSizeEvidence,
+    builder: (column) => column,
+  );
+
   $$DevicesTableAnnotationComposer get deviceId {
     final $$DevicesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -9169,6 +9769,9 @@ class $$CameraModulesTableTableManager
                 Value<String?> metadataModel = const Value.absent(),
                 Value<String> cameraClass = const Value.absent(),
                 Value<bool> inCameraNoiseReduction = const Value.absent(),
+                Value<String?> captureFormat = const Value.absent(),
+                Value<String?> captureFormatSource = const Value.absent(),
+                Value<String?> rawFileSizeEvidence = const Value.absent(),
               }) => CameraModulesCompanion(
                 id: id,
                 deviceId: deviceId,
@@ -9195,6 +9798,9 @@ class $$CameraModulesTableTableManager
                 metadataModel: metadataModel,
                 cameraClass: cameraClass,
                 inCameraNoiseReduction: inCameraNoiseReduction,
+                captureFormat: captureFormat,
+                captureFormatSource: captureFormatSource,
+                rawFileSizeEvidence: rawFileSizeEvidence,
               ),
           createCompanionCallback:
               ({
@@ -9223,6 +9829,9 @@ class $$CameraModulesTableTableManager
                 Value<String?> metadataModel = const Value.absent(),
                 Value<String> cameraClass = const Value.absent(),
                 Value<bool> inCameraNoiseReduction = const Value.absent(),
+                Value<String?> captureFormat = const Value.absent(),
+                Value<String?> captureFormatSource = const Value.absent(),
+                Value<String?> rawFileSizeEvidence = const Value.absent(),
               }) => CameraModulesCompanion.insert(
                 id: id,
                 deviceId: deviceId,
@@ -9249,6 +9858,9 @@ class $$CameraModulesTableTableManager
                 metadataModel: metadataModel,
                 cameraClass: cameraClass,
                 inCameraNoiseReduction: inCameraNoiseReduction,
+                captureFormat: captureFormat,
+                captureFormatSource: captureFormatSource,
+                rawFileSizeEvidence: rawFileSizeEvidence,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -12203,6 +12815,13 @@ typedef $$CaptureBlocksTableCreateCompanionBuilder =
       Value<double?> gainValue,
       Value<int> completedFrames,
       Value<int> rejectedFrames,
+      Value<String?> wbMode,
+      Value<String?> wbPreset,
+      Value<int?> wbKelvin,
+      Value<double?> wbTint,
+      Value<String?> focusMode,
+      Value<String?> fieldOrigins,
+      Value<String?> fileEvidence,
     });
 typedef $$CaptureBlocksTableUpdateCompanionBuilder =
     CaptureBlocksCompanion Function({
@@ -12219,6 +12838,13 @@ typedef $$CaptureBlocksTableUpdateCompanionBuilder =
       Value<double?> gainValue,
       Value<int> completedFrames,
       Value<int> rejectedFrames,
+      Value<String?> wbMode,
+      Value<String?> wbPreset,
+      Value<int?> wbKelvin,
+      Value<double?> wbTint,
+      Value<String?> focusMode,
+      Value<String?> fieldOrigins,
+      Value<String?> fileEvidence,
     });
 
 final class $$CaptureBlocksTableReferences
@@ -12332,6 +12958,41 @@ class $$CaptureBlocksTableFilterComposer
 
   ColumnFilters<int> get rejectedFrames => $composableBuilder(
     column: $table.rejectedFrames,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get wbMode => $composableBuilder(
+    column: $table.wbMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get wbPreset => $composableBuilder(
+    column: $table.wbPreset,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get wbKelvin => $composableBuilder(
+    column: $table.wbKelvin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get wbTint => $composableBuilder(
+    column: $table.wbTint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get focusMode => $composableBuilder(
+    column: $table.focusMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fieldOrigins => $composableBuilder(
+    column: $table.fieldOrigins,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fileEvidence => $composableBuilder(
+    column: $table.fileEvidence,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12453,6 +13114,41 @@ class $$CaptureBlocksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get wbMode => $composableBuilder(
+    column: $table.wbMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get wbPreset => $composableBuilder(
+    column: $table.wbPreset,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get wbKelvin => $composableBuilder(
+    column: $table.wbKelvin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get wbTint => $composableBuilder(
+    column: $table.wbTint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get focusMode => $composableBuilder(
+    column: $table.focusMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fieldOrigins => $composableBuilder(
+    column: $table.fieldOrigins,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fileEvidence => $composableBuilder(
+    column: $table.fileEvidence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SessionLogsTableOrderingComposer get sessionLogId {
     final $$SessionLogsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -12531,6 +13227,31 @@ class $$CaptureBlocksTableAnnotationComposer
 
   GeneratedColumn<int> get rejectedFrames => $composableBuilder(
     column: $table.rejectedFrames,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get wbMode =>
+      $composableBuilder(column: $table.wbMode, builder: (column) => column);
+
+  GeneratedColumn<String> get wbPreset =>
+      $composableBuilder(column: $table.wbPreset, builder: (column) => column);
+
+  GeneratedColumn<int> get wbKelvin =>
+      $composableBuilder(column: $table.wbKelvin, builder: (column) => column);
+
+  GeneratedColumn<double> get wbTint =>
+      $composableBuilder(column: $table.wbTint, builder: (column) => column);
+
+  GeneratedColumn<String> get focusMode =>
+      $composableBuilder(column: $table.focusMode, builder: (column) => column);
+
+  GeneratedColumn<String> get fieldOrigins => $composableBuilder(
+    column: $table.fieldOrigins,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fileEvidence => $composableBuilder(
+    column: $table.fileEvidence,
     builder: (column) => column,
   );
 
@@ -12624,6 +13345,13 @@ class $$CaptureBlocksTableTableManager
                 Value<double?> gainValue = const Value.absent(),
                 Value<int> completedFrames = const Value.absent(),
                 Value<int> rejectedFrames = const Value.absent(),
+                Value<String?> wbMode = const Value.absent(),
+                Value<String?> wbPreset = const Value.absent(),
+                Value<int?> wbKelvin = const Value.absent(),
+                Value<double?> wbTint = const Value.absent(),
+                Value<String?> focusMode = const Value.absent(),
+                Value<String?> fieldOrigins = const Value.absent(),
+                Value<String?> fileEvidence = const Value.absent(),
               }) => CaptureBlocksCompanion(
                 id: id,
                 sessionLogId: sessionLogId,
@@ -12638,6 +13366,13 @@ class $$CaptureBlocksTableTableManager
                 gainValue: gainValue,
                 completedFrames: completedFrames,
                 rejectedFrames: rejectedFrames,
+                wbMode: wbMode,
+                wbPreset: wbPreset,
+                wbKelvin: wbKelvin,
+                wbTint: wbTint,
+                focusMode: focusMode,
+                fieldOrigins: fieldOrigins,
+                fileEvidence: fileEvidence,
               ),
           createCompanionCallback:
               ({
@@ -12654,6 +13389,13 @@ class $$CaptureBlocksTableTableManager
                 Value<double?> gainValue = const Value.absent(),
                 Value<int> completedFrames = const Value.absent(),
                 Value<int> rejectedFrames = const Value.absent(),
+                Value<String?> wbMode = const Value.absent(),
+                Value<String?> wbPreset = const Value.absent(),
+                Value<int?> wbKelvin = const Value.absent(),
+                Value<double?> wbTint = const Value.absent(),
+                Value<String?> focusMode = const Value.absent(),
+                Value<String?> fieldOrigins = const Value.absent(),
+                Value<String?> fileEvidence = const Value.absent(),
               }) => CaptureBlocksCompanion.insert(
                 id: id,
                 sessionLogId: sessionLogId,
@@ -12668,6 +13410,13 @@ class $$CaptureBlocksTableTableManager
                 gainValue: gainValue,
                 completedFrames: completedFrames,
                 rejectedFrames: rejectedFrames,
+                wbMode: wbMode,
+                wbPreset: wbPreset,
+                wbKelvin: wbKelvin,
+                wbTint: wbTint,
+                focusMode: focusMode,
+                fieldOrigins: fieldOrigins,
+                fileEvidence: fileEvidence,
               ),
           withReferenceMapper: (p0) => p0
               .map(

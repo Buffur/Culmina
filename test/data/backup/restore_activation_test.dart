@@ -178,15 +178,15 @@ void main() {
       setUp(() async {
         final good = await _currentDatabase(tmp, 'Backup site');
         // Cut after the header and the first pages: the header still says
-        // version 25, the file is a SQLite file, its tables are gone.
+        // version 26, the file is a SQLite file, its tables are gone.
         final truncated = Uint8List.sublistView(good, 0, good.length ~/ 2);
         // A real SQLite file stamped at the current version with no tables.
         final emptyFile = File(p.join(tmp.path, 'empty.sqlite'));
-        await _rawEdit(emptyFile, 25, ['CREATE TABLE unrelated (x INTEGER);']);
+        await _rawEdit(emptyFile, 26, ['CREATE TABLE unrelated (x INTEGER);']);
         // A current database with one table's column removed.
         final partialFile = File(p.join(tmp.path, 'partial.sqlite'));
         await partialFile.writeAsBytes(good);
-        await _rawEdit(partialFile, 25, [
+        await _rawEdit(partialFile, 26, [
           'ALTER TABLE session_logs DROP COLUMN name;',
         ]);
         unusable = {
@@ -207,7 +207,7 @@ void main() {
           final bytes = _zip(unusable[kind]!);
 
           // The header check alone would accept it (TD-106).
-          expect(service(bytes).check(bytes).preview.schemaVersion, 25);
+          expect(service(bytes).check(bytes).preview.schemaVersion, 26);
           await expectLater(
             service(bytes).pick(),
             throwsA(
@@ -256,7 +256,7 @@ void main() {
           final liveBefore = await live.readAsBytes();
           final newerFile = File(p.join(tmp.path, 'newer.sqlite'));
           await newerFile.writeAsBytes(await _currentDatabase(tmp, 'Future'));
-          await _rawEdit(newerFile, 26, const []);
+          await _rawEdit(newerFile, 27, const []);
           final bytes = await newerFile.readAsBytes();
           await expectLater(
             service(_zip(bytes)).pick(),
@@ -270,7 +270,7 @@ void main() {
           );
           // A header that hides the newer database is refused too.
           await expectLater(
-            service(_zip(bytes, headerVersion: 25)).pick(),
+            service(_zip(bytes, headerVersion: 26)).pick(),
             throwsA(isA<BackupException>()),
           );
           await BackupStaging.stage(
@@ -329,7 +329,7 @@ void main() {
           .customSelect('PRAGMA user_version')
           .getSingle()
           .then((r) => r.data.values.single),
-      25,
+      26,
     );
     expect(await db.customSelect('PRAGMA foreign_key_check').get(), isEmpty);
     expect(
