@@ -40,6 +40,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'domain/services/night_weather_service.dart';
 import 'presentation/viewmodels/theme_viewmodel.dart';
+import 'presentation/screens/settings/backup_section.dart';
 import 'presentation/screens/startup/unsupported_database_screen.dart';
 import 'presentation/widgets/night_clock.dart';
 import 'core/config/app_identity.dart';
@@ -56,11 +57,15 @@ void main() async {
 }
 
 /// Opens the database and starts the app; run again after the recovery
-/// screen resets a refused database (S1.5).
+/// screen resets a refused database (S1.5), and after a confirmed restore
+/// ([_restartForRestore]).
 Future<void> _start() async {
-  // TASK 14.4: a restore confirmed last time replaces the database before
-  // it opens (the replaced file is kept as a safety copy); since S8.9 the
-  // backup's settings come with it and no stale id survives (ENG-14).
+  // F01 (TASK 14.4, D7 A): a confirmed restore is staged and the app
+  // restarts at once; the staged database is checked again and replaces the
+  // live one before it opens, and an interrupted restore is completed. The
+  // backup's settings come with it and no stale id survives (S8.9, ENG-14).
+  // The replaced file is kept as the one safety copy (D2 A). The outcome is
+  // reported once by the app ([RestoreOutcomeNotice]).
   try {
     await BackupStaging.apply(
       await getApplicationDocumentsDirectory(),
@@ -144,7 +149,11 @@ Future<void> _start() async {
     firstRun: SharedPrefsFirstRunRepository(),
     privacy: SharedPrefsPrivacyPreferencesRepository(),
     exporter: ShareSessionExporter(),
-    backup: FileBackupService(database, sessionRepo),
+    backup: FileBackupService(
+      database,
+      sessionRepo,
+      restartApp: () => _restartForRestore(database),
+    ),
     sessions: sessionRepo,
     // ADR-017 §6: capture files are read in place, on Android only.
     captureFiles: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
@@ -182,6 +191,21 @@ Future<void> _start() async {
   );
 }
 
+/// D7 A: a confirmed restore applies at once. The app is replaced by a
+/// screen that cannot be edited, the database closes, and [_start] applies
+/// the staged restore before opening it again; returning from Recents in
+/// the meantime finds the same screen.
+Future<void> _restartForRestore(AppDatabase database) async {
+  runApp(RestoringBackupApp(theme: AppTheme.light, darkTheme: AppTheme.dark));
+  await WidgetsBinding.instance.endOfFrame;
+  try {
+    await database.close();
+  } catch (e) {
+    AppLog.warning('backup', 'Database not closed before restore', error: e);
+  }
+  await _start();
+}
+
 class AstroPlanApp extends StatelessWidget {
   const AstroPlanApp({super.key});
 
@@ -203,7 +227,7 @@ class AstroPlanApp extends StatelessWidget {
       builder: (context, child) {
         final content = KeyedSubtree(
           key: _content,
-          child: NightClock(child: child!),
+          child: RestoreOutcomeNotice(child: NightClock(child: child!)),
         );
         return themeVM.isFieldMode
             ? ColorFiltered(colorFilter: AppTheme.fieldFilter, child: content)

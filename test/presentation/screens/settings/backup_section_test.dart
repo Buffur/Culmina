@@ -1,6 +1,10 @@
-// TASK 14.4: the Settings backup section — back up, restore (picked,
-// checked, confirmed, staged for the next start), a refused file explained,
-// a staged restore cancelled.
+// TASK 14.4, F01 (D2/D7 A, UX-S R1, TD-105): the Settings backup section —
+// back up; restore picked, checked, confirmed and applied at once (no
+// pending state, no Undo); Back up first returns to the same confirmation
+// only after success; a refusal says the current data is unchanged; the
+// next app instance reports the outcome once.
+
+import 'dart:io';
 
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -23,13 +27,20 @@ class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
 class _FakeBackup implements BackupService {
   int backups = 0;
-  bool staged = false;
-  Object? stagedFile;
+  Object? restored;
   BackupProblem? refuse;
   bool cancelPick = false;
+  bool failBackup = false;
+  bool failRestore = false;
+  int sessions = 12;
+  RestoreOutcome? stored;
+  int cleared = 0;
 
   @override
-  Future<void> backUpAndShare() async => backups++;
+  Future<void> backUpAndShare() async {
+    if (failBackup) throw StateError('share failed');
+    backups++;
+  }
 
   @override
   Future<({BackupPreview preview, Object file})?> pick() async {
@@ -39,24 +50,27 @@ class _FakeBackup implements BackupService {
       preview: BackupPreview(
         createdAtUtc: DateTime.utc(2026, 12, 16, 8),
         schemaVersion: 17,
-        appVersion: '1.0.0',
-        sessionCount: 12,
+        appVersion: '0.9.0',
+        sessionCount: sessions,
       ),
       file: 'backup-bytes',
     );
   }
 
   @override
-  Future<void> stage(Object file) async {
-    stagedFile = file;
-    staged = true;
+  Future<void> restoreAndRestart(Object file) async {
+    if (failRestore) throw const FileSystemException('disk full');
+    restored = file;
   }
 
   @override
-  Future<bool> hasStagedRestore() async => staged;
+  Future<RestoreOutcome?> outcome() async => stored;
 
   @override
-  Future<void> cancelStagedRestore() async => staged = false;
+  Future<void> clearOutcome() async {
+    stored = null;
+    cleared++;
+  }
 }
 
 void main() {
@@ -101,11 +115,19 @@ void main() {
     expect(find.text('Backup file created'), findsOneWidget); // S9.8
   });
 
-  testWidgets('restore: the preview is confirmed, then staged', (tester) async {
-    await pump(tester);
+  Future<void> openConfirmation(WidgetTester tester) async {
     await tester.tap(find.byKey(const Key('backup.restore')));
     await tester.pumpAndSettle();
-    expect(find.textContaining('with 12 sessions'), findsOneWidget);
+  }
+
+  testWidgets('restore: the preview is confirmed, then applied at once', (
+    tester,
+  ) async {
+    await pump(tester);
+    await openConfirmation(tester);
+    // TD-105: the backup's version, not this app's name; plans, plural.
+    expect(find.textContaining('by version 0.9.0, with 12 plans'), findsOne);
+    expect(find.textContaining('by Culmina'), findsNothing);
     // S13.2, TD-093: the confirmation names the backup's date and time.
     final made = DateTime.utc(2026, 12, 16, 8).toLocal();
     const months = [
@@ -129,40 +151,92 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('(device zone, UTC'), findsOneWidget);
-    expect(backup.staged, isFalse, reason: 'nothing before confirmation');
-    await tester.tap(find.byKey(const Key('confirm.action')) /* S9.4 */);
-    await tester.pumpAndSettle();
-    expect(backup.stagedFile, 'backup-bytes');
-    expect(find.byKey(const Key('backup.staged')), findsOneWidget);
-    expect(
-      find.text('Restore ready: it runs when you reopen the app'),
-      findsOneWidget,
-    ); // S9.8
+    // D2 A: truthful recovery, no Undo and no unreachable safety copy.
+    expect(find.textContaining('cannot be undone in the app'), findsOne);
+    expect(find.textContaining('safety copy'), findsNothing);
+    expect(find.text('Undo'), findsNothing);
+    expect(find.byKey(const Key('restore.backUpFirst')), findsOneWidget);
+    expect(backup.restored, isNull, reason: 'nothing before confirmation');
 
-    await tester.tap(find.byKey(const Key('backup.staged'))); // cancel
+    await tester.tap(find.byKey(const Key('confirm.action')));
     await tester.pumpAndSettle();
-    expect(backup.staged, isFalse);
-    expect(find.text('Restore cancelled'), findsOneWidget); // S9.8
-    expect(find.byKey(const Key('backup.restore')), findsOneWidget);
+    expect(backup.restored, 'backup-bytes');
+    // D7 A: no pending restore is ever shown.
+    expect(find.byKey(const Key('backup.staged')), findsNothing);
+    expect(find.textContaining('Restore ready'), findsNothing);
   });
 
-  testWidgets('cancelling the confirmation stages nothing', (tester) async {
+  testWidgets('TD-105: one plan is singular', (tester) async {
     await pump(tester);
-    await tester.tap(find.byKey(const Key('backup.restore')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Cancel'));
-    await tester.pumpAndSettle();
-    expect(backup.staged, isFalse);
+    backup.sessions = 1;
+    await openConfirmation(tester);
+    expect(find.textContaining('with 1 plan.'), findsOne);
   });
 
-  testWidgets('a backup from a newer app is refused with the reason', (
+  testWidgets('Back up first returns to the same confirmation after success', (
     tester,
   ) async {
     await pump(tester);
-    backup.refuse = BackupProblem.newerSchema;
-    await tester.tap(find.byKey(const Key('backup.restore')));
+    await openConfirmation(tester);
+    await tester.tap(find.byKey(const Key('restore.backUpFirst')));
     await tester.pumpAndSettle();
-    expect(find.textContaining('newer version of Culmina'), findsOneWidget);
-    expect(backup.staged, isFalse);
+    expect(backup.backups, 1);
+    expect(backup.restored, isNull);
+    expect(find.text('Restore this backup?'), findsOneWidget);
+    expect(find.textContaining('with 12 plans'), findsOne);
+    await tester.tap(find.byKey(const Key('confirm.action')));
+    await tester.pumpAndSettle();
+    expect(backup.restored, 'backup-bytes');
   });
+
+  testWidgets('a failed Back up first never restores', (tester) async {
+    await pump(tester);
+    backup.failBackup = true;
+    await openConfirmation(tester);
+    await tester.tap(find.byKey(const Key('restore.backUpFirst')));
+    await tester.pumpAndSettle();
+    expect(find.text('Restore this backup?'), findsNothing);
+    expect(find.textContaining("Couldn't back up"), findsOneWidget);
+    expect(backup.restored, isNull);
+  });
+
+  testWidgets('cancelling the confirmation restores nothing', (tester) async {
+    await pump(tester);
+    await openConfirmation(tester);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(backup.restored, isNull);
+  });
+
+  testWidgets('a restore that cannot start says the data is unchanged', (
+    tester,
+  ) async {
+    await pump(tester);
+    backup.failRestore = true;
+    await openConfirmation(tester);
+    await tester.tap(find.byKey(const Key('confirm.action')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Your current data is unchanged'), findsOne);
+    expect(find.byKey(const Key('backup.restore')), findsOneWidget);
+  });
+
+  for (final (problem, reason) in [
+    (BackupProblem.newerSchema, 'newer version of Culmina'),
+    (BackupProblem.unusable, 'damaged or incomplete'),
+    (BackupProblem.notABackup, 'not a Culmina backup'),
+  ]) {
+    testWidgets('a refused file (${problem.name}) is explained at pick time', (
+      tester,
+    ) async {
+      await pump(tester);
+      backup.refuse = problem;
+      await tester.tap(find.byKey(const Key('backup.restore')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('The backup was not applied'), findsOne);
+      expect(find.textContaining(reason), findsOneWidget);
+      expect(find.textContaining('Your current data is unchanged'), findsOne);
+      expect(find.text('Restore this backup?'), findsNothing);
+      expect(backup.restored, isNull);
+    });
+  }
 }

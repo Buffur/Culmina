@@ -524,6 +524,7 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** Phases 13, 15.
 
 ## F-44 — Export / interoperability manifest
+- **F01 (2026-10-18), backup restore:** a picked backup's database is checked completely before the confirmation (integrity, schema, every row, repository reads, through the app's own connection); the confirmation names the backup's version and plan count and offers Back up first; Restore and restart applies it at once, checked again, with interrupted activation completed or rolled back; the next start reports the outcome once (TD-106 code, TD-105). Phone rehearsal: G2.
 - **TASK 14.3 (commit `a234ff6`):** manifest v2 (`docs/EXPORT_MANIFEST.md`) exported per session and for all sessions as a shared `.json` file with a text summary; v1 still readable; tested round trip. Import is deferred (roadmap).
 - **Status:** Implemented *(export; was Prototype)*
 - **Current implementation:** `SessionLog.toJson()` / `fromJson()` (manifest v1) with tests; text sharing is live (F-41).

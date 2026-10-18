@@ -250,20 +250,32 @@ allows reuse.
   version 2, `preferences.json` (`BackupPreferences`): `{"version": 1, "bool": {...}, "int":
   {...}, "double": {...}}` holding the planning preferences, the display preferences (field
   mode, the `section.*` open states), `activeLocationId` and `firstRunDone`.
-- **Restore:** refused when the file is not a backup, when the header disagrees with the
-  database's own `user_version`, when the schema is newer than the app's, or below the v8
-  floor; otherwise confirmed, staged as `astroplan.restore.sqlite` and swapped in by
-  `main.dart` before the database opens (`BackupStaging.apply`), the replaced file and its
-  `-wal`/`-shm` renamed `*.before-restore-<time>.bak`, never deleted. An older supported
-  schema is upgraded by the normal migrations when the database opens.
+- **Restore (F01, 2026-10-18; D2/D7 A):** refused when the file is not a backup, when the
+  header disagrees with the database's own `user_version`, when the schema is newer than the
+  app's, or below the v8 floor; then, still at pick time, the database is written to an
+  isolated temporary copy and opened through the production connection
+  (`openDatabaseConnection`, which migrates an older supported schema): `PRAGMA
+  integrity_check`, `PRAGMA foreign_key_check`, every expected table and column, every row
+  through the generated row classes and the repositories' own reads must pass
+  (`checkRestoreCandidate`), or it is refused as unusable and the copy deleted. On "Restore and
+  restart" the database is staged as `astroplan.restore.sqlite` (its settings as
+  `astroplan.restore.preferences.json`) and the app restarts at once; `BackupStaging.apply`
+  checks the staged file again, then writes `astroplan.restore.journal.json` (a timestamp and
+  a snapshot of every setting a restore may change) before it moves the live database and its
+  `-wal`/`-shm`/`-journal` to `astroplan.sqlite.before-restore-<time>.bak[-wal…]`, renames the
+  staged file into place and applies the settings. A start that finds the journal completes the
+  restore; an I/O failure puts the old database, side files and settings back. The outcome
+  (`applied`, `refused` with its reason, `completedAfterInterruption`) is kept in
+  `astroplan.restore.outcome.json` until the next app instance has shown it once. One safety
+  copy is kept: older ones (and pre-F01 side-file copies) are deleted only after a completed
+  restore, never by a refusal.
 - **Settings (S8.9; TD-056, ENG-14):** a version 2 archive must carry readable settings, and
-  only the keys above are ever read from it. They are staged as
-  `astroplan.restore.preferences.json` and applied just before the database swap (a restore
-  interrupted before the swap is redone at the next start): the carried keys are replaced as a
-  whole. A version 1 archive still restores; it keeps the device's settings but removes
-  `activeLocationId`, which may name another site in the restored database. Either way the plan
-  ids (`targetId`, `equipmentId`, `editedSessionId`) are removed. A confirmed reset
-  (`confirmDatabaseReset`) removes `activeLocationId` and the plan ids too.
+  only the keys above are ever read from it. Since F01 they are applied just after the database
+  swap, inside the journal: the carried keys are replaced as a whole. A version 1 archive still
+  restores; it keeps the device's settings but removes `activeLocationId`, which may name
+  another site in the restored database. Either way the plan ids (`targetId`, `equipmentId`,
+  `editedSessionId`) are removed. A confirmed reset (`confirmDatabaseReset`) removes
+  `activeLocationId` and the plan ids too.
 - **Not included:** the transient position, the catalog seed marker (it describes the device's
   own database), the plan ids, the place-name opt-in (a consent given on each device) and the
   weather cache. Before S8.9 no preference was included (TD-056).

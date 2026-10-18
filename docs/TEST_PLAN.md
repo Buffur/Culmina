@@ -1060,3 +1060,27 @@ suite as it is.)*
 - **Owner checklist (manual, not yet done):** the policy URL opens (with the contact
   filled in); the About screen's links open; the Data Safety form is filled in from
   `docs/COMPLIANCE.md`.
+
+**Added by F01** (restore safety, 2026-10-18; final completion roadmap):
+- **`data/backup/restore_activation_test.dart` (22):** real SQLite files only. CHK-F01.A1: a
+  truncated database, one without the expected schema and one missing a column, inside valid
+  archives, are refused at pick time (the header check alone accepts them) and again on
+  activation, with the live database and settings byte- and value-identical and the check copy
+  deleted; a newer database refused both ways, also behind a header that hides it.
+  CHK-F01.A2: a populated v24 database (generated schema) migrates through the production
+  connection and restores its sites, results (not-done reason, partly), legacy entry and
+  settings. CHK-F01.A3: process death at each of six activation steps ends, at the next start,
+  in the checked new database with its settings and no old write-ahead log; an I/O failure at
+  each step puts back the old database, its side file and the old settings exactly.
+  CHK-F01.A4/A5 (data): one newest safety copy, older ones pruned only after a completed
+  restore; the outcome is recorded once and cleared; a staging failure never restarts.
+- **`screens/settings/backup_section_test.dart` (rewritten, 10):** the confirmation names the
+  backup's version and "1 plan"/"N plans" (TD-105), promises no Undo or safety copy (D2 A),
+  offers Back up first, which returns to the same confirmation only after success; Restore
+  and restart applies at once with no pending state (D7 A); pick-time refusals say the current
+  data is unchanged.
+- **`screens/settings/restore_outcome_notice_test.dart` (5):** applied / refused /
+  completed-after-interruption outcomes shown once by the next app instance, then cleared; the
+  restoring screen has nothing to edit and cannot be left with Back.
+- **Not host-testable:** the in-process restart in `main.dart` and returning from Recents
+  during activation are G2's phone row (REL-10).

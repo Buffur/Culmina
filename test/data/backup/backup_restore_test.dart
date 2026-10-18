@@ -38,6 +38,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final _clock = FixedClock(DateTime.utc(2026, 12, 16, 8));
 
+/// For tests of the staging mechanics with placeholder bytes: the
+/// candidate check itself is covered by `restore_activation_test.dart`.
+Future<void> _accepted(File candidate) async {}
+
 final _blocks = [
   CaptureBlock(
     frameType: FrameType.light,
@@ -154,11 +158,12 @@ void main() {
       expect(checked.preview.schemaVersion, 25); // the app schema (S8.6)
       expect(checked.preview.appVersion, AppIdentity.version);
       await service.stage(checked);
-      expect(await service.hasStagedRestore(), isTrue);
-      // ... and applies it at the next start, before opening the database.
+      expect(await BackupStaging.isStaged(newPhone), isTrue);
+      // ... and applies it at the next start, before opening the database,
+      // after checking it again (F01).
       expect(
-        await BackupStaging.apply(newPhone, nowUtc: _clock.nowUtc()),
-        isNull,
+        (await BackupStaging.apply(newPhone, nowUtc: _clock.nowUtc()))!.result,
+        RestoreResult.applied,
       );
       final newDb = AppDatabase(
         NativeDatabase(File(p.join(newPhone.path, BackupStaging.database))),
@@ -169,7 +174,7 @@ void main() {
       await newDb.close();
 
       expect(after, before);
-      expect(await service.hasStagedRestore(), isFalse);
+      expect(await BackupStaging.isStaged(newPhone), isFalse);
     },
   );
 
@@ -253,8 +258,17 @@ void main() {
     final live = File(p.join(newPhone.path, BackupStaging.database));
     await live.writeAsString('old data');
     await BackupStaging.stage(newPhone, Uint8List.fromList([1, 2, 3]));
-    final safety = await BackupStaging.apply(newPhone, nowUtc: _clock.nowUtc());
-    expect(await safety!.readAsString(), 'old data');
+    await BackupStaging.apply(
+      newPhone,
+      nowUtc: _clock.nowUtc(),
+      check: _accepted,
+    );
+    final safety = newPhone
+        .listSync()
+        .whereType<File>()
+        .where((f) => p.basename(f.path).contains('.before-restore-'))
+        .single;
+    expect(await safety.readAsString(), 'old data');
     expect(await live.readAsBytes(), [1, 2, 3]);
   });
 
@@ -467,7 +481,7 @@ void main() {
       expect(prefs.getDouble('transientLatitude'), 46.0);
       expect(prefs.getInt('catalogSeedVersion'), 3);
       expect(prefs.getBool('placeNameLookup'), isFalse);
-      expect(await service.hasStagedRestore(), isFalse);
+      expect(await BackupStaging.isStaged(newPhone), isFalse);
       expect(
         File(p.join(newPhone.path, BackupStaging.stagedPreferences))
             .existsSync(),
@@ -486,7 +500,11 @@ void main() {
       await File(p.join(newPhone.path, BackupStaging.database))
           .writeAsString('old');
       await BackupStaging.stage(newPhone, Uint8List.fromList([1, 2, 3]));
-      await BackupStaging.apply(newPhone, nowUtc: _clock.nowUtc());
+      await BackupStaging.apply(
+        newPhone,
+        nowUtc: _clock.nowUtc(),
+        check: _accepted,
+      );
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getInt('activeLocationId'), isNot(7));
       expect(prefs.getInt('targetId'), isNull);

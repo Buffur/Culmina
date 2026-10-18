@@ -1,37 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_button_styles.dart';
 import '../../../domain/services/backup_service.dart';
-import '../../shared/confirmation_patterns.dart';
+import '../../shared/app_messages.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../viewmodels/backup_viewmodel.dart';
 import '../../../core/config/app_identity.dart';
 
-/// Backup and restore (TASK 14.4, owner decisions): a backup is one
-/// `.astroplan` file shared wherever the user wants it; a restore is
-/// checked, confirmed, and applied when the app next starts. Since S9.4
-/// every action reports a failure (trap 18) and Restore confirms through
-/// the shared destructive dialog (RD-09).
+/// What the restore confirmation lets the user do (F01 A4, D2/D7, UX-S R1).
+enum _RestoreChoice { cancel, backUpFirst, restore }
+
+/// Backup and restore (TASK 14.4; F01, owner decisions D2/D7): a backup is
+/// one `.astroplan` file shared wherever the user wants it. A restore is
+/// checked completely when the file is picked, confirmed, and applied at
+/// once: the app restarts, checks it again and replaces its data; the next
+/// app instance says what happened ([RestoreOutcomeNotice]). Every action
+/// reports a failure (trap 18).
 class BackupSection extends StatelessWidget {
   const BackupSection({super.key});
 
+  /// Why a backup was not applied, as the end of "The backup was not
+  /// applied: …".
   static String problemText(BackupProblem p) => switch (p) {
     BackupProblem.notABackup =>
-      'This file is not an ${AppIdentity.appName} backup, or it is damaged.',
+      'this file is not a ${AppIdentity.appName} backup, or it is damaged',
     BackupProblem.newerSchema =>
-      'This backup was made by a newer version of ${AppIdentity.appName}. Update the '
-          'app first.',
+      'it was made by a newer version of ${AppIdentity.appName}. Update '
+          'the app first',
     BackupProblem.tooOld =>
-      'This backup is too old for this version of ${AppIdentity.appName}.',
+      'it is too old for this version of ${AppIdentity.appName}',
+    BackupProblem.unusable => 'the data in it is damaged or incomplete',
+    BackupProblem.notApplied =>
+      'its files could not replace the ones on this device',
   };
+
+  /// A refusal before anything changed (SP09).
+  static String refusedText(BackupProblem p) =>
+      'The backup was not applied: ${problemText(p)}. Your current data is '
+      'unchanged.';
+
+  /// What the app instance after a restore says, once (F01 A5).
+  static String outcomeText(RestoreOutcome o) => switch (o.result) {
+    RestoreResult.applied =>
+      'Backup restored. Your data now comes from the backup.',
+    RestoreResult.refused => refusedText(o.problem ?? BackupProblem.unusable),
+    RestoreResult.completedAfterInterruption =>
+      'The restore was interrupted, and has now been completed. Your data '
+          'now comes from the backup.',
+  };
+
+  static String _plans(int n) => n == 1 ? '1 plan' : '$n plans';
+
+  Future<_RestoreChoice> _confirm(BuildContext context, BackupPreview p) async {
+    final choice = await showDialog<_RestoreChoice>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Restore this backup?'),
+        content: SingleChildScrollView(
+          child: Text(
+            // TD-105: the backup names its version, not this app's name.
+            'Made ${NightTimeFormatter.deviceDateTime(context, p.createdAtUtc)} '
+            'by version ${p.appVersion}, with ${_plans(p.sessionCount)}.\n\n'
+            'All plans, results, sites, rigs, targets and settings on this '
+            'device are replaced by the backup. ${AppIdentity.appName} '
+            'restarts to do it, and this cannot be undone in the app.\n\n'
+            'To keep your current data, back up first.',
+            key: const Key('restore.message'),
+          ),
+        ),
+        actions: [
+          TextButton(
+            key: const Key('confirm.cancel'),
+            onPressed: () => Navigator.pop(context, _RestoreChoice.cancel),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            key: const Key('restore.backUpFirst'),
+            onPressed: () => Navigator.pop(context, _RestoreChoice.backUpFirst),
+            child: const Text('Back up first'),
+          ),
+          TextButton(
+            key: const Key('confirm.action'),
+            style: AppButtonStyles.destructiveText(
+              Theme.of(context).colorScheme,
+            ),
+            onPressed: () => Navigator.pop(context, _RestoreChoice.restore),
+            child: const Text('Restore and restart'),
+          ),
+        ],
+      ),
+    );
+    return choice ?? _RestoreChoice.cancel;
+  }
 
   Future<void> _restore(BuildContext context, BackupViewModel vm) async {
     final ({BackupPreview preview, Object file})? picked;
     try {
       picked = await vm.pick();
     } on BackupException catch (e) {
-      if (context.mounted) showFailure(context, problemText(e.problem));
+      if (context.mounted) showFailure(context, refusedText(e.problem));
       return;
     } catch (e) {
       if (context.mounted) {
@@ -40,27 +109,24 @@ class BackupSection extends StatelessWidget {
       return;
     }
     if (picked == null || !context.mounted) return;
-    final p = picked.preview;
-    final sure = await confirmDestructive(
-      context,
-      title: 'Restore this backup?',
-      message:
-          'Made ${NightTimeFormatter.deviceDateTime(context, p.createdAtUtc)} '
-          'by ${AppIdentity.appName} ${p.appVersion}, with ${p.sessionCount} '
-          'sessions.\n\nAll current sessions, sites, rigs, targets and '
-          'settings are replaced when ${AppIdentity.appName} next starts. '
-          'The current data is kept as a safety copy on this device.',
-      action: 'Restore at next start',
-    );
-    if (!sure || !context.mounted) return;
-    final staged = await runWithFeedback(
-      context,
-      'prepare the restore',
-      () => vm.stage(picked!.file),
-    );
-    // S9.8 (D9-5): what happens next.
-    if (staged && context.mounted) {
-      showDone(context, 'Restore ready: it runs when you reopen the app');
+    var choice = await _confirm(context, picked.preview);
+    while (choice == _RestoreChoice.backUpFirst) {
+      if (!context.mounted) return;
+      // UX-S R1: the existing backup; only its success returns to this same
+      // confirmation. A failure or a cancelled backup never restores.
+      final done = await runWithFeedback(context, 'back up', vm.backUp);
+      if (!done || !context.mounted) return;
+      showDone(context, 'Backup file created');
+      choice = await _confirm(context, picked.preview);
+    }
+    if (choice != _RestoreChoice.restore || !context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await vm.restoreAndRestart(picked.file);
+    } catch (_) {
+      messenger.showMessage(
+        SnackBar(content: Text(refusedText(BackupProblem.notApplied))),
+      );
     }
   }
 
@@ -87,38 +153,103 @@ class BackupSection extends StatelessWidget {
             }
           },
         ),
-        if (vm.restoreStaged)
-          ListTile(
-            key: const Key('backup.staged'),
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.restart_alt),
-            title: const Text(
-              'Restore ready: close and reopen ${AppIdentity.appName}',
-            ),
-            subtitle: const Text('Tap to cancel the restore.'),
-            enabled: !vm.busy,
-            onTap: () async {
-              final done = await runWithFeedback(
-                context,
-                'cancel the restore',
-                vm.cancelRestore,
-              );
-              if (done && context.mounted) {
-                showDone(context, 'Restore cancelled');
-              }
-            },
-          )
-        else
-          ListTile(
-            key: const Key('backup.restore'),
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.settings_backup_restore),
-            title: const Text('Restore from a backup'),
-            subtitle: const Text('Checked first; applied at the next start.'),
-            enabled: !vm.busy,
-            onTap: () => _restore(context, vm),
+        ListTile(
+          key: const Key('backup.restore'),
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.settings_backup_restore),
+          title: const Text('Restore from a backup'),
+          subtitle: Text(
+            'Checked first; ${AppIdentity.appName} then restarts to apply it.',
           ),
+          enabled: !vm.busy,
+          onTap: () => _restore(context, vm),
+        ),
       ],
     );
   }
+}
+
+/// Reports the last restore's outcome once, on the first screen of the app
+/// instance that starts after it (F01 A5, UXA-C1), then forgets it.
+class RestoreOutcomeNotice extends StatefulWidget {
+  const RestoreOutcomeNotice({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<RestoreOutcomeNotice> createState() => _RestoreOutcomeNoticeState();
+}
+
+class _RestoreOutcomeNoticeState extends State<RestoreOutcomeNotice> {
+  bool _shown = false;
+
+  void _showOnce(BackupViewModel vm, RestoreOutcome outcome) {
+    _shown = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.maybeOf(context)?.showMessage(
+        SnackBar(
+          key: const Key('restore.outcome'),
+          content: Text(BackupSection.outcomeText(outcome)),
+          duration: const Duration(seconds: 10),
+          action: SnackBarAction(label: 'OK', onPressed: () {}),
+        ),
+      );
+      vm.outcomeShown();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<BackupViewModel?>();
+    final outcome = vm?.outcome;
+    if (!_shown && vm != null && outcome != null) _showOnce(vm, outcome);
+    return widget.child;
+  }
+}
+
+/// Shown instead of the app while a confirmed restore is applied (D7 A):
+/// nothing can be edited until the app has restarted with the result.
+class RestoringBackupApp extends StatelessWidget {
+  const RestoringBackupApp({super.key, this.theme, this.darkTheme});
+
+  final ThemeData? theme;
+  final ThemeData? darkTheme;
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    title: AppIdentity.appName,
+    theme: theme,
+    darkTheme: darkTheme,
+    debugShowCheckedModeBanner: false,
+    home: const PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 24),
+                  Text(
+                    'Restoring the backup…',
+                    key: Key('restore.restoring'),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '${AppIdentity.appName} restarts when it is done.',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

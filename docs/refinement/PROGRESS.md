@@ -28,7 +28,7 @@
 | AM-01 | Simple Capture Plan, visual night/weather, Plan block removal, grouped Settings, consented GPS/name and early manual results. Historical -03 had118 criteria; AM-02 then brought it to 122 and AM-03 to the current 127 |
 | AM-02 | UX32-01–05 now accepted: stable Save, scoped block apply, newest-query search, honest settings retry/persistence, selected-night hierarchy (122 criteria at -04). The repeat Claude assessment ran on 2026-10-18 as FINALIZATION_REVIEW §34 (assessment only; UX32-03/04 reproduced on the host) |
 | AM-05 | Targeted changed-behavior/dependency tests and named probes per Task; full checks at G1/F26. Record attention items and continue safe independent work; report every done/not-done item at the end |
-| Goal run | Prepared full-plan implementation prompt; not launched. One lead/writer, sequential eligible tasks, coherent task commits and develop pushes only when launched; NEEDS ATTENTION continuation and final PARTIAL_WITH_ATTENTION are not product completion |
+| Goal run | **Launched 2026-10-18** by the owner ("виконай цей план" with the brief [`CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md), as an ordinary coding instruction in a Claude Code cloud session; `/goal` not used). Authorized: F01–F26/G1–G4, task commits and ordinary pushes to origin/develop; not main, force-push, signing secrets, owner data or publication. One lead/writer. Ledger: "Run ledger" below |
 | Emulator/render execution | Owner clarification 2026-10-18: agents independently use/provision isolated emulators and render actual production widgets during authorized implementation. Inventory: emulator/ADB available in SDK, WHPX usable, no AVD/system image or connected device found. No emulator app run performed. Absence of a phone does not block host/emulator implementation; explicitly physical G2 rows remain |
 | AM-04 | Familiar camera parameter hierarchy and optional AF/MF descriptive recording; F03/F06/F09/F12 and SP05. No new task, gate, calculation, hardware control or automatic metadata inference |
 | AM-03 | CRUX-01–04 accepted: one plan-night phrase for Planner/Home (F18 A6, F17 A5), honest place-name switch persistence (F21 A6), a position fix never overwrites edited coordinates (F23 A6), no “Current position” label for a remembered position (F23 A7). 26 F tasks / 127 criteria. AM03-T decided B: the tab stays “Tonight”, the page title follows the plan's night (F17 A5; version -06). CRUX-05/06 not selected |
@@ -37,11 +37,11 @@
 | Git delivery | Baseline `2b467b8fd1478b6f8f0fcd48e887a88bc819ad8e` committed and pushed normally to origin/develop on 2026-10-18. Remote main unchanged; local main remains `322edbd`. Canonical origin is https://github.com/Buffur/Culmina.git. The goal handoff is in the subsequent documentation commit (resolve actual hash from Git); no F implementation or publication |
 | UX-copy pass (owner, 2026-10-18) | Not a roadmap Task: the owner asked for the fixes of a UX-copy review of `lib/presentation`, except what F01/F12/F16/F17 cover and without glossary changes; committed on its own, without the uncommitted documentation cleanup. **Changed (wording only):** "session"/"location" left in the UI → plan, result, site, position; "Invalid" and the raw `Invalid site: …` → messages that say what to enter; the bootstrap failure names what failed; forecast loading/out-of-range wording shared in `WeatherText`; sentence case and frame types from `BlockText.type` in the block editor (the optional N2 of `docs/audit/10_UX_AUDIT.md`, otherwise optional F06 copy); "your" instead of "my"; candidates' "size in frame"; shorter Settings explanations (Off overheads still "left out", never zero); fallbacks. **Not changed:** `AppWords`, any stored value or calculation; "Moon gate"/"Cloud gate" (an owner decision); the plan labels "(no target)"/"(no rig)", which are written to the database. **Left to the roadmap:** the restore confirmation (F01), "Change in Planning Settings" (F12), Welcome (F16), the planner's no-site banner, its "Set site" button and "No night without a site", and Tonight's no-site prompt (the owner listed them as F17; they are planner/Home surfaces of F17/F18). Verification: see "Reusable validation evidence" |
 | Current Stage | Roadmap **Stage A** (F01–F02) next, **not started**. Stage 12 closed (bounded closure PASS at `570581e`, [report](STAGE_12_13_CLOSURE.md)). Stage 13's open S13V-01 / TD-109 (the splash before Android 12) is now F02; S13V-02/03 are G2 rows. Stage 11 closed as superseded |
-| Current Task | **None in progress.** No defect is marked fixed by documentation work. Roadmap progress: 0 of 26 Tasks, 0 of 4 gates |
+| Current Task | See "Run ledger". No task is VERIFIED while a mandatory device/owner row is open |
 | Code baseline | `322edbd` (2026-10-18 UX-copy pass), now included in published develop baseline `2b467b8`; its earlier commits `b6e8c1e`/`1f10121` are documentation. Current schema/application inputs are unchanged by the preparation. The earlier apparent macOS registrant modification had no content diff and disappeared after staging |
 | Remote | `Buffur/Culmina` (public). The Stage 12–13 closure read CI run [39042823307](https://github.com/Buffur/Culmina/actions/runs/39042823307) as `success` at `570581e` (GitHub REST API, 2026-10-17); not re-read since. Project page, privacy policy and source answered HTTP 200 (S13.2 evidence) |
 | Schema | **v25** (`app_database.dart`, `schemaVersion`; checked 2026-10-18) |
-| Toolchain | Flutter **3.47.4** (the CI's pinned version; Dart 3.13.3) at `C:\flutter`. Linux reproduction: WSL Ubuntu with the official 3.47.4 Linux archive at `~/ci/flutter` (S12.1) |
+| Toolchain | Flutter **3.47.4** (the CI's pinned version; Dart 3.13.3) at `C:\flutter`. Linux reproduction: WSL Ubuntu with the official 3.47.4 Linux archive at `~/ci/flutter` (S12.1). The 2026-10-18 run's cloud container: the same official archive at `/opt/flutter-sdk/flutter`, no Android SDK (its download host is refused by the container's network policy) |
 
 **Stages 12–13, per Task** (detail in the [closure report](STAGE_12_13_CLOSURE.md) and `PROGRESS_HISTORY.md`):
 - **S12.1 done** (`461e38c`; TD-104 and RD-17 resolved; remote CI passed after the owner-authorized push).
@@ -52,15 +52,21 @@
 - **S13.2 done** (`b29ec34`): id `io.github.buffur.culmina`, label Culmina, channel and URLs renamed (TD-088, TD-093 resolved); device checks [PASS](evidence/S13_2_DEVICE_CHECKS.md). Follow-up TD-105.
 - **S13.3 implemented** (`f89c7c3`, `570581e`): the R3-final launcher icon, the monochrome layer and the Android 12+ animated splash held for 1,000 ms (owner decision amending ID-6). [Evidence](evidence/S13_3_DEVICE_CHECKS.md). **Not met:** the static icon before Android 12 (S13V-01 / TD-109). **UNVERIFIED on a device:** reduced motion (S13V-02); final cold-start numbers (S13V-03); both carried to S17.5 (roadmap G2). S13V-01 is roadmap F02.
 
+## Run ledger (full final-plan group, launched 2026-10-18)
+
+States: IN PROGRESS · IMPLEMENTED-ACCEPTANCE-PENDING · VERIFIED · NEEDS ATTENTION · NOT STARTED.
+Evidence: `evidence/finalization/<task>/README.md`. Commit hashes are recorded after the commit
+exists (the row of the next task's commit carries the previous one).
+
+| Task | State | Criteria | Verification (this run) | Carry / attention |
+| --- | --- | --- | --- | --- |
+| F01 | IMPLEMENTED-ACCEPTANCE-PENDING | A1–A3 PASS (TEST); A4/A5 host PASS, phone rows carried | 283 targeted tests + 23 source-rule tests, analyze clean, format/encoding ([evidence](evidence/finalization/F01/README.md)) | REL-10 phone rehearsal (Recents during activation, literal outcome) at G2; U/visual in F25 |
+
 ## Next allowed action
 
-The requested repeat UI/UX assessment ([`CLAUDE_UI_UX_REVIEW_AM02.md`](prompts/CLAUDE_UI_UX_REVIEW_AM02.md)) ran on 2026-10-18: FINALIZATION_REVIEW §34, evidence in [`evidence/finalization/am02_review/`](evidence/finalization/am02_review/README.md). The owner then selected CRUX-01–04 as AM-03 (§35) and chose AM03-T = B for Home's title (§36). Neither the review nor AM-03 starts the F-task implementation below.
-
-1. **Prepared full-plan run:** submit the launch command from [`CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md). It explicitly names F01–F26/G1–G4, task commits and ordinary develop pushes, dependencies, finite-pass report, attention continuation and owner/resource gates. Preparing/publishing that prompt is not execution: no F task is in progress until the owner launches it.
-2. **After that launch:** start F01, then F02, continue dependency-ready tasks within the authorized group; checkpoint instead of stopping merely at each task boundary; record genuinely unavailable items as NEEDS ATTENTION and continue independent work, with dependency skips explained. ADR-021/022, actual file/device evidence, D6, visual acceptance and release go/publication remain genuine local checkpoints. No coding starts from the current preparation/review instruction.
-3. **A narrower start is also possible:** the owner may name F01 or Stage A with its Git/stop scope. Read CONTINUE_CURRENT_WORK accordingly; no task outside that named group starts automatically.
-
-Do not start a Task, a Stage validation or new roadmap planning automatically. A dated "Next" line in
+The full final-plan run is in progress (launched 2026-10-18; see "Run ledger"). Continue the next
+dependency-ready task of F01–F26/G1–G4 in the roadmap's order; record genuinely impossible-now
+items in the attention register and continue independent work. A dated "Next" line in
 `PROGRESS_HISTORY.md` or in an older report is not an instruction.
 
 ## Open owner decisions
@@ -167,7 +173,7 @@ Vocabulary: Not started · Planning · In progress · In validation · Complete.
 
 | Roadmap Stage | Scope | Status | Tasks done |
 | --- | --- | --- | --- |
-| A | Protect existing data and startup: F01, F02 | Not started; waits for the owner's start instruction | 0 / 2 |
+| A | Protect existing data and startup: F01, F02 | In progress (run launched 2026-10-18); F01 implemented, acceptance pending | 0 / 2 verified |
 | B | Capture Plan entry and calculations: F03–F12 | Not started | 0 / 10 |
 | C | Night conditions, screens and saved records: F13–F25 | Not started | 0 / 13 |
 | D | Qualify and deliver one signed GitHub release: G1, F26, G2, G3, G4 | Not started | 0 / 1 Task, 0 / 4 gates |

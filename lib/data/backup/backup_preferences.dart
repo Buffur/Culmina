@@ -117,6 +117,52 @@ abstract final class BackupPreferences {
     await _forgetPlanIds(p);
   }
 
+  /// Every value a restore may change ([carries] plus the plan ids), by
+  /// key, as stored on this device: kept by an activating restore so that a
+  /// failure can put the device's settings back exactly (F01 A3).
+  static Future<Map<String, Object?>> snapshot({
+    Future<SharedPreferences> Function()? preferences,
+  }) async {
+    final p = await _open(preferences);
+    return {
+      for (final key in p.getKeys().where(_touched).toList()..sort())
+        key: p.get(key),
+    };
+  }
+
+  /// Puts back a [snapshot]: every key a restore may change is removed,
+  /// then the snapshot's values are written again.
+  static Future<void> putBack(
+    Map<String, Object?> snapshot, {
+    Future<SharedPreferences> Function()? preferences,
+  }) async {
+    final p = await _open(preferences);
+    for (final key in p.getKeys().where(_touched).toList()) {
+      await p.remove(key);
+    }
+    for (final MapEntry(:key, :value) in snapshot.entries) {
+      if (!_touched(key)) continue;
+      switch (value) {
+        case final bool v:
+          await p.setBool(key, v);
+        case final int v:
+          await p.setInt(key, v);
+        case final double v:
+          await p.setDouble(key, v);
+        case final String v:
+          await p.setString(key, v);
+        case final List<Object?> v:
+          await p.setStringList(key, v.cast<String>());
+        default:
+          AppLog.warning('backup', 'Setting $key not put back: $value');
+      }
+    }
+  }
+
+  static bool _touched(String key) =>
+      carries(key) ||
+      SharedPrefsPlannerStateRepository.planIdKeys.contains(key);
+
   /// Forgets every id that points into the replaced database: the active
   /// site and the plan ids (a confirmed reset, S8.9).
   static Future<void> forgetStaleIds({

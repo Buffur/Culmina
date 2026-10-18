@@ -19,6 +19,7 @@ import '../export/share_session_exporter.dart';
 import 'backup_archive.dart';
 import 'backup_preferences.dart';
 import 'backup_staging.dart';
+import 'restore_candidate.dart';
 
 /// [BackupService] on the app's database file (TASK 14.4): `VACUUM INTO`
 /// gives a consistent copy while the app runs; the share sheet saves it
@@ -33,7 +34,10 @@ class FileBackupService implements BackupService {
     Future<Uint8List?> Function()? pickBytes,
     Future<void> Function()? clearPicked,
     Future<Map<String, Object?>> Function()? readPreferences,
+    Future<void> Function(File candidate)? checkCandidate,
+    this._restartApp,
   }) : _readPreferences = readPreferences ?? BackupPreferences.read,
+       _checkCandidate = checkCandidate ?? checkRestoreCandidate,
        _dataDir = dataDir ?? getApplicationDocumentsDirectory,
        _tempDir = tempDir ?? getTemporaryDirectory,
        _pickBytes = pickBytes ?? _pickWithFilePicker,
@@ -53,6 +57,13 @@ class FileBackupService implements BackupService {
 
   /// Deletes the picker's copies of picked files (TD-065).
   final Future<void> Function() _clearPicked;
+
+  /// The full candidate check ([checkRestoreCandidate]).
+  final Future<void> Function(File candidate) _checkCandidate;
+
+  /// Restarts the app so the staged restore is applied before the database
+  /// opens again (`main.dart`); null in tests that stage only.
+  final Future<void> Function()? _restartApp;
 
   static Future<Uint8List?> _pickWithFilePicker() async {
     final picked = await FilePicker.pickFiles(
@@ -123,19 +134,50 @@ class FileBackupService implements BackupService {
       '${ShareSessionExporter.localStampWithOffset(nowUtc)}. Keep this file '
       'to restore.';
 
-  /// Checks backup [bytes] against this app (the testable part of [pick]).
+  /// Checks backup [bytes]' archive and header against this app.
   CheckedBackup check(Uint8List bytes) => BackupArchive.read(
     bytes,
     appSchemaVersion: _db.schemaVersion,
     minSchemaVersion: kMinSupportedSchemaVersion,
   );
 
+  /// The complete pick-time check (F01 A1, UXA-C1): the archive, then its
+  /// database on an isolated copy in the temporary folder, opened through
+  /// the app's production connection. The copy is always deleted; nothing
+  /// else is touched. Throws [BackupException].
+  Future<CheckedBackup> checkFully(Uint8List bytes) async {
+    final checked = check(bytes);
+    final dir = await _tempDir();
+    final copy = File(
+      p.join(
+        dir.path,
+        'restore-check-${_clock.nowUtc().microsecondsSinceEpoch}.sqlite',
+      ),
+    );
+    try {
+      await copy.writeAsBytes(checked.database, flush: true);
+      await _checkCandidate(copy);
+    } finally {
+      for (final f in [
+        copy,
+        for (final s in ['-wal', '-shm', '-journal']) File('${copy.path}$s'),
+      ]) {
+        try {
+          if (await f.exists()) await f.delete();
+        } on FileSystemException catch (e) {
+          AppLog.warning('backup', 'Check copy not deleted', error: e);
+        }
+      }
+    }
+    return checked;
+  }
+
   @override
   Future<({BackupPreview preview, Object file})?> pick() async {
     try {
       final bytes = await _pickBytes();
       if (bytes == null) return null;
-      final checked = check(bytes);
+      final checked = await checkFully(bytes);
       return (preview: checked.preview, file: checked);
     } finally {
       // TD-065 (ADR-017 §6): on Android the picker copies the whole file
@@ -149,7 +191,9 @@ class FileBackupService implements BackupService {
     }
   }
 
-  @override
+  /// Stages a picked, checked backup next to the live database. At the
+  /// next start (at once, through [restoreAndRestart]) [BackupStaging.apply]
+  /// checks it again and replaces the live data.
   Future<void> stage(Object file) async {
     final checked = file as CheckedBackup;
     await BackupStaging.stage(
@@ -159,11 +203,28 @@ class FileBackupService implements BackupService {
     );
   }
 
+  /// D7 A: no editable gap. A failure to stage removes what was written and
+  /// is reported where the user confirmed; nothing live has changed.
   @override
-  Future<bool> hasStagedRestore() async =>
-      BackupStaging.isStaged(await _dataDir());
+  Future<void> restoreAndRestart(Object file) async {
+    final restart = _restartApp;
+    if (restart == null) {
+      throw StateError('No app restart available for a restore');
+    }
+    try {
+      await stage(file);
+    } catch (_) {
+      await BackupStaging.cancel(await _dataDir());
+      rethrow;
+    }
+    await restart();
+  }
 
   @override
-  Future<void> cancelStagedRestore() async =>
-      BackupStaging.cancel(await _dataDir());
+  Future<RestoreOutcome?> outcome() async =>
+      BackupStaging.readOutcome(await _dataDir());
+
+  @override
+  Future<void> clearOutcome() async =>
+      BackupStaging.clearOutcome(await _dataDir());
 }

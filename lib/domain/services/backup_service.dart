@@ -23,6 +23,15 @@ enum BackupProblem {
 
   /// Older than the oldest schema this app can upgrade (ADR-008 floor).
   tooOld,
+
+  /// The archive is well formed, but its database cannot become the live
+  /// one: damaged, truncated, missing tables or columns, or unreadable rows
+  /// (F01, TD-106).
+  unusable,
+
+  /// The checked backup could not replace the live files; everything was
+  /// put back as it was (F01 A3).
+  notApplied,
 }
 
 class BackupException implements Exception {
@@ -33,22 +42,52 @@ class BackupException implements Exception {
   String toString() => 'BackupException: ${problem.name}';
 }
 
-/// Manual backup and restore (TASK 14.4; owner decisions): one
+/// What happened to the last confirmed restore, reported once by the app
+/// instance that starts after it (F01 A5).
+enum RestoreResult {
+  /// The backup is now the app's data.
+  applied,
+
+  /// The backup was refused when the app restarted to apply it; the data
+  /// from before is unchanged.
+  refused,
+
+  /// The restore was interrupted and, at the next start, completed: the
+  /// data is the backup's.
+  completedAfterInterruption,
+}
+
+class RestoreOutcome {
+  const RestoreOutcome(this.result, {this.problem});
+
+  final RestoreResult result;
+
+  /// Why it was refused; null otherwise.
+  final BackupProblem? problem;
+}
+
+/// Manual backup and restore (TASK 14.4; F01, owner decisions D2/D7): one
 /// `.astroplan` file (database copy + manifest v2 + header) shared to a
-/// place the user picks; a restore is checked, confirmed, staged and
-/// applied at the next start, before the database opens.
+/// place the user picks. A restore is checked when the file is picked,
+/// confirmed, then applied at once: the app restarts, checks the backup
+/// again before anything changes, and replaces its data.
 abstract class BackupService {
   /// Creates a backup and opens the share sheet.
   Future<void> backUpAndShare();
 
-  /// Lets the user pick a backup file and checks it; null if cancelled.
-  /// Throws [BackupException] when it cannot be restored.
+  /// Lets the user pick a backup file and checks it completely, the
+  /// database included; null if cancelled. Throws [BackupException] when
+  /// it cannot be restored; nothing has changed then.
   Future<({BackupPreview preview, Object file})?> pick();
 
-  /// Stages a picked, checked backup for the next start.
-  Future<void> stage(Object file);
+  /// Applies a picked, checked, confirmed backup now: the app restarts
+  /// into a screen that cannot be edited, and the next app instance reports
+  /// the outcome ([outcome]).
+  Future<void> restoreAndRestart(Object file);
 
-  /// Whether a restore is staged, and cancelling it.
-  Future<bool> hasStagedRestore();
-  Future<void> cancelStagedRestore();
+  /// The outcome of the last restore, if not yet reported.
+  Future<RestoreOutcome?> outcome();
+
+  /// Forgets the outcome once it has been reported.
+  Future<void> clearOutcome();
 }
