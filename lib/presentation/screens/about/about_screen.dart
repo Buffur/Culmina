@@ -135,7 +135,8 @@ class AboutScreen extends StatelessWidget {
             'rigs, targets, plans and results stay on this device. The app '
             'sends a position only to fetch the weather (Open-Meteo), to '
             'show map tiles (OpenStreetMap) and — if you switch it on in '
-            'Settings — to look up a place name (Nominatim). Location '
+            'Settings, or when the site editor offers it — to look up a '
+            'place name (Nominatim). Location '
             'permission is asked only when you tap "Use current position".',
             key: Key('about.privacy'),
           ),

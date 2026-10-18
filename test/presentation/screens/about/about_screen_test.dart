@@ -108,7 +108,7 @@ void main() {
       'Open-Meteo',
       'OpenStreetMap',
       'Nominatim',
-      'if you switch it on in Settings',
+      'if you switch it on in Settings, or when the site editor offers it',
     ]) {
       expect(privacy.data, contains(phrase));
     }

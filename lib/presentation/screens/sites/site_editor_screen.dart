@@ -3,6 +3,8 @@ import '../../../domain/models/calendar_date.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../shared/app_words.dart';
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -14,12 +16,14 @@ import '../../../core/diagnostics/app_log.dart';
 import '../../../domain/models/iana_time_context.dart';
 import '../../../domain/models/location_profile.dart';
 import '../../../domain/services/location_service.dart';
+import '../../../domain/services/reverse_geocoder.dart';
 import '../../shared/collapsible_section.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/coordinate_input.dart';
 import '../../shared/location_feedback.dart';
 import '../../shared/site_form_input.dart';
 import '../../viewmodels/disclosure_viewmodel.dart';
+import '../../viewmodels/settings_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../shared/app_messages.dart';
 import '../../shared/failure_feedback.dart';
@@ -98,6 +102,18 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   bool _saving = false;
   bool _locating = false;
 
+  /// F23 A5: the place-name proposal for a position from "Use current
+  /// position" — for an empty name only, through the opt-in lookup.
+  _NameLookup _nameLookup = _NameLookup.none;
+  String? _proposedName;
+  String? _proposedAttribution;
+
+  /// The position the opt-in offer is for.
+  (double, double)? _offeredAt;
+
+  /// Only the newest lookup may answer.
+  int _lookupGeneration = 0;
+
   /// Set once the user chose Discard or the site is saved: the page may go.
   bool _leaving = false;
 
@@ -142,6 +158,19 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     for (final c in [_name, _elevation, _notes]) {
       c.addListener(_guardChanged);
     }
+    _name.addListener(_nameEdited);
+  }
+
+  /// A typed name is the user's: the proposal, its source line and any
+  /// pending answer give way to it.
+  void _nameEdited() {
+    if (_nameLookup == _NameLookup.none) return;
+    if (_nameLookup == _NameLookup.found && _name.text == _proposedName) {
+      return;
+    }
+    if (_name.text.trim().isEmpty && _nameLookup != _NameLookup.found) return;
+    _lookupGeneration++;
+    setState(() => _nameLookup = _NameLookup.none);
   }
 
   void _refresh() {
@@ -212,7 +241,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       switch (result) {
         case LocationFound(:final location):
           if ((_latitude.text, _longitude.text) == asked) {
-            _fillCoordinates(location.latitude, location.longitude);
+            _applyFix(location.latitude, location.longitude);
           } else {
             _offerFix(location.latitude, location.longitude);
           }
@@ -229,10 +258,86 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     }
   }
 
-  void _fillCoordinates(double latitude, double longitude) {
+  /// Fills the coordinates from a fix, then proposes a name for them.
+  void _applyFix(double latitude, double longitude) {
     _latitude.text = _coordinate(latitude);
     _longitude.text = _coordinate(longitude);
+    unawaited(_proposeName(latitude, longitude));
   }
+
+  /// F23 A5: a new site's name from the consented place-name lookup. Never
+  /// over a name already there or typed meanwhile, never for coordinates
+  /// changed meanwhile; with place names off, the opt-in is offered and
+  /// nothing is sent. Not finding a name never blocks typing or Save.
+  Future<void> _proposeName(double latitude, double longitude) async {
+    if (_name.text.trim().isNotEmpty) return;
+    if (!context.read<SettingsViewModel>().placeNameLookup) {
+      setState(() {
+        _nameLookup = _NameLookup.offer;
+        _offeredAt = (latitude, longitude);
+      });
+      return;
+    }
+    final generation = ++_lookupGeneration;
+    setState(() => _nameLookup = _NameLookup.looking);
+    ReverseGeocodeResult result;
+    try {
+      result = await context.read<SiteViewModel>().lookUpPlaceName(
+        latitude,
+        longitude,
+      );
+    } catch (e) {
+      result = ReverseGeocodeFailed('$e');
+    }
+    if (!mounted || generation != _lookupGeneration) return;
+    final stillThere =
+        (_latitude.text, _longitude.text) ==
+        (_coordinate(latitude), _coordinate(longitude));
+    if (!stillThere || _name.text.trim().isNotEmpty) {
+      setState(() => _nameLookup = _NameLookup.none);
+      return;
+    }
+    setState(() {
+      switch (result) {
+        case PlaceNameFound(:final name, :final attribution):
+          _proposedName = name;
+          _proposedAttribution = attribution;
+          _nameLookup = _NameLookup.found;
+          _name.text = name;
+        case PlaceNameNotFound():
+          _nameLookup = _NameLookup.notFound;
+        case ReverseGeocodeFailed(:final reason):
+          AppLog.warning('location', 'Place-name lookup failed: $reason');
+          _nameLookup = _NameLookup.failed;
+      }
+    });
+  }
+
+  /// The user's explicit opt-in from the offer: the same setting as in
+  /// Settings, then the lookup for the offered position.
+  Future<void> _turnOnPlaceNames() async {
+    final at = _offeredAt;
+    final on = await runWithFeedback(
+      context,
+      'save the place-name setting',
+      () => context.read<SettingsViewModel>().setPlaceNameLookup(true),
+    );
+    if (!on || !mounted || at == null) return;
+    setState(() => _nameLookup = _NameLookup.none);
+    await _proposeName(at.$1, at.$2);
+  }
+
+  String? get _nameHelper => switch (_nameLookup) {
+    _NameLookup.looking => 'Looking up a place name…',
+    _NameLookup.found =>
+      'Suggested by ${_proposedAttribution ?? 'a lookup'}; '
+          'change it freely.',
+    _NameLookup.notFound =>
+      'No place name found for this position; '
+          'enter a name.',
+    _NameLookup.failed => 'No place name: the lookup failed. Enter a name.',
+    _NameLookup.none || _NameLookup.offer => null,
+  };
 
   /// The coordinates were edited while the fix was found: they stay, and
   /// the fix is the user's choice, until they use it or close the message.
@@ -249,7 +354,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         action: SnackBarAction(
           label: 'Use position',
           onPressed: () {
-            if (mounted) _fillCoordinates(latitude, longitude);
+            if (mounted) _applyFix(latitude, longitude);
           },
         ),
       ),
@@ -373,11 +478,18 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
           padding: const EdgeInsets.all(AppSpacing.md),
           children: [
             TextFormField(
+              key: const Key('siteEditor.name'),
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                helperText: _nameHelper,
+                helperMaxLines: 3,
+              ),
               textCapitalization: TextCapitalization.words,
               validator: SiteFormInput.validateName,
             ),
+            if (_nameLookup == _NameLookup.offer)
+              _PlaceNameOffer(onTurnOn: _turnOnPlaceNames),
             TextFormField(
               controller: _latitude,
               decoration: const InputDecoration(
@@ -520,5 +632,39 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         validator: SiteFormInput.validateSqm,
       ),
     ];
+  }
+}
+
+/// Where the site editor's name proposal stands (F23 A5).
+enum _NameLookup { none, offer, looking, found, notFound, failed }
+
+/// Place names are off: what a name suggestion would send, and the opt-in.
+/// Nothing is sent until the user turns it on.
+class _PlaceNameOffer extends StatelessWidget {
+  const _PlaceNameOffer({required this.onTurnOn});
+
+  final VoidCallback onTurnOn;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      key: const Key('siteEditor.placeNameOffer'),
+      padding: const EdgeInsets.only(top: AppSpacing.xs),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'A name can be suggested for this position. Place names are '
+            'off: turning them on sends the chosen position to '
+            'OpenStreetMap Nominatim, as in Settings.',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          TextButton(
+            onPressed: onTurnOn,
+            child: const Text('Turn on place names'),
+          ),
+        ],
+      ),
+    );
   }
 }

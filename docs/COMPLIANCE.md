@@ -33,7 +33,7 @@
   notice ships in `assets/catalog/OPENNGC_NOTICE.txt` and on the About screen.
 - **Privacy policy on GitHub Pages:** `docs/privacy/index.md`, to be served at
   <https://buffur.github.io/Culmina/privacy/> (the app links there; live since 2026-10-17, S12.3).
-- **Place-name lookups are opt-in** (Settings → "Look up place names", off by default).
+- **Place-name lookups are opt-in** (Settings → "Look up place names", off by default; the site editor offers the same switch after "Use current position" and sends nothing until it is on, F23 A5).
 
 ## Third-party terms, checked 2026-09-24, re-checked 2026-09-30
 

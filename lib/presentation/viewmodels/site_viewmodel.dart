@@ -225,6 +225,14 @@ class SiteViewModel extends ChangeNotifier {
   Future<LocationResult> locateDevice() =>
       _locationService.getCurrentLocation();
 
+  /// A place name for a position, changing nothing here: the site editor
+  /// proposes it as a new site's name (F23 A5). It goes through the opt-in
+  /// lookup, so with place names off nothing is sent.
+  Future<ReverseGeocodeResult> lookUpPlaceName(
+    double latitude,
+    double longitude,
+  ) => _reverseGeocoder.placeNameFor(latitude, longitude);
+
   /// Makes the device position the transient position; on
   /// [LocationUnavailable] nothing changes and the result says why.
   Future<LocationResult> useCurrentLocation() async {

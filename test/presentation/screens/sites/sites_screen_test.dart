@@ -14,6 +14,7 @@ import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/services/location_service.dart';
+import 'package:astroplan/domain/services/reverse_geocoder.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/location/location_picker_screen.dart';
@@ -34,6 +35,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../support/fake_device_time_zone.dart';
 import '../../../support/fake_location_service.dart';
 import '../../../support/fake_reverse_geocoder.dart';
+import '../../../support/in_memory_privacy_preferences.dart';
 import '../../../support/no_snapshot_weather.dart';
 
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
@@ -46,13 +48,17 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   late FakeLocationService gps;
+  late FakeReverseGeocoder names;
 
   Future<void> build(
     WidgetTester tester, {
     List<domain.LocationProfile> sites = const [],
     FakeLocationService? locationService,
+    FakeReverseGeocoder? geocoder,
+    bool placeNames = true,
   }) async {
     gps = locationService ?? FakeLocationService();
+    names = geocoder ?? FakeReverseGeocoder();
     await tester.runAsync(() async {
       database = AppDatabase(NativeDatabase.memory());
       locations = DriftLocationRepository(database);
@@ -65,7 +71,10 @@ void main() {
         _NoWeather(),
         locations,
         locationService: gps,
-        reverseGeocoder: FakeReverseGeocoder(),
+        reverseGeocoder: names,
+        privacyPreferences: InMemoryPrivacyPreferences(
+          placeNameLookup: placeNames,
+        ),
         deviceTimeZone: FakeDeviceTimeZone('Europe/Ljubljana'),
         clock: FixedClock(DateTime.utc(2026, 9, 23, 12)),
       );
@@ -569,6 +578,221 @@ void main() {
         expect(vm.sites, isEmpty);
         expect((vm.site.latitude, vm.site.longitude), before);
       });
+    });
+
+    // F23 A5 (AM-01): "Use current position" proposes a name for an empty
+    // name through the consented lookup; off, it offers the opt-in and sends
+    // nothing; a name already there, typed meanwhile, or a position changed
+    // meanwhile is never overwritten; not finding one never blocks Save.
+    group('a name for the position', () {
+      const at = DeviceLocation(latitude: 45.8123, longitude: 15.9771);
+      const ljubljana = PlaceNameFound(
+        'Ljubljana',
+        attribution: '© OpenStreetMap contributors',
+      );
+
+      Future<void> locate(WidgetTester tester) async {
+        await tester.tap(
+          find.byKey(const Key('siteEditor.useCurrentPosition')),
+        );
+        for (var i = 0; i < 3; i++) {
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          await tester.pump();
+        }
+        await tester.pumpAndSettle();
+      }
+
+      String nameText(WidgetTester tester) => tester
+          .widget<TextFormField>(find.byKey(const Key('siteEditor.name')))
+          .controller!
+          .text;
+
+      testWidgets('found: the name is proposed with its source, and saved', (
+        tester,
+      ) async {
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(result: ljubljana),
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await locate(tester);
+
+        expect(names.lookups, [(45.8123, 15.9771)]);
+        expect(nameText(tester), 'Ljubljana');
+        expect(
+          find.textContaining('Suggested by © OpenStreetMap contributors'),
+          findsOneWidget,
+        );
+        expect(vm.sites, isEmpty, reason: 'nothing saved before Save');
+        await save(tester);
+        expect(vm.sites.single.name, 'Ljubljana');
+        expect(vm.sites.single.latitude, 45.8123);
+      });
+
+      testWidgets('a name already there is kept and nothing is sent', (
+        tester,
+      ) async {
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(result: ljubljana),
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await tester.enterText(
+          find.byKey(const Key('siteEditor.name')),
+          'Back garden',
+        );
+        await locate(tester);
+        expect(names.lookups, isEmpty);
+        expect(nameText(tester), 'Back garden');
+      });
+
+      testWidgets('a saved site being edited keeps its name', (tester) async {
+        await build(
+          tester,
+          sites: [site('Home', 46.05, 14.51)],
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(result: ljubljana),
+        );
+        await pump(
+          tester,
+          at: AppRouter.siteEdit,
+          extra: SiteEditorArgs(site: vm.sites.single),
+        );
+        await locate(tester);
+        expect(names.lookups, isEmpty);
+        expect(nameText(tester), 'Home');
+      });
+
+      testWidgets('a name typed while the lookup runs wins', (tester) async {
+        final pending = Completer<ReverseGeocodeResult>();
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(answer: () => pending.future),
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await locate(tester);
+        expect(find.text('Looking up a place name…'), findsOneWidget);
+        await tester.enterText(
+          find.byKey(const Key('siteEditor.name')),
+          'Typed',
+        );
+        pending.complete(ljubljana);
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        await tester.pumpAndSettle();
+        expect(nameText(tester), 'Typed');
+        expect(find.textContaining('Suggested by'), findsNothing);
+      });
+
+      testWidgets('an answer for coordinates changed meanwhile is ignored', (
+        tester,
+      ) async {
+        final pending = Completer<ReverseGeocodeResult>();
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(answer: () => pending.future),
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await locate(tester);
+        await tester.enterText(
+          find.widgetWithText(TextFormField, 'Latitude (°)'),
+          '44.1',
+        );
+        pending.complete(ljubljana);
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        await tester.pumpAndSettle();
+        expect(nameText(tester), isEmpty);
+        expect(find.textContaining('Suggested by'), findsNothing);
+      });
+
+      testWidgets('off: the opt-in is offered, nothing is sent, typing a '
+          'name and Save still work', (tester) async {
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(result: ljubljana),
+          placeNames: false,
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await locate(tester);
+        expect(
+          find.byKey(const Key('siteEditor.placeNameOffer')),
+          findsOneWidget,
+        );
+        expect(names.lookups, isEmpty, reason: 'nothing sent while off');
+        expect(vm.settings.placeNameLookup, isFalse);
+
+        await tester.enterText(
+          find.byKey(const Key('siteEditor.name')),
+          'Field',
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const Key('siteEditor.placeNameOffer')),
+          findsNothing,
+        );
+        await save(tester);
+        expect(vm.sites.single.name, 'Field');
+        expect(names.lookups, isEmpty);
+        expect(vm.settings.placeNameLookup, isFalse);
+      });
+
+      testWidgets('off, then turned on from the offer: the setting is on and '
+          'the name is proposed', (tester) async {
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(result: ljubljana),
+          placeNames: false,
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await locate(tester);
+        await tester.tap(find.text('Turn on place names'));
+        for (var i = 0; i < 3; i++) {
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          await tester.pump();
+        }
+        await tester.pumpAndSettle();
+        expect(vm.settings.placeNameLookup, isTrue);
+        expect(names.lookups, contains((45.8123, 15.9771)));
+        expect(nameText(tester), 'Ljubljana');
+        expect(vm.sites, isEmpty);
+      });
+
+      for (final (label, result, helper) in [
+        (
+          'not found',
+          const PlaceNameNotFound() as ReverseGeocodeResult,
+          'No place name found for this position; enter a name.',
+        ),
+        (
+          'a failure',
+          const ReverseGeocodeFailed('offline') as ReverseGeocodeResult,
+          'No place name: the lookup failed. Enter a name.',
+        ),
+      ]) {
+        testWidgets('$label: says so, and a typed name saves', (tester) async {
+          await build(
+            tester,
+            locationService: FakeLocationService(location: at),
+            geocoder: FakeReverseGeocoder(result: result),
+          );
+          await pump(tester, at: AppRouter.siteEdit);
+          await locate(tester);
+          expect(find.text(helper), findsOneWidget);
+          expect(nameText(tester), isEmpty);
+          await tester.enterText(
+            find.byKey(const Key('siteEditor.name')),
+            'Field',
+          );
+          await save(tester);
+          expect(vm.sites.single.name, 'Field');
+          expect(vm.sites.single.latitude, 45.8123);
+        });
+      }
     });
 
     testWidgets('a GPS failure says why and changes no field', (tester) async {
