@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -484,7 +486,7 @@ class _Actions extends StatelessWidget {
             ? 'Copied to ${NightTimeFormatter.eveningDate(night!)}'
             : 'Plan opened',
       );
-      context.push(AppRouter.session());
+      unawaited(context.push(AppRouter.session()));
     }
   }
 

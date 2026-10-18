@@ -2,6 +2,8 @@
 // to sunrise), ranges with units, the dew heuristic, the forecast's age and
 // model, attribution, and the stale / unavailable / out-of-range states.
 
+import 'dart:async';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -225,7 +227,7 @@ void main() {
   ) async {
     await pump(tester);
     await run(tester, () async {
-      vm.setEveningDate(CalendarDate(2026, 9, 29));
+      unawaited(vm.setEveningDate(CalendarDate(2026, 9, 29)));
       await Future<void>.delayed(Duration.zero);
     });
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));

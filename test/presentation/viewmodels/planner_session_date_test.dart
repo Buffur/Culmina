@@ -15,6 +15,8 @@
 //   - Downstream recalculation tests use VisibilityCalculator directly —
 //     these are pure Dart functions with no platform-channel dependencies.
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,7 +105,7 @@ void main() {
       vm = await buildViewModel(
         clock: FixedClock(DateTime.utc(2026, 9, 22, 1, 30)),
       );
-      vm.setEveningDate(CalendarDate(2026, 10, 5));
+      unawaited(vm.setEveningDate(CalendarDate(2026, 10, 5)));
       expect(vm.eveningDate, CalendarDate(2026, 10, 5));
     });
 
@@ -113,7 +115,7 @@ void main() {
       );
       var notified = false;
       vm.addListener(() => notified = true);
-      vm.setEveningDate(CalendarDate(2026, 10, 6));
+      unawaited(vm.setEveningDate(CalendarDate(2026, 10, 6)));
       expect(notified, isTrue);
     });
 
@@ -121,7 +123,7 @@ void main() {
       vm = await buildViewModel(
         clock: FixedClock(DateTime.utc(2026, 9, 22, 1, 30)),
       );
-      vm.setEveningDate(CalendarDate(2025, 1, 1));
+      unawaited(vm.setEveningDate(CalendarDate(2025, 1, 1)));
       expect(vm.eveningDate, CalendarDate(2025, 1, 1));
     });
 
@@ -129,7 +131,7 @@ void main() {
       vm = await buildViewModel(
         clock: FixedClock(DateTime.utc(2026, 9, 22, 1, 30)),
       );
-      vm.setEveningDate(CalendarDate(2028, 6, 15));
+      unawaited(vm.setEveningDate(CalendarDate(2028, 6, 15)));
       expect(vm.eveningDate, CalendarDate(2028, 6, 15));
     });
 
@@ -138,8 +140,8 @@ void main() {
       vm = await buildViewModel(
         clock: FixedClock(DateTime.utc(2026, 9, 22, 1, 30)),
       );
-      vm.setEveningDate(CalendarDate(2030, 1, 1));
-      vm.newSession();
+      unawaited(vm.setEveningDate(CalendarDate(2030, 1, 1)));
+      unawaited(vm.newSession());
       expect(vm.eveningDate, CalendarDate(2026, 9, 21));
     });
 

@@ -64,6 +64,7 @@ exists (the row of the next task's commit carries the previous one).
 | F02 | IMPLEMENTED; A2/A3 NEEDS ATTENTION | A1 PASS (TEST, fails on the old resources); A2/A3 not observable here | `app_identity_test.dart` ([evidence](evidence/finalization/F02/README.md)) | No Android SDK/emulator in this container (network policy refuses dl.google.com) |
 | F03 | IN PROGRESS — waits for ADR-021 acceptance | A1: [decision sheet](ADR_021_DECISION_SHEET.md) prepared (C1–C21, V1–V15), owner acceptance pending; A2–A4 not started (depend on A1); A5: no FITS sample available (recorded) | — | ADR-021 owner acceptance; FITS sample |
 | F13 | IN PROGRESS — waits for ADR-022 acceptance | [decision sheet](ADR_022_DECISION_SHEET.md) prepared (N1–N12, M1–M7, W1–W3); implementation after acceptance | — | ADR-022 owner acceptance |
+| F24 | IN PROGRESS | A3, A4, A6 implemented and tested; A1, A2, A5 not started | [evidence](evidence/finalization/F24/README.md) | Closure after F01–F23 per the roadmap |
 
 ## Next allowed action
 

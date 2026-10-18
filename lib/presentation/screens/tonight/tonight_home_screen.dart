@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -535,7 +537,7 @@ class _QuickActions extends StatelessWidget {
             );
             if (started && context.mounted) {
               showDone(context, 'New plan started');
-              context.push(AppRouter.session());
+              unawaited(context.push(AppRouter.session()));
             }
           },
           icon: const Icon(Icons.add),

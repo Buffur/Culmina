@@ -7,6 +7,7 @@
 // the preferences, and main() runs again. The tests close the database and
 // build a new ViewModel graph on the same file and preferences.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
@@ -318,7 +319,7 @@ void main() {
       });
       addTearDown(() => tester.runAsync(db.close));
       await _pumpApp(tester, vm);
-      AppRouter.router.push(AppRouter.siteEdit);
+      unawaited(AppRouter.router.push(AppRouter.siteEdit));
       await _settle(tester);
       final name = find.widgetWithText(TextFormField, 'Name');
       await tester.enterText(name, 'Dark field');

@@ -42,8 +42,8 @@
 | TD-100 | Low | The accessibility sweep misses editors, the filter panel and the map | S16.7 | F25 |
 | TD-101 | Low | Hand-formatted quantities | S16.7 | F25 |
 | TD-102 | Low | Two contract checks shown by probes only | S16.8 | F22, F24 (A2) |
-| TD-103 | Low | The v10 orphan cleanup logs with `print` | S16.8 | F24 (A3) |
-| TD-038 | Low | Stricter analysis rules (`unawaited_futures`) | S16.8 | F24 (A4) |
+| TD-103 | Low | The v10 orphan cleanup logs with `print`. **Fixed by F24 A3 (2026-10-18)** | S16.8 | F24 (A3, implemented) |
+| TD-038 | Low | Stricter analysis rules (`unawaited_futures`). **Enabled by F24 A4 (2026-10-18)** | S16.8 | F24 (A4, implemented) |
 | TD-045 | Low | Drift row-class name collisions | Excluded (S16.8) | Excluded |
 | TD-030 | Low | Repository hygiene: `skills-lock.json`, `.agents/skills/` (partly resolved) | RD-02 (owner housekeeping) | Excluded |
 | TD-035 | Low | Equipment seeding is not idempotent per row (partly resolved) | Not scheduled; re-verify | — |

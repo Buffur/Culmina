@@ -35,6 +35,9 @@ linter:
     # it cannot be dropped by accident. `catch (_) {}`, which this lint
     # allows, is caught by test/core/diagnostics/no_empty_catch_test.dart.
     empty_catches: true
+    # F24 A4 (TD-038): a Future that is neither awaited nor explicitly
+    # marked `unawaited(...)` is a likely lost failure.
+    unawaited_futures: true
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

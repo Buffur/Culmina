@@ -3,6 +3,8 @@
 // listed when the Logbook comes back into view, without a restart. Found on
 // the emulator in S11.3. Through the real app, router and database.
 
+import 'dart:async';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -106,7 +108,7 @@ void main() {
   testWidgets('a plan saved in the planner opened over the Logbook is listed '
       'when the planner closes', (tester) async {
     await start(tester);
-    AppRouter.router.push(AppRouter.session());
+    unawaited(AppRouter.router.push(AppRouter.session()));
     await settle(tester);
     expect(find.text('Plan'), findsWidgets);
     await savePlanFor(tester, CalendarDate(2026, 11, 14));

@@ -6,6 +6,8 @@
 // says it is an example where it is listed and chosen. Through the real app
 // and database.
 
+import 'dart:async';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -178,7 +180,7 @@ void main() {
     expect(vm.selectedEquipment!.isExample, isTrue);
     expect(find.text(ExampleText.rigNote), findsOneWidget);
 
-    AppRouter.router.push(AppRouter.selectRig);
+    unawaited(AppRouter.router.push(AppRouter.selectRig));
     await settle(tester);
     expect(find.textContaining('${ExampleText.rig} · '), findsOneWidget);
   });

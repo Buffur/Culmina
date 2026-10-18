@@ -35,6 +35,7 @@ import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 
+import 'package:astroplan/core/diagnostics/app_log.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/database/json_map_converter.dart';
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
@@ -1413,8 +1414,21 @@ void main() {
           "(2, 999, 'DARK', 300.0, 5);",
         );
 
+        AppLog.clear();
         final db = AppDatabase(schema.newConnection());
         await db.customSelect('SELECT 1').get();
+
+        // F24 A3 (TD-103): the count goes to the app's log, not `print`.
+        expect(
+          [
+            for (final e in AppLog.recent)
+              if (e.scope == 'database') e.message,
+          ],
+          containsAll([
+            contains('deleted 1 orphan row(s) from optical_rigs'),
+            contains('deleted 1 orphan row(s) from capture_blocks'),
+          ]),
+        );
 
         final rigs = await db.select(db.opticalRigs).get();
         expect(rigs.map((r) => r.id), [1]);

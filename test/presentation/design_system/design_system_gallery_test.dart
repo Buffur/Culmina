@@ -5,6 +5,8 @@
 // targets, labels, AA contrast in light and dark). Each Stage 5 Task adds
 // its components to `galleryEntries` (gallery_entries.dart).
 
+import 'dart:async';
+
 import 'package:astroplan/presentation/shared/confirmation_patterns.dart';
 import 'package:astroplan/presentation/shared/delete_patterns.dart';
 import 'package:astroplan/presentation/shared/failure_feedback.dart';
@@ -24,10 +26,12 @@ Future<List<String>> _auditOverlays(
   final context = tester.element(find.byType(ListView));
 
   // S5.8: the shared confirmation for a stored record.
-  confirmDestructive(
-    context,
-    title: 'Delete rig "Refractor 400"?',
-    message: 'Plans that use it keep their saved values.',
+  unawaited(
+    confirmDestructive(
+      context,
+      title: 'Delete rig "Refractor 400"?',
+      message: 'Plans that use it keep their saved values.',
+    ),
   );
   await tester.pumpAndSettle();
   expect(find.byType(AlertDialog), findsOneWidget);
@@ -41,7 +45,7 @@ Future<List<String>> _auditOverlays(
   await tester.pumpAndSettle();
 
   // S5.8: the unsaved-changes prompt.
-  askUnsavedChanges(context, plan: 'M42 · Fri, Nov 13');
+  unawaited(askUnsavedChanges(context, plan: 'M42 · Fri, Nov 13'));
   await tester.pumpAndSettle();
   expect(find.text('Unsaved changes'), findsOneWidget);
   problems.addAll(
@@ -51,7 +55,7 @@ Future<List<String>> _auditOverlays(
   await tester.pumpAndSettle();
 
   // S5.8: the undo message, then the success message replacing it.
-  showUndo(context, message: 'Block deleted', onUndo: () {});
+  unawaited(showUndo(context, message: 'Block deleted', onUndo: () {}));
   await tester.pumpAndSettle();
   expect(find.text('Block deleted'), findsOneWidget);
   problems.addAll(

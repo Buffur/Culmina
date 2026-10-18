@@ -5,6 +5,7 @@
 // row springs back; all of it is red or black in field mode by the theme
 // alone.
 
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -257,19 +258,21 @@ void main() {
   testWidgets('field mode: the prompt, the confirmation, the undo and the '
       'done messages are red or black by the theme alone', (tester) async {
     final context = await _host(tester, theme: AppTheme.fieldTheme);
-    askUnsavedChanges(context, plan: 'M42');
+    unawaited(askUnsavedChanges(context, plan: 'M42'));
     await tester.pumpAndSettle();
     expect(await _colouredPixels(tester), 0, reason: 'prompt');
     await tester.tap(find.byKey(const Key('unsaved.cancel')));
     await tester.pumpAndSettle();
 
-    confirmDestructive(context, title: 'Delete rig?', message: 'Kept.');
+    unawaited(
+      confirmDestructive(context, title: 'Delete rig?', message: 'Kept.'),
+    );
     await tester.pumpAndSettle();
     expect(await _colouredPixels(tester), 0, reason: 'confirmation');
     await tester.tap(find.byKey(const Key('confirm.cancel')));
     await tester.pumpAndSettle();
 
-    showUndo(context, message: 'Block deleted', onUndo: () {});
+    unawaited(showUndo(context, message: 'Block deleted', onUndo: () {}));
     await tester.pumpAndSettle();
     expect(await _colouredPixels(tester), 0, reason: 'undo');
 

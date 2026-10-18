@@ -635,10 +635,11 @@ Future<void> _deleteOrphanForeignKeyRows(GeneratedDatabase db) async {
     await db.customStatement(
       'DELETE FROM ${entry.key} WHERE rowid IN (${entry.value.join(',')});',
     );
-    // ignore: avoid_print
-    print(
+    // TD-103 (trap 15): the app's log, like every other diagnostic.
+    AppLog.warning(
+      'database',
       'ADR-008 v10 migration: deleted ${entry.value.length} orphan row(s) '
-      'from ${entry.key} (dangling foreign key).',
+          'from ${entry.key} (dangling foreign key).',
     );
   }
 }

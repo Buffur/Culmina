@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -41,6 +43,15 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
   bool _initialLoading = true;
   Object? _loadError;
 
+  /// F24 A6 (UX32-03): each request's number; only the newest request's
+  /// result or failure is shown, so a late answer to an older query can
+  /// never replace the newer one's list.
+  int _generation = 0;
+
+  /// The query whose answer [_targets] (or [_loadError]) holds; while it
+  /// differs from [_searchQuery] the newer search is still running.
+  String _shownQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -55,21 +66,26 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
 
   Future<void> _loadTargets() async {
     final targets = context.read<TargetsViewModel>();
+    final generation = ++_generation;
+    final query = _searchQuery;
+    bool current() => mounted && generation == _generation;
     try {
-      final results = await targets.search(_searchQuery);
-      if (mounted) {
+      final results = await targets.search(query);
+      if (current()) {
         setState(() {
           _targets = results;
           _loadError = null;
           _initialLoading = false;
+          _shownQuery = query;
         });
       }
     } catch (e) {
       // TASK 15.1: an unreadable list says so instead of looking empty.
-      if (mounted) {
+      if (current()) {
         setState(() {
           _loadError = e;
           _initialLoading = false;
+          _shownQuery = query;
         });
       }
     }
@@ -143,7 +159,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
     );
     if (started && mounted) {
       showDone(context, 'New plan for ${_name(target)}');
-      context.push(AppRouter.session());
+      unawaited(context.push(AppRouter.session()));
     }
   }
 
@@ -340,7 +356,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
       },
     );
     // Refresh list after dialog closes, regardless of whether user saved.
-    _loadTargets();
+    unawaited(_loadTargets());
     // TD-028: pick up an edit to the currently selected target instead of
     // leaving the planner showing stale field values. A no-op unless the
     // edited target is the selected one.
@@ -382,6 +398,15 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
       ),
       body: _initialLoading
           ? const Center(child: CircularProgressIndicator())
+          : _shownQuery != _searchQuery
+          // F24 A6: an older query's list is never shown under newer text.
+          ? Center(
+              key: const Key('targets.searching'),
+              child: Semantics(
+                liveRegion: true,
+                child: Text('Searching for "$_searchQuery"…'),
+              ),
+            )
           : _loadError != null
           ? LoadFailureView(
               action: 'load the targets',

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -141,7 +143,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
     // S9.8 (D9-5): a save says so.
     if (saved && mounted) showDone(context, 'Rig saved');
     // Always refresh list after dialog closes.
-    _loadEquipment();
+    unawaited(_loadEquipment());
     // TD-028: pick up an edit to the currently selected equipment instead of
     // leaving the planner showing stale field values. A no-op unless the
     // edited profile is the selected one.

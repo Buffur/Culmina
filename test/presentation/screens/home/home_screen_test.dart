@@ -7,6 +7,8 @@
 //     card instead of hanging or crashing (the first screen never blocks on the network)
 //   - a bootstrap-repository failure renders an error/retry view
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -428,8 +430,8 @@ void main() {
       await vm.ready;
     });
 
-    vm.setTarget(testTarget);
-    vm.setEquipment(testEquip);
+    unawaited(vm.setTarget(testTarget));
+    unawaited(vm.setEquipment(testEquip));
     await tester.pumpWidget(wrap(vm));
     await tester.pumpAndSettle();
 
@@ -486,8 +488,8 @@ void main() {
       await vm.ready;
     });
 
-    vm.setTarget(testTarget);
-    vm.setEquipment(testEquip);
+    unawaited(vm.setTarget(testTarget));
+    unawaited(vm.setEquipment(testEquip));
     await tester.pumpWidget(wrap(vm));
     await tester.pumpAndSettle();
 
@@ -564,8 +566,8 @@ void main() {
       await vm.ready;
     });
 
-    vm.setTarget(testTarget);
-    vm.setEquipment(testEquip);
+    unawaited(vm.setTarget(testTarget));
+    unawaited(vm.setEquipment(testEquip));
     await tester.pumpWidget(wrap(vm));
     await tester.pumpAndSettle();
 

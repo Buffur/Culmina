@@ -4,6 +4,7 @@
 // survives a restart. The on-device check in real darkness is an owner
 // checklist item (docs/TEST_PLAN.md).
 
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -133,11 +134,13 @@ void main() {
     await settle(tester);
 
     final context = tester.element(find.byType(Scaffold).last);
-    showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Delete?'),
-        actions: [TextButton(onPressed: () {}, child: const Text('Delete'))],
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Delete?'),
+          actions: [TextButton(onPressed: () {}, child: const Text('Delete'))],
+        ),
       ),
     );
     await settle(tester);

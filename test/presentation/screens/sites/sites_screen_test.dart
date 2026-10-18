@@ -5,6 +5,8 @@
 // current position" fills the form only; Bortle and SQM in a collapsed,
 // remembered section with the map link; back with changes asks.
 
+import 'dart:async';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -96,7 +98,7 @@ void main() {
         child: MaterialApp.router(routerConfig: router),
       ),
     );
-    router.push(at, extra: extra);
+    unawaited(router.push(at, extra: extra));
     await tester.pumpAndSettle();
   }
 

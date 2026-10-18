@@ -31,4 +31,20 @@ void main() {
     ];
     expect(offenders, isEmpty);
   });
+
+  // F24 A3 (TD-103, trap 15): every diagnostic goes through AppLog; no
+  // `print` or `debugPrint` call is left in lib.
+  test('no print or debugPrint call in lib', () {
+    final call = RegExp(r'(^|[^\w.])(print|debugPrint)\(');
+    final offenders = [
+      for (final f in Directory('lib').listSync(recursive: true))
+        if (f is File &&
+            f.path.endsWith('.dart') &&
+            !f.path.endsWith('.g.dart'))
+          for (final (i, line) in f.readAsLinesSync().indexed)
+            if (!line.trimLeft().startsWith('//') && call.hasMatch(line))
+              '${f.path}:${i + 1}: ${line.trim()}',
+    ];
+    expect(offenders, isEmpty);
+  });
 }

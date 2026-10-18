@@ -5,6 +5,8 @@
 // sites are deleted through the shared confirmation, from a visible Delete
 // or a swipe; a cancelled delete leaves everything as it was.
 
+import 'dart:async';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -156,7 +158,9 @@ void main() {
 
   testWidgets('from /select/target a tap still chooses', (tester) async {
     await start(tester, AppRouter.tonight);
-    AppRouter.router.push(AppRouter.selectTarget); // as the planner opens it
+    unawaited(
+      AppRouter.router.push(AppRouter.selectTarget),
+    ); // as the planner opens it
     await settle(tester);
     expect(find.text('Choose a target'), findsOneWidget);
     await tester.enterText(find.byType(TextField).first, 'M31');

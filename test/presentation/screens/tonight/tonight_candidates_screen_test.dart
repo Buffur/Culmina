@@ -2,6 +2,8 @@
 // with the same inputs as Home's opportunity card, and the screen sorts,
 // filters and opens a target.
 
+import 'dart:async';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -123,7 +125,7 @@ void main() {
         child: MaterialApp.router(routerConfig: router),
       ),
     );
-    router.push('/tonight');
+    unawaited(router.push('/tonight'));
     await tester.pump();
 
     // The evaluation runs on a background isolate.
