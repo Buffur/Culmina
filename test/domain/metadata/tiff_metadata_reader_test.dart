@@ -223,9 +223,9 @@ void main() {
 
   test('other recognised formats are not supported', () async {
     for (final (header, format) in [
-      ('SIMPLE  =                    T'.codeUnits, MetadataFormat.fits),
       ('XISF0100'.codeUnits, MetadataFormat.xisf),
-      // JPEG (S2.8) and HEIF (S2.9) have readers; CR3 is recognised only.
+      // JPEG (S2.8), HEIF (S2.9) and FITS (F10) have readers; CR3 is
+      // recognised only.
       ([0, 0, 0, 24, ...'ftypcrx '.codeUnits, 0, 0, 0, 0], MetadataFormat.cr3),
       (<int>[], MetadataFormat.unknown),
       ('not an image'.codeUnits, MetadataFormat.unknown),

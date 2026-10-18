@@ -16,6 +16,9 @@ abstract final class ProposalText {
       if (p.exposure case final e?)
         'Exposure ${QuantityText.exposure(e.value)}',
       if (p.iso case final i?) 'ISO ${i.value.value!.round()}',
+      if (p.gain case final g?) 'Gain ${QuantityText.number(g.value.value!)}',
+      if (p.filter case final f?) 'Filter ${f.value}',
+      if (p.binning case final b?) 'Binning ${b.value} × ${b.value}',
       if (p.whiteBalance case final wb?)
         'White balance ${CaptureSettingsText.whiteBalance(wb.value)}',
     ];
@@ -43,6 +46,23 @@ abstract final class ProposalText {
     NeutralEvidence(:final vector) =>
       'As-shot neutral ${vector.values.map(QuantityText.number).join(' · ')} '
           '(a neutral vector, not a colour temperature)',
+    SettingEvidence(:final keyword, :final value) => switch (keyword) {
+      'GAIN' =>
+        'Gain ${QuantityText.number(value)}: not proposed (this rig records '
+            'ISO, and a gain is not an ISO)',
+      'EGAIN' =>
+        'Conversion gain ${QuantityText.number(value)} e⁻/ADU (shown only)',
+      'OFFSET' => 'Offset ${QuantityText.number(value)} (shown only)',
+      'CCD-TEMP' =>
+        'Sensor temperature ${QuantityText.number(value)} °C (shown only)',
+      'SET-TEMP' =>
+        'Cooler setpoint ${QuantityText.number(value)} °C (shown only; not '
+            'the measured temperature)',
+      _ => '$keyword ${QuantityText.number(value)} (shown only)',
+    },
+    BinningEvidence(:final binning) =>
+      'Binning ${binning.x} × ${binning.y}: not proposed'
+          '${binning.isSymmetric ? '' : ' (not the same on both axes)'}',
   };
 
   /// Why the file's size is not used for this block, or null.
@@ -52,6 +72,6 @@ abstract final class ProposalText {
             'its size is not used for storage.';
 
   static String unreadable(BlockProposal p) =>
-      "${p.label} can't be read for a block: it is not a DNG, JPEG or HEIC "
-      'this app reads. Nothing was changed.';
+      "${p.label} can't be read for a block: it is not a DNG, JPEG, HEIC or "
+      'FITS file this app reads. Nothing was changed.';
 }

@@ -294,9 +294,8 @@ class _BlockListState extends State<_BlockList> {
                       icon: const Icon(Icons.add),
                       label: const Text('Add light frames'),
                     ),
-                    if (_fromPhoto != null &&
-                        _cameraClass != CameraClass.astroColour &&
-                        _cameraClass != CameraClass.astroMono)
+                    // F10: FITS is read, so every class has a file to take.
+                    if (_fromPhoto != null)
                       OutlinedButton.icon(
                         key: const Key('capturePlan.addFromPhoto'),
                         onPressed: () => _add(pickPhoto: true),

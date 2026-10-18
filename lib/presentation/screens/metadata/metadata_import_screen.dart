@@ -72,8 +72,9 @@ class _MetadataImportScreenState extends State<MetadataImportScreen> {
               padding: const EdgeInsets.all(16),
               children: [
                 const Text(
-                  "Reads a few kilobytes of a photo's or RAW file's header, on "
-                  'this device, and proposes a rig from it. Nothing is saved '
+                  "Reads a few kilobytes of a DNG, JPEG, HEIC or FITS file's "
+                  'header, on this device, and proposes a rig from it. Other '
+                  'RAW files are recognized but not read. Nothing is saved '
                   'until you press Save in the rig editor, and nothing leaves '
                   'this device.',
                 ),

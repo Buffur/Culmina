@@ -90,10 +90,11 @@ void main() {
     tester,
   ) async {
     await show(tester);
-    files.file('light.fits', 'SIMPLE  =                    T'.codeUnits);
+    // FITS is read since F10; XISF stays recognized only.
+    files.file('light.xisf', 'XISF0100'.codeUnits);
     await pick(tester);
     expect(
-      find.text("This file's format (FITS) is not supported yet."),
+      find.text("This file's format (XISF) is not supported yet."),
       findsOneWidget,
     );
     expect(find.text('Exposure'), findsNothing);

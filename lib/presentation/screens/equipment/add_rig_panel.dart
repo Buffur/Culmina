@@ -6,9 +6,9 @@ import '../../shared/rig_input_text.dart';
 
 /// How a new rig starts (F05; S14.2, CA-02): the camera class first, with
 /// "Not sure" as an explicit Unknown, then two equally visible choices.
-/// From a photo comes first for a phone or camera, Enter by hand first for
-/// an astro camera (FITS is not read yet, F10). The panel only reports the
-/// choice; the caller opens the editor or the import.
+/// From a photo comes first for every class since FITS is read (F10; until
+/// then an astro camera put Enter by hand first). The panel only reports
+/// the choice; the caller opens the editor or the import.
 class AddRigPanel extends StatefulWidget {
   const AddRigPanel({super.key, required this.onByHand, this.onFromPhoto});
 
@@ -33,9 +33,6 @@ class AddRigPanel extends StatefulWidget {
 class _AddRigPanelState extends State<AddRigPanel> {
   CameraClass? _class;
 
-  bool get _astro =>
-      _class == CameraClass.astroColour || _class == CameraClass.astroMono;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -55,11 +52,7 @@ class _AddRigPanelState extends State<AddRigPanel> {
             icon: const Icon(Icons.add_photo_alternate_outlined),
             label: const Text(RigInputText.fromPhoto),
           );
-    final choices = [
-      if (fromPhoto != null && !_astro) fromPhoto,
-      byHand,
-      if (fromPhoto != null && _astro) fromPhoto,
-    ];
+    final choices = [?fromPhoto, byHand];
     return Column(
       key: const Key('addRig.panel'),
       crossAxisAlignment: CrossAxisAlignment.stretch,

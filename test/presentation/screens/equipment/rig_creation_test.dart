@@ -197,22 +197,25 @@ void main() {
       expect(find.text('Not sure'), findsOneWidget);
     });
 
-    testWidgets('photo first for a phone or camera, by hand first for an '
-        'astro camera; the readable formats are named', (tester) async {
+    // F05 put Enter by hand first for astro cameras "until F10"; FITS is
+    // read since F10, so a photo (a FITS sub-frame) comes first for all.
+    testWidgets('photo first for every class since F10; the readable formats '
+        'are named, other RAW honestly', (tester) async {
       await start(tester);
       for (final c in [CameraClass.phone, CameraClass.dslrMirrorless]) {
         await tester.tap(find.byKey(Key('addRig.class.${c.name}')));
         await tester.pumpAndSettle();
         expect(top('addRig.fromPhoto'), lessThan(top('addRig.byHand')));
         expect(find.textContaining('JPEG, HEIC or DNG'), findsOneWidget);
+        expect(find.textContaining('Other RAW files'), findsOneWidget);
         expect(enabled(tester, 'addRig.fromPhoto'), isTrue);
         expect(enabled(tester, 'addRig.byHand'), isTrue);
       }
       for (final c in [CameraClass.astroColour, CameraClass.astroMono]) {
         await tester.tap(find.byKey(Key('addRig.class.${c.name}')));
         await tester.pumpAndSettle();
-        expect(top('addRig.byHand'), lessThan(top('addRig.fromPhoto')));
-        expect(find.textContaining('FITS files are not read'), findsOneWidget);
+        expect(top('addRig.fromPhoto'), lessThan(top('addRig.byHand')));
+        expect(find.textContaining('a FITS sub-frame'), findsOneWidget);
       }
     });
 

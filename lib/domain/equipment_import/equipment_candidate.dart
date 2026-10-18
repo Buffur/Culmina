@@ -232,7 +232,13 @@ class EquipmentCandidate {
           UnknownField(:final gap) => UnknownField(gap),
         };
 
-    final estimate = _estimate(m, focal, dims, source);
+    final fits = reading.format == MetadataFormat.fits
+        ? _fitsGeometry(m, source)
+        : null;
+    final estimate = switch (fits) {
+      final f? => (width: f.width, height: f.height, pitch: f.pitch),
+      null => _estimate(m, focal, dims, source),
+    };
     final rawSize = _rawFileSize(reading.format, fileLengthBytes);
     final make = field(m.cameraMake);
     final model = field(m.cameraModel);
@@ -247,8 +253,8 @@ class EquipmentCandidate {
       ),
       manufacturer: make,
       cameraModel: model,
-      resolutionWidthPx: side((d) => d.longSidePx),
-      resolutionHeightPx: side((d) => d.shortSidePx),
+      resolutionWidthPx: fits?.longPx ?? side((d) => d.longSidePx),
+      resolutionHeightPx: fits?.shortPx ?? side((d) => d.shortSidePx),
       focalLengthMm: focal,
       focalRatio: ratio,
       sensorWidthMm: estimate.width,
@@ -289,6 +295,88 @@ class EquipmentCandidate {
       origins: const [
         MetadataOrigin(format: MetadataFormat.dng, field: 'File size'),
       ],
+    );
+  }
+
+  /// ADR-021 C11/C21 (F10): a FITS file's native geometry. NAXISn is the
+  /// written (binned) output and XPIXSZ the binned pixel size, so with a
+  /// symmetric XBINNING = YBINNING = k the native pixel count is NAXISn × k
+  /// and the native pixel size XPIXSZ / k, normalized once. Absent binning
+  /// is not taken as 1 (some writers omit it for binned frames), and
+  /// asymmetric binning or pixels are a conflict: nothing is proposed then.
+  static ({
+    CandidateField<double> width,
+    CandidateField<double> height,
+    CandidateField<double> pitch,
+    CandidateField<int> longPx,
+    CandidateField<int> shortPx,
+  })
+  _fitsGeometry(CaptureMetadata m, String source) {
+    final dims = m.imageDimensions;
+    final bin = m.binning;
+    final size = m.pixelSizeUm;
+    final gap = switch (bin) {
+      AbsentValue() => CandidateGap.notInFile,
+      KnownValue(:final value) when !value.isSymmetric =>
+        CandidateGap.conflicting,
+      KnownValue() => null,
+      _ => CandidateGap.unreadable,
+    };
+    if (gap != null ||
+        dims is! KnownValue<ImageDimensions> ||
+        bin is! KnownValue<SensorBinning>) {
+      final g = gap ?? CandidateGap.notInFile;
+      return (
+        width: UnknownField(g),
+        height: UnknownField(g),
+        pitch: UnknownField(g),
+        longPx: UnknownField(g),
+        shortPx: UnknownField(g),
+      );
+    }
+    final k = bin.value.x;
+    final origins = [dims.origin, bin.origin];
+    ProposedField<T> proposed<T>(T v, [List<MetadataOrigin> more = const []]) =>
+        ProposedField(
+          v,
+          source: source,
+          confidence: SpecConfidence.reported,
+          origins: [...origins, ...more],
+        );
+    final long = dims.value.longSidePx * k;
+    final short = dims.value.shortSidePx * k;
+    final longPx = EquipmentLimits.resolutionPx.contains(long.toDouble())
+        ? proposed(long)
+        : const UnknownField<int>(CandidateGap.outOfRange);
+    final shortPx = EquipmentLimits.resolutionPx.contains(short.toDouble())
+        ? proposed(short)
+        : const UnknownField<int>(CandidateGap.outOfRange);
+    if (size is! KnownValue<PixelSize> || !size.value.isSquare) {
+      final g = size is KnownValue<PixelSize>
+          ? CandidateGap.conflicting
+          : CandidateGap.notInFile;
+      return (
+        width: UnknownField(g),
+        height: UnknownField(g),
+        pitch: UnknownField(g),
+        longPx: longPx,
+        shortPx: shortPx,
+      );
+    }
+    final pitch = size.value.xUm / k;
+    final pitchField = EquipmentLimits.pixelPitchUm.contains(pitch)
+        ? proposed(_round(pitch, pixelPitchDecimals), [size.origin])
+        : const UnknownField<double>(CandidateGap.outOfRange);
+    return (
+      width: proposed(_round(long * pitch / 1000, sensorDecimals), [
+        size.origin,
+      ]),
+      height: proposed(_round(short * pitch / 1000, sensorDecimals), [
+        size.origin,
+      ]),
+      pitch: pitchField,
+      longPx: longPx,
+      shortPx: shortPx,
     );
   }
 

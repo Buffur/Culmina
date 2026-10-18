@@ -288,12 +288,11 @@ void main() {
       expect(find.text('Add capture block'), findsOneWidget);
     });
 
-    testWidgets("an astro rig is not offered a photo until FITS (F10)", (
-      tester,
-    ) async {
+    testWidgets('an astro rig is offered a file too, since FITS is read '
+        '(F10)', (tester) async {
       await start(tester, rig: _rig(CameraClass.astroMono), files: true);
       expect(find.text('Add light frames'), findsOneWidget);
-      expect(find.text('Take from a photo'), findsNothing);
+      expect(find.text('Take from a photo'), findsOneWidget);
     });
   });
 }

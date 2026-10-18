@@ -335,9 +335,11 @@ abstract final class StorageEstimate {
           MetadataFormat.dng => 'dng',
           MetadataFormat.jpeg => 'jpeg',
           MetadataFormat.heif => 'heic',
+          MetadataFormat.fits => 'fits',
           _ => null,
         };
         if (format0 == null) return null;
+        if (format0 == 'fits') return _fits(label, metadata, lengthBytes);
         final dims = metadata.imageDimensions.valueOrNull;
         final compression = format0 == 'dng'
             ? switch (metadata.compression.valueOrNull?.kind) {
@@ -371,6 +373,29 @@ abstract final class StorageEstimate {
       case MetadataUnsupported() || MetadataUnreadable():
         return null;
     }
+  }
+
+  /// A read FITS file (F10, C6/C11): its written (output) geometry, sample
+  /// size and binning; a supported image layout is uncompressed.
+  static FileEvidence _fits(String label, CaptureMetadata m, int bytes) {
+    final layout = m.sampleLayout.valueOrNull;
+    final dims = m.imageDimensions.valueOrNull;
+    final bin = m.binning.valueOrNull;
+    return FileEvidence(
+      bytes: bytes,
+      format: 'fits',
+      read: true,
+      width: dims?.widthPx,
+      height: dims?.heightPx,
+      bitsPerSample: m.bitsPerSample.valueOrNull,
+      compression: layout == null
+          ? null
+          : layout.isSupported
+          ? FileCompression.none
+          : FileCompression.unknown,
+      binning: bin != null && bin.isSymmetric ? bin.x : null,
+      label: label,
+    );
   }
 
   static String _extension(MetadataFormat f) => switch (f) {

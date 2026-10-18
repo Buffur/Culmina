@@ -46,12 +46,15 @@ abstract final class RigInputText {
   static const fromPhoto = 'From a photo';
   static const byHand = 'Enter by hand';
 
-  /// The capture-file formats whose metadata is read (F04; FITS is F10).
+  /// The capture-file formats whose metadata is read (F04, F10). Other RAW
+  /// files are recognized, never read (RG-14).
   static String readableFormats(CameraClass c) =>
       c == CameraClass.astroColour || c == CameraClass.astroMono
-      ? 'A photo can be a JPEG, HEIC or DNG file. FITS files are not read '
-            'yet, so an astro camera is usually entered by hand.'
-      : 'A photo can be a JPEG, HEIC or DNG file; it is read on this device.';
+      ? 'A file can be a FITS sub-frame, or a JPEG, HEIC or DNG; it is read '
+            'on this device.'
+      : 'A photo can be a JPEG, HEIC or DNG file (or a FITS sub-frame); it is '
+            'read on this device. Other RAW files (CR3, NEF, ARW …) are not '
+            'read.';
 
   static const savedAndChosen = 'Rig saved and chosen for this plan';
 }

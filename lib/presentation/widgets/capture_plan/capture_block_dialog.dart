@@ -567,16 +567,37 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
           );
         }
       }
-      if (p.iso case final iso?) {
+      if (p.sensitivity case final g?) {
         final now = _typedGain();
+        final word = g.value.kind == GainKind.iso ? 'ISO' : 'gain';
         if (_mayReplace(CaptureField.sensitivity, now)) {
-          _gainValue.text = _trimZeros(iso.value.value!);
-          _seeds[CaptureField.sensitivity] = (iso.value, iso.origin);
+          _gainValue.text = _trimZeros(g.value.value!);
+          _seeds[CaptureField.sensitivity] = (g.value, g.origin);
         } else {
           kept.add(
-            'ISO ${_gainValue.text.trim()} (the file says '
-            '${iso.value.value!.round()})',
+            '$word ${_gainValue.text.trim()} (the file says '
+            '${_trimZeros(g.value.value!)})',
           );
+        }
+      }
+      // FITS (F10): the filter as written, and a symmetric binning.
+      if (p.filter case final f?) {
+        final now = _filter == 'None' ? null : _filter;
+        if (_mayReplace(CaptureField.filter, now) || now == _defaultFilter) {
+          if (!_filters.contains(f.value)) _customFilter = f.value;
+          _filter = f.value;
+          _seeds[CaptureField.filter] = (f.value, f.origin);
+        } else {
+          kept.add('filter $now (the file says ${f.value})');
+        }
+      }
+      if (p.binning case final b? when _showBinning) {
+        final untouched = _binning == (_source?.binning ?? 1);
+        if (untouched || _mayReplace(CaptureField.binning, _binning)) {
+          _binning = b.value;
+          _seeds[CaptureField.binning] = (b.value, b.origin);
+        } else {
+          kept.add('binning $_binning × $_binning (the file says ${b.value})');
         }
       }
       if (p.whiteBalance case final wb?) {
@@ -1089,8 +1110,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
       ),
       if (p == null)
         Text(
-          'Reads exposure, ISO and white balance from a DNG, JPEG or HEIC '
-          'on this device; nothing is saved until you apply the block.',
+          'Reads exposure, ISO or gain, white balance, and a FITS filter '
+          'and binning from a DNG, JPEG, HEIC or FITS file on this device; '
+          'nothing is saved until you apply the block.',
           style: muted,
         )
       else

@@ -24,6 +24,9 @@ class BlockProposal {
     this.exposure,
     this.iso,
     this.whiteBalance,
+    this.gain,
+    this.binning,
+    this.filter,
     this.file,
     this.evidence = const [],
     this.modeConflicts = const {},
@@ -42,6 +45,18 @@ class BlockProposal {
   /// Only Auto, from EXIF WhiteBalance = Auto (C2).
   final ProposedValue<WhiteBalance>? whiteBalance;
 
+  /// A FITS GAIN, only for a class that records gain (C13, C21).
+  final ProposedValue<CaptureGain>? gain;
+
+  /// A FITS XBINNING = YBINNING, only where the class offers binning.
+  final ProposedValue<int>? binning;
+
+  /// A FITS FILTER, as written (trimmed; C21).
+  final ProposedValue<String>? filter;
+
+  /// The ISO or the gain, whichever the class records.
+  ProposedValue<CaptureGain>? get sensitivity => iso ?? gain;
+
   /// The file as the block's storage evidence (C6).
   final FileEvidence? file;
 
@@ -58,7 +73,13 @@ class BlockProposal {
   final bool unreadable;
 
   bool get isEmpty =>
-      exposure == null && iso == null && whiteBalance == null && file == null;
+      exposure == null &&
+      iso == null &&
+      gain == null &&
+      binning == null &&
+      filter == null &&
+      whiteBalance == null &&
+      file == null;
 
   /// Builds the proposal for a block at [binning] of a rig of [cameraClass].
   static BlockProposal of({
@@ -126,17 +147,58 @@ class BlockProposal {
       evidence.add(ProposalEvidence.neutral(value));
     }
 
+    // FITS (F10, C21): GAIN for a gain class, symmetric binning where the
+    // class bins, FILTER as written; the rest is evidence only.
+    ProposedValue<CaptureGain>? gain;
+    if (m.acquisitionGain case KnownValue(:final value, origin: final o)) {
+      if (cameraClass.lightSensitivity == LightSensitivity.gain &&
+          value <= 10000) {
+        gain = ProposedValue(CaptureGain.gain(value), origin(o));
+      } else {
+        evidence.add(ProposalEvidence.setting('GAIN', value));
+      }
+    }
+    ProposedValue<int>? binningValue;
+    if (m.binning case KnownValue(:final value, origin: final o)) {
+      if (cameraClass.offersLightBinning &&
+          value.isSymmetric &&
+          value.x >= 1 &&
+          value.x <= 4) {
+        binningValue = ProposedValue(value.x, origin(o));
+      } else {
+        evidence.add(ProposalEvidence.binning(value));
+      }
+    }
+    ProposedValue<String>? filter;
+    if (m.filterName case KnownValue(:final value, origin: final o)
+        when value.trim().length <= 32) {
+      filter = ProposedValue(value.trim(), origin(o));
+    }
+    for (final (keyword, v) in [
+      ('EGAIN', m.conversionGainElectronsPerAdu),
+      ('OFFSET', m.offset),
+      ('CCD-TEMP', m.sensorTemperatureC),
+      ('SET-TEMP', m.setpointTemperatureC),
+    ]) {
+      if (v case KnownValue(:final value)) {
+        evidence.add(ProposalEvidence.setting(keyword, value));
+      }
+    }
+
     final block = CaptureBlock(
       frameType: FrameType.light,
       exposureTimeSeconds: 1,
       frameCount: 1,
-      binning: binning,
+      binning: binningValue?.value ?? binning,
     );
     return BlockProposal(
       label: label,
       exposure: exposure,
       iso: iso,
       whiteBalance: wb,
+      gain: gain,
+      binning: binningValue,
+      filter: filter,
       file: file,
       evidence: evidence,
       modeConflicts: file == null
@@ -161,6 +223,25 @@ sealed class ProposalEvidence {
       LightSourceEvidence;
   const factory ProposalEvidence.neutral(NeutralVector vector) =
       NeutralEvidence;
+  const factory ProposalEvidence.setting(String keyword, double value) =
+      SettingEvidence;
+  const factory ProposalEvidence.binning(SensorBinning binning) =
+      BinningEvidence;
+}
+
+/// A FITS value shown only (C21): OFFSET, temperatures, EGAIN, or a GAIN
+/// the class does not record.
+final class SettingEvidence extends ProposalEvidence {
+  const SettingEvidence(this.keyword, this.value);
+  final String keyword;
+  final double value;
+}
+
+/// A binning not proposed: asymmetric, out of range, or a class that does
+/// not bin per exposure.
+final class BinningEvidence extends ProposalEvidence {
+  const BinningEvidence(this.binning);
+  final SensorBinning binning;
 }
 
 final class SensitivityEvidence extends ProposalEvidence {
