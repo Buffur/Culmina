@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_button_styles.dart';
 import '../../../domain/services/backup_service.dart';
 import '../../shared/app_messages.dart';
@@ -228,18 +229,18 @@ class RestoringBackupApp extends StatelessWidget {
         body: SafeArea(
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(24),
+              padding: EdgeInsets.all(AppSpacing.lg),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CircularProgressIndicator(),
-                  SizedBox(height: 24),
+                  SizedBox(height: AppSpacing.lg),
                   Text(
                     'Restoring the backup…',
                     key: Key('restore.restoring'),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: AppSpacing.sm),
                   Text(
                     '${AppIdentity.appName} restarts when it is done.',
                     textAlign: TextAlign.center,
