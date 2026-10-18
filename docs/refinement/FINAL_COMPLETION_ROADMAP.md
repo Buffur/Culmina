@@ -1,8 +1,10 @@
 # Culmina — Final completion roadmap
 
-**Status: APPROVED BASELINE WITH OWNER-AUTHORIZED AMENDMENTS AM-01/AM-02/AM-03/AM-04 (2026-10-18). Version: P6-2026-10-18-07. Active execution queue: F01–F26, G1–G4. P8 approved base -02; explicit owner instructions authorized AM-01 (-03), AM-02 (-04), AM-03 (-05) and AM-03's Home title choice AM03-T = B (-06). AM-04 (-07) records the owner's familiar capture-parameter hierarchy. The owner subsequently authorized committing and pushing the prepared project to develop; this does not start application implementation or authorize publication.**
+**Status: APPROVED BASELINE WITH OWNER-AUTHORIZED AMENDMENTS AM-01/AM-02/AM-03/AM-04/AM-05 (2026-10-18). Version: P6-2026-10-18-08. Active execution queue: F01–F26, G1–G4. P8 approved base -02; explicit owner instructions authorized AM-01 (-03), AM-02 (-04), AM-03 (-05) and AM-03's Home title choice AM03-T = B (-06). AM-04 (-07) records the owner's familiar capture-parameter hierarchy. The owner subsequently authorized committing and pushing the prepared project to develop; this does not start application implementation or authorize publication.**
 
 
+
+**AM-05 — finite pass with attention items and targeted verification (owner, 2026-10-18):** when an item genuinely cannot be completed now, record NEEDS ATTENTION / Варто звернути увагу, the exact remaining F/G/CHK requirement, reason, affected dependencies and resumption condition, then continue safely executable independent work. Account for all items and finish with a done/not-done report rather than waiting indefinitely. Required owner decisions/resources and hard dependencies are not waived. Per-task verification uses changed behavior plus affected dependencies and named domain probes under updated CLAUDE.md V1; full gate/actual remote CI is consolidated at G1 and F26 final release inputs. Background CI is not a per-task wait barrier. This changes execution/verification timing, not the 26 tasks, 127 behavior criteria, science/UI/data contracts or release acceptance. See FINALIZATION_REVIEW §40 and DECISIONS E.1 AM-05.
 
 **AM-04 — familiar camera parameters (owner, 2026-10-18):** for Phone/DSLR, show exposure, count, ISO, WB and optional AF/MF recording in the basic block editor, with applicable frame type/filter. Choose ISO versus gain from the explicitly selected rig class; do not require a technical ISO/GAIN selector in each block. Binning belongs in applicable astro-camera Details; preserve recorded values and calibration identity. Accept familiar fractional seconds as well as decimal seconds, storing canonical seconds. Focus mode is an optional descriptive record, not numeric focus, camera control or a calibration-match dimension. F03/F06/F09/F12 and SP05 carry the exact changes; no new task or gate. See FINALIZATION_REVIEW §37 and DECISIONS E.1 AM-04.
 
@@ -40,7 +42,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 1. **Approval and start are separate.** P8 approved base -02; the explicit owner instructions amend it as AM-01/AM-02. Approval/amendment freezes the named scope. An explicit start instruction may authorize one task or the entire bounded sequence. Within an authorized sequence Claude advances in dependency order without requesting repeated task-start permission. Otherwise the existing one-task start rule applies. An implementation session does not start today.
 2. Execute the numbered sequence. Resolve ordinary implementation details inside the task. A missing FITS sample pauses F10 only; continue independent tasks and return before G1. Other unmet dependencies pause only affected tasks. Stage labels organize work; they do not create artificial prerequisites beyond those listed.
 3. **Change control:** amend only the affected task for a demonstrated blocker, contradictory repository evidence, omitted necessary dependency, inability to meet an approved requirement, or an explicit owner change. Record the reason and affected criteria. Non-blocking findings go to a short follow-up list; speculative expansion stays excluded. No general re-audit, validation-of-validation or new exploration stage.
-4. Apply CLAUDE.md **V1–V8**, rather than a second verification policy. `H` below means high-risk: full `dart run tool/check.dart` on the task's final code plus named domain probes. `S` means shared behavior: affected regression areas, analysis, changed-file format and encoding; full gate only where explicitly stated or the affected set cannot be bounded. A broader valid run satisfies its constituent checks. A later task invalidates only relevant evidence. Do not rerun unchanged checks for a newer timestamp.
+4. Apply CLAUDE.md **V1–V8**, rather than a second verification policy. `H` means high-risk targeted contract/dependency tests plus the named domain probes; `S` means affected shared-behavior regressions, analysis, changed-file format and encoding. Neither label alone requires the entire suite after each Task. Consolidate the full quality gate/actual green remote CI at G1 and on F26 final release inputs; broaden a Task check only for demonstrated unbounded impact and record why. Background CI does not stop independent work at every Task boundary. A broader valid run satisfies its parts; reuse evidence while relevant inputs are unchanged (AM-05).
 5. Each task closes with a compact record: task ID; criterion-by-criterion result; changed files; commands and results or justified evidence reuse; baseline/environment; limitations; next eligible task. A task with mandatory pending device/owner evidence is **implemented, acceptance pending**, not complete. Update `PROGRESS.md` and only registers invalidated by the change. Original IDs need aliases, not duplicate completion records.
 6. Preserve planning-first behavior, offline core, immutable saved snapshots/results, Save/Discard/Cancel, user-confirmed proposals, canonical scientific units, unknown-as-unknown, metadata provenance, and existing valid calculations. Never reset a newer database, silently replace real inputs with examples, or remove working behavior to pass acceptance.
 
@@ -78,7 +80,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F01.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** fixture provenance, preserved-content comparisons, failure/restart matrix and final gate result; device row explicitly carried to G2 if pending.
 
@@ -102,11 +104,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** full gate required by the original S13.3 contract; host resource regression, Android compilation and API 26–30 launch. G2 carries physical reduced-motion and final timing rows S13V-02/03.
+**Verification:** S; host resource regression, Android compilation and API 26–30 launch. AM-05 moves the original blanket S13.3 full-suite timing to consolidated G1. G2 carries physical reduced-motion and final timing rows S13V-02/03.
 
 **Criterion checks:** §7 `CHK-F02.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** resource regression, runtime capture and a V5 closure of S13V-01 only. No repetition of Stage 12 or all Stage 13 acceptance.
 
@@ -140,7 +142,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F03.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** accepted ADR-021 decisions, generated migration evidence, field/round-trip matrix and final gate.
 
@@ -168,7 +170,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F04.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** field/tag fixture matrix, real-sample result without private metadata in Git, final gate.
 
@@ -198,7 +200,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F05.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** route/required-input matrix, JPEG journey, U renders/acceptance and explicit remaining input barriers.
 
@@ -232,7 +234,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F06.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** value/source operation matrix, WB round trips, renders and gate.
 
@@ -262,7 +264,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F07.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** vector inputs/expected/actual, invalidation examples, source labels and gate; FITS runtime branch completed in F10.
 
@@ -292,7 +294,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F08.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** proposal/conflict/cancel matrix, file-format/device results and gate.
 
@@ -322,7 +324,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F09.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** tuple/coverage fixture table, preview/Undo evidence, replacement journey and gate.
 
@@ -352,7 +354,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F10.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** fixture provenance/license, keyword/normalization matrix, real-file and device evidence, gate. Do not commit private samples or values.
 
@@ -384,7 +386,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F11.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** vectors, grouping decisions, rendered/text alternative and gate.
 
@@ -416,7 +418,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F12.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** representative fits/non-fits/partial-input states, assertions against service outputs, U evidence.
 
@@ -452,7 +454,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F13.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** accepted ADR-022 including the D9 flow and renders, predicate derivation, vector comparison and gate.
 
@@ -484,7 +486,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F14.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** coverage/cache matrix, request-budget and duration vectors, UI/wording evidence and gate.
 
@@ -516,7 +518,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F15.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** browse/adopt state matrix, cache evidence, renders and device timing status.
 
@@ -542,11 +544,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** full gate for router/startup shared behavior; first-frame/router/widget and updated core-loop tests.
+**Verification:** S; affected first-frame/router/widget, route callers and updated core-loop tests; consolidated integration gate at G1 (AM-05).
 
 **Criterion checks:** §7 `CHK-F16.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** first-run state table, launch observation, setup journey and gate.
 
@@ -580,7 +582,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F17.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** state captures, browse/adopt assertions and owner visual acceptance.
 
@@ -618,7 +620,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F18.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** state/journey matrix, service-backed labels, scroll deltas and visual acceptance.
 
@@ -646,11 +648,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** H because result eligibility/reconciliation changes persisted lifecycle behavior; full gate plus targeted early-report, stale-form, saved-context and result event/content/derived-UI checks; records/result/progress and immutable-snapshot tests, stored-record confirmation/Cancel/delete persistence and derived-selection checks; in-plan edit Undo stays in F06/F09.
+**Verification:** H because result eligibility/reconciliation changes persisted lifecycle behavior; targeted early-report, stale-form, saved-context and result event/content/derived-UI checks; records/result/progress and immutable-snapshot tests, stored-record confirmation/Cancel/delete persistence and derived-selection checks; in-plan edit Undo stays in F06/F09.
 
 **Criterion checks:** §7 `CHK-F19.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** saved-content comparisons, result/progress journey and U acceptance.
 
@@ -680,7 +682,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F20.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** dated source URL, field/status mapping, fixtures and gate.
 
@@ -714,11 +716,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** H when changing persisted preference/write semantics; full gate and injected persistence/concurrency/restart checks; backup/enum, conversion and theme regressions.
+**Verification:** H when changing persisted preference/write semantics; injected persistence/concurrency/restart checks; backup/enum, conversion and theme regressions.
 
 **Criterion checks:** §7 `CHK-F21.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** preference/backup and display coverage tables, conversion vectors, contrast evidence and gate.
 
@@ -748,7 +750,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F22.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** route/state matrix, old-schema content comparison, process-death results.
 
@@ -784,7 +786,7 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Criterion checks:** §7 `CHK-F23.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** mapper fixtures, notice inventory, bounded TD-031 disposition and visual evidence.
 
@@ -817,11 +819,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** full gate at the end, as required for S16.8/tooling changes. F22 owns TD-102's other half. Preserve all existing tests; no coverage-percentage target or repeated global test-gap audit.
+**Verification:** targeted maintenance regressions, analysis and affected tooling checks under V1; the old S16.8 blanket full-suite timing is consolidated at G1 by AM-05. F22 owns TD-102's other half. Preserve all existing tests; no coverage-percentage target or repeated global test-gap audit.
 
 **Criterion checks:** §7 `CHK-F24.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** six-row checklist with files, evidence, classification of surviving non-blocking items and final gate.
 
@@ -845,11 +847,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** full gate explicitly required by S16.7; complete affected accessibility/render inventory and W integration walkthroughs. Reuse valid earlier task evidence rather than replaying every row.
+**Verification:** complete affected accessibility/render tests and W integration walkthroughs; AM-05 consolidates the old S16.7 blanket full-suite requirement at G1. Reuse valid earlier task evidence rather than replaying every row.
 
 **Criterion checks:** §7 `CHK-F25.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** surface/criterion matrix, W records, owner visual decision, explicit non-blocking/UNVERIFIED gaps and gate.
 
@@ -890,11 +892,11 @@ The original plan's main problems are distributed acceptance clauses, a critical
 
 **Data/science invariant:** §8 CP/NC and shared rule 6 apply where relevant: preserve canonical units, Unknown, reviewed local proposals and original history; no provenance or result is invented.
 
-**Verification:** H; release-check rejection/success cases, native build/Kotlin checks, artifact metadata/signature/alignment/hash inspection and remote CI. Public CI needs no private release key; local production-artifact evidence is recorded separately.
+**Verification:** H; targeted release-check rejection/success cases, native build/Kotlin checks, artifact metadata/signature/alignment/hash inspection. F26 A3 retains the full gate and actual remote CI on final changed release inputs, with V3 reuse when valid. Public CI needs no private release key; local production-artifact evidence is recorded separately.
 
 **Criterion checks:** §7 `CHK-F26.A1…An` binds every A to a meaningful check and evidence layer; all start PLANNED.
 
-**Stop condition:** close only after every A has evidence or an explicitly named permitted carry; mandatory pending evidence means implemented, acceptance pending. Stop at unresolved local acceptance/resource or the end of authorized scope; continue only independent authorized tasks. No automatic next-task start outside that scope.
+**Stop condition:** close successfully only after every A has evidence or an explicitly named permitted carry. If a requirement genuinely cannot be completed now, record NEEDS ATTENTION with implemented/missing parts, concrete reason, dependency impact and resumption condition; mandatory pending evidence is never PASS. An authorized finite run continues the next safely executable independent item and accounts for dependent skips; it does not wait on this item or cross an unapproved contract. Finish the pass with all item dispositions and a done/not-done report; no task outside the authorized scope starts.
 
 **Completion Evidence:** reproducible release manifest, selected checked APKs, checksums, public fingerprint, release notes/instructions and green final-input gate/CI.
 
@@ -1055,6 +1057,13 @@ CRUX-05 and CRUX-06 were not selected: they stay proposals in §34 (CRUX-06 is c
 | Optional descriptive focus record and round trips | F03 A1/A3, F06 A4, F12 A3 and their CHK rows; §8 CP | Unrecorded/AF/MF, no numeric focus/control, no guessed metadata or new matching/science dimension; v26 encoding in ADR-021 |
 | Calibration remains simple and correct | F09 A2 / CHK-F09.A2 | Same familiar review fields; preserve the modeled tuple, LENR, proposal/Cancel/Undo and separate flat exposure |
 
+### AM-05 execution and verification → existing requirements
+
+| Owner instruction | Binding | Preserved boundary |
+| --- | --- | --- |
+| Mark impossible-now items for attention and continue | §2/§6/§9.4; every F stop condition; CLAUDE V7; goal brief and PROGRESS attention register | No unapproved contract, hard dependency bypass, fabricated completion, published release with missing mandatory evidence or silent dropping of tasks |
+| Test the changed task and its affected dependents | CLAUDE V1–V3; §2 H/S definitions; F02/F16/F19/F21/F24/F25 verification timing; G1 and F26 A3 | All 127 behavior A/CHK pairs and meaningful named domain/regression probes retained; full gate/actual green CI at final integration/release checkpoints; no per-task waiting on unrelated tests |
+
 ## 5. Accepted choices, exclusions and local prerequisites
 
 **Owner answer, 2026-10-18:** `D1–D5, D7–D9: A; D6: після вимірювань; UX-S: A` [“D6: after measurements”] to FINALIZATION_REVIEW §26. These were semantic P6 decisions; P8 subsequently approved base -02, and AM-01 amends only the explicitly listed outcomes. Recommendations in historical audits do not override this answer. DECISIONS E.1 records the same bounded acceptance.
@@ -1094,7 +1103,7 @@ At task start read `PROGRESS.md`'s current state and next action, the named task
 
 Implement → verify at the cumulative diff's V1 class → check each A-criterion → self-review → update affected records → coherent commit if authorized → advance or stop according to the authorized run. Push/publication require their existing explicit authorization. Present owner reviews as concrete renders or numbered contract choices, not open-ended design sessions. If a genuine unresolved product/data/scientific choice appears, ask only that local question and continue independent authorized work. Accepted behavior is not reopened because a new agent prefers another design.
 
-**Current authority:** P8 and AM-01–AM-04 are recorded in PROGRESS/DECISIONS; this file is the execution queue and old Stage/task IDs remain aliases. Keep historical reports intact. Maintain one current task/status table and compact completion rows in PROGRESS; do not paste the entire roadmap there. Record an evidence carry once, then close it at the named gate.
+**Current authority:** P8 and AM-01–AM-05 are recorded in PROGRESS/DECISIONS; this file is the execution queue and old Stage/task IDs remain aliases. Keep historical reports intact. Maintain one current task/status table and compact completion rows in PROGRESS; do not paste the entire roadmap there. Record an evidence carry once, then close it at the named gate.
 
 | Accounting item | Proposed baseline |
 | --- | --- |
@@ -1106,7 +1115,8 @@ Implement → verify at the cumulative diff's V1 class → check each A-criterio
 | Main dependency chains | F03→F04/F05→F06→F07→F08→F09; F10 joins with real sample; F13→F14/F15→F17; F22–F24→F25; G1→F26→G2→G3→G4 |
 | Unresolved owner-choice entries | **1**: D6, deferred by the owner to the measured F26 sizes. AM03-T (the Home title) was decided B on 2026-10-18 (§5). D1–D5 and D7–D9 were answered A on 2026-10-18 (§5). The ADR-021 (F03) and ADR-022 (F13) local acceptance checkpoints remain; they settle exact encodings and reference vectors, not new product choices |
 | Global replanning/review prerequisites | **None** |
-| Finished | All mandatory task/gate criteria evidenced; no release blocker; tested artifact published/checked; outstanding optional limits explicitly classified |
+| Product complete | All mandatory task/gate criteria evidenced; no release blocker; tested artifact published/checked; outstanding optional limits explicitly classified |
+| Finite pass finished with attention (AM-05) | All 26 tasks/four gates accounted for, no safe eligible independent work left; incomplete items stay NEEDS ATTENTION with reasons/dependencies/resumption actions. This is PARTIAL_WITH_ATTENTION, not product completion |
 
 **One focused consistency pass:** verify original-task/review coverage, approved scope, dependency order, objective criteria, proportional checks and finite closure; correct material omissions once before presenting for approval. After that, stop planning. Future corrections use the local change-control rule, never a standing request to review the whole roadmap again.
 
@@ -1319,4 +1329,4 @@ The following rows bind the gates in §3. All are PLANNED/OUTSTANDING. Each impl
 
 ### 9.4 Stop/change control
 
-P7 checked base -02 and P8 approved it. AM-01 is version -03, AM-02 is version -04, AM-03 is version -05 version -06 records AM-03's decided Home title choice AM03-T = B, and current version -07 incorporates AM-04 familiar parameters; its changed criteria/annex are checked proportionally under V5–V7, without claiming a new independent global review. Approval/amendment does not start coding. Named implementation authorization advances only eligible tasks and stops at its finite end, unresolved local decision/resource or required independent validation. V5–V7 bound corrections/rechecks to original blockers and affected criteria. No endless audit/replanning or hidden expansion. Push/publication, signing secrets and owner-data actions retain their explicit boundaries.
+P7 checked base -02 and P8 approved it. AM-01 is version -03, AM-02 is version -04, AM-03 is version -05; version -06 records AM-03's decided Home title choice AM03-T = B, and version -07 incorporates AM-04 familiar parameters; its changed criteria/annex are checked proportionally under V5–V7, without claiming a new independent global review. Approval/amendment does not start coding. AM-05 is current version -08: an authorized finite pass advances eligible independent tasks, records unavailable requirements/decisions as NEEDS ATTENTION with their downstream impact, and ends with a complete done/not-done report when no safely executable work remains. It neither waits indefinitely on one item nor bypasses its prerequisite; release gates remain mandatory for product completion. V5–V7 bound corrections/rechecks to original blockers and affected criteria. No endless audit/replanning or hidden expansion. Push/publication, signing secrets and owner-data actions retain their explicit boundaries.

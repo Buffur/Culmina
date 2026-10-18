@@ -9,18 +9,18 @@ Open this repository's `develop` checkout in Claude Code. Use a coding-capable s
 Submit this single command as the owner's start instruction:
 
 ```text
-/goal Read docs/refinement/prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md completely and execute its bounded final-plan run on develop. I authorize sequential F01-F26 implementation, G1-G4 subject to their stated owner/resource gates, task commits and ordinary pushes to origin/develop; no main update, force-push, signing-secret access, owner-data operation or publication without its separate authorization. Continue every dependency-ready task without asking to start it again. Finish only with a transcript-supported COMPLETE report after all mandatory task/gate evidence, or a truthful BLOCKED handoff after exhausting eligible independent work and documenting the exact missing resource/owner decision. A blocked handoff is not project completion. Resume existing verified progress instead of restarting audits.
+/goal Read docs/refinement/prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md completely and execute its finite F01-F26/G1-G4 run on develop. I authorize task commits and ordinary pushes to origin/develop; no main update, force-push, signing-secret access, owner-data operation or publication without separate authorization. Run tests for changed behavior and affected dependencies under current CLAUDE V1, with full integration/release checks at G1/F26; do not wait for all unrelated tests after every task. When an item genuinely cannot be completed now, record NEEDS ATTENTION with the exact missing requirement, reason, dependencies and next action, then continue safe independent work. Finish once all 30 items are accounted for and no eligible work remains, with an evidence-backed done/not-done report: COMPLETE only if every mandatory criterion/gate passed, otherwise PARTIAL_WITH_ATTENTION. Resume PROGRESS; do not restart audits or wait indefinitely for unavailable resources.
 ```
 
-The command is deliberately shorter than the runtime's documented 4,000-character goal-condition limit; the detailed contract is this file. The evaluator sees the conversation: surface real commands, results, criterion counts, commit/CI identities and pending decisions in progress reports. A successful evaluator verdict is not an independent test or a substitute for the repository acceptance evidence.
+The command is deliberately shorter than the runtime's documented 4,000-character goal-condition limit; the detailed contract is this file. The evaluator sees the conversation: surface real commands, results, criterion counts, commit/CI identities and pending decisions in progress reports. A successful evaluator verdict is not an independent test or a substitute for the repository acceptance evidence. PARTIAL_WITH_ATTENTION finishes this finite pass while leaving the listed product work explicitly incomplete.
 
 If `/goal` is unavailable, report the actual client/runtime limitation. The owner may submit the same brief as an ordinary coding instruction and resume manually; do not claim an unattended goal loop exists. A restored chat or memory is not enough: reread current repository checkpoints. Runtime errors, credit limits and required owner decisions can interrupt a goal; no prompt guarantees uninterrupted completion.
 
 ## Authorized scope and authority
 
-You are the implementation lead for the finite approved queue in `docs/refinement/FINAL_COMPLETION_ROADMAP.md`, version **P6-2026-10-18-07**, AM-01/AM-02/AM-03/AM-04. It contains **26 tasks, 127 A/CHK criterion pairs and four gates**, not 127 separate development tasks. Baseline content SHA-256: `7e75d60bbc8d97c444318fc8eb1c6285e32d850c9e2019e3854351661d0c51fa`. Later explicit owner amendments and verified task completions take precedence; never overwrite a newer authorized state to match these starting numbers.
+You are the implementation lead for the finite approved queue in `docs/refinement/FINAL_COMPLETION_ROADMAP.md`, version **P6-2026-10-18-08**, AM-01/AM-02/AM-03/AM-04/AM-05. It contains **26 tasks, 127 A/CHK criterion pairs and four gates**, not 127 separate development tasks. Baseline content SHA-256: `6ab29ddda5fbea5097a03df04338a4062d5060e133e8c85a075dab7c88e6b6f9`. Later explicit owner amendments and verified task completions take precedence; never overwrite a newer authorized state to match these starting numbers.
 
-The complete named group F01–F26/G1–G4 is authorized when the owner launches this prompt. A task boundary requires a checkpoint and coherent commit, then continuation to the next eligible task within this group. It does not require another start request. Apply `CLAUDE.md`'s grouped-run exception and roadmap §2/§6. A single-task prompt outside this run still stops at its own scope boundary. This brief changes neither acceptance criteria nor the canonical verification policy.
+The complete named group F01–F26/G1–G4 is authorized when the owner launches this prompt. A task boundary requires targeted affected-area verification, a checkpoint and coherent commit of stable work, then continuation to the next eligible task within this group. A genuine impossible-now item is recorded as NEEDS ATTENTION rather than blocking the pass; never commit broken partial work into the shared baseline merely to move on. It does not require another start request. Apply `CLAUDE.md`'s grouped-run exception and roadmap §2/§6. A single-task prompt outside this run still stops at its own scope boundary. This brief changes neither acceptance criteria nor the canonical verification policy.
 
 Ordinary engineering choices and all necessary multi-file work inside an authorized task are included. Genuine unresolved product/scientific/contract choices retain their named checkpoints. The already selected D1–D5/D7–D9, UX-S and AM03-T = B are not votes to repeat. D6 is intentionally decided after F26 measurements. Preparing decision options does not authorize approving them yourself.
 
@@ -34,7 +34,7 @@ At bootstrap read these entry points; at later tasks reread only changed/current
 2. `docs/refinement/PROGRESS.md` — current state, active run, task/criterion evidence, blockers, reusable validation and next allowed action. Start from here after every compaction/restart.
 3. `docs/refinement/PRODUCT_DIRECTION.md` — current direction and §9 supersession map; the primary product is an understandable Capture Plan.
 4. `docs/refinement/FINAL_COMPLETION_ROADMAP.md` — read completely once: §2 shared U/W and execution; §3 each task/gate; §4 source/amendment mappings; §5 accepted choices, exclusions and local prerequisites; §6 accounting; §7 every CHK; §8 capture/night semantics; §9 UI annex/evidence/release rows.
-5. `docs/DECISIONS.md` E.1 — approved completion baseline, D1–D9/UX-S, AM-01–AM-04, AM03-T; then only the ADR sections the task names. ADR-021 and ADR-022 are task-local acceptance checkpoints, not already accepted encodings.
+5. `docs/DECISIONS.md` E.1 — approved completion baseline, D1–D9/UX-S, AM-01–AM-05, AM03-T; then only the ADR sections the task names. ADR-021 and ADR-022 are task-local acceptance checkpoints, not already accepted encodings.
 6. `docs/refinement/FINALIZATION_REVIEW.md` — incorporated source ledger §§4–10 and active §20 SP01–SP11 UX contracts; use affected AM records §31/§33/§35–§37 and §34 finding evidence. Earlier alternative sketches, review-time proposals and dated snapshots are evidence, not competing requirements. Resolve conflicts to current approved F/A/CHK and owner amendments. Do not load all historical reports into every task.
 7. `docs/Examples/README.md` and relevant images — including night slider, weather and `capture_parameters_reference.jpg`. Inspect actual images. Supplied Moonlit source is layout reference only; no imported astronomy engine/vendor dependency or copying arbitrary reference values into defaults.
 8. `.agents/rules/00-project-governance.md` plus relevant rule files; `docs/ENGINEERING_GUARDRAILS.md` relevant persistence/time/metadata/UI/privacy/testing/release traps. Select relevant `.agents/skills/` only when helpful; do not assume they auto-load or override the user's scope.
@@ -125,6 +125,17 @@ Default sequence: F01 → F02 → F03…F12 → F13…F25 → G1 → F26 → G2 
 - **Data/science/privacy:** preserve canonical units, explicit Unknown/provenance, supported legacy/future-enum behavior, offline core and existing approved models. No absolute SNR, new provider, partial-rig redesign, tracker, hardware controller, localization project or licence expansion. GPS/name proposals require the existing consent and preserve later user edits.
 - **UI proof:** implement actual Flutter screens; sketches and reference photos are not acceptance. U includes real glyphs, 412 px, 100%/200%, light/dark/field, error/IME and reduced motion as applicable; the long block editor has reachable actions at 412×915/200% with keyboard. Use the existing full-screen route pattern when the dialog fails these criteria.
 
+## Attention-first scheduling (owner AM-05)
+
+Keep one operational attention register in PROGRESS. For a genuine missing tool/resource/file, refused or unavailable permission/owner decision, reproducible external failure, or an unresolved item after meaningful diagnosis/repair attempts:
+
+1. Record **NEEDS ATTENTION / Варто звернути увагу** for the exact F/G/CHK, what works, what is not implemented or not verified, the concrete reason and attempts/evidence, severity, dependencies, and the minimum action/condition needed to resume. Preserve the distinction between incomplete implementation and implemented-but-unverified behavior.
+2. Finish independently executable parts safely; do not classify ordinary difficulty as impossibility or skip a fix merely to save effort. Isolate your own incomplete work in a task worktree or preserved patch if it would break shared code; preserve user work and leave develop usable. Commit only coherent suitably verified changes there.
+3. Select the next dependency-ready item in the original queue without waiting for an answer. If an item's hard prerequisite is missing, mark that dependency and move to another independent item. No approval, missing source contract, severe defect or unpassed release gate is waived by the attention label.
+4. Revisit a recorded item when new owner input/resource/evidence arrives; do not repeatedly retry an unchanged blocker. At the end account for **every F01–F26 and G1–G4**. End this pass when no safe eligible work remains and produce the required report; no permanent wait for a phone/file/decision or speculative replanning.
+
+Final attention rows must name the item, implemented and missing parts, reason/evidence, severity, affected dependencies, how to resolve, and whether a later retry is possible. Do not drop skipped items from totals. The owner can supply the answers/resources and resume the same queue later.
+
 ## Implementation, verification and review loop
 
 For each task:
@@ -132,12 +143,12 @@ For each task:
 1. Read its full contract, every A/CHK pair, relevant actual code/tests and dependency evidence. Confirm what already exists; do not reimplement completed work or turn planned functionality into a duplicate defect.
 2. State a short local engineering plan and the affected inputs. Implement the whole authorized behavior, including migrations/generated code/export/UI/callers where required. No new stand-alone planning document is needed.
 3. Add/update meaningful regressions for the changed failure paths. Use independent fixtures/expected behavior; never weaken tests, replace production paths with fakes, assert only implementation structure, or confuse an observation of the old defect with proof of a fix.
-4. Run exactly the verification required by **CLAUDE.md V1–V8** and the task's cumulative risk after its final code change. High-risk persistence/science/schema/metadata tasks require the full gate plus named probes; shared behavior requires affected regressions and escalates as V1 says. Reuse valid evidence; a passing broader check satisfies its parts. Do not rerun the full gate after Markdown-only completion edits.
+4. Run exactly the verification required by **CLAUDE.md V1–V8** and the task's cumulative risk after its final code change. Select tests for changed behavior and affected dependencies, including every relevant named migration/recovery/science/metadata probe; high-risk classification alone does not require the full suite for each task. Broaden only for demonstrated impact. Consolidate full gate/green remote CI at G1 and F26 final changed release inputs under current V1/V3. Reuse valid evidence; a passing broader check satisfies its parts. Do not rerun the full gate after Markdown-only completion edits.
 5. Check every A/CHK explicitly. Use CODE/TEST/HOST RENDER/EMULATOR/DEVICE/HUMAN labels and real environment/baseline. Verify persistence **and derived UI** after relevant stale edit/Undo/copy/restart/cancel operations. A screenshot proves neither timing nor human understanding. Record current output rather than repeating historical test totals.
 6. Self-review the cumulative diff against the exact task, data/science invariants and original finding. Fix actual in-scope failures. A later relevant fix invalidates affected evidence, not all prior tasks. Fresh-session/other-agent review where required must disclose authorship and cannot fabricate independence.
 7. Update PROGRESS and only other invalidated registers. Record criterion disposition, commands/results or justified reuse, environment, evidence path, unresolved carry/owner decision and next eligible task. Store reproducible nonprivate evidence under `docs/refinement/evidence/finalization/` with a task-specific directory. Keep raw evidence intact; original observation patches are not permanent regression tests.
-8. Commit a coherent tested task with a meaningful message, then normal push to **origin/develop** within this launched run. Check the actual push result. Read remote CI for that exact SHA when required; failing CI is a problem to resolve, queued/in-progress/missing CI is not green. Do not include unrelated edits, keys, private samples, real owner databases or generated build outputs.
-9. Checkpoint and continue the next dependency-ready task in the authorized group. If mandatory evidence is pending, say **IMPLEMENTED / ACCEPTANCE PENDING**, not complete; continue only what that state permits. Do not ask whether to start an already authorized task.
+8. Commit a coherent tested task with a meaningful message, then normal push to **origin/develop** within this launched run. Check the actual push result. Remote CI may run asynchronously: do not wait for the whole suite at each task before safe independent work. Read and require actual green CI at G1/F26; triage observed failures when they arrive, and never label queued/in-progress/missing/cancelled CI as green. Preserve a stable baseline and hard dependency checks. Do not include unrelated edits, keys, private samples, real owner databases or generated build outputs.
+9. Checkpoint and continue the next dependency-ready task in the authorized group. If mandatory behavior/evidence is unavailable, add **NEEDS ATTENTION** with implementation state and reason, then continue the next safe independent item. An implemented part can be **IMPLEMENTED / ACCEPTANCE PENDING**, never VERIFIED without its evidence. Do not ask whether to start an already authorized task.
 
 For a pure CI trigger/path-selection edit, verify syntax/selection and unchanged execution steps as V1 allows. For any later CI toolchain/steps/dependency change, apply its actual higher risk. Run checks with the repository's pinned toolchain; describe any environmental mismatch honestly.
 
@@ -149,9 +160,9 @@ The launched run may delegate narrowly scoped reading, reproduction or review wi
 
 Do not change branch under an active writer or run concurrent Git mutations. Before integration inspect every worker diff, resolve actual conflicts, rerun only affected integration evidence, and attribute the baseline correctly. An idle helper is not a completed task. Quiesce helpers before handoff. New sessions recover from committed repository state, not assumptions that earlier teammates still exist.
 
-## Genuine owner/resource gates and blocked handoff
+## Genuine owner/resource gates and attention handoff
 
-Prepare concrete review material before asking; bundle related numbered items where practical. Continue independent authorized work while an answer/resource is pending.
+Prepare concrete material and numbered owner questions, record them as attention items and continue independent authorized work. Do not wait for an answer before considering the next eligible task; list unanswered questions in the final report. Existing accepted choices are not asked again.
 
 | Gate/resource | Required handling |
 | --- | --- |
@@ -164,9 +175,9 @@ Prepare concrete review material before asking; bundle related numbered items wh
 | Owner data / G2 | Separate explicit authorization before moving data or uninstalling an owner app; independent verified backup and isolated rehearsal first. A newer database is not permission to reset it |
 | Release go/publication / G3/G4 | Obtain actual owner go/no-go and separate explicit publication authorization; preparing release assets and pushing code are not publication permission |
 
-When no eligible independent work remains, stop repeated retries/reviews. Produce a **BLOCKED handoff**, keeping unfinished tasks/gates pending, with: completed implementation; verified versus carried criteria; exact missing decision/resource; material already prepared; next eligible task/action; branch/HEAD/CI state; dirty files if any. Do not mark the project complete, weaken a criterion, fabricate acceptance, spin indefinitely or create a new roadmap to evade the gate. If the user pauses/stops, checkpoint and honor that instruction.
+When no eligible independent work remains, finish the finite pass with **PARTIAL_WITH_ATTENTION** and the complete done/not-done register: implemented/verified versus missing work, exact reasons/resources/decisions, dependency skips, prepared material and resumption actions, branch/HEAD/CI and preserved work. Never mark the product complete, weaken a criterion, fabricate acceptance, wait indefinitely or invent another roadmap. A user stop/pause is honored after a checkpoint.
 
-On the next owner reply/session, reread PROGRESS and evidence, incorporate that answer, and resume the same finite queue. Do not rerun valid checks merely because the session/commit hash changed. A blocked goal may need the owner to submit the launch command again; the repository checkpoint remains the recovery mechanism.
+On the next owner reply/session, reread PROGRESS, incorporate supplied answers/resources and resume the same finite queue. Do not rerun valid checks for a newer session/commit. Submit the launch command again if the previous goal finished; this resumes recorded work, not a new global audit.
 
 ## Checkpoint and terminal report
 
@@ -174,18 +185,18 @@ PROGRESS is the sole operational ledger. Keep compact task/criterion rows rather
 
 ```text
 Run: full final-plan group; develop; launch authority/date/session
-Task: Fxx; state: IN PROGRESS / IMPLEMENTED-ACCEPTANCE-PENDING / VERIFIED / BLOCKED
+Task: Fxx; state: IN PROGRESS / IMPLEMENTED-ACCEPTANCE-PENDING / VERIFIED / NEEDS ATTENTION
 Criteria: CHK-Fxx.A1 ... A(n), each result and evidence reference
 Inputs/environment: actual code/toolchain/device/sample baseline
 Verification: commands + exit/result OR valid reused evidence and why
-Owner/resource carries: exact gate, prepared material and required action
+Attention: exact missing behavior/evidence, reason/attempt/severity, dependency impact and resumption action
 Git/CI: actual commit/push SHA, remote CI URL/status; no invented future hash
-Next: next eligible named task, or blocked handoff and why none can proceed
+Next: next safe eligible task, or final PARTIAL_WITH_ATTENTION report once none can proceed
 ```
 
 Give concise Ukrainian progress updates and owner questions; persistent documentation stays English unless instructed otherwise. Surface important changes and real failures promptly; do not narrate every routine command. Before a commit/handoff inspect the actual diff and repository state and preserve unrelated user work.
 
-Final output must include: all F01–F26 and G1–G4 dispositions; implemented/verified/pending counts without conflating them; remaining stages; criterion/evidence links; test and exact remote-CI results; release APK identity/hash/signer/device checks where reached; owner decisions still needed; Git branch/commit/push state; next action. **COMPLETE** means all mandatory criteria and gates evidenced, including the authorized published download. Everything else is a truthful partial/blocked result, even if all currently runnable host tests pass.
+Final output must include: all F01–F26 and G1–G4 dispositions; implemented/verified/pending counts without conflating them; remaining stages; criterion/evidence links; test and exact remote-CI results; release APK identity/hash/signer/device checks where reached; owner decisions still needed; Git branch/commit/push state; next action. **COMPLETE** means all mandatory criteria and gates evidenced, including the authorized published download. Otherwise finish the exhausted pass as **PARTIAL_WITH_ATTENTION**, even if all currently runnable tests pass. The Ukrainian final report must separate completed/verified, implemented-but-unverified and not-implemented items; give every attention item its reason, dependency impact and exact next action. A finished run does not imply a finished product.
 
 ## Runtime references and handoff check
 

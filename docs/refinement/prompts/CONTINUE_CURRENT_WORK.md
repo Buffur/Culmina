@@ -15,13 +15,15 @@
    here; an explicitly authorized finite group continues to its next dependency-ready task under
    its launch brief (for the full plan, `CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`). A prompt file's
    presence does not activate a grouped run. Verify by change class and reuse
-   valid evidence (Verification Policy V1–V3): a high-risk Task ends with one full-gate pass after
-   its last code change; a shared-behaviour Task ends with its affected regression checks, and
-   escalates to the full gate only as V1 says.
+   valid evidence (Verification Policy V1–V3, owner AM-05): each Task runs changed-behavior and
+   affected-dependency tests plus applicable named probes, rather than all tests by default. Full
+   integration/release gates are consolidated at G1/F26; asynchronous CI need not delay each Task.
 4. If the action is a research or owner-decision gate, do not implement; prepare the decision.
 5. If the action is a Stage validation, use `INDEPENDENT_STAGE_VALIDATION.md`.
 6. Update `PROGRESS.md` by its "How to update this file" rules and commit if authorized. Stop at the
-   end of the named scope or a genuine unresolved gate/resource; do not start another Task or Stage
-   outside that scope. Within the owner's explicitly launched finite group, checkpoint and continue
+   end of a single-task scope. Within a launched finite group, mark genuinely unavailable items
+   NEEDS ATTENTION with reason/dependencies/resumption action and continue safe independent work;
+   finish with the done/not-done report when all items are accounted for and no eligible work remains.
+   Do not start another Task or Stage outside the authorized scope. Within the owner's explicitly launched finite group, checkpoint and continue
    eligible independent work without asking for duplicate start approval. Git permissions follow the
    current owner instruction rather than this reusable template.

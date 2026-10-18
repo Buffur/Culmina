@@ -7,7 +7,7 @@ Session prompts for post-roadmap refinement. A prompt is the scope of its own se
 - [`CLAUDE_UI_UX_REVIEW_AM02.md`](CLAUDE_UI_UX_REVIEW_AM02.md): repeat the UI/UX, usability, existing-function and potential-bug review against AM-02; assessment only, current app versus planned outcomes kept separate. Run on 2026-10-18: [FINALIZATION_REVIEW §34](../FINALIZATION_REVIEW.md#34-claude-repeat-uiux-review-am-02); its CRUX-01–04 became AM-03 (§35).
 
 **In use (reusable procedures):**
-- [`CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md): full-plan implementation brief and explicit launch command for sequential F01–F26/G1–G4 on develop, current AM-04 baseline. Includes sources of truth, task mapping, proportional checks, single-writer coordination, task commits/pushes, resume checkpoints and honest owner/resource gates. Prepared, not launched by its presence in Git.
+- [`CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md): full-plan implementation brief and explicit launch command for sequential F01–F26/G1–G4 on develop, current AM-05 baseline. Includes sources of truth, task mapping, proportional checks, single-writer coordination, task commits/pushes, resume checkpoints and attention-item continuation, final done/not-done report, targeted Task tests and consolidated integration/release gates. Prepared, not launched by its presence in Git.
 - [`CONTINUE_CURRENT_WORK.md`](CONTINUE_CURRENT_WORK.md): continue the next allowed action named in `../PROGRESS.md`.
 - [`INDEPENDENT_STAGE_VALIDATION.md`](INDEPENDENT_STAGE_VALIDATION.md): validate a Stage against its frozen surface (V4–V8).
 

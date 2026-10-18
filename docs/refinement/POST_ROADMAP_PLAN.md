@@ -1,5 +1,7 @@
 # Culmina (formerly AstroPlan) — Post-Roadmap Refinement Plan
 
+> **Owner AM-05 (2026-10-18):** current execution uses targeted Task/dependency tests and attention-item continuation under CLAUDE V1/V7 and FINAL_COMPLETION_ROADMAP version -08. Old blanket per-Task full-suite timing in the S-ID clauses below is superseded; meaningful domain probes and final G1/F26 checks remain. Do not treat historical S-clauses as a second active queue.
+
 > **Status (2026-10-18):** the strategic plan and the RG/RD registers of post-roadmap refinement.
 > **The active execution queue is [`FINAL_COMPLETION_ROADMAP.md`](FINAL_COMPLETION_ROADMAP.md)**, approved
 > by the owner on 2026-10-18 (P8 base P6-2026-10-18-02; current AM-01–AM-03 version P6-2026-10-18-06, DECISIONS E.1). §5, "Stages 12–17 — Culmina release roadmap (RA.P)" (approved at G3, 2026-10-17, and amended

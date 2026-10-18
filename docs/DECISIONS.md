@@ -387,6 +387,15 @@ registered by TASK 0.2; each is decided in its own ADR task in `docs/MASTER_ROAD
 
 ## E.1 Resolved decisions
 
+### AM-05 — attention-item continuation and targeted Task tests (owner, 2026-10-18)
+
+- **Instruction:** «Якщо будуть пункти які не можна виконати, нехай модель позначить їх як варто звернути увагу і приступе до наступного завдання. У кінці надасть звіт що виконано, а що ні ... не варто з кожним таском чекати перевірку всіх тестів, можна враховувати лише потрібні тести під змінену задачу».
+- **Execution:** record NEEDS ATTENTION with exact F/G/CHK, implemented/missing parts, concrete reason/attempt, severity, dependency impact and resumption action; continue safe dependency-ready work. Do not wait indefinitely or pretend a hard prerequisite passed. Account for all 30 items and finish the pass with COMPLETE or PARTIAL_WITH_ATTENTION; only verified mandatory requirements qualify for product completion.
+- **Verification:** CLAUDE V1/V7 is updated: targeted behavior/dependency tests and applicable named domain probes per Task; no automatic full suite for every high-risk Task and no per-Task wait for asynchronous full CI. Full gate/actual green CI remain at G1 and F26 final changed release inputs, with valid reuse and reasoned impact escalation. Tests are not deleted/weakened, and missing evidence remains missing.
+- **Binding:** roadmap P6-2026-10-18-08 and its execution/verification/stop fields, canonical CLAUDE policy, PROGRESS attention register, goal brief, CONTINUE_CURRENT_WORK and the historical S-clause supersession note. All 26 tasks, 127 A/CHK behavior pairs and four release gates remain; owner/resource/release decisions are not self-approved.
+- **Git/start:** normal documentation commit/push continues the prepared develop handoff. This prepares the revised workflow; it does not launch F implementation. The owner starts by submitting the updated goal command.
+
+
 ### Full-plan goal handoff — launch boundary (owner, 2026-10-18)
 
 - **Execution clarification:** the owner states agents can independently emulate a device or produce renders. The authorized implementation run includes discovering/provisioning/launching an isolated test emulator and actual-widget renders; lack of a physical phone alone is not an implementation blocker. Existing explicitly physical-phone acceptance rows are preserved. No F task starts from clarifying these instructions.
