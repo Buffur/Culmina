@@ -62,6 +62,8 @@ exists (the row of the next task's commit carries the previous one).
 | --- | --- | --- | --- | --- |
 | F01 (`8ad566d`, not pushed) | IMPLEMENTED-ACCEPTANCE-PENDING | A1–A3 PASS (TEST); A4/A5 host PASS, phone rows carried | 283 targeted tests + 23 source-rule tests, analyze clean, format/encoding ([evidence](evidence/finalization/F01/README.md)) | REL-10 phone rehearsal (Recents during activation, literal outcome) at G2; U/visual in F25 |
 | F02 | IMPLEMENTED; A2/A3 NEEDS ATTENTION | A1 PASS (TEST, fails on the old resources); A2/A3 not observable here | `app_identity_test.dart` ([evidence](evidence/finalization/F02/README.md)) | No Android SDK/emulator in this container (network policy refuses dl.google.com) |
+| F03 | IN PROGRESS — waits for ADR-021 acceptance | A1: [decision sheet](ADR_021_DECISION_SHEET.md) prepared (C1–C21, V1–V15), owner acceptance pending; A2–A4 not started (depend on A1); A5: no FITS sample available (recorded) | — | ADR-021 owner acceptance; FITS sample |
+| F13 | IN PROGRESS — waits for ADR-022 acceptance | [decision sheet](ADR_022_DECISION_SHEET.md) prepared (N1–N12, M1–M7, W1–W3); implementation after acceptance | — | ADR-022 owner acceptance |
 
 ## Next allowed action
 
@@ -89,6 +91,9 @@ The run is prepared, not launched: no actual task is classified as failed or ski
 | Item / F-G-CHK | Implemented versus missing | Reason / attempt / evidence / severity | Affected dependencies | Resumption action / responsible input | State |
 | --- | --- | --- | --- | --- | --- |
 | Git push (all tasks) | Commits are made on local `develop`; none reach origin | `git push -u origin develop` → HTTP 403 "Claude doesn't have GitHub access to Buffur/Culmina for your organization" (twice, 2026-10-18). Severity: high (unpushed work is lost if the container is reclaimed; remote CI cannot run) | Every task's push; G1/F26 remote CI | Owner reconnects GitHub (claude.ai/connect-github) and/or installs the Claude GitHub App on Buffur/Culmina; then push develop | OPEN |
+| F03 A1 → F04–F12 (dependent persistence/science) | ADR-021 decision sheet written with recommendations and vectors | Owner local acceptance required by roadmap §5 before dependent implementation; asked 2026-10-18 | F03 A2–A4, F04–F12, F16 (via F05), F18–F20 parts | Owner accepts (or amends numbered items of) `ADR_021_DECISION_SHEET.md` | OPEN |
+| F13 A1–A5 → F14/F15/F17/F18 night parts | ADR-022 decision sheet written | Owner local acceptance required (roadmap §5) | F13–F15, F17, F18 A3/A6 | Owner accepts `ADR_022_DECISION_SHEET.md` | OPEN |
+| F03 A5 / F10 (FITS sample) | Reader work possible only after F04 | No real astro-camera FITS in the repository or this container (searched 2026-10-18); public samples not licence-checked | F10, F07 FITS branch, G1 (unless owner deferral) | Owner provides a local FITS sub-frame (kept out of Git) or names a licensed fixture | OPEN |
 | F02 A2/A3; every native Android/emulator row (G1 REL-02, F26, F22 process death) | F02 resources fixed and host-tested; no native build, launch or capture | The container has no Android SDK and cannot get one: `dl.google.com` (SDK repository; `maven.google.com` redirects there) is refused by the network policy (403, 2026-10-18). Remote CI builds no Android. Severity: blocks F02 VERIFIED and native gate rows, not host implementation | F02 close; G1 REL-02; F26 | Run in an environment with the Android SDK (owner machine with the existing SDK, or a cloud environment whose network policy allows dl.google.com): API 26–30 emulator launch capture, Android 12+ animation-off observation | OPEN |
 
 ## Owner actions outstanding
