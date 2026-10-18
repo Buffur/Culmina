@@ -32,6 +32,7 @@ import 'logbook_screen.dart';
 import '../../shared/unsaved_plan_prompt.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../core/utils/astro_math.dart';
+import '../../shared/capture_settings_text.dart';
 
 /// A Logbook entry (TASK 14.1; S8.7, P8.7, ADR-019 §8, §10): read-only
 /// history from its snapshots — never today's site, target or rig (ADR-014
@@ -395,7 +396,9 @@ class _PlanVsActual extends StatelessWidget {
             FrameType.flat => 'Flats',
             FrameType.bias => 'Bias',
             FrameType.darkFlat => 'Dark flats',
-          }} · ${QuantityText.exposure(b.exposureTimeSeconds)}';
+          }} · ${QuantityText.exposure(b.exposureTimeSeconds)}'
+      // F06 A4: the recorded white balance and focus mode, when any.
+      '${CaptureSettingsText.suffix(b)}';
 }
 
 class _Notes extends StatelessWidget {

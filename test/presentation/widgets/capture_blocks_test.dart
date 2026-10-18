@@ -325,16 +325,19 @@ void main() {
     });
   });
 
-  testWidgets("the block dialog's Save is its primary (filled) button", (
-    tester,
-  ) async {
+  testWidgets("the block dialog's Apply changes is its primary (filled) "
+      'button', (tester) async {
     await start(tester);
     await blocks(tester, [_light(60, 10, filter: 'L')]);
     await tester.tap(find.text('L · 60 s × 10 · 10 min'));
     await tester.pumpAndSettle();
     final submit = find.byKey(const Key('blockDialog.submit'));
     expect(tester.widget(submit), isA<FilledButton>());
-    expect(find.descendant(of: submit, matching: find.text('Save')), findsOne);
+    // F06 A7 (AM-02): the block's own action, never the plan's Save.
+    expect(
+      find.descendant(of: submit, matching: find.text('Apply changes')),
+      findsOne,
+    );
   });
 
   group('an edit briefly marks the row it changed', () {

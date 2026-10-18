@@ -166,6 +166,11 @@ class SharedPrefsPlannerStateRepository implements PlannerStateRepository {
         calibrationPolicy: type == FrameType.light
             ? null
             : CalibrationPolicy.tryParse(b['calibrationPolicy'] as String?),
+        // ADR-021 (F06): additive keys; absent or unreadable = unrecorded.
+        whiteBalance: WhiteBalance.fromJson(b['whiteBalance']),
+        focusMode: FocusMode.tryParse(b['focusMode']),
+        origins: FieldOrigins.fromJson(b['origins']),
+        fileEvidence: FileEvidence.fromJson(b['fileEvidence']),
       );
     } on ArgumentError catch (e) {
       AppLog.warning('storage', 'Skipping invalid saved block', error: e);
@@ -190,6 +195,10 @@ class SharedPrefsPlannerStateRepository implements PlannerStateRepository {
             'gainKind': b.gain.kind.name,
             'gainValue': b.gain.value,
             'calibrationPolicy': b.calibrationPolicy?.name,
+            'whiteBalance': b.whiteBalance?.toJson(),
+            'focusMode': b.focusMode?.name,
+            if (!b.origins.isEmpty) 'origins': b.origins.toJson(),
+            'fileEvidence': b.fileEvidence?.toJson(),
           },
         )
         .toList();

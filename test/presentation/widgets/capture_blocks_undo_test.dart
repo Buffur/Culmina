@@ -186,7 +186,7 @@ void main() {
     await settle(tester);
     expect(vm.captureBlocks[1].frameCount, 7);
     expect(
-      find.textContaining('Block changed: Ha · 300 s × 7'),
+      find.textContaining('Changed in this plan: Ha · 300 s × 7'),
       findsOneWidget,
     );
     expect(await storedFrames(tester), [10, 7]);

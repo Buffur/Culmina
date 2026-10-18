@@ -5,6 +5,7 @@ import '../../domain/models/capture_block.dart';
 import '../../domain/models/session.dart';
 import '../../domain/models/session_result.dart';
 import '../../domain/services/session_reconciliation.dart';
+import 'capture_settings_text.dart';
 import 'night_time_formatter.dart';
 import 'opportunity_text.dart';
 import 'plan_state.dart';
@@ -82,7 +83,9 @@ abstract final class EntryShareText {
       for (final b in r.blocks)
         if (b.block.frameType == FrameType.light)
           '  ${b.block.filterName ?? 'Light'} · '
-              '${QuantityText.exposure(b.block.exposureTimeSeconds)}: '
+              '${QuantityText.exposure(b.block.exposureTimeSeconds)}'
+              // F06 A4: the recorded white balance and focus mode.
+              '${CaptureSettingsText.suffix(b.block)}: '
               '${counted ? '${b.confirmed} of ${b.planned}' : '${b.planned} planned'}',
     ];
   }

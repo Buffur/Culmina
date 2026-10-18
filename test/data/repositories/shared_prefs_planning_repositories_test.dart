@@ -133,6 +133,41 @@ void main() {
       expect(loaded[1].binning, 2);
     });
 
+    // F06 (ADR-021 C1/C3/C4/C6): the preferences plan keeps the recorded
+    // settings too; a plan written before them reads them as unrecorded.
+    test('capture plan round trip keeps white balance, focus, origins and '
+        'file evidence', () async {
+      SharedPreferences.setMockInitialValues({});
+      final origins = FieldOrigins({
+        CaptureField.exposure: FieldOrigin(OriginKind.file, 'IMG_0845.dng'),
+      });
+      final block = CaptureBlock(
+        frameType: FrameType.light,
+        exposureTimeSeconds: 1 / 14,
+        frameCount: 200,
+        whiteBalance: WhiteBalance.kelvin(4500, tint: -3),
+        focusMode: FocusMode.af,
+        origins: origins,
+      );
+      await repo.saveCaptureBlocks([block]);
+      final loaded = (await repo.loadCaptureBlocks())!.single;
+      expect(loaded.whiteBalance, block.whiteBalance);
+      expect(loaded.focusMode, FocusMode.af);
+      expect(loaded.origins, origins);
+      expect(loaded.exposureTimeSeconds, 1 / 14);
+
+      SharedPreferences.setMockInitialValues({
+        'captureBlocks':
+            '{"version":2,"blocks":[{"frameType":"light",'
+            '"exposureTimeSeconds":60,"frameCount":3,"focusMode":"zoom"}]}',
+      });
+      final old = (await repo.loadCaptureBlocks())!.single;
+      expect(
+        (old.whiteBalance, old.focusMode, old.origins.isEmpty),
+        (null, null, true),
+      );
+    });
+
     test(
       'plan JSON is versioned (v2) and a pre-5.3 v1 list still loads',
       () async {

@@ -213,8 +213,11 @@ void main() {
       expect((f.gain, f.exposureTimeSeconds), (CaptureGain.gain(77), 2.0));
     });
 
-    testWidgets('an edited flat ISO survives a source change for an Unknown '
-        'camera', (tester) async {
+    // ADR-021 C13 replaced Unknown's ISO-or-gain choice: a flat of an
+    // Unknown rig has no field; it takes its chosen source's recorded value,
+    // named, never relabelled, and follows a source change.
+    testWidgets('an Unknown camera\'s flat takes its source\'s recorded gain, '
+        'with no field', (tester) async {
       final result = <CaptureBlock?>[];
       await open(
         tester,
@@ -225,16 +228,11 @@ void main() {
       await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
       await enter(tester, 'Frame count', '20');
-      final kind = find.byKey(const Key('blockDialog.gainKind'));
-      await tester.ensureVisible(kind);
-      await tester.tap(kind);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('ISO').last);
-      await tester.pumpAndSettle();
-      await enter(tester, 'ISO', '800');
+      expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
+      expect(find.byKey(const Key('blockDialog.gainValue')), findsNothing);
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
-      expect(result.single!.gain, CaptureGain.iso(800));
+      expect(result.single!.gain, CaptureGain.gain(120));
     });
 
     testWidgets('"Use other values" on a dark flat shows the flat\'s values', (
@@ -468,22 +466,38 @@ void main() {
           );
           await tester.tap(find.byKey(const Key('blockDialog.useOther')));
           await tester.pumpAndSettle();
+          // AM-04 (F06 A5): an astro camera's binning, in Details.
+          if (c.offersLightBinning) {
+            final details = find.byKey(const Key('blockDialog.details'));
+            await tester.ensureVisible(details);
+            await tester.tap(details);
+            await tester.pumpAndSettle();
+          }
           expect(
             find.byKey(const Key('blockDialog.binning')),
             c.offersLightBinning ? findsOneWidget : findsNothing,
           );
-          expect(
-            find.byKey(const Key('blockDialog.gainKind')),
-            c == CameraClass.unknown ? findsOneWidget : findsNothing,
-            reason: 'the class records one kind; Unknown chooses',
-          );
-          final value = tester.widget<TextField>(
-            find.descendant(
-              of: find.byKey(const Key('blockDialog.gainValue')),
-              matching: find.byType(TextField),
-            ),
-          );
-          expect(value.controller!.text, iso ? '800' : '100');
+          expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
+          if (c == CameraClass.unknown) {
+            // ADR-021 C13: no field and no guessed kind; the source's value
+            // is kept as recorded and named.
+            expect(
+              find.byKey(const Key('blockDialog.gainValue')),
+              findsNothing,
+            );
+            expect(
+              find.textContaining(iso ? 'ISO 800' : 'gain 100'),
+              findsWidgets,
+            );
+          } else {
+            final value = tester.widget<TextField>(
+              find.descendant(
+                of: find.byKey(const Key('blockDialog.gainValue')),
+                matching: find.byType(TextField),
+              ),
+            );
+            expect(value.controller!.text, iso ? '800' : '100');
+          }
           if (c != CameraClass.unknown) {
             expect(
               find.text(

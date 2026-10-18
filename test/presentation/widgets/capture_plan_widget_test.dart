@@ -8,6 +8,7 @@
 // Reorder-index correctness (TD-010) is covered at the ViewModel level in
 // planner_capture_blocks_test.dart, where it's deterministic and fast.
 
+import 'package:astroplan/domain/models/camera_class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +35,20 @@ import '../../support/fake_location_service.dart';
 import '../../support/no_snapshot_weather.dart';
 
 class _MockWeather with NoSnapshotWeather implements WeatherRepository {}
+
+/// A camera rig: its blocks record ISO (ADR-021 C13).
+const _dslr = EquipmentProfile(
+  id: 1,
+  name: 'Camera',
+  cameraClass: CameraClass.dslrMirrorless,
+  sensorWidthMm: 23.5,
+  sensorHeightMm: 15.6,
+  pixelPitchUm: 3.9,
+  resolutionWidthPx: 6000,
+  resolutionHeightPx: 4000,
+  focalLengthMm: 200,
+  focalRatio: 4,
+);
 
 void main() {
   late AppDatabase database;
@@ -89,7 +104,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
     // The dialog is still open (validation failed) and no block was added.
@@ -97,7 +112,7 @@ void main() {
       find.widgetWithText(AlertDialog, 'Add capture block'),
       findsOneWidget,
     );
-    expect(find.text('Enter a positive number of seconds'), findsOneWidget);
+    expect(find.text('Enter seconds, e.g. 60, 0.5 or 1/14'), findsOneWidget);
     expect(find.text('Enter a whole number of at least 1'), findsOneWidget);
     expect(vm.captureBlocks, isEmpty);
   });
@@ -115,7 +130,7 @@ void main() {
       find.widgetWithText(TextFormField, 'Frame count'),
       '10',
     );
-    await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
     expect(
@@ -138,7 +153,7 @@ void main() {
       find.widgetWithText(TextFormField, 'Frame count'),
       '15',
     );
-    await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
     expect(find.widgetWithText(AlertDialog, 'Add capture block'), findsNothing);
@@ -177,7 +192,7 @@ void main() {
         find.widgetWithText(TextFormField, 'Frame count'),
         '45',
       );
-      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.tap(find.widgetWithText(FilledButton, 'Apply changes'));
       await tester.pumpAndSettle();
 
       expect(
@@ -222,23 +237,39 @@ void main() {
     tester.view.physicalSize = const Size(412, 915);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
+    await vm.plan.setEquipment(_dslr);
     await tester.pumpWidget(wrap());
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.byKey(const Key('blockDialog.gainKind')));
+    await tester.ensureVisible(find.byKey(const Key('blockDialog.gainValue')));
     await tester.pumpAndSettle();
-    expect(find.text('ISO / gain (for your records)'), findsOneWidget);
+    expect(find.text('ISO (for your records)'), findsOneWidget);
     expect(find.textContaining('ensitivity'), findsNothing);
-    final helper = find.text('Recorded only; it does not change the plan.');
+    final helper = find.text(
+      'Optional; recorded only, it does not change the plan.',
+    );
     expect(
       tester.renderObject<RenderParagraph>(helper).didExceedMaxLines,
       isFalse,
     );
   });
 
+  // ADR-021 C13: without a camera type no ISO or gain kind is offered.
+  testWidgets('without a rig the dialog names the camera-type remedy', (
+    tester,
+  ) async {
+    await tester.pumpWidget(wrap());
+    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
+    expect(find.byKey(const Key('blockDialog.chooseClass')), findsOneWidget);
+    expect(find.textContaining('ensitivity'), findsNothing);
+  });
+
   testWidgets('the dialog saves a calibration policy and a typed gain', (
     tester,
   ) async {
+    await vm.plan.setEquipment(_dslr);
     await tester.pumpWidget(wrap());
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
@@ -254,11 +285,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // The calibration tip (S7.3a) sits above the fields.
-    await tester.ensureVisible(find.byKey(const Key('blockDialog.gainKind')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('blockDialog.gainKind')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('ISO').last);
+    await tester.ensureVisible(find.byKey(const Key('blockDialog.gainValue')));
     await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const Key('blockDialog.gainValue')),
@@ -273,7 +300,7 @@ void main() {
       find.widgetWithText(TextFormField, 'Frame count'),
       '10',
     );
-    await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
     final b = vm.captureBlocks.single;

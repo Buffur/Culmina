@@ -263,6 +263,66 @@ void main() {
       expect(flat.gain, CaptureGain.gain(0), reason: 'a flat keeps its gain');
     });
 
+    // F06 A2/A4 (ADR-021 C4, C15): the fix keeps what is not matched (the
+    // white balance, focus mode, file evidence) and records where each taken
+    // field came from; the other fields keep their own origins.
+    test('keeps the recorded settings and records the inherited origins', () {
+      final file = FieldOrigin(OriginKind.file, 'DARK_0001.dng');
+      final dark = CaptureBlock(
+        frameType: FrameType.dark,
+        exposureTimeSeconds: 60,
+        frameCount: 25,
+        whiteBalance: WhiteBalance.auto(),
+        focusMode: FocusMode.mf,
+        origins: FieldOrigins({
+          CaptureField.count: file,
+          CaptureField.exposure: file,
+        }),
+      );
+      final from = FieldOrigin(OriginKind.inherited, 'from Ha · 300 s × 20');
+      final m = CalibrationMatch.matched(dark, ha, origin: from);
+      expect(
+        (m.whiteBalance, m.focusMode),
+        (WhiteBalance.auto(), FocusMode.mf),
+      );
+      expect(m.origins[CaptureField.exposure], from);
+      expect(m.origins[CaptureField.sensitivity], from);
+      expect(m.origins[CaptureField.binning], from);
+      expect(m.origins[CaptureField.count], file, reason: 'not taken');
+      expect(m.origins[CaptureField.filter], isNull);
+      // Without an origin the block's own origins are untouched.
+      expect(CalibrationMatch.matched(dark, ha).origins, dark.origins);
+    });
+
+    // ADR-021 C15: white balance and focus mode are never calibration
+    // identity, and change no budget (F06 A4).
+    test('white balance and focus change neither matching nor the budget', () {
+      final dark = CalibrationMatch.matched(_b(FrameType.dark), ha);
+      final recorded = dark.copyWith(
+        whiteBalance: () => WhiteBalance.kelvin(5600, tint: 3),
+        focusMode: () => FocusMode.af,
+      );
+      final light = ha.copyWith(
+        whiteBalance: () => WhiteBalance.preset(WhiteBalancePreset.cloudy),
+        focusMode: () => FocusMode.mf,
+      );
+      expect(CalibrationMatch.of(recorded, [light], _astro), isEmpty);
+      final plain = CaptureBudgetCalculator.calculate(
+        blocks: [ha, dark],
+        averageRawFileSizeMB: 50,
+      );
+      final withRecords = CaptureBudgetCalculator.calculate(
+        blocks: [light, recorded],
+        averageRawFileSizeMB: 50,
+      );
+      expect(withRecords.windowLoadMs, plain.windowLoadMs);
+      expect(withRecords.storageMB, plain.storageMB);
+      expect(
+        [for (final b in withRecords.blocks) b.exposureMs],
+        [for (final b in plain.blocks) b.exposureMs],
+      );
+    });
+
     test('what each type takes from its source (S7.V1, TD-083)', () {
       final exposure = {
         for (final t in FrameType.values) t: CalibrationMatch.takesExposure(t),

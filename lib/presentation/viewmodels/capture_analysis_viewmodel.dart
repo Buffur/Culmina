@@ -216,9 +216,14 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     final index = fillWindowBlockIndex;
     final count = fillWindowFrameCount;
     if (index == null || count == null || count < 1) return false;
+    final block = _plan.captureBlocks[index];
+    // ADR-021 C4: the user's edit of the count; other origins stay.
     await _plan.updateCaptureBlock(
       index,
-      _plan.captureBlocks[index].copyWith(frameCount: count),
+      block.copyWith(
+        frameCount: count,
+        origins: block.origins.edited(CaptureField.count),
+      ),
     );
     return true;
   }

@@ -12,6 +12,7 @@ import '../../domain/services/fit_analyzer.dart';
 import '../shared/block_text.dart';
 import '../shared/calibration_text.dart';
 import '../shared/capability_text.dart';
+import '../shared/capture_settings_text.dart';
 import '../shared/delete_patterns.dart';
 import '../shared/example_text.dart';
 import '../shared/failure_feedback.dart';
@@ -93,7 +94,15 @@ class _BlockListState extends State<_BlockList> {
     final plan = context.read<SessionPlanViewModel>();
     final source = CalibrationMatch.defaultSource(block, plan.captureBlocks);
     if (source == null) return;
-    final matched = CalibrationMatch.matched(block, source);
+    // ADR-021 C4: the taken fields record where they came from.
+    final matched = CalibrationMatch.matched(
+      block,
+      source,
+      origin: FieldOrigin(
+        OriginKind.inherited,
+        CaptureSettingsText.fromBlock(BlockText.row(source, null)),
+      ),
+    );
     await runWithFeedback(
       context,
       'match the block',
@@ -123,6 +132,8 @@ class _BlockListState extends State<_BlockList> {
     );
     if (block == null || !mounted) return;
     final plan = context.read<SessionPlanViewModel>();
+    // F06 A7 (AM-02): the working plan changes (the new row is marked);
+    // the plan's own Save stays separate.
     await runWithFeedback(
       context,
       'add the block',
@@ -148,7 +159,7 @@ class _BlockListState extends State<_BlockList> {
       'change the block',
       () => editBlocksWithUndo(
         context,
-        message: 'Block changed: ${BlockText.row(edited, null)}',
+        message: 'Changed in this plan: ${BlockText.row(edited, null)}',
         change: () => plan.updateCaptureBlock(index, edited),
       ),
     );

@@ -1,7 +1,7 @@
 // S7.2b (ADR-020 §3–§5; RG-11 = C1, B1, P2): a light block asks only for
 // what applies to the rig's camera class: ISO for phones and cameras, gain
-// for astro cameras, the choice for Unknown; binning only for astro cameras
-// and Unknown. A value the class does not show is kept as recorded and
+// for astro cameras, and for Unknown no kind at all since ADR-021 C13 (F06);
+// binning only for astro cameras and Unknown, in Details (AM-04). A value the class does not show is kept as recorded and
 // named; nothing is converted between ISO and gain. A new light block
 // starts from the plan's last light block, marked as a proposal and stored
 // only on Add.
@@ -114,6 +114,14 @@ void main() {
         label(tester),
         iso ? 'ISO (for your records)' : 'Gain (for your records)',
       );
+      // AM-04 (F06 A5): binning is an astro camera's, in Details.
+      expect(find.byKey(const Key('blockDialog.binning')), findsNothing);
+      final details = find.byKey(const Key('blockDialog.details'));
+      if (!iso) {
+        await tester.ensureVisible(details);
+        await tester.tap(details);
+        await tester.pumpAndSettle();
+      }
       expect(
         find.byKey(const Key('blockDialog.binning')),
         iso ? findsNothing : findsOneWidget,
@@ -123,13 +131,24 @@ void main() {
     });
   }
 
-  testWidgets('Unknown keeps the choice of ISO or gain, and binning', (
-    tester,
-  ) async {
-    await open(tester, []);
-    expect(find.byKey(const Key('blockDialog.gainKind')), findsOneWidget);
+  // ADR-021 C13 (AM-04) replaced Unknown's ISO-or-gain choice: no kind is
+  // guessed; the remedy is the rig's camera type. Binning stays in Details.
+  testWidgets('Unknown offers no ISO/gain kind, but the camera-type '
+      'remedy; binning in Details', (tester) async {
+    final result = <CaptureBlock?>[];
+    await open(tester, result);
+    expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
+    expect(find.byKey(const Key('blockDialog.gainValue')), findsNothing);
+    expect(find.byKey(const Key('blockDialog.chooseClass')), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('blockDialog.details')));
+    await tester.tap(find.byKey(const Key('blockDialog.details')));
+    await tester.pumpAndSettle();
     expect(find.byKey(const Key('blockDialog.binning')), findsOneWidget);
     expect(tester.takeException(), isNull);
+    await tester.enterText(find.byKey(const Key('blockDialog.exposure')), '60');
+    await tester.enterText(find.byKey(const Key('blockDialog.count')), '10');
+    await submit(tester);
+    expect(result.single!.gain, CaptureGain.none, reason: 'unrecorded');
   });
 
   testWidgets('a phone rig keeps a recorded gain and binning it does not '

@@ -178,10 +178,27 @@ abstract final class CalibrationMatch {
   /// [block] with what it inherits copied from [source] (ADR-020 §6, L1):
   /// darks and dark flats the exposure, ISO or gain and binning; bias the ISO
   /// or gain and binning; flats the filter and binning. Everything else (the
-  /// count, the policy, a flat's or bias's own exposure) is kept.
-  static CaptureBlock matched(CaptureBlock block, CaptureBlock source) {
+  /// count, the policy, a flat's or bias's own exposure, the white balance,
+  /// focus mode and file evidence) is kept. With [origin] (ADR-021 C4), each
+  /// inherited field records it; the other fields keep their own.
+  static CaptureBlock matched(
+    CaptureBlock block,
+    CaptureBlock source, {
+    FieldOrigin? origin,
+  }) {
     final type = block.frameType;
     if (type == FrameType.light) return block;
+    var origins = block.origins;
+    if (origin != null) {
+      for (final field in [
+        if (type == FrameType.flat) CaptureField.filter,
+        if (takesExposure(type)) CaptureField.exposure,
+        if (takesSensitivity(type)) CaptureField.sensitivity,
+        CaptureField.binning,
+      ]) {
+        origins = origins.withOrigin(field, origin);
+      }
+    }
     return CaptureBlock(
       id: block.id,
       sessionLogId: block.sessionLogId,
@@ -194,6 +211,10 @@ abstract final class CalibrationMatch {
       binning: source.binning,
       gain: takesSensitivity(type) ? source.gain : block.gain,
       calibrationPolicy: block.calibrationPolicy,
+      whiteBalance: block.whiteBalance,
+      focusMode: block.focusMode,
+      origins: origins,
+      fileEvidence: block.fileEvidence,
     );
   }
 }

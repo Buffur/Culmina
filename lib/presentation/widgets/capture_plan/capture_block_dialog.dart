@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_block.dart';
 import '../../../domain/services/calibration_match.dart';
+import '../../../domain/services/exposure_input.dart';
 import '../../shared/block_text.dart';
 import '../../shared/calibration_text.dart';
+import '../../shared/capture_settings_text.dart';
+import '../../shared/confirmation_patterns.dart';
 
 const _filters = ['L', 'R', 'G', 'B', 'Ha', 'OIII', 'SII', 'OSC', 'None'];
 
@@ -15,18 +18,27 @@ const _filters = ['L', 'R', 'G', 'B', 'Ha', 'OIII', 'SII', 'OSC', 'None'];
 /// it, or applies an edit with Undo (TD-079, S6.16). [initial] makes it an
 /// edit of that block.
 ///
-/// S7.2b (ADR-020 §3, §5): a light block shows what applies to the rig's
-/// [cameraClass]: ISO for phones and cameras, gain for astro cameras, the
-/// choice for Unknown; binning only for astro cameras and Unknown. A value
-/// the class does not show is kept as recorded, and named. A new light block
-/// starts from [proposal] (the plan's last light block): its exposure, ISO
-/// or gain and binning, marked as a proposal and stored only on Add.
+/// S7.2b (ADR-020 §3, §5), ADR-021 C13 (AM-04): a light block shows what
+/// applies to the rig's [cameraClass]: ISO for phones and cameras, gain for
+/// astro cameras, and for Unknown no ISO/gain field but a way to say the
+/// camera type; binning only for astro cameras and Unknown, in Details. A
+/// value the class does not show is kept as recorded, and named. A new
+/// light block starts from [proposal] (the plan's last light block): its
+/// exposure, ISO or gain and binning, marked as a proposal and stored only
+/// on Add block.
 ///
 /// S7.3a (ADR-020 §6–§7; RG-10 = L1, D1, H1): a new dark, bias, flat or dark
 /// flat takes what it must match from a block of the plan's [blocks] (a
 /// light, or a flat for a dark flat; the first by default), shown with its
 /// origin; "Use other values" makes those fields the user's. A short tip per
 /// calibration type, more on demand, hideable ([tipsShown], [onTipsShown]).
+///
+/// F06 (ADR-021 C1/C3/C4/C14; SP05): exposure as decimal seconds or a
+/// fraction; a custom filter stays itself; flats and bias never keep a
+/// light's proposed exposure; white balance and AF/MF are optional records
+/// for phones, cameras and Unknown; each field keeps its origin unless the
+/// user changes it. A changed dialog asks before Back or a tap outside
+/// discards it.
 Future<CaptureBlock?> showCaptureBlockDialog(
   BuildContext context, {
   CaptureBlock? initial,
@@ -75,22 +87,51 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   late FrameType _type;
   late String _filter;
   late int _binning;
-  late GainKind _gainKind;
   late CalibrationPolicy _policy;
   late final TextEditingController _exposure;
   late final TextEditingController _count;
   late final TextEditingController _gainValue;
+  late final TextEditingController _kelvin;
+  late final TextEditingController _tint;
+  WhiteBalanceMode? _wbMode;
+  WhiteBalancePreset _wbPreset = WhiteBalancePreset.daylight;
+  FocusMode? _focus;
   late bool _tipsShown = widget.tipsShown;
   bool _tipMore = false;
+  bool _details = false;
+
+  /// A valid filter outside the list (an older plan's, an import's): kept
+  /// as itself, never coerced to None (F06 A1).
+  String? _customFilter;
 
   /// S7.3a: which of the plan's blocks a new calibration block matches, and
   /// whether it still takes its values from it (until "Use other values").
   int _sourceIndex = 0;
   bool _inherit = true;
 
-  /// S7.V1 (TD-083): whether the user has typed, cleared or re-kinded the
-  /// ISO or gain; a source then no longer proposes a flat's.
+  /// S7.V1 (TD-083): whether the user has typed or cleared the ISO or gain;
+  /// a source then no longer proposes a flat's.
   bool _gainEdited = false;
+
+  /// For Unknown (no ISO/gain field, ADR-021 C13): a source's recorded ISO
+  /// or gain taken by "Use other values" or a flat's proposal, kept as
+  /// recorded, never relabelled.
+  CaptureGain? _copiedGain;
+
+  /// F06 A3: whether the exposure field still holds the light proposal's
+  /// value, which a flat, bias or dark flat must not keep.
+  bool _exposureFromProposal = false;
+
+  /// ADR-021 C4: values taken from a source while the dialog is open (the
+  /// proposal, "Use other values"), with their origin. A field that still
+  /// holds that value keeps the origin on submit; a changed one is entered.
+  final Map<CaptureField, (Object?, FieldOrigin)> _seeds = {};
+
+  /// The dialog's state when it opened, for the discard guard (F06 A6).
+  late final List<Object?> _opened;
+
+  /// Set when the dialog closes on purpose, so the guard lets it go.
+  bool _leaving = false;
 
   List<CaptureBlock> get _sources =>
       CalibrationMatch.sourcesFor(_type, widget.blocks);
@@ -111,19 +152,28 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   CaptureBlock? get _source => widget.initial ?? widget.proposal;
 
   /// The sensitivity kind a block of this class records (ADR-020 §3; RG-10
-  /// §4 gives calibration frames the lights' kind); null when the user
-  /// chooses it (Unknown).
+  /// §4 gives calibration frames the lights' kind); null for Unknown, which
+  /// records none until the camera type is set (ADR-021 C13).
   GainKind? get _fixedKind => switch (widget.cameraClass.lightSensitivity) {
     LightSensitivity.iso => GainKind.iso,
     LightSensitivity.gain => GainKind.gain,
     LightSensitivity.either => null,
   };
 
-  GainKind get _kind => _fixedKind ?? _gainKind;
-
   /// Binning, for every frame type, only where the class offers it (RG-10
   /// §4: not applicable for phones and cameras, where it is the rig's mode).
   bool get _showBinning => widget.cameraClass.offersLightBinning;
+
+  /// White balance and focus mode (ADR-021 C1, C3; AM-04): offered on a
+  /// light block of a phone, camera or Unknown rig.
+  bool get _showCameraRecords =>
+      widget.cameraClass.offersCameraRecords && _type == FrameType.light;
+
+  List<String> get _filterOptions => [
+    ..._filters.where((f) => f != 'None'),
+    ?_customFilter,
+    'None',
+  ];
 
   @override
   void initState() {
@@ -131,30 +181,84 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     final i = widget.initial;
     final from = _source;
     _type = i?.frameType ?? FrameType.light;
-    _filter = i?.filterName ?? 'L';
-    if (!_filters.contains(_filter)) _filter = 'None';
+    final filter = i == null ? _defaultFilter : (i.filterName ?? 'None');
+    _filter = filter;
+    if (!_filters.contains(filter)) _customFilter = filter;
     _binning = from?.binning ?? 1;
-    _gainKind = from?.gain.kind ?? GainKind.unknown;
     _policy = i?.calibrationPolicy ?? CalibrationPolicy.outsideWindow;
     _exposure = TextEditingController(
-      text: from == null ? '' : _trimZeros(from.exposureTimeSeconds),
+      text: from == null ? '' : ExposureInput.format(from.exposureTimeSeconds),
     );
     _count = TextEditingController(text: i?.frameCount.toString() ?? '');
     // A value of another kind than this class records stays as it was and
     // is named instead of being shown in the field (ADR-020 §3).
     final gv = from?.gain.value;
-    final shown = _fixedKind == null || from?.gain.kind == _fixedKind;
+    final fixed = _fixedKind;
+    final shown = fixed != null && from?.gain.kind == fixed;
     _gainValue = TextEditingController(
       text: gv == null || !shown ? '' : _trimZeros(gv),
     );
+    final wb = i?.whiteBalance;
+    _wbMode = wb?.mode;
+    _wbPreset = wb?.preset ?? WhiteBalancePreset.daylight;
+    _kelvin = TextEditingController(text: wb?.kelvinK?.toString() ?? '');
+    _tint = TextEditingController(
+      text: wb?.tint == null ? '' : _trimZeros(wb!.tint!),
+    );
+    _focus = i?.focusMode;
+    final p = widget.proposal;
+    if (p != null) {
+      _exposureFromProposal = true;
+      final origin = FieldOrigin(
+        OriginKind.copied,
+        CaptureSettingsText.fromBlock(BlockText.row(p, null)),
+      );
+      _seeds[CaptureField.exposure] = (p.exposureTimeSeconds, origin);
+      _seeds[CaptureField.binning] = (p.binning, origin);
+      if (shown) _seeds[CaptureField.sensitivity] = (p.gain, origin);
+    }
+    _opened = _state();
   }
+
+  /// A new block's filter by class (F06 A3): a mono astro camera's
+  /// luminance, otherwise none (a colour sensor, a phone or Unknown).
+  String get _defaultFilter =>
+      widget.cameraClass == CameraClass.astroMono ? 'L' : 'None';
 
   @override
   void dispose() {
     _exposure.dispose();
     _count.dispose();
     _gainValue.dispose();
+    _kelvin.dispose();
+    _tint.dispose();
     super.dispose();
+  }
+
+  /// Everything the user can change, for the discard guard.
+  List<Object?> _state() => [
+    _type,
+    _filter,
+    _binning,
+    _policy,
+    _exposure.text.trim(),
+    _count.text.trim(),
+    _gainValue.text.trim(),
+    _wbMode,
+    _wbPreset,
+    _kelvin.text.trim(),
+    _tint.text.trim(),
+    _focus,
+    _sourceIndex,
+    _inherit,
+  ];
+
+  bool get _changed {
+    final now = _state();
+    for (var i = 0; i < now.length; i++) {
+      if (now[i] != _opened[i]) return true;
+    }
+    return false;
   }
 
   /// Whole numbers print without a trailing ".0" (60.0 -> "60").
@@ -164,9 +268,10 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
 
   String? _validateGain(String? value) {
     final text = (value ?? '').trim();
-    if (_kind == GainKind.unknown || text.isEmpty) return null;
+    final kind = _fixedKind;
+    if (kind == null || text.isEmpty) return null;
     final v = double.tryParse(text);
-    if (_kind == GainKind.iso) {
+    if (kind == GainKind.iso) {
       if (v == null || v != v.roundToDouble() || v < 1 || v > 1000000) {
         return 'ISO is a whole number from 1 to 1000000';
       }
@@ -179,29 +284,63 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   CaptureGain _gain() {
     final v = double.tryParse(_gainValue.text.trim());
     final fixed = _fixedKind;
-    if (fixed != null) {
-      if (v != null) {
-        return fixed == GainKind.iso
-            ? CaptureGain.iso(v.round())
-            : CaptureGain.gain(v);
-      }
-      // Cleared: none; a value of another kind is kept as recorded.
-      final kept = widget.initial?.gain ?? CaptureGain.none;
-      return kept.kind == fixed ? CaptureGain.none : kept;
+    final kept = widget.initial?.gain ?? CaptureGain.none;
+    if (fixed == null) {
+      // ADR-021 C13: Unknown records none of its own; an edited block keeps
+      // its value, a source's is taken as recorded.
+      return _copiedGain ?? kept;
     }
-    switch (_gainKind) {
-      case GainKind.iso:
-        return v == null ? CaptureGain.none : CaptureGain.iso(v.round());
-      case GainKind.gain:
-        return v == null ? CaptureGain.none : CaptureGain.gain(v);
-      case GainKind.unknown:
-        return widget.initial?.gain.kind == GainKind.unknown
-            ? widget
-                  .initial!
-                  .gain // keep a legacy unknown-kind value
-            : CaptureGain.none;
+    if (v != null) {
+      return fixed == GainKind.iso
+          ? CaptureGain.iso(v.round())
+          : CaptureGain.gain(v);
     }
+    // Cleared: none; a value of another kind is kept as recorded.
+    return kept.kind == fixed ? CaptureGain.none : kept;
   }
+
+  String? _validateKelvin(String? value) {
+    if (_wbMode != WhiteBalanceMode.kelvin) return null;
+    final k = int.tryParse((value ?? '').trim());
+    if (k == null || k < WhiteBalance.minKelvin || k > WhiteBalance.maxKelvin) {
+      return 'A whole number of kelvins, ${WhiteBalance.minKelvin}–'
+          '${WhiteBalance.maxKelvin}';
+    }
+    return null;
+  }
+
+  String? _validateTint(String? value) {
+    final t = (value ?? '').trim();
+    if (t.isEmpty || !_tintApplies) return null;
+    final v = double.tryParse(t);
+    if (v == null || v.abs() > WhiteBalance.maxAbsTint) {
+      return 'A number from −${WhiteBalance.maxAbsTint.round()} to '
+          '${WhiteBalance.maxAbsTint.round()}, as the camera shows it';
+    }
+    return null;
+  }
+
+  bool get _tintApplies => _wbMode != null && _wbMode != WhiteBalanceMode.auto;
+
+  /// The white balance as set in the dialog; null = not recorded.
+  WhiteBalance? _whiteBalance() {
+    if (!_showCameraRecords) return widget.initial?.whiteBalance;
+    final tintText = _tint.text.trim();
+    final tint = tintText.isEmpty ? null : double.tryParse(tintText);
+    return switch (_wbMode) {
+      null => null,
+      WhiteBalanceMode.auto => WhiteBalance.auto(),
+      WhiteBalanceMode.preset => WhiteBalance.preset(_wbPreset, tint: tint),
+      WhiteBalanceMode.kelvin => WhiteBalance.kelvin(
+        int.parse(_kelvin.text.trim()),
+        tint: tint,
+      ),
+      WhiteBalanceMode.custom => WhiteBalance.custom(tint: tint),
+    };
+  }
+
+  FocusMode? _focusMode() =>
+      _showCameraRecords ? _focus : widget.initial?.focusMode;
 
   /// A new flat's ISO or gain is proposed from its light block (RG-10 §4:
   /// prefilled and overridable), until the user edits it (S7.V1); its
@@ -209,20 +348,47 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   void _prefillFlatGain() {
     final from = _inheritFrom;
     if (_type != FrameType.flat || from == null || _gainEdited) return;
-    _copyGain(from.gain);
+    _copyGain(from.gain, _sourceOrigin(from, OriginKind.copied));
   }
 
   /// Puts [g] in the ISO or gain field, unless this class records the other
   /// kind: never relabelled as it (SI-004), the field is left empty.
-  void _copyGain(CaptureGain g) {
-    final fits = _fixedKind == null || g.kind == _fixedKind;
-    _gainKind = g.kind;
+  void _copyGain(CaptureGain g, FieldOrigin origin) {
+    final fixed = _fixedKind;
+    final fits = fixed != null && g.kind == fixed;
     _gainValue.text = g.value == null || !fits ? '' : _trimZeros(g.value!);
+    if (fixed == null) _copiedGain = g;
+    if (fits || fixed == null) _seeds[CaptureField.sensitivity] = (g, origin);
   }
+
+  FieldOrigin _sourceOrigin(CaptureBlock from, OriginKind kind) => FieldOrigin(
+    kind,
+    CaptureSettingsText.fromBlock(BlockText.row(from, null)),
+  );
 
   /// Whether the exposure is the user's to type (not taken from a source).
   bool get _typesExposure =>
       _inheritFrom == null || !CalibrationMatch.takesExposure(_type);
+
+  void _setType(FrameType type) {
+    setState(() {
+      _type = type;
+      _sourceIndex = 0;
+      final p = widget.proposal;
+      if (type == FrameType.light) {
+        // Back to a light: the proposal again, unless the user typed one.
+        if (p != null && _exposure.text.trim().isEmpty) {
+          _exposure.text = ExposureInput.format(p.exposureTimeSeconds);
+          _exposureFromProposal = true;
+        }
+      } else if (type != FrameType.dark && _exposureFromProposal) {
+        // F06 A3: a flat's, bias's or dark flat's exposure is its own.
+        _exposure.clear();
+        _exposureFromProposal = false;
+      }
+      _prefillFlatGain();
+    });
+  }
 
   /// "Use other values" (ADR-020 §6): the values still taken from the source
   /// become the fields', which are the user's from now on. What was already
@@ -231,67 +397,188 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   void _useOtherValues() {
     final from = _inheritFrom;
     if (from == null) return;
+    final origin = _sourceOrigin(from, OriginKind.copied);
     setState(() {
       _inherit = false;
       if (CalibrationMatch.takesExposure(_type)) {
-        _exposure.text = _trimZeros(from.exposureTimeSeconds);
+        _exposure.text = ExposureInput.format(from.exposureTimeSeconds);
+        _exposureFromProposal = false;
+        _seeds[CaptureField.exposure] = (from.exposureTimeSeconds, origin);
       }
       _binning = from.binning;
-      if (CalibrationMatch.takesSensitivity(_type)) _copyGain(from.gain);
-      final filter = from.filterName ?? 'None';
+      _seeds[CaptureField.binning] = (from.binning, origin);
+      if (CalibrationMatch.takesSensitivity(_type)) {
+        _copyGain(from.gain, origin);
+      }
       if (_type == FrameType.flat) {
-        _filter = _filters.contains(filter) ? filter : 'None';
+        final filter = from.filterName ?? 'None';
+        if (!_filters.contains(filter)) _customFilter = filter;
+        _filter = filter;
+        _seeds[CaptureField.filter] = (from.filterName, origin);
       }
     });
   }
 
-  void _submit() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-    final isLight = _type == FrameType.light;
-    final from = _inheritFrom;
-    final block = CaptureBlock(
-      id: widget.initial?.id ?? 0,
-      sessionLogId: widget.initial?.sessionLogId ?? 0,
-      frameType: _type,
-      filterName: (isLight || _type == FrameType.flat) && _filter != 'None'
-          ? _filter
-          : null,
-      exposureTimeSeconds: _typesExposure
-          ? double.parse(_exposure.text.trim())
-          : from!.exposureTimeSeconds,
-      frameCount: int.parse(_count.text.trim()),
-      binning: _binning,
-      gain: _gain(),
-      calibrationPolicy: isLight ? null : _policy,
-    );
-    Navigator.pop(context, from == null ? block : _withSource(block, from));
+  /// [field]'s origin for [value] (ADR-021 C4): an edited block's own while
+  /// the value is unchanged, a source's while it holds that source's value,
+  /// otherwise entered; null when nothing is recorded for a new block.
+  FieldOrigin? _origin(CaptureField field, Object? value, Object? before) {
+    final i = widget.initial;
+    if (i != null && value == before) return i.origins[field];
+    if (_seeds[field] case (final seeded, final origin) when seeded == value) {
+      return origin;
+    }
+    if (i == null && value == null) return null;
+    return FieldOrigin.entered();
   }
 
-  /// [block] with what it inherits from [from] (L1): a flat keeps the ISO or
-  /// gain typed in the dialog, which the source only proposes.
-  CaptureBlock _withSource(CaptureBlock block, CaptureBlock from) =>
-      CalibrationMatch.matched(block, from);
+  CaptureBlock _build() {
+    final isLight = _type == FrameType.light;
+    final from = _inheritFrom;
+    final i = widget.initial;
+    final filter = (isLight || _type == FrameType.flat) && _filter != 'None'
+        ? _filter
+        : null;
+    final exposure = _typesExposure
+        ? ExposureInput.parse(_exposure.text)!
+        : from!.exposureTimeSeconds;
+    final count = int.parse(_count.text.trim());
+    final gain = _gain();
+    final wb = _whiteBalance();
+    final focus = _focusMode();
+    final binning = _binning;
+    var origins = i?.origins ?? FieldOrigins.none;
+    for (final (field, value, before) in [
+      (CaptureField.frameType, _type, i?.frameType),
+      (CaptureField.filter, filter, i?.filterName),
+      (CaptureField.exposure, exposure, i?.exposureTimeSeconds),
+      (CaptureField.count, count, i?.frameCount),
+      (
+        CaptureField.sensitivity,
+        gain == CaptureGain.none ? null : gain,
+        i?.gain == CaptureGain.none ? null : i?.gain,
+      ),
+      (CaptureField.binning, _showBinning ? binning : null, i?.binning),
+      (CaptureField.wb, wb, i?.whiteBalance),
+      (CaptureField.focusMode, focus, i?.focusMode),
+    ]) {
+      // A hidden binning of an edited block keeps its origin.
+      if (field == CaptureField.binning && !_showBinning && i != null) continue;
+      origins = origins.withOrigin(field, _origin(field, value, before));
+    }
+    final block = CaptureBlock(
+      id: i?.id ?? 0,
+      sessionLogId: i?.sessionLogId ?? 0,
+      frameType: _type,
+      filterName: filter,
+      exposureTimeSeconds: exposure,
+      frameCount: count,
+      binning: binning,
+      gain: gain,
+      calibrationPolicy: isLight ? null : _policy,
+      whiteBalance: wb,
+      focusMode: focus,
+      origins: origins,
+      fileEvidence: i?.fileEvidence,
+    );
+    return from == null
+        ? block
+        : CalibrationMatch.matched(
+            block,
+            from,
+            origin: _sourceOrigin(from, OriginKind.inherited),
+          );
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final block = _build();
+    _leaving = true;
+    Navigator.pop(context, block);
+  }
+
+  /// Back or a tap outside (F06 A6): an unchanged dialog closes; a changed
+  /// one asks with the shared prompt, whose dismissal is Cancel.
+  Future<void> _leave() async {
+    if (!_changed) {
+      _leaving = true;
+      Navigator.pop(context);
+      return;
+    }
+    final i = widget.initial;
+    final choice = await askUnsavedChanges(
+      context,
+      plan: i == null ? 'New block' : BlockText.identity(i),
+    );
+    if (!mounted) return;
+    switch (choice) {
+      case UnsavedChoice.cancel:
+        return;
+      case UnsavedChoice.discard:
+        _leaving = true;
+        Navigator.pop(context);
+      case UnsavedChoice.save:
+        await _submit();
+    }
+  }
 
   void _setTipsShown(bool shown) {
     setState(() => _tipsShown = shown);
     widget.onTipsShown?.call(shown);
   }
 
-  /// The recorded values a light block keeps without showing them (ADR-020
-  /// §3): named, so nothing is hidden silently.
+  /// The recorded values a block keeps without showing them (ADR-020 §3,
+  /// ADR-021 C3/C13): named, so nothing is hidden silently.
   List<String> _kept() {
     if (_inheritFrom != null) return const []; // the source's values show
-    final gain = widget.initial?.gain ?? CaptureGain.none;
+    final i = widget.initial;
+    final fixed = _fixedKind;
+    final gain =
+        (fixed == null ? _copiedGain : null) ?? i?.gain ?? CaptureGain.none;
     return [
       if (!_showBinning && _binning != 1) '$_binning × $_binning binning',
-      if (_fixedKind != null && gain.kind != _fixedKind && gain.value != null)
+      if ((fixed == null || gain.kind != fixed) && gain.value != null)
         switch (gain.kind) {
           GainKind.iso => 'ISO ${_trimZeros(gain.value!)}',
           GainKind.gain => 'gain ${_trimZeros(gain.value!)}',
           GainKind.unknown =>
             'ISO or gain ${_trimZeros(gain.value!)} (kind not recorded)',
         },
+      if (!_showCameraRecords) ...[
+        if (i?.whiteBalance case final wb?)
+          'white balance ${CaptureSettingsText.whiteBalance(wb)}',
+        if (i?.focusMode case final f?) 'focus ${CaptureSettingsText.focus(f)}',
+      ],
     ];
+  }
+
+  /// "From …" under a field that still holds a source's value (ADR-021 C4):
+  /// a compact, visible origin; Details lists them all.
+  String? _from(CaptureField field, Object? value) {
+    final i = widget.initial;
+    final origin = i != null && value == _initialValue(field)
+        ? i.origins[field]
+        : switch (_seeds[field]) {
+            (final seeded, final o) when seeded == value => o,
+            _ => null,
+          };
+    if (origin == null || origin.kind == OriginKind.entered) return null;
+    return CaptureSettingsText.origin(origin);
+  }
+
+  Object? _initialValue(CaptureField field) {
+    final i = widget.initial!;
+    return switch (field) {
+      CaptureField.filter => i.filterName,
+      CaptureField.exposure => i.exposureTimeSeconds,
+      CaptureField.sensitivity => i.gain,
+      CaptureField.binning => i.binning,
+      CaptureField.wb => i.whiteBalance,
+      CaptureField.focusMode => i.focusMode,
+      CaptureField.count => i.frameCount,
+      CaptureField.frameType => i.frameType,
+      CaptureField.fileSize => null,
+    };
   }
 
   @override
@@ -307,298 +594,444 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     final takesGain = from != null && CalibrationMatch.takesSensitivity(_type);
     final takesBinning = from != null;
     final takesFilter = from != null && _type == FrameType.flat;
-    return AlertDialog(
-      title: Text(
-        widget.initial == null ? 'Add capture block' : 'Edit capture block',
-      ),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.proposal != null && isLight)
+    final origins = widget.initial?.origins.all ?? const {};
+    final binning = _showBinning && !takesBinning
+        ? DropdownButtonFormField<int>(
+            key: const Key('blockDialog.binning'),
+            initialValue: _binning,
+            isExpanded: true, // S7.2b: wraps at 200 % text
+            decoration: InputDecoration(
+              labelText: 'Binning',
+              helperText: _from(CaptureField.binning, _binning),
+            ),
+            items: [
+              for (final b in [1, 2, 3, 4])
+                DropdownMenuItem(value: b, child: Text('${b}x$b')),
+            ],
+            onChanged: (v) {
+              if (v != null) setState(() => _binning = v);
+            },
+          )
+        : null;
+    return PopScope(
+      canPop: _leaving,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _leave();
+      },
+      child: AlertDialog(
+        title: Text(
+          widget.initial == null ? 'Add capture block' : 'Edit capture block',
+        ),
+        content: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // F06 A7 (AM-02): what the button changes, and what it does
+                // not; no extra confirmation.
                 Padding(
-                  key: const Key('blockDialog.proposal'),
+                  key: const Key('blockDialog.scope'),
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Proposed from your last light block: exposure, '
-                    '${fixed == GainKind.gain ? 'gain' : 'ISO or gain'} and '
-                    'binning. Change them if needed.',
+                    widget.initial == null
+                        ? 'Adds the block to this plan. Save plan records '
+                              'the plan.'
+                        : 'Changes the block in this plan, with Undo. Save '
+                              'plan records the plan.',
                     style: muted,
                   ),
                 ),
-              DropdownButtonFormField<FrameType>(
-                initialValue: _type,
-                isExpanded: true, // S7.2b: wraps at 200 % text
-                decoration: const InputDecoration(labelText: 'Frame type'),
-                items: [
-                  for (final t in FrameType.values)
-                    DropdownMenuItem(value: t, child: Text(BlockText.type(t))),
-                ],
-                onChanged: (v) {
-                  if (v != null) {
-                    setState(() {
-                      _type = v;
-                      _sourceIndex = 0;
-                      _prefillFlatGain();
-                    });
-                  }
-                },
-              ),
-              if (tip != null && _tipsShown) ...[
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    _tipMore ? '${tip.$1} ${tip.$2}' : tip.$1,
-                    key: const Key('blockDialog.tip'),
-                    style: muted,
-                  ),
-                ),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    TextButton(
-                      key: const Key('blockDialog.tipMore'),
-                      onPressed: () => setState(() => _tipMore = !_tipMore),
-                      child: Text(_tipMore ? 'Less' : 'More'),
+                if (widget.proposal != null && isLight)
+                  Padding(
+                    key: const Key('blockDialog.proposal'),
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      'Proposed from your last light block: exposure, '
+                      '${fixed == GainKind.gain ? 'gain' : 'ISO'} and '
+                      'binning. Change them if needed.',
+                      style: muted,
                     ),
-                    TextButton(
-                      key: const Key('blockDialog.hideTips'),
-                      onPressed: () => _setTipsShown(false),
-                      child: const Text('Hide tips'),
-                    ),
-                  ],
-                ),
-              ] else if (tip != null)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    key: const Key('blockDialog.showTips'),
-                    onPressed: () => _setTipsShown(true),
-                    child: const Text('Show tips'),
                   ),
-                ),
-              if (from != null) ...[
-                DropdownButtonFormField<int>(
-                  key: const Key('blockDialog.source'),
-                  initialValue: _sourceIndex.clamp(0, sources.length - 1),
-                  isExpanded: true,
-                  decoration: InputDecoration(
-                    labelText: _type == FrameType.darkFlat
-                        ? 'Matches the flat block'
-                        : 'Matches the light block',
-                  ),
+                DropdownButtonFormField<FrameType>(
+                  key: const Key('blockDialog.frameType'),
+                  initialValue: _type,
+                  isExpanded: true, // S7.2b: wraps at 200 % text
+                  decoration: const InputDecoration(labelText: 'Frame type'),
                   items: [
-                    for (var i = 0; i < sources.length; i++)
+                    for (final t in FrameType.values)
                       DropdownMenuItem(
-                        value: i,
-                        child: Text(BlockText.row(sources[i], null)),
+                        value: t,
+                        child: Text(BlockText.type(t)),
                       ),
                   ],
                   onChanged: (v) {
-                    if (v != null) {
-                      setState(() {
-                        _sourceIndex = v;
-                        _prefillFlatGain();
-                      });
-                    }
+                    if (v != null) _setType(v);
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    CalibrationText.inherited(
-                      _type,
-                      from,
-                      withBinning: widget.cameraClass.offersLightBinning,
+                if (tip != null && _tipsShown) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      _tipMore ? '${tip.$1} ${tip.$2}' : tip.$1,
+                      key: const Key('blockDialog.tip'),
+                      style: muted,
                     ),
-                    key: const Key('blockDialog.inherited'),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    key: const Key('blockDialog.useOther'),
-                    onPressed: _useOtherValues,
-                    child: const Text('Use other values'),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      TextButton(
+                        key: const Key('blockDialog.tipMore'),
+                        onPressed: () => setState(() => _tipMore = !_tipMore),
+                        child: Text(_tipMore ? 'Less' : 'More'),
+                      ),
+                      TextButton(
+                        key: const Key('blockDialog.hideTips'),
+                        onPressed: () => _setTipsShown(false),
+                        child: const Text('Hide tips'),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-              if ((isLight || _type == FrameType.flat) && !takesFilter)
-                DropdownButtonFormField<String>(
-                  initialValue: _filter,
-                  isExpanded: true, // S7.2b: wraps at 200 % text
-                  decoration: const InputDecoration(labelText: 'Filter'),
-                  items: [
-                    for (final f in _filters)
-                      DropdownMenuItem(value: f, child: Text(f)),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) setState(() => _filter = v);
-                  },
-                ),
-              if (_typesExposure)
+                ] else if (tip != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: const Key('blockDialog.showTips'),
+                      onPressed: () => _setTipsShown(true),
+                      child: const Text('Show tips'),
+                    ),
+                  ),
+                if (from != null) ...[
+                  DropdownButtonFormField<int>(
+                    key: const Key('blockDialog.source'),
+                    initialValue: _sourceIndex.clamp(0, sources.length - 1),
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      labelText: _type == FrameType.darkFlat
+                          ? 'Matches the flat block'
+                          : 'Matches the light block',
+                    ),
+                    items: [
+                      for (var i = 0; i < sources.length; i++)
+                        DropdownMenuItem(
+                          value: i,
+                          child: Text(BlockText.row(sources[i], null)),
+                        ),
+                    ],
+                    onChanged: (v) {
+                      if (v != null) {
+                        setState(() {
+                          _sourceIndex = v;
+                          _prefillFlatGain();
+                        });
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      CalibrationText.inherited(
+                        _type,
+                        from,
+                        withBinning: widget.cameraClass.offersLightBinning,
+                      ),
+                      key: const Key('blockDialog.inherited'),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: const Key('blockDialog.useOther'),
+                      onPressed: _useOtherValues,
+                      child: const Text('Use other values'),
+                    ),
+                  ),
+                ],
+                if ((isLight || _type == FrameType.flat) && !takesFilter)
+                  DropdownButtonFormField<String>(
+                    key: const Key('blockDialog.filter'),
+                    initialValue: _filter,
+                    isExpanded: true, // S7.2b: wraps at 200 % text
+                    decoration: InputDecoration(
+                      labelText: 'Filter',
+                      helperText: _from(
+                        CaptureField.filter,
+                        _filter == 'None' ? null : _filter,
+                      ),
+                    ),
+                    items: [
+                      for (final f in _filterOptions)
+                        DropdownMenuItem(value: f, child: Text(f)),
+                    ],
+                    onChanged: (v) {
+                      if (v != null) setState(() => _filter = v);
+                    },
+                  ),
+                if (_typesExposure)
+                  TextFormField(
+                    key: const Key('blockDialog.exposure'),
+                    controller: _exposure,
+                    decoration: InputDecoration(
+                      labelText: 'Exposure (seconds)',
+                      hintText: 'e.g. 60 or 1/14',
+                      helperText: _type == FrameType.bias
+                          ? 'The shortest your camera allows.'
+                          : _from(
+                              CaptureField.exposure,
+                              ExposureInput.parse(_exposure.text),
+                            ),
+                      helperMaxLines: 3,
+                    ),
+                    // Fractions need "/", which a number pad lacks (C14).
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    onChanged: (_) =>
+                        setState(() => _exposureFromProposal = false),
+                    validator: (value) => ExposureInput.problem(value ?? ''),
+                  ),
                 TextFormField(
-                  controller: _exposure,
-                  decoration: InputDecoration(
-                    labelText: 'Exposure (seconds)',
-                    hintText: 'e.g. 60',
-                    helperText: _type == FrameType.bias
-                        ? 'The shortest your camera allows.'
-                        : null,
+                  key: const Key('blockDialog.count'),
+                  controller: _count,
+                  decoration: const InputDecoration(
+                    labelText: 'Frame count',
+                    hintText: 'e.g. 30',
                   ),
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
-                    final exposure = double.tryParse((value ?? '').trim());
-                    if (exposure == null || exposure <= 0) {
-                      return 'Enter a positive number of seconds';
+                    final count = int.tryParse((value ?? '').trim());
+                    if (count == null || count < 1) {
+                      return 'Enter a whole number of at least 1';
                     }
-                    if (exposure > CaptureBlock.maxExposureSeconds) {
-                      return 'At most '
-                          '${CaptureBlock.maxExposureSeconds.round()} s';
+                    if (count > CaptureBlock.maxFrameCount) {
+                      return 'At most ${CaptureBlock.maxFrameCount}';
                     }
                     return null;
                   },
                 ),
-              TextFormField(
-                controller: _count,
-                decoration: const InputDecoration(
-                  labelText: 'Frame count',
-                  hintText: 'e.g. 30',
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  final count = int.tryParse((value ?? '').trim());
-                  if (count == null || count < 1) {
-                    return 'Enter a whole number of at least 1';
-                  }
-                  if (count > CaptureBlock.maxFrameCount) {
-                    return 'At most ${CaptureBlock.maxFrameCount}';
-                  }
-                  return null;
-                },
-              ),
-              if (!isLight)
-                DropdownButtonFormField<CalibrationPolicy>(
-                  key: const Key('blockDialog.policy'),
-                  initialValue: _policy,
-                  isExpanded: true, // S7.2b: wraps at 200 % text
-                  decoration: const InputDecoration(
-                    labelText: 'When is it taken?',
+                if (!isLight)
+                  DropdownButtonFormField<CalibrationPolicy>(
+                    key: const Key('blockDialog.policy'),
+                    initialValue: _policy,
+                    isExpanded: true, // S7.2b: wraps at 200 % text
+                    decoration: const InputDecoration(
+                      labelText: 'When is it taken?',
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: CalibrationPolicy.outsideWindow,
+                        child: Text('Outside the window (twilight/dawn)'),
+                      ),
+                      DropdownMenuItem(
+                        value: CalibrationPolicy.inWindow,
+                        child: Text('During the window'),
+                      ),
+                      DropdownMenuItem(
+                        value: CalibrationPolicy.library,
+                        child: Text('From your library (no window time)'),
+                      ),
+                    ],
+                    onChanged: (v) {
+                      if (v != null) setState(() => _policy = v);
+                    },
                   ),
-                  items: const [
-                    DropdownMenuItem(
-                      value: CalibrationPolicy.outsideWindow,
-                      child: Text('Outside the window (twilight/dawn)'),
-                    ),
-                    DropdownMenuItem(
-                      value: CalibrationPolicy.inWindow,
-                      child: Text('During the window'),
-                    ),
-                    DropdownMenuItem(
-                      value: CalibrationPolicy.library,
-                      child: Text('From your library (no window time)'),
-                    ),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) setState(() => _policy = v);
-                  },
-                ),
-              if (_showBinning && !takesBinning)
-                DropdownButtonFormField<int>(
-                  key: const Key('blockDialog.binning'),
-                  initialValue: _binning,
-                  isExpanded: true, // S7.2b: wraps at 200 % text
-                  decoration: const InputDecoration(labelText: 'Binning'),
-                  items: [
-                    for (final b in [1, 2, 3, 4])
-                      DropdownMenuItem(value: b, child: Text('${b}x$b')),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) setState(() => _binning = v);
-                  },
-                ),
-              if (fixed == null && !takesGain)
-                DropdownButtonFormField<GainKind>(
-                  key: const Key('blockDialog.gainKind'),
-                  initialValue: _gainKind,
-                  isExpanded: true, // S7.2b: wraps at 200 % text
-                  decoration: const InputDecoration(
-                    // RD-03 (S1.8): never called "sensitivity" (SI-004).
-                    labelText: 'ISO / gain (for your records)',
-                    helperText: 'Recorded only; it does not change the plan.',
-                    helperMaxLines: 5,
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                      value: GainKind.unknown,
-                      child: Text('Not recorded'),
-                    ),
-                    DropdownMenuItem(value: GainKind.iso, child: Text('ISO')),
-                    DropdownMenuItem(
-                      value: GainKind.gain,
-                      child: Text('Camera gain'),
-                    ),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) {
-                      setState(() {
-                        _gainKind = v;
-                        _gainEdited = true;
-                      });
-                    }
-                  },
-                ),
-              if (_kind != GainKind.unknown && !takesGain)
-                TextFormField(
-                  key: const Key('blockDialog.gainValue'),
-                  controller: _gainValue,
-                  decoration: InputDecoration(
-                    labelText: fixed == null
-                        ? (_kind == GainKind.iso ? 'ISO' : 'Gain')
-                        : (fixed == GainKind.iso
-                              ? 'ISO (for your records)'
-                              : 'Gain (for your records)'),
-                    helperText: fixed == null
-                        ? null
-                        : 'Optional; recorded only, it does not change the '
+                if (fixed != null && !takesGain)
+                  TextFormField(
+                    key: const Key('blockDialog.gainValue'),
+                    controller: _gainValue,
+                    decoration: InputDecoration(
+                      labelText: fixed == GainKind.iso
+                          ? 'ISO (for your records)'
+                          : 'Gain (for your records)',
+                      helperText:
+                          _from(CaptureField.sensitivity, _typedGain()) ??
+                          'Optional; recorded only, it does not change the '
                               'plan.',
-                    helperMaxLines: 5,
+                      helperMaxLines: 5,
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    validator: _validateGain,
+                    onChanged: (_) => setState(() => _gainEdited = true),
                   ),
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
+                // ADR-021 C13: Unknown records no ISO or gain; the remedy is
+                // the rig's camera type, never a guessed kind.
+                if (fixed == null && !takesGain)
+                  Padding(
+                    key: const Key('blockDialog.chooseClass'),
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      'ISO or gain: set the rig’s camera type (Rigs → Edit '
+                      'rig) to record it here.',
+                      style: muted,
+                    ),
                   ),
-                  validator: _validateGain,
-                  onChanged: (_) => _gainEdited = true,
-                ),
-              if (kept.isNotEmpty)
-                Padding(
-                  key: const Key('blockDialog.kept'),
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    'Also recorded: ${kept.join(', ')} (kept as it was).',
-                    style: muted,
+                if (_showCameraRecords) ..._cameraRecords(muted),
+                if (kept.isNotEmpty)
+                  Padding(
+                    key: const Key('blockDialog.kept'),
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      'Also recorded: ${kept.join(', ')} (kept as it was).',
+                      style: muted,
+                    ),
                   ),
-                ),
-            ],
+                // SP05 (AM-01/AM-04): the rarer values and the origins, one
+                // tap away; nothing in them is erased while closed.
+                if (binning != null ||
+                    origins.isNotEmpty ||
+                    (_showCameraRecords && _tintApplies))
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: const Key('blockDialog.details'),
+                      onPressed: () => setState(() => _details = !_details),
+                      child: Text(_details ? 'Fewer details' : 'Details'),
+                    ),
+                  ),
+                if (_details) ...[
+                  ?binning,
+                  if (_showCameraRecords && _tintApplies)
+                    TextFormField(
+                      key: const Key('blockDialog.tint'),
+                      controller: _tint,
+                      decoration: const InputDecoration(
+                        labelText: 'White balance tint (optional)',
+                        helperText: 'As the camera shows it; no unit.',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
+                      validator: _validateTint,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  if (origins.isNotEmpty)
+                    Padding(
+                      key: const Key('blockDialog.origins'),
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        [
+                          'Where the values came from:',
+                          for (final e in origins.entries)
+                            '${CaptureSettingsText.field(e.key)}: '
+                                '${CaptureSettingsText.origin(e.value)}',
+                        ].join('\n'),
+                        style: muted,
+                      ),
+                    ),
+                ] else if (binning != null && _binning != 1)
+                  // A closed Details still says a non-default binning.
+                  Text('Binning ${_binning}x$_binning', style: muted),
+              ],
+            ),
           ),
         ),
+        actions: [
+          TextButton(
+            key: const Key('blockDialog.cancel'),
+            onPressed: () {
+              _leaving = true;
+              Navigator.pop(context);
+            },
+            child: const Text('Cancel'),
+          ),
+          // S6.9: the dialog's primary action (§6.1's button hierarchy);
+          // F06 A7: Add block / Apply changes, never the plan's Save.
+          FilledButton(
+            key: const Key('blockDialog.submit'),
+            onPressed: _submit,
+            child: Text(widget.initial == null ? 'Add block' : 'Apply changes'),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        // S6.9: the dialog's primary action (§6.1's button hierarchy).
-        FilledButton(
-          key: const Key('blockDialog.submit'),
-          onPressed: _submit,
-          child: Text(widget.initial == null ? 'Add' : 'Save'),
-        ),
-      ],
     );
+  }
+
+  /// White balance and focus mode, optional records (ADR-021 C1, C3).
+  List<Widget> _cameraRecords(TextStyle? muted) => [
+    DropdownButtonFormField<WhiteBalanceMode?>(
+      key: const Key('blockDialog.wbMode'),
+      initialValue: _wbMode,
+      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: 'White balance (optional)',
+        helperText: _from(CaptureField.wb, _wbOrNull()),
+      ),
+      items: [
+        const DropdownMenuItem(value: null, child: Text('Not recorded')),
+        for (final m in WhiteBalanceMode.values)
+          DropdownMenuItem(value: m, child: Text(CaptureSettingsText.mode(m))),
+      ],
+      onChanged: (m) => setState(() => _wbMode = m),
+    ),
+    if (_wbMode == WhiteBalanceMode.preset)
+      DropdownButtonFormField<WhiteBalancePreset>(
+        key: const Key('blockDialog.wbPreset'),
+        initialValue: _wbPreset,
+        isExpanded: true,
+        decoration: const InputDecoration(labelText: 'Preset'),
+        items: [
+          for (final p in WhiteBalancePreset.values)
+            DropdownMenuItem(
+              value: p,
+              child: Text(CaptureSettingsText.preset(p)),
+            ),
+        ],
+        onChanged: (p) {
+          if (p != null) setState(() => _wbPreset = p);
+        },
+      ),
+    if (_wbMode == WhiteBalanceMode.kelvin)
+      TextFormField(
+        key: const Key('blockDialog.wbKelvin'),
+        controller: _kelvin,
+        decoration: const InputDecoration(
+          labelText: 'Colour temperature (K)',
+          hintText: 'e.g. 5600',
+        ),
+        keyboardType: TextInputType.number,
+        validator: _validateKelvin,
+        onChanged: (_) => setState(() {}),
+      ),
+    DropdownButtonFormField<FocusMode?>(
+      key: const Key('blockDialog.focus'),
+      initialValue: _focus,
+      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: 'Focus (optional)',
+        helperText:
+            _from(CaptureField.focusMode, _focus) ??
+            'A record only; the app does not control the camera.',
+        helperMaxLines: 3,
+      ),
+      items: const [
+        DropdownMenuItem(value: null, child: Text('Not recorded')),
+        DropdownMenuItem(value: FocusMode.af, child: Text('AF (autofocus)')),
+        DropdownMenuItem(value: FocusMode.mf, child: Text('MF (manual)')),
+      ],
+      onChanged: (f) => setState(() => _focus = f),
+    ),
+  ];
+
+  /// The ISO or gain as typed, or null while it is empty or invalid.
+  CaptureGain? _typedGain() {
+    final text = _gainValue.text.trim();
+    if (text.isEmpty || _validateGain(text) != null) return null;
+    return _gain();
+  }
+
+  /// The white balance as currently set, or null while it cannot be built.
+  WhiteBalance? _wbOrNull() {
+    try {
+      return _validateKelvin(_kelvin.text) == null &&
+              _validateTint(_tint.text) == null
+          ? _whiteBalance()
+          : null;
+    } on ArgumentError {
+      return null;
+    }
   }
 }
