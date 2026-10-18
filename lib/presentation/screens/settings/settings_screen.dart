@@ -337,10 +337,35 @@ class SettingsScreen extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             secondary: const Icon(Icons.place_outlined),
             title: const Text('Look up place names'),
-            subtitle: const Text(
-              'Sends the chosen position to OpenStreetMap Nominatim to '
-              'show a place name. Off: positions are shown as coordinates '
-              'and nothing is sent.',
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Sends the chosen position to OpenStreetMap Nominatim to '
+                  'show a place name. Off: positions are shown as coordinates '
+                  'and nothing is sent.',
+                ),
+                // F21 A6: Off is applied but not stored; say so, with Retry.
+                if (settingsVm.placeNameLookupUnsaved) ...[
+                  Text(
+                    'Off for now, but not saved: after a restart place '
+                    'names would be on again.',
+                    key: const Key('settings.placeNames.unsaved'),
+                    style: small?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                  TextButton(
+                    key: const Key('settings.placeNames.retry'),
+                    onPressed: () => runWithFeedback(
+                      context,
+                      'save the place-name setting',
+                      () => settingsVm.setPlaceNameLookup(false),
+                    ),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ],
             ),
             value: settingsVm.placeNameLookup,
             onChanged: (on) => runWithFeedback(

@@ -94,6 +94,9 @@ void main() {
     expect(tester.widget<SwitchListTile>(tile).value, isFalse);
     await tester.tap(tile);
     await tester.pump();
+    // F21 A6: On applies once it is stored, not before.
+    await tester.runAsync(() => pumpEventQueue());
+    await tester.pump();
     expect(vm.settings.placeNameLookup, isTrue);
     expect(tester.widget<SwitchListTile>(tile).value, isTrue);
   });
