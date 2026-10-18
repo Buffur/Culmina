@@ -1821,7 +1821,7 @@ The handoff is [`prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](prompts/CLAU
 | More than one Claude agent | One lead/integration writer; helpers read/reproduce/review, coding only with isolation and stable ownership; no concurrent writes to develop, migration or PROGRESS |
 | Failed checks or missing evidence | Meaningful regression and V1–V8; no fake PASS, observation-test fix claim, repeated unchanged gates or completion with mandatory evidence missing |
 | Human/resource checkpoint | Concrete ADR-021/022/visual/D6/file/device/signing/release material; continue independent work, then truthful BLOCKED handoff rather than self-approval or spinning |
-| Git/CI | Normal develop pushes, no main/force; develop now triggers unchanged CI gate steps. Baseline run [39124553324](https://github.com/Buffur/Culmina/actions/runs/39124553324) was observed in progress; no PASS inferred |
+| Git/CI | Normal develop pushes, no main/force; develop now triggers unchanged CI gate steps. Baseline run [39124553324](https://github.com/Buffur/Culmina/actions/runs/39124553324) subsequently completed with **success**, read from GitHub REST API on 2026-10-18 for `2b467b8`. Goal-handoff commit `2134a2b` and this result record change Markdown only, so the application gate inputs are unchanged and V3 permits reuse; no F/device/release acceptance inferred |
 | Runtime goal | Official Claude goal/agent-team references checked 2026-10-18; goal condition fits the documented size. No Claude CLI on the preparing PATH; no actual Claude run, permission bypass or runtime acceptance claim |
 | Final success | Every mandatory F/G condition including separately authorized published artifact must have actual evidence; a blocked handoff explicitly does not mean project completion |
 
