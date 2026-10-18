@@ -19,6 +19,21 @@ class CaptureMetadata {
     this.lensMake = const AbsentValue(),
     this.lensModel = const AbsentValue(),
     this.imageDimensions = const AbsentValue(),
+    this.bitsPerSample = const AbsentValue(),
+    this.compression = const AbsentValue(),
+    this.asShotNeutral = const AbsentValue(),
+    this.whiteBalance = const AbsentValue(),
+    this.lightSource = const AbsentValue(),
+    this.pixelSizeUm = const AbsentValue(),
+    this.binning = const AbsentValue(),
+    this.acquisitionGain = const AbsentValue(),
+    this.conversionGainElectronsPerAdu = const AbsentValue(),
+    this.offset = const AbsentValue(),
+    this.sensorTemperatureC = const AbsentValue(),
+    this.setpointTemperatureC = const AbsentValue(),
+    this.filterName = const AbsentValue(),
+    this.telescope = const AbsentValue(),
+    this.sampleLayout = const AbsentValue(),
   });
 
   final MetadataValue<double> exposureSeconds;
@@ -50,6 +65,58 @@ class CaptureMetadata {
   /// uses [ImageDimensions.longSidePx] and [ImageDimensions.shortSidePx].
   final MetadataValue<ImageDimensions> imageDimensions;
 
+  // F04 (ADR-021 C2, C6, C10, C21): the storage, white-balance and FITS
+  // fields. Each keeps its tag or keyword in its origin; none is a block or
+  // rig value by itself: an import proposes from them (F08, F10).
+
+  /// DNG BitsPerSample (258) of the main image, when every sample has the
+  /// same depth (else unparseable: an unsupported layout).
+  final MetadataValue<int> bitsPerSample;
+
+  /// DNG Compression (259) of the main image, as its code.
+  final MetadataValue<PixelCompression> compression;
+
+  /// DNG AsShotNeutral (50728): a neutral vector, never converted to kelvins
+  /// (C2).
+  final MetadataValue<NeutralVector> asShotNeutral;
+
+  /// EXIF WhiteBalance (41987): auto or manual, the camera's mode only.
+  final MetadataValue<ExifWhiteBalance> whiteBalance;
+
+  /// EXIF LightSource (37384); code 0 ("unknown") reads as absent.
+  final MetadataValue<LightSource> lightSource;
+
+  /// FITS XPIXSZ/YPIXSZ, micrometres, as the file writes them (C21: the
+  /// binned convention is resolved by the import, not here).
+  final MetadataValue<PixelSize> pixelSizeUm;
+
+  /// FITS XBINNING/YBINNING.
+  final MetadataValue<SensorBinning> binning;
+
+  /// FITS GAIN: the camera's gain setting (acquisition gain).
+  final MetadataValue<double> acquisitionGain;
+
+  /// FITS EGAIN: the conversion gain, e⁻/ADU, a different quantity.
+  final MetadataValue<double> conversionGainElectronsPerAdu;
+
+  /// FITS OFFSET: the camera's offset setting.
+  final MetadataValue<double> offset;
+
+  /// FITS CCD-TEMP: the sensor's measured temperature, °C.
+  final MetadataValue<double> sensorTemperatureC;
+
+  /// FITS SET-TEMP: the cooler's setpoint, °C (not the actual temperature).
+  final MetadataValue<double> setpointTemperatureC;
+
+  /// FITS FILTER, as written (trimmed).
+  final MetadataValue<String> filterName;
+
+  /// FITS TELESCOP: identity text only.
+  final MetadataValue<String> telescope;
+
+  /// FITS BITPIX/NAXIS/NAXISn and its header size: the pixel layout.
+  final MetadataValue<SampleLayout> sampleLayout;
+
   /// Every field, in contract order.
   List<MetadataValue<Object>> get values => [
     exposureSeconds,
@@ -64,7 +131,190 @@ class CaptureMetadata {
     lensMake,
     lensModel,
     imageDimensions,
+    bitsPerSample,
+    compression,
+    asShotNeutral,
+    whiteBalance,
+    lightSource,
+    pixelSizeUm,
+    binning,
+    acquisitionGain,
+    conversionGainElectronsPerAdu,
+    offset,
+    sensorTemperatureC,
+    setpointTemperatureC,
+    filterName,
+    telescope,
+    sampleLayout,
   ];
+}
+
+/// DNG/TIFF Compression (259), kept as its code (F04 A3). Only
+/// [kind] `none` allows a theoretical size (ADR-021 C10); any other code,
+/// including one not listed, is explicit and never guessed.
+class PixelCompression {
+  const PixelCompression(this.code);
+
+  final int code;
+
+  PixelCompressionKind get kind => switch (code) {
+    1 => PixelCompressionKind.none,
+    7 || 8 => PixelCompressionKind.lossless, // lossless JPEG, Deflate
+    34892 => PixelCompressionKind.lossy, // lossy JPEG (DNG 1.4)
+    _ => PixelCompressionKind.unknown, // e.g. JPEG XL: lossless or lossy
+  };
+
+  @override
+  bool operator ==(Object other) =>
+      other is PixelCompression && other.code == code;
+
+  @override
+  int get hashCode => code.hashCode;
+
+  @override
+  String toString() => 'compression $code (${kind.name})';
+}
+
+enum PixelCompressionKind { none, lossless, lossy, unknown }
+
+/// A DNG neutral vector (AsShotNeutral), one value per colour channel.
+class NeutralVector {
+  NeutralVector(List<double> values) : values = List.unmodifiable(values);
+
+  final List<double> values;
+
+  @override
+  bool operator ==(Object other) =>
+      other is NeutralVector &&
+      other.values.length == values.length &&
+      [for (var i = 0; i < values.length; i++) other.values[i] == values[i]]
+          .every((same) => same);
+
+  @override
+  int get hashCode => Object.hashAll(values);
+
+  @override
+  String toString() => 'neutral $values';
+}
+
+/// EXIF WhiteBalance (41987): 0 auto, 1 manual.
+enum ExifWhiteBalance { auto, manual }
+
+/// EXIF LightSource (37384), its code and the EXIF 2.3 name.
+class LightSource {
+  const LightSource(this.code);
+
+  final int code;
+
+  String get name => switch (code) {
+    1 => 'Daylight',
+    2 => 'Fluorescent',
+    3 => 'Tungsten',
+    4 => 'Flash',
+    9 => 'Fine weather',
+    10 => 'Cloudy weather',
+    11 => 'Shade',
+    12 => 'Daylight fluorescent',
+    13 => 'Day white fluorescent',
+    14 => 'Cool white fluorescent',
+    15 => 'White fluorescent',
+    16 => 'Warm white fluorescent',
+    17 => 'Standard light A',
+    18 => 'Standard light B',
+    19 => 'Standard light C',
+    20 => 'D55',
+    21 => 'D65',
+    22 => 'D75',
+    23 => 'D50',
+    24 => 'ISO studio tungsten',
+    255 => 'Other light source',
+    _ => 'Light source $code',
+  };
+
+  @override
+  bool operator ==(Object other) => other is LightSource && other.code == code;
+
+  @override
+  int get hashCode => code.hashCode;
+
+  @override
+  String toString() => 'light source $code ($name)';
+}
+
+/// A pixel's size, micrometres, per axis.
+class PixelSize {
+  const PixelSize(this.xUm, this.yUm);
+
+  final double xUm;
+  final double yUm;
+
+  bool get isSquare => xUm == yUm;
+
+  @override
+  bool operator ==(Object other) =>
+      other is PixelSize && other.xUm == xUm && other.yUm == yUm;
+
+  @override
+  int get hashCode => Object.hash(xUm, yUm);
+
+  @override
+  String toString() => '$xUm x $yUm µm';
+}
+
+/// Binning per axis, as the file writes it. Asymmetric binning is explicit
+/// (F04 A3): a block takes only a symmetric value (ADR-021 C21).
+class SensorBinning {
+  const SensorBinning(this.x, this.y);
+
+  final int x;
+  final int y;
+
+  bool get isSymmetric => x == y;
+
+  @override
+  bool operator ==(Object other) =>
+      other is SensorBinning && other.x == x && other.y == y;
+
+  @override
+  int get hashCode => Object.hash(x, y);
+
+  @override
+  String toString() => '${x}x$y';
+}
+
+/// A FITS image's pixel layout: BITPIX, the axis lengths and the header's
+/// 2,880-byte records. [isSupported] is the layout ADR-021 C10 can size: two
+/// axes and BITPIX 8, 16, 32, −32 or −64.
+class SampleLayout {
+  SampleLayout({
+    required this.bitpix,
+    required List<int> axes,
+    this.headerRecords,
+  }) : axes = List.unmodifiable(axes);
+
+  final int bitpix;
+  final List<int> axes;
+  final int? headerRecords;
+
+  bool get isSupported =>
+      axes.length == 2 && const [8, 16, 32, -32, -64].contains(bitpix);
+
+  int get bytesPerSample => bitpix.abs() ~/ 8;
+
+  @override
+  bool operator ==(Object other) =>
+      other is SampleLayout &&
+      other.bitpix == bitpix &&
+      other.headerRecords == headerRecords &&
+      other.axes.length == axes.length &&
+      [for (var i = 0; i < axes.length; i++) other.axes[i] == axes[i]]
+          .every((same) => same);
+
+  @override
+  int get hashCode => Object.hash(bitpix, Object.hashAll(axes), headerRecords);
+
+  @override
+  String toString() => 'BITPIX $bitpix, axes $axes';
 }
 
 /// An image's pixel dimensions, as stored in the file (ADR-018 §3).

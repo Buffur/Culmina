@@ -7,7 +7,8 @@
 //     "focalLength35mmEquivalentMm": 60, "sensitivity": "isoUnspecified 50",
 //     "captureTime": "YYYY-MM-DDTHH:MM:SS (zone unknown)",
 //     "cameraMake": "...", "cameraModel": "...", "uniqueCameraModel": "...",
-//     "lensMake": null, "lensModel": null, "maxBytesRead": 65536}]}
+//     "lensMake": null, "lensModel": null, "maxBytesRead": 65536,
+//     "bitsPerSample": 16, "compression": "compression 1 (none)"}]}
 //
 // A key that is present is checked (null means the field must be unknown);
 // a key that is left out is not checked. Without the variable the test is
@@ -66,6 +67,14 @@ void main() {
           'lensMake': m.lensMake,
           'lensModel': m.lensModel,
           'imageDimensions': m.imageDimensions,
+          // F04 (ADR-021): compared as their text, e.g. "16",
+          // "compression 1 (none)", "neutral [0.47, 1.0, 0.62]",
+          // "ExifWhiteBalance.auto", "light source 21 (D65)".
+          'bitsPerSample': m.bitsPerSample,
+          'compression': m.compression,
+          'asShotNeutral': m.asShotNeutral,
+          'whiteBalance': m.whiteBalance,
+          'lightSource': m.lightSource,
         };
         for (final MapEntry(:key, :value) in fields.entries) {
           if (!sample.containsKey(key)) continue;
@@ -75,6 +84,8 @@ void main() {
           switch (want) {
             case null:
               expect(got, isNull, reason: reason);
+            case int() when got is int:
+              expect(got, want, reason: reason);
             case num():
               expect(got, isA<double>(), reason: reason);
               expect(got! as double, closeTo(want, 1e-9), reason: reason);

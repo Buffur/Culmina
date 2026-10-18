@@ -139,6 +139,28 @@ class FixtureEntry {
                 .asUint8List(),
       );
 
+  /// Several SHORT values (F04: BitsPerSample per sample, AsShotNeutral).
+  factory FixtureEntry.shorts(int tag, List<int> values) =>
+      FixtureEntry._(tag, 3, values.length, (e) {
+        final d = ByteData(2 * values.length);
+        for (var i = 0; i < values.length; i++) {
+          d.setUint16(2 * i, values[i], e);
+        }
+        return d.buffer.asUint8List();
+      });
+
+  /// Several RATIONAL values (F04: AsShotNeutral).
+  factory FixtureEntry.rationals(int tag, List<(int, int)> values) =>
+      FixtureEntry._(tag, 5, values.length, (e) {
+        final d = ByteData(8 * values.length);
+        for (var i = 0; i < values.length; i++) {
+          d
+            ..setUint32(8 * i, values[i].$1, e)
+            ..setUint32(8 * i + 4, values[i].$2, e);
+        }
+        return d.buffer.asUint8List();
+      });
+
   factory FixtureEntry.bytes(int tag, List<int> bytes, {int type = 1}) =>
       FixtureEntry._(tag, type, bytes.length, (_) => Uint8List.fromList(bytes));
 

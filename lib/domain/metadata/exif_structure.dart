@@ -136,6 +136,20 @@ class ExifStructure {
               _ifd0.pixelPair(256, 257),
               if (exif != null) exif.pixelPair(40962, 40963),
             ]),
+      // F04 (ADR-021 C2, C10): a DNG's main-image storage layout from IFD0
+      // only (sub-IFDs are never followed), its neutral vector, and the
+      // camera's white-balance mode and light source wherever they are.
+      bitsPerSample: _format == MetadataFormat.dng && _ifd0.isMainImage
+          ? await _ifd0.bitsPerSample(source)
+          : const AbsentValue(),
+      compression: _format == MetadataFormat.dng && _ifd0.isMainImage
+          ? _ifd0.compression()
+          : const AbsentValue(),
+      asShotNeutral: _format == MetadataFormat.dng
+          ? await _ifd0.asShotNeutral(source)
+          : const AbsentValue(),
+      whiteBalance: await field((i) async => i.exifWhiteBalance()),
+      lightSource: await field((i) async => i.lightSource()),
     );
   }
 }
@@ -165,7 +179,13 @@ const _contractTags = {
   // Image dimensions (ADR-018 §3): NewSubfileType, ImageWidth, ImageLength
   // and DefaultCropSize in IFD0; PixelX/YDimension in the EXIF IFD.
   _newSubfileType, 256, 257, _defaultCropSize, 40962, 40963,
+  // F04 (ADR-021): BitsPerSample, Compression and AsShotNeutral (IFD0 of a
+  // DNG), WhiteBalance and LightSource.
+  _bitsPerSample, _compression, _asShotNeutral, _whiteBalance, _lightSource,
 };
+
+const _bitsPerSample = 258, _compression = 259, _asShotNeutral = 50728;
+const _whiteBalance = 41987, _lightSource = 37384;
 
 const _newSubfileType = 254, _defaultCropSize = 50720;
 
@@ -184,6 +204,11 @@ const _names = {
   50708: 'UniqueCameraModel',
   _newSubfileType: 'NewSubfileType',
   _defaultCropSize: 'DefaultCropSize',
+  _bitsPerSample: 'BitsPerSample',
+  _compression: 'Compression',
+  _asShotNeutral: 'AsShotNeutral',
+  _whiteBalance: 'WhiteBalance',
+  _lightSource: 'LightSource',
 };
 
 /// The field label of a width/height tag pair.
@@ -419,6 +444,130 @@ class _Ifd {
       sides[1],
       origin(tag),
       raw: '${sides[0]} x ${sides[1]}',
+    );
+  }
+
+  /// Whether this IFD is the main image (NewSubfileType absent or 0).
+  bool get isMainImage {
+    if (entries[_newSubfileType] == null) return true;
+    return _singleInteger(_newSubfileType) == 0;
+  }
+
+  /// SHORT or LONG values, at most [maxCount] of them, or null when the
+  /// entry has another type or count or cannot be read in bounds.
+  Future<List<int>?> _integers(
+    MetadataSource source,
+    _Entry e,
+    int maxCount,
+  ) async {
+    if ((e.type != _short && e.type != _long) ||
+        e.count < 1 ||
+        e.count > maxCount) {
+      return null;
+    }
+    final bytes = await _bytes(source, e, 4 * maxCount);
+    if (bytes == null) return null;
+    final data = ByteData.sublistView(bytes);
+    return [
+      for (var i = 0; i < e.count; i++)
+        e.type == _short
+            ? data.getUint16(2 * i, endian)
+            : data.getUint32(4 * i, endian),
+    ];
+  }
+
+  /// BitsPerSample (258): one depth for every sample; differing depths are
+  /// an unsupported layout (unparseable, F04 A3).
+  Future<MetadataValue<int>> bitsPerSample(MetadataSource source) async {
+    final e = entries[_bitsPerSample];
+    if (e == null) return const AbsentValue();
+    final values = await _integers(source, e, 4);
+    if (values == null) return _bad(_bitsPerSample, e);
+    final raw = values.join(' ');
+    if (values.any((v) => v != values.first) ||
+        values.first < 1 ||
+        values.first > 32) {
+      return UnparseableValue(raw: raw, origin: origin(_bitsPerSample));
+    }
+    return KnownValue(values.first, raw: raw, origin: origin(_bitsPerSample));
+  }
+
+  /// Compression (259), a single SHORT code.
+  MetadataValue<PixelCompression> compression() {
+    final e = entries[_compression];
+    if (e == null) return const AbsentValue();
+    final code = _singleInteger(_compression);
+    if (code == null || code == 0) return _bad(_compression, e);
+    return KnownValue(
+      PixelCompression(code),
+      raw: '$code',
+      origin: origin(_compression),
+    );
+  }
+
+  /// AsShotNeutral (50728): one to four positive RATIONAL or SHORT values,
+  /// kept as a vector (ADR-021 C2; never a colour temperature).
+  Future<MetadataValue<NeutralVector>> asShotNeutral(
+    MetadataSource source,
+  ) async {
+    final e = entries[_asShotNeutral];
+    if (e == null || !isIfd0) return const AbsentValue();
+    if (e.count < 1 || e.count > 4) return _bad(_asShotNeutral, e);
+    final List<ExifRational> parts;
+    if (e.type == _rational) {
+      final bytes = await _bytes(source, e, 32);
+      if (bytes == null) return _bad(_asShotNeutral, e);
+      final data = ByteData.sublistView(bytes);
+      parts = [
+        for (var i = 0; i < e.count; i++)
+          ExifRational(
+            data.getUint32(8 * i, endian),
+            data.getUint32(8 * i + 4, endian),
+          ),
+      ];
+    } else if (e.type == _short) {
+      final values = await _integers(source, e, 4);
+      if (values == null) return _bad(_asShotNeutral, e);
+      parts = [for (final v in values) ExifRational(v, 1)];
+    } else {
+      return _bad(_asShotNeutral, e);
+    }
+    final raw = parts.join(' ');
+    if (parts.any((r) => r.denominator == 0 || r.numerator == 0)) {
+      return UnparseableValue(raw: raw, origin: origin(_asShotNeutral));
+    }
+    return KnownValue(
+      NeutralVector([for (final r in parts) r.numerator / r.denominator]),
+      raw: raw,
+      origin: origin(_asShotNeutral),
+    );
+  }
+
+  /// WhiteBalance (41987): 0 auto, 1 manual; any other code unparseable.
+  MetadataValue<ExifWhiteBalance> exifWhiteBalance() {
+    final e = entries[_whiteBalance];
+    if (e == null) return const AbsentValue();
+    final code = _singleInteger(_whiteBalance);
+    final mode = switch (code) {
+      0 => ExifWhiteBalance.auto,
+      1 => ExifWhiteBalance.manual,
+      _ => null,
+    };
+    if (mode == null) return _bad(_whiteBalance, e);
+    return KnownValue(mode, raw: '$code', origin: origin(_whiteBalance));
+  }
+
+  /// LightSource (37384); 0 is EXIF's "unknown", read as absent.
+  MetadataValue<LightSource> lightSource() {
+    final e = entries[_lightSource];
+    if (e == null) return const AbsentValue();
+    final code = _singleInteger(_lightSource);
+    if (code == null) return _bad(_lightSource, e);
+    if (code == 0) return const AbsentValue();
+    return KnownValue(
+      LightSource(code),
+      raw: '$code',
+      origin: origin(_lightSource),
     );
   }
 
