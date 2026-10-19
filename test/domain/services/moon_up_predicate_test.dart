@@ -4,6 +4,7 @@
 // same predicate.
 
 import 'package:astroplan/domain/models/calendar_date.dart';
+import 'package:astroplan/domain/models/imaging_opportunity.dart';
 import 'package:astroplan/domain/models/moon_conditions.dart';
 import 'package:astroplan/domain/models/session_night.dart';
 import 'package:astroplan/domain/models/site_time_context.dart';
@@ -31,6 +32,91 @@ void main() {
       MoonCalculator.isUp(MoonCalculator.upThresholdDeg(0.95), 0.95),
       isFalse,
     );
+  });
+
+  // CHK-F13.A1/A2: between −0.83° and 0° the centre is below the geometric
+  // horizon but its upper limb is above the apparent one, so the Moon is up
+  // (ADR-022 N1): never `altitude > 0`, nor Meeus' geocentric h₀ copied
+  // into the topocentric frame. The threshold follows the parallax: across
+  // π = 0.90°…1.00° it runs −0.81195°…−0.8392°.
+  test('N1 boundary vectors: −0.84° down, −0.83° by the parallax, −0.5° '
+      'and 0° up', () {
+    for (final (alt, upAt) in [
+      (-0.84, {0.90: false, 0.95: false, 1.00: false}),
+      (-0.83, {0.90: false, 0.95: false, 1.00: true}),
+      (-0.5, {0.90: true, 0.95: true, 1.00: true}),
+      (0.0, {0.90: true, 0.95: true, 1.00: true}),
+    ]) {
+      for (final MapEntry(key: pi, value: up) in upAt.entries) {
+        expect(MoonCalculator.isUp(alt, pi), up, reason: 'h $alt° at π $pi°');
+      }
+    }
+    expect(MoonCalculator.upThresholdDeg(0.90), closeTo(-0.81195, 1e-9));
+    expect(MoonCalculator.upThresholdDeg(1.00), closeTo(-0.8392, 1e-9));
+  });
+
+  test('on real nights, a sample between −0.81° and 0° is up for rise/set, '
+      'the batch track and the Moon gate; one below −0.85° is down', () {
+    var sawBand = 0;
+    var sawBelow = 0;
+    for (var day = 0; day < 30; day++) {
+      final night = _night(
+        CalendarDate(2026, 12, 1).addDays(day),
+        46.05,
+        14.51,
+      );
+      final c = MoonCalculator.conditionsForNight(night);
+      final batch = MoonTrack.forNight(night);
+      final n = c.samples.length;
+      final gated = ImagingOpportunityCalculator.fromSamples(
+        night: night,
+        sunAltitudesDeg: List.filled(n, -30),
+        targetAltitudesDeg: List.filled(n, 60),
+        darknessLimitDeg: -18,
+        minAltitudeDeg: 30,
+        gates: const OptionalGates(moonMinIlluminationPct: 0),
+        moon: OpportunityMoon.fromConditions(c),
+      );
+      final upCount = c.samples.where((s) => s.up).length;
+      expect(
+        gated.samples.where((s) => s.failing.contains(OpportunityGate.moon)),
+        hasLength(upCount),
+      );
+      for (final (i, s) in c.samples.indexed) {
+        final moonGate = gated.samples[i].failing.contains(
+          OpportunityGate.moon,
+        );
+        if (s.altitudeDeg > -0.81 && s.altitudeDeg <= 0) {
+          sawBand++;
+          expect(
+            (s.up, batch.up[i], moonGate),
+            (true, true, true),
+            reason: '$i',
+          );
+        } else if (s.altitudeDeg < -0.85) {
+          sawBelow++;
+          expect((s.up, batch.up[i], moonGate), (false, false, false));
+        }
+      }
+      // Rise/set: an event exactly where `up` changes, a band sample too.
+      expect(c.riseSet.aboveAtStart, c.samples.first.up);
+      final events = {for (final e in c.riseSet.events) e.utc: e.kind};
+      for (var i = 1; i < n; i++) {
+        final prev = c.samples[i - 1].up;
+        final now = c.samples[i].up;
+        expect(
+          events[c.samples[i].instantUtc],
+          prev == now
+              ? isNull
+              : now
+              ? MoonEventKind.rise
+              : MoonEventKind.set,
+          reason: '$i',
+        );
+      }
+    }
+    expect(sawBand, greaterThan(0), reason: 'the band was sampled');
+    expect(sawBelow, greaterThan(0));
   });
 
   // M2: the topocentric predicate and the classical geocentric h₀ form are

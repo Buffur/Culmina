@@ -6,6 +6,7 @@
 // stays, with a neutral status. Through the real app and database.
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -47,6 +48,7 @@ void main() {
     WidgetTester tester, {
     Size size = const Size(412, 915),
     bool seedRig = true,
+    bool withSite = true,
   }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
@@ -57,17 +59,21 @@ void main() {
       if (seedRig) {
         await EquipmentSeeder(DriftEquipmentRepository(db)).seedIfNeeded();
       }
-      final siteId = await DriftLocationRepository(db).insertLocation(
-        domain.LocationProfile(
-          id: 0,
-          name: 'Ljubljana',
-          latitude: 46.05,
-          longitude: 14.51,
-          elevation: 300,
-          timeZoneId: 'Europe/Ljubljana',
-        ),
-      );
-      SharedPreferences.setMockInitialValues({'activeLocationId': siteId});
+      if (withSite) {
+        final siteId = await DriftLocationRepository(db).insertLocation(
+          domain.LocationProfile(
+            id: 0,
+            name: 'Ljubljana',
+            latitude: 46.05,
+            longitude: 14.51,
+            elevation: 300,
+            timeZoneId: 'Europe/Ljubljana',
+          ),
+        );
+        SharedPreferences.setMockInitialValues({'activeLocationId': siteId});
+      } else {
+        SharedPreferences.setMockInitialValues({});
+      }
       final clock = FixedClock(DateTime.utc(2026, 11, 10, 16));
       vm = PlannerHarness(
         DriftTargetRepository(db),
@@ -313,6 +319,102 @@ void main() {
     expect(inStatus(AppWords.needsBlock), findsOneWidget);
     expect(inStatus(vm.fitAnalysis.reason), findsOneWidget);
     expect(vm.fitAnalysis.reason, contains('no light frames'));
+  });
+
+  // F12 A2 (CHK-F12.A2): blocks without a target. The fit cannot be
+  // evaluated, so the status names the missing input with its own reason
+  // and invents no verdict, end or fill; the results that do not need a
+  // target (integration, relative gain, storage) stay.
+  testWidgets('blocks without a target: the missing input is named; the '
+      'still-valid results stay, no fit is invented', (tester) async {
+    await start(tester, size: const Size(800, 3000));
+    await tester.runAsync(() async {
+      await vm.newSession(); // keeps the site and rig; no target, no blocks
+      await vm.plan.idle;
+      for (final b in [
+        CaptureBlock(
+          frameType: FrameType.light,
+          filterName: 'Ha',
+          exposureTimeSeconds: 300,
+          frameCount: 12,
+        ),
+        CaptureBlock(
+          frameType: FrameType.light,
+          filterName: 'OIII',
+          exposureTimeSeconds: 300,
+          frameCount: 9,
+        ),
+      ]) {
+        await vm.plan.addCaptureBlock(b);
+      }
+      await vm.plan.idle;
+    });
+    await settle(tester);
+    expect(vm.selectedTarget, isNull);
+    expect(vm.captureBlocks, hasLength(2));
+    // FitAnalyzer's own answer: input missing, with the input named.
+    expect(vm.fitAnalysis.state, FitState.needsInput);
+    expect(vm.fitAnalysis.reason, PlanStatus.targetReason);
+    final status = find.byKey(const Key('planner.status'));
+    Finder inStatus(Finder f) => find.descendant(of: status, matching: f);
+    expect(inStatus(find.text(AppWords.needsTarget)), findsOneWidget);
+    expect(inStatus(find.text(PlanStatus.targetReason)), findsOneWidget);
+    expect(inStatus(find.text('Choose a target')), findsOneWidget);
+    // No verdict, end or fill invented from a window that is not known.
+    for (final state in [FitState.fits, FitState.tight, FitState.doesNotFit]) {
+      expect(
+        inStatus(find.textContaining(StatusBlock.headline(state))),
+        findsNothing,
+        reason: state.name,
+      );
+    }
+    expect(find.byKey(const Key('status.number.Capture ends')), findsNothing);
+    expect(find.byKey(const Key('capturePlan.fillWindow')), findsNothing);
+    // Still valid: the integration, each group's gain and the storage.
+    expect(
+      find.descendant(
+        of: find.byKey(Key('status.number.${AppWords.integration}')),
+        matching: find.text('1 h 45 min'),
+      ),
+      findsOneWidget,
+    );
+    for (final (i, gain) in [(0, '3.5x'), (1, '3.0x')]) {
+      expect(
+        find.descendant(
+          of: find.byKey(Key('capturePlan.gain.$i')),
+          matching: find.text(gain),
+        ),
+        findsOneWidget,
+      );
+    }
+    expect(find.byKey(const Key('capturePlan.storage')), findsOneWidget);
+  });
+
+  testWidgets('blocks without a site: the site is named; integration and '
+      'gain stay, no fit is invented', (tester) async {
+    await start(tester, size: const Size(800, 3000), withSite: false);
+    expect(vm.sessionNight, isNull);
+    expect(vm.captureBlocks, isNotEmpty);
+    expect(vm.fitAnalysis.state, FitState.needsInput);
+    final status = find.byKey(const Key('planner.status'));
+    Finder inStatus(Finder f) => find.descendant(of: status, matching: f);
+    expect(inStatus(find.text(PlanStatus.needsSite)), findsOneWidget);
+    expect(inStatus(find.text(PlanStatus.siteReason)), findsOneWidget);
+    expect(find.byKey(const Key('status.number.Capture ends')), findsNothing);
+    expect(find.byKey(const Key('capturePlan.fillWindow')), findsNothing);
+    expect(vm.captureBudget.integrationMs, greaterThan(0));
+    expect(
+      find.descendant(
+        of: find.byKey(Key('status.number.${AppWords.integration}')),
+        matching: find.text(
+          QuantityText.duration(
+            Duration(milliseconds: vm.captureBudget.integrationMs),
+          ),
+        ),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('capturePlan.gain.0')), findsOneWidget);
   });
 
   testWidgets('without a rig the structure stays and the status is neutral', (

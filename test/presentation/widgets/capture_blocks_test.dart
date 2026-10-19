@@ -350,6 +350,40 @@ void main() {
     });
   });
 
+  // CHK-F06.A5 / F11 A3: the concise estimate is the plan's: a count applied
+  // in the block dialog moves the group's relative gain (√N against one of
+  // its frames), and the row says the new count.
+  testWidgets('a count applied in the block dialog moves the relative gain '
+      'shown for its group', (tester) async {
+    await start(tester);
+    await blocks(tester, [_light(60, 4, filter: 'L')]);
+    Finder gain(String value) => find.descendant(
+      of: find.byKey(const Key('capturePlan.gain.0')),
+      matching: find.text(value),
+    );
+    expect(gain('2.0x'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('capturePlan.gain.0')),
+        matching: find.textContaining('× 4'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('L · 60 s × 4 · 4 min'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('blockDialog.count')), '25');
+    await tester.tap(find.byKey(const Key('blockDialog.submit')));
+    for (var i = 0; i < 8; i++) {
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+    expect(vm.captureBlocks.single.frameCount, 25);
+    expect(gain('5.0x'), findsOneWidget);
+    expect(gain('2.0x'), findsNothing);
+    expect(find.textContaining('SNR'), findsNothing);
+    await tester.runAsync(() => vm.plan.idle);
+  });
+
   testWidgets("the block dialog's Apply changes is its primary (filled) "
       'button', (tester) async {
     await start(tester);

@@ -7,13 +7,16 @@
 
 import 'package:astroplan/domain/metadata/capture_metadata.dart';
 import 'package:astroplan/domain/metadata/capture_metadata_reader.dart';
+import 'package:astroplan/domain/metadata/metadata_format.dart';
 import 'package:astroplan/domain/models/camera_class.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
+import 'package:astroplan/domain/models/capture_evidence.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/services/block_proposal.dart';
 import 'package:astroplan/domain/services/storage_estimate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../support/heif_fixture.dart';
 import '../../support/jpeg_fixture.dart';
 import '../../support/memory_metadata_source.dart';
 import '../../support/tiff_fixture.dart';
@@ -165,6 +168,93 @@ void main() {
       expect(text.isEmpty, isTrue);
     },
   );
+
+  // F08 / CHK-F08.A4 (host part): a phone HEIC goes the same light-block
+  // path as a JPEG. Its format is recognized as HEIC, its measured length
+  // is the block's storage evidence and is used as measured: a lossy file
+  // is never rescaled and never gets a theoretical size (C6, C10).
+  test('a phone HEIC: recognized, its measured size is the evidence, used '
+      'as measured, never rescaled', () async {
+    final exif = phoneStyleJpegExif();
+    exif.exif!.addAll([
+      FixtureEntry.long(40962, 4096),
+      FixtureEntry.long(40963, 3072),
+      FixtureEntry.short(41987, 0),
+    ]);
+    final heic = (HeifFixture()..addExif(2, exif.build().bytes)).build();
+    final rig = _rig(4096, 3072);
+    final p = await _propose(
+      heic,
+      name: '/DCIM/IMG_0846.HEIC',
+      rig: rig,
+      length: 2876543,
+    );
+    expect(p.unreadable, isFalse);
+    expect(p.exposure!.value, closeTo(0.009987236, 1e-12));
+    expect(p.exposure!.origin.descriptor, 'IMG_0846.HEIC');
+    expect(p.iso!.value, CaptureGain.iso(100));
+    expect(p.whiteBalance!.value, WhiteBalance.auto());
+    expect(p.file!.toJson(), {
+      'bytes': 2876543,
+      'format': 'heic',
+      'read': true,
+      'width': 4096,
+      'height': 3072,
+      'bitsPerSample': null,
+      'compression': 'lossy',
+      'binning': null,
+      'label': 'IMG_0846.HEIC',
+    });
+    expect(p.modeConflicts, isEmpty);
+
+    final block = CaptureBlock(
+      frameType: FrameType.light,
+      exposureTimeSeconds: 1,
+      frameCount: 10,
+      fileEvidence: p.file,
+    );
+    final frame = StorageEstimate.of(block, rig);
+    expect(
+      (frame.basis, frame.bytes, frame.label, frame.read),
+      (StorageBasis.blockFile, 2876543.0, 'IMG_0846.HEIC', true),
+    );
+    expect(StorageEstimate.theoretical(block, rig), isNull, reason: 'lossy');
+    // A rig declared as JPEG/HEIC takes the HEIC as its own format.
+    final declared = rig.withCaptureEvidence(
+      captureFormat: () => CaptureFormat.jpegHeic,
+    );
+    expect(StorageEstimate.conflicts(p.file!, block, declared), isEmpty);
+    expect(StorageEstimate.of(block, declared).bytes, 2876543.0);
+    // Without the file, that rig's size is Unknown, never a guess.
+    expect(
+      StorageEstimate.of(
+        CaptureBlock(
+          frameType: FrameType.light,
+          exposureTimeSeconds: 1,
+          frameCount: 10,
+        ),
+        declared,
+      ).gap,
+      StorageGap.compressed,
+    );
+  });
+
+  test('a HEIF without a reader (an image sequence) counts by its length '
+      'only, recognized as HEIF', () {
+    final p = BlockProposal.of(
+      name: 'BURST_0001.HEIC',
+      reading: const MetadataUnsupported(MetadataFormat.heifSequence),
+      lengthBytes: 5123456,
+      cameraClass: CameraClass.phone,
+      rig: _rig(4096, 3072),
+    );
+    expect(p.unreadable, isFalse);
+    expect((p.exposure, p.iso, p.whiteBalance), (null, null, null));
+    expect(
+      (p.file!.format, p.file!.read, p.file!.bytes, p.file!.width),
+      ('recognized:heif', false, 5123456, null),
+    );
+  });
 
   test('a path is never kept, only the basename (C5)', () async {
     final p = await _propose(_jpeg(), name: '/storage/DCIM/IMG_0845.jpg');

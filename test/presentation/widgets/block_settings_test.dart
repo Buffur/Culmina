@@ -236,6 +236,40 @@ void main() {
       expect(o[CaptureField.count]!.kind, OriginKind.entered);
     });
 
+    // CHK-F06.A2: a frame-type switch is not an edit of the values it
+    // leaves alone, so their origins survive it.
+    testWidgets('origins survive a frame-type switch and back', (tester) async {
+      await open(
+        tester,
+        initial: _light(
+          origins: FieldOrigins({
+            CaptureField.exposure: _file,
+            CaptureField.filter: _copied,
+          }),
+        ),
+      );
+      await choose(tester, 'blockDialog.frameType', 'Flat');
+      await choose(tester, 'blockDialog.frameType', 'Light');
+      expect(find.text('IMG_0845.dng'), findsOneWidget);
+      await submit(tester);
+      final o = result.single!.origins;
+      expect(o[CaptureField.exposure], _file);
+      expect(o[CaptureField.filter], _copied);
+      expect(o[CaptureField.frameType], isNull, reason: 'still a light');
+
+      await open(
+        tester,
+        proposal: _light(filter: 'Ha', exposure: 300, count: 20),
+        cameraClass: CameraClass.astroMono,
+      );
+      await choose(tester, 'blockDialog.frameType', 'Dark');
+      await choose(tester, 'blockDialog.frameType', 'Light');
+      expect(fieldText(tester, 'blockDialog.exposure'), '300');
+      await type(tester, 'blockDialog.count', '12');
+      await submit(tester);
+      expect(result.single!.origins[CaptureField.exposure], _copied);
+    });
+
     testWidgets('Cancel changes nothing', (tester) async {
       await open(
         tester,
@@ -406,6 +440,41 @@ void main() {
       expect(fieldText(tester, 'blockDialog.exposure'), '1/250');
       await submit(tester);
       expect(result.single!.exposureTimeSeconds, 1 / 250);
+    });
+
+    // CHK-F06.A6: an error is shown by its field; nothing typed is lost.
+    testWidgets('typed values stay when validation shows an error', (
+      tester,
+    ) async {
+      await open(tester, cameraClass: CameraClass.dslrMirrorless);
+      await type(tester, 'blockDialog.exposure', '1/0');
+      await type(tester, 'blockDialog.count', '25');
+      await type(tester, 'blockDialog.gainValue', '800');
+      await choose(tester, 'blockDialog.wbMode', 'Kelvin');
+      await type(tester, 'blockDialog.wbKelvin', '500');
+      await submit(tester);
+      expect(result, isEmpty, reason: 'still open');
+      expect(
+        find.text('A fraction needs a denominator above 0'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('A whole number of kelvins'), findsOneWidget);
+      for (final (key, typed) in [
+        ('blockDialog.exposure', '1/0'),
+        ('blockDialog.count', '25'),
+        ('blockDialog.gainValue', '800'),
+        ('blockDialog.wbKelvin', '500'),
+      ]) {
+        expect(fieldText(tester, key), typed, reason: key);
+      }
+      await type(tester, 'blockDialog.exposure', '1/4');
+      await type(tester, 'blockDialog.wbKelvin', '5200');
+      await submit(tester);
+      final b = result.single!;
+      expect(
+        (b.exposureTimeSeconds, b.frameCount, b.gain, b.whiteBalance),
+        (0.25, 25, CaptureGain.iso(800), WhiteBalance.kelvin(5200)),
+      );
     });
 
     testWidgets('412 × 915 at 200 % with the keyboard open: every field and '

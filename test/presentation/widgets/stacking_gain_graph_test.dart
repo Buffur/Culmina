@@ -38,11 +38,26 @@ CaptureBlock _light(double s, int n, String? filter, [CaptureGain? gain]) =>
       gain: gain ?? CaptureGain.none,
     );
 
+/// The default plan: three comparable groups and one block on its own.
+List<CaptureBlock> _groups() {
+  final g100 = CaptureGain.gain(100);
+  return [
+    _light(60, 100, 'Ha', g100),
+    _light(60, 20, ' HA', g100), // same group (C15 filter): 120 frames
+    _light(300, 12, 'Ha', g100), // another exposure: another group
+    _light(30, 1, null), // gain not recorded: on its own
+  ];
+}
+
 void main() {
   late AppDatabase db;
   late PlannerHarness vm;
 
-  Future<void> start(WidgetTester tester, {ThemeData? theme}) async {
+  Future<void> start(
+    WidgetTester tester, {
+    ThemeData? theme,
+    List<CaptureBlock>? blocks,
+  }) async {
     tester.view.physicalSize = const Size(412, 4000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -57,13 +72,7 @@ void main() {
         locationService: FakeLocationService(),
       );
       await vm.ready;
-      final g100 = CaptureGain.gain(100);
-      for (final b in [
-        _light(60, 100, 'Ha', g100),
-        _light(60, 20, ' HA', g100), // same group (C15 filter): 120 frames
-        _light(300, 12, 'Ha', g100), // another exposure: another group
-        _light(30, 1, null), // gain not recorded: on its own
-      ]) {
+      for (final b in blocks ?? _groups()) {
         await vm.plan.addCaptureBlock(b);
       }
     });
@@ -172,6 +181,54 @@ void main() {
     );
     handle.dispose();
   });
+
+  // F11 A2 (CHK-F11.A2): without light frames there is no group, so no gain
+  // is invented; the empty state says what to add, and the first light
+  // block replaces it with its own line.
+  for (final (name, blocks) in [
+    ('no blocks', <CaptureBlock>[]),
+    (
+      'calibration only',
+      [
+        CaptureBlock(
+          frameType: FrameType.dark,
+          exposureTimeSeconds: 60,
+          frameCount: 20,
+          calibrationPolicy: CalibrationPolicy.library,
+        ),
+      ],
+    ),
+  ]) {
+    testWidgets('$name: the gain says there are no light frames yet', (
+      tester,
+    ) async {
+      await start(tester, blocks: blocks);
+      expect(vm.captureBudget.lightGroups, isEmpty);
+      final empty = find.byKey(const Key('capturePlan.noGain'));
+      expect(empty, findsOneWidget);
+      expect(
+        tester.widget<Text>(empty).data,
+        'No light frames yet: add light frames to see their relative gain.',
+      );
+      expect(find.byKey(const Key('capturePlan.gain.0')), findsNothing);
+      expect(find.textContaining('1.0x'), findsNothing);
+      expect(
+        find.byKey(const Key('section.${PlannerSections.gainCurve}')),
+        findsNothing,
+        reason: 'no curve without a group',
+      );
+
+      await tester.runAsync(() => vm.plan.addCaptureBlock(_light(60, 4, 'L')));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 2));
+      expect(empty, findsNothing);
+      final row = find.byKey(const Key('capturePlan.gain.0'));
+      expect(
+        find.descendant(of: row, matching: find.text('2.0x')),
+        findsOneWidget,
+      );
+    });
+  }
 
   // TD-076 (S6.16): the plan's own point is named with its count and value,
   // beside a swatch drawn like the dot; the curve's end is a comparison,

@@ -169,6 +169,53 @@ void main() {
     );
   });
 
+  testWidgets('A1: a proposed value the user then edits is entered on '
+      'Apply, not the file\'s; the untouched ones keep the file', (
+    tester,
+  ) async {
+    picks = [('IMG_0845.jpg', _jpeg(iso: 800, exposureMicro: 71429))];
+    await open(tester);
+    await tapKey(tester, 'blockDialog.fromPhoto');
+    expect(text(tester, 'blockDialog.exposure'), '0.071429');
+    await tester.enterText(find.byKey(const Key('blockDialog.exposure')), '20');
+    await tester.enterText(find.byKey(const Key('blockDialog.count')), '30');
+    await tapKey(tester, 'blockDialog.submit');
+    final b = result.single!;
+    expect(b.exposureTimeSeconds, 20);
+    expect(b.origins[CaptureField.exposure], FieldOrigin.entered());
+    expect(b.origins[CaptureField.sensitivity]!.kind, OriginKind.file);
+    expect(b.origins[CaptureField.sensitivity]!.descriptor, 'IMG_0845.jpg');
+    expect(b.gain, CaptureGain.iso(800));
+  });
+
+  testWidgets('A2: pick, edit, pick again: the typed value is kept and '
+      'named; the earlier file\'s other values follow the new file', (
+    tester,
+  ) async {
+    picks = [
+      ('A.jpg', _jpeg(iso: 100, exposureMicro: 500000)),
+      ('B.jpg', _jpeg(iso: 1600, exposureMicro: 2000000)),
+    ];
+    await open(tester);
+    await tapKey(tester, 'blockDialog.fromPhoto');
+    await tester.enterText(find.byKey(const Key('blockDialog.exposure')), '45');
+    await tapKey(tester, 'blockDialog.fromPhoto');
+    expect(text(tester, 'blockDialog.exposure'), '45');
+    expect(text(tester, 'blockDialog.gainValue'), '1600');
+    expect(review(tester), contains('From B.jpg'));
+    expect(
+      review(tester),
+      contains('Kept what you typed: exposure 45 s (the file says 2 s).'),
+    );
+    await tester.enterText(find.byKey(const Key('blockDialog.count')), '8');
+    await tapKey(tester, 'blockDialog.submit');
+    final b = result.single!;
+    expect((b.exposureTimeSeconds, b.gain), (45.0, CaptureGain.iso(1600)));
+    expect(b.origins[CaptureField.exposure], FieldOrigin.entered());
+    expect(b.origins[CaptureField.sensitivity]!.descriptor, 'B.jpg');
+    expect(b.fileEvidence!.label, 'B.jpg');
+  });
+
   testWidgets('A2: repeated picks end the same in either order', (
     tester,
   ) async {
