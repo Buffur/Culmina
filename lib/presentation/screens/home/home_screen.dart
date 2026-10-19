@@ -247,7 +247,8 @@ class HomeScreen extends StatelessWidget {
                           onTap: () => context.push(AppRouter.nightMoon),
                           child: NightSummary(
                             night: night,
-                            conditions: conditionsVm,
+                            dark: conditionsVm.nightTimeline?.darkAtLimit,
+                            moon: conditionsVm.moonConditions,
                             zoneId: siteVm.displayZoneId,
                           ),
                         ),

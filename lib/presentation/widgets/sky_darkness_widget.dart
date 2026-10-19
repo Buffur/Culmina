@@ -19,6 +19,7 @@ import '../../../domain/models/night_timeline.dart';
 import '../../../domain/models/sky_darkness.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../domain/services/night_view.dart';
 
 /// The site's sky darkness in the planner (TASK 7.4): Bortle and SQM as
 /// entered, with their sources, or unknown. Since S6.5 the night's timeline
@@ -287,13 +288,18 @@ class _BortleBadge extends StatelessWidget {
 /// the detail's summary alone, not repeated here, and the section has its
 /// own heading.
 class NightTimelineSection extends StatelessWidget {
-  const NightTimelineSection({super.key});
+  const NightTimelineSection({super.key, this.view});
+
+  /// A browsed night (F15); else the plan's night.
+  final NightView? view;
 
   static const title = 'Sun and twilight';
 
   @override
   Widget build(BuildContext context) {
-    final timeline = context.watch<NightConditionsViewModel>().nightTimeline;
+    final timeline =
+        view?.timeline ??
+        context.watch<NightConditionsViewModel>().nightTimeline;
     final zoneId = context.watch<SiteViewModel>().displayZoneId;
     final theme = Theme.of(context);
     if (timeline == null) {
@@ -406,13 +412,21 @@ class TwilightBar extends StatelessWidget {
 /// when it is up is the detail's summary alone, and the section has its own
 /// heading.
 class MoonSection extends StatelessWidget {
-  const MoonSection({super.key});
+  const MoonSection({super.key, this.view});
+
+  /// A browsed night (F15); else the plan's night.
+  final NightView? view;
 
   @override
   Widget build(BuildContext context) {
-    final conditionsVm = context.watch<NightConditionsViewModel>();
+    final v = view;
+    final conditionsVm = v == null
+        ? context.watch<NightConditionsViewModel>()
+        : null;
+    final moonConditions = v?.moon ?? conditionsVm?.moonConditions;
+    final moonFree = v?.moonFree ?? conditionsVm?.moonFree;
     final zoneId = context.watch<SiteViewModel>().displayZoneId;
-    final illum = conditionsVm.lunarIllumination;
+    final illum = moonConditions?.illuminationAtMidnight;
     final lunarIllum = illum == null ? '--' : QuantityText.percent(illum * 100);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -432,7 +446,7 @@ class MoonSection extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
-        if (conditionsVm.moonConditions?.phaseName case final phase?)
+        if (moonConditions?.phaseName case final phase?)
           Padding(
             padding: const EdgeInsets.only(left: AppSpacing.xl),
             child: Text(
@@ -441,8 +455,8 @@ class MoonSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-        if (conditionsVm.moonFree case final free?)
-          if (conditionsVm.moonConditions case final c?)
+        if (moonFree case final free?)
+          if (moonConditions case final c?)
             Padding(
               padding: const EdgeInsets.only(
                 left: AppSpacing.xl,
@@ -462,7 +476,7 @@ class MoonSection extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
-        _MoonDetails(conditions: conditionsVm.moonConditions, zoneId: zoneId),
+        _MoonDetails(conditions: moonConditions, zoneId: zoneId),
       ],
     );
   }

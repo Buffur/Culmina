@@ -9,6 +9,7 @@ import '../../domain/models/night_timeline.dart';
 import '../../domain/models/night_weather_summary.dart';
 import '../../domain/models/weather_snapshot.dart';
 import '../../domain/services/fit_analyzer.dart';
+import '../../domain/services/night_view.dart';
 
 /// Wording shared by Tonight and the planner (TASK 12.5; moved out of the
 /// weather, sky and budget widgets so both say the same thing). Formatting
@@ -229,4 +230,58 @@ abstract final class FitText {
         FitState.noWindow => palette.statusNoWindow,
         FitState.nothingToFit || FitState.needsInput => palette.statusNeutral,
       };
+}
+
+/// Wording for browsing nights (F15; ADR-022 N11): the viewed versus the
+/// plan's night, the sky states of the shared bar, and the time slider's
+/// readout. Facts only.
+abstract final class NightBrowseText {
+  /// "Viewing Thu, Dec 17 · Your plan: Tue, Dec 15" (N11).
+  static String viewing(String viewed, String plan) =>
+      'Viewing $viewed · Your plan: $plan';
+
+  static String sky(SkyState s, double limitDeg) => switch (s) {
+    SkyState.daylight => 'Daylight',
+    SkyState.civil => 'Civil twilight',
+    SkyState.nautical => 'Nautical twilight',
+    SkyState.astronomical => 'Astronomical twilight',
+    SkyState.dark => 'Dark (Sun below ${QuantityText.degrees(limitDeg)})',
+  };
+
+  /// The slider's readout (A5): the sky, the Moon, and the dark interval's
+  /// end — time until darkness, or time left in it, kept apart.
+  static String cursor(
+    NightInstant i,
+    double limitDeg,
+    String Function(DateTime utc) at,
+  ) {
+    final moon = i.moonUp ? 'Moon above the horizon' : 'Moon below the horizon';
+    final change = i.darkChangeUtc;
+    final dark = switch ((i.dark, change)) {
+      (true, final c?) =>
+        'dark for another ${QuantityText.duration(c.difference(i.instantUtc))} '
+            '(until ${at(c)})',
+      (true, null) => 'dark until the night ends',
+      (false, final c?) =>
+        'darkness in ${QuantityText.duration(c.difference(i.instantUtc))} '
+            '(from ${at(c)})',
+      (false, null) => 'no more dark time this night',
+    };
+    final moonChange = switch (i.moonChangeUtc) {
+      final c? => '; the Moon ${i.moonUp ? 'sets' : 'rises'} at ${at(c)}',
+      null => '',
+    };
+    return '${sky(i.sky, limitDeg)} · $moon · $dark$moonChange';
+  }
+
+  /// The shared bar's text alternative: each run with its times.
+  static String bar(
+    List<NightSegment> segments,
+    double limitDeg,
+    String Function(DateTime utc) at,
+  ) => [
+    for (final g in segments)
+      '${sky(g.sky, limitDeg)}${g.moonUp ? ', Moon up' : ''} '
+          '${at(g.startUtc)}–${at(g.endUtc)}',
+  ].join('; ');
 }

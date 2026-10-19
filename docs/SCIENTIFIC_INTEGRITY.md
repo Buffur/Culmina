@@ -873,6 +873,8 @@ already carries purpose/units/assumptions. All times are UTC unless noted.
 
 > **S7.1 (2026-09-29; RD-08 = T3):** CALC-31's tracking input is the plan's effective tracking (the plan's override, else the rig's default, else unknown). An input-source change decided by RD-08; no formula changed (DECISIONS E.1, "RD-08 decided").
 
+> **F15 (2026-10-19; ADR-022 N1–N5, N10):** no new formula. `NightView` and `MoonCalendar` compose CALC-28/29/43's Moon samples (N1), the Sun track, and N4's moon-free classification on one 5-minute grid, so the calendar, the browsed night and the plan's rows give the same moon-free time (`night_view_test.dart`). The bar's sky states use ADR-007's thresholds and the plan's limit, and the slider's state is the grid sample at or before the instant (N3).
+
 > **F11 (2026-10-18; PD-05 O2b; ADR-021 C16):** CALC-42 now takes the group's exposure: its graph is drawn against integration time T = N · t, normalized to the plan, √(T / T_plan) (`StackingGainCurve.relativeToPlan`; R-O2-1: 0.7071, 1, 1.4142 within ±0.0001; R-O2-2: √N 10.954 → 15.492). The points (n, √n) and CALC-15 are unchanged. A group is one normalized filter, exposure, recorded ISO or gain and binning. A block with an unrecorded ISO or gain stands alone, since an unknown never proves two blocks alike. Zero integration gives 0; no plan gives no reference (null), never a made-up one. SI-003 holds: relative only, never an SNR, never summed across groups. Vectors: `light_groups_test.dart`.
 
 > **S6.16 (2026-09-28):** CALC-42's display only (TD-076): the graph names the plan's point and marks its end as a comparison, never a target. No formula, input or point changed; SI-003 holds.

@@ -243,6 +243,10 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** Phase 8.
 
 ## F-16 — Moon position, rise/set, Moon–target separation
+- **F15 (2026-10-19; ADR-022 N10/N11):** the Night & Moon detail browses nights.
+  - **Bar and slider.** A shared daylight/twilight/dark bar with Moon-up hatched, a legend and a text alternative. Its time slider shows the site-local time, date and zone, the sky and the Moon, and either "darkness in …" or "dark for another … (until …)". "Now" is offered only inside the viewed night, otherwise "Night start".
+  - **Moon nights.** A month of phase discs and moon-free hours, computed in an isolate and cached (N10); a week list at large text.
+  - **Viewing versus adopting.** Tapping a night only views it ("Viewing … · Your plan: …"); "Plan this night" adopts it through D9.
 - **Status:** Implemented *(TASK 6.3–6.4)*
 - **Current implementation:** `MoonConditions` for the night and the selected target: Moon altitude on the 5-minute grid, moonrise/moonset, the intervals when the Moon is up, and the closest Moon–target approach while both are above the horizon. The sky card shows "Moon up …" or "Moon up all night / below the horizon all night" and "Closest to the target while both are up: N° at HH:MM", or that they are never up together. These are annotations only, with no "impact %".
 - **Relevant files:** `lib/domain/services/moon_calculator.dart`, `lib/domain/models/moon_conditions.dart`, `sky_darkness_widget.dart`.
