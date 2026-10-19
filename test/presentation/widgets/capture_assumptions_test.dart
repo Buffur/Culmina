@@ -152,6 +152,42 @@ void main() {
     }
   });
 
+  // The optional Moon and cloud gates (ADR-013 G4/G5) shape the window the
+  // fit uses: when on, the panel shows them with their thresholds; off,
+  // they change nothing and are not listed.
+  testWidgets('A1: the Moon and cloud gates, when on, with the thresholds '
+      'the window uses', (tester) async {
+    await start(
+      tester,
+      PlanningPreferences(
+        moonGateEnabled: true,
+        moonGateMinIlluminationPct: 40,
+        cloudGateEnabled: true,
+        cloudGateMaxPct: 70,
+      ),
+    );
+    final gates = vm.planningPreferences.optionalGates;
+    expect(gates.moonMinIlluminationPct, 40);
+    expect(gates.cloudMaxPct, 70);
+    expect(
+      row(tester, 'Moon gate'),
+      'excludes time when the Moon is up and at least 40 % lit',
+    );
+    expect(
+      row(tester, 'Cloud gate'),
+      'excludes forecast hours with more than 70 % cloud',
+    );
+  });
+
+  testWidgets('A1: gates that are off are not listed', (tester) async {
+    await start(tester, PlanningPreferences(cloudGateEnabled: true));
+    expect(find.text('Moon gate'), findsNothing);
+    expect(
+      row(tester, 'Cloud gate'),
+      'excludes forecast hours with more than 50 % cloud',
+    );
+  });
+
   testWidgets('A3: the focus reminder is words only; the scope is said', (
     tester,
   ) async {

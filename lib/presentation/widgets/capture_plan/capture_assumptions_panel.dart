@@ -105,6 +105,21 @@ class CaptureAssumptionsPanel extends StatelessWidget {
     ('Feasibility margin', QuantityText.percent(p.feasibilityMarginPercent)),
     (AppWords.darknessLimit, QuantityText.degrees(p.darknessLimit.degrees)),
     ('Minimum target altitude', QuantityText.degrees(p.minAltitudeDeg)),
+    // F12 A1: the optional gates (ADR-013 G4/G5) shape the window the fit
+    // uses; when on, their thresholds are listed as the calculation takes
+    // them ([PlanningPreferences.optionalGates]).
+    if (p.optionalGates.moonMinIlluminationPct case final pct?)
+      (
+        'Moon gate',
+        'excludes time when the Moon is up and at least '
+            '${QuantityText.percent(pct)} lit',
+      ),
+    if (p.optionalGates.cloudMaxPct case final pct?)
+      (
+        'Cloud gate',
+        'excludes forecast hours with more than '
+            '${QuantityText.percent(pct)} cloud',
+      ),
   ];
 
   @override
