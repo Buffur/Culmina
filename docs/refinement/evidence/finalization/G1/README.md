@@ -11,6 +11,13 @@ ADR/visual acceptances recorded — ADR-021/022 **yes** (2026-10-18); visual acc
 **no** (OWNER ACTION). G1 therefore runs its host rows now and lists the rest; it does **not**
 pass as a whole.
 
+**Re-audit (2026-10-19, after this record's first version):** the owner asked whether everything
+in the plan is really implemented. The answer is in [`REAUDIT.md`](REAUDIT.md): 16 behaviour gaps (H2 included; TD-110 also resolved)
+found and fixed, and the untested or weakly tested clauses covered. The relevant
+`STAGE_11_MATRIX.md` rows (roadmap G1: "each F-task A-criterion plus the relevant
+`STAGE_11_MATRIX.md` rows") are dispositioned one by one in
+[`STAGE_11_ROWS.md`](STAGE_11_ROWS.md). Its one failing host row, H2, is fixed (`c9cd965`).
+
 ## Status vocabulary
 
 - **VERIFIED (host)**: the criterion's required evidence is complete on the host layer.

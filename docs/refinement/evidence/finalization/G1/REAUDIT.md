@@ -29,6 +29,8 @@ was mutation-checked: the guarded code was broken, the test failed, and the code
 | F15 A5 | The Night & Moon slider announced the current time for the next and previous steps (its formatter ignored the value) | Each step announces its own instant | `1469731` | `night_moon_browse_test.dart` (increased/decreased value) |
 | F25 A1 | The renders covered default states only; About (after F23 A5) and the map picker had no current render | 44 renders of the error and feedback states, About and the map picker (96 in all), plus a surface/criterion matrix | `e6a0376` | `u_renders_test.dart` (opt-in) |
 | F21 A5 (found by the renders) | The planning "not saved" card's Retry was at 1.67:1 on the error colour | `onErrorContainer` | `e6a0376` | `display_settings_test.dart` text-contrast checks |
+| F12 A1, found while strengthening tests | When on, the Moon and cloud gates shape the window the fit uses, but the planner's effective assumptions did not list them | Two rows (Moon gate, Cloud gate) with their thresholds, shown only when on | `c5af26c` | `capture_assumptions_test.dart` (both gates, on and off) |
+| F01 A2, found while strengthening tests | A dangling foreign key was refused (the code checked it) but untested | — (test only) | `c98210c` | `restore_activation_test.dart` and the pick-time refusal set |
 
 ## Untested or weakly tested clauses (tests added)
 
@@ -36,6 +38,19 @@ was mutation-checked: the guarded code was broken, the test failed, and the code
 | --- | --- | --- |
 | F06 A2, A6, relative gain; F08 A1/A2 (edit after a pick, pick again); F10 FITS in the block dialog (gain, custom filter, binning rule, kept values); F11 empty state; F12 A2 (blocks without a target or a site); F13 Moon-up boundary (−0.84°…0°, real nights); HEIC through the block path | `block_settings_test.dart`, `block_from_photo_test.dart`, `block_from_fits_test.dart` (new), `stacking_gain_graph_test.dart`, `capture_blocks_test.dart`, `planner_structure_test.dart`, `moon_up_predicate_test.dart`, `block_proposal_test.dart` | `143fac0` |
 | F15 A5 (polar nights, readout texts, keyboard and semantics); F16 A2/A3 (Welcome: GPS only on tap, denial, photo path and Cancel); F18 A5 (missing rig); F19 A1 (Completed icon), A4 (Back and tap-outside on delete confirmations); F20 A1 (two known nights in date order; the CSV share file); F21 A5 (the writing mark comes before the keys); F22 A1 (a deleted plan behind a restored planner route) | `night_moon_browse_test.dart`, `welcome_screen_test.dart` (new), `planner_f18_test.dart`, `results_screen_test.dart`, `library_manage_mode_test.dart`, `astrobin_acquisitions_test.dart`, `share_astrobin_csv_exporter_test.dart` (new), `planning_preferences_write_mark_test.dart` (new), `route_restoration_test.dart` | `17b260a` |
+
+### Weak tests strengthened (third batch, `c31f028`–`c8c5d07`)
+
+F14 A1: literal coverage strings on the "Coming nights" cards and a stale forecast's lead. F14 A3:
+the strip's gap column, the partial-hour star and the legend. F14 A5: the literal Clear Outside URL
+and its launch. D9 (F14 A6, F15 A2, F18 A3): "Plan this night" on a saved, changed plan, with
+Save, Discard, Cancel and a failing Save. F19 A3: a different live forecast never replaces the
+entry's saved one. F17 A3: Home's picker Cancel keeps the night, the blocks and the fit. F18 A2:
+the autosave banner clears after Save (widget level). F22 A3: notes and conditions through a kill.
+F23 A5: Save during a pending lookup. F24 A1: a committed morning instant (ADR-007 L4: the night
+changes at the site's mean solar noon). F24 A6: manage-mode and empty-answer races. F10: a 3-axis
+FITS through `evidenceOf`. Each was mutation-checked; two mutations survived for a stated reason (a
+fixture without the gust case; Save rebuilding the screen anyway) and are covered by other tests.
 
 ## Found by the G1 Stage 11 rows (`STAGE_11_ROWS.md`)
 
