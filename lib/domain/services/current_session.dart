@@ -288,7 +288,14 @@ class CurrentSession {
       final id = current != null && current.planEditable
           ? current.id
           : (await _repository.create(plan)).id;
-      return _session = await _repository.savePlan(id, plan, snapshot);
+      _session = await _repository.savePlan(id, plan, snapshot);
+      // TD-095 (F18 A2): Save writes the whole plan, so an earlier
+      // autosave failure no longer holds.
+      if (_writeFailure != null) {
+        _writeFailure = null;
+        onWriteFailureChanged?.call();
+      }
+      return _session!;
     }),
   );
 

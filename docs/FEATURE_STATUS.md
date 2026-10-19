@@ -440,6 +440,12 @@ see DATA_MODEL.md B2/B8.)
 # Planning
 
 ## F-35 — Capture plan editor (blocks)
+- **F18 (2026-10-19; S16.3, AM-01, AM-03):** the planner leads with the plan night's answer and context.
+  - **Removed for this release.** "Tonight for this target" with its chart, window list and placeholder (the widget and its tests stay in the code; ImagingOpportunity and FitAnalyzer are unchanged).
+  - **Target once.** The target appears only in its card; the identity strip keeps the night and the state. "Altitude now" says when it is not the plan's night.
+  - **Save plan.** It is always shown once loaded, and disabled with "To save: …" and the direct action while a site, target or rig is missing.
+  - **Autosave banner.** A successful Save clears it (TD-095).
+  - **Plan-night phrase.** Planner wording uses it, so another night is named and no text says "tonight"; the values are unchanged.
 - **Status:** Partial
 - **Current implementation:** add, edit, delete, reorder (light/dark/flat/bias with a filter list); default plan 100×60 s lights, 20×60 s darks, 20×2 s flats; persisted in preferences. **S7.3a:** a fifth frame type, dark flat; calibration blocks inherit from a light (or flat) block, with match warnings and tips (ADR-020 §6–§7). **TASK 4.1:** the add dialog is shared with a new edit dialog (opened by tapping a block), reachable at `updateCaptureBlock` for the first time; both reject invalid input (exposure > 0, frame count ≥ 1) via `Form` validators instead of silently defaulting; list items key on `ObjectKey(block)` instead of a hashCode+index combination that changed on every reorder. **TASK 4.4:** the Sequence Plan header carries an "Example plan" badge while the seeded default is unmodified, clearing on the first add/edit/remove/reorder or on loading a saved session. **S6.8 (RD-04):** a plan starts empty, with "Start from the example plan" (one tap fills the example, badged until the first edit).
 - **Relevant files:** `lib/presentation/widgets/capture_plan_widget.dart`, `planner_viewmodel.dart` (`reorderCaptureBlocks`, `updateCaptureBlock`, `isExampleCapturePlan`), `lib/domain/models/capture_block.dart`.

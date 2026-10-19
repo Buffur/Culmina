@@ -14,6 +14,7 @@ import '../../domain/services/calibration_match.dart';
 import '../../domain/services/capture_budget_calculator.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../shared/block_text.dart';
+import '../shared/plan_night_phrase.dart';
 import '../shared/calibration_text.dart';
 import '../shared/capability_text.dart';
 import '../shared/capture_settings_text.dart';
@@ -323,7 +324,7 @@ class _BlockListState extends State<_BlockList> {
               final block = blocks[index];
               final budget = index < budgets.length ? budgets[index] : null;
               final placement = BlockText.placement(block, budget);
-              final fits = measured
+              final fitsText = measured
                   ? BlockText.whatFits(
                       block,
                       unplaced: fit.unplacedFramesByBlock[index] ?? 0,
@@ -332,6 +333,14 @@ class _BlockListState extends State<_BlockList> {
                       others: shared,
                     )
                   : null;
+              // F18 A6: the plan's night in the words, never its values.
+              final fits = fitsText == null
+                  ? null
+                  : PlanNightPhrase.apply(
+                      fitsText,
+                      viewModel.eveningDate ?? viewModel.tonightKey,
+                      viewModel.tonightKey,
+                    );
               final unplaced = (fit.unplacedFramesByBlock[index] ?? 0) > 0;
               final mismatch = index < mismatches.length
                   ? mismatches[index]

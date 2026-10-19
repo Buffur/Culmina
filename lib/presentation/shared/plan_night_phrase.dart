@@ -31,4 +31,27 @@ abstract final class PlanNightPhrase {
       planNight == tonight
       ? "Tonight's candidates"
       : 'Candidates for ${NightTimeFormatter.eveningDate(planNight)}';
+
+  /// [text] worded for the plan's night (F18 A6): unchanged when the plan's
+  /// night is tonight; otherwise each "tonight" names the night. Only the
+  /// words change; the value, fit or window a text reports never does.
+  static String apply(
+    String text,
+    CalendarDate planNight,
+    CalendarDate tonight,
+  ) {
+    if (planNight == tonight) return text;
+    final on = of(planNight, tonight);
+    String cap(String s, bool upper) =>
+        upper ? '${s[0].toUpperCase()}${s.substring(1)}' : s;
+    return text
+        .replaceAllMapped(
+          RegExp(r"([Tt])onight's (windows|window|dark time)"),
+          (m) => cap('the ${m[2]} $on', m[1] == 'T'),
+        )
+        .replaceAllMapped(
+          RegExp(r'\b([Tt])onight\b'),
+          (m) => cap(on, m[1] == 'T'),
+        );
+  }
 }

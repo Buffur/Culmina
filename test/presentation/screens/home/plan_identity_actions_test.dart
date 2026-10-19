@@ -106,11 +106,21 @@ void main() {
     await tester.runAsync(() => vm.plan.idle);
   }
 
-  testWidgets('the identity shows the target, the night and the state: Not '
-      'saved, then Saved, then Saved · changed', (tester) async {
+  // F18 A1: the target appears once, in its card, not in the strip.
+  testWidgets('the identity shows the night and the state: Not saved, then '
+      'Saved, then Saved · changed; the target only in its card', (
+    tester,
+  ) async {
     await start(tester);
     final target = vm.selectedTarget!;
-    expect(inIdentity(target.commonName ?? target.catalogId), findsOneWidget);
+    expect(inIdentity(target.commonName ?? target.catalogId), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('planner.target')),
+        matching: find.textContaining(target.commonName ?? target.catalogId),
+      ),
+      findsOneWidget,
+    );
     expect(
       inIdentity('Night of ${NightTimeFormatter.eveningDate(vm.eveningDate!)}'),
       findsOneWidget,

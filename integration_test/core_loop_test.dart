@@ -335,8 +335,12 @@ void main() {
     await tester.runAsync(() => vm.conditions.idle);
     await settle(tester);
     expect(vm.conditions.nightWeather, isA<NightWeatherAvailable>());
-    await scrollTo(tester, find.byKey(const Key('opportunity.window.0')));
+    // F18 A1 (AM-01): the windows are no longer listed in the plan; the
+    // status gives the usable time from the same opportunity.
+    expect(find.byKey(const Key('opportunity.window.0')), findsNothing);
     expect(vm.conditions.imagingOpportunity!.windows, isNotEmpty);
+    await scrollTo(tester, find.byKey(const Key('planner.status')));
+    expect(find.byKey(const Key('planner.status')), findsOneWidget);
 
     // Plan: the example plan, trimmed to tonight's window, then Save.
     await tap(tester, find.text('Save plan'));

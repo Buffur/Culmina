@@ -10,6 +10,7 @@ import '../../shared/context_line.dart';
 import '../../shared/detail_scaffold.dart';
 import '../../shared/night_text.dart';
 import '../../shared/night_time_formatter.dart';
+import '../../shared/plan_night_phrase.dart';
 import '../../shared/plan_this_night.dart';
 import '../../viewmodels/night_browser_viewmodel.dart';
 import '../../viewmodels/night_conditions_viewmodel.dart';
@@ -111,6 +112,9 @@ class _NightMoonBody extends StatelessWidget {
             dark: view.timeline.darkAtLimit,
             moon: view.moon,
             zoneId: site.displayZoneId,
+            // The viewed night in the words ("not tonight" only tonight).
+            words: (t) =>
+                PlanNightPhrase.apply(t, browser.viewedDate, plan.tonightKey),
           ),
         ],
       ),
@@ -143,12 +147,16 @@ class NightSummary extends StatelessWidget {
     required this.dark,
     required this.moon,
     required this.zoneId,
+    this.words,
   });
 
   final SessionNight night;
   final SunThresholdResult? dark;
   final MoonConditions? moon;
   final String? zoneId;
+
+  /// Words the plan's night (F18 A6), e.g. "not tonight" for another night.
+  final String Function(String)? words;
 
   @override
   Widget build(BuildContext context) {
@@ -162,9 +170,15 @@ class NightSummary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (dark case final d?)
-          Text(DarkText.span(d, at), key: const Key('nightSummary.dark')),
+          Text(
+            (words ?? (s) => s)(DarkText.span(d, at)),
+            key: const Key('nightSummary.dark'),
+          ),
         if (moon case final m?)
-          Text(MoonText.up(m, at), key: const Key('nightSummary.moon')),
+          Text(
+            (words ?? (s) => s)(MoonText.up(m, at)),
+            key: const Key('nightSummary.moon'),
+          ),
       ],
     );
   }

@@ -133,6 +133,11 @@ void main() {
     // S6.6: no empty state; the structure stays with a neutral status and
     // an action where the target and the rig go.
     expect(find.byKey(const Key('planner.status')), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('planner.noTarget')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.byKey(const Key('planner.noTarget')), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('planner.noRig')),
@@ -282,16 +287,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(throwingWeather.calls, greaterThan(0));
 
-      // TASK 10.3: one opportunity card; the fixed sky warning is gone.
-      // S6.16 (ADR-019 §6 as amended): it follows the capture plan, so the
-      // lazy list is scrolled to it first.
+      // AM-01 (F18 A1): no "Tonight for this target" card in the plan for
+      // this release; the fixed sky warning stays gone.
       final list = find.byType(Scrollable).first;
-      await tester.scrollUntilVisible(
-        find.text('Tonight for this target'),
-        300,
-        scrollable: list,
-      );
-      expect(find.text('Tonight for this target'), findsOneWidget);
+      expect(find.text('Tonight for this target'), findsNothing);
       expect(find.text('Max Altitude'), findsNothing);
 
       // The list builds lazily; scroll the weather row into view. S6.5:
@@ -503,18 +502,19 @@ void main() {
     expect(find.text(PlanStatus.needsSite), findsOneWidget);
     expect(find.text(PlanStatus.siteReason), findsOneWidget);
     expect(find.textContaining('no light frames'), findsNothing);
-    // S6.16 (ADR-019 §6 as amended): the chart's place follows the capture
-    // plan; the lazy list is scrolled to it.
-    await tester.scrollUntilVisible(
-      find.text("Set a site to see tonight's altitude chart."),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
+    // F18 A1: no altitude chart or its placeholder in the plan. A5: Save
+    // plan stays, disabled, with the reason beside it and the direct action.
     expect(
       find.text("Set a site to see tonight's altitude chart."),
-      findsOneWidget,
+      findsNothing,
     );
-    expect(find.text('Save plan'), findsNothing);
+    expect(find.text('Save plan'), findsOneWidget);
+    final save = tester.widget<ButtonStyleButton>(
+      find.byKey(const Key('planner.save')),
+    );
+    expect(save.onPressed, isNull);
+    expect(find.text('To save: ${PlanStatus.siteReason}'), findsOneWidget);
+    expect(find.byKey(const Key('planner.saveFix')), findsOneWidget);
   });
 
   testWidgets('a gated feature has no entry point (TASK 4.3, TD-014, PD-06)', (

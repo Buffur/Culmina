@@ -9,6 +9,7 @@ import 'package:astroplan/domain/models/session_night.dart';
 import 'package:astroplan/domain/models/weather_snapshot.dart';
 import 'package:astroplan/domain/services/imaging_opportunity_calculator.dart';
 import 'package:astroplan/presentation/shared/opportunity_text.dart';
+import 'package:astroplan/presentation/widgets/altitude_chart_widget.dart';
 import 'package:astroplan/presentation/widgets/tonight_opportunity_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -186,5 +187,28 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const Key('opportunity.excluded.0')), findsOneWidget);
+  });
+
+  // Moved here from the accessibility sweep by F18 (the chart left the
+  // plan for this release; the widget and its text alternative stay).
+  testWidgets('the altitude chart has a text alternative', (tester) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AltitudeChartWidget(opportunity: _v3(), zoneId: 'UTC'),
+        ),
+      ),
+    );
+    expect(
+      find.bySemanticsLabel(
+        RegExp(
+          r"Chart of the target's altitude through the night: .*"
+          r'usable time .*listed below the chart\.',
+        ),
+      ),
+      findsOneWidget,
+    );
+    handle.dispose();
   });
 }

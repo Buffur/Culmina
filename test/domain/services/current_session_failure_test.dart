@@ -7,9 +7,13 @@ import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
+import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/models/session.dart';
+import 'package:astroplan/domain/models/session_night.dart';
 import 'package:astroplan/domain/repositories/storage_failure.dart';
+import 'package:astroplan/domain/services/capture_budget_calculator.dart';
 import 'package:astroplan/domain/services/current_session.dart';
+import 'package:astroplan/domain/services/session_snapshot_builder.dart';
 import 'package:drift/drift.dart'
     show QueryInterceptor, QueryExecutor, ApplyInterceptor;
 import 'package:drift/native.dart';
@@ -110,5 +114,46 @@ void main() {
     await current.write(() => _plan(22));
     await current.write(() => _plan(23));
     expect(changes, 3); // cleared once, then no change
+  });
+
+  // TD-095 (F18 A2): a successful Save writes the whole plan, so the
+  // banner of an earlier failed autosave goes; a failed Save keeps it.
+  test('a successful Save clears an earlier autosave failure', () async {
+    interceptor.failing = true;
+    await current.write(() => _plan(11));
+    expect(current.writeFailure, isNotNull);
+    final before = changes;
+    final blocks = [
+      CaptureBlock(
+        frameType: FrameType.light,
+        exposureTimeSeconds: 300,
+        frameCount: 12,
+      ),
+    ];
+    final prefs = PlanningPreferences();
+    final snapshot = SessionSnapshotBuilder.build(
+      takenAtUtc: DateTime.utc(2026, 9, 24, 18),
+      night: SessionNight(
+        eveningDate: CalendarDate(2026, 9, 24),
+        startUtc: DateTime.utc(2026, 9, 24, 11),
+        endUtc: DateTime.utc(2026, 9, 25, 11),
+        latitude: 46.05,
+        longitude: 14.51,
+        timeContextId: 'Europe/Ljubljana',
+      ),
+      preferences: prefs,
+      budget: CaptureBudgetCalculator.calculate(
+        blocks: blocks,
+        overheads: CaptureOverheads.fromPreferences(prefs),
+      ),
+      blocks: blocks,
+    );
+    await expectLater(current.save(_plan(12), snapshot), throwsA(anything));
+    expect(current.writeFailure, isNotNull, reason: 'a failed Save keeps it');
+    interceptor.failing = false;
+    final saved = await current.save(_plan(12), snapshot);
+    expect(saved.isSavedPlan, isTrue);
+    expect(current.writeFailure, isNull);
+    expect(changes, greaterThan(before), reason: 'the banner is told');
   });
 }

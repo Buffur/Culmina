@@ -436,29 +436,13 @@ void main() {
     expect(find.byKey(const Key('weather.precipNote')), findsOneWidget);
   });
 
-  testWidgets('the altitude chart has a text alternative', (tester) async {
+  // F18 A1 (AM-01): the altitude chart is out of the plan for this
+  // release; its text alternative is tested on the widget
+  // (`tonight_opportunity_widget_test.dart`).
+  testWidgets('the plan has no altitude chart', (tester) async {
     await _pumpApp(tester, theme: _Theme.light, textScale: 1.0);
-    final handle = tester.ensureSemantics();
     AppRouter.router.go(AppRouter.session());
     await _settle(tester);
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('chart.altitude')),
-      300,
-      scrollable: find
-          .byWidgetPredicate(
-            (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
-          )
-          .first,
-    );
-    expect(
-      find.bySemanticsLabel(
-        RegExp(
-          r"Chart of the target's altitude through the night: .*"
-          r'usable time .*listed below the chart\.',
-        ),
-      ),
-      findsOneWidget,
-    );
-    handle.dispose();
+    expect(find.byKey(const Key('chart.altitude')), findsNothing);
   });
 }

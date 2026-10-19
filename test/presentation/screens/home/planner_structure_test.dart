@@ -24,7 +24,6 @@ import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/shared/status_block.dart';
 import 'package:astroplan/presentation/widgets/altitude_chart_widget.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
-import 'package:astroplan/presentation/widgets/timeline_data.dart';
 import 'package:astroplan/presentation/widgets/tonight_opportunity_widget.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -226,27 +225,21 @@ void main() {
 
   // S6.12 (P6.11): the timeline's intervals are the opportunity's, and the
   // planned capture is drawn as far as the fit exposes it: its end.
-  testWidgets("the timeline draws the opportunity's windows and the fit's "
-      'end', (tester) async {
+  // AM-01 (F18 A1): "Tonight for this target", its chart and window list
+  // are out of the plan for this release; the opportunity and the fit are
+  // still computed, and the status keeps the availability and the reason.
+  testWidgets("the plan has no target's-night chart; the opportunity and the "
+      'fit are still computed', (tester) async {
     await start(tester, size: const Size(800, 3000));
-    final painter =
-        tester
-                .widget<CustomPaint>(
-                  find.descendant(
-                    of: find.byType(AltitudeChartWidget),
-                    matching: find.byType(CustomPaint),
-                  ),
-                )
-                .painter!
-            as TimelinePainter;
+    expect(find.byType(AltitudeChartWidget), findsNothing);
+    expect(find.text(TonightOpportunityWidget.title), findsNothing);
     final o = vm.conditions.imagingOpportunity!;
-    expect(painter.data.windows, [
-      for (final w in o.windows) TimelineSpan(w.startUtc, w.endUtc),
-    ]);
+    expect(o.windows, isNotEmpty);
     final fit = vm.fitAnalysis;
     expect(fit.state, anyOf(FitState.fits, FitState.tight));
-    expect(painter.data.captureEndUtc, fit.endUtc);
     expect(fit.endUtc, isNotNull);
+    expect(fit.availableMs, greaterThan(0));
+    expect(find.byKey(const Key('planner.status')), findsOneWidget);
   });
 
   // S6.16 (ADR-019 §6 as amended by the owner, DECISIONS E.1 "Stage 6
@@ -254,7 +247,7 @@ void main() {
   // rig and the capture plan, then the target's night as supporting
   // analysis, then the conditions.
   testWidgets('the order: status, context, target, rig, capture plan, the '
-      "target's night, the conditions", (tester) async {
+      'conditions (F18: no target\'s-night section)', (tester) async {
     await start(tester, size: const Size(800, 8000));
     final order = [
       ('status', find.byKey(const Key('planner.status'))),
@@ -262,8 +255,6 @@ void main() {
       ('target', find.byKey(const Key('planner.target'))),
       ('rig', find.byKey(const Key('planner.rig'))),
       ('capture plan', find.text(AppWords.capturePlan)),
-      ("the target's night", find.text(TonightOpportunityWidget.title)),
-      ('the chart', find.byType(AltitudeChartWidget)),
       ('Night & Moon', find.byKey(const Key('planner.night'))),
       ('Weather', find.byKey(const Key('planner.weather'))),
       ('Sky darkness', find.text('Sky darkness')),

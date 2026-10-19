@@ -24,7 +24,6 @@ import '../../../domain/models/target_types.dart';
 import '../../shared/field_mode_button.dart';
 import '../../widgets/capture_plan_widget.dart';
 import '../../widgets/plan_tracking.dart';
-import '../../widgets/tonight_opportunity_widget.dart';
 import '../../widgets/sky_darkness_widget.dart';
 import '../../shared/night_text.dart';
 import '../details/night_moon_screen.dart';
@@ -36,6 +35,7 @@ import '../../shared/context_line.dart';
 import '../../shared/plan_state.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/unsaved_plan_prompt.dart';
+import '../../shared/plan_night_phrase.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -49,6 +49,12 @@ class HomeScreen extends StatelessWidget {
     final startupVm = context.watch<StartupViewModel>();
     final target = planVm.selectedTarget;
     final equipment = planVm.selectedEquipment;
+    // F18 A6 (AM-03): the plan's night in the words, never its values.
+    String words(String text) => PlanNightPhrase.apply(
+      text,
+      planVm.eveningDate ?? planVm.tonightKey,
+      planVm.tonightKey,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -119,19 +125,22 @@ class HomeScreen extends StatelessWidget {
                             // stay usable, with a visible warning.
                             if (TargetTypes.isMoving(target.type))
                               'Note': TargetTypes.movingWarning,
+                            // F18 A1: "Altitude now" is the altitude now; on
+                            // another night it says it is not that night's.
                             if (conditionsVm.currentAltitude != null)
-                              // UX-15 (3): the altitude now, not on
-                              // the planned night.
-                              'Altitude now': QuantityText.degrees(
-                                conditionsVm.currentAltitude!,
-                                digits: 1,
-                              ),
-                            // TASK 10.3: inside tonight's windows, not
-                            // at culmination (possibly in daylight).
+                              planVm.eveningDate == planVm.tonightKey
+                                      ? 'Altitude now'
+                                      : 'Altitude now (not on the plan\'s night)':
+                                  QuantityText.degrees(
+                                    conditionsVm.currentAltitude!,
+                                    digits: 1,
+                                  ),
+                            // TASK 10.3: inside the night's windows, not at
+                            // culmination (possibly in daylight).
                             if (conditionsVm.imagingOpportunity case final o?)
                               'Max altitude in windows':
                                   o.maxAltitudeInWindowsDeg == null
-                                  ? 'no window tonight'
+                                  ? words('no window tonight')
                                   : QuantityText.degrees(
                                       o.maxAltitudeInWindowsDeg!,
                                       digits: 1,
@@ -221,20 +230,11 @@ class HomeScreen extends StatelessWidget {
                         ),
                       _SectionHeader(AppWords.capturePlan),
                       const CapturePlanWidget(),
-                      // The target's night, supporting the plan (S6.16): the
-                      // chart and the windows, after the plan is built. With
-                      // a site but no target there is nothing to show yet
-                      // (the status asks for the target), so no heading.
-                      if (planVm.sessionNight == null) ...[
-                        _SectionHeader(TonightOpportunityWidget.title),
-                        const _NoSiteCard(
-                          message:
-                              "Set a site to see tonight's altitude chart.",
-                        ),
-                      ] else if (target != null) ...[
-                        _SectionHeader(TonightOpportunityWidget.title),
-                        const TonightOpportunityWidget(),
-                      ],
+                      // AM-01 (F18 A1): "Tonight for this target", its chart,
+                      // window list and placeholder are out of the plan for
+                      // this release; the status keeps the availability and
+                      // the fit's reason, and Night & Moon and Weather stay
+                      // one tap away below.
                       _SectionHeader('Conditions'),
                       // S6.5 (UX-06, UX-10): the night and its
                       // forecast in full are on their detail screens;
@@ -250,6 +250,7 @@ class HomeScreen extends StatelessWidget {
                             dark: conditionsVm.nightTimeline?.darkAtLimit,
                             moon: conditionsVm.moonConditions,
                             zoneId: siteVm.displayZoneId,
+                            words: words,
                           ),
                         ),
                         _DetailRow(
@@ -300,12 +301,10 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-      bottomNavigationBar:
-          target == null ||
-              equipment == null ||
-              startupVm.isLoading ||
-              startupVm.hasBootstrapError ||
-              planVm.sessionNight == null
+      // F18 A5: once the planner has loaded, Save plan is always there. Its
+      // prerequisites (the existing rule: a site's night, a target, a rig)
+      // are said beside it with the direct action; it never disappears.
+      bottomNavigationBar: startupVm.isLoading || startupVm.hasBootstrapError
           ? null
           // TASK 15.3: not a BottomAppBar — its fixed 80 px height squeezed
           // the buttons below the 48 px tap target (and clips large text).
@@ -318,27 +317,75 @@ class HomeScreen extends StatelessWidget {
                     horizontal: 16.0,
                     vertical: 8.0,
                   ),
-                  // S6.2 (ADR-019 §6): Save plan is the one primary action.
-                  child: FilledButton.icon(
-                    key: const Key('planner.save'),
-                    onPressed: () async {
-                      // TASK 11.3 (ADR-014): saves the plan as a planned
-                      // session with a fresh plan snapshot.
-                      final saved = await runWithFeedback(
-                        context,
-                        'save the plan',
-                        analysisVm.saveSession,
-                      );
-                      if (saved && context.mounted) {
-                        showDone(context, 'Plan saved');
-                      }
-                    },
-                    icon: const Icon(Icons.save_outlined),
-                    label: const Text(AppWords.savePlan),
-                  ),
+                  child: _SaveBar(words: words),
                 ),
               ),
             ),
+    );
+  }
+}
+
+/// Save plan, always shown after loading (F18 A5; S6.2: the one primary
+/// action). When a prerequisite is missing it is disabled, with the reason
+/// in adjacent text (not a tooltip) and the direct corrective action.
+class _SaveBar extends StatelessWidget {
+  const _SaveBar({required this.words});
+
+  final String Function(String) words;
+
+  @override
+  Widget build(BuildContext context) {
+    final plan = context.watch<SessionPlanViewModel>();
+    final analysis = context.read<CaptureAnalysisViewModel>();
+    final missing = PlanStatus.missingInput(plan);
+    final blocked = missing != null;
+    final save = FilledButton.icon(
+      key: const Key('planner.save'),
+      onPressed: blocked
+          ? null
+          : () async {
+              // TASK 11.3 (ADR-014): saves the plan as a planned session
+              // with a fresh plan snapshot.
+              final saved = await runWithFeedback(
+                context,
+                'save the plan',
+                analysis.saveSession,
+              );
+              if (saved && context.mounted) showDone(context, 'Plan saved');
+            },
+      icon: const Icon(Icons.save_outlined),
+      label: const Text(AppWords.savePlan),
+    );
+    if (missing == null) return save;
+    final route = missing.route ?? AppRouter.selectSite;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          liveRegion: true,
+          child: Text(
+            'To save: ${words(missing.reason)}',
+            key: const Key('planner.saveReason'),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        // Wraps at large text rather than overflowing (trap 17).
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.xs,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            save,
+            OutlinedButton(
+              key: const Key('planner.saveFix'),
+              onPressed: () => context.push(route),
+              child: Text(missing.action ?? 'Set a site'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -549,36 +596,6 @@ class _AutosaveFailureBanner extends StatelessWidget {
   }
 }
 
-/// Shown in place of a night-dependent section (the altitude chart) when
-/// there is no site — there is no SessionNight to compute it from
-/// (ADR-007 §9), so it must not silently use the default London
-/// coordinates (SI-008).
-class _NoSiteCard extends StatelessWidget {
-  final String message;
-
-  const _NoSiteCard({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(
-              Icons.location_off_outlined,
-              color: AppPalette.of(context).muted,
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// The plan's actions (S6.2; ADR-019 §6): New plan and Copy to another
 /// night; Track live left with the tracker (S8.4). Each says what happened.
 class _PlanMenu extends StatelessWidget {
@@ -656,7 +673,8 @@ class _PlanIdentity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final plan = context.watch<SessionPlanViewModel>();
-    final target = plan.selectedTarget;
+    // F18 A1: the target appears once, in its card; the strip keeps the
+    // night and the plan's state.
     final evening = plan.eveningDate;
     final session = plan.activeSession;
     final text = Theme.of(context).textTheme;
@@ -679,12 +697,6 @@ class _PlanIdentity extends StatelessWidget {
               runSpacing: AppSpacing.xs,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Text(
-                  target == null
-                      ? 'No target'
-                      : target.commonName ?? target.catalogId,
-                  style: text.titleMedium,
-                ),
                 Text(
                   evening == null
                       ? 'No night without a site'

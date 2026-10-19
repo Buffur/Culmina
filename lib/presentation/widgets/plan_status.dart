@@ -7,6 +7,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../navigation/app_router.dart';
+import '../shared/plan_night_phrase.dart';
 import '../shared/app_words.dart';
 import '../shared/change_mark.dart';
 import '../shared/failure_feedback.dart';
@@ -86,6 +87,12 @@ class PlanStatus extends StatelessWidget {
 
     final missing = missingInput(plan);
     final state = missing != null ? FitState.needsInput : fit.state;
+    // F18 A6 (AM-03): the plan's night in the words, never its values.
+    String words(String text) => PlanNightPhrase.apply(
+      text,
+      plan.eveningDate ?? plan.tonightKey,
+      plan.tonightKey,
+    );
 
     final measured =
         missing == null &&
@@ -137,7 +144,7 @@ class PlanStatus extends StatelessWidget {
                   ? Duration(milliseconds: fit.availableMs)
                   : null,
               // TD-075: a missing input's own reason, else the fit's.
-              reason: missing?.reason ?? fit.reason,
+              reason: words(missing?.reason ?? fit.reason),
               keyNumbers: [
                 // Always (S6.7): the budget's lines are folded into Budget
                 // details, and integration needs no site, target or rig.
@@ -195,13 +202,20 @@ class FillWindowAction extends StatelessWidget {
     final index = viewModel.fillWindowBlockIndex;
     final target = viewModel.fillWindowFrameCount;
     if (index == null || target == null) return const SizedBox.shrink();
-    final block = context.watch<SessionPlanViewModel>().captureBlocks[index];
+    final plan = context.watch<SessionPlanViewModel>();
+    final block = plan.captureBlocks[index];
+    // F18 A6: the plan's night in the words.
+    String words(String text) => PlanNightPhrase.apply(
+      text,
+      plan.eveningDate ?? plan.tonightKey,
+      plan.tonightKey,
+    );
     final label =
         '${block.filterName ?? 'Light'} '
         '${QuantityText.exposure(block.exposureTimeSeconds)}';
     if (target < 1) {
       return Text(
-        'Not even one $label frame fits tonight.',
+        words('Not even one $label frame fits tonight.'),
         style: Theme.of(context).textTheme.bodySmall,
       );
     }
@@ -213,9 +227,11 @@ class FillWindowAction extends StatelessWidget {
         key: const Key('capturePlan.fillWindow'),
         icon: Icon(trim ? Icons.content_cut : Icons.open_in_full),
         label: Text(
-          trim
-              ? 'Trim $label to $target frames to fit tonight'
-              : 'Fill tonight\'s window: $label × $target',
+          words(
+            trim
+                ? 'Trim $label to $target frames to fit tonight'
+                : 'Fill tonight\'s window: $label × $target',
+          ),
         ),
         onPressed: () => runWithFeedback(
           context,
