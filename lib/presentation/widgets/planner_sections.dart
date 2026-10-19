@@ -9,6 +9,10 @@ abstract final class PlannerSections {
   static const rigDetails = 'planner.rigDetails';
   static const sky = 'planner.sky';
 
+  /// F18 A1: the current sky on another plan night; shown only then, so
+  /// it is not in [all].
+  static const currentSky = 'planner.currentSky';
+
   static const all = [
     budgetDetails,
     gainHelp,

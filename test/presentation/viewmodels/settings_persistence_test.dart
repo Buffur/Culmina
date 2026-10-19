@@ -9,6 +9,7 @@
 import 'dart:async';
 
 import 'package:astroplan/core/units/display_units.dart';
+import 'package:astroplan/data/repositories/shared_prefs_display_settings_repository.dart';
 import 'package:astroplan/data/repositories/shared_prefs_planning_preferences_repository.dart';
 import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/repositories/display_settings_repository.dart';
@@ -68,6 +69,9 @@ class _DisplayStore implements DisplaySettingsRepository {
     if (fail) throw const StorageFailure('save the display settings');
     stored = s;
   }
+
+  @override
+  Future<bool> lastSaveIncomplete() async => false;
 }
 
 SettingsViewModel _vm(PlanningPreferencesRepository store) => SettingsViewModel(
@@ -201,6 +205,49 @@ void main() {
   });
 
   group('Appearance and units', () {
+    test('a save stopped between two keys is unsaved after a restart, not a '
+        'silent mix; Retry stores it whole', () async {
+      SharedPreferences.setMockInitialValues({});
+      var stopAt = SharedPrefsDisplaySettingsRepository.elevationKey;
+      final repo = SharedPrefsDisplaySettingsRepository(
+        beforeWrite: (key) async {
+          if (key == stopAt) {
+            throw const StorageFailure('save the display settings');
+          }
+        },
+      );
+      final vm = DisplaySettingsViewModel(repo);
+      await vm.load();
+      expect(vm.unsaved, isFalse);
+      // Wind and elevation in one save (coalesced edits): it stops after
+      // wind is written.
+      await expectLater(
+        vm.setUnits(
+          vm.units.copyWith(wind: WindUnit.mph, elevation: ElevationUnit.feet),
+        ),
+        throwsA(isA<StorageFailure>()),
+      );
+      expect(await repo.lastSaveIncomplete(), isTrue);
+      final restarted = DisplaySettingsViewModel(repo);
+      await restarted.load();
+      expect(restarted.units.wind, WindUnit.mph);
+      expect(restarted.units.elevation, ElevationUnit.metres);
+      expect(restarted.unsaved, isTrue, reason: 'a mix is never shown saved');
+      stopAt = '';
+      await restarted.retry();
+      expect(restarted.unsaved, isFalse);
+      expect(await repo.lastSaveIncomplete(), isFalse);
+      // One changed key after a complete save needs no mark.
+      await restarted.setUnits(
+        restarted.units.copyWith(temperature: TemperatureUnit.fahrenheit),
+      );
+      expect(await repo.lastSaveIncomplete(), isFalse);
+      final again = DisplaySettingsViewModel(repo);
+      await again.load();
+      expect(again.unsaved, isFalse);
+      expect(again.units.temperature, TemperatureUnit.fahrenheit);
+    });
+
     test('a failed choice stays shown, unsaved, with Retry; a restart shows '
         'the stored one', () async {
       final store = _DisplayStore()..fail = true;

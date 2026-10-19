@@ -49,6 +49,8 @@ class HomeScreen extends StatelessWidget {
     final startupVm = context.watch<StartupViewModel>();
     final target = planVm.selectedTarget;
     final equipment = planVm.selectedEquipment;
+    final otherNight =
+        (planVm.eveningDate ?? planVm.tonightKey) != planVm.tonightKey;
     // F18 A6 (AM-03): the plan's night in the words, never its values.
     String words(String text) => PlanNightPhrase.apply(
       text,
@@ -125,16 +127,15 @@ class HomeScreen extends StatelessWidget {
                             // stay usable, with a visible warning.
                             if (TargetTypes.isMoving(target.type))
                               'Note': TargetTypes.movingWarning,
-                            // F18 A1: "Altitude now" is the altitude now; on
-                            // another night it says it is not that night's.
-                            if (conditionsVm.currentAltitude != null)
-                              planVm.eveningDate == planVm.tonightKey
-                                      ? 'Altitude now'
-                                      : 'Altitude now (not on the plan\'s night)':
-                                  QuantityText.degrees(
-                                    conditionsVm.currentAltitude!,
-                                    digits: 1,
-                                  ),
+                            // F18 A1: "Altitude now" leads only when the
+                            // plan's night is tonight; otherwise it is in the
+                            // current-sky detail below.
+                            if (conditionsVm.currentAltitude != null &&
+                                !otherNight)
+                              'Altitude now': QuantityText.degrees(
+                                conditionsVm.currentAltitude!,
+                                digits: 1,
+                              ),
                             // TASK 10.3: inside the night's windows, not at
                             // culmination (possibly in daylight).
                             if (conditionsVm.imagingOpportunity case final o?)
@@ -146,6 +147,23 @@ class HomeScreen extends StatelessWidget {
                                       digits: 1,
                                     ),
                           },
+                          below:
+                              conditionsVm.currentAltitude != null && otherNight
+                              ? CollapsibleSection(
+                                  sectionKey: PlannerSections.currentSky,
+                                  title: 'Current sky (not the plan\'s night)',
+                                  summary:
+                                      'Altitude now: ${QuantityText.degrees(conditionsVm.currentAltitude!, digits: 1)}',
+                                  child: Text(
+                                    'The altitude at this moment, not at any '
+                                    'time on the plan\'s night; the windows '
+                                    'above are for that night.',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall,
+                                  ),
+                                )
+                              : null,
                           onTap: () => context.push(AppRouter.selectTarget),
                         ),
                       ] else

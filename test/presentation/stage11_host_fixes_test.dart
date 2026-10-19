@@ -139,6 +139,77 @@ void main() {
     expect(find.textContaining('-'), findsNothing, reason: 'no hyphen-minus');
   });
 
+  // F18 A1: on another plan night the altitude now is secondary detail,
+  // labelled as not that night's, never a row of the target's summary.
+  testWidgets('F18 A1: on another night "Altitude now" is in the labelled '
+      'current-sky detail', (tester) async {
+    tester.view.physicalSize = const Size(412, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    late AppDatabase db;
+    late PlannerHarness vm;
+    await tester.runAsync(() async {
+      db = AppDatabase(NativeDatabase.memory());
+      await CatalogSeeder(DriftTargetRepository(db)).seedIfNeeded();
+      await EquipmentSeeder(DriftEquipmentRepository(db)).seedIfNeeded();
+      final siteId = await DriftLocationRepository(db).insertLocation(
+        domain.LocationProfile(
+          id: 0,
+          name: 'Ljubljana',
+          latitude: 46.05,
+          longitude: 14.51,
+          timeZoneId: 'Europe/Ljubljana',
+        ),
+      );
+      SharedPreferences.setMockInitialValues({'activeLocationId': siteId});
+      final clock = FixedClock(DateTime.utc(2026, 11, 10, 11));
+      vm = PlannerHarness(
+        DriftTargetRepository(db),
+        DriftEquipmentRepository(db),
+        _NoForecast(),
+        DriftLocationRepository(db),
+        locationService: FakeLocationService(),
+        reverseGeocoder: FakeReverseGeocoder(),
+        deviceTimeZone: FakeDeviceTimeZone(),
+        clock: clock,
+        sessionRepository: DriftSessionRepository(db, clock: clock),
+      );
+      await vm.ready;
+      await vm.choosePlan();
+      await vm.plan.setEveningDate(vm.plan.tonightKey.addDays(3));
+      await vm.plan.idle;
+    });
+    addTearDown(() => tester.runAsync(db.close));
+    AppRouter.router.go(AppRouter.session());
+    await tester.pumpWidget(
+      MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
+    );
+    await _settle(tester);
+    final altitude = vm.conditions.currentAltitude!;
+    final degrees = '−${altitude.abs().toStringAsFixed(1)}°';
+    final summary = find.byKey(const Key('planner.target'));
+    expect(
+      find.descendant(of: summary, matching: find.text('Altitude now')),
+      findsNothing,
+    );
+    final detail = find.byKey(const Key('section.planner.currentSky'));
+    expect(detail, findsOneWidget);
+    expect(
+      find.descendant(
+        of: detail,
+        matching: find.text("Current sky (not the plan's night)"),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: detail,
+        matching: find.text('Altitude now: $degrees'),
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('S11H-03: the zone picker marks the current zone with a check, '
       'not colour alone', (tester) async {
     await tester.pumpWidget(

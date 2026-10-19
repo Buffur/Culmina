@@ -27,13 +27,16 @@ class DisplaySettings {
   int get hashCode => Object.hash(appearance, units);
 }
 
-/// Persistence for [DisplaySettings]: one stored value per setting, so a
-/// write never leaves a mix of two configurations. Throws [StorageFailure]
-/// when the store cannot be read or written; an unknown stored value reads
-/// as its default.
+/// Persistence for [DisplaySettings]: one stored value per setting. Throws
+/// [StorageFailure] when the store cannot be read or written; an unknown
+/// stored value reads as its default.
 abstract class DisplaySettingsRepository {
   Future<DisplaySettings> load();
 
   /// Stores [settings] whole (each changed value is one write).
   Future<void> save(DisplaySettings settings);
+
+  /// Whether the last [save] stopped part way (F21 A5): the stored values
+  /// may then mix two configurations, so they are shown as unsaved.
+  Future<bool> lastSaveIncomplete();
 }

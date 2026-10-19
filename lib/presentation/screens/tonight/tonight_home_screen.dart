@@ -226,6 +226,12 @@ class _PlanCard extends StatelessWidget {
         (fit.state == FitState.fits ||
             fit.state == FitState.tight ||
             fit.state == FitState.doesNotFit);
+    // F17 A5: the status describes the plan's night in its words.
+    String words(String text) => PlanNightPhrase.apply(
+      text,
+      planVm.eveningDate ?? planVm.tonightKey,
+      planVm.tonightKey,
+    );
 
     return Card(
       key: const Key('tonight.plan'),
@@ -298,7 +304,7 @@ class _PlanCard extends StatelessWidget {
                       ? Duration(milliseconds: fit.availableMs)
                       : null,
                   // TD-075: a missing input's own reason, else the fit's.
-                  reason: missing?.reason ?? fit.reason,
+                  reason: words(missing?.reason ?? fit.reason),
                   action: missing?.headline == PlanStatus.needsRig
                       ? OutlinedButton(
                           key: const Key('tonight.chooseRig'),

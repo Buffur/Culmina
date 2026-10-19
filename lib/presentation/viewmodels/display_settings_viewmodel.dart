@@ -34,10 +34,12 @@ class DisplaySettingsViewModel extends ChangeNotifier {
   bool get saving => !_failed && _shown != _stored;
 
   /// Restores the stored choices; an unreadable store keeps the defaults
-  /// (logged), as field mode does.
+  /// (logged), as field mode does. After a save that stopped part way the
+  /// stored values are shown as unsaved, with Retry (F21 A5).
   Future<void> load() async {
     try {
       _shown = _stored = await _repository.load();
+      _failed = await _repository.lastSaveIncomplete();
     } catch (e) {
       AppLog.warning('display', 'Display settings unreadable', error: e);
     }

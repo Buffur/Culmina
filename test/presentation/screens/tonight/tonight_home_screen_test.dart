@@ -585,9 +585,41 @@ void main() {
         ),
         findsOneWidget,
       );
+      // The plan card's status (fit or missing input) names that night too.
+      final card = find.descendant(
+        of: find.byKey(const Key('tonight.plan')),
+        matching: find.byType(Text),
+      );
+      final words = [
+        for (final t in tester.widgetList<Text>(card))
+          t.data ?? t.textSpan?.toPlainText() ?? '',
+      ].join(' | ');
+      expect(words.toLowerCase(), isNot(contains('tonight')), reason: words);
       await tester.tap(find.byKey(const Key('tonight.candidates')));
       await settle(tester);
       expect(find.text('Candidates for $named'), findsOneWidget);
+    });
+
+    testWidgets('a missing target on another plan night names that night', (
+      tester,
+    ) async {
+      await start(tester);
+      await tester.runAsync(() async {
+        await vm.lifecycle.newSession();
+        await vm.plan.idle;
+        await vm.plan.setEveningDate(vm.plan.tonightKey.addDays(2));
+      });
+      await settle(tester);
+      final named = NightTimeFormatter.eveningDate(
+        vm.plan.tonightKey.addDays(2),
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('tonight.status')),
+          matching: find.text('Choose a target to see the windows on $named.'),
+        ),
+        findsOneWidget,
+      );
     });
   });
 
