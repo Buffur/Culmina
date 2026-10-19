@@ -13,6 +13,7 @@ import '../../../domain/services/session_reconciliation.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
 import '../../shared/confirmation_patterns.dart';
+import '../../shared/deleted_plan_fallback.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../shared/opportunity_text.dart';
@@ -44,6 +45,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
   ResultOutcome? _outcome;
   NotDoneReason? _reason;
   bool _filled = false;
+  bool _fallback = false;
 
   /// F21: the temperature is typed in the chosen unit and stored in °C; an
   /// unchanged field keeps the stored value exactly.
@@ -178,6 +180,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
   Widget build(BuildContext context) {
     final vm = context.watch<ResultsViewModel?>();
     final session = vm?.session;
+    // F22 A1: an entry deleted meanwhile (a restored route may name one).
+    if (vm?.missingId == widget.sessionId && !_fallback) {
+      _fallback = true;
+      showDeletedPlanFallback(context);
+    }
     if (vm == null || session == null || session.id != widget.sessionId) {
       return Scaffold(
         appBar: AppBar(title: const Text('How did it go?')),

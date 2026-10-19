@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -95,6 +97,13 @@ class AppRouter {
   static final router = GoRouter(
     navigatorKey: rootNavigatorKey,
     initialLocation: tonight,
+    // F22 A1 (TD-094): after the system kills the app in the background,
+    // the open route comes back (Flutter state restoration of the router's
+    // location; the tabs' own stacks are not restored separately). An
+    // `extra` cannot be restored ([RestoredArgsCodec]); a route that needs
+    // one goes back to its list instead of opening a different form (A2).
+    restorationScopeId: 'router',
+    extraCodec: const RestoredArgsCodec(),
     redirect: (context, state) =>
         state.uri.path == '/' || state.uri.path.isEmpty ? tonight : null,
     routes: [
@@ -214,26 +223,35 @@ class AppRouter {
       GoRoute(
         path: siteEdit,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => SiteEditorScreen(
-          args: state.extra as SiteEditorArgs? ?? const SiteEditorArgs(),
-        ),
+        builder: (context, state) => switch (state.extra) {
+          RestoredArgsLost() => const RestoredArgsLostRedirect(librarySites),
+          final extra => SiteEditorScreen(
+            args: extra as SiteEditorArgs? ?? const SiteEditorArgs(),
+          ),
+        },
       ),
       // The map as a coordinate picker for the site editor (TASK 7.3).
       GoRoute(
         path: sitePick,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => LocationPickerScreen(
-          pickOnly: true,
-          initial: state.extra as LatLng?,
-        ),
+        builder: (context, state) => switch (state.extra) {
+          RestoredArgsLost() => const RestoredArgsLostRedirect(librarySites),
+          final extra => LocationPickerScreen(
+            pickOnly: true,
+            initial: extra as LatLng?,
+          ),
+        },
       ),
       if (FeatureScope.metadataImport)
         GoRoute(
           path: metadata,
           parentNavigatorKey: rootNavigatorKey,
-          builder: (context, state) => MetadataImportScreen(
-            args: state.extra as NewRigArgs? ?? const NewRigArgs(),
-          ),
+          builder: (context, state) => switch (state.extra) {
+            RestoredArgsLost() => const RestoredArgsLostRedirect(libraryRigs),
+            final extra => MetadataImportScreen(
+              args: extra as NewRigArgs? ?? const NewRigArgs(),
+            ),
+          },
         ),
       GoRoute(
         path: planSettings,
@@ -263,4 +281,69 @@ class AppRouter {
       ),
     ],
   );
+}
+
+/// The router's `extra` codec for state restoration (F22 A2). The app's
+/// extras (a site to edit, a map position, a rig class) are objects that
+/// are not restored: any one is written as a marker and read back as
+/// [RestoredArgsLost], so a restored route never opens with defaults that
+/// would add or activate a different site or rig.
+class RestoredArgsCodec extends Codec<Object?, Object?> {
+  const RestoredArgsCodec();
+
+  static const _lost = 'restoredArgsLost';
+
+  @override
+  Converter<Object?, Object?> get encoder => const _Encode();
+
+  @override
+  Converter<Object?, Object?> get decoder => const _Decode();
+}
+
+/// An `extra` that could not be restored.
+class RestoredArgsLost {
+  const RestoredArgsLost();
+}
+
+/// A restored route whose arguments were lost (F22 A2): it goes to
+/// [location], its list, where nothing is chosen for the user. (A restored
+/// route stack is not run through redirects, so the route's builder does
+/// it.)
+class RestoredArgsLostRedirect extends StatefulWidget {
+  const RestoredArgsLostRedirect(this.location, {super.key});
+
+  final String location;
+
+  @override
+  State<RestoredArgsLostRedirect> createState() =>
+      _RestoredArgsLostRedirectState();
+}
+
+class _RestoredArgsLostRedirectState extends State<RestoredArgsLostRedirect> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) GoRouter.of(context).go(widget.location);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
+class _Encode extends Converter<Object?, Object?> {
+  const _Encode();
+
+  @override
+  Object? convert(Object? input) =>
+      input == null ? null : RestoredArgsCodec._lost;
+}
+
+class _Decode extends Converter<Object?, Object?> {
+  const _Decode();
+
+  @override
+  Object? convert(Object? input) =>
+      input == RestoredArgsCodec._lost ? const RestoredArgsLost() : null;
 }

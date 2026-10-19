@@ -242,6 +242,8 @@ class AstroPlanApp extends StatelessWidget {
         Appearance.system || null => ThemeMode.system,
       },
       routerConfig: AppRouter.router,
+      // F22 A1 (TD-094): the open route survives a background process death.
+      restorationScopeId: 'app',
       // Field mode: every pixel below the app root, dialogs and snackbars
       // included, goes through the red filter (owner decision, TASK 12.4).
       builder: (context, child) {

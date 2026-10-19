@@ -50,6 +50,11 @@ class ResultsViewModel extends ChangeNotifier {
 
   Session? get session => _session;
 
+  /// F22 A1: the entry last asked for by [load] does not exist (deleted
+  /// meanwhile; a route restored after a process death may name one).
+  int? get missingId => _missingId;
+  int? _missingId;
+
   /// The saved plan under review: the execution-start snapshot of a run,
   /// else the plan snapshot; null when none can be read (SI-008).
   SessionSnapshot? get review =>
@@ -188,6 +193,7 @@ class ResultsViewModel extends ChangeNotifier {
       s = await _sessions.get(id);
     }
     _session = s;
+    _missingId = s == null ? id : null;
     _state = s == null ? null : await _sessions.execution(id);
     notifyListeners();
   }
