@@ -1,5 +1,5 @@
 // S6.3 (U1, W1, V3, UX-12; S4-DEF-04 = R; supersedes S1.6's guard): New
-// plan, Copy to another night, Tonight's New and Open ask Save · Discard ·
+// plan, Copy to another night and Open (Tonight's New left with F17 A2) ask Save · Discard ·
 // Cancel before leaving a plan with unsaved changes, and each answer does
 // what it says; an untouched never-saved draft is replaced without asking and
 // deleted. Through the real app and database. The first cases are S1.6's,
@@ -250,25 +250,19 @@ void main() {
     expect(find.text('Choose a night'), findsOneWidget);
   });
 
-  testWidgets("Tonight's New session asks too", (tester) async {
+  // F17 A2 (S16.2): Home has no New plan action any more; the planner's
+  // guarded New plan (the "New plan" caller below) is the one way, and
+  // every answer is tested there.
+  testWidgets("Tonight has no New plan; the planner's menu has it", (
+    tester,
+  ) async {
     await start(tester, AppRouter.tonight);
-    await edit(tester);
-    final before = vm.activeSessionId;
-    final button = find.byKey(const Key('tonight.newSession'));
-    await tester.ensureVisible(button);
-    await tester.tap(button);
+    expect(find.byKey(const Key('tonight.newSession')), findsNothing);
+    AppRouter.router.go(AppRouter.session());
     await settle(tester);
-    await tester.tap(_cancel);
+    await tester.tap(find.byKey(const Key('planner.menu')));
     await settle(tester);
-    expect(vm.activeSessionId, before);
-    expect(find.text('Plan'), findsNothing);
-
-    await tester.tap(button);
-    await settle(tester);
-    await tester.tap(_discard);
-    await settle(tester);
-    expect(vm.activeSessionId, isNot(before));
-    expect(find.text('Plan'), findsOneWidget);
+    expect(find.byKey(const Key('planner.newPlan')), findsOneWidget);
   });
 
   testWidgets('opening another session asks; opening the current one does '
@@ -308,7 +302,8 @@ void main() {
   // S6.3: every answer at every caller. Before each case the planner holds
   // a plan with unsaved changes (never saved, or saved then changed), and
   // another saved plan exists for Open.
-  const callers = ['New plan', 'Copy', "Tonight's New", 'Open'];
+  // "Tonight's New" left with F17 A2 (Home's New plan removed).
+  const callers = ['New plan', 'Copy', 'Open'];
   const answers = [
     ('Save', false),
     ('Discard', false),
@@ -332,12 +327,6 @@ void main() {
         await planAction(tester, 'planner.newPlan');
       case 'Copy':
         await planAction(tester, 'planner.copy');
-      case "Tonight's New":
-        AppRouter.router.go(AppRouter.tonight);
-        await settle(tester);
-        final button = find.byKey(const Key('tonight.newSession'));
-        await tester.ensureVisible(button);
-        await tester.tap(button);
       case 'Open':
         AppRouter.router.go(AppRouter.sessionDetail(other));
         await settle(tester);

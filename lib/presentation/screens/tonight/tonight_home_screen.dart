@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +17,8 @@ import '../../shared/field_mode_button.dart';
 import '../../shared/location_feedback.dart';
 import '../../shared/night_text.dart';
 import '../../shared/night_time_formatter.dart';
+import '../../shared/plan_night_phrase.dart';
+import '../../../domain/models/night_weather_summary.dart';
 import '../../shared/plan_state.dart';
 import '../../shared/startup_mark.dart';
 import '../../shared/status_block.dart';
@@ -27,10 +27,8 @@ import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/night_conditions_viewmodel.dart';
 import '../../widgets/plan_status.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
-import '../../viewmodels/plan_lifecycle_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/startup_viewmodel.dart';
-import '../../shared/unsaved_plan_prompt.dart';
 import '../../shared/failure_feedback.dart';
 
 /// The Tonight tab's root (ADR-015, TASK 12.5; plan first since S6.13,
@@ -75,12 +73,14 @@ class TonightHomeScreen extends StatelessWidget {
           AppSpacing.md,
           AppSpacing.md,
         ),
+        // F17 (S16.2): the night's facts lead; Your plan follows, then the
+        // secondary candidate action.
         children: const [
           _Title(),
           _Context(),
+          _NightCard(),
           _ResultDue(),
           _PlanCard(),
-          _NightCard(),
           SizedBox(height: 8),
           _QuickActions(),
         ],
@@ -91,31 +91,41 @@ class TonightHomeScreen extends StatelessWidget {
     // header, in the scale's headline role, as on the detail screens
     // (S5.7): it wraps at large text, which an app bar's title cannot. The
     // app bar keeps the actions.
-    return Scaffold(
-      appBar: AppBar(actions: const [FieldModeButton()]),
-      body: body,
-    );
+    // F17 A1: the title and the field-mode toggle share one compact
+    // header that wraps at large text (in [_Title]).
+    return Scaffold(body: SafeArea(child: body));
   }
 }
 
-/// "Tonight", the page's title (S6.16): a semantic header.
+/// The page's title (S6.16) and the field-mode toggle in one wrapping
+/// header (F17 A1). AM03-T = B: "Tonight" for the current night, else the
+/// plan's night ("Night of Fri, Dec 18"); the tab stays "Tonight".
 class _Title extends StatelessWidget {
   const _Title();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final plan = context.watch<SessionPlanViewModel>();
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Semantics(
-        header: true,
-        child: Text(
-          'Tonight',
-          key: const Key('tonight.title'),
-          style: theme.textTheme.headlineSmall?.copyWith(
-            color: AppPalette.of(context).textPrimary,
+      padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: AppSpacing.sm),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: AppSpacing.sm,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
+              PlanNightPhrase.title(plan.eveningDate, plan.tonightKey),
+              key: const Key('tonight.title'),
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: AppPalette.of(context).textPrimary,
+              ),
+            ),
           ),
-        ),
+          const FieldModeButton(),
+        ],
       ),
     );
   }
@@ -315,7 +325,7 @@ class _PlanCard extends StatelessWidget {
             _Row(
               key: const Key('tonight.planCandidates'),
               icon: Icons.format_list_numbered,
-              label: _candidatesLabel,
+              label: _candidatesLabel(planVm),
               lines: const [_candidatesLine],
               onTap: () => context.push(AppRouter.candidates),
             ),
@@ -339,9 +349,14 @@ class _PlanCard extends StatelessWidget {
   }
 }
 
-/// "What can I image tonight?" and its line (TD-080): the candidates for
-/// this site and night, in RD-10's order.
-const _candidatesLabel = 'What can I image tonight?';
+/// "What can I image tonight?" (or "… on Fri, Dec 18?", F17 A5) and its
+/// line (TD-080): the candidates for this site and the plan's night, in
+/// RD-10's order.
+String _candidatesLabel(SessionPlanViewModel plan) =>
+    PlanNightPhrase.candidatesAction(
+      plan.eveningDate ?? plan.tonightKey,
+      plan.tonightKey,
+    );
 const _candidatesLine = 'Candidates for this site and night, by usable time';
 
 /// Your plan offers the two ways to a target (no target yet, and a night to
@@ -403,6 +418,11 @@ class _NightCard extends StatelessWidget {
     void openNight() => context.push(AppRouter.nightMoon);
     final moon = conditions.moonConditions;
 
+    final plan = context.watch<SessionPlanViewModel>();
+    final phrase = PlanNightPhrase.of(
+      plan.eveningDate ?? plan.tonightKey,
+      plan.tonightKey,
+    );
     final rows = <Widget>[];
     if (timeline != null) {
       String at(DateTime utc) => NightTimeFormatter.instant(
@@ -411,34 +431,41 @@ class _NightCard extends StatelessWidget {
         windowStartUtc: timeline.night.startUtc,
         zoneId: zoneId,
       );
+      final dark = timeline.darkAtLimit;
       rows.add(
         _Row(
           key: const Key('tonight.night'),
           icon: Icons.nights_stay_outlined,
           label: 'Night',
           lines: [
-            _span('Sunset to sunrise', timeline.sunriseSunset, at),
-            // TD-054 (S6.13): the dark span at the user's limit (S6.5).
-            if (timeline.darkAtLimit case final dark?) DarkText.span(dark, at),
+            // F17 A1/A5: the dark interval at the user's limit (TD-054),
+            // in the plan-night phrase when there is none.
+            if (dark case final d?)
+              d is SunNeverBelow
+                  ? 'Dark (Sun below ${QuantityText.degrees(d.thresholdDeg)}): '
+                        'none $phrase'
+                  : DarkText.span(d, at),
             'Times in ${NightTimeFormatter.zoneCaption(timeline.night.startUtc, zoneId: zoneId)}',
           ],
           onTap: openNight,
         ),
       );
       if (moon != null) {
-        final during = conditions.moonDuringDark;
+        final free = conditions.moonFree;
         rows.add(
           _Row(
             key: const Key('tonight.moon'),
             icon: Icons.nightlight_round,
             label: 'Moon',
-            // UX-17 (S6.13): the Moon during the dark span, the useful
-            // fact; its rise and set times are on Night & Moon.
+            // F17 A1: the phase and the moon-free dark time (ADR-022 N4,
+            // N5); rise and set are on Night & Moon.
             lines: [
-              during != null
-                  ? MoonText.duringDark(during)
-                  : '${QuantityText.percent(moon.illuminationAtMidnight * 100)} '
-                        'lit at midnight; no dark time tonight',
+              [
+                if (moon.phaseName case final p?) MoonText.phaseName(p),
+                '${QuantityText.percent(moon.illuminationAtMidnight * 100)} '
+                    'lit at midnight',
+              ].join(', '),
+              if (free != null) MoonText.moonFree(free, at),
             ],
             onTap: openNight,
           ),
@@ -450,7 +477,7 @@ class _NightCard extends StatelessWidget {
         key: const Key('tonight.weather'),
         icon: Icons.cloud_outlined,
         label: 'Weather',
-        lines: _weatherLines(conditions),
+        lines: _weatherLines(conditions, phrase),
         onTap: () => context.push(AppRouter.weather),
       ),
     );
@@ -461,82 +488,46 @@ class _NightCard extends StatelessWidget {
     );
   }
 
-  /// "Sunset to sunrise: 18:02 – 06:41", or what the Sun does instead.
-  static String _span(
-    String label,
-    SunThresholdResult r,
-    String Function(DateTime) at,
-  ) => switch (r) {
-    SunCrossing(:final duskUtc, :final dawnUtc) =>
-      '$label: ${duskUtc == null ? 'from the start' : at(duskUtc)} – '
-          '${dawnUtc == null ? 'the end' : at(dawnUtc)}',
-    SunNeverBelow() => '$label: not tonight',
-    SunAlwaysBelow() => '$label: all night',
+  /// The forecast over the dark span (ADR-022 N6): its cloud range, what
+  /// of the span it covers, and its age; no dark time, or why there is no
+  /// forecast. Unknown is never shown as 0 (SI-008).
+  static List<String> _weatherLines(
+    NightConditionsViewModel c,
+    String phrase,
+  ) => switch (c.nightWeather) {
+    NightWeatherIdle() || NightWeatherLoading() => [WeatherText.loading],
+    NightWeatherOutOfRange() => [WeatherText.outOfRange],
+    NightWeatherUnavailable(:final failure) => [
+      'No forecast. ${WeatherText.failure(failure)}',
+    ],
+    final NightWeatherAvailable a => [
+      switch (c.nightWeatherSummary) {
+        final s? when s.span == NightWeatherSpan.noDark =>
+          'No dark time $phrase: no hours to forecast',
+        final s => 'Cloud in the dark ${WeatherText.range(s?.cloudCover, '%')}',
+      },
+      if (c.nightWeatherSummary case final s?) ?WeatherText.coverage(s),
+      WeatherText.freshness(a),
+    ],
   };
-
-  /// The forecast's cloud range and age, or why there is none — unknown
-  /// is never shown as 0 (SI-008).
-  static List<String> _weatherLines(NightConditionsViewModel c) =>
-      switch (c.nightWeather) {
-        NightWeatherIdle() || NightWeatherLoading() => [WeatherText.loading],
-        NightWeatherOutOfRange() => [WeatherText.outOfRange],
-        NightWeatherUnavailable(:final failure) => [
-          'No forecast. ${WeatherText.failure(failure)}',
-        ],
-        final NightWeatherAvailable a => [
-          'Cloud ${WeatherText.range(c.nightWeatherSummary?.cloudCover, '%')}',
-          WeatherText.freshness(a),
-        ],
-      };
 }
 
+/// The secondary action (F17 A1/A2): the target candidates, when Your plan
+/// does not already offer them. Home has no New plan action; the planner
+/// keeps its own guarded New plan menu.
 class _QuickActions extends StatelessWidget {
   const _QuickActions();
 
   @override
   Widget build(BuildContext context) {
-    final inPlanCard = _offersTargets(context.watch<SessionPlanViewModel>());
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (!inPlanCard) ...[
-          OutlinedButton.icon(
-            key: const Key('tonight.candidates'),
-            onPressed: () => context.push(AppRouter.candidates),
-            icon: const Icon(Icons.format_list_numbered),
-            label: const Text(_candidatesLabel),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size.fromHeight(48),
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
-        OutlinedButton.icon(
-          key: const Key('tonight.newSession'),
-          onPressed: () async {
-            // S6.3 (U1): Save · Discard · Cancel first, and report a
-            // failed write (trap 18).
-            final leaving = await askBeforeLeavingPlan(context);
-            if (leaving == null || !context.mounted) return;
-            final started = await runWithFeedback(
-              context,
-              'start a new plan',
-              () => context.read<PlanLifecycleViewModel>().newSession(
-                discard: leaving == LeavingPlan.discard,
-              ),
-            );
-            if (started && context.mounted) {
-              showDone(context, 'New plan started');
-              unawaited(context.push(AppRouter.session()));
-            }
-          },
-          icon: const Icon(Icons.add),
-          label: const Text(AppWords.newPlan),
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size.fromHeight(48),
-          ),
-        ),
-      ],
+    final plan = context.watch<SessionPlanViewModel>();
+    if (_offersTargets(plan)) return const SizedBox.shrink();
+    return OutlinedButton.icon(
+      key: const Key('tonight.candidates'),
+      onPressed: () => context.push(AppRouter.candidates),
+      icon: const Icon(Icons.format_list_numbered),
+      label: Text(_candidatesLabel(plan)),
+      style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
     );
   }
 }

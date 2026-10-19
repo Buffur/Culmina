@@ -647,6 +647,11 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** Phases 1, 16 (ADR-001: Android first).
 
 ## F-51 — Tonight's candidates (all targets for one night)
+- **F17 (2026-10-19; S16.2, AM03-T = B):** Home leads with the night.
+  - **Header.** The title and field mode share one wrapping header; the title is "Tonight" for the current night, else "Night of …".
+  - **Order.** Site/night context, then the night card (dark interval, phase and moon-free time, cloud over the dark span with coverage and age), then Your plan, then the candidates as the secondary action.
+  - **Plan night.** The candidate action and this screen's title name the plan's night ("What can I image on Fri, Dec 18?", "Candidates for Fri, Dec 18") unless it is tonight (`PlanNightPhrase`).
+  - **Removed.** Home's New plan action; the planner's menu keeps it.
 - **Status:** Implemented (TASK 10.4, commit `6bb596f`)
 - **Current implementation:** `CandidateEvaluator` evaluates every target in the database for the chosen night with the same rules and inputs as Home's opportunity card (ADR-013: darkness, minimum altitude, optional Moon/cloud gates, forecast), sharing the Sun and Moon samples; `TonightScreen` (`/tonight`, Home app bar) sorts by usable time (default), window start, max altitude, Moon separation, frame fill or name, filters by type / own targets, hides targets without a window unless toggled (each then shows its reason), and a tap selects the target. Runs on a background isolate. No score or recommendation.
 - **Relevant files:** `lib/domain/services/candidate_evaluator.dart`, `lib/presentation/screens/tonight/tonight_screen.dart`, `planner_viewmodel.dart` (`tonightCandidates`).

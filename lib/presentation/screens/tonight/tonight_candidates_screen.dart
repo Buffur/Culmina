@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/plan_night_phrase.dart';
+
 import '../../../domain/models/session_night.dart';
 import '../../../domain/services/candidate_evaluator.dart';
 import '../../shared/capability_text.dart';
@@ -77,7 +79,13 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     if (night != null && night != _rowsNight) _load();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tonight's candidates"),
+        // F17 A5: the list is for the plan's night.
+        title: Text(
+          PlanNightPhrase.candidatesTitle(
+            planVm.eveningDate ?? planVm.tonightKey,
+            planVm.tonightKey,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

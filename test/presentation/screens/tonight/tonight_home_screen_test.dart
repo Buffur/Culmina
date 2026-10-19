@@ -141,7 +141,8 @@ void main() {
     await start(tester);
     expect(find.byKey(const Key('tonight.noSite')), findsNothing);
     expect(find.byKey(const Key('tonight.night')), findsOneWidget);
-    expect(find.textContaining('Sunset to sunrise:'), findsOneWidget);
+    // F17 A1: the dark interval, not sunset to sunrise (on Night & Moon).
+    expect(find.textContaining('Sunset to sunrise:'), findsNothing);
     expect(find.textContaining('Dark (Sun below −18°):'), findsOneWidget);
     expect(find.byKey(const Key('tonight.moon')), findsOneWidget);
     // S1.13 (SCI-09): the night's value, and when it applies.
@@ -168,12 +169,16 @@ void main() {
   // S6.13: the plan card's status says what is missing, in the planner's
   // words, and offers the picker (before: its own "No rig chosen" line).
   testWidgets('no rig: says so and offers the rig picker', (tester) async {
+    tester.view.physicalSize = const Size(800, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
     await start(tester, rig: false);
     final status = find.byKey(const Key('tonight.status'));
     expect(
       find.descendant(of: status, matching: find.text(PlanStatus.needsRig)),
       findsOneWidget,
     );
+    await tester.ensureVisible(find.byKey(const Key('tonight.chooseRig')));
     await tester.tap(find.byKey(const Key('tonight.chooseRig')));
     await settle(tester);
     expect(find.text('Choose a rig'), findsWidgets);
@@ -244,21 +249,23 @@ void main() {
 
   // S6.13 (P6.6; ADR-019 §5): plan first.
   group('plan first (S6.13)', () {
-    testWidgets('the order: site and night, the plan with its answer, the '
-        'night rows, then the secondary actions', (tester) async {
+    // F17 (S16.2): the night's facts lead, Your plan follows, then the
+    // secondary candidate action; Home has no New plan.
+    testWidgets('the order: site and night, the night rows, the plan with its '
+        'answer, then the secondary action', (tester) async {
       tester.view.physicalSize = const Size(800, 3000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
       await start(tester, lightFrames: 10);
       double y(String key) => tester.getTopLeft(find.byKey(Key(key))).dy;
       final order = [
+        'tonight.title',
         'tonight.context',
-        'tonight.plan',
         'tonight.night',
         'tonight.moon',
         'tonight.weather',
+        'tonight.plan',
         'tonight.candidates',
-        'tonight.newSession',
       ];
       for (var i = 1; i < order.length; i++) {
         expect(y(order[i]), greaterThan(y(order[i - 1])), reason: order[i]);
@@ -273,6 +280,9 @@ void main() {
 
     testWidgets('without a target: Choose a target and What can I image '
         'tonight?', (tester) async {
+      tester.view.physicalSize = const Size(800, 3000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
       await start(tester, firstRunDone: false);
       final plan = find.byKey(const Key('tonight.plan'));
       expect(
@@ -281,6 +291,7 @@ void main() {
       );
       expect(find.byKey(const Key('tonight.chooseTarget')), findsOneWidget);
       expect(find.byKey(const Key('tonight.planCandidates')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const Key('tonight.chooseTarget')));
       await tester.tap(find.byKey(const Key('tonight.chooseTarget')));
       await settle(tester);
       expect(find.text('Choose a target'), findsWidgets);
@@ -354,6 +365,9 @@ void main() {
 
     testWidgets('TD-080: without a target, each way to a target says what it '
         'offers, and What can I image tonight? is shown once', (tester) async {
+      tester.view.physicalSize = const Size(800, 3000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
       await start(tester, firstRunDone: false);
       final choose = find.byKey(const Key('tonight.chooseTarget'));
       final candidates = find.byKey(const Key('tonight.planCandidates'));
@@ -375,6 +389,7 @@ void main() {
       );
       expect(find.text('What can I image tonight?'), findsOneWidget);
       expect(find.byKey(const Key('tonight.candidates')), findsNothing);
+      await tester.ensureVisible(candidates);
       await tester.tap(candidates);
       await settle(tester);
       expect(find.text("Tonight's candidates"), findsWidgets);
@@ -488,14 +503,36 @@ void main() {
       });
     }
 
-    testWidgets('the Moon row says what the Moon does while it is dark '
-        '(UX-17)', (tester) async {
+    // F17 A1 (ADR-022 N4/N5): the phase and the moon-free dark time.
+    testWidgets('the Moon row gives the phase and the moon-free dark time', (
+      tester,
+    ) async {
       await start(tester, lightFrames: 10);
-      final during = vm.conditions.moonDuringDark!;
+      final moon = vm.conditions.moonConditions!;
+      final free = vm.conditions.moonFree!;
+      final row = find.byKey(const Key('tonight.moon'));
       expect(
         find.descendant(
-          of: find.byKey(const Key('tonight.moon')),
-          matching: find.text(MoonText.duringDark(during)),
+          of: row,
+          matching: find.textContaining(MoonText.phaseName(moon.phaseName!)),
+        ),
+        findsOneWidget,
+      );
+      final ctx = tester.element(row);
+      expect(
+        find.descendant(
+          of: row,
+          matching: find.text(
+            MoonText.moonFree(
+              free,
+              (utc) => NightTimeFormatter.instant(
+                ctx,
+                utc,
+                windowStartUtc: moon.night.startUtc,
+                zoneId: vm.site.displayZoneId,
+              ),
+            ),
+          ),
         ),
         findsOneWidget,
       );
@@ -503,19 +540,54 @@ void main() {
       expect(find.textContaining('from noon'), findsNothing);
     });
 
-    testWidgets('New plan says what happened', (tester) async {
+    // F17 A2: Home has no New plan; the planner keeps its guarded menu.
+    testWidgets('Home has no New plan; Open planner resumes the same plan', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 3000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
       await start(tester, lightFrames: 10);
-      final button = find.byKey(const Key('tonight.newSession'));
-      await tester.ensureVisible(button);
-      await tester.tap(button);
+      expect(find.byKey(const Key('tonight.newSession')), findsNothing);
+      expect(find.text(AppWords.newPlan), findsNothing);
+      final id = vm.plan.activeSessionId;
+      await tester.tap(find.byKey(const Key('tonight.openPlanner')));
       await settle(tester);
-      // The chosen plan has unsaved changes: Discard them (S6.3).
-      await tester.tap(find.byKey(const Key('unsaved.discard')));
+      expect(vm.plan.activeSessionId, id, reason: 'the same plan');
+      expect(find.byKey(const Key('planner.menu')), findsOneWidget);
+    });
+
+    // F17 A5 (AM03-T = B): "tonight" only for the current night; another
+    // night of the plan is named, in the title, the night card and the
+    // candidate action and screen; the tab stays "Tonight".
+    testWidgets('another plan night is named; the tab stays Tonight', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(800, 3000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await start(tester, lightFrames: 10);
+      expect(find.text('Tonight'), findsWidgets);
+      expect(find.text('What can I image tonight?'), findsOneWidget);
+      final other = vm.plan.tonightKey.addDays(3);
+      await tester.runAsync(() => vm.plan.setEveningDate(other));
       await settle(tester);
-      expect(find.text('New plan started'), findsOneWidget);
+      final named = NightTimeFormatter.eveningDate(other);
+      expect(
+        tester.widget<Text>(find.byKey(const Key('tonight.title'))).data,
+        'Night of $named',
+      );
+      expect(find.text('What can I image on $named?'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.text('Tonight'),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('tonight.candidates')));
+      await settle(tester);
+      expect(find.text('Candidates for $named'), findsOneWidget);
     });
   });
 
