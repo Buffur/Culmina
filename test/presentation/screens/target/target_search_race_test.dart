@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:astroplan/domain/models/astro_target.dart';
 import 'package:astroplan/domain/repositories/target_repository.dart';
 import 'package:astroplan/presentation/screens/target/target_selection_screen.dart';
+import 'package:astroplan/presentation/shared/list_mode.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,10 @@ void main() {
   late _HeldSearches repo;
   late _Plan plan;
 
-  Future<void> start(WidgetTester tester) async {
+  Future<void> start(
+    WidgetTester tester, {
+    ListMode mode = ListMode.choose,
+  }) async {
     repo = _HeldSearches();
     plan = _Plan();
     final router = GoRouter(
@@ -82,7 +86,7 @@ void main() {
         ),
         GoRoute(
           path: '/select',
-          builder: (_, _) => const TargetSelectionScreen(),
+          builder: (_, _) => TargetSelectionScreen(mode: mode),
         ),
       ],
     );
@@ -193,5 +197,70 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(plan.chosen, _orion);
+  });
+
+  // F24 A6: the same rule in the Library's manage mode, where a tap opens
+  // the target's editor instead of choosing it.
+  testWidgets('manage mode (Library targets): a late older answer never '
+      'replaces the newer list; a tap edits the newest list\'s target', (
+    tester,
+  ) async {
+    await start(tester, mode: ListMode.manage);
+    expect(find.byIcon(Icons.chevron_right), findsNWidgets(2));
+    await type(tester, 'And');
+    await type(tester, 'Ori');
+    expect(find.byKey(const Key('targets.searching')), findsOneWidget);
+    repo.answer('Ori', [_orion]);
+    await tester.pump();
+    repo.answer('And', [_andromeda]); // late, older
+    await tester.pump();
+    expect(find.text('Orion Nebula (C2)'), findsOneWidget);
+    expect(find.text('Andromeda (C1)'), findsNothing);
+    await tester.tap(find.text('Orion Nebula (C2)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Catalog ID: C2'), findsOneWidget);
+    expect(plan.chosen, isNull, reason: 'managing never chooses');
+  });
+
+  testWidgets('manage mode: a late failure of an older query is ignored', (
+    tester,
+  ) async {
+    await start(tester, mode: ListMode.manage);
+    await type(tester, 'And');
+    await type(tester, 'Ori');
+    repo.answer('Ori', [_orion]);
+    await tester.pump();
+    repo.fail('And');
+    await tester.pump();
+    expect(find.byKey(const Key('loadFailure.message')), findsNothing);
+    expect(find.text('Orion Nebula (C2)'), findsOneWidget);
+  });
+
+  testWidgets('an empty newest answer stays empty when an older one with '
+      'results arrives late', (tester) async {
+    await start(tester);
+    await type(tester, 'And');
+    await type(tester, 'Andx');
+    repo.answer('Andx', const []);
+    await tester.pump();
+    expect(find.text('No results for "Andx".'), findsOneWidget);
+    repo.answer('And', [_andromeda]); // late, older, not empty
+    await tester.pump();
+    expect(find.text('No results for "Andx".'), findsOneWidget);
+    expect(find.text('Andromeda (C1)'), findsNothing);
+  });
+
+  testWidgets('an empty older answer arriving late never empties the newer '
+      'list', (tester) async {
+    await start(tester, mode: ListMode.manage);
+    await type(tester, 'Orx');
+    await type(tester, 'Ori');
+    repo.answer('Ori', [_orion]);
+    await tester.pump();
+    repo.answer('Orx', const []); // late, older, empty
+    await tester.pump();
+    expect(find.text('Orion Nebula (C2)'), findsOneWidget);
+    expect(find.text('No results for "Orx".'), findsNothing);
+    expect(find.textContaining('No results'), findsNothing);
   });
 }
