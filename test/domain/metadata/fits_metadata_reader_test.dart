@@ -321,4 +321,96 @@ void main() {
       );
     });
   });
+
+  // F10 (CHK-F10.A2; ADR-021 C10/C11): a layout the reader does not support
+  // (a 3-axis cube) stays explicit as storage evidence: no geometry, its
+  // compression unknown, never the pixel payload of its first plane.
+  group('an unsupported layout (3 axes) as storage evidence', () {
+    final cubeCards = <(String, Object)>[
+      ('SIMPLE', true),
+      ('BITPIX', 16),
+      ('NAXIS', 3),
+      ('NAXIS1', 100),
+      ('NAXIS2', 80),
+      ('NAXIS3', 3),
+      ('EXPTIME', 60.0),
+    ];
+    // One 2,880-byte header record, then 100 × 80 × 3 planes × 2 bytes.
+    const length = 2880 + 100 * 80 * 3 * 2;
+
+    Future<FileEvidence> cube() async {
+      final reading = await _read(
+        fitsFile(cubeCards, dataBytes: 100 * 80 * 3 * 2),
+      );
+      expect(reading, isA<MetadataRead>());
+      expect(reading.format, MetadataFormat.fits);
+      return StorageEstimate.evidenceOf('cube.fits', reading, length)!;
+    }
+
+    test('evidenceOf: the file and its length, no geometry, compression '
+        'unknown', () async {
+      final e = await cube();
+      expect(e.format, 'fits');
+      expect(e.read, isTrue);
+      expect(e.bytes, length);
+      expect(e.label, 'cube.fits');
+      expect((e.width, e.height), (null, null), reason: 'not one image');
+      expect(e.compression, FileCompression.unknown);
+      expect(e.binning, isNull);
+    });
+
+    test('never counted as a theoretical size', () async {
+      final e = await cube();
+      // A rig of the plane's size with no format and no measured size: the
+      // cube's evidence gives no theoretical payload (100 × 80 × 2 = 16,000
+      // bytes, or 17,280 in FITS records).
+      final rig = EquipmentProfile(
+        id: 1,
+        name: 'Astro',
+        cameraClass: CameraClass.astroMono,
+        sensorWidthMm: 3.76,
+        sensorHeightMm: 3.008,
+        pixelPitchUm: 37.6,
+        resolutionWidthPx: 100,
+        resolutionHeightPx: 80,
+        focalLengthMm: 400,
+        focalRatio: 5,
+        rawFileSizeEvidence: e,
+      );
+      final block = CaptureBlock(
+        frameType: FrameType.light,
+        exposureTimeSeconds: 60,
+        frameCount: 1,
+      );
+      expect(StorageEstimate.theoretical(block, rig), isNull);
+      final asRig = StorageEstimate.of(block, rig);
+      expect(asRig.basis, isNot(StorageBasis.theoretical));
+      expect(asRig.basis, StorageBasis.unknown);
+      expect(asRig.bytes, isNull);
+      // As the block's own file it is the measured length, as read.
+      final own = StorageEstimate.of(
+        CaptureBlock(
+          frameType: FrameType.light,
+          exposureTimeSeconds: 60,
+          frameCount: 1,
+          fileEvidence: e,
+        ),
+        EquipmentProfile(
+          id: 2,
+          name: 'Astro',
+          cameraClass: CameraClass.astroMono,
+          sensorWidthMm: 3.76,
+          sensorHeightMm: 3.008,
+          pixelPitchUm: 37.6,
+          resolutionWidthPx: 100,
+          resolutionHeightPx: 80,
+          focalLengthMm: 400,
+          focalRatio: 5,
+        ),
+      );
+      expect(own.basis, StorageBasis.blockFile);
+      expect(own.bytes, length.toDouble());
+      expect(own.bytes, isNot(anyOf(16000, 17280)));
+    });
+  });
 }
