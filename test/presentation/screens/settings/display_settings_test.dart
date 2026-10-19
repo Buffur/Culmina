@@ -171,6 +171,9 @@ void main() {
       find.textContaining("Couldn't save the display setting"),
       findsOneWidget,
     );
+    await tester.ensureVisible(find.byKey(const Key('settings.display.retry')));
+    await tester.pump();
+    await expectLater(tester, meetsGuideline(textContrastGuideline));
     display.fail = false;
     await tester.ensureVisible(find.byKey(const Key('settings.display.retry')));
     await tester.tap(find.byKey(const Key('settings.display.retry')));
@@ -193,6 +196,10 @@ void main() {
     );
     expect(find.byKey(const Key('settings.unsaved')), findsOneWidget);
     expect(planning.stored.darknessLimit, DarknessLimit.astronomical);
+    // Its text and its Retry are readable on the error colour.
+    await tester.ensureVisible(find.byKey(const Key('settings.retry')));
+    await tester.pump();
+    await expectLater(tester, meetsGuideline(textContrastGuideline));
     planning.fail = false;
     await tester.ensureVisible(find.byKey(const Key('settings.retry')));
     await tester.tap(find.byKey(const Key('settings.retry')));

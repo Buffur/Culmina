@@ -2,7 +2,13 @@
 // through the real app, router and database, at 412 × 915 with real fonts
 // (Roboto and the Material icons from the SDK) — light at 100 %, dark at
 // 200 % and field mode (through the app's red filter) at 100 %, plus the
-// block editor at 200 % with the keyboard open. Opt-in, outside the
+// block editor at 200 % with the keyboard open. Since the re-audit
+// (2026-10-19) also the error and feedback states those tasks added (the
+// unsaved Settings lines, the site editor's place-name offer, lookup and
+// not-found lines and its "Use position" message, the target search's
+// pending and failed states, the deleted-plan fallback, an empty AstroBin
+// export), About with its licence statement, the map picker, and the site
+// editor and result form with the keyboard open. Opt-in, outside the
 // quality gate like the gallery: set ASTROPLAN_U_RENDERS to an output
 // directory (docs/refinement/evidence/finalization/F25/renders) and run
 // this file alone. Host renders only: not device evidence and not the
@@ -13,33 +19,45 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
+import 'package:astroplan/data/repositories/shared_prefs_display_settings_repository.dart';
+import 'package:astroplan/data/repositories/shared_prefs_planning_preferences_repository.dart';
 import 'package:astroplan/data/services/catalog_seeder.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
+import 'package:astroplan/domain/models/astro_target.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
+import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/models/session_result.dart';
 import 'package:astroplan/domain/models/weather_snapshot.dart';
+import 'package:astroplan/domain/repositories/storage_failure.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/astrobin_acquisitions.dart';
+import 'package:astroplan/domain/services/location_service.dart';
+import 'package:astroplan/domain/services/reverse_geocoder.dart';
 import 'package:astroplan/domain/services/session_exporter.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
+import 'package:astroplan/presentation/shared/deleted_plan_fallback.dart';
+import 'package:astroplan/presentation/viewmodels/display_settings_viewmodel.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../support/fake_device_time_zone.dart';
 import '../../support/fake_location_service.dart';
 import '../../support/fake_reverse_geocoder.dart';
+import '../../support/in_memory_privacy_preferences.dart';
 import '../../support/planner_harness.dart';
 import '../../support/sdk_fonts.dart';
 
@@ -94,6 +112,41 @@ class _Forecast implements WeatherRepository {
         ],
       ),
     );
+  }
+}
+
+/// The target search, held or failed on demand (F24 A6 states).
+class _Targets extends DriftTargetRepository {
+  _Targets(super.db);
+  Completer<void>? hold;
+  bool fail = false;
+
+  @override
+  Future<List<AstroTarget>> searchTargets(String query) async {
+    if (hold case final h?) await h.future;
+    if (fail) throw const StorageFailure('search the targets');
+    return super.searchTargets(query);
+  }
+}
+
+/// Planning settings whose writes fail on demand (F21 A5).
+class _Planning extends SharedPrefsPlanningPreferencesRepository {
+  bool fail = false;
+
+  @override
+  Future<void> save(PlanningPreferences preferences) => fail
+      ? Future.error(const StorageFailure('save the planning preferences'))
+      : super.save(preferences);
+}
+
+/// The place-name choice, its writes failing on demand (F21 A6).
+class _Privacy extends InMemoryPrivacyPreferences {
+  bool fail = false;
+
+  @override
+  Future<void> savePlaceNameLookup(bool on) async {
+    if (fail) throw const StorageFailure('save the place-name setting');
+    placeNameLookup = on;
   }
 }
 
@@ -170,7 +223,31 @@ void main() {
 
       late AppDatabase db;
       late PlannerHarness vm;
+      late _Targets targets;
       late int resultId, planId;
+      late Future<void> Function() recordResult;
+      final planning = _Planning();
+      final privacy = _Privacy();
+      var displayFails = false;
+      final display = SharedPrefsDisplaySettingsRepository(
+        beforeWrite: (_) async {
+          if (displayFails) {
+            throw const StorageFailure('save the display settings');
+          }
+        },
+      );
+      Future<LocationResult> Function()? fix;
+      final location = FakeLocationService(
+        answer: () =>
+            fix?.call() ??
+            Future.value(
+              const LocationFound(
+                DeviceLocation(latitude: 46.0569, longitude: 14.5058),
+              ),
+            ),
+      );
+      Completer<ReverseGeocodeResult>? lookup;
+      final geocoder = FakeReverseGeocoder(answer: () => lookup!.future);
       final clock = FixedClock(DateTime.utc(2026, 11, 10, 18));
       await tester.runAsync(() async {
         db = AppDatabase(NativeDatabase.memory());
@@ -191,25 +268,31 @@ void main() {
           'firstRunDone': true,
         });
         final sessions = DriftSessionRepository(db, clock: clock);
+        targets = _Targets(db);
         vm = PlannerHarness(
-          DriftTargetRepository(db),
+          targets,
           DriftEquipmentRepository(db),
           _Forecast(clock),
           DriftLocationRepository(db),
-          locationService: FakeLocationService(),
-          reverseGeocoder: FakeReverseGeocoder(),
+          locationService: location,
+          reverseGeocoder: geocoder,
           deviceTimeZone: FakeDeviceTimeZone(),
           clock: clock,
           sessionRepository: sessions,
           csvExporter: _NoShare(),
+          preferencesRepository: planning,
+          displaySettings: display,
+          // The app's default: place names off until chosen.
+          privacyPreferences: privacy,
         );
         await vm.ready;
         await vm.choosePlan();
         await vm.plan.idle;
         final saved = await vm.analysis.saveSession();
         resultId = saved.id;
-        // A result recorded early (F19) for the Logbook and the entry.
-        await sessions.recordResult(
+        // A result recorded early (F19) for the Logbook and the entry,
+        // after the empty AstroBin export is shot.
+        recordResult = () => sessions.recordResult(
           resultId,
           PartlyDone({
             saved.blocks.first.id: saved.blocks.first.frameCount ~/ 2,
@@ -275,6 +358,15 @@ void main() {
         await _settle(tester);
       }
 
+      // F20: no entry has recorded frames yet.
+      AppRouter.router.go(AppRouter.sessions);
+      await _settle(tester);
+      await tap(find.byKey(const Key('logbook.menu')));
+      await tap(find.byKey(const Key('logbook.astrobin')));
+      await shot('astrobin_empty');
+      await close();
+      await tester.runAsync(recordResult);
+
       await at(AppRouter.tonight, 'home');
       await at(AppRouter.session(), 'planner');
       await at(AppRouter.candidates, 'candidates');
@@ -339,6 +431,145 @@ void main() {
         tester.view.resetViewInsets();
       }
       await tap(find.byKey(const Key('blockDialog.cancel')));
+
+      // F23: About, with the licence and the accepted permission.
+      await at(AppRouter.about, 'about');
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('about.playServices')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await shot('about_licence');
+
+      // F24/F25: the map picker (host: no tiles load, the controls and the
+      // attribution stay).
+      unawaited(
+        AppRouter.router.push(
+          AppRouter.sitePick,
+          extra: const LatLng(46.05, 14.51),
+        ),
+      );
+      await shot('map_picker');
+      AppRouter.router.pop();
+      await _settle(tester);
+
+      // F24 A6: the search while it runs, then failed.
+      AppRouter.router.go(AppRouter.selectTarget);
+      await _settle(tester);
+      targets.hold = Completer<void>();
+      await tester.enterText(find.byType(TextField).last, 'Orion');
+      await shot('target_searching');
+      targets.fail = true;
+      targets.hold!.complete();
+      targets.hold = null;
+      await shot('target_search_failed');
+      targets.fail = false;
+      AppRouter.router.go(AppRouter.tonight);
+      await _settle(tester);
+
+      // F23 A5/A6: a new site from the position: the place-name offer, the
+      // lookup, not found; then a fix found after the coordinates changed.
+      unawaited(
+        AppRouter.router.push(
+          AppRouter.siteEdit,
+          extra: const SiteEditorArgs(),
+        ),
+      );
+      await _settle(tester);
+      await tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
+      await shot('site_editor_offer');
+      lookup = Completer();
+      await tap(find.text('Turn on place names'));
+      await shot('site_editor_looking');
+      lookup.complete(const PlaceNameNotFound());
+      await shot('site_editor_not_found');
+      final later = Completer<LocationResult>();
+      fix = () => later.future;
+      await tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
+      final latitude = find.widgetWithText(TextFormField, 'Latitude (°)');
+      await tester.scrollUntilVisible(
+        latitude,
+        -200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.enterText(latitude, '46.1');
+      later.complete(
+        const LocationFound(
+          DeviceLocation(latitude: 46.0569, longitude: 14.5058),
+        ),
+      );
+      await shot('site_editor_position_found');
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold).last))
+          .clearSnackBars();
+      if (v == _Variant.dark200) {
+        // The latitude field still has the focus.
+        tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+        await shot('site_editor_inset300');
+        tester.view.resetViewInsets();
+      }
+      AppRouter.router.pop();
+      await _settle(tester);
+
+      if (v == _Variant.dark200) {
+        // The result form with the keyboard open.
+        AppRouter.router.go(AppRouter.results(planId));
+        await _settle(tester);
+        tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+        await shot('results_inset300');
+        tester.view.resetViewInsets();
+      }
+
+      // F21 A5/A6: Settings whose writes fail: each unsaved line with Retry.
+      planning.fail = true;
+      privacy.fail = true;
+      displayFails = true;
+      final scope = tester.element(find.byType(Scaffold).first);
+      // In the test's zone, like a tap: each fails and is shown unsaved.
+      for (final write in [
+        () => vm.settings.setMinAltitude(25),
+        () => vm.settings.setPlaceNameLookup(false),
+        () {
+          final d = scope.read<DisplaySettingsViewModel>();
+          return d.setUnits(d.units.copyWith(wind: WindUnit.mph));
+        },
+      ]) {
+        unawaited(write().then((_) {}, onError: (Object _) {}));
+      }
+      await _settle(tester);
+      AppRouter.router.go(AppRouter.settings);
+      await _settle(tester);
+      for (final (key, name) in [
+        ('settings.unsaved', 'settings_unsaved'),
+        ('settings.placeNames.unsaved', 'settings_place_names_unsaved'),
+        ('settings.display.unsaved', 'settings_display_unsaved'),
+      ]) {
+        // From the top each time.
+        await tester.fling(
+          find.byType(Scrollable).first,
+          const Offset(0, 20000),
+          5000,
+        );
+        await _settle(tester);
+        await tester.scrollUntilVisible(
+          find.byKey(Key(key)),
+          300,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await shot(name);
+      }
+
+      // F22 A1: a restored plan that was deleted meanwhile: Tonight, and
+      // why.
+      AppRouter.router.go(AppRouter.tonight);
+      await _settle(tester);
+      showDeletedPlanFallback(
+        tester.element(find.byKey(const Key('tonight.title'))),
+      );
+      // On a restore the call comes during a build; here a frame is asked
+      // for, and the message comes after it.
+      tester.binding.scheduleFrame();
+      await tester.pump();
+      await shot('deleted_plan_fallback');
     });
   }
 }

@@ -695,6 +695,10 @@ class _PlanningUnsaved extends StatelessWidget {
             ),
             TextButton(
               key: const Key('settings.retry'),
+              // On the error colour, in its own foreground (AA contrast).
+              style: TextButton.styleFrom(
+                foregroundColor: scheme.onErrorContainer,
+              ),
               onPressed: onRetry,
               child: const Text('Retry'),
             ),
