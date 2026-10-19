@@ -21,3 +21,10 @@ class TestClock extends Clock {
 /// so "tonight" is that night whatever the wall clock says. TD-096: a
 /// morning run once found the night already over.
 final testEvening = TestClock(DateTime.utc(2026, 11, 10, 18));
+
+/// The morning after [testEvening] (F24 A1): 06:00 UTC on 11 Nov 2026, 06:00
+/// at the default position (London) and 07:00 in Ljubljana, before sunrise
+/// at both and before the site's mean solar noon. By ADR-007 §5 (L4) the
+/// planner's night is still the one that began on the evening of 10 Nov:
+/// the default night changes at mean solar noon, not at midnight or dawn.
+final testMorning = TestClock(DateTime.utc(2026, 11, 11, 6));
