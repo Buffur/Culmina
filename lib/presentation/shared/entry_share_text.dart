@@ -101,7 +101,7 @@ abstract final class EntryShareText {
     final parts = [
       if (log.temperature case final t?)
         QuantityText.temperature(t, units, digits: 1),
-      if (log.humidity case final h?) '${h.round()} % humidity',
+      if (log.humidity case final h?) '${QuantityText.percent(h)} humidity',
       if (log.cloudCover case final c?) '$c % cloud',
     ];
     return parts.isEmpty ? null : parts.join(' · ');

@@ -1,4 +1,4 @@
-# F24 — finite reproducibility and diagnostics checklist (evidence, partial)
+# F24 — finite reproducibility and diagnostics checklist (evidence)
 
 Environment: 2026-10-18 cloud containers (two sessions), Flutter 3.47.4 (Linux archive). Rows done so far:
 
@@ -18,3 +18,20 @@ Environment: 2026-10-18 cloud containers (two sessions), Flutter 3.47.4 (Linux a
 - The affected-area run listed in `../F23/README.md` (home, tonight, sites, location, shared,
   lifecycle, navigation, viewmodels, data/services, core) covers both files.
 - `flutter analyze --no-pub` → `No issues found!`; changed-file format and encoding pass.
+
+## Closure recheck after F01–F23 (2026-10-19)
+
+The roadmap closes F24 after F01–F09 and F11–F23 (F10 only for FITS-specific checks). Each row
+was rechecked against the code at `658d8cf` (F22), after every later change:
+
+| Row | Recheck | Evidence on the current inputs |
+| --- | --- | --- |
+| A1 / TD-096 | Holds. Every test added since (F11–F22) builds its harness or repository with a fixed or test clock (`testEvening`, `TestClock`, a test's own `Clock`); the "no wall-clock reads in the tests" rule in `clock_test.dart` still passes | whole unit/widget suite at `658d8cf` (working tree before its commit) → `+2238 ~2: All tests passed!`, which includes `clock_test.dart` |
+| A2 / TD-102 | Holds; the map picker is unchanged since | `location_picker_tiles_failing_test.dart` in the same run |
+| A3 / TD-103 | Holds; no `print`/`debugPrint` added (the source scan passes) | `no_empty_catch_test.dart`, `schema_migration_test.dart` M8 in the same run |
+| A4 / TD-038 | Holds; `unawaited_futures` stays on and `flutter analyze --no-pub` is clean at `658d8cf` | analysis in the same gate run (`No issues found!`) |
+| A5 / TD-002, TD-020, TD-025 | Holds: startup still asks no GPS and the forecast starts after a frame (F16 moved the first route before `runApp` without awaiting either); F21's new display settings load before the first frame without network; zones unchanged | `planner_bootstrap_test.dart`, `lifecycle_matrix_test.dart` in the same run |
+| A6 / UX32-03 | Holds; target search unchanged since | `target_search_race_test.dart` in the same run |
+
+Reuse (V3): the run above is the F22 gate run; F24's inputs (`test/`, `lib/`, tooling) have not
+changed since except for documentation. No row reopened; F24 is **closed** with this recheck.

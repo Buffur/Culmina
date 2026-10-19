@@ -1,6 +1,7 @@
 import '../../domain/models/tracking_type.dart';
 import '../../domain/services/capability_calculator.dart';
 import 'app_words.dart';
+import '../../core/utils/quantity_text.dart';
 
 /// Display text for [RigCapability] (TASK 8.6). Formatting only; every
 /// figure comes from the domain [CapabilityCalculator].
@@ -9,7 +10,8 @@ abstract final class CapabilityText {
       s >= 10 ? '${s.round()} s' : '${s.toStringAsFixed(1)} s';
 
   static String fov(RigCapability c) =>
-      '${c.fovWidthDeg.toStringAsFixed(2)}° × ${c.fovHeightDeg.toStringAsFixed(2)}°';
+      '${QuantityText.degrees(c.fovWidthDeg, digits: 2)} × '
+      '${QuantityText.degrees(c.fovHeightDeg, digits: 2)}';
 
   static String pixelScale(RigCapability c) =>
       '${c.pixelScaleArcsecPerPx.toStringAsFixed(2)} arcsec/px';
@@ -19,7 +21,7 @@ abstract final class CapabilityText {
     final n = c.npf;
     if (n == null) return null;
     return '≈ ${_seconds(n.seconds)} (k = ${n.k.toStringAsFixed(1)}, '
-        '|δ| ${n.declinationUsedDeg.round()}°)'
+        '|δ| ${QuantityText.degrees(n.declinationUsedDeg.abs())})'
         '${n.conditional ? ' if untracked' : ''}';
   }
 
@@ -39,7 +41,7 @@ abstract final class CapabilityText {
   /// A frame-fill fraction (CALC-31: the major axis over the frame's short
   /// side), worded the same in the planner and the candidates (SCI-06).
   static String frameFillOf(double fraction) =>
-      "${(fraction * 100).round()} % of the frame's short side";
+      "${QuantityText.percent(fraction * 100)} of the frame's short side";
 
   /// The warning for a light sub longer than the recommendation.
   static String subWarning(RigCapability c) =>

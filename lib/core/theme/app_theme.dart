@@ -12,6 +12,9 @@ import 'app_typography.dart';
 /// the secondary text), `surfaceContainerHigh` is the raised surface, and
 /// [AppTypography.scale] sets every style's size and weight.
 class AppTheme {
+  /// The family of the styles the theme builds by hand (F25).
+  static const _family = 'Roboto';
+
   static final ThemeData light = _withTokens(
     ThemeData(
       brightness: Brightness.light,
@@ -24,6 +27,9 @@ class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
+          // F25 (U): named, so it is never the engine's bare default; Roboto
+          // is Android's system font, so the app looks as before.
+          fontFamily: _family,
           color: AppColors.lightTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w600,
@@ -76,6 +82,9 @@ class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
+          // F25 (U): named, so it is never the engine's bare default; Roboto
+          // is Android's system font, so the app looks as before.
+          fontFamily: _family,
           color: AppColors.darkTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w600,
@@ -176,6 +185,9 @@ class AppTheme {
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
+          // F25 (U): named, so it is never the engine's bare default; Roboto
+          // is Android's system font, so the app looks as before.
+          fontFamily: _family,
           color: AppColors.fieldTextPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w600,
@@ -198,7 +210,10 @@ class AppTheme {
       iconTheme: const IconThemeData(color: AppColors.fieldTextPrimary),
       snackBarTheme: const SnackBarThemeData(
         backgroundColor: AppColors.fieldBorder,
-        contentTextStyle: TextStyle(color: AppColors.fieldTextPrimary),
+        contentTextStyle: TextStyle(
+          fontFamily: _family,
+          color: AppColors.fieldTextPrimary,
+        ),
         actionTextColor: AppColors.fieldTextPrimary,
       ),
     ),

@@ -222,13 +222,19 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       DropdownButtonFormField<String>(
+                        // F25 A1: a long type wraps instead of overflowing
+                        // the dialog at large text.
+                        isExpanded: true,
                         initialValue: selectedType,
                         decoration: const InputDecoration(
                           labelText: 'Object type',
                         ),
                         items: types
                             .map(
-                              (t) => DropdownMenuItem(value: t, child: Text(t)),
+                              (t) => DropdownMenuItem(
+                                value: t,
+                                child: Text(t, overflow: TextOverflow.ellipsis),
+                              ),
                             )
                             .toList(),
                         onChanged: (val) {

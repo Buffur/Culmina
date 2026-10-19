@@ -533,7 +533,7 @@ class _MoonDetails extends StatelessWidget {
         : approach == null
         ? 'The Moon and the target are not up at the same time tonight.'
         : 'Closest to the target while both are up: '
-              '${approach.separationDeg.round()}° at ${at(approach.instantUtc)}.';
+              '${QuantityText.degrees(approach.separationDeg)} at ${at(approach.instantUtc)}.';
 
     if (sepText == null) return const SizedBox.shrink();
     return Padding(

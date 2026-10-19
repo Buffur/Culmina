@@ -142,7 +142,7 @@ class SettingsScreen extends StatelessWidget {
             value: p.feasibilityMarginPercent,
             range: PlanningPreferences.marginRange,
             divisions: 50,
-            label: '${p.feasibilityMarginPercent.round()} %',
+            label: QuantityText.percent(p.feasibilityMarginPercent),
             onChanged: (v) => update(p.copyWith(feasibilityMarginPercent: v)),
           ),
           _SliderTile(
@@ -562,7 +562,7 @@ class _GateTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = '${percent.round()} %';
+    final label = QuantityText.percent(percent);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

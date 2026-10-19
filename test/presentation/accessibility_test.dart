@@ -7,7 +7,7 @@
 // asserted there. Plus the altitude chart's text alternative.
 
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
@@ -22,7 +22,9 @@ import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/models/session.dart';
 import 'package:astroplan/domain/models/session_night.dart';
+import 'package:astroplan/domain/services/astrobin_acquisitions.dart';
 import 'package:astroplan/domain/services/capture_budget_calculator.dart';
+import 'package:astroplan/domain/services/session_exporter.dart';
 import 'package:astroplan/domain/services/session_snapshot_builder.dart';
 import 'package:astroplan/domain/models/weather_snapshot.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
@@ -30,7 +32,9 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:drift/native.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,6 +104,11 @@ class _FullForecast implements WeatherRepository {
 
 enum _Theme { light, dark, field }
 
+class _NoShare implements AstroBinCsvExporter {
+  @override
+  Future<void> share(AstroBinExport export) async {}
+}
+
 Future<void> _settle(WidgetTester tester) async {
   for (var i = 0; i < 12; i++) {
     await tester.runAsync(
@@ -160,6 +169,8 @@ Future<({PlannerHarness vm, int running, int planned, int ended})> _pumpApp(
       // S3.6: a file matching the seeded rig, so the import review shows a
       // match, its reasons, a conflict switch and every action.
       captureFiles: FakeCaptureFileAccess()..file('light.jpg', _seedJpeg()),
+      // F25: the AstroBin export, so the sweep sees its preview.
+      csvExporter: _NoShare(),
     );
     await vm.ready;
     await vm.choosePlan(); // S6.8: nothing is preselected
@@ -405,6 +416,113 @@ void main() {
         if (fresh.isNotEmpty) {
           report.add('planner, new plan:\n${fresh.join('\n')}');
         }
+        handle.dispose();
+        expect(report, isEmpty, reason: report.join('\n\n'));
+      });
+    }
+  }
+
+  // F25 A1 (U): the changed editors, dialogs and sheets, the filter panel,
+  // the AstroBin preview and the map picker, in every theme at 100 % and
+  // 200 % text.
+  for (final theme in _Theme.values) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets('editors, dialogs, the filter panel and the map picker meet '
+          'the guidelines: ${theme.name}, ${(scale * 100).round()} % text', (
+        tester,
+      ) async {
+        await _pumpApp(tester, theme: theme, textScale: scale);
+        final handle = tester.ensureSemantics();
+        final report = <String>[];
+        Future<void> check(String name) async {
+          final p = await _audit(tester, contrast: theme != _Theme.field);
+          if (p.isNotEmpty) report.add('$name:\n${p.join('\n')}');
+        }
+
+        Future<void> tap(Finder f) async {
+          await tester.ensureVisible(f.first);
+          await tester.tap(f.first);
+          await _settle(tester);
+        }
+
+        Future<void> closeDialog() async {
+          Navigator.of(tester.element(find.byType(Dialog).last)).pop();
+          await _settle(tester);
+        }
+
+        // The Logbook's filter panel.
+        AppRouter.router.go(AppRouter.sessions);
+        await _settle(tester);
+        await tap(find.byKey(const Key('logbook.filters')));
+        expect(find.byKey(const Key('logbook.filters.done')), findsOneWidget);
+        await check('logbook filter panel');
+        await tap(find.byKey(const Key('logbook.filters.done')));
+
+        // The AstroBin preview.
+        await tap(find.byKey(const Key('logbook.menu')));
+        await tap(find.byKey(const Key('logbook.astrobin')));
+        expect(find.byKey(const Key('astrobin.preview')), findsOneWidget);
+        await check('AstroBin preview');
+        await tap(find.byKey(const Key('astrobin.cancel')));
+
+        // The rig editor and the target editor.
+        AppRouter.router.go(AppRouter.libraryRigs);
+        await _settle(tester);
+        await tap(find.byType(ListTile));
+        expect(find.byKey(const Key('rigEditor.save')), findsOneWidget);
+        await check('rig editor');
+        await closeDialog();
+        AppRouter.router.go(AppRouter.libraryTargets);
+        await _settle(tester);
+        await tester.enterText(find.byType(TextField).first, 'M42');
+        await _settle(tester);
+        await tap(
+          find.ancestor(
+            of: find.textContaining('M42'),
+            matching: find.byType(ListTile),
+          ),
+        );
+        expect(find.byKey(const Key('targetEditor.delete')), findsOneWidget);
+        await check('target editor');
+        await closeDialog();
+
+        // The block editor.
+        AppRouter.router.go(AppRouter.session());
+        await _settle(tester);
+        await tap(
+          find.ancestor(
+            of: find.textContaining(' × '),
+            matching: find.byType(ListTile),
+          ),
+        );
+        expect(find.byKey(const Key('blockDialog.cancel')), findsOneWidget);
+        await check('block editor');
+        await tap(find.byKey(const Key('blockDialog.cancel')));
+
+        // The map picker; the host has no path_provider plugin (flutter_map's
+        // tile cache asks it for a folder).
+        const pathProvider = MethodChannel('plugins.flutter.io/path_provider');
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          pathProvider,
+          (call) async => Directory.systemTemp.path,
+        );
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            pathProvider,
+            null,
+          ),
+        );
+        unawaited(
+          AppRouter.router.push(
+            AppRouter.sitePick,
+            extra: const LatLng(46.05, 14.51),
+          ),
+        );
+        await _settle(tester);
+        await check('map picker');
+        AppRouter.router.pop();
+        await _settle(tester);
+
         handle.dispose();
         expect(report, isEmpty, reason: report.join('\n\n'));
       });

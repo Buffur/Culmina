@@ -291,8 +291,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ),
                 // −60…60 °C, in the unit typed.
                 validator: _units.temperature == TemperatureUnit.fahrenheit
-                    ? _range(-76, 140, '°F')
-                    : _range(-60, 60, '°C'),
+                    ? _range(-76, 140, TemperatureUnit.fahrenheit.symbol)
+                    : _range(-60, 60, TemperatureUnit.celsius.symbol),
               ),
               TextFormField(
                 key: const Key('results.humidity'),

@@ -14,6 +14,7 @@ import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/candidates_viewmodel.dart';
+import '../../../core/utils/quantity_text.dart';
 
 /// "What can I image tonight?" (TASK 10.4): every target evaluated for the
 /// chosen night with the same rules as Home's opportunity card, sorted by a
@@ -259,10 +260,10 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                         ? 'No window: ${OpportunityText.noWindowShort(reason, darknessLimitDeg: prefs.darknessLimit.degrees, minAltitudeDeg: prefs.minAltitudeDeg)}'
                         : [
                             '${at(r.firstWindowStartUtc!)} – ${at(r.lastWindowEndUtc!)}',
-                            'max ${r.maxAltitudeDeg!.round()}°',
+                            'max ${QuantityText.degrees(r.maxAltitudeDeg!)}',
                             r.minMoonSeparationDeg == null
                                 ? 'Moon down in the windows'
-                                : 'Moon ≥ ${r.minMoonSeparationDeg!.round()}° away',
+                                : 'Moon ≥ ${QuantityText.degrees(r.minMoonSeparationDeg!)} away',
                             if (r.frameFillFraction case final f?)
                               CapabilityText.frameFillOf(f),
                           ].join(' · ');

@@ -7,6 +7,7 @@ import '../shared/opportunity_text.dart';
 
 import '../../domain/models/imaging_opportunity.dart';
 import 'timeline_data.dart';
+import '../../core/utils/quantity_text.dart';
 
 /// How much the timeline shows (S6.12): [full] in the planner (altitude
 /// grid, Moon, legend); [compact] for a summary such as Tonight's (bands,
@@ -126,7 +127,7 @@ class AltitudeChartWidget extends StatelessWidget {
                 _line(context, 'Moon', palette.chartMoon),
               _line(
                 context,
-                'Min ${opportunity.minAltitudeDeg.round()}°',
+                'Min ${QuantityText.degrees(opportunity.minAltitudeDeg)}',
                 palette.chartMinAltitude,
               ),
               if (data.captureEndUtc != null)
@@ -157,8 +158,7 @@ class AltitudeChartWidget extends StatelessWidget {
         'The windows are listed below the chart.';
   }
 
-  static String _signed(double v) =>
-      v < 0 ? '−${(-v).round()}°' : '${v.round()}°';
+  static String _signed(double v) => QuantityText.degrees(v);
 
   Widget _swatch(BuildContext context, String label, Color color) => Row(
     mainAxisSize: MainAxisSize.min,

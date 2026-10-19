@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/diagnostics/app_log.dart';
 import '../../../core/config/app_identity.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../domain/services/location_service.dart';
 import '../../shared/coordinate_input.dart';
 import '../../shared/location_feedback.dart';
@@ -112,52 +113,52 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
       ),
       body: Stack(
         children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: _selectedLocation ?? const LatLng(51.5, -0.1),
-              initialZoom: 5.0,
-              onTap: (tapPosition, point) {
-                setState(() {
-                  _selectedLocation = point;
-                });
-              },
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: AppIdentity.packageName,
-                // TASK 16.3: the app's identifying user agent, with a
-                // contact URL (OSM tile usage policy).
-                tileProvider: NetworkTileProvider(
-                  headers: {'User-Agent': AppIdentity.userAgent},
-                ),
+          // F25 A1: the map is tappable, so it has a label.
+          Semantics(
+            label: 'Map. Tap to choose a point',
+            child: FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                initialCenter: _selectedLocation ?? const LatLng(51.5, -0.1),
+                initialZoom: 5.0,
+                onTap: (tapPosition, point) {
+                  setState(() {
+                    _selectedLocation = point;
+                  });
+                },
               ),
-              if (_selectedLocation != null)
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: _selectedLocation!,
-                      width: 40,
-                      height: 40,
-                      child: Icon(
-                        Icons.location_pin,
-                        color: Theme.of(context).colorScheme.error,
-                        size: 40,
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: AppIdentity.packageName,
+                  // TASK 16.3: the app's identifying user agent, with a
+                  // contact URL (OSM tile usage policy).
+                  tileProvider: NetworkTileProvider(
+                    headers: {'User-Agent': AppIdentity.userAgent},
+                  ),
+                ),
+                if (_selectedLocation != null)
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: _selectedLocation!,
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.location_pin,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 40,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              // OpenStreetMap tile usage policy: visible attribution linking
-              // to the copyright page. Bottom-left, clear of the FAB.
-              SimpleAttributionWidget(
-                alignment: Alignment.bottomLeft,
-                source: const Text('OpenStreetMap contributors'),
-                onTap: () => launchUrl(
-                  Uri.parse('https://www.openstreetmap.org/copyright'),
-                ),
-              ),
-            ],
+                    ],
+                  ),
+                // OpenStreetMap tile usage policy: visible attribution linking
+                // to the copyright page. Bottom-left, clear of the FAB. F25 A1:
+                // the app's own line, which wraps at large text (flutter_map's
+                // one-line widget overflowed at 200 %).
+                const _OsmAttribution(),
+              ],
+            ),
           ),
           if (_isLoadingLocation)
             const Center(
@@ -259,4 +260,42 @@ class _CoordinateEntryDialogState extends State<_CoordinateEntryDialog> {
       ],
     );
   }
+}
+
+/// "© OpenStreetMap contributors", linking to the copyright page (the tile
+/// usage policy), on the map's surface; it wraps rather than overflows.
+class _OsmAttribution extends StatelessWidget {
+  const _OsmAttribution();
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+    child: Align(
+      alignment: Alignment.bottomLeft,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 280),
+        child: Material(
+          color: Theme.of(context).colorScheme.surface,
+          child: InkWell(
+            onTap: () =>
+                launchUrl(Uri.parse('https://www.openstreetmap.org/copyright')),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xs),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('© ', style: Theme.of(context).textTheme.bodySmall),
+                  Flexible(
+                    child: Text(
+                      'OpenStreetMap contributors',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

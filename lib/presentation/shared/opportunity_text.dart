@@ -10,21 +10,22 @@ abstract final class OpportunityText {
   /// ([QuantityText.duration], S1.7).
   static String duration(Duration d) => QuantityText.duration(d);
 
-  static String _deg(double v) => '${v.round()}°';
+  static String _deg(double v) => QuantityText.degrees(v);
+
+  static String _pct(double? v) =>
+      v == null ? 'unknown' : QuantityText.percent(v);
 
   /// One gate's reason, for example "Sun above −18°".
-  static String reason(
-    OpportunityGate gate,
-    ImagingOpportunity o,
-  ) => switch (gate) {
-    OpportunityGate.darkness => 'Sun above ${_signed(o.darknessLimitDeg)}',
-    OpportunityGate.altitude => 'target below ${_deg(o.minAltitudeDeg)}',
-    OpportunityGate.moon =>
-      'Moon up and at least '
-          '${o.gates.moonMinIlluminationPct?.round()} % lit (your Moon gate)',
-    OpportunityGate.cloud =>
-      'cloud above ${o.gates.cloudMaxPct?.round()} % (your cloud gate)',
-  };
+  static String reason(OpportunityGate gate, ImagingOpportunity o) =>
+      switch (gate) {
+        OpportunityGate.darkness => 'Sun above ${_signed(o.darknessLimitDeg)}',
+        OpportunityGate.altitude => 'target below ${_deg(o.minAltitudeDeg)}',
+        OpportunityGate.moon =>
+          'Moon up and at least '
+              '${_pct(o.gates.moonMinIlluminationPct)} lit (your Moon gate)',
+        OpportunityGate.cloud =>
+          'cloud above ${_pct(o.gates.cloudMaxPct)} (your cloud gate)',
+      };
 
   /// Every failing gate of an excluded segment, in a fixed order.
   static String reasons(ExcludedSegment s, ImagingOpportunity o) => [
@@ -32,8 +33,7 @@ abstract final class OpportunityText {
       if (s.reasons.contains(g)) reason(g, o),
   ].join('; ');
 
-  static String _signed(double v) =>
-      v < 0 ? '−${(-v).round()}°' : '${v.round()}°';
+  static String _signed(double v) => QuantityText.degrees(v);
 
   /// Why there is no window tonight (ADR-013 §4).
   static String noWindow(NoWindowReason r, ImagingOpportunity o) =>
@@ -84,11 +84,7 @@ abstract final class OpportunityText {
     if (lo == null || hi == null) {
       parts.add('no cloud forecast');
     } else {
-      parts.add(
-        lo.round() == hi.round()
-            ? 'cloud ${lo.round()} %'
-            : 'cloud ${lo.round()}–${hi.round()} %',
-      );
+      parts.add('cloud ${QuantityText.percentRange(lo, hi)}');
       if (x.hoursWithoutForecast > 0) {
         parts.add('${x.hoursWithoutForecast} h without forecast');
       }
