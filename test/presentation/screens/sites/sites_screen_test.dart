@@ -686,6 +686,41 @@ void main() {
         expect(find.textContaining('Suggested by'), findsNothing);
       });
 
+      testWidgets('Save while the lookup runs saves the typed name; the late '
+          'answer never overwrites it', (tester) async {
+        final pending = Completer<ReverseGeocodeResult>();
+        await build(
+          tester,
+          locationService: FakeLocationService(location: at),
+          geocoder: FakeReverseGeocoder(answer: () => pending.future),
+        );
+        await pump(tester, at: AppRouter.siteEdit);
+        await locate(tester);
+        expect(find.text('Looking up a place name…'), findsOneWidget);
+        await tester.enterText(
+          find.byKey(const Key('siteEditor.name')),
+          'Typed',
+        );
+        await save(tester);
+        // Saved with the typed name and the fix, without waiting.
+        expect(vm.sites.single.name, 'Typed');
+        expect(vm.sites.single.latitude, 45.8123);
+        expect(vm.sites.single.longitude, 15.9771);
+        expect(find.byType(SiteEditorScreen), findsNothing, reason: 'left');
+
+        pending.complete(ljubljana);
+        for (var i = 0; i < 3; i++) {
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          await tester.pump();
+        }
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        expect(vm.sites.single.name, 'Typed');
+        final stored = await tester.runAsync(locations.getLocations);
+        expect(stored!.single.name, 'Typed', reason: 'never overwritten');
+        expect(find.text('Ljubljana'), findsNothing);
+      });
+
       testWidgets('an answer for coordinates changed meanwhile is ignored', (
         tester,
       ) async {
