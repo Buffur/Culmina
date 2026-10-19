@@ -38,6 +38,48 @@ import '../../../support/legacy_run.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
+/// F19 A3: today's live forecast, unlike the one saved with the plan: another
+/// source, fetched now, 85 % cloud over every requested hour.
+class _LiveForecast implements WeatherRepository {
+  _LiveForecast(this.clock);
+
+  final Clock clock;
+  int calls = 0;
+
+  @override
+  Future<WeatherFetch> fetchSnapshot({
+    required double latitude,
+    required double longitude,
+    required DateTime startUtc,
+    required DateTime endUtc,
+  }) async {
+    calls++;
+    final first = DateTime.utc(
+      startUtc.year,
+      startUtc.month,
+      startUtc.day,
+      startUtc.hour,
+    );
+    return WeatherFetched(
+      WeatherSnapshot(
+        provider: 'live-provider',
+        model: 'live_model',
+        fetchedAtUtc: clock.nowUtc(),
+        latitude: latitude,
+        longitude: longitude,
+        hours: [
+          for (
+            var t = first;
+            t.isBefore(endUtc);
+            t = t.add(const Duration(hours: 1))
+          )
+            WeatherHour(timeUtc: t, cloudCoverPct: 85),
+        ],
+      ),
+    );
+  }
+}
+
 /// Records what would be shared (TASK 14.3).
 class _RecordingExporter implements SessionExporter {
   final List<List<ExportedSession>> shared = [];
@@ -81,7 +123,7 @@ void main() {
 
   /// A completed run (10 of 24 × 300 s, with notes), a planned session, a
   /// legacy log and a planned session saved without a snapshot.
-  Future<void> seed(WidgetTester tester) async {
+  Future<void> seed(WidgetTester tester, {WeatherRepository? weather}) async {
     tester.view.physicalSize = const Size(800, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -96,7 +138,7 @@ void main() {
       vm = PlannerHarness(
         DriftTargetRepository(database),
         DriftEquipmentRepository(database),
-        _NoForecast(),
+        weather ?? _NoForecast(),
         DriftLocationRepository(database),
         locationService: FakeLocationService(),
         reverseGeocoder: FakeReverseGeocoder(),
@@ -410,6 +452,102 @@ void main() {
       findsOneWidget,
       reason: 'the saved hours after midnight had none',
     );
+  });
+
+  // F19 A3, with a live forecast that differs: the entry keeps the saved
+  // one (its source, its fetch time and its age then), never today's.
+  testWidgets('the entry keeps the saved forecast while a different live '
+      'one is loaded', (tester) async {
+    final live = _LiveForecast(FixedClock(DateTime.utc(2026, 12, 15, 19)));
+    await seed(tester, weather: live);
+    await tester.runAsync(() async {
+      final night = vm.plan.sessionNight!;
+      final prefs = vm.settings.planningPreferences;
+      final span = NightWeatherSummarizer.spanOf(
+        VisibilityCalculator.calculateNightTimelineForNight(night),
+      );
+      final forecast = WeatherSnapshot(
+        provider: 'open-meteo',
+        model: 'best_match',
+        fetchedAtUtc: DateTime.utc(2026, 12, 15, 9),
+        latitude: 46.05,
+        longitude: 14.5,
+        hours: [
+          for (var h = 17; h < 24; h++)
+            WeatherHour(
+              timeUtc: DateTime.utc(2026, 12, 15, h),
+              cloudCoverPct: h < 20 ? 15 : 40,
+            ),
+        ],
+      );
+      await sessions.savePlan(
+        plannedId,
+        vm.plan.currentPlan(),
+        SessionSnapshotBuilder.build(
+          takenAtUtc: DateTime.utc(2026, 12, 15, 19),
+          night: night,
+          timeZoneId: 'Europe/Ljubljana',
+          preferences: prefs,
+          budget: vm.analysis.captureBudget,
+          blocks: vm.plan.captureBlocks,
+          site: vm.site.activeSite,
+          target: vm.plan.selectedTarget,
+          rig: vm.plan.selectedEquipment,
+          weather: NightWeatherAvailable(
+            snapshot: forecast,
+            age: WeatherAge.aging,
+            ageDuration: const Duration(hours: 10),
+            fromCache: true,
+          ),
+          weatherSummary: NightWeatherSummarizer.summarize(
+            forecast,
+            fromUtc: span.fromUtc,
+            toUtc: span.toUtc,
+            dewMarginC: prefs.dewMarginC,
+          ),
+        ),
+      );
+      await vm.conditions.refreshWeather();
+      await vm.conditions.idle;
+    });
+    // The live forecast is loaded, and it is different.
+    expect(live.calls, greaterThan(0));
+    final now = vm.conditions.nightWeather;
+    expect(now, isA<NightWeatherAvailable>());
+    now as NightWeatherAvailable;
+    expect(now.snapshot.provider, 'live-provider');
+    expect(now.age, WeatherAge.current);
+    expect(now.snapshot.fetchedAtUtc, DateTime.utc(2026, 12, 15, 19));
+
+    await pumpAt(tester, AppRouter.sessionDetail(plannedId));
+    final weather = find.byKey(const Key('detail.weather'));
+    await tester.ensureVisible(weather);
+    final text = [
+      for (final t in tester.widgetList<Text>(
+        find.descendant(of: weather, matching: find.byType(Text)),
+      ))
+        t.data ?? t.textSpan!.toPlainText(),
+    ].join(' | ');
+    for (final saved in [
+      'as saved with the plan',
+      'open-meteo / best_match',
+      '15–40 %',
+    ]) {
+      expect(text, contains(saved), reason: saved);
+    }
+    // The fetch time as saved: 09:00 UTC is 10:00 in Ljubljana (CET).
+    expect(text, contains('Fetched'));
+    expect(
+      text,
+      matches(RegExp(r'Fetched:\s*10:00 AM \| Age when saved: aging')),
+    );
+    // Its age when saved, not the live forecast's.
+    expect(text, contains('aging'));
+    expect(text, isNot(contains('current')));
+    // Nothing of the live forecast in the entry.
+    expect(text, isNot(contains('live-provider')));
+    expect(text, isNot(contains('live_model')));
+    expect(text, isNot(contains('85')));
   });
 
   testWidgets('acceptance: a legacy log renders its stored text only', (
