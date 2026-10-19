@@ -229,7 +229,7 @@ class FitAnalyzer {
       state: tight ? FitState.tight : FitState.fits,
       reason: tight
           ? 'Everything fits, but only ${_fmt(free)} of window time is left '
-                '(less than your $pct % margin).$flipNote'
+                '(less than your ${QuantityText.percent(pct)} margin).$flipNote'
           : 'Everything fits with ${_fmt(free)} of window time to spare.'
                 '$flipNote',
       availableMs: available,
@@ -361,12 +361,12 @@ class FitAnalyzer {
       -12.0 => timeline.nauticalTwilight,
       _ => null,
     };
-    final limit = darknessLimitDeg.round();
+    final limit = QuantityText.degrees(darknessLimitDeg);
     if (atLimit is SunNeverBelow) {
-      return 'No usable window: the Sun never gets below $limit° tonight.';
+      return 'No usable window: the Sun never gets below $limit tonight.';
     }
     return 'No usable window: the target never rises above '
-        '${minAltitudeDeg.round()}° while the Sun is below $limit°.';
+        '${QuantityText.degrees(minAltitudeDeg)} while the Sun is below $limit.';
   }
 
   static FitResult _result(

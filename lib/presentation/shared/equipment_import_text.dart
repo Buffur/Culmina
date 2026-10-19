@@ -75,7 +75,9 @@ abstract final class EquipmentImportText {
       EquipmentSpec.resolution => pair('px'),
       EquipmentSpec.sensorSize => pair('mm'),
       EquipmentSpec.pixelPitch => '${n(v)} µm',
-      EquipmentSpec.rawFileSize => '${n(v)} MB',
+      EquipmentSpec.rawFileSize => QuantityText.storage(
+        (v as num).toDouble() * 1e6,
+      ),
       EquipmentSpec.focalLength => '${n(v)} mm',
       EquipmentSpec.focalRatio => 'f/${n(v)}',
     };

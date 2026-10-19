@@ -358,8 +358,7 @@ class _SnapshotSections extends StatelessWidget {
       },
       'Cloud cover (dark hours)': switch (snap.weatherCloudPct) {
         null => 'no forecast',
-        (:final min, :final max) when min == max => '$min %',
-        (:final min, :final max) => '$min–$max %',
+        (:final min, :final max) => QuantityText.percentRange(min, max),
       },
       if (snap.weatherHoursWithoutForecast case final n when n > 0)
         'Hours without forecast': '$n',
@@ -464,8 +463,9 @@ class _Conditions extends StatelessWidget {
             unitsOf(context),
             digits: 1,
           ),
-        if (log.humidity case final h?) 'Humidity': '$h %',
-        if (log.cloudCover case final c?) 'Cloud cover': '$c %',
+        if (log.humidity case final h?) 'Humidity': QuantityText.percent(h),
+        if (log.cloudCover case final c?)
+          'Cloud cover': QuantityText.percent(c),
       },
       empty: 'None recorded.',
     );

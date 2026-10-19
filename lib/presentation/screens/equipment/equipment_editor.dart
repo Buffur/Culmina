@@ -96,9 +96,11 @@ class _EquipmentEditor {
   ) {
     final set = [
       if (maxExposure.trim().isNotEmpty) 'maximum ${maxExposure.trim()} s',
-      if (raw.trim().isNotEmpty) 'RAW ${raw.trim()} MB',
+      // The fields' own text, as typed (not a formatted quantity).
+      if (raw.trim().isNotEmpty) 'RAW ${raw.trim()} MB', // as typed
       if (format != null) captureFormatLabel(format),
-      if (rotation.trim().isNotEmpty) 'rotation ${rotation.trim()}°',
+      if (rotation.trim().isNotEmpty)
+        'rotation ${rotation.trim()}°', // as typed
     ];
     return set.isEmpty
         ? 'Maximum exposure, RAW size, format, rotation: not set'

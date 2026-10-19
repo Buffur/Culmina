@@ -217,7 +217,7 @@ void main() {
         budget: CaptureBudgetCalculator.calculate(blocks: [_light(120, 30)]),
         windows: const [],
         noWindowReason:
-            'No usable window: the Sun never gets below -18° tonight.',
+            'No usable window: the Sun never gets below −18° tonight.',
       );
       expect(f.state, FitState.noWindow);
       expect(f.reason, contains('never gets below'));
@@ -340,7 +340,7 @@ void main() {
           darknessLimitDeg: -18,
           minAltitudeDeg: 20,
         ),
-        contains('never gets below -18°'),
+        contains('never gets below −18°'),
       );
     });
 

@@ -12,6 +12,7 @@ import '../viewmodels/settings_viewmodel.dart';
 import '../viewmodels/site_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import '../viewmodels/night_conditions_viewmodel.dart';
+import '../../core/utils/quantity_text.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/units/display_units.dart';
 import '../shared/display_units_of.dart';
@@ -649,7 +650,7 @@ class _HourColumn extends StatelessWidget {
     double? t(double? c) => c == null ? null : u.temperatureOf(c);
     double? w(double? kmh) => kmh == null ? null : u.windOf(kmh);
     final cloud = slot.instant && h?.cloudCoverPct != null
-        ? ', cloud ${_v(h!.cloudCoverPct)} %'
+        ? ', cloud ${QuantityText.percent(h!.cloudCoverPct!)}'
         : h == null
         ? ', no forecast'
         : '';
