@@ -21,6 +21,7 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -294,6 +295,24 @@ void main() {
       reason: 'every hour is within the dew margin',
     );
     expect(find.text('Tap to set location'), findsNothing);
+  });
+
+  // H2 (G1-S11-01): an hour's button label replaces the InkWell's own
+  // semantics, so the tap must be on the labelled node itself.
+  testWidgets('Weather: each hour button can be activated by a screen '
+      'reader', (tester) async {
+    final handle = tester.ensureSemantics();
+    await start(tester, AppRouter.weather);
+    final hours = find.bySemanticsLabel(RegExp(r'Shows its exact values$'));
+    expect(hours, findsWidgets);
+    for (final e in hours.evaluate()) {
+      final data = tester
+          .getSemantics(find.byWidget(e.widget))
+          .getSemanticsData();
+      expect(data.hasAction(SemanticsAction.tap), isTrue, reason: data.label);
+      expect(data.flagsCollection.isButton, isTrue);
+    }
+    handle.dispose();
   });
 
   testWidgets('Night & Moon: the twilights as a bar from sunset to sunrise, '

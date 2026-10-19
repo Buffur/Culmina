@@ -657,6 +657,10 @@ class _HourColumn extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
+      // The InkWell's own semantics are excluded with its label, so the
+      // tap is given here, or a double tap would do nothing.
+      enabled: true,
+      onTap: onTap,
       excludeSemantics: true,
       label:
           '${NightTimeFormatter.clockTime(context, slot.timeUtc, zoneId: zoneId)}'

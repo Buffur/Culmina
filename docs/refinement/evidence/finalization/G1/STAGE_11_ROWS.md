@@ -306,19 +306,25 @@ controls (the slider, the night browser), so it is an accessibility defect, not 
 TalkBack walkthrough (G2) covers the same controls. Not fixed here (this record is
 documentation only).
 
+**Resolved 2026-10-19 (corrective change after this record; V5 recheck of H2 only):** both
+`Semantics` now pass `onTap` and `enabled`. `detail_screens_test.dart` "Weather: each hour button
+can be activated by a screen reader" and `night_moon_browse_test.dart` "A5: a calendar day can be
+activated by a screen reader" (which performs the semantics tap and sees the night viewed) fail
+on the old code and pass. **H2: re-verified (host).**
+
 ### G1-S11-02 — FOLLOW-UP (B1, B2): the planner's timeline widget has no caller
 
 Since F18 A1 removed "Tonight for this target" and its chart from the plan,
 `TonightOpportunityWidget` (and through it `AltitudeChartWidget`) is imported by no file in
 `lib/`; only tests use it. B1/B2's widget checks still pass, but they guard code no screen shows.
 **Destination:** `TECH_DEBT.md` (remove the widget or reuse it where a decision places it), not a
-release blocker.
+release blocker. Recorded as TD-111.
 
 ### G1-S11-03 — FOLLOW-UP (P3): `TEST_PLAN.md` lags the final plan
 
 L3 does not expect the restored route (F22), L7 names "every schema v8–v24 → v25" (now v26, F03),
 and L1/A10's steps say "first-run page" for F16's Welcome. Documentation drift, not a code defect.
-**Destination:** a documentation update with the G2 runbook.
+**Destination:** a documentation update with the G2 runbook. *Done 2026-10-19:* `TEST_PLAN.md` L1, L3 and L7 carry dated notes.
 
 ## Summary
 
@@ -338,7 +344,7 @@ REUSED); UNVERIFIED 45 (the 44 invalidated rows and M5, REUSED as UNVERIFIED); N
 OWNER ACTION 4; DEFERRED 9. No row is IMPLEMENTED-only: where a row's level is not reached the
 row is UNVERIFIED and its host evidence is named in the row.
 
-**Blocking at this record:** H2 (G1-S11-01) — the only row whose host re-verification fails.
+**Blocking at this record:** H2 (G1-S11-01) — the only row whose host re-verification fails. *Since resolved (see G1-S11-01): no host row blocks.*
 Every other HOST row passes on `e6a0376` (R1–R3), except P1, which needs the full gate on the
 final inputs.
 

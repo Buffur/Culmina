@@ -151,6 +151,25 @@ void main() {
     );
   });
 
+  // H2 (G1-S11-01): a day cell's label replaces the InkWell's semantics, so
+  // the labelled node itself must carry the tap, and it views that night.
+  testWidgets('A5: a calendar day can be activated by a screen reader', (
+    tester,
+  ) async {
+    await start(tester);
+    final handle = tester.ensureSemantics();
+    final cell = find.byKey(Key('nightMoon.day.${viewed.toIso8601String()}'));
+    await tester.ensureVisible(cell);
+    await settle(tester);
+    final node = tester.getSemantics(cell);
+    expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    tester.semantics.tap(find.semantics.byPredicate((n) => n.id == node.id));
+    await settle(tester);
+    expect(find.byKey(const Key('nightMoon.viewing')), findsOneWidget);
+    expect(vm.eveningDate, tonight, reason: 'viewing is not adopting');
+    handle.dispose();
+  });
+
   testWidgets('A2/A5: tapping a night views it; the slider browses it; '
       'nothing about the plan changes; Back to the plan', (tester) async {
     await start(tester);

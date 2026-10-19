@@ -386,6 +386,10 @@ class _DayCell extends StatelessWidget {
     return Semantics(
       button: true,
       selected: viewed,
+      // The InkWell's own semantics are excluded with its label, so the
+      // tap is given here, or a double tap would do nothing.
+      enabled: true,
+      onTap: () => browser.viewNight(day.date),
       excludeSemantics: true,
       label:
           '${MoonCalendarSection.dayLabel(day)}${plan ? '; your plan\'s night' : ''}',
