@@ -166,7 +166,15 @@ Future<void> _start() async {
   // S5.5: collapsible sections open as the user left them, from the first
   // frame.
   await vms.disclosure.load();
-  await vms.tonight.load();
+  // F16 A1: the stored first-run flag (and whether a site is stored)
+  // decides the first route before the first frame: no Tonight flash.
+  final plannerState = SharedPrefsPlannerStateRepository();
+  await vms.tonight.load(
+    hasStoredSite:
+        await plannerState.getActiveLocationId() != null ||
+        await plannerState.getTransientPosition() != null,
+  );
+  AppRouter.router.go(AppRouter.firstLocation(vms.tonight));
   try {
     await vms.backup?.load();
   } catch (e, s) {

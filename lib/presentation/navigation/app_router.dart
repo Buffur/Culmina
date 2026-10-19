@@ -20,6 +20,7 @@ import '../screens/sites/sites_screen.dart';
 import '../screens/target/target_selection_screen.dart';
 import '../screens/execution/results_screen.dart';
 import '../screens/welcome/welcome_screen.dart';
+import '../viewmodels/tonight_viewmodel.dart';
 import '../shared/list_mode.dart';
 import '../screens/tonight/tonight_candidates_screen.dart';
 import '../screens/tonight/tonight_home_screen.dart';
@@ -81,6 +82,10 @@ class AppRouter {
 
   /// The first-run setup (TASK 12.5).
   static const welcome = '/welcome';
+
+  /// The first route (F16 A1): the setup on a first run, else Tonight.
+  static String firstLocation(TonightViewModel tonight) =>
+      tonight.startsAtWelcome ? welcome : AppRouter.tonight;
 
   /// The detail screens (S6.5; ADR-019 §9): the plan's night and its
   /// forecast, above the tabs.

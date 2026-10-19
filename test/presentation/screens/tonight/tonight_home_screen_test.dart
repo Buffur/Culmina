@@ -106,8 +106,10 @@ void main() {
       await vm.ready;
       // S6.8: nothing is preselected; a first run has chosen nothing yet.
       if (firstRunDone) await vm.choosePlan();
-      await vm.tonight.load();
+      // F16 A1: as main does, the stored flag and site decide the first
+      // route before the first frame.
       if (site) await vm.site.setLocation(46.05, 14.5);
+      await vm.tonight.load(hasStoredSite: site);
       if (lightFrames != null) {
         while (vm.plan.captureBlocks.isNotEmpty) {
           await vm.plan.removeCaptureBlock(0);
@@ -118,6 +120,7 @@ void main() {
       await vm.conditions.idle;
     });
     addTearDown(() => tester.runAsync(database.close));
+    AppRouter.router.go(AppRouter.firstLocation(vm.tonight));
     await tester.pumpWidget(
       MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
     );
@@ -516,43 +519,126 @@ void main() {
     });
   });
 
-  group('first run (owner decisions)', () {
-    testWidgets('offered on a start without a site; Skip closes it for good', (
+  group('first run (owner decisions; F16)', () {
+    // A1: the first frame is the setup, never Tonight first.
+    testWidgets('a first run starts on Welcome: Tonight is never built', (
       tester,
     ) async {
       await start(tester, site: false, firstRunDone: false);
       expect(find.text('Welcome to Culmina'), findsOneWidget);
-      expect(find.textContaining('asks for location permission'), findsOne);
+      expect(find.byKey(const Key('tonight.noSite')), findsNothing);
+      expect(find.byType(NavigationBar), findsNothing);
+    });
 
-      await tester.tap(find.byKey(const Key('welcome.skip')));
+    // A2: one page, purpose and permission, two optional steps, no target
+    // step, no Skip; Start planning closes it for good.
+    testWidgets('one page with two optional steps; Start planning closes it '
+        'for good', (tester) async {
+      await start(tester, site: false, firstRunDone: false);
+      expect(find.textContaining('asks for location permission'), findsOne);
+      expect(find.byKey(const Key('welcome.site')), findsOneWidget);
+      expect(find.byKey(const Key('welcome.rig')), findsOneWidget);
+      expect(find.byKey(const Key('welcome.target')), findsNothing);
+      expect(find.byKey(const Key('welcome.skip')), findsNothing);
+      expect(find.text('Skip'), findsNothing);
+      expect(find.byKey(const Key('addRig.panel')), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('welcome.start')),
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.tap(find.byKey(const Key('welcome.start')));
       await settle(tester);
       expect(find.text('Welcome to Culmina'), findsNothing);
       expect(find.byKey(const Key('tonight.noSite')), findsOneWidget);
       expect(firstRun.done, isTrue);
     });
 
-    testWidgets('Done closes it for good too', (tester) async {
+    testWidgets('back closes it for good too', (tester) async {
       await start(tester, site: false, firstRunDone: false);
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('welcome.done')),
-        300,
-        scrollable: find.byType(Scrollable).last,
-      );
-      await tester.tap(find.byKey(const Key('welcome.done')));
+      await tester.binding.handlePopRoute();
       await settle(tester);
       expect(find.text('Welcome to Culmina'), findsNothing);
       expect(firstRun.done, isTrue);
     });
 
-    testWidgets('a step opens the normal picker and comes back', (
-      tester,
-    ) async {
+    testWidgets('a saved rig is chosen from the normal picker and comes '
+        'back', (tester) async {
       await start(tester, site: false, firstRunDone: false);
+      await tester.ensureVisible(find.byKey(const Key('welcome.chooseRig')));
+      await settle(tester);
       await tester.tap(find.byKey(const Key('welcome.chooseRig')));
       await settle(tester);
       expect(find.text('Choose a rig'), findsWidgets);
       await tester.pageBack();
       await settle(tester);
+      expect(find.text('Welcome to Culmina'), findsOneWidget);
+    });
+
+    // A3 (D8; UXA-C2): a rig typed in from the class-first panel becomes
+    // the plan's rig and the page shows it; Cancel saves and chooses
+    // nothing.
+    testWidgets('class → by hand: Cancel changes nothing; Save chooses the '
+        'rig and the page shows it', (tester) async {
+      tester.view.physicalSize = const Size(800, 3000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await start(tester, site: false, rig: false, firstRunDone: false);
+      await tester.tap(find.byKey(const Key('addRig.class.dslrMirrorless')));
+      await settle(tester);
+      await tester.tap(find.byKey(const Key('addRig.byHand')));
+      await settle(tester);
+      expect(find.byKey(const Key('rigEditor.save')), findsOneWidget);
+      expect(
+        find.textContaining('Needed for the field of view'),
+        findsWidgets,
+        reason: 'missing inputs are explained, never defaulted',
+      );
+      await tester.tap(find.text('Cancel'));
+      await settle(tester);
+      expect(vm.plan.selectedEquipment, isNull);
+
+      await tester.tap(find.byKey(const Key('addRig.class.dslrMirrorless')));
+      await settle(tester);
+      await tester.tap(find.byKey(const Key('addRig.byHand')));
+      await settle(tester);
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Rig name'),
+        'Garden DSLR',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, '6248'),
+        '6000',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, '4176'),
+        '4000',
+      );
+      await tester.enterText(
+        find.byKey(const Key('equipmentEditor.pixelSize')),
+        '3.9',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Effective focal length (mm)'),
+        '135',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Focal ratio (f/)'),
+        '2.8',
+      );
+      await tester.pump();
+      await tester.ensureVisible(find.byKey(const Key('rigEditor.save')));
+      await tester.tap(find.byKey(const Key('rigEditor.save')));
+      await settle(tester);
+      expect(vm.plan.selectedEquipment?.name, 'Garden DSLR');
+      expect(vm.plan.selectedEquipment?.cameraClass.name, 'dslrMirrorless');
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('welcome.rig')),
+          matching: find.text('Garden DSLR'),
+        ),
+        findsOneWidget,
+      );
       expect(find.text('Welcome to Culmina'), findsOneWidget);
     });
 
@@ -575,7 +661,6 @@ void main() {
           .data!;
       expect(status('site'), 'Not set');
       expect(status('rig'), 'Not chosen');
-      expect(status('target'), 'Not chosen');
 
       await tester.runAsync(() async {
         final rigs = DriftEquipmentRepository(database);
@@ -584,7 +669,6 @@ void main() {
       });
       await settle(tester);
       expect(status('rig'), endsWith('(example rig)'));
-      expect(status('target'), 'Not chosen');
     });
 
     testWidgets('not offered when a site is already set', (tester) async {

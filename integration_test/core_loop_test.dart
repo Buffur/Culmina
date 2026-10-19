@@ -147,8 +147,11 @@ class _Device {
       );
       await vm.ready;
       await vm.theme.load();
-      await vm.tonight.load();
+      // F16 A1: as main does, the flag and a stored site pick the first
+      // route before the first frame.
+      await vm.tonight.load(hasStoredSite: !vm.site.isDefaultLocation);
     });
+    AppRouter.router.go(AppRouter.firstLocation(vm.tonight));
     await tester.pumpWidget(
       MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
     );
@@ -296,9 +299,15 @@ void main() {
     await device.boot(tester);
     addTearDown(() => device.close(tester));
 
-    // First run: skipped; the site is set in the Library instead.
+    // First run: the setup is the first screen; Start planning leaves both
+    // steps for later, and the site is set in the Library instead.
     expect(find.text('Welcome to Culmina'), findsOneWidget);
-    await tap(tester, find.byKey(const Key('welcome.skip')));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('welcome.start')),
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tap(tester, find.byKey(const Key('welcome.start')));
     expect(find.byKey(const Key('tonight.noSite')), findsOneWidget);
 
     // Site.

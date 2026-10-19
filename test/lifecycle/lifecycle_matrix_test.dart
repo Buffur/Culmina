@@ -126,7 +126,9 @@ Future<PlannerHarness> _boot(
   );
   await vm.ready;
   await vm.theme.load();
-  await vm.tonight.load();
+  // F16 A1: as main does.
+  await vm.tonight.load(hasStoredSite: !vm.site.isDefaultLocation);
+  AppRouter.router.go(AppRouter.firstLocation(vm.tonight));
   return vm;
 }
 
@@ -194,7 +196,12 @@ void main() {
     });
     expect(vm.site.isDefaultLocation, isTrue);
 
-    await tester.tap(find.byKey(const Key('welcome.skip')));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('welcome.start')),
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.tap(find.byKey(const Key('welcome.start')));
     await _settle(tester);
     expect(find.byKey(const Key('tonight.noSite')), findsOneWidget);
 

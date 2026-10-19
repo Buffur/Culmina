@@ -133,6 +133,7 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** governance (ADR-006).
 
 ## F-05 — Seed data and first-run bootstrap
+- **F16 (2026-10-19; S16.1, RA-B01–06):** the stored first-run flag, with whether a site or position is stored, is read before `runApp`; `AppRouter.firstLocation` makes `/welcome` the first route on a first run, so Tonight never draws first. Tonight's post-frame push is removed. Welcome is one page with the purpose, the permission rationale, an optional site step (GPS only on "Use current position") and an optional rig step. The rig step has the class-first panel (by hand or from a photo; the rig saved there becomes the plan's rig and is shown, D8 / UXA-C2) and "Or choose a saved rig". Start planning or back closes it for good. There is no target step and no Skip.
 - **TASK 12.5 (commit `b13f7c7`):** a first-run setup page (`/welcome`) with site, rig and target steps, each skippable, reusing the pickers; the location-permission rationale is shown before "Use current position". Offered once, only on a start without a site (owner decisions); Skip, Done and back store that it is done.
 - **TASK 8.5:** equipment seeding ships one profile (verified ZWO camera + example optics) with stored provenance; the four phone profiles are no longer seeded. The equipment seeder still re-seeds when the equipment table is empty (TD-035, equipment part).
 - **Status:** Partial *(bootstrap ordering fixed TASK 1.2)*

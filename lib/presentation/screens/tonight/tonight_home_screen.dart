@@ -30,7 +30,6 @@ import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/plan_lifecycle_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/startup_viewmodel.dart';
-import '../../viewmodels/tonight_viewmodel.dart';
 import '../../shared/unsaved_plan_prompt.dart';
 import '../../shared/failure_feedback.dart';
 
@@ -51,13 +50,6 @@ class TonightHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final startupVm = context.watch<StartupViewModel>();
-    final tonightVm = context.watch<TonightViewModel>();
-    if (tonightVm.firstRunDue) {
-      tonightVm.markOffered();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted) context.push(AppRouter.welcome);
-      });
-    }
     final Widget body;
     if (startupVm.hasBootstrapError) {
       body = Center(
