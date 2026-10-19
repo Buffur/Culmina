@@ -1,5 +1,6 @@
 import '../models/execution.dart';
 import '../models/session.dart';
+import 'astrobin_acquisitions.dart';
 
 /// A session as exported (TASK 14.3): the aggregate with its run's events
 /// (owner decision: the event log is included).
@@ -15,4 +16,11 @@ class ExportedSession {
 /// Implemented in the data layer; import is deferred.
 abstract class SessionExporter {
   Future<void> share(List<ExportedSession> sessions);
+}
+
+/// Shares an AstroBin acquisition CSV (F20; mapping v1 in
+/// `docs/EXPORT_MANIFEST.md`) through the platform share sheet, with the
+/// rows' filter names in order. Implemented in the data layer.
+abstract class AstroBinCsvExporter {
+  Future<void> share(AstroBinExport acquisitions);
 }

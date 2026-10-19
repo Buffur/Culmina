@@ -20,6 +20,7 @@ import '../domain/services/reverse_geocoder.dart';
 import '../domain/services/backup_service.dart';
 import '../domain/services/current_session.dart';
 import '../domain/services/session_exporter.dart';
+import 'viewmodels/astrobin_export_viewmodel.dart';
 import 'viewmodels/backup_viewmodel.dart';
 import 'viewmodels/candidates_viewmodel.dart';
 import 'viewmodels/capture_analysis_viewmodel.dart';
@@ -56,6 +57,7 @@ class AppViewModels {
     required FirstRunRepository firstRun,
     required PrivacyPreferencesRepository privacy,
     SessionExporter? exporter,
+    AstroBinCsvExporter? csvExporter,
     BackupService? backup,
     SessionRepository? sessions,
     CaptureFileAccess? captureFiles,
@@ -128,6 +130,10 @@ class AppViewModels {
     // S8.3: a night check or a recorded result may change Tonight's line.
     lifecycle.onNightChecked = sessionList?.refreshDue;
     this.backup = backup == null ? null : BackupViewModel(backup);
+    // F20: the AstroBin acquisition CSV, where sessions and sharing exist.
+    astrobin = sessions == null || csvExporter == null
+        ? null
+        : AstroBinExportViewModel(sessions, csvExporter);
     results = sessions == null
         ? null
         : ResultsViewModel(
@@ -185,6 +191,9 @@ class AppViewModels {
   /// Null when no backup service is given (tests).
   late final BackupViewModel? backup;
   late final ResultsViewModel? results;
+
+  /// Null without sessions or a CSV exporter (tests).
+  late final AstroBinExportViewModel? astrobin;
   late final ThemeViewModel theme;
 
   /// Collapsible sections' remembered states (S5.5).
@@ -214,6 +223,7 @@ class AppViewModels {
     ChangeNotifierProvider.value(value: tonight),
     ChangeNotifierProvider<BackupViewModel?>.value(value: backup),
     ChangeNotifierProvider<ResultsViewModel?>.value(value: results),
+    Provider<AstroBinExportViewModel?>.value(value: astrobin),
     ChangeNotifierProvider<MetadataImportViewModel?>.value(
       value: metadataImport,
     ),

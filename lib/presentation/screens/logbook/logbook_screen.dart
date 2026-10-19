@@ -17,7 +17,9 @@ import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../shared/plan_state.dart';
 import '../../viewmodels/library_viewmodels.dart';
+import '../../viewmodels/astrobin_export_viewmodel.dart';
 import '../execution/results_screen.dart';
+import 'astrobin_export.dart';
 
 /// An entry's identity (S8.5–S8.6; RD-14): its name when it has one, else
 /// its target and night, "M42 · Mon, Dec 15" ([targetAndNight]).
@@ -148,6 +150,7 @@ class _LogbookScreenState extends State<LogbookScreen> {
       });
     }
     final count = vm.filter.count;
+    final astrobin = context.read<AstroBinExportViewModel?>();
     return Scaffold(
       appBar: AppBar(
         title: _searching
@@ -185,29 +188,41 @@ class _LogbookScreenState extends State<LogbookScreen> {
           ),
           // TASK 14.3 (owner): every saved entry in one manifest file. S9.8:
           // a labelled item in the Logbook's menu, not an icon alone.
-          if (vm.canExport)
+          if (vm.canExport || astrobin != null)
             PopupMenuButton<void>(
               key: const Key('logbook.menu'),
               tooltip: 'More',
               itemBuilder: (_) => [
-                PopupMenuItem<void>(
-                  key: const Key('logbook.exportAll'),
-                  onTap: () async {
-                    final done = await runWithFeedback(
-                      context,
-                      'export the Logbook',
-                      vm.exportAll,
-                    );
-                    if (done && context.mounted) {
-                      showDone(context, 'Export file created');
-                    }
-                  },
-                  child: const ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.file_download_outlined),
-                    title: Text(AppWords.exportAllAsFile),
+                if (vm.canExport)
+                  PopupMenuItem<void>(
+                    key: const Key('logbook.exportAll'),
+                    onTap: () async {
+                      final done = await runWithFeedback(
+                        context,
+                        'export the Logbook',
+                        vm.exportAll,
+                      );
+                      if (done && context.mounted) {
+                        showDone(context, 'Export file created');
+                      }
+                    },
+                    child: const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.file_download_outlined),
+                      title: Text(AppWords.exportAllAsFile),
+                    ),
                   ),
-                ),
+                // F20: the AstroBin acquisition CSV, after its preview.
+                if (astrobin != null)
+                  PopupMenuItem<void>(
+                    key: const Key('logbook.astrobin'),
+                    onTap: () => exportForAstroBinFlow(context),
+                    child: const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.table_view_outlined),
+                      title: Text(exportForAstroBin),
+                    ),
+                  ),
               ],
             ),
         ],

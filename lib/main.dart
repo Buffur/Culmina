@@ -149,6 +149,7 @@ Future<void> _start() async {
     firstRun: SharedPrefsFirstRunRepository(),
     privacy: SharedPrefsPrivacyPreferencesRepository(),
     exporter: ShareSessionExporter(),
+    csvExporter: ShareAstroBinCsvExporter(),
     backup: FileBackupService(
       database,
       sessionRepo,

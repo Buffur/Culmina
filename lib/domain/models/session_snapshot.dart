@@ -1,4 +1,5 @@
 import 'astro_target.dart';
+import 'camera_class.dart';
 import 'calendar_date.dart';
 import 'session_night.dart';
 
@@ -142,6 +143,12 @@ class SessionSnapshot {
   int? get bortleClass => _section('skyDarkness')?['bortleClass'] as int?;
   double? get sqm => _num('skyDarkness', 'sqmMagArcsec2');
   double? get rigFocalRatio => _num('rig', 'focalRatio');
+
+  /// F20: the saved rig's camera class; null when the snapshot has none.
+  CameraClass? get cameraClass => switch (_section('rig')?['cameraClass']) {
+    final String name => CameraClass.fromStorage(name),
+    _ => null,
+  };
   double? get rigPixelPitchUm => _num('rig', 'pixelPitchUm');
   double? get darknessLimitDeg => _num('preferences', 'darknessLimitDeg');
   Duration? get integration => _ms('budget', 'integrationMs');

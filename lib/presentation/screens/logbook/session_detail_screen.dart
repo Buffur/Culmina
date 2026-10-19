@@ -33,6 +33,8 @@ import '../../shared/unsaved_plan_prompt.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../core/utils/astro_math.dart';
 import '../../shared/capture_settings_text.dart';
+import '../../viewmodels/astrobin_export_viewmodel.dart';
+import 'astrobin_export.dart';
 
 /// A Logbook entry (TASK 14.1; S8.7, P8.7, ADR-019 §8, §10): read-only
 /// history from its snapshots — never today's site, target or rig (ADR-014
@@ -588,6 +590,17 @@ class _Actions extends StatelessWidget {
             },
             icon: const Icon(Icons.file_download_outlined),
             label: const Text(AppWords.exportAsFile),
+            style: OutlinedButton.styleFrom(minimumSize: tall),
+          ),
+        ],
+        // F20: this entry's AstroBin acquisition CSV, after its preview.
+        if (context.read<AstroBinExportViewModel?>() != null && !s.legacy) ...[
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            key: const Key('detail.astrobin'),
+            onPressed: () => exportForAstroBinFlow(context, id: s.id),
+            icon: const Icon(Icons.table_view_outlined),
+            label: const Text(exportForAstroBin),
             style: OutlinedButton.styleFrom(minimumSize: tall),
           ),
         ],

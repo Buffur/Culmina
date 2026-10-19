@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../core/config/app_identity.dart';
 import '../../core/time/clock.dart';
+import '../../domain/services/astrobin_acquisitions.dart';
 import '../../domain/services/session_exporter.dart';
 import 'session_manifest_codec.dart';
 
@@ -74,5 +75,49 @@ class ShareSessionExporter implements SessionExporter {
     final n = sessions.length;
     return '${AppIdentity.appName} export: $n ${n == 1 ? 'session' : 'sessions'} '
         '($shown$more). Manifest v${SessionManifestCodec.version}.';
+  }
+}
+
+/// Writes an AstroBin acquisition CSV (F20) to the temporary folder and
+/// hands it to the share sheet, with the filter names in row order: the
+/// CSV's `filter` column takes AstroBin's numeric equipment ID, which
+/// Culmina does not have, so the user picks each row's filter there.
+class ShareAstroBinCsvExporter implements AstroBinCsvExporter {
+  ShareAstroBinCsvExporter({this._clock = const SystemClock()});
+
+  final Clock _clock;
+
+  @override
+  Future<void> share(AstroBinExport acquisitions) async {
+    final now = _clock.nowUtc();
+    final dir = await getTemporaryDirectory();
+    final file = File(p.join(dir.path, fileName(now)));
+    await file.writeAsString(acquisitions.csv);
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path, mimeType: 'text/csv')],
+        text: shareText(acquisitions),
+      ),
+    );
+  }
+
+  /// `astroplan-astrobin-2026-09-29-2130.csv`, in the device's local time.
+  static String fileName(DateTime nowUtc) =>
+      'astroplan-astrobin-${ShareSessionExporter.localFileStamp(nowUtc)}.csv';
+
+  /// The rows in CSV order with their filter names (A3), and how many
+  /// entries gave none.
+  static String shareText(AstroBinExport a) {
+    final n = a.rows.length;
+    final skipped = a.skipped.length;
+    return [
+      'AstroBin CSV: $n ${n == 1 ? 'row' : 'rows'}. '
+          "AstroBin's filter column takes its equipment ID, so it is left "
+          'empty; choose each row\'s filter there:',
+      ...a.rowLines,
+      if (skipped > 0)
+        '$skipped ${skipped == 1 ? 'entry gives' : 'entries give'} no row '
+            '(no recorded frames).',
+    ].join('\n');
   }
 }

@@ -85,6 +85,7 @@ class PlannerHarness extends ChangeNotifier {
     FirstRunRepository? firstRun,
     PrivacyPreferencesRepository? privacyPreferences,
     SessionExporter? exporter,
+    AstroBinCsvExporter? csvExporter,
     BackupService? backup,
     CaptureFileAccess? captureFiles,
   }) : _targetRepository = targetRepository,
@@ -119,6 +120,7 @@ class PlannerHarness extends ChangeNotifier {
           privacyPreferences ??
           InMemoryPrivacyPreferences(placeNameLookup: true),
       exporter: exporter,
+      csvExporter: csvExporter,
       backup: backup,
       sessions: sessionRepository,
       captureFiles: captureFiles,

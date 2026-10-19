@@ -552,6 +552,7 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** Phases 13, 15.
 
 ## F-44 — Export / interoperability manifest
+- **F20 (2026-10-19; S16.5, Q4, CA-08/M7, UX-S R12):** **Export for AstroBin (CSV)** from the Logbook's menu and an entry: AstroBin's acquisition CSV of recorded acquisitions only (completed results; plans, runs in progress, Not done and old logs give no rows and are listed with the reason), one row per night and light setting, the `filter` column empty with the filter names in row order in the preview and the share text, unknown values blank, calibration counts only from recorded frames proving the whole C15 tuple of one row. Previewed before Share CSV; Cancel shares nothing. Mapping v1 in `docs/EXPORT_MANIFEST.md`; the manifest is unchanged. No AstroBin account, lookup or upload.
 - **F01 (2026-10-18), backup restore:** a picked backup's database is checked completely before the confirmation (integrity, schema, every row, repository reads, through the app's own connection); the confirmation names the backup's version and plan count and offers Back up first; Restore and restart applies it at once, checked again, with interrupted activation completed or rolled back; the next start reports the outcome once (TD-106 code, TD-105). Phone rehearsal: G2.
 - **TASK 14.3 (commit `a234ff6`):** manifest v2 (`docs/EXPORT_MANIFEST.md`) exported per session and for all sessions as a shared `.json` file with a text summary; v1 still readable; tested round trip. Import is deferred (roadmap).
 - **Status:** Implemented *(export; was Prototype)*
