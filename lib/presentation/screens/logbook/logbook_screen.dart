@@ -7,6 +7,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../domain/models/session.dart';
 import '../../../domain/services/result_action.dart';
+import '../../../domain/services/saved_night_end.dart';
 import '../../../domain/services/session_reconciliation.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
@@ -294,6 +295,23 @@ class _LogbookScreenState extends State<LogbookScreen> {
     );
   }
 
+  /// When a saved night ahead can take its result (F19 A2/A5), in the
+  /// saved plan's zone: the entry detail's wording.
+  static String _resultWhen(BuildContext context, Session s) {
+    final start = SavedNightEnd.startOf(s);
+    if (start == null) {
+      return 'A result can be recorded once the night begins.';
+    }
+    final zone = s.timeZoneId ?? s.planSnapshot?.timeZoneId;
+    final date = NightTimeFormatter.eveningDate(
+      CalendarDate.fromDateTimeFields(
+        NightTimeFormatter.wallClock(start, zoneId: zone),
+      ),
+    );
+    return 'A result can be recorded once the night begins: from $date, '
+        '${NightTimeFormatter.clockTime(context, start, zoneId: zone)}.';
+  }
+
   Widget _row(BuildContext context, SessionsViewModel vm, Session session) {
     final log = session.record;
     final action = vm.resultAction(session);
@@ -365,6 +383,15 @@ class _LogbookScreenState extends State<LogbookScreen> {
                     due: dueReport,
                   ),
                   key: Key('logbook.integration.${session.id}'),
+                ),
+              // F19 A5: a saved night ahead offers no Record result yet;
+              // its card says from when one can be recorded, rather than
+              // leaving the action unexplained.
+              if (action == ResultAction.none && session.isSavedPlan)
+                Text(
+                  _resultWhen(context, session),
+                  key: Key('logbook.resultWhen.${session.id}'),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               // S8.2 (I-6): Record result once the saved night has ended;
               // Edit result for a result.

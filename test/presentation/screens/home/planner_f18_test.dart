@@ -17,6 +17,7 @@ import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/shared/plan_night_phrase.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
 import 'package:drift/native.dart';
@@ -46,7 +47,11 @@ void main() {
     }
   }
 
-  Future<void> start(WidgetTester tester, {bool target = true}) async {
+  Future<void> start(
+    WidgetTester tester, {
+    bool target = true,
+    bool rig = true,
+  }) async {
     tester.view.physicalSize = const Size(800, 6000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -77,8 +82,11 @@ void main() {
         sessionRepository: DriftSessionRepository(db, clock: clock),
       );
       await vm.ready;
-      final rig = (await DriftEquipmentRepository(db).getAllEquipment()).first;
-      await vm.setEquipment(rig);
+      if (rig) {
+        await vm.setEquipment(
+          (await DriftEquipmentRepository(db).getAllEquipment()).first,
+        );
+      }
       if (target) {
         final m42 = (await DriftTargetRepository(db).searchTargets('M42'))
             .first;
@@ -172,5 +180,42 @@ void main() {
     await settle(tester);
     expect(find.text('Plan saved'), findsOneWidget);
     expect(save, findsOneWidget, reason: 'it never disappears');
+  });
+
+  testWidgets('A5: Save plan stays, disabled with the reason and the '
+      'direct action while the rig is missing; enabled once chosen', (
+    tester,
+  ) async {
+    await start(tester, rig: false);
+    expect(vm.plan.selectedTarget, isNotNull, reason: 'only the rig missing');
+    final save = find.byKey(const Key('planner.save'));
+    expect(save, findsOneWidget);
+    expect(tester.widget<ButtonStyleButton>(save).onPressed, isNull);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('planner.saveReason'))).data,
+      'To save: ${PlanStatus.rigReason}',
+    );
+    final fix = find.byKey(const Key('planner.saveFix'));
+    expect(
+      find.descendant(of: fix, matching: find.text(AppWords.chooseRig)),
+      findsOneWidget,
+    );
+    await tester.tap(fix);
+    await settle(tester);
+    // The plan's rig list (D8 A): a tap chooses the rig for this plan.
+    final rig = (await tester.runAsync(
+      () => DriftEquipmentRepository(db).getAllEquipment(),
+    ))!.first;
+    await tester.tap(find.widgetWithText(ListTile, rig.name));
+    await settle(tester);
+    expect(vm.plan.selectedEquipment?.id, rig.id);
+    AppRouter.router.go(AppRouter.session());
+    await settle(tester);
+    expect(tester.widget<ButtonStyleButton>(save).onPressed, isNotNull);
+    expect(find.byKey(const Key('planner.saveReason')), findsNothing);
+    expect(find.byKey(const Key('planner.saveFix')), findsNothing);
+    await tester.tap(save);
+    await settle(tester);
+    expect(find.text('Plan saved'), findsOneWidget);
   });
 }

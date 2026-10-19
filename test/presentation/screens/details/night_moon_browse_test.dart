@@ -20,6 +20,7 @@ import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
+import 'package:astroplan/domain/services/night_view.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/shared/night_text.dart';
@@ -27,6 +28,8 @@ import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -301,6 +304,115 @@ void main() {
     await settle(tester);
     expect(textOf(tester, 'nightMoon.cursor'), contains(', CET, UTC+01:00'));
     expect(vm.eveningDate, tonight);
+  });
+
+  /// Makes a polar site the active one.
+  Future<void> polarSite(WidgetTester tester, double latitude) async {
+    await tester.runAsync(() async {
+      final id = await vm.site.saveSite(
+        domain.LocationProfile(
+          id: 0,
+          name: 'Polar $latitude',
+          latitude: latitude,
+          longitude: 15.6,
+          timeZoneId: 'Arctic/Longyearbyen',
+        ),
+      );
+      await vm.site.selectSite(id);
+    });
+    await settle(tester);
+  }
+
+  testWidgets('A5 polar: under the midnight Sun (78° N, June) the readout '
+      'says there is no more dark time, all night', (tester) async {
+    await start(tester);
+    await polarSite(tester, 78);
+    final b = browser(tester);
+    b.viewNight(CalendarDate(2027, 6, 20));
+    await settle(tester);
+    expect(b.view.segments.map((s) => s.sky).toSet(), {
+      SkyState.daylight,
+    }, reason: 'no twilight and no dark at all');
+    for (final hours in [0, 6, 12, 18, 23]) {
+      b.setCursor(b.view.night.startUtc.add(Duration(hours: hours)));
+      await settle(tester);
+      final text = textOf(tester, 'nightMoon.cursor');
+      expect(text, contains('Daylight · '), reason: '+$hours h');
+      expect(text, contains('no more dark time this night'));
+      expect(text, isNot(contains('darkness in')));
+    }
+    expect(vm.eveningDate, tonight, reason: 'browsing changes no plan');
+  });
+
+  testWidgets('A5 polar: in the polar night (88° N, December) the readout '
+      'says dark until the night ends, with no dark-time change', (
+    tester,
+  ) async {
+    await start(tester);
+    await polarSite(tester, 88);
+    final b = browser(tester);
+    expect(b.view.segments.map((s) => s.sky).toSet(), {SkyState.dark});
+    for (final hours in [0, 12, 23]) {
+      b.setCursor(b.view.night.startUtc.add(Duration(hours: hours)));
+      await settle(tester);
+      expect(b.cursor.darkChangeUtc, isNull);
+      final text = textOf(tester, 'nightMoon.cursor');
+      expect(text, contains('Dark (Sun below −18°)'), reason: '+$hours h');
+      expect(text, contains('dark until the night ends'));
+      expect(text, isNot(contains('dark for another')));
+    }
+  });
+
+  testWidgets('A5: the slider moves by keyboard, five minutes per arrow '
+      'key, and reads its instant to assistive technology', (tester) async {
+    await start(tester);
+    final handle = tester.ensureSemantics();
+    final b = browser(tester);
+    b.setCursor(b.view.night.startUtc.add(const Duration(hours: 6)));
+    await settle(tester);
+    final slider = find.byKey(const Key('nightMoon.slider'));
+    expect(slider, findsOneWidget);
+    final before = b.cursorUtc;
+    String readout() => textOf(tester, 'nightMoon.cursor');
+
+    // Its semantics: a slider whose value is the instant the readout
+    // starts with, with increase / decrease actions.
+    SemanticsNode node() =>
+        find.semantics.byFlag(SemanticsFlag.isSlider).evaluate().single;
+    expect(node().value, isNotEmpty);
+    expect(node().label, node().value);
+    expect(readout(), startsWith('${node().value}, '));
+    expect(
+      node().getSemanticsData().hasAction(SemanticsAction.increase),
+      isTrue,
+    );
+    expect(
+      node().getSemanticsData().hasAction(SemanticsAction.decrease),
+      isTrue,
+    );
+
+    // Reach it with Tab, then the arrows.
+    bool focused() =>
+        FocusManager.instance.primaryFocus?.context
+            ?.findAncestorWidgetOfExactType<Slider>() ==
+        tester.widget<Slider>(slider);
+    for (var i = 0; i < 60 && !focused(); i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+    }
+    expect(focused(), isTrue, reason: 'reachable by keyboard');
+    expect(b.cursorUtc, before, reason: 'focusing moves nothing');
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await settle(tester);
+    expect(b.cursorUtc, before.add(const Duration(minutes: 5)));
+    expect(readout(), startsWith('${node().value}, '));
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await settle(tester);
+    expect(b.cursorUtc, before);
+    expect(vm.eveningDate, tonight);
+    handle.dispose();
   });
 
   testWidgets('large text: the month becomes a week list', (tester) async {

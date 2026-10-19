@@ -245,6 +245,34 @@ void main() {
     expect(out.csv.split('\n'), [_header, '2026-12-16,,20,300,,,,,,,,,,,,,']);
   });
 
+  test('A1: two known nights give their rows in date order, whatever order '
+      'the entries come in or their ids say; an unknown night is last', () {
+    ExportedSession night(int id, String date, int frames) => _entry(
+      id: id,
+      blocks: [_b(id, FrameType.light, filter: 'L')],
+      confirmed: {id: frames},
+      snapshot: _snap(date),
+    );
+    final out = AstroBinExport.of([
+      _entry(id: 1, blocks: [_b(9, FrameType.light)], confirmed: {9: 5}),
+      // The later night has the lower id: neither the input order nor the
+      // ids give the date order.
+      night(2, '2026-12-17', 7),
+      night(3, '2026-12-15', 3),
+    ]);
+    expect(out.csv.split('\n'), [
+      _header,
+      '2026-12-15,,3,300,,,,,,,,,,,,,',
+      '2026-12-17,,7,300,,,,,,,,,,,,,',
+      ',,5,300,,,,,,,,,,,,,',
+    ]);
+    expect(out.rowLines, [
+      '1. L · 2026-12-15 · 3 × 300 s',
+      '2. L · 2026-12-17 · 7 × 300 s',
+      '3. No filter · date unknown · 5 × 300 s',
+    ]);
+  });
+
   test('rows of the same night follow the entries\' order by id, whatever '
       'order they are given in', () {
     ExportedSession night(int id, String filter) => _entry(

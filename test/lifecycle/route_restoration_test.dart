@@ -170,6 +170,46 @@ void main() {
     expect(find.text(deletedPlanMessage), findsOneWidget);
   });
 
+  testWidgets('A1: a restored planner route for a saved plan deleted '
+      'meanwhile shows Tonight and says why', (tester) async {
+    tester.view.physicalSize = const Size(800, 2400);
+    addTearDown(tester.view.reset);
+    await boot(tester, first: true);
+    addTearDown(() => tester.runAsync(db.close));
+    final x = await tester.runAsync(() => vm.analysis.saveSession());
+    AppRouter.router.go(AppRouter.session(x!.id));
+    await settle(tester);
+    expect(location(), AppRouter.session(x.id));
+    expect(find.byKey(const Key('planner.status')), findsOneWidget);
+    final data = await tester.getRestorationData();
+    await tester.runAsync(() => sessions.delete(x.id));
+
+    AppRouter.router.go(AppRouter.tonight);
+    await settle(tester);
+    await boot(tester);
+    await tester.restoreFrom(data);
+    await settle(tester);
+    expect(location(), AppRouter.tonight);
+    expect(find.text(deletedPlanMessage), findsOneWidget);
+    expect(await tester.runAsync(() => sessions.get(x.id)), isNull);
+  });
+
+  testWidgets('A1: a restored planner route whose plan still exists stays '
+      'on the planner and says nothing', (tester) async {
+    tester.view.physicalSize = const Size(800, 2400);
+    addTearDown(tester.view.reset);
+    await boot(tester, first: true);
+    addTearDown(() => tester.runAsync(db.close));
+    final x = await tester.runAsync(() => vm.analysis.saveSession());
+    AppRouter.router.go(AppRouter.session(x!.id));
+    await settle(tester);
+
+    await killAndRestore(tester);
+    expect(location(), AppRouter.session(x.id));
+    expect(find.byKey(const Key('planner.status')), findsOneWidget);
+    expect(find.text(deletedPlanMessage), findsNothing);
+  });
+
   testWidgets('A1/A2: a restored result form reloads the stored entry; Back '
       'writes nothing (typed values are not restored)', (tester) async {
     tester.view.physicalSize = const Size(800, 2400);

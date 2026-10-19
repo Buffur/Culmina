@@ -278,6 +278,103 @@ void main() {
     );
   });
 
+  // F19 A4: the shared delete confirmation, dismissed by system Back or by
+  // a tap outside it, deletes nothing: from a rig's and a target's editor
+  // and from a swipe on the list.
+  testWidgets('F19 A4: system Back and a tap outside dismiss a rig\'s and a '
+      'target\'s delete confirmation; nothing is deleted', (tester) async {
+    await start(tester, AppRouter.libraryRigs);
+    final rigs = DriftEquipmentRepository(db),
+        targets = DriftTargetRepository(db);
+    final allRigs = (await tester.runAsync(rigs.getAllEquipment))!;
+    final rig = vm.plan.selectedEquipment!;
+    final target = vm.plan.selectedTarget!;
+
+    /// Opens the confirmation with [open], dismisses it with [dismiss].
+    Future<void> dismissed(
+      String question,
+      Future<void> Function() open,
+      Future<void> Function() dismiss,
+    ) async {
+      await open();
+      await settle(tester);
+      expect(find.text(question), findsOneWidget);
+      await dismiss();
+      await settle(tester);
+      expect(find.text(question), findsNothing, reason: 'dismissed');
+    }
+
+    Future<void> back() async {
+      await tester.binding.handlePopRoute();
+    }
+
+    Future<void> outside() => tester.tapAt(const Offset(4, 4));
+
+    // A swipe on the plan's rig in the list.
+    final row = find.widgetWithText(ListTile, rig.name);
+    await dismissed(
+      'Delete this rig?',
+      () => tester.drag(row, const Offset(-500, 0)),
+      back,
+    );
+    expect(row, findsOneWidget, reason: 'the row springs back');
+    await dismissed(
+      'Delete this rig?',
+      () => tester.drag(row, const Offset(-500, 0)),
+      outside,
+    );
+    expect(row, findsOneWidget);
+
+    // The same rig, from its editor.
+    await tester.tap(row);
+    await settle(tester);
+    Future<void> deleteRig() =>
+        tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await dismissed('Delete this rig?', deleteRig, back);
+    expect(
+      find.byKey(const Key('rigEditor.delete')),
+      findsOneWidget,
+      reason: 'Back closed only the dialog',
+    );
+    await dismissed('Delete this rig?', deleteRig, outside);
+    expect(find.byKey(const Key('rigEditor.delete')), findsOneWidget);
+    expect(find.text('Rig deleted'), findsNothing);
+    expect(
+      (await tester.runAsync(rigs.getAllEquipment))!.map((r) => r.id),
+      allRigs.map((r) => r.id),
+    );
+    expect(vm.plan.selectedEquipment?.id, rig.id);
+    await tester.tap(find.text('Cancel')); // closes the editor unchanged
+    await settle(tester);
+
+    // The plan's target, from its editor.
+    AppRouter.router.go(AppRouter.libraryTargets);
+    await settle(tester);
+    await tester.enterText(find.byType(TextField).first, target.catalogId);
+    await settle(tester);
+    await tester.tap(
+      find
+          .ancestor(
+            of: find.textContaining(target.catalogId),
+            matching: find.byType(ListTile),
+          )
+          .first,
+    );
+    await settle(tester);
+    Future<void> deleteTarget() =>
+        tester.tap(find.byKey(const Key('targetEditor.delete')));
+    await dismissed('Delete this target?', deleteTarget, back);
+    expect(find.byKey(const Key('targetEditor.delete')), findsOneWidget);
+    await dismissed('Delete this target?', deleteTarget, outside);
+    expect(find.byKey(const Key('targetEditor.delete')), findsOneWidget);
+    expect(find.text('Target deleted'), findsNothing);
+    expect(
+      await tester.runAsync(() => targets.getTargetById(target.id)),
+      isNotNull,
+    );
+    expect(vm.plan.selectedTarget?.id, target.id);
+  });
+
   // S9.8 (D9-5): a save says so.
   testWidgets('saving a rig, a target and a site says so', (tester) async {
     await start(tester, AppRouter.libraryRigs);

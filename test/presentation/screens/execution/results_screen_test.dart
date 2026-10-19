@@ -515,6 +515,73 @@ void main() {
       expect(find.byKey(Key('logbook.editResults.$id')), findsOneWidget);
     });
 
+    // F19 A5: no Record action on a night ahead, but never unexplained: the
+    // upcoming card and the entry both say from when a result can be
+    // recorded, in the saved plan's zone.
+    testWidgets('F19 A5: a night ahead says when its result can be '
+        'recorded, on its Upcoming card and on the entry', (tester) async {
+      await open(
+        tester,
+        _Kind.saved,
+        at: DateTime.utc(2026, 12, 15, 10),
+        route: false,
+      );
+      expect(find.byKey(const Key('logbook.upcoming')), findsOneWidget);
+      expect(find.byKey(Key('logbook.recordResult.$id')), findsNothing);
+      final card = find.byKey(Key('logbook.resultWhen.$id'));
+      expect(card, findsOneWidget);
+      final when = tester.widget<Text>(card).data!;
+      expect(
+        when,
+        startsWith(
+          'A result can be recorded once the night begins: from Tue, Dec 15, ',
+        ),
+      );
+
+      await tester.tap(find.byKey(Key('logbook.title.$id')));
+      await settle(tester);
+      final detail = find.byKey(const Key('detail.resultWhen'));
+      expect(detail, findsOneWidget);
+      expect(tester.widget<Text>(detail).data, when, reason: 'one wording');
+      expect(find.byKey(const Key('detail.recordResult')), findsNothing);
+
+      // Once the night has begun the action replaces the explanation.
+      clock.now = DateTime.utc(2026, 12, 16, 2);
+      AppRouter.router.go(AppRouter.sessions);
+      await settle(tester);
+      expect(find.byKey(Key('logbook.recordResult.$id')), findsOneWidget);
+      expect(find.byKey(Key('logbook.resultWhen.$id')), findsNothing);
+    });
+
+    testWidgets('F19 A1: Completed as planned reads Completed with its own '
+        'icon, on the card and on the entry', (tester) async {
+      await open(tester, _Kind.saved, at: _morning, route: false);
+      await tap(tester, 'logbook.recordResult.$id');
+      await tap(tester, 'results.outcome.asPlanned');
+      await tap(tester, 'results.save');
+
+      expect((await stored(tester)).resultKind, ResultKind.asPlanned);
+      expect(
+        find.descendant(
+          of: find.byKey(Key('logbook.status.$id')),
+          matching: find.text('Completed'),
+        ),
+        findsOneWidget,
+      );
+      expect(icon(id, Icons.check_circle_outline), findsOneWidget);
+      expect(icon(id, Icons.incomplete_circle_outlined), findsNothing);
+      expect(find.byKey(Key('logbook.resultWhen.$id')), findsNothing);
+      AppRouter.router.go(AppRouter.sessionDetail(id));
+      await settle(tester);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('detail.status')),
+          matching: find.byIcon(Icons.check_circle_outline),
+        ),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('an ended Saved plan offers Record result, on its row and '
         'on the entry, with Copy to another night and no Open', (tester) async {
       await open(tester, _Kind.saved, at: _morning, route: false);
