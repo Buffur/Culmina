@@ -63,6 +63,15 @@ void main() {
     expect(find.text('20°'), findsOneWidget);
     expect(find.text('15 %'), findsOneWidget);
     expect(find.text('5 s'), findsOneWidget);
+    // F12 (AM-01): the optional times are in the collapsed advanced group,
+    // whose summary counts them.
+    expect(
+      find.text('Gates: 0 of 2 on · optional times: 0 of 5 included'),
+      findsOneWidget,
+    );
+    expect(find.text('Not included'), findsNothing);
+    await tester.tap(find.byKey(const Key('settings.advanced')));
+    await tester.pumpAndSettle();
     expect(find.text('Not included'), findsNWidgets(5));
     expect(find.textContaining('not scientific laws'), findsOneWidget);
     // S1.8 (UX-20): overheads are applied since TASK 5.4.
@@ -127,6 +136,8 @@ void main() {
     await tester.pump();
     expect(vm.planningPreferences.darknessLimit, DarknessLimit.nautical);
 
+    await tester.tap(find.byKey(const Key('settings.advanced')));
+    await tester.pumpAndSettle();
     await tester.tap(
       find.descendant(
         of: find.byKey(const Key('settings.dither')),

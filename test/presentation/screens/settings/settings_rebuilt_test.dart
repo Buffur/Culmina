@@ -133,6 +133,9 @@ void main() {
       ),
     );
     await tester.pump();
+    // F12 (AM-01): the gates and optional times are one tap away.
+    await tester.tap(find.byKey(const Key('settings.advanced')));
+    await tester.pumpAndSettle();
   }
 
   Finder inTile(String key, Type type) =>
@@ -146,6 +149,7 @@ void main() {
     final headings = [
       'Imaging window',
       'Fit and capture time',
+      'Advanced',
       'Guidance',
       'Display',
       'Privacy',

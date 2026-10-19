@@ -41,28 +41,32 @@ abstract final class BlockText {
 
   /// What fits of this block tonight (S6.10; P6.9), only from the fit's own
   /// outputs: [unplaced] from `FitResult.unplacedFramesByBlock`, [upTo]
-  /// from `FitAnalyzer.maxFramesForBlock` (the last light block only) and
-  /// [spare], how many more of it still fit. Null when there is nothing to
-  /// say.
+  /// from `FitAnalyzer.maxFramesForBlock` and [spare], how many more of it
+  /// still fit. Since F12 (TD-074) every light block has [upTo] and [spare],
+  /// each with every other block as planned, which [others] says when
+  /// other blocks share the window (two answers cannot both hold). Null
+  /// when there is nothing to say.
   static String? whatFits(
     CaptureBlock b, {
     required int unplaced,
     int? upTo,
     int? spare,
+    bool others = false,
   }) {
+    final rest = others ? ' (other blocks as planned)' : '';
     if (unplaced > 0) {
       final head = unplaced == 1
           ? '1 frame does not fit tonight'
           : '$unplaced frames do not fit tonight';
       return upTo != null && upTo > 0
           ? '$head · up to $upTo × '
-                '${QuantityText.exposure(b.exposureTimeSeconds)} fit'
+                '${QuantityText.exposure(b.exposureTimeSeconds)} fit$rest'
           : head;
     }
     if (spare != null && spare > 0) {
       return spare == 1
-          ? '+1 frame still fits tonight'
-          : '+$spare frames still fit tonight';
+          ? '+1 frame still fits tonight$rest'
+          : '+$spare frames still fit tonight$rest';
     }
     return null;
   }

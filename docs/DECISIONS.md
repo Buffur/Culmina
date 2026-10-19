@@ -3927,6 +3927,8 @@ lower half" is not audited yet — TASK 12.5 designs the Tonight dashboard.)*
 - **Settings from the planner:** "Change in Planning Settings" switches to the
   Settings tab (`go`), leaving the autosaved planner.
 
+- **Implemented (F12, 2026-10-19; amends ADR-015's Settings tab, UX-S R3):** the assumptions panel's "Change in Settings" pushes `/plan/settings` above the tabs (root navigator) instead of switching to the Settings tab. It shows the planning settings only, titled "Planning settings", with a scope notice: global settings, the plan updates, each Save keeps a copy in its snapshot. Back pops to the same plan and section. The Settings tab keeps every section, the advanced gates and optional times collapsed (AM-01).
+
 ## ADR-016: Execution model under Android constraints
 
 > **Amended by ADR-019 (owner, 2026-09-27, S4.D):** execution is **optional**, off the primary path ("Track live"). Results are recorded after the session, and their counts are written as events, so the counters still equal the replay. The tracker's Finish leads to the same result form (ADR-019 §4). §2–§6's model is unchanged for live runs.

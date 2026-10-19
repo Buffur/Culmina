@@ -21,7 +21,32 @@ import '../../../core/utils/quantity_text.dart';
 /// screen only edits [PlanningPreferences] through the ViewModel, and every
 /// calculation stays in the domain.
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, this.overPlan = false});
+
+  /// Opened over the plan by "Change in Settings" (F12; UX-S R3): the
+  /// planning settings only, with their global scope said; Back returns to
+  /// the plan.
+  final bool overPlan;
+
+  /// The collapsed advanced group's facts: "Gates: 0 of 2 on · optional
+  /// times: 1 of 5 included".
+  static String advancedSummary(PlanningPreferences p) {
+    final gates = [p.moonGateEnabled, p.cloudGateEnabled].where((on) => on);
+    final times = [
+      p.ditherEveryNFrames,
+      p.refocusEveryMinutes,
+      p.filterChangeSeconds,
+      p.meridianFlipSeconds,
+      p.setupMinutes,
+    ].where((v) => v != null);
+    return 'Gates: ${gates.length} of 2 on · optional times: '
+        '${times.length} of 5 included';
+  }
+
+  static const scopeNotice =
+      'These settings apply to every plan, including the one you came from: '
+      'its budget and fit update as you change them. Each saved plan keeps a '
+      'copy of the values it was saved with. Back returns to your plan.';
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +61,18 @@ class SettingsScreen extends StatelessWidget {
     final small = Theme.of(context).textTheme.bodySmall;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(overPlan ? 'Planning settings' : 'Settings')),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
+          if (overPlan)
+            Card(
+              key: const Key('settings.scope'),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Text(scopeNotice),
+              ),
+            ),
           Text(
             'These are planning preferences, not scientific laws. The '
             'defaults are common rules of thumb; adjust them to your sky, '
@@ -85,30 +118,6 @@ class SettingsScreen extends StatelessWidget {
                 update(p.copyWith(darknessLimit: s.first)),
           ),
           const SizedBox(height: AppSpacing.sm),
-          // RD-11 = S9, TD-050: the optional gates of ADR-013 (G4, G5).
-          _GateTile(
-            key: const Key('settings.moonGate'),
-            title: 'Moon gate',
-            enabled: p.moonGateEnabled,
-            percent: p.moonGateMinIlluminationPct,
-            on: (pct) =>
-                'Excludes time when the Moon is up and at least $pct lit.',
-            off: 'Off: the Moon never excludes time.',
-            onToggle: (on) => update(p.copyWith(moonGateEnabled: on)),
-            onPercent: (v) => update(p.copyWith(moonGateMinIlluminationPct: v)),
-          ),
-          _GateTile(
-            key: const Key('settings.cloudGate'),
-            title: 'Cloud gate',
-            enabled: p.cloudGateEnabled,
-            percent: p.cloudGateMaxPct,
-            on: (pct) =>
-                'Excludes forecast hours with more than $pct cloud. An hour '
-                'without a forecast is never excluded.',
-            off: 'Off: the forecast never excludes time.',
-            onToggle: (on) => update(p.copyWith(cloudGateEnabled: on)),
-            onPercent: (v) => update(p.copyWith(cloudGateMaxPct: v)),
-          ),
           const _Section(
             'Fit and capture time',
             'Changes the capture budget and the fit verdict.',
@@ -142,161 +151,209 @@ class SettingsScreen extends StatelessWidget {
             label: '${p.perFrameOverheadSeconds.round()} s',
             onChanged: (v) => update(p.copyWith(perFrameOverheadSeconds: v)),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'Optional overheads. Off: the plan leaves this time out, so '
-            'your night may take longer than shown. On: it is added to the '
-            'capture plan\'s budget and fit. The values are assumptions — '
-            'measure your rig.',
-            style: small,
+          // F12 (AM-01; SP11): the optional gates and times, collapsed.
+          const _Section(
+            'Advanced',
+            'Optional gates and times. When on, they change the imaging '
+                'window, the capture budget and the fit.',
           ),
-          _OptionalOverhead(
-            key: const Key('settings.dither'),
-            title: 'Dither',
-            enabled: p.ditherEveryNFrames != null,
-            summary: p.ditherEveryNFrames == null
-                ? 'Not included'
-                : 'Every ${p.ditherEveryNFrames} lights, '
-                      '${p.ditherSettleSeconds.round()} s to settle each',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(ditherEveryNFrames: (on ? 3 : null,)),
-            ),
-            steppers: [
-              if (p.ditherEveryNFrames case final n?)
-                _Stepper(
-                  key: const Key('settings.dither.every'),
-                  label: 'Every',
-                  value: n.toDouble(),
-                  range: (1, 100),
-                  step: 1,
-                  format: (v) => '${v.round()} lights',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(ditherEveryNFrames: (v.round(),)),
-                  ),
-                ),
-              if (p.ditherEveryNFrames != null)
-                _Stepper(
-                  key: const Key('settings.dither.settle'),
-                  label: 'Settle',
-                  value: p.ditherSettleSeconds,
-                  range: PlanningPreferences.overheadSecondsRange,
-                  step: 5,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(p.copyWith(ditherSettleSeconds: v)),
-                ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.refocus'),
-            title: 'Refocus',
-            enabled: p.refocusEveryMinutes != null,
-            summary: p.refocusEveryMinutes == null
-                ? 'Not included'
-                : 'Every ${p.refocusEveryMinutes!.round()} min, '
-                      '${p.refocusSeconds.round()} s each',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(refocusEveryMinutes: (on ? 60.0 : null,)),
-            ),
-            steppers: [
-              if (p.refocusEveryMinutes case final every?)
-                _Stepper(
-                  key: const Key('settings.refocus.every'),
-                  label: 'Every',
-                  value: every,
-                  range: PlanningPreferences.refocusIntervalRange,
-                  step: 10,
-                  format: (v) => '${v.round()} min',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(refocusEveryMinutes: (v,)),
-                  ),
-                ),
-              if (p.refocusEveryMinutes != null)
-                _Stepper(
-                  key: const Key('settings.refocus.duration'),
-                  label: 'Takes',
-                  value: p.refocusSeconds,
-                  range: PlanningPreferences.overheadSecondsRange,
-                  step: 10,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(p.copyWith(refocusSeconds: v)),
-                ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.filterChange'),
-            title: 'Filter change',
-            enabled: p.filterChangeSeconds != null,
-            summary: p.filterChangeSeconds == null
-                ? 'Not included'
-                : '${p.filterChangeSeconds!.round()} s per change',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(filterChangeSeconds: (on ? 30.0 : null,)),
-            ),
-            steppers: [
-              if (p.filterChangeSeconds case final s?)
-                _Stepper(
-                  key: const Key('settings.filterChange.seconds'),
-                  label: 'Takes',
-                  value: s,
-                  range: PlanningPreferences.overheadSecondsRange,
-                  step: 5,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(filterChangeSeconds: (v,)),
-                  ),
-                ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.flip'),
-            title: 'Meridian flip',
-            enabled: p.meridianFlipSeconds != null,
-            summary: p.meridianFlipSeconds == null
-                ? 'Not included'
-                : '${QuantityText.duration(Duration(seconds: p.meridianFlipSeconds!.round()))}, '
-                      'once, when the target crosses the meridian',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(
-                meridianFlipSeconds: (on ? 300.0 : null,),
+          ExpansionTile(
+            key: const Key('settings.advanced'),
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: EdgeInsets.zero,
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            title: const Text('Gates and optional times'),
+            subtitle: Text(advancedSummary(p)),
+            children: [
+              // RD-11 = S9, TD-050: the optional gates of ADR-013 (G4, G5).
+              _GateTile(
+                key: const Key('settings.moonGate'),
+                title: 'Moon gate',
+                enabled: p.moonGateEnabled,
+                percent: p.moonGateMinIlluminationPct,
+                on: (pct) =>
+                    'Excludes time when the Moon is up and at least $pct lit.',
+                off: 'Off: the Moon never excludes time.',
+                onToggle: (on) => update(p.copyWith(moonGateEnabled: on)),
+                onPercent: (v) =>
+                    update(p.copyWith(moonGateMinIlluminationPct: v)),
               ),
-            ),
-            steppers: [
-              if (p.meridianFlipSeconds case final s?)
-                _Stepper(
-                  key: const Key('settings.flip.seconds'),
-                  label: 'Takes',
-                  value: s,
-                  range: PlanningPreferences.flipSecondsRange,
-                  step: 30,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(meridianFlipSeconds: (v,)),
+              _GateTile(
+                key: const Key('settings.cloudGate'),
+                title: 'Cloud gate',
+                enabled: p.cloudGateEnabled,
+                percent: p.cloudGateMaxPct,
+                on: (pct) =>
+                    'Excludes forecast hours with more than $pct cloud. An hour '
+                    'without a forecast is never excluded.',
+                off: 'Off: the forecast never excludes time.',
+                onToggle: (on) => update(p.copyWith(cloudGateEnabled: on)),
+                onPercent: (v) => update(p.copyWith(cloudGateMaxPct: v)),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                'Optional overheads. Off: the plan leaves this time out, so '
+                'your night may take longer than shown. On: it is added to the '
+                'capture plan\'s budget and fit. The values are assumptions — '
+                'measure your rig.',
+                style: small,
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.dither'),
+                title: 'Dither',
+                enabled: p.ditherEveryNFrames != null,
+                summary: p.ditherEveryNFrames == null
+                    ? 'Not included'
+                    : 'Every ${p.ditherEveryNFrames} lights, '
+                          '${p.ditherSettleSeconds.round()} s to settle each',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(ditherEveryNFrames: (on ? 3 : null,)),
+                ),
+                steppers: [
+                  if (p.ditherEveryNFrames case final n?)
+                    _Stepper(
+                      key: const Key('settings.dither.every'),
+                      label: 'Every',
+                      value: n.toDouble(),
+                      range: (1, 100),
+                      step: 1,
+                      format: (v) => '${v.round()} lights',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(
+                          ditherEveryNFrames: (v.round(),),
+                        ),
+                      ),
+                    ),
+                  if (p.ditherEveryNFrames != null)
+                    _Stepper(
+                      key: const Key('settings.dither.settle'),
+                      label: 'Settle',
+                      value: p.ditherSettleSeconds,
+                      range: PlanningPreferences.overheadSecondsRange,
+                      step: 5,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) =>
+                          update(p.copyWith(ditherSettleSeconds: v)),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.refocus'),
+                title: 'Refocus',
+                enabled: p.refocusEveryMinutes != null,
+                summary: p.refocusEveryMinutes == null
+                    ? 'Not included'
+                    : 'Every ${p.refocusEveryMinutes!.round()} min, '
+                          '${p.refocusSeconds.round()} s each',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(
+                    refocusEveryMinutes: (on ? 60.0 : null,),
                   ),
                 ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.setup'),
-            title: 'Setup before the first window',
-            enabled: p.setupMinutes != null,
-            summary: p.setupMinutes == null
-                ? 'Not included'
-                : '${p.setupMinutes!.round()} min, in the total time only',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(setupMinutes: (on ? 30.0 : null,)),
-            ),
-            steppers: [
-              if (p.setupMinutes case final m?)
-                _Stepper(
-                  key: const Key('settings.setup.minutes'),
-                  label: 'Takes',
-                  value: m,
-                  range: PlanningPreferences.setupMinutesRange,
-                  step: 5,
-                  format: (v) => '${v.round()} min',
-                  onChanged: (v) =>
-                      update(p.withOptionalOverheads(setupMinutes: (v,))),
+                steppers: [
+                  if (p.refocusEveryMinutes case final every?)
+                    _Stepper(
+                      key: const Key('settings.refocus.every'),
+                      label: 'Every',
+                      value: every,
+                      range: PlanningPreferences.refocusIntervalRange,
+                      step: 10,
+                      format: (v) => '${v.round()} min',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(refocusEveryMinutes: (v,)),
+                      ),
+                    ),
+                  if (p.refocusEveryMinutes != null)
+                    _Stepper(
+                      key: const Key('settings.refocus.duration'),
+                      label: 'Takes',
+                      value: p.refocusSeconds,
+                      range: PlanningPreferences.overheadSecondsRange,
+                      step: 10,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) => update(p.copyWith(refocusSeconds: v)),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.filterChange'),
+                title: 'Filter change',
+                enabled: p.filterChangeSeconds != null,
+                summary: p.filterChangeSeconds == null
+                    ? 'Not included'
+                    : '${p.filterChangeSeconds!.round()} s per change',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(
+                    filterChangeSeconds: (on ? 30.0 : null,),
+                  ),
                 ),
+                steppers: [
+                  if (p.filterChangeSeconds case final s?)
+                    _Stepper(
+                      key: const Key('settings.filterChange.seconds'),
+                      label: 'Takes',
+                      value: s,
+                      range: PlanningPreferences.overheadSecondsRange,
+                      step: 5,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(filterChangeSeconds: (v,)),
+                      ),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.flip'),
+                title: 'Meridian flip',
+                enabled: p.meridianFlipSeconds != null,
+                summary: p.meridianFlipSeconds == null
+                    ? 'Not included'
+                    : '${QuantityText.duration(Duration(seconds: p.meridianFlipSeconds!.round()))}, '
+                          'once, when the target crosses the meridian',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(
+                    meridianFlipSeconds: (on ? 300.0 : null,),
+                  ),
+                ),
+                steppers: [
+                  if (p.meridianFlipSeconds case final s?)
+                    _Stepper(
+                      key: const Key('settings.flip.seconds'),
+                      label: 'Takes',
+                      value: s,
+                      range: PlanningPreferences.flipSecondsRange,
+                      step: 30,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(meridianFlipSeconds: (v,)),
+                      ),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.setup'),
+                title: 'Setup before the first window',
+                enabled: p.setupMinutes != null,
+                summary: p.setupMinutes == null
+                    ? 'Not included'
+                    : '${p.setupMinutes!.round()} min, in the total time only',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(setupMinutes: (on ? 30.0 : null,)),
+                ),
+                steppers: [
+                  if (p.setupMinutes case final m?)
+                    _Stepper(
+                      key: const Key('settings.setup.minutes'),
+                      label: 'Takes',
+                      value: m,
+                      range: PlanningPreferences.setupMinutesRange,
+                      step: 5,
+                      format: (v) => '${v.round()} min',
+                      onChanged: (v) =>
+                          update(p.withOptionalOverheads(setupMinutes: (v,))),
+                    ),
+                ],
+              ),
             ],
           ),
           const _Section(
@@ -328,66 +385,68 @@ class SettingsScreen extends StatelessWidget {
             label: '${p.dewMarginC.toStringAsFixed(1)} °C',
             onChanged: (v) => update(p.copyWith(dewMarginC: v)),
           ),
-          const _Section('Display', 'How the app looks; no value changes.'),
-          const FieldModeTile(),
-          const _Section('Privacy', 'What leaves this device.'),
-          // TASK 16.3 (owner decision): opt-in, off by default.
-          SwitchListTile(
-            key: const Key('settings.placeNames'),
-            contentPadding: EdgeInsets.zero,
-            secondary: const Icon(Icons.place_outlined),
-            title: const Text('Look up place names'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Sends the chosen position to OpenStreetMap Nominatim to '
-                  'show a place name. Off: positions are shown as coordinates '
-                  'and nothing is sent.',
-                ),
-                // F21 A6: Off is applied but not stored; say so, with Retry.
-                if (settingsVm.placeNameLookupUnsaved) ...[
-                  Text(
-                    'Off for now, but not saved: after a restart place '
-                    'names would be on again.',
-                    key: const Key('settings.placeNames.unsaved'),
-                    style: small?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+          if (!overPlan) ...[
+            const _Section('Display', 'How the app looks; no value changes.'),
+            const FieldModeTile(),
+            const _Section('Privacy', 'What leaves this device.'),
+            // TASK 16.3 (owner decision): opt-in, off by default.
+            SwitchListTile(
+              key: const Key('settings.placeNames'),
+              contentPadding: EdgeInsets.zero,
+              secondary: const Icon(Icons.place_outlined),
+              title: const Text('Look up place names'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Sends the chosen position to OpenStreetMap Nominatim to '
+                    'show a place name. Off: positions are shown as coordinates '
+                    'and nothing is sent.',
                   ),
-                  TextButton(
-                    key: const Key('settings.placeNames.retry'),
-                    onPressed: () => runWithFeedback(
-                      context,
-                      'save the place-name setting',
-                      () => settingsVm.setPlaceNameLookup(false),
+                  // F21 A6: Off is applied but not stored; say so, with Retry.
+                  if (settingsVm.placeNameLookupUnsaved) ...[
+                    Text(
+                      'Off for now, but not saved: after a restart place '
+                      'names would be on again.',
+                      key: const Key('settings.placeNames.unsaved'),
+                      style: small?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     ),
-                    child: const Text('Retry'),
-                  ),
+                    TextButton(
+                      key: const Key('settings.placeNames.retry'),
+                      onPressed: () => runWithFeedback(
+                        context,
+                        'save the place-name setting',
+                        () => settingsVm.setPlaceNameLookup(false),
+                      ),
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ],
-              ],
+              ),
+              value: settingsVm.placeNameLookup,
+              onChanged: (on) => runWithFeedback(
+                context,
+                'save the place-name setting',
+                () => settingsVm.setPlaceNameLookup(on),
+              ),
             ),
-            value: settingsVm.placeNameLookup,
-            onChanged: (on) => runWithFeedback(
-              context,
-              'save the place-name setting',
-              () => settingsVm.setPlaceNameLookup(on),
+            const _Section(
+              'Data',
+              'Your plans, results, sites, rigs, targets and these settings.',
             ),
-          ),
-          const _Section(
-            'Data',
-            'Your plans, results, sites, rigs, targets and these settings.',
-          ),
-          // TASK 14.4: backup and restore.
-          const BackupSection(),
-          const _Section('About', 'Who made this, and the data it uses.'),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.info_outline),
-            title: const Text('About & data sources'),
-            subtitle: const Text('Attributions, licences and privacy'),
-            onTap: () => context.push(AppRouter.about),
-          ),
+            // TASK 14.4: backup and restore.
+            const BackupSection(),
+            const _Section('About', 'Who made this, and the data it uses.'),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.info_outline),
+              title: const Text('About & data sources'),
+              subtitle: const Text('Attributions, licences and privacy'),
+              onTap: () => context.push(AppRouter.about),
+            ),
+          ],
         ],
       ),
     );

@@ -6,6 +6,7 @@
 // adaptation; documented in ARCHITECTURE.md B16), so contrast is not
 // asserted there. Plus the altitude chart's text alternative.
 
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:astroplan/core/time/clock.dart';
@@ -349,6 +350,9 @@ void main() {
         );
         AppRouter.router.go(AppRouter.settings);
         await _settle(tester);
+        // F12: the optional gates and times are one tap away.
+        await tester.tap(find.byKey(const Key('settings.advanced')));
+        await _settle(tester);
         expect(find.byTooltip('Settle: more'), findsOneWidget);
         final settingsOn = await _audit(
           tester,
@@ -357,6 +361,16 @@ void main() {
         if (settingsOn.isNotEmpty) {
           report.add('settings, all on:\n${settingsOn.join('\n')}');
         }
+        // F12 (UX-S R3): the planning settings over the plan.
+        unawaited(AppRouter.router.push(AppRouter.planSettings));
+        await _settle(tester);
+        expect(find.byKey(const Key('settings.scope')), findsOneWidget);
+        final overPlan = await _audit(tester, contrast: theme != _Theme.field);
+        if (overPlan.isNotEmpty) {
+          report.add('planning settings:\n${overPlan.join('\n')}');
+        }
+        AppRouter.router.pop();
+        await _settle(tester);
         // TD-087: the Saved plan's form with Not done chosen, so the sweep
         // sees the reason chips.
         AppRouter.router.go(AppRouter.results(app.ended));

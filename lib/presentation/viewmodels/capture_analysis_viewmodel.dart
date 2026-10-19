@@ -54,7 +54,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   Object? _cacheKey;
   CaptureBudget? _budget;
   FitResult? _fit;
-  (int?,)? _fillCount;
+  final _fitCounts = <int, int?>{};
 
   void _onInputsChanged() {
     _generation++;
@@ -69,7 +69,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     _cacheKey = key;
     _budget = null;
     _fit = null;
-    _fillCount = null;
+    _fitCounts.clear();
   }
 
   /// The capture budget of the plan (ADR-009, TASK 5.4).
@@ -188,33 +188,38 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
 
   /// The frame count for [fillWindowBlockIndex] that fills tonight's windows
   /// (TASK 5.6); null without a light block, 0 when none fits.
-  int? get fillWindowFrameCount {
+  int? get fillWindowFrameCount => fillWindowBlockIndex == null
+      ? null
+      : framesThatFit(fillWindowBlockIndex!);
+
+  /// What fits of the block at [index] tonight with every other block as
+  /// planned (F12; TD-074): `FitAnalyzer.maxFramesForBlock`, cached per
+  /// generation; null for a calibration block, 0 when none fits.
+  int? framesThatFit(int index) {
     _validateCache();
-    return (_fillCount ??= (_computeFillCount(),)).$1;
+    return _fitCounts.putIfAbsent(index, () {
+      final flip = captureBudget.countOf(BudgetEventKind.meridianFlip) > 0;
+      return FitAnalyzer.maxFramesForBlock(
+        blocks: _plan.captureBlocks,
+        blockIndex: index,
+        windows: _conditions.visibilityWindows,
+        overheads: _overheads,
+        targetTransitsInWindow: flip,
+        transitUtc: flip ? _transitUtc : null,
+      );
+    });
   }
 
-  int? _computeFillCount() {
-    final index = fillWindowBlockIndex;
-    if (index == null) return null;
-    final flip = captureBudget.countOf(BudgetEventKind.meridianFlip) > 0;
-    return FitAnalyzer.maxFramesForBlock(
-      blocks: _plan.captureBlocks,
-      blockIndex: index,
-      windows: _conditions.visibilityWindows,
-      overheads: _overheads,
-      targetTransitsInWindow: flip,
-      transitUtc: flip ? _transitUtc : null,
-    );
-  }
-
-  /// How many more frames of [fillWindowBlockIndex] still fit tonight than
+  /// How many more frames of the block at [index] still fit tonight than
   /// are planned (S6.10, "+N frames still fit"); null when none do.
-  int? get fillWindowSpareFrames {
-    final index = fillWindowBlockIndex, count = fillWindowFrameCount;
-    if (index == null || count == null) return null;
+  int? spareFrames(int index) {
+    final count = framesThatFit(index) ?? 0;
     final spare = count - _plan.captureBlocks[index].frameCount;
     return spare > 0 ? spare : null;
   }
+
+  int? get fillWindowSpareFrames =>
+      fillWindowBlockIndex == null ? null : spareFrames(fillWindowBlockIndex!);
 
   /// Applies [fillWindowFrameCount] as the user's edit of the count (its
   /// origin entered, ADR-021 C4); false (no change) when nothing fits.

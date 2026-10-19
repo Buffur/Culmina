@@ -53,6 +53,10 @@ class AppRouter {
   static const settings = '/settings';
   static const about = '/settings/about';
 
+  /// The planning settings over the plan (F12; UX-S R3): Back returns to
+  /// the plan and its section.
+  static const planSettings = '/plan/settings';
+
   /// The metadata import (S3.7, ADR-018 §7): above the tabs, opened from
   /// the equipment screen's "Add from a photo".
   static const metadata = '/equipment/import';
@@ -226,6 +230,11 @@ class AppRouter {
             args: state.extra as NewRigArgs? ?? const NewRigArgs(),
           ),
         ),
+      GoRoute(
+        path: planSettings,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const SettingsScreen(overPlan: true),
+      ),
       GoRoute(
         path: welcome,
         parentNavigatorKey: rootNavigatorKey,

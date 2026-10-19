@@ -449,6 +449,12 @@ see DATA_MODEL.md B2/B8.)
 - **Dependencies:** F-13; decision PD-08.
 - **Roadmap relevance:** Phase 9.
 
+
+> **F12, 2026-10-19 (S14.12; PD-10/14; SP11; UX-S R3):**
+> - **Assumptions panel.** Each row is the value the calculation uses, written exactly ("2.5 s", not a rounded "3 s"). An included overhead says how often this plan's budget counts it ("4 times in this plan", "once in this plan", "not reached by this plan"); an overhead that is off reads "Not included". The panel adds the PD-10 focus reminder (words only) and a global-scope line.
+> - **Settings over the plan.** "Change in Settings" opens the planning settings over the plan (`/plan/settings`): "Planning settings", with the scope notice and only the planning groups. Back returns to the same plan and its open section.
+> - **Settings groups.** Imaging window, then Fit and capture time, then Advanced: the gates and optional times, collapsed, with a count summary. Then Guidance (NPF, dew); Display, Privacy, Data and About stay on the tab.
+> - **What fits, per block.** Every light block's line comes from `FitAnalyzer.maxFramesForBlock` with the other blocks as planned, which the line says when other blocks share the window (TD-074, partly).
 ## F-37 — Integration time and relative stacking gain
 - **Status:** Partial
 - **Current implementation:** integration from `CaptureBudgetCalculator`; **since TASK 5.6** √N is shown **per group of light frames with the same filter and exposure** (e.g. "Ha · 300 s × 20 — 4.5x") under the heading "Relative stacking gain (√N vs one frame)", with help text saying it is not a signal-to-noise ratio of the image and only applies within a group (ADR-009 §7).

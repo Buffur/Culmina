@@ -11,6 +11,7 @@ import '../../core/config/feature_scope.dart';
 import '../../domain/services/block_proposal.dart';
 import '../../domain/services/calibration_builder.dart';
 import '../../domain/services/calibration_match.dart';
+import '../../domain/services/capture_budget_calculator.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../shared/block_text.dart';
 import '../shared/calibration_text.dart';
@@ -223,7 +224,10 @@ class _BlockListState extends State<_BlockList> {
         fit.state == FitState.fits ||
         fit.state == FitState.tight ||
         fit.state == FitState.doesNotFit;
-    final fillIndex = measured ? analysis.fillWindowBlockIndex : null;
+    // F12 (TD-074): each light block's answer holds with the others as
+    // planned; say so when other blocks share the window.
+    final shared =
+        budgets.where((b) => b.placement == BudgetPlacement.window).length > 1;
     // S7.3a (ADR-020 §6): warnings in words; they never block the plan.
     final mismatches = analysis.calibrationMismatches;
     final flatsMissing = analysis.lightsWithoutFlats;
@@ -323,12 +327,9 @@ class _BlockListState extends State<_BlockList> {
                   ? BlockText.whatFits(
                       block,
                       unplaced: fit.unplacedFramesByBlock[index] ?? 0,
-                      upTo: index == fillIndex
-                          ? analysis.fillWindowFrameCount
-                          : null,
-                      spare: index == fillIndex
-                          ? analysis.fillWindowSpareFrames
-                          : null,
+                      upTo: analysis.framesThatFit(index),
+                      spare: analysis.spareFrames(index),
+                      others: shared,
                     )
                   : null;
               final unplaced = (fit.unplacedFramesByBlock[index] ?? 0) > 0;

@@ -3,7 +3,7 @@
 // and then returns to Tonight, and the planner opens above the tabs.
 
 import 'package:astroplan/core/time/clock.dart';
-import 'package:astroplan/data/database/app_database.dart';
+import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
@@ -17,7 +17,10 @@ import 'package:astroplan/domain/repositories/session_repository.dart';
 import 'package:astroplan/domain/repositories/target_repository.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
+import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
+import 'package:astroplan/presentation/widgets/planner_sections.dart';
 
 import '../../support/planner_harness.dart';
 
@@ -156,6 +159,7 @@ void main() {
       AppRouter.librarySites: 'Sites',
       AppRouter.settings: 'Settings', // S9.4
       AppRouter.about: 'About & data sources',
+      AppRouter.planSettings: 'Planning settings', // F12
       AppRouter.session(): 'Plan',
       AppRouter.selectTarget: 'Choose a target',
       AppRouter.selectRig: 'Choose a rig',
@@ -223,6 +227,65 @@ void main() {
     await back(tester);
     expect(title('Tonight'), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);
+  });
+  // F12 A4 (UX-S R3): "Change in Settings" opens the planning settings over
+  // the plan, with their global scope said; Back returns to the same plan
+  // and its open section, the blocks and results kept, the change applied.
+  testWidgets('Change in Settings opens over the plan; Back returns to the '
+      'same plan and section', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.byKey(const Key('tonight.openPlanner')));
+    await settle(tester);
+    await tester.runAsync(
+      () => vm.addCaptureBlock(
+        CaptureBlock(
+          frameType: FrameType.light,
+          filterName: 'Ha',
+          exposureTimeSeconds: 120,
+          frameCount: 12,
+        ),
+      ),
+    );
+    await tester.runAsync(
+      () => vm.disclosure.setOpen(PlannerSections.assumptions, true),
+    );
+    await settle(tester);
+    final blocks = vm.captureBlocks;
+    final change = find.byKey(const Key('capturePlan.changeSettings'));
+    await tester.ensureVisible(change);
+    await settle(tester);
+    expect(find.text('Change in Settings'), findsOneWidget);
+    expect(find.text('Change in Planning Settings'), findsNothing);
+    await tester.tap(change);
+    await settle(tester);
+
+    expect(title('Planning settings'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing, reason: 'over the plan');
+    expect(find.text(SettingsScreen.scopeNotice), findsOneWidget);
+    for (final kept in [
+      'Imaging window',
+      'Fit and capture time',
+      'Advanced',
+      'Guidance',
+    ]) {
+      expect(find.text(kept), findsWidgets, reason: kept);
+    }
+    for (final other in ['Display', 'Privacy', 'Data', 'About']) {
+      expect(find.text(other), findsNothing, reason: other);
+    }
+    await tester.runAsync(
+      () => vm.settings.setPlanningPreferences(
+        vm.planningPreferences.copyWith(feasibilityMarginPercent: 25),
+      ),
+    );
+    await settle(tester);
+
+    await back(tester);
+    expect(find.text('Plan'), findsOneWidget, reason: 'the same plan');
+    expect(vm.captureBlocks, blocks, reason: 'the edits are kept');
+    expect(vm.disclosure.isOpen(PlannerSections.assumptions), isTrue);
+    expect(find.byKey(const Key('capturePlan.changeSettings')), findsOneWidget);
+    expect(find.text('25 %'), findsOneWidget, reason: 'the change applied');
   });
 }
 

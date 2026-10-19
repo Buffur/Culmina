@@ -17,6 +17,7 @@ import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/models/spec_confidence.dart';
 import 'package:astroplan/domain/models/spec_provenance.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
+import 'package:astroplan/domain/services/capture_budget_calculator.dart';
 import 'package:astroplan/domain/services/fit_analyzer.dart';
 import 'package:astroplan/presentation/shared/block_text.dart';
 import 'package:astroplan/presentation/shared/change_mark.dart';
@@ -262,15 +263,31 @@ void main() {
   });
 
   group('what fits equals the fit\'s outputs', () {
+    // F12 (TD-074): every block's answer is the service's own output,
+    // `FitAnalyzer.maxFramesForBlock` with every other block as planned.
     void expectRowsMatchTheFit(WidgetTester tester) {
       final fit = vm.fitAnalysis;
-      final fill = vm.analysis.fillWindowBlockIndex;
+      final others =
+          vm.captureBudget.blocks
+              .where((b) => b.placement == BudgetPlacement.window)
+              .length >
+          1;
       for (final (i, block) in vm.captureBlocks.indexed) {
+        final upTo = FitAnalyzer.maxFramesForBlock(
+          blocks: vm.captureBlocks,
+          blockIndex: i,
+          windows: vm.visibilityWindows,
+          overheads: CaptureOverheads.fromPreferences(vm.planningPreferences),
+        );
+        expect(vm.analysis.framesThatFit(i), upTo, reason: 'block $i');
         final expected = BlockText.whatFits(
           block,
           unplaced: fit.unplacedFramesByBlock[i] ?? 0,
-          upTo: i == fill ? vm.analysis.fillWindowFrameCount : null,
-          spare: i == fill ? vm.analysis.fillWindowSpareFrames : null,
+          upTo: upTo,
+          spare: upTo != null && upTo > block.frameCount
+              ? upTo - block.frameCount
+              : null,
+          others: others,
         );
         final row = find.byKey(Key('capture.whatFits.$i'));
         if (expected == null) {
@@ -307,8 +324,35 @@ void main() {
       expect(max, greaterThan(0), reason: 'part of the last block fits');
       expect(
         textOf(tester, const Key('capture.whatFits.1')),
-        '$unplaced frames do not fit tonight · up to $max × 300 s fit',
+        '$unplaced frames do not fit tonight · up to $max × 300 s fit '
+        '(other blocks as planned)',
       );
+      expectRowsMatchTheFit(tester);
+    });
+
+    testWidgets('F12 A2: every light block says what fits with the others '
+        'as planned; a calibration block only what does not', (tester) async {
+      await start(tester, rig: _rig());
+      await blocks(tester, [
+        _light(60, 4, 'Ha'),
+        _light(60, 4, 'OIII'),
+        CaptureBlock(
+          frameType: FrameType.dark,
+          exposureTimeSeconds: 60,
+          frameCount: 5,
+        ),
+      ]);
+      expect(vm.fitAnalysis.state, FitState.fits);
+      for (final i in [0, 1]) {
+        final max = vm.analysis.framesThatFit(i)!;
+        expect(max, greaterThan(4));
+        expect(
+          textOf(tester, Key('capture.whatFits.$i')),
+          '+${max - 4} frames still fit tonight (other blocks as planned)',
+        );
+      }
+      expect(vm.analysis.framesThatFit(2), isNull, reason: 'a dark');
+      expect(find.byKey(const Key('capture.whatFits.2')), findsNothing);
       expectRowsMatchTheFit(tester);
     });
 
