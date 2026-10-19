@@ -99,6 +99,23 @@ void main() {
     expect(AppIdentity.sourceUrl, startsWith('https://'));
   });
 
+  testWidgets('F23 A2: the accepted Play services permission is shown, as '
+      'the README grants it', (tester) async {
+    await pumpAbout(tester);
+    final shown = tester
+        .widget<Text>(find.byKey(const Key('about.playServices')))
+        .data!;
+    final readme = File('README.md').readAsStringSync();
+    final quote = RegExp(
+      r'^> (Additional permission under GNU GPL[\s\S]*?resulting work\.)',
+      multiLine: true,
+    ).firstMatch(readme)!;
+    String words(String s) =>
+        s.replaceAll(RegExp(r'\n> ?'), ' ').replaceAll(RegExp(r'\s+'), ' ');
+    expect(shown, contains(words(quote[1]!)));
+    expect(shown, contains('Google Play services location'));
+  });
+
   testWidgets('summarises privacy and links the policy', (tester) async {
     await pumpAbout(tester);
     final privacy = tester.widget<Text>(find.byKey(const Key('about.privacy')));

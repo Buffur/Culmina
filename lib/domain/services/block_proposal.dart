@@ -151,11 +151,16 @@ class BlockProposal {
     // class bins, FILTER as written; the rest is evidence only.
     ProposedValue<CaptureGain>? gain;
     if (m.acquisitionGain case KnownValue(:final value, origin: final o)) {
-      if (cameraClass.lightSensitivity == LightSensitivity.gain &&
-          value <= 10000) {
+      final why = switch (cameraClass.lightSensitivity) {
+        LightSensitivity.iso => GainNotProposed.recordsIso,
+        LightSensitivity.either => GainNotProposed.classUnknown,
+        LightSensitivity.gain when value > 10000 => GainNotProposed.outOfRange,
+        LightSensitivity.gain => null,
+      };
+      if (why == null) {
         gain = ProposedValue(CaptureGain.gain(value), origin(o));
       } else {
-        evidence.add(ProposalEvidence.setting('GAIN', value));
+        evidence.add(ProposalEvidence.gain(value, why));
       }
     }
     ProposedValue<int>? binningValue;
@@ -225,16 +230,36 @@ sealed class ProposalEvidence {
       NeutralEvidence;
   const factory ProposalEvidence.setting(String keyword, double value) =
       SettingEvidence;
+  const factory ProposalEvidence.gain(double value, GainNotProposed why) =
+      GainEvidence;
   const factory ProposalEvidence.binning(SensorBinning binning) =
       BinningEvidence;
 }
 
-/// A FITS value shown only (C21): OFFSET, temperatures, EGAIN, or a GAIN
-/// the class does not record.
+/// A FITS value shown only (C21): OFFSET, temperatures, EGAIN.
 final class SettingEvidence extends ProposalEvidence {
   const SettingEvidence(this.keyword, this.value);
   final String keyword;
   final double value;
+}
+
+/// Why a FITS GAIN is not proposed (C13, SI-004).
+enum GainNotProposed {
+  /// The rig's class records ISO, and a gain is not an ISO.
+  recordsIso,
+
+  /// The rig's camera type is not set.
+  classUnknown,
+
+  /// Above any camera's gain setting (more than 10000).
+  outOfRange,
+}
+
+/// A FITS GAIN shown, not proposed, with [why].
+final class GainEvidence extends ProposalEvidence {
+  const GainEvidence(this.value, this.why);
+  final double value;
+  final GainNotProposed why;
 }
 
 /// A binning not proposed: asymmetric, out of range, or a class that does

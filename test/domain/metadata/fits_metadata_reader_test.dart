@@ -286,6 +286,39 @@ void main() {
       );
       expect(phone.gain, isNull, reason: 'a gain is never an ISO');
       expect(phone.binning, isNull);
+      // Each not-proposed gain says why, in its own words.
+      GainNotProposed? why(CameraClass c) {
+        final p = BlockProposal.of(
+          name: 'L_0001.fits',
+          reading: reading,
+          lengthBytes: 13049280,
+          cameraClass: c,
+        );
+        return p.evidence.whereType<GainEvidence>().singleOrNull?.why;
+      }
+
+      expect(why(CameraClass.phone), GainNotProposed.recordsIso);
+      expect(why(CameraClass.dslrMirrorless), GainNotProposed.recordsIso);
+      expect(why(CameraClass.unknown), GainNotProposed.classUnknown);
+      expect(why(CameraClass.astroMono), isNull);
+      final high = BlockProposal.of(
+        name: 'L_0001.fits',
+        reading: MetadataRead(
+          MetadataFormat.fits,
+          await _meta([
+            for (final e in ninaLight())
+              if (e.$1 != 'GAIN') e,
+            ('GAIN', 20000),
+          ]),
+        ),
+        lengthBytes: 13049280,
+        cameraClass: CameraClass.astroColour,
+      );
+      expect(high.gain, isNull);
+      expect(
+        high.evidence.whereType<GainEvidence>().single.why,
+        GainNotProposed.outOfRange,
+      );
     });
   });
 }

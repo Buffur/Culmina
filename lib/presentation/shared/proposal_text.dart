@@ -51,10 +51,14 @@ abstract final class ProposalText {
     NeutralEvidence(:final vector) =>
       'As-shot neutral ${vector.values.map(QuantityText.number).join(' · ')} '
           '(a neutral vector, not a colour temperature)',
+    GainEvidence(:final value, :final why) =>
+      'Gain ${QuantityText.number(value)}: not proposed '
+          '${switch (why) {
+            GainNotProposed.recordsIso => '(this rig records ISO, and a gain is not an ISO)',
+            GainNotProposed.classUnknown => "until the rig's camera type is set",
+            GainNotProposed.outOfRange => '(above any gain setting)',
+          }}',
     SettingEvidence(:final keyword, :final value) => switch (keyword) {
-      'GAIN' =>
-        'Gain ${QuantityText.number(value)}: not proposed (this rig records '
-            'ISO, and a gain is not an ISO)',
       'EGAIN' =>
         'Conversion gain ${QuantityText.number(value)} e⁻/ADU (shown only)',
       'OFFSET' => 'Offset ${QuantityText.number(value)} (shown only)',

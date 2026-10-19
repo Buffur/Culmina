@@ -175,6 +175,30 @@ void main() {
     expect(vm.captureBlocks, hasLength(2));
   });
 
+  // AM-04 (ADR-020 §3): binning is named only where a block offers it.
+  for (final (c, named) in [
+    (CameraClass.dslrMirrorless, false),
+    (CameraClass.phone, false),
+    (CameraClass.astroMono, true),
+    (CameraClass.unknown, true),
+  ]) {
+    testWidgets('${c.name}: the preview ${named ? 'names' : 'never names'} '
+        'binning', (tester) async {
+      await start(tester, rig: _rig(c), blocks: [_light('L')]);
+      await openPreview(tester);
+      final rows = [
+        for (final t in tester.widgetList<Text>(
+          find.descendant(of: find.byType(Dialog), matching: find.byType(Text)),
+        ))
+          t.data ?? '',
+      ].where((t) => t.startsWith(RegExp('Dark ·|Flat|Bias'))).toList();
+      expect(rows, isNotEmpty);
+      for (final r in rows) {
+        expect(r.contains('1 × 1'), named, reason: r);
+      }
+    });
+  }
+
   testWidgets("a flat's exposure must be entered; counts are editable; a "
       'row can be left out', (tester) async {
     await start(

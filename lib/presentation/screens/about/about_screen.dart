@@ -154,6 +154,15 @@ class AboutScreen extends StatelessWidget {
             'use, study, share and change it under that licence.',
             key: const Key('about.licence'),
           ),
+          gap,
+          // F23 A2 (S12.4 = (a)): the owner's accepted exception for the
+          // Google Play services location libraries in the Android build;
+          // the same words as README.md and COMPLIANCE.md.
+          Text(
+            'The Android build includes Google Play services location, used '
+            'only when you tap "Use current position". $playServicesPermission',
+            key: const Key('about.playServices'),
+          ),
           const _LinkButton(
             key: Key('about.source'),
             label: 'Source code',
@@ -173,6 +182,15 @@ class AboutScreen extends StatelessWidget {
     );
   }
 }
+
+/// The additional permission under GPL-3.0 section 7 (S12.4 = (a)).
+const playServicesPermission =
+    'Additional permission under GNU GPL version 3 section 7: if you modify '
+    'this program, or any covered work, by linking or combining it with the '
+    'Google Play services libraries (or a modified version of those '
+    'libraries), containing parts covered by the terms of the Android '
+    'Software Development Kit License, the licensors of this program grant '
+    'you additional permission to convey the resulting work.';
 
 Future<void> _open(String url) =>
     launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);

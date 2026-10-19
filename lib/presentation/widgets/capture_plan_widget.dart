@@ -146,7 +146,11 @@ class _BlockListState extends State<_BlockList> {
       plan.captureBlocks,
       plan.selectedEquipment,
     );
-    final added = await showCalibrationPreview(context, proposal);
+    final added = await showCalibrationPreview(
+      context,
+      proposal,
+      withBinning: _cameraClass.offersLightBinning,
+    );
     if (added == null || added.isEmpty || !mounted) return;
     await runWithFeedback(
       context,

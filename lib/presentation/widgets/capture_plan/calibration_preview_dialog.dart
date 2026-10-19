@@ -11,19 +11,22 @@ import '../../shared/calibration_text.dart';
 /// the plan's lights need and no block proves covered. Counts are editable
 /// proposals; a flat's or bias's exposure is entered here, never taken from
 /// a light; a row can be left out. Returns the blocks to add, or null on
-/// Cancel (nothing changes).
+/// Cancel (nothing changes). Binning is named only where the rig's class
+/// offers it on a block ([withBinning]; ADR-020 §3, AM-04).
 Future<List<CaptureBlock>?> showCalibrationPreview(
   BuildContext context,
-  CalibrationProposal proposal,
-) => showDialog<List<CaptureBlock>>(
+  CalibrationProposal proposal, {
+  bool withBinning = true,
+}) => showDialog<List<CaptureBlock>>(
   context: context,
-  builder: (_) => _CalibrationPreview(proposal),
+  builder: (_) => _CalibrationPreview(proposal, withBinning: withBinning),
 );
 
 class _CalibrationPreview extends StatefulWidget {
-  const _CalibrationPreview(this.proposal);
+  const _CalibrationPreview(this.proposal, {required this.withBinning});
 
   final CalibrationProposal proposal;
+  final bool withBinning;
 
   @override
   State<_CalibrationPreview> createState() => _CalibrationPreviewState();
@@ -64,15 +67,15 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
   String _describe(ProposedCalibration p) {
     final source = BlockText.row(p.source, null);
     final gain = CalibrationText.sensitivity(p.gain);
+    final bin = widget.withBinning ? ' · ${p.binning} × ${p.binning}' : '';
     return switch (p.type) {
       FrameType.dark =>
-        'Dark · ${QuantityText.exposure(p.exposureSeconds!)} · $gain · '
-            '${p.binning} × ${p.binning}, for $source',
+        'Dark · ${QuantityText.exposure(p.exposureSeconds!)} · $gain$bin, '
+            'for $source',
       FrameType.flat =>
-        'Flat (${p.filterName ?? 'no filter'}) · ${p.binning} × ${p.binning}, '
-            'for $source; its exposure is set for its light source',
-      FrameType.bias =>
-        'Bias · $gain · ${p.binning} × ${p.binning}, the shortest exposure',
+        'Flat (${p.filterName ?? 'no filter'})$bin, for $source; its '
+            'exposure is set for its light source',
+      FrameType.bias => 'Bias · $gain$bin, the shortest exposure',
       FrameType.darkFlat =>
         p.flatIndex == null
             ? 'Dark flat · ${QuantityText.exposure(p.exposureSeconds!)} · '
