@@ -12,7 +12,8 @@ import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/backup_service.dart';
-import 'package:astroplan/presentation/screens/settings/backup_section.dart' show notShared;
+import 'package:astroplan/presentation/screens/settings/backup_section.dart'
+    show notShared;
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
