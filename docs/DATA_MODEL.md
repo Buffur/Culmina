@@ -248,8 +248,9 @@ allows reuse.
   `created_at_utc_ms`, `session_count`), `astroplan.sqlite` (a consistent copy made with
   `VACUUM INTO`), `manifest.json` (export manifest v2, `docs/EXPORT_MANIFEST.md`) and, since
   version 2, `preferences.json` (`BackupPreferences`): `{"version": 1, "bool": {...}, "int":
-  {...}, "double": {...}}` holding the planning preferences, the display preferences (field
-  mode, the `section.*` open states), `activeLocationId` and `firstRunDone`.
+  {...}, "double": {...}, "string": {...}}` holding the planning preferences, the display
+  preferences (field mode, the `section.*` open states; since F21 Appearance and units, in the
+  additive `string` group), `activeLocationId` and `firstRunDone`.
 - **Restore (F01, 2026-10-18; D2/D7 A):** refused when the file is not a backup, when the
   header disagrees with the database's own `user_version`, when the schema is newer than the
   app's, or below the v8 floor; then, still at pick time, the database is written to an
@@ -704,6 +705,8 @@ this file, covering the full ADR-008 §7 matrix through M9 (M10 is the rest of
 *The dated notes that opened this file until 2026-10-18, verbatim (newest first).*
 
 > **TD-086 fix (2026-09-29):** `Session.unreadableSnapshotNight` (domain only, no schema change): the evening date an unreadable `plan_snapshot` still names under `night.eveningDate`, read by `DriftSessionRepository` without trusting the rest; used only by CALC-44 to end a saved night later.
+
+> **F21 (2026-10-19; S16.6, PD-20):** new SharedPreferences keys, all strings holding an enum name: `appearance` (`system`, `light`, `dark`; absent = System, D1 = A), `units.temperature` (`celsius`, `fahrenheit`), `units.wind` (`kmh`, `mph`, `ms`), `units.elevation` (`metres`, `feet`); an unknown name reads as the default. `planningPreferencesWriting` (bool) is set while the planning preferences' keys are written and removed after, so an interrupted save is reported on the next start. `preferences.json` gains an additive `string` group (`BackupPreferences`, still `version` 1): an older file restores the defaults, an older app ignores it. Every stored value stays canonical (°C, km/h, metres); units are display only. No schema change.
 
 > **S8.9 (2026-09-29; TD-056, ENG-14 resolved):** the backup archive is `format_version` 2 and adds `preferences.json` (B8a). A restore applies it before the restored database opens and clears the plan ids; a confirmed reset clears the active site and the plan ids. No schema change.
 

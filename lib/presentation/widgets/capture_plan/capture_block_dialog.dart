@@ -12,6 +12,7 @@ import '../../shared/capture_settings_text.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/proposal_text.dart';
+import '../../shared/display_units_of.dart';
 
 const _filters = ['L', 'R', 'G', 'B', 'Ha', 'OIII', 'SII', 'OSC', 'None'];
 
@@ -1131,7 +1132,8 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                 ProposalText.unreadable(p)
               else ...[
                 ProposalText.proposed(p),
-                for (final e in p.evidence) ProposalText.evidence(e),
+                for (final e in p.evidence)
+                  ProposalText.evidence(e, unitsOf(context)),
                 if (p.file case final f? when !f.read)
                   'Its size counts for storage (mode not read; compressed '
                       'sizes vary with content).',

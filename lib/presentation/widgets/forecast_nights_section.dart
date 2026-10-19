@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../domain/models/night_weather_summary.dart';
 import '../../domain/services/forecast_overview.dart';
+import '../shared/display_units_of.dart';
 import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../shared/plan_this_night.dart';
@@ -145,17 +146,17 @@ class _NightCard extends StatelessWidget {
         children: [
           if (covered) ...[
             Text(
-              'Temperature ${WeatherText.range(s.temperature, '°C')} · dew '
-              'point ${WeatherText.range(s.dewPoint, '°C')}',
+              'Temperature ${WeatherText.temperatureRange(s.temperature, unitsOf(context))} · dew '
+              'point ${WeatherText.temperatureRange(s.dewPoint, unitsOf(context))}',
               style: small,
             ),
             Text(
-              'Wind ${WeatherText.range(s.windSpeed, 'km/h')} · gusts '
-              '${WeatherText.range(s.windGusts, 'km/h')} · precipitation '
+              'Wind ${WeatherText.windRange(s.windSpeed, unitsOf(context))} · gusts '
+              '${WeatherText.windRange(s.windGusts, unitsOf(context))} · precipitation '
               'chance ${WeatherText.range(s.precipitationProbability, '%')}',
               style: small,
             ),
-            Text(WeatherText.dew(s), style: small),
+            Text(WeatherText.dew(s, unitsOf(context)), style: small),
           ],
           if (!isPlan)
             TextButton(

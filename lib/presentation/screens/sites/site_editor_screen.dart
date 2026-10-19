@@ -22,7 +22,9 @@ import '../../shared/confirmation_patterns.dart';
 import '../../shared/coordinate_input.dart';
 import '../../shared/location_feedback.dart';
 import '../../shared/site_form_input.dart';
+import '../../../core/units/display_units.dart';
 import '../../viewmodels/disclosure_viewmodel.dart';
+import '../../viewmodels/display_settings_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../shared/app_messages.dart';
@@ -85,9 +87,19 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   late final _longitude = TextEditingController(
     text: _coordinate(_original?.longitude ?? widget.args.longitude),
   );
-  late final _elevation = TextEditingController(
-    text: _original?.elevation == null ? '' : _trim(_original!.elevation!),
-  );
+
+  /// F21: elevation is typed in the chosen unit and stored in metres;
+  /// an unchanged field keeps the stored value exactly.
+  late final DisplayUnits _units =
+      context.read<DisplaySettingsViewModel?>()?.units ?? DisplayUnits.metric;
+  late final String _elevationShown = _original?.elevation == null
+      ? ''
+      : _trim(
+          double.parse(
+            _units.elevationOf(_original!.elevation!).toStringAsFixed(1),
+          ),
+        );
+  late final _elevation = TextEditingController(text: _elevationShown);
   late final _sqm = TextEditingController(
     text: _original?.sqm == null ? '' : _trim(_original!.sqm!),
   );
@@ -412,7 +424,12 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         name: _name.text.trim(),
         latitude: CoordinateInput.parse(_latitude.text)!,
         longitude: CoordinateInput.parse(_longitude.text)!,
-        elevation: CoordinateInput.parse(_elevation.text),
+        elevation: _elevation.text == _elevationShown
+            ? _original?.elevation
+            : switch (CoordinateInput.parse(_elevation.text)) {
+                final v? => _units.metresFrom(v),
+                null => null,
+              },
         timeZoneId: _zoneId,
         notes: SiteFormInput.optionalText(_notes.text),
         bortleClass: _bortle,
@@ -542,14 +559,14 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
             // RG-08 = E2: optional, without prominence; empty is unknown.
             TextFormField(
               controller: _elevation,
-              decoration: const InputDecoration(
-                labelText: 'Elevation (m)',
+              decoration: InputDecoration(
+                labelText: 'Elevation (${_units.elevation.symbol})',
                 helperText:
-                    'Optional · metres above sea level; empty is '
-                    'unknown',
+                    'Optional · ${_units.elevation == ElevationUnit.feet ? 'feet' : 'metres'} '
+                    'above sea level; empty is unknown',
               ),
               keyboardType: numberKeyboard,
-              validator: SiteFormInput.validateElevation,
+              validator: (t) => SiteFormInput.validateElevation(t, _units),
             ),
             if (FeatureScope.lightPollutionContext) _skyDarknessSection(),
             TextFormField(

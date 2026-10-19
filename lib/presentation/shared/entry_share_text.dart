@@ -1,4 +1,5 @@
 import '../../core/config/app_identity.dart';
+import '../../core/units/display_units.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/models/calendar_date.dart';
 import '../../domain/models/capture_block.dart';
@@ -15,7 +16,12 @@ import 'plan_state.dart';
 /// and never the site's coordinates** (private by default); Export as file
 /// is the complete record. Pure: the same entry gives the same text.
 abstract final class EntryShareText {
-  static String of(Session s, {SessionReconciliation? reconciliation}) {
+  /// [units]: the chosen display units (F21); the record stays in °C.
+  static String of(
+    Session s, {
+    SessionReconciliation? reconciliation,
+    DisplayUnits units = DisplayUnits.metric,
+  }) {
     final log = s.record;
     final snap = s.executionStartSnapshot ?? s.planSnapshot;
     final night =
@@ -35,7 +41,7 @@ abstract final class EntryShareText {
       'Rig: ${snap?.rigName ?? log.equipmentName}',
       'Result: ${result(s)}',
       ..._counts(s, reconciliation),
-      if (_conditions(s) case final c?) 'Conditions: $c',
+      if (_conditions(s, units) case final c?) 'Conditions: $c',
       '',
       '— ${AppIdentity.appName}',
     ];
@@ -90,11 +96,11 @@ abstract final class EntryShareText {
     ];
   }
 
-  static String? _conditions(Session s) {
+  static String? _conditions(Session s, DisplayUnits units) {
     final log = s.record;
     final parts = [
       if (log.temperature case final t?)
-        '${QuantityText.signed(t, digits: 1)} °C',
+        QuantityText.temperature(t, units, digits: 1),
       if (log.humidity case final h?) '${h.round()} % humidity',
       if (log.cloudCover case final c?) '$c % cloud',
     ];

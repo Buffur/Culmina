@@ -4,6 +4,7 @@ import 'package:provider/single_child_widget.dart';
 import '../core/time/clock.dart';
 import '../domain/metadata/capture_file_access.dart';
 import '../domain/repositories/display_preferences_repository.dart';
+import '../domain/repositories/display_settings_repository.dart';
 import '../domain/repositories/equipment_repository.dart';
 import '../domain/repositories/first_run_repository.dart';
 import '../domain/repositories/location_repository.dart';
@@ -23,6 +24,7 @@ import '../domain/services/session_exporter.dart';
 import 'viewmodels/astrobin_export_viewmodel.dart';
 import 'viewmodels/backup_viewmodel.dart';
 import 'viewmodels/candidates_viewmodel.dart';
+import 'viewmodels/display_settings_viewmodel.dart';
 import 'viewmodels/capture_analysis_viewmodel.dart';
 import 'viewmodels/library_viewmodels.dart';
 import 'viewmodels/metadata_import_viewmodel.dart';
@@ -54,6 +56,7 @@ class AppViewModels {
     required DeviceTimeZone deviceTimeZone,
     required Clock clock,
     required DisplayPreferencesRepository display,
+    required DisplaySettingsRepository displaySettings,
     required FirstRunRepository firstRun,
     required PrivacyPreferencesRepository privacy,
     SessionExporter? exporter,
@@ -160,6 +163,7 @@ class AppViewModels {
             },
           );
     theme = ThemeViewModel(display);
+    this.displaySettings = DisplaySettingsViewModel(displaySettings);
     disclosure = DisclosureViewModel(display);
     metadataImport = captureFiles == null
         ? null
@@ -196,6 +200,9 @@ class AppViewModels {
   late final AstroBinExportViewModel? astrobin;
   late final ThemeViewModel theme;
 
+  /// Appearance and units (F21).
+  late final DisplaySettingsViewModel displaySettings;
+
   /// Collapsible sections' remembered states (S5.5).
   late final DisclosureViewModel disclosure;
 
@@ -223,6 +230,10 @@ class AppViewModels {
     ChangeNotifierProvider.value(value: tonight),
     ChangeNotifierProvider<BackupViewModel?>.value(value: backup),
     ChangeNotifierProvider<ResultsViewModel?>.value(value: results),
+    // Nullable, so a widget built without it reads the metric defaults.
+    ChangeNotifierProvider<DisplaySettingsViewModel?>.value(
+      value: displaySettings,
+    ),
     Provider<AstroBinExportViewModel?>.value(value: astrobin),
     ChangeNotifierProvider<MetadataImportViewModel?>.value(
       value: metadataImport,

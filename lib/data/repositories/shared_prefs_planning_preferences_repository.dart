@@ -29,6 +29,10 @@ class SharedPrefsPlanningPreferencesRepository
   static const _cloudGate = 'cloudGateEnabled';
   static const _cloudGatePct = 'cloudGateMaxPct';
 
+  /// F21 A5: set while a save writes its keys, removed once all are
+  /// written; still set after a failed or interrupted save.
+  static const writingKey = 'planningPreferencesWriting';
+
   /// Every key this repository stores, for the backup (S8.9, TD-056).
   static const keys = {
     _minAltitude,
@@ -48,6 +52,7 @@ class SharedPrefsPlanningPreferencesRepository
     _moonGatePct,
     _cloudGate,
     _cloudGatePct,
+    writingKey,
   };
 
   @override
@@ -95,6 +100,7 @@ class SharedPrefsPlanningPreferencesRepository
 
   Future<void> _save(PlanningPreferences preferences) async {
     final p = await SharedPreferences.getInstance();
+    await p.setBool(writingKey, true);
     await p.setDouble(_minAltitude, preferences.minAltitudeDeg);
     await p.setDouble(_darknessLimit, preferences.darknessLimit.degrees);
     await p.setDouble(_margin, preferences.feasibilityMarginPercent);
@@ -112,7 +118,15 @@ class SharedPrefsPlanningPreferencesRepository
     await _setOrRemove(p, _filterChange, preferences.filterChangeSeconds);
     await _setOrRemove(p, _flip, preferences.meridianFlipSeconds);
     await _setOrRemove(p, _setup, preferences.setupMinutes);
+    await p.remove(writingKey);
   }
+
+  @override
+  Future<bool> lastSaveIncomplete() => guardStorage(
+    'read the planning preferences',
+    () async =>
+        (await SharedPreferences.getInstance()).getBool(writingKey) ?? false,
+  );
 
   static Future<void> _setOrRemove(
     SharedPreferences p,

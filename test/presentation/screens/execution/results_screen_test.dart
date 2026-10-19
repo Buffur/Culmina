@@ -7,6 +7,7 @@
 // offers Record result and Edit result.
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -357,6 +358,27 @@ void main() {
       () => sessions.get(vm.plan.activeSessionId!),
     );
     expect(copy!.blocks.map((b) => b.filterName), ['L', 'Ha']);
+  });
+
+  // F21 A2: the temperature is typed in the chosen unit and stored in °C.
+  testWidgets('in °F the temperature is typed in °F and stored in °C', (
+    tester,
+  ) async {
+    await open(tester, _Kind.run);
+    expect(find.text('Temperature (°C)'), findsOneWidget, reason: 'metric');
+    await tester.runAsync(
+      () => vm.vms.displaySettings.setUnits(
+        const DisplayUnits(temperature: TemperatureUnit.fahrenheit),
+      ),
+    );
+    AppRouter.router.go(AppRouter.sessions);
+    await settle(tester);
+    AppRouter.router.go(AppRouter.results(id));
+    await settle(tester);
+    expect(find.text('Temperature (°F)'), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('results.temperature')), '50');
+    await tap(tester, 'results.save');
+    expect((await stored(tester)).record.temperature, closeTo(10, 1e-9));
   });
 
   // F19 A5: during the night, a Saved · changed plan resolves its changes

@@ -18,6 +18,7 @@ import '../../shared/context_line.dart';
 import '../../shared/delete_patterns.dart';
 import '../../shared/detail_scaffold.dart';
 import '../../shared/entry_share_text.dart';
+import '../../shared/display_units_of.dart';
 import '../../shared/plan_state.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/night_time_formatter.dart';
@@ -288,7 +289,10 @@ class _SnapshotSections extends StatelessWidget {
             'Position':
                 '${deg(snap.siteLatitudeDeg ?? night?.latitude, 3)}, '
                 '${deg(snap.siteLongitudeDeg ?? night?.longitude, 3)}',
-            'Elevation': known(snap.siteElevationM?.round(), ' m') ?? 'unknown',
+            'Elevation': switch (snap.siteElevationM) {
+              final m? => QuantityText.elevation(m, unitsOf(context)),
+              null => 'unknown',
+            },
             'Bortle': known(snap.bortleClass) ?? 'unknown',
             'SQM': known(snap.sqm, ' mag/arcsec²') ?? 'unknown',
           },
@@ -455,7 +459,11 @@ class _Conditions extends StatelessWidget {
       title: 'Conditions',
       rows: {
         if (log.temperature case final t?)
-          'Temperature': '${QuantityText.signed(t, digits: 1)} °C',
+          'Temperature': QuantityText.temperature(
+            t,
+            unitsOf(context),
+            digits: 1,
+          ),
         if (log.humidity case final h?) 'Humidity': '$h %',
         if (log.cloudCover case final c?) 'Cloud cover': '$c %',
       },
@@ -564,7 +572,11 @@ class _Actions extends StatelessWidget {
           key: const Key('detail.share'),
           onPressed: () => SharePlus.instance.share(
             ShareParams(
-              text: EntryShareText.of(s, reconciliation: reconciliation),
+              text: EntryShareText.of(
+                s,
+                reconciliation: reconciliation,
+                units: unitsOf(context),
+              ),
             ),
           ),
           icon: const Icon(Icons.share),

@@ -1,3 +1,4 @@
+import '../../core/units/display_units.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/metadata/capture_metadata.dart';
 import '../../domain/services/block_proposal.dart';
@@ -27,7 +28,11 @@ abstract final class ProposalText {
         : 'Proposed: ${parts.join(' · ')}.';
   }
 
-  static String evidence(ProposalEvidence e) => switch (e) {
+  /// [units]: the chosen display units (F21); the file's values are °C.
+  static String evidence(
+    ProposalEvidence e, [
+    DisplayUnits units = DisplayUnits.metric,
+  ]) => switch (e) {
     SensitivityEvidence(:final value, :final proposed, :final recordsGain) =>
       recordsGain
           ? '${MetadataText.sensitivity(value)}: an ISO is not a gain, so '
@@ -54,9 +59,11 @@ abstract final class ProposalText {
         'Conversion gain ${QuantityText.number(value)} e⁻/ADU (shown only)',
       'OFFSET' => 'Offset ${QuantityText.number(value)} (shown only)',
       'CCD-TEMP' =>
-        'Sensor temperature ${QuantityText.number(value)} °C (shown only)',
+        'Sensor temperature ${QuantityText.temperatureAsRecorded(value, units)} '
+            '(shown only)',
       'SET-TEMP' =>
-        'Cooler setpoint ${QuantityText.number(value)} °C (shown only; not '
+        'Cooler setpoint ${QuantityText.temperatureAsRecorded(value, units)} '
+            '(shown only; not '
             'the measured temperature)',
       _ => '$keyword ${QuantityText.number(value)} (shown only)',
     },

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/units/display_units.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../domain/models/capture_block.dart';
@@ -16,6 +17,7 @@ import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../shared/opportunity_text.dart';
 import '../../shared/plan_state.dart';
+import '../../viewmodels/display_settings_viewmodel.dart';
 import '../../viewmodels/results_viewmodel.dart';
 
 /// "How did it go?" (S8.2; ADR-019 §3.1, §4): review the saved plan, then
@@ -42,6 +44,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
   ResultOutcome? _outcome;
   NotDoneReason? _reason;
   bool _filled = false;
+
+  /// F21: the temperature is typed in the chosen unit and stored in °C; an
+  /// unchanged field keeps the stored value exactly.
+  late final DisplayUnits _units =
+      context.read<DisplaySettingsViewModel?>()?.units ?? DisplayUnits.metric;
+  String _temperatureShown = '';
+  double? _temperatureStored;
 
   @override
   void initState() {
@@ -81,7 +90,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
     }
     _environment.text = log.environmentalNotes ?? '';
     _processing.text = log.processingNotes ?? '';
-    _temperature.text = _text(log.temperature);
+    _temperatureStored = log.temperature;
+    _temperatureShown = _temperature.text = _text(switch (log.temperature) {
+      final c? => double.parse(_units.temperatureOf(c).toStringAsFixed(1)),
+      null => null,
+    });
     _humidity.text = _text(log.humidity);
     _cloud.text = log.cloudCover?.toString() ?? '';
   }
@@ -121,7 +134,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
     final notes = ResultNotes(
       environmentalNotes: _optional(_environment.text),
       processingNotes: _optional(_processing.text),
-      temperatureC: _number(_temperature.text),
+      temperatureC: _temperature.text == _temperatureShown
+          ? _temperatureStored
+          : switch (_number(_temperature.text)) {
+              final v? => _units.celsiusFrom(v),
+              null => null,
+            },
       humidityPct: _number(_humidity.text),
       cloudCoverPct: _number(_cloud.text)?.round(),
     );
@@ -257,14 +275,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
               TextFormField(
                 key: const Key('results.temperature'),
                 controller: _temperature,
-                decoration: const InputDecoration(
-                  labelText: 'Temperature (°C)',
+                decoration: InputDecoration(
+                  labelText: 'Temperature (${_units.temperature.symbol})',
                 ),
                 keyboardType: const TextInputType.numberWithOptions(
                   signed: true,
                   decimal: true,
                 ),
-                validator: _range(-60, 60, '°C'),
+                // −60…60 °C, in the unit typed.
+                validator: _units.temperature == TemperatureUnit.fahrenheit
+                    ? _range(-76, 140, '°F')
+                    : _range(-60, 60, '°C'),
               ),
               TextFormField(
                 key: const Key('results.humidity'),

@@ -20,7 +20,10 @@ import 'package:astroplan/data/backup/file_backup_service.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/export/session_manifest_codec.dart';
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
+import 'package:astroplan/core/units/display_units.dart';
+import 'package:astroplan/data/repositories/shared_prefs_display_settings_repository.dart';
 import 'package:astroplan/data/repositories/shared_prefs_planning_preferences_repository.dart';
+import 'package:astroplan/domain/repositories/display_settings_repository.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/models/execution.dart';
@@ -393,6 +396,11 @@ void main() {
       'section.planner.budget': false,
       'activeLocationId': 4,
       'firstRunDone': true,
+      // F21 A1: Appearance and units, by name.
+      'appearance': 'dark',
+      'units.temperature': 'fahrenheit',
+      'units.wind': 'mph',
+      'units.elevation': 'feet',
       // Not carried: the position, the seed marker, the plan ids, privacy.
       'transientLatitude': 10.0,
       'transientLongitude': 20.0,
@@ -441,6 +449,12 @@ void main() {
         },
         'int': {'activeLocationId': 4, 'ditherEveryNFrames': 3},
         'double': {'minAltitude': 35.0},
+        'string': {
+          'appearance': 'dark',
+          'units.elevation': 'feet',
+          'units.temperature': 'fahrenheit',
+          'units.wind': 'mph',
+        },
       });
     });
 
@@ -474,6 +488,18 @@ void main() {
       expect(planning.ditherEveryNFrames, 3);
       expect(planning.refocusEveryMinutes, isNull);
       expect(planning.optionalGates.moonMinIlluminationPct, isNotNull);
+      // F21 A1: Appearance and units come back too.
+      expect(
+        await SharedPrefsDisplaySettingsRepository().load(),
+        const DisplaySettings(
+          appearance: Appearance.dark,
+          units: DisplayUnits(
+            temperature: TemperatureUnit.fahrenheit,
+            wind: WindUnit.mph,
+            elevation: ElevationUnit.feet,
+          ),
+        ),
+      );
       for (final id in ['targetId', 'equipmentId', 'editedSessionId']) {
         expect(prefs.getInt(id), isNull, reason: id);
       }

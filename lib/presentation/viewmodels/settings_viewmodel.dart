@@ -36,7 +36,25 @@ class SettingsViewModel extends ChangeNotifier {
 
   PlanningPreferences _preferences = PlanningPreferences();
 
+  /// The planning preferences in force: the newest edit, applied at once
+  /// even before it is stored (F21 A5).
   PlanningPreferences get planningPreferences => _preferences;
+
+  /// F21 A5: the newest edit could not be stored (or a save before a
+  /// restart did not finish): the screen says so, with Retry. What is
+  /// stored is [_stored]; nothing reports it as saved meanwhile.
+  bool get planningPreferencesUnsaved => _planningFailed || _incomplete;
+  bool _planningFailed = false;
+  bool _incomplete = false;
+  PlanningPreferences _stored = PlanningPreferences();
+
+  /// Whether the newest edit is still being stored.
+  bool get planningPreferencesSaving =>
+      !planningPreferencesUnsaved && _preferences != _stored;
+
+  /// Null until the first write, so the chain starts in the caller's zone.
+  Future<void>? _planningWrites;
+  int _planningRequest = 0;
 
   /// Minimum usable altitude, degrees (clamped to [5°, 60°]).
   double get minAltitude => _preferences.minAltitudeDeg;
@@ -45,7 +63,8 @@ class SettingsViewModel extends ChangeNotifier {
   double get dewPointThreshold => _preferences.dewMarginC;
 
   Future<void> load() async {
-    _preferences = await _repository.load();
+    _preferences = _stored = await _repository.load();
+    _incomplete = await _repository.lastSaveIncomplete();
     _placeNames.enabled = await _privacy.loadPlaceNameLookup();
     notifyListeners();
     if (_placeNames.enabled) onPlaceNameLookupChanged?.call();
@@ -90,12 +109,50 @@ class SettingsViewModel extends ChangeNotifier {
     );
   }
 
-  /// Replaces the planning preferences, persists them, and lets every value
-  /// derived from them (windows, fit, dew risk) refresh.
-  Future<void> setPlanningPreferences(PlanningPreferences preferences) async {
+  /// Replaces the planning preferences, lets every value derived from them
+  /// (windows, fit, dew risk) refresh, and stores them (F21 A5). Writes run
+  /// in order, each of the whole configuration; only the newest request's
+  /// outcome changes the saved/unsaved state, so an older completion never
+  /// marks a newer edit saved or overwrites it. A failure keeps the edit applied and
+  /// unsaved, and is rethrown for the screen's message.
+  Future<void> setPlanningPreferences(PlanningPreferences preferences) {
     _preferences = preferences;
     notifyListeners();
-    await _repository.save(_preferences);
+    return _writePlanning();
+  }
+
+  /// Stores the newest complete configuration again (Retry, or "Save these
+  /// settings" after an incomplete save).
+  Future<void> retryPlanningPreferences() => _writePlanning();
+
+  /// Completes when every started planning write has finished.
+  Future<void> get planningIdle => _planningWrites ?? Future<void>.value();
+
+  Future<void> _writePlanning() {
+    final request = ++_planningRequest;
+    // Coalesced: a write superseded before it starts is skipped; the newer
+    // one stores the newest configuration (a slider's drag is one write).
+    final write = (_planningWrites ?? Future<void>.value()).then((_) async {
+      if (request != _planningRequest) return;
+      final target = _preferences;
+      await _repository.save(target);
+      _stored = target;
+    });
+    _planningWrites = write.then((_) {}, onError: (Object _) {});
+    return write.then(
+      (_) {
+        if (request != _planningRequest) return;
+        _planningFailed = _incomplete = false;
+        notifyListeners();
+      },
+      onError: (Object e, StackTrace s) {
+        if (request == _planningRequest) {
+          _planningFailed = true;
+          notifyListeners();
+        }
+        Error.throwWithStackTrace(e, s);
+      },
+    );
   }
 
   Future<void> setMinAltitude(double value) =>

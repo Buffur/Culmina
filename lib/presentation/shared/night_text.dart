@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
+import '../../core/units/display_units.dart';
 import '../../core/utils/quantity_text.dart';
 
 import '../../domain/models/moon_conditions.dart';
@@ -39,6 +40,20 @@ abstract final class WeatherText {
     final hi = r.max.toStringAsFixed(digits);
     return lo == hi ? '$lo $unit' : '$lo–$hi $unit';
   }
+
+  /// F21: an absolute temperature range in the chosen unit.
+  static String temperatureRange(WeatherRange? r, DisplayUnits u) => range(
+    r == null
+        ? null
+        : WeatherRange(u.temperatureOf(r.min), u.temperatureOf(r.max)),
+    u.temperature.symbol,
+  );
+
+  /// F21: a wind-speed range (stored in km/h) in the chosen unit.
+  static String windRange(WeatherRange? r, DisplayUnits u) => range(
+    r == null ? null : WeatherRange(u.windOf(r.min), u.windOf(r.max)),
+    u.wind.symbol,
+  );
 
   static String failure(WeatherFailure failure) => switch (failure) {
     WeatherFailure.unavailable => 'Offline or the service did not answer.',
@@ -95,18 +110,22 @@ abstract final class WeatherText {
   };
 
   /// The dew heuristic over the dark span (N6): about N h.
-  static String dew(NightWeatherSummary s) {
-    final margin = s.dewMarginC.toStringAsFixed(1);
+  /// The margin is a temperature difference (F21 A3: 2 °C reads 3.6 °F).
+  static String dew(
+    NightWeatherSummary s, [
+    DisplayUnits units = DisplayUnits.metric,
+  ]) {
+    final margin = QuantityText.temperatureDifference(s.dewMarginC, units);
     if (s.dewKnownHours == 0) {
       return 'Dew risk: unknown (no temperature or dew point).';
     }
     if (s.dewRiskHours == 0) {
       return 'Dew risk (heuristic): none of ${s.dewKnownHours} dark hours has '
-          'a temperature − dew point spread at or below $margin °C.';
+          'a temperature − dew point spread at or below $margin.';
     }
     return 'Dew risk (heuristic): about ${s.dewRiskHours} h of '
         '${s.dewKnownHours} dark hours with a temperature − dew point spread '
-        'at or below $margin °C (the margin in Settings).';
+        'at or below $margin (the margin in Settings).';
   }
 
   /// Q3 (PD-18; F14 A5): the limitation, said where the forecast is.

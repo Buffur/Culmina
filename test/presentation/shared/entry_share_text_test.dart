@@ -4,6 +4,7 @@
 // site's coordinates.
 
 import 'package:astroplan/core/config/app_identity.dart';
+import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
@@ -142,6 +143,18 @@ void main() {
     expect(text, isNot(contains('1234')));
     expect(text, isNot(contains('46.05')));
     expect(text, isNot(contains('14.51')));
+  });
+
+  // F21 A2: the shared temperature follows the chosen unit.
+  test('the conditions in °F', () {
+    expect(EntryShareText.of(_entry(name: 'First light')), contains('−3.0 °C'));
+    expect(
+      EntryShareText.of(
+        _entry(name: 'First light'),
+        units: const DisplayUnits(temperature: TemperatureUnit.fahrenheit),
+      ),
+      contains('26.6 °F'),
+    );
   });
 
   test('Partly, Not done with a reason, a plan awaiting its result', () {

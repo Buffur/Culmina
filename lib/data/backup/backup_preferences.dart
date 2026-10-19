@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/diagnostics/app_log.dart';
 import '../repositories/shared_prefs_display_preferences_repository.dart';
+import '../repositories/shared_prefs_display_settings_repository.dart';
 import '../repositories/shared_prefs_first_run_repository.dart';
 import '../repositories/shared_prefs_planner_state_repository.dart';
 import '../repositories/shared_prefs_planning_preferences_repository.dart';
@@ -15,8 +16,11 @@ import '../repositories/shared_prefs_planning_preferences_repository.dart';
 /// [forgetStaleIds]).
 ///
 /// The file groups values by type: `{"version": 1, "bool": {...},
-/// "int": {...}, "double": {...}}`. Only the keys above are read or
-/// written, whatever a file holds.
+/// "int": {...}, "double": {...}, "string": {...}}`. Only the keys above
+/// are read or written, whatever a file holds. *F21 A1:* the `string`
+/// group (Appearance and units, stored by name) is additive: a file without
+/// it restores their defaults (System, °C, km/h, m); an app before F21
+/// ignores it; an unknown name reads as the default when loaded.
 abstract final class BackupPreferences {
   static const version = 1;
 
@@ -27,6 +31,7 @@ abstract final class BackupPreferences {
 
   static const _keys = {
     ...SharedPrefsPlanningPreferencesRepository.keys,
+    ...SharedPrefsDisplaySettingsRepository.keys,
     SharedPrefsDisplayPreferencesRepository.fieldModeKey,
     SharedPrefsPlannerStateRepository.activeLocationIdKey,
     SharedPrefsFirstRunRepository.doneKey,
@@ -44,6 +49,7 @@ abstract final class BackupPreferences {
     final bools = <String, bool>{};
     final ints = <String, int>{};
     final doubles = <String, double>{};
+    final strings = <String, String>{};
     for (final key in p.getKeys().where(carries).toList()..sort()) {
       switch (p.get(key)) {
         case final bool v:
@@ -52,11 +58,19 @@ abstract final class BackupPreferences {
           ints[key] = v;
         case final double v:
           doubles[key] = v;
+        case final String v:
+          strings[key] = v;
         case final other:
           AppLog.warning('backup', 'Setting $key not carried: $other');
       }
     }
-    return {'version': version, 'bool': bools, 'int': ints, 'double': doubles};
+    return {
+      'version': version,
+      'bool': bools,
+      'int': ints,
+      'double': doubles,
+      'string': strings,
+    };
   }
 
   /// A backup's settings checked and reduced to the carried keys with the
@@ -84,6 +98,7 @@ abstract final class BackupPreferences {
         'double',
         (v) => v is num && v.isFinite ? v.toDouble() : null,
       ),
+      'string': group<String>('string', (v) => v is String ? v : null),
     };
   }
 
@@ -112,6 +127,11 @@ abstract final class BackupPreferences {
       }
       for (final e in (carried['double']! as Map<String, double>).entries) {
         await p.setDouble(e.key, e.value);
+      }
+      // F21: absent in a file parsed before F21's group existed.
+      for (final e
+          in (carried['string'] as Map<String, String>? ?? const {}).entries) {
+        await p.setString(e.key, e.value);
       }
     }
     await _forgetPlanIds(p);

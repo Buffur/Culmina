@@ -9,6 +9,8 @@ import '../../navigation/app_router.dart';
 import '../../shared/field_mode_button.dart';
 import '../../shared/failure_feedback.dart';
 import 'backup_section.dart';
+import 'display_settings_section.dart';
+import '../../shared/display_units_of.dart';
 import '../../../core/utils/quantity_text.dart';
 
 /// Settings (TASK 5.2, SI-006, TD-043; rebuilt by S9.4 after RG-13's
@@ -71,6 +73,15 @@ class SettingsScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Text(scopeNotice),
+              ),
+            ),
+          // F21 A5: an edit that is applied but not stored says so.
+          if (settingsVm.planningPreferencesUnsaved)
+            _PlanningUnsaved(
+              onRetry: () => runWithFeedback(
+                context,
+                'save the settings',
+                settingsVm.retryPlanningPreferences,
               ),
             ),
           Text(
@@ -377,17 +388,25 @@ class SettingsScreen extends StatelessWidget {
             key: const Key('settings.dewMargin'),
             title: 'Dew warning margin',
             help:
-                'Warn when the air temperature is within this many °C of the '
+                'Warn when the air temperature is within this margin of the '
                 'dew point.',
             value: p.dewMarginC,
             range: PlanningPreferences.dewMarginRange,
             divisions: 20,
-            label: '${p.dewMarginC.toStringAsFixed(1)} °C',
+            // F21 A3: a temperature difference (2 °C = 3.6 °F).
+            label: QuantityText.temperatureDifference(
+              p.dewMarginC,
+              unitsOf(context),
+            ),
             onChanged: (v) => update(p.copyWith(dewMarginC: v)),
           ),
           if (!overPlan) ...[
-            const _Section('Display', 'How the app looks; no value changes.'),
+            const _Section(
+              'Display',
+              'How the app looks and the units it shows; no value changes.',
+            ),
             const FieldModeTile(),
+            const DisplaySettingsSection(),
             const _Section('Privacy', 'What leaves this device.'),
             // TASK 16.3 (owner decision): opt-in, off by default.
             SwitchListTile(
@@ -645,6 +664,42 @@ class _Stepper extends StatelessWidget {
                 : null,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// F21 A5: the newest planning edit is applied but not stored (a failed
+/// write, or a save before a restart that did not finish), with Retry.
+class _PlanningUnsaved extends StatelessWidget {
+  const _PlanningUnsaved({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      key: const Key('settings.unsaved'),
+      color: scheme.errorContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'These settings are in use but not saved: after a restart the '
+              'last saved ones return. Retry saves them as shown.',
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: scheme.onErrorContainer),
+            ),
+            TextButton(
+              key: const Key('settings.retry'),
+              onPressed: onRetry,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
       ),
     );
   }

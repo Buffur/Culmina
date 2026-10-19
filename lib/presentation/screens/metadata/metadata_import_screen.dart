@@ -15,6 +15,7 @@ import '../../viewmodels/metadata_import_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../equipment/equipment_editor.dart';
 import '../../shared/app_messages.dart';
+import '../../shared/display_units_of.dart';
 
 /// How the import was opened (F05): the camera class chosen first, given to
 /// a new rig drafted here, and whether a new rig's Save returns its id to
@@ -141,7 +142,7 @@ class _Result extends StatelessWidget {
               title,
               Text(MetadataText.format(format)),
               const SizedBox(height: 8),
-              for (final row in MetadataText.rows(metadata))
+              for (final row in MetadataText.rows(metadata, unitsOf(context)))
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Column(

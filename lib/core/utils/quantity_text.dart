@@ -1,3 +1,5 @@
+import '../units/display_units.dart';
+
 /// One written form for each quantity the app shows (S1.7; audit ENG-06,
 /// UX-19), shared by the domain's reason texts and the presentation, so the
 /// same value reads the same everywhere. Formatting only.
@@ -62,4 +64,37 @@ abstract final class QuantityText {
   static String storage(double bytes) => bytes >= 1e9
       ? '${(bytes / 1e9).toStringAsFixed(2)} GB'
       : '${(bytes / 1e6).toStringAsFixed(2)} MB';
+
+  /// F21: an absolute temperature [celsius] in [units]: "−3 °C", "27 °F".
+  static String temperature(
+    double celsius,
+    DisplayUnits units, {
+    int digits = 0,
+  }) =>
+      '${signed(units.temperatureOf(celsius), digits: digits)} '
+      '${units.temperature.symbol}';
+
+  /// F21: a recorded temperature [celsius] as written ("-10 °C",
+  /// "14 °F"), converted values to one decimal at most.
+  static String temperatureAsRecorded(double celsius, DisplayUnits units) =>
+      '${number(units.temperature == TemperatureUnit.celsius ? celsius : double.parse(units.temperatureOf(celsius).toStringAsFixed(1)))} '
+      '${units.temperature.symbol}';
+
+  /// F21: a temperature difference [celsius] (a dew margin) in [units]:
+  /// 2 °C reads "3.6 °F", never "35.6 °F".
+  static String temperatureDifference(
+    double celsius,
+    DisplayUnits units, {
+    int digits = 1,
+  }) =>
+      '${signed(units.temperatureDifferenceOf(celsius), digits: digits)} '
+      '${units.temperature.symbol}';
+
+  /// F21: a wind speed [kmh] in [units]: "12 km/h", "7 mph", "3 m/s".
+  static String wind(double kmh, DisplayUnits units, {int digits = 0}) =>
+      '${signed(units.windOf(kmh), digits: digits)} ${units.wind.symbol}';
+
+  /// F21: an elevation [metres] in [units], whole: "300 m", "984 ft".
+  static String elevation(double metres, DisplayUnits units) =>
+      '${signed(units.elevationOf(metres))} ${units.elevation.symbol}';
 }

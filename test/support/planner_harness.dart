@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import 'package:astroplan/domain/metadata/capture_file_access.dart';
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/data/repositories/shared_prefs_display_settings_repository.dart';
+import 'package:astroplan/domain/repositories/display_settings_repository.dart';
 import 'package:astroplan/data/repositories/open_meteo_weather_repository.dart';
 import 'package:astroplan/data/repositories/shared_prefs_planner_state_repository.dart';
 import 'package:astroplan/data/repositories/shared_prefs_planning_preferences_repository.dart';
@@ -82,6 +84,7 @@ class PlannerHarness extends ChangeNotifier {
     NightWeatherService? nightWeatherService,
     SessionRepository? sessionRepository,
     DisplayPreferencesRepository? displayPreferences,
+    DisplaySettingsRepository? displaySettings,
     FirstRunRepository? firstRun,
     PrivacyPreferencesRepository? privacyPreferences,
     SessionExporter? exporter,
@@ -113,6 +116,8 @@ class PlannerHarness extends ChangeNotifier {
       deviceTimeZone: deviceTimeZone ?? FlutterTimezoneDeviceTimeZone(),
       clock: time,
       display: displayPreferences ?? InMemoryDisplayPreferences(),
+      displaySettings:
+          displaySettings ?? SharedPrefsDisplaySettingsRepository(),
       firstRun: firstRun ?? InMemoryFirstRun(),
       // Place-name lookups ON in tests (the app's default is off, TASK
       // 16.3), so the geocoding tests keep exercising the lookup path.

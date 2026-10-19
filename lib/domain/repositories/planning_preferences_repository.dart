@@ -9,5 +9,10 @@ abstract class PlanningPreferencesRepository {
   /// The saved preferences, or the documented defaults when nothing is saved.
   Future<PlanningPreferences> load();
 
+  /// Stores [preferences] whole.
   Future<void> save(PlanningPreferences preferences);
+
+  /// F21 A5: whether the last [save] did not finish (the store may hold a
+  /// mix of two configurations); false once a later save completes.
+  Future<bool> lastSaveIncomplete();
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 
+import 'core/units/display_units.dart';
 import 'core/diagnostics/app_log.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/navigation/app_router.dart';
@@ -23,6 +24,7 @@ import 'domain/repositories/session_repository.dart';
 import 'data/repositories/drift_location_repository.dart';
 import 'domain/repositories/location_repository.dart';
 import 'data/repositories/shared_prefs_display_preferences_repository.dart';
+import 'data/repositories/shared_prefs_display_settings_repository.dart';
 import 'data/repositories/shared_prefs_first_run_repository.dart';
 import 'data/repositories/shared_prefs_planner_state_repository.dart';
 import 'data/repositories/shared_prefs_planning_preferences_repository.dart';
@@ -39,6 +41,7 @@ import 'data/metadata/android_capture_file_access.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'domain/services/night_weather_service.dart';
+import 'presentation/viewmodels/display_settings_viewmodel.dart';
 import 'presentation/viewmodels/theme_viewmodel.dart';
 import 'presentation/screens/settings/backup_section.dart';
 import 'presentation/screens/startup/unsupported_database_screen.dart';
@@ -146,6 +149,7 @@ Future<void> _start() async {
     deviceTimeZone: FlutterTimezoneDeviceTimeZone(),
     clock: clock,
     display: SharedPrefsDisplayPreferencesRepository(),
+    displaySettings: SharedPrefsDisplaySettingsRepository(),
     firstRun: SharedPrefsFirstRunRepository(),
     privacy: SharedPrefsPrivacyPreferencesRepository(),
     exporter: ShareSessionExporter(),
@@ -164,6 +168,7 @@ Future<void> _start() async {
   // Field mode is restored before the first frame, so a restart in field
   // mode never flashes the normal theme (TASK 12.4).
   await vms.theme.load();
+  await vms.displaySettings.load();
   // S5.5: collapsible sections open as the user left them, from the first
   // frame.
   await vms.disclosure.load();
@@ -224,12 +229,18 @@ class AstroPlanApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeVM = context.watch<ThemeViewModel>();
+    // F21 (D1 = A): System by default; Light or Dark when chosen.
+    final appearance = context.watch<DisplaySettingsViewModel?>()?.appearance;
 
     return MaterialApp.router(
       title: AppIdentity.appName,
       theme: themeVM.isFieldMode ? AppTheme.fieldTheme : AppTheme.light,
       darkTheme: themeVM.isFieldMode ? AppTheme.fieldTheme : AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: switch (appearance) {
+        Appearance.light => ThemeMode.light,
+        Appearance.dark => ThemeMode.dark,
+        Appearance.system || null => ThemeMode.system,
+      },
       routerConfig: AppRouter.router,
       // Field mode: every pixel below the app root, dialogs and snackbars
       // included, goes through the red filter (owner decision, TASK 12.4).

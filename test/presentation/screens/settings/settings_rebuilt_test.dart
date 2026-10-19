@@ -78,6 +78,9 @@ class _Broken implements PlanningPreferencesRepository {
   @override
   Future<void> save(PlanningPreferences preferences) async =>
       throw const StorageFailure('disk full');
+
+  @override
+  Future<bool> lastSaveIncomplete() async => false;
 }
 
 void main() {

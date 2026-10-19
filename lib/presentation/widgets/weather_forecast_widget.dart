@@ -13,6 +13,8 @@ import '../viewmodels/site_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import '../viewmodels/night_conditions_viewmodel.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/units/display_units.dart';
+import '../shared/display_units_of.dart';
 import '../shared/night_text.dart';
 import '../../core/theme/app_spacing.dart';
 
@@ -251,8 +253,8 @@ class _AvailableBody extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(
               'Cloud ${WeatherText.range(s.cloudCover, '%')} · '
-              'Temperature ${WeatherText.range(s.temperature, '°C')} · '
-              'Dew point ${WeatherText.range(s.dewPoint, '°C')}',
+              'Temperature ${WeatherText.temperatureRange(s.temperature, unitsOf(context))} · '
+              'Dew point ${WeatherText.temperatureRange(s.dewPoint, unitsOf(context))}',
               key: const Key('weather.facts'),
               style: theme.textTheme.bodyMedium,
             ),
@@ -280,7 +282,7 @@ class _AvailableBody extends StatelessWidget {
             s.coveredHours > 0) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
-            WeatherText.dew(s),
+            WeatherText.dew(s, unitsOf(context)),
             key: const Key('weather.dew'),
             style: small?.copyWith(
               color: s.dewRiskHours > 0 ? theme.colorScheme.error : null,
@@ -402,10 +404,16 @@ class _Ranges extends StatelessWidget {
         'Chance of precipitation (preceding hour)',
         WeatherText.range(s.precipitationProbability, '%'),
       ),
-      ('Wind at 10 m', WeatherText.range(s.windSpeed, 'km/h')),
-      ('Gusts (max of preceding hour)', WeatherText.range(s.windGusts, 'km/h')),
-      ('Temperature', WeatherText.range(s.temperature, '°C')),
-      ('Dew point', WeatherText.range(s.dewPoint, '°C')),
+      ('Wind at 10 m', WeatherText.windRange(s.windSpeed, unitsOf(context))),
+      (
+        'Gusts (max of preceding hour)',
+        WeatherText.windRange(s.windGusts, unitsOf(context)),
+      ),
+      (
+        'Temperature',
+        WeatherText.temperatureRange(s.temperature, unitsOf(context)),
+      ),
+      ('Dew point', WeatherText.temperatureRange(s.dewPoint, unitsOf(context))),
       ('Relative humidity', WeatherText.range(s.relativeHumidity, '%')),
       (
         'Horizontal visibility (not transparency)',
@@ -460,11 +468,11 @@ class _HourStrip extends StatefulWidget {
 class _HourStripState extends State<_HourStrip> {
   int? _selected;
 
-  static const _rows = <(IconData, String)>[
+  static List<(IconData, String)> _rows(DisplayUnits u) => [
     (Icons.cloud, 'cloud %'),
-    (Icons.thermostat, 'temp. °C'),
-    (Icons.opacity, 'dew pt. °C'),
-    (Icons.air, 'wind/gust km/h'),
+    (Icons.thermostat, 'temp. ${u.temperature.symbol}'),
+    (Icons.opacity, 'dew pt. ${u.temperature.symbol}'),
+    (Icons.air, 'wind/gust ${u.wind.symbol}'),
     (Icons.water_drop_outlined, 'precip. %'),
   ];
 
@@ -488,7 +496,7 @@ class _HourStripState extends State<_HourStrip> {
           label:
               'Hourly forecast for the dark span: ${s.totalHours} hours, cloud '
               '${WeatherText.range(s.cloudCover, '%')}, temperature '
-              '${WeatherText.range(s.temperature, '°C')}. Select an hour for '
+              '${WeatherText.temperatureRange(s.temperature, unitsOf(context))}. Select an hour for '
               'its exact values.',
           child: SingleChildScrollView(
             key: const Key('weather.hours'),
@@ -504,7 +512,9 @@ class _HourStripState extends State<_HourStrip> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text('Hour', style: style),
-                        for (final (icon, label) in _rows) ...[
+                        for (final (icon, label) in _rows(
+                          unitsOf(context),
+                        )) ...[
                           // S9.6: room for the hour columns' cloud bar.
                           if (icon == Icons.cloud) SizedBox(height: _barHeight),
                           Row(
@@ -596,6 +606,11 @@ class _HourColumn extends StatelessWidget {
     if (h == null) return '$time: no forecast for this hour.';
     String v(double? x, String unit, {int digits = 0}) =>
         x == null ? 'no forecast' : '${x.toStringAsFixed(digits)} $unit';
+    // F21: shown in the chosen units; the forecast stays in °C and km/h.
+    final u = unitsOf(context);
+    double? t(double? c) => c == null ? null : u.temperatureOf(c);
+    double? w(double? kmh) => kmh == null ? null : u.windOf(kmh);
+    final deg = u.temperature.symbol, speed = u.wind.symbol;
     final partial = slot.partial
         ? ' (${slot.precedingMinutes} min of that hour in the dark span)'
         : '';
@@ -604,15 +619,15 @@ class _HourColumn extends StatelessWidget {
         '$time: cloud ${v(h.cloudCoverPct, '%')} (low '
             '${v(h.cloudCoverLowPct, '%')}, mid ${v(h.cloudCoverMidPct, '%')}, '
             'high ${v(h.cloudCoverHighPct, '%')})',
-        'temperature ${v(h.temperatureC, '°C', digits: 1)}, dew point '
-            '${v(h.dewPointC, '°C', digits: 1)}, humidity '
+        'temperature ${v(t(h.temperatureC), deg, digits: 1)}, dew point '
+            '${v(t(h.dewPointC), deg, digits: 1)}, humidity '
             '${v(h.relativeHumidityPct, '%')}',
-        'wind ${v(h.windSpeedKmh, 'km/h')}',
+        'wind ${v(w(h.windSpeedKmh), speed)}',
         'visibility ${v(h.visibilityM == null ? null : h.visibilityM! / 1000, 'km', digits: 1)}',
       ] else
         '$time: after the dark span ends',
       if (slot.preceding)
-        'in the hour before: gusts up to ${v(h.windGustsKmh, 'km/h')}, '
+        'in the hour before: gusts up to ${v(w(h.windGustsKmh), speed)}, '
             'precipitation chance ${v(h.precipitationProbabilityPct, '%')}'
             '$partial',
     ].join('; ');
@@ -629,6 +644,10 @@ class _HourColumn extends StatelessWidget {
     );
     String instant(double? x, {int digits = 0}) =>
         slot.instant ? _v(x, digits: digits) : '';
+    // F21: the chosen units; the forecast stays in °C and km/h.
+    final u = unitsOf(context);
+    double? t(double? c) => c == null ? null : u.temperatureOf(c);
+    double? w(double? kmh) => kmh == null ? null : u.windOf(kmh);
     final cloud = slot.instant && h?.cloudCoverPct != null
         ? ', cloud ${_v(h!.cloudCoverPct)} %'
         : h == null
@@ -672,7 +691,7 @@ class _HourColumn extends StatelessWidget {
                     // the number is the text, so the bar is not read out.
                     _CloudBar(percent: slot.instant ? h.cloudCoverPct : null),
                     Text(instant(h.cloudCoverPct), style: style),
-                    Text(instant(h.temperatureC), style: style),
+                    Text(instant(t(h.temperatureC)), style: style),
                     // S9.6: dew risk is marked by an icon too, never by
                     // colour alone (the shared rules).
                     Row(
@@ -687,7 +706,7 @@ class _HourColumn extends StatelessWidget {
                             semanticLabel: 'dew risk',
                           ),
                         Text(
-                          instant(h.dewPointC),
+                          instant(t(h.dewPointC)),
                           style: slot.dewRisk == true
                               ? style?.copyWith(
                                   color: theme.colorScheme.error,
@@ -698,8 +717,8 @@ class _HourColumn extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      '${instant(h.windSpeedKmh)}/'
-                      '${slot.preceding ? '${_v(h.windGustsKmh)}$star' : ''}',
+                      '${instant(w(h.windSpeedKmh))}/'
+                      '${slot.preceding ? '${_v(w(h.windGustsKmh))}$star' : ''}',
                       style: style,
                     ),
                     Text(

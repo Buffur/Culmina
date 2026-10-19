@@ -1,3 +1,4 @@
+import '../../core/units/display_units.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/metadata/capture_metadata.dart';
 import '../../domain/metadata/metadata_format.dart';
@@ -39,9 +40,11 @@ abstract final class MetadataText {
   };
 
   /// The rows of a [CaptureMetadata], in reading order.
+  /// [units]: the chosen display units (F21); the file's values are °C.
   static List<({String label, String value, String? source})> rows(
-    CaptureMetadata m,
-  ) => [
+    CaptureMetadata m, [
+    DisplayUnits units = DisplayUnits.metric,
+  ]) => [
     _row('Exposure', m.exposureSeconds, QuantityText.exposure),
     _row('ISO', m.sensitivity, sensitivity),
     _row(
@@ -105,12 +108,14 @@ abstract final class MetadataText {
     _row(
       'Sensor temperature',
       m.sensorTemperatureC,
-      (v) => '${QuantityText.number(v)} °C',
+      (v) => QuantityText.temperatureAsRecorded(v, units),
     ),
     _row(
       'Cooler setpoint',
       m.setpointTemperatureC,
-      (v) => '${QuantityText.number(v)} °C (not the measured temperature)',
+      (v) =>
+          '${QuantityText.temperatureAsRecorded(v, units)} (not the '
+          'measured temperature)',
     ),
     _row('Filter', m.filterName, (v) => v),
     _row('Telescope', m.telescope, (v) => v),

@@ -1,3 +1,4 @@
+import '../../core/units/display_units.dart';
 import 'coordinate_input.dart';
 import 'light_pollution_map_link.dart';
 
@@ -9,13 +10,23 @@ abstract final class SiteFormInput {
       (text == null || text.trim().isEmpty) ? 'Name is required' : null;
 
   /// Metres above mean sea level, -500..9000; empty means unknown (RG-08 =
-  /// E2, S7.5), never 0.
-  static String? validateElevation(String? text) {
+  /// E2, S7.5), never 0. F21: typed in [units]' elevation unit, checked in
+  /// metres, the range said in the typed unit.
+  static String? validateElevation(
+    String? text, [
+    DisplayUnits units = DisplayUnits.metric,
+  ]) {
     if (text == null || text.trim().isEmpty) return null;
     final value = CoordinateInput.parse(text);
-    if (value == null) return 'Enter metres, e.g. 295';
-    if (value < -500 || value > 9000) {
-      return 'Elevation must be between -500 and 9000 m';
+    final feet = units.elevation == ElevationUnit.feet;
+    if (value == null) {
+      return feet ? 'Enter feet, e.g. 968' : 'Enter metres, e.g. 295';
+    }
+    final metres = units.metresFrom(value);
+    if (metres < -500 || metres > 9000) {
+      return feet
+          ? 'Elevation must be between -1640 and 29527 ft'
+          : 'Elevation must be between -500 and 9000 m';
     }
     return null;
   }

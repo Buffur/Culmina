@@ -15,6 +15,7 @@ import '../../shared/delete_patterns.dart';
 import '../../shared/entry_share_text.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
+import '../../shared/display_units_of.dart';
 import '../../shared/plan_state.dart';
 import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/astrobin_export_viewmodel.dart';
@@ -393,6 +394,7 @@ class _LogbookScreenState extends State<LogbookScreen> {
               ShareParams(
                 text: EntryShareText.of(
                   session,
+                  units: unitsOf(context),
                   reconciliation: _results[session.id],
                 ),
               ),
