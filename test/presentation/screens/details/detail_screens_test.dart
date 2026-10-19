@@ -39,10 +39,14 @@ class _Weather implements WeatherRepository {
     this.fail = false,
     this.dew = false,
     this.unknownCloudAt,
+    this.missingAt,
   });
 
   final Clock clock;
   final bool fail;
+
+  /// F14 A3: the UTC hour whose row is absent (a gap), if any.
+  final int? missingAt;
 
   /// TD-089: the hour whose total cloud is unknown (null), if any.
   final int? unknownCloudAt;
@@ -77,20 +81,21 @@ class _Weather implements WeatherRepository {
             t.isBefore(endUtc);
             t = t.add(const Duration(hours: 1))
           )
-            WeatherHour(
-              timeUtc: t,
-              cloudCoverPct: t.hour == unknownCloudAt ? null : 40,
-              cloudCoverLowPct: 10,
-              cloudCoverMidPct: 20,
-              cloudCoverHighPct: 40,
-              precipitationProbabilityPct: 5,
-              windSpeedKmh: 8,
-              windGustsKmh: 15,
-              temperatureC: 2,
-              dewPointC: dew ? 1.5 : -3,
-              relativeHumidityPct: 70,
-              visibilityM: 24000,
-            ),
+            if (t.hour != missingAt)
+              WeatherHour(
+                timeUtc: t,
+                cloudCoverPct: t.hour == unknownCloudAt ? null : 40,
+                cloudCoverLowPct: 10,
+                cloudCoverMidPct: 20,
+                cloudCoverHighPct: 40,
+                precipitationProbabilityPct: 5,
+                windSpeedKmh: 8,
+                windGustsKmh: 15,
+                temperatureC: 2,
+                dewPointC: dew ? 1.5 : -3,
+                relativeHumidityPct: 70,
+                visibilityM: 24000,
+              ),
         ],
       ),
     );
@@ -107,6 +112,7 @@ void main() {
     bool fail = false,
     bool dew = false,
     int? unknownCloudAt,
+    int? missingAt,
     domain.LocationProfile? site,
     DateTime? now,
   }) async {
@@ -133,7 +139,13 @@ void main() {
       vm = PlannerHarness(
         DriftTargetRepository(db),
         DriftEquipmentRepository(db),
-        _Weather(clock, fail: fail, dew: dew, unknownCloudAt: unknownCloudAt),
+        _Weather(
+          clock,
+          fail: fail,
+          dew: dew,
+          unknownCloudAt: unknownCloudAt,
+          missingAt: missingAt,
+        ),
         DriftLocationRepository(db),
         locationService: FakeLocationService(),
         reverseGeocoder: FakeReverseGeocoder(),
@@ -334,6 +346,85 @@ void main() {
     final known = slots.where((s) => s.hour?.cloudCoverPct != null).length;
     expect(known, lessThan(slots.length), reason: 'one hour is unknown');
     expect(find.byKey(const Key('weather.cloudBar')), findsNWidgets(known));
+  });
+
+  // F14 A3: a gap is its own "no forecast" column; the preceding-hour
+  // values of an hour only partly in the dark span carry "*"; the wind/gust
+  // and precipitation rows are labelled by the legend and the note.
+  testWidgets('Weather strip: a missing hour says "no forecast"; a partial '
+      'hour is starred; wind/gust and precipitation rows with their legend', (
+    tester,
+  ) async {
+    // 10 Nov 2026, Ljubljana: dark from about 17:25 UTC, so 17:00–18:00 is
+    // only partly dark; the 22:00 UTC row is absent.
+    await start(tester, AppRouter.weather, missingAt: 22);
+    final slots = vm.conditions.nightWeatherSummary!.slots;
+    Finder column(int i) => find.byKey(Key('weather.hour.$i'));
+    Finder inColumn(int i, String text) =>
+        find.descendant(of: column(i), matching: find.text(text));
+
+    // The gap: exactly one column, at 22:00 UTC, and it says so.
+    final gap = slots.indexWhere((s) => s.timeUtc.hour == 22);
+    expect(slots[gap].hour, isNull);
+    expect(find.text('no\nforecast'), findsOneWidget);
+    expect(inColumn(gap, 'no\nforecast'), findsOneWidget);
+    expect(inColumn(gap, '8/15'), findsNothing, reason: 'never invented');
+    final handle = tester.ensureSemantics();
+    expect(
+      tester.getSemantics(column(gap)).label,
+      allOf(contains('no forecast'), isNot(contains('cloud'))),
+    );
+    expect(
+      tester.getSemantics(column(gap + 1)).label,
+      contains('cloud 40 %'),
+      reason: 'the next hour has its row',
+    );
+    handle.dispose();
+    await tester.ensureVisible(column(gap));
+    await tester.tap(column(gap));
+    await settle(tester);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('weather.hourDetail'))).data,
+      endsWith(': no forecast for this hour.'),
+    );
+
+    // The first column: 18:00 UTC, whose preceding hour (17:00, 18:00] is
+    // only partly dark: its gust and precipitation chance are starred.
+    expect(slots.first.timeUtc, DateTime.utc(2026, 11, 10, 18));
+    expect(slots.first.partial, isTrue);
+    expect(inColumn(0, '8/15*'), findsOneWidget);
+    expect(inColumn(0, '5*'), findsOneWidget);
+    // A whole dark hour: the same values without the star.
+    expect(inColumn(2, '8/15'), findsOneWidget);
+    expect(inColumn(2, '5'), findsOneWidget);
+    expect(inColumn(2, '8/15*'), findsNothing);
+    // Only the dusk hour is partial here: one starred gust, one starred
+    // precipitation chance in the whole strip.
+    expect(find.text('8/15*'), findsOneWidget);
+    expect(find.text('5*'), findsOneWidget);
+
+    // The legend names each row and its unit; the note explains both.
+    for (final label in [
+      'cloud %',
+      'temp. °C',
+      'dew pt. °C',
+      'wind/gust km/h',
+      'precip. %',
+    ]) {
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('weather.hours')),
+          matching: find.text(label),
+        ),
+        findsOneWidget,
+        reason: label,
+      );
+    }
+    expect(
+      tester.widget<Text>(find.byKey(const Key('weather.precipNote'))).data,
+      'Precipitation and gusts are for the hour before each time; '
+      '* marks an hour only partly in the dark span.',
+    );
   });
 
   testWidgets('Night & Moon: a night the Sun never leaves has no twilight '
