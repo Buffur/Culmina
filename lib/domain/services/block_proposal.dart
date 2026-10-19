@@ -31,6 +31,7 @@ class BlockProposal {
     this.evidence = const [],
     this.modeConflicts = const {},
     this.unreadable = false,
+    this.rig,
   });
 
   /// The file's basename (C5).
@@ -66,8 +67,28 @@ class BlockProposal {
   final List<ProposalEvidence> evidence;
 
   /// Why [file] does not fit the rig's mode for this block (C8): shown;
-  /// the file's size is then not used for storage.
+  /// the file's size is then not used for storage. At the binning the
+  /// file proposes (or the block's); [conflictsAt] for another one.
   final Set<StorageConflict> modeConflicts;
+
+  /// The rig the file was compared with.
+  final EquipmentProfile? rig;
+
+  /// [modeConflicts] for a block that keeps [binning] (TD-110): a binning
+  /// kept against the file's is a conflict, as on Apply.
+  Set<StorageConflict> conflictsAt(int binning) => switch (file) {
+    null => const {},
+    final f => StorageEstimate.conflicts(
+      f,
+      CaptureBlock(
+        frameType: FrameType.light,
+        exposureTimeSeconds: 1,
+        frameCount: 1,
+        binning: binning,
+      ),
+      rig,
+    ),
+  };
 
   /// The file could not be read for a block (unrecognized or damaged).
   final bool unreadable;
@@ -209,6 +230,7 @@ class BlockProposal {
       modeConflicts: file == null
           ? const {}
           : StorageEstimate.conflicts(file, block, rig),
+      rig: rig,
     );
   }
 }

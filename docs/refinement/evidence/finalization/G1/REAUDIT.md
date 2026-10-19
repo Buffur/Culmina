@@ -37,11 +37,18 @@ was mutation-checked: the guarded code was broken, the test failed, and the code
 | F06 A2, A6, relative gain; F08 A1/A2 (edit after a pick, pick again); F10 FITS in the block dialog (gain, custom filter, binning rule, kept values); F11 empty state; F12 A2 (blocks without a target or a site); F13 Moon-up boundary (−0.84°…0°, real nights); HEIC through the block path | `block_settings_test.dart`, `block_from_photo_test.dart`, `block_from_fits_test.dart` (new), `stacking_gain_graph_test.dart`, `capture_blocks_test.dart`, `planner_structure_test.dart`, `moon_up_predicate_test.dart`, `block_proposal_test.dart` | `143fac0` |
 | F15 A5 (polar nights, readout texts, keyboard and semantics); F16 A2/A3 (Welcome: GPS only on tap, denial, photo path and Cancel); F18 A5 (missing rig); F19 A1 (Completed icon), A4 (Back and tap-outside on delete confirmations); F20 A1 (two known nights in date order; the CSV share file); F21 A5 (the writing mark comes before the keys); F22 A1 (a deleted plan behind a restored planner route) | `night_moon_browse_test.dart`, `welcome_screen_test.dart` (new), `planner_f18_test.dart`, `results_screen_test.dart`, `library_manage_mode_test.dart`, `astrobin_acquisitions_test.dart`, `share_astrobin_csv_exporter_test.dart` (new), `planning_preferences_write_mark_test.dart` (new), `route_restoration_test.dart` | `17b260a` |
 
-## Follow-ups recorded (not blocking)
+## Found by the G1 Stage 11 rows (`STAGE_11_ROWS.md`)
 
-- **TD-110:** when a kept binning differs from the file's, the block dialog's review does not say
-  the file's size is unusable. Storage is still correct: on Apply the file is skipped, never
-  rescaled, and the plan's storage note says so.
+| Row | Finding | Fix | Commit | Test |
+| --- | --- | --- | --- | --- |
+| H2 (F14, F15) | The weather hour button and the calendar day cell replaced their InkWell's semantics with a label but passed no tap: TalkBack announced buttons a double tap could not activate | Both pass `onTap` and `enabled` | `c9cd965` | `detail_screens_test.dart`, `night_moon_browse_test.dart` (semantics tap) |
+
+## Follow-ups
+
+- **TD-110, resolved:** the block dialog's review now says that a kept binning other than the
+  file's makes its size unusable (computed at the block's binning).
+- **TD-111 (open, low):** `TonightOpportunityWidget` and its chart have no caller since F18 A1.
+- `TEST_PLAN.md` L1/L3/L7 carry dated notes (Welcome, route restoration, schema v26).
 
 ## What the re-audit did not change
 

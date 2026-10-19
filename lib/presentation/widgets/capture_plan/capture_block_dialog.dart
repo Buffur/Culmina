@@ -1098,7 +1098,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   /// F08: "Take from a photo" and the inline review of what it read.
   List<Widget> _photoReview(TextStyle? muted) {
     final p = _picked;
-    final mode = p == null ? null : ProposalText.mode(p);
+    // At the binning the block will have: a kept binning other than the
+    // file's makes its size unusable (TD-110).
+    final mode = p == null ? null : ProposalText.mode(p, binning: _binning);
     return [
       Align(
         alignment: Alignment.centerLeft,

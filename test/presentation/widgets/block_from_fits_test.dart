@@ -201,6 +201,14 @@ void main() {
       review(tester),
       contains('Kept what you typed: binning 3 × 3 (the file says 2).'),
     );
+    // TD-110: the review already says why the file's size will not count.
+    expect(
+      review(tester),
+      contains(
+        "Not the rig's mode (another binning, another pixel count): its "
+        'size is not used for storage.',
+      ),
+    );
     await tester.enterText(find.byKey(const Key('blockDialog.count')), '5');
     await tapKey(tester, 'blockDialog.submit');
     final b = result.single!;

@@ -76,11 +76,17 @@ abstract final class ProposalText {
           '${binning.isSymmetric ? '' : ' (not the same on both axes)'}',
   };
 
-  /// Why the file's size is not used for this block, or null.
-  static String? mode(BlockProposal p) => p.modeConflicts.isEmpty
-      ? null
-      : "Not the rig's mode (${p.modeConflicts.map(StorageText.conflict).join(', ')}): "
-            'its size is not used for storage.';
+  /// Why the file's size is not used for this block, or null; [binning]:
+  /// the block's binning when it differs from the one proposed (TD-110).
+  static String? mode(BlockProposal p, {int? binning}) {
+    final conflicts = binning == null
+        ? p.modeConflicts
+        : p.conflictsAt(binning);
+    return conflicts.isEmpty
+        ? null
+        : "Not the rig's mode (${conflicts.map(StorageText.conflict).join(', ')}): "
+              'its size is not used for storage.';
+  }
 
   static String unreadable(BlockProposal p) =>
       "${p.label} can't be read for a block: it is not a DNG, JPEG, HEIC or "
