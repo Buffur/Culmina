@@ -470,6 +470,75 @@ void main() {
       expect(stored!.eveningDate, CalendarDate(2026, 12, 20));
     });
 
+    // F17 A3 (D9 A): Cancel in Home's night picker keeps the plan as it
+    // was, an unsaved edit included: the same night, the same blocks and
+    // the same fit and its text.
+    testWidgets("the night picker's Cancel keeps the plan, its edit and its "
+        'results', (tester) async {
+      await start(tester, lightFrames: 10);
+      await tester.runAsync(() async {
+        await vm.plan.addCaptureBlock(
+          CaptureBlock(
+            frameType: FrameType.light,
+            filterName: 'Ha',
+            exposureTimeSeconds: 300,
+            frameCount: 7,
+          ),
+        );
+        await vm.plan.idle;
+      });
+      await settle(tester);
+      final status = find.byKey(const Key('tonight.status'));
+      List<String> texts(Finder of) => [
+        for (final t in tester.widgetList<Text>(
+          find.descendant(of: of, matching: find.byType(Text)),
+        ))
+          t.data ?? t.textSpan!.toPlainText(),
+      ];
+      List<(String?, int, double, FrameType)> blocks() => [
+        for (final b in vm.plan.captureBlocks)
+          (b.filterName, b.frameCount, b.exposureTimeSeconds, b.frameType),
+      ];
+      final night = vm.plan.eveningDate;
+      expect(night, CalendarDate(2026, 12, 15));
+      final before = blocks();
+      expect(before, [
+        ('L', 10, 60.0, FrameType.light),
+        ('Ha', 7, 300.0, FrameType.light),
+      ]);
+      final fit = vm.analysis.fitAnalysis;
+      final statusText = texts(status);
+      final contextText = texts(find.byKey(const Key('tonight.context')));
+      expect(statusText, isNotEmpty);
+      // 10 × 60 s + 7 × 300 s = 45 min of light frames.
+      expect(
+        vm.analysis.captureBudget.integration,
+        const Duration(minutes: 45),
+      );
+
+      await tester.tap(find.byKey(const Key('context.night')));
+      await settle(tester);
+      expect(find.text('Choose a night'), findsOneWidget);
+      await tester.tap(find.text('20')); // chosen, then cancelled
+      await tester.tap(find.text('Cancel'));
+      await settle(tester);
+      await tester.runAsync(() => vm.plan.idle);
+      expect(find.text('Choose a night'), findsNothing);
+
+      expect(vm.plan.eveningDate, night);
+      expect(blocks(), before);
+      expect(vm.analysis.fitAnalysis.state, fit.state);
+      expect(vm.analysis.fitAnalysis.windowLoadMs, fit.windowLoadMs);
+      expect(vm.analysis.fitAnalysis.availableMs, fit.availableMs);
+      expect(vm.analysis.fitAnalysis.reason, fit.reason);
+      expect(texts(status), statusText);
+      expect(texts(find.byKey(const Key('tonight.context'))), contextText);
+      expect(
+        vm.analysis.captureBudget.integration,
+        const Duration(minutes: 45),
+      );
+    });
+
     for (final limit in DarknessLimit.values) {
       testWidgets('the Dark row is the dark span at the user\'s limit '
           '(${limit.degrees.round()}°; TD-054)', (tester) async {
