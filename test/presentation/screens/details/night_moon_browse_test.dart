@@ -402,10 +402,15 @@ void main() {
     }
     expect(focused(), isTrue, reason: 'reachable by keyboard');
     expect(b.cursorUtc, before, reason: 'focusing moves nothing');
+    // A step up or down is announced as the instant it goes to.
+    final up = node().increasedValue;
+    expect(up, isNot(node().value));
+    expect(node().decreasedValue, isNot(node().value));
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await settle(tester);
     expect(b.cursorUtc, before.add(const Duration(minutes: 5)));
     expect(readout(), startsWith('${node().value}, '));
+    expect(node().value, up);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);

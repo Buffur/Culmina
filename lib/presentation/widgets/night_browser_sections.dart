@@ -89,7 +89,10 @@ class NightBarSection extends StatelessWidget {
           max: (n - 1).toDouble(),
           divisions: n - 1,
           label: at(cursor.instantUtc),
-          semanticFormatterCallback: (_) => at(cursor.instantUtc),
+          // Each step's own instant, so a screen reader announces the
+          // time a step up or down would go to.
+          semanticFormatterCallback: (v) =>
+              at(night.startUtc.add(Duration(minutes: v.round() * 5))),
           onChanged: (v) => browser.setCursor(
             night.startUtc.add(Duration(minutes: v.round() * 5)),
           ),
