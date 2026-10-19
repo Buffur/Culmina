@@ -12,6 +12,7 @@ import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/backup_service.dart';
+import 'package:astroplan/presentation/screens/settings/backup_section.dart' show notShared;
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +32,17 @@ class _FakeBackup implements BackupService {
   BackupProblem? refuse;
   bool cancelPick = false;
   bool failBackup = false;
+  bool dismissShare = false;
   bool failRestore = false;
   int sessions = 12;
   RestoreOutcome? stored;
   int cleared = 0;
 
   @override
-  Future<void> backUpAndShare() async {
+  Future<bool> backUpAndShare() async {
     if (failBackup) throw StateError('share failed');
     backups++;
+    return !dismissShare;
   }
 
   @override
@@ -198,6 +201,33 @@ void main() {
     expect(find.text('Restore this backup?'), findsNothing);
     expect(find.textContaining("Couldn't back up"), findsOneWidget);
     expect(backup.restored, isNull);
+  });
+
+  // F01 A4: a share sheet closed without sharing kept no backup, so the
+  // confirmation does not come back and nothing is restored.
+  testWidgets('Back up first whose share sheet is closed never restores', (
+    tester,
+  ) async {
+    await pump(tester);
+    backup.dismissShare = true;
+    await openConfirmation(tester);
+    await tester.tap(find.byKey(const Key('restore.backUpFirst')));
+    await tester.pumpAndSettle();
+    expect(backup.backups, 1);
+    expect(find.text('Restore this backup?'), findsNothing);
+    expect(find.text(notShared), findsOneWidget);
+    expect(find.text('Backup file created'), findsNothing);
+    expect(backup.restored, isNull);
+  });
+
+  testWidgets('Back up now whose share sheet is closed says no backup was '
+      'saved', (tester) async {
+    await pump(tester);
+    backup.dismissShare = true;
+    await tester.tap(find.byKey(const Key('backup.backUp')));
+    await tester.pumpAndSettle();
+    expect(find.text(notShared), findsOneWidget);
+    expect(find.text('Backup file created'), findsNothing);
   });
 
   testWidgets('cancelling the confirmation restores nothing', (tester) async {

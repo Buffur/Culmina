@@ -34,7 +34,13 @@ class BackupViewModel extends ChangeNotifier {
     await _service.clearOutcome();
   }
 
-  Future<void> backUp() => _run(_service.backUpAndShare);
+  /// Backs up and shares; false when the share sheet was closed without
+  /// sharing (F01 A4).
+  Future<bool> backUp() async {
+    var shared = false;
+    await _run(() async => shared = await _service.backUpAndShare());
+    return shared;
+  }
 
   /// Picks and checks a backup; null if cancelled. Throws
   /// [BackupException] for a file that cannot be restored.

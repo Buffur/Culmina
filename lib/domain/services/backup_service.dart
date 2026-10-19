@@ -72,8 +72,10 @@ class RestoreOutcome {
 /// confirmed, then applied at once: the app restarts, checks the backup
 /// again before anything changes, and replaces its data.
 abstract class BackupService {
-  /// Creates a backup and opens the share sheet.
-  Future<void> backUpAndShare();
+  /// Creates a backup and opens the share sheet. False when the user
+  /// closed the sheet without sharing (the file was not kept anywhere;
+  /// F01 A4: only a backup that was shared counts as done).
+  Future<bool> backUpAndShare();
 
   /// Lets the user pick a backup file and checks it completely, the
   /// database included; null if cancelled. Throws [BackupException] when

@@ -25,7 +25,7 @@ class _Stored implements BackupService {
   }
 
   @override
-  Future<void> backUpAndShare() => throw UnimplementedError();
+  Future<bool> backUpAndShare() => throw UnimplementedError();
 
   @override
   Future<({BackupPreview preview, Object file})?> pick() =>

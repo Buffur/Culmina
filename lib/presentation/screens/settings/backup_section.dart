@@ -19,6 +19,12 @@ enum _RestoreChoice { cancel, backUpFirst, restore }
 /// once: the app restarts, checks it again and replaces its data; the next
 /// app instance says what happened ([RestoreOutcomeNotice]). Every action
 /// reports a failure (trap 18).
+/// F01 A4: the share sheet was closed without sharing, so no backup file
+/// was kept anywhere.
+const notShared =
+    'No backup was saved: the share sheet was closed. Back up again and '
+    'choose where to keep the file.';
+
 class BackupSection extends StatelessWidget {
   const BackupSection({super.key});
 
@@ -115,8 +121,15 @@ class BackupSection extends StatelessWidget {
       if (!context.mounted) return;
       // UX-S R1: the existing backup; only its success returns to this same
       // confirmation. A failure or a cancelled backup never restores.
-      final done = await runWithFeedback(context, 'back up', vm.backUp);
+      var shared = false;
+      final done = await runWithFeedback(
+        context,
+        'back up',
+        () async => shared = await vm.backUp(),
+      );
       if (!done || !context.mounted) return;
+      // F01 A4: a share sheet closed without sharing kept no backup.
+      if (!shared) return showFailure(context, notShared);
       showDone(context, 'Backup file created');
       choice = await _confirm(context, picked.preview);
     }
@@ -148,10 +161,16 @@ class BackupSection extends StatelessWidget {
           ),
           enabled: !vm.busy,
           onTap: () async {
-            final done = await runWithFeedback(context, 'back up', vm.backUp);
-            if (done && context.mounted) {
-              showDone(context, 'Backup file created');
-            }
+            var shared = false;
+            final done = await runWithFeedback(
+              context,
+              'back up',
+              () async => shared = await vm.backUp(),
+            );
+            if (!done || !context.mounted) return;
+            shared
+                ? showDone(context, 'Backup file created')
+                : showFailure(context, notShared);
           },
         ),
         ListTile(

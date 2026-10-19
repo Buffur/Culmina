@@ -110,17 +110,20 @@ class FileBackupService implements BackupService {
   }
 
   @override
-  Future<void> backUpAndShare() async {
+  Future<bool> backUpAndShare() async {
     final bytes = await createBackup();
     final now = _clock.nowUtc();
     final file = File(p.join((await _tempDir()).path, fileName(now)));
     await file.writeAsBytes(bytes, flush: true);
-    await SharePlus.instance.share(
+    final result = await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path, mimeType: 'application/zip')],
         text: shareText(now),
       ),
     );
+    // Dismissed: nothing kept the file. "Unavailable" (a platform that
+    // cannot tell) still opened the sheet with the file, so it counts.
+    return result.status != ShareResultStatus.dismissed;
   }
 
   /// The backup's file name in the device's local date and time (S9.8):

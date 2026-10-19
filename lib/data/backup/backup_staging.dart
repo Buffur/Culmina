@@ -127,6 +127,10 @@ abstract final class BackupStaging {
       started = {
         'stamp': nowUtc.toIso8601String().replaceAll(RegExp('[:.]'), '-'),
         'previous_preferences': await snapshotPreferences(),
+        // Whether a database was here before: a rollback that is itself
+        // interrupted must know whether the file at the live path is the
+        // old database or the new one.
+        'had_live': await live.exists(),
       };
       await step('journal');
       await _writeJson(journalFile, started);
@@ -142,11 +146,28 @@ abstract final class BackupStaging {
     // A journal: the last start stopped in the middle of a checked
     // restore. Finish it; the candidate was checked before the journal
     // was written.
+    if (started['rolling_back'] == true) {
+      // The last start stopped while putting the old state back: finish
+      // that, never the restore it had already refused.
+      return _rollBack(
+        dir,
+        started,
+        putBackPreferences,
+        'rollback interrupted',
+        step,
+      );
+    }
     AppLog.warning('backup', 'Completing an interrupted restore');
     if (!await next.exists() && !await live.exists()) {
       // Nothing to finish with (an outside deletion): put the safety copy
       // back rather than start with no data.
-      return _rollBack(dir, started, putBackPreferences, 'no database left');
+      return _rollBack(
+        dir,
+        started,
+        putBackPreferences,
+        'no database left',
+        step,
+      );
     }
     return _swap(
       dir,
@@ -192,7 +213,7 @@ abstract final class BackupStaging {
       await restorePreferences(await _readStagedPreferences(dir));
     } on Exception catch (e, s) {
       AppLog.error('backup', 'Restore not applied', error: e, stackTrace: s);
-      return _rollBack(dir, started, putBackPreferences, e);
+      return _rollBack(dir, started, putBackPreferences, e, step);
     }
     await step('commit');
     final outcome = RestoreOutcome(
@@ -208,38 +229,61 @@ abstract final class BackupStaging {
   }
 
   /// Puts the live database and settings back as they were before the
-  /// journal was written; the restore is reported as not applied. If even
-  /// that fails, the journal stays for the next start.
+  /// journal was written; the restore is reported as not applied. The
+  /// journal is marked first, and every step can be repeated, so a start
+  /// that stops in the middle finishes the rollback at the next one. If
+  /// a step fails, the journal stays for the next start.
   static Future<RestoreOutcome> _rollBack(
     Directory dir,
     Map<String, Object?> started,
     Future<void> Function(Map<String, Object?>) putBackPreferences,
     Object reason,
+    Future<void> Function(String) step,
   ) async {
     final live = _file(dir, database);
     final next = _file(dir, staged);
     final safety = _safety(dir, started['stamp']! as String);
     final rolledBack = _file(dir, '$staged.rolled-back');
+    if (started['rolling_back'] != true) {
+      await step('rollbackJournal');
+      await _writeJson(_file(dir, journal), {...started, 'rolling_back': true});
+    }
+    // A journal from before F01's had_live: no staged file means it moved
+    // in, and a live file then is the new one only if there was none.
+    final hadLive = switch (started['had_live']) {
+      final bool known => known,
+      _ => await next.exists(),
+    };
     if (await safety.exists()) {
       if (await live.exists()) {
         // The new database already moved in: it goes back out so the
         // safety copy can return.
+        await step('rollbackMoveNew');
         await live.rename(rolledBack.path);
       }
+      await step('rollbackDatabase');
       await safety.rename(live.path);
-      for (final suffix in _sideSuffixes) {
-        final side = File('${safety.path}$suffix');
-        if (await side.exists()) await side.rename('${live.path}$suffix');
-      }
-    } else if (!await next.exists() && await live.exists()) {
+    } else if (!hadLive && await live.exists()) {
       // There was no database before (a new install): the new one moved
       // in, so the old state is no database at all.
+      await step('rollbackMoveNew');
       await live.rename(rolledBack.path);
+    }
+    // With no safety copy left and a database before, the live file is
+    // the old one: it never moved, or an earlier attempt brought it back.
+    for (final suffix in _sideSuffixes) {
+      final side = File('${safety.path}$suffix');
+      if (await side.exists()) {
+        await step('rollbackSide');
+        await side.rename('${live.path}$suffix');
+      }
     }
     final previous = started['previous_preferences'];
     if (previous is Map) {
+      await step('rollbackPreferences');
       await putBackPreferences(Map<String, Object?>.from(previous));
     }
+    await step('rollbackCancel');
     await cancel(dir);
     await _deleteIfExists(rolledBack);
     final outcome = const RestoreOutcome(

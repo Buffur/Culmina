@@ -463,6 +463,103 @@ void main() {
       );
     }
 
+    // A start killed while it puts the old state back finishes the
+    // rollback at the next start; it never applies the refused restore.
+    for (final failed in ['swap', 'preferences']) {
+      for (final killed in [
+        if (failed == 'preferences') 'rollbackMoveNew',
+        'rollbackDatabase',
+        'rollbackSide',
+        'rollbackPreferences',
+        'rollbackCancel',
+      ]) {
+        test('a failed "$failed", killed at "$killed": the next start '
+            'finishes the rollback', () async {
+          await stage();
+          await expectLater(
+            BackupStaging.apply(
+              phone,
+              nowUtc: _clock.nowUtc(),
+              onStep: (s) async {
+                if (s == failed) throw const FileSystemException('disk full');
+                if (s == killed) throw _Killed();
+              },
+            ),
+            throwsA(isA<_Killed>()),
+          );
+          final outcome = await BackupStaging.apply(
+            phone,
+            nowUtc: _clock.nowUtc(),
+          );
+          expect(outcome!.result, RestoreResult.refused);
+          expect(outcome.problem, BackupProblem.notApplied);
+          await expectOldState();
+          expect(
+            await BackupStaging.apply(phone, nowUtc: _clock.nowUtc()),
+            isNull,
+          );
+          await expectOldState();
+        });
+      }
+    }
+
+    for (final killed in [null, 'rollbackPreferences', 'rollbackCancel']) {
+      test(
+        'a new install: a failed restore leaves no database'
+        '${killed == null ? '' : ', also when killed at "$killed"'}',
+        () async {
+          await live.delete();
+          await File('${live.path}-wal').delete();
+          await stage();
+          Future<RestoreOutcome?> run() => BackupStaging.apply(
+            phone,
+            nowUtc: _clock.nowUtc(),
+            onStep: (s) async {
+              if (s == 'preferences') throw const FileSystemException('full');
+              if (s == killed) throw _Killed();
+            },
+          );
+          if (killed != null) {
+            await expectLater(run(), throwsA(isA<_Killed>()));
+          }
+          final outcome = killed == null
+              ? await run()
+              : await BackupStaging.apply(phone, nowUtc: _clock.nowUtc());
+          expect(outcome!.problem, BackupProblem.notApplied);
+          expect(live.existsSync(), isFalse);
+          expect(await _settingsNow(), _deviceSettings);
+          expect(await BackupStaging.isStaged(phone), isFalse);
+          expect(
+            File(p.join(phone.path, BackupStaging.journal)).existsSync(),
+            isFalse,
+          );
+        },
+      );
+    }
+
+    test('killed before the rollback is marked: the next start completes '
+        'the restore instead, in one coherent state', () async {
+      await stage();
+      var failed = false;
+      await expectLater(
+        BackupStaging.apply(
+          phone,
+          nowUtc: _clock.nowUtc(),
+          onStep: (s) async {
+            if (s == 'swap' && !failed) {
+              failed = true;
+              throw const FileSystemException('disk full');
+            }
+            if (s == 'rollbackJournal') throw _Killed();
+          },
+        ),
+        throwsA(isA<_Killed>()),
+      );
+      final outcome = await BackupStaging.apply(phone, nowUtc: _clock.nowUtc());
+      expect(outcome!.result, RestoreResult.completedAfterInterruption);
+      await expectNewState();
+    });
+
     test(
       'a failed settings write half way is rolled back as a whole',
       () async {
