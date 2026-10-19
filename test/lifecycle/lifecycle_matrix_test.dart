@@ -315,7 +315,8 @@ void main() {
   });
   // F22 A3 (TD-102, S11H-07): the Stage 11 probe P1, committed. A plan's
   // name and every result field (Not done with its reason, Partly with its
-  // count, As planned) survive kills, and the Logbook search finds the name.
+  // count, As planned; each with its notes and conditions) survive kills,
+  // and the Logbook search finds the name.
   test('L4b: a named plan and every result field survive kills', () async {
     final file = _dbFile();
     final clock = _Clock(DateTime.utc(2026, 11, 10, 18));
@@ -347,12 +348,45 @@ void main() {
     expect((await repo.get(named.id))!.name, 'Orion trip');
     await repo.recordResult(
       named.id,
-      const NotDone(reason: NotDoneReason.clouds),
+      const NotDone(
+        reason: NotDoneReason.clouds,
+        notes: ResultNotes(
+          environmentalNotes: 'Overcast from 19:00',
+          processingNotes: 'Nothing to stack',
+          temperatureC: 4.5,
+          humidityPct: 92,
+          cloudCoverPct: 100,
+        ),
+      ),
     );
     final light = (await repo.get(partly.id))!.blocks
         .firstWhere((b) => b.frameType == FrameType.light);
-    await repo.recordResult(partly.id, PartlyDone({light.id: 7}));
-    await repo.recordResult(asPlanned.id, const CompletedAsPlanned());
+    await repo.recordResult(
+      partly.id,
+      PartlyDone(
+        {light.id: 7},
+        notes: const ResultNotes(
+          environmentalNotes: 'Wind after 23:00',
+          processingNotes: 'Reject trailed subs',
+          temperatureC: -3,
+          humidityPct: 71.5,
+          cloudCoverPct: 20,
+        ),
+      ),
+    );
+    final planned = (await repo.get(asPlanned.id))!.blocks
+        .firstWhere((b) => b.frameType == FrameType.light);
+    await repo.recordResult(
+      asPlanned.id,
+      const CompletedAsPlanned(
+        notes: ResultNotes(
+          environmentalNotes: 'Clear and calm',
+          temperatureC: -0.5,
+          humidityPct: 60,
+          cloudCoverPct: 0,
+        ),
+      ),
+    );
     await db.close(); // killed again
 
     db = AppDatabase(NativeDatabase(file));
@@ -362,13 +396,35 @@ void main() {
     expect(notDone.name, 'Orion trip');
     expect(notDone.status, SessionStatus.abandoned);
     expect(notDone.notDoneReason, NotDoneReason.clouds);
+    expect(notDone.resultKind, isNull);
+    expect(notDone.record.environmentalNotes, 'Overcast from 19:00');
+    expect(notDone.record.processingNotes, 'Nothing to stack');
+    expect(notDone.record.temperature, 4.5);
+    expect(notDone.record.humidity, 92);
+    expect(notDone.record.cloudCover, 100);
     final counted = (await repo.get(partly.id))!;
     expect(counted.status, SessionStatus.completed);
     expect(counted.resultKind, ResultKind.partly);
+    expect(counted.notDoneReason, isNull);
     expect((await repo.execution(partly.id)).completedFor(light.id), 7);
+    expect(counted.record.environmentalNotes, 'Wind after 23:00');
+    expect(counted.record.processingNotes, 'Reject trailed subs');
+    expect(counted.record.temperature, -3);
+    expect(counted.record.humidity, 71.5);
+    expect(counted.record.cloudCover, 20);
     final done = (await repo.get(asPlanned.id))!;
     expect(done.status, SessionStatus.completed);
     expect(done.resultKind, ResultKind.asPlanned);
+    expect(
+      (await repo.execution(asPlanned.id)).completedFor(planned.id),
+      planned.frameCount,
+      reason: 'as planned: the planned count',
+    );
+    expect(done.record.environmentalNotes, 'Clear and calm');
+    expect(done.record.processingNotes, isNull, reason: 'not entered');
+    expect(done.record.temperature, -0.5);
+    expect(done.record.humidity, 60);
+    expect(done.record.cloudCover, 0, reason: 'a typed 0 stays 0');
     final logbook = SessionsViewModel(repo, clock: clock)..setQuery('orion');
     expect(logbook.searched(await repo.list()).map((s) => s.id), [named.id]);
     await db.close();
