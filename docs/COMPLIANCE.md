@@ -54,7 +54,7 @@ location) are not listed there.
 **Google Play services location (S11P-03; owner decision S12.4 = (a), 2026-10-17):** `geolocator_android`
 bundles the proprietary `play-services-location` 21.2.0 (with `-base`, `-basement`, `-tasks`) in the
 GPL-3.0 APK; it is used only when the user taps "Use current position". The owner accepts it and grants
-this exception as the copyright holder (also in `README.md`; the About statement follows in S16.8):
+this exception as the copyright holder (also in `README.md`, and on the About screen since F23 A2, 2026-10-19):
 
 > Additional permission under GNU GPL version 3 section 7: if you modify this program, or any
 > covered work, by linking or combining it with the Google Play services libraries (or a modified
