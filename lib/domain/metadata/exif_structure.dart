@@ -476,17 +476,18 @@ class _Ifd {
     ];
   }
 
-  /// BitsPerSample (258): one depth for every sample; differing depths are
-  /// an unsupported layout (unparseable, F04 A3).
+  /// BitsPerSample (258): the depth of a one-sample (colour filter array)
+  /// main image. More than one sample per pixel is an unsupported layout
+  /// (unparseable, F04 A3): the theoretical payload (C10) counts one
+  /// sample per pixel, so a three-sample image would be a third of its
+  /// size.
   Future<MetadataValue<int>> bitsPerSample(MetadataSource source) async {
     final e = entries[_bitsPerSample];
     if (e == null) return const AbsentValue();
     final values = await _integers(source, e, 4);
     if (values == null) return _bad(_bitsPerSample, e);
     final raw = values.join(' ');
-    if (values.any((v) => v != values.first) ||
-        values.first < 1 ||
-        values.first > 32) {
+    if (values.length != 1 || values.first < 1 || values.first > 32) {
       return UnparseableValue(raw: raw, origin: origin(_bitsPerSample));
     }
     return KnownValue(values.first, raw: raw, origin: origin(_bitsPerSample));

@@ -58,14 +58,23 @@ void main() {
       expect((m.compression as KnownValue).origin.field, 'Compression (259)');
     });
 
-    test('three equal depths are one depth; differing depths are an '
+    test('one sample is one depth; more than one sample per pixel is an '
         'unsupported layout', () async {
       var (m, _) = await _read(
+        _dng([
+          FixtureEntry.shorts(258, [14]),
+        ]),
+      );
+      expect(m.bitsPerSample.valueOrNull, 14);
+      // Three samples (a linear, demosaiced DNG): a one-sample payload
+      // would be a third of the file's pixel data.
+      (m, _) = await _read(
         _dng([
           FixtureEntry.shorts(258, [16, 16, 16]),
         ]),
       );
-      expect(m.bitsPerSample.valueOrNull, 16);
+      expect(m.bitsPerSample, isA<UnparseableValue<int>>());
+      expect((m.bitsPerSample as UnparseableValue).raw, '16 16 16');
       (m, _) = await _read(
         _dng([
           FixtureEntry.shorts(258, [16, 12, 16]),

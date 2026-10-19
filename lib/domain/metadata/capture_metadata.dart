@@ -69,8 +69,8 @@ class CaptureMetadata {
   // fields. Each keeps its tag or keyword in its origin; none is a block or
   // rig value by itself: an import proposes from them (F08, F10).
 
-  /// DNG BitsPerSample (258) of the main image, when every sample has the
-  /// same depth (else unparseable: an unsupported layout).
+  /// DNG BitsPerSample (258) of the main image, when it has one sample per
+  /// pixel (else unparseable: an unsupported layout).
   final MetadataValue<int> bitsPerSample;
 
   /// DNG Compression (259) of the main image, as its code.
