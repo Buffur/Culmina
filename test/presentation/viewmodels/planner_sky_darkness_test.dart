@@ -96,20 +96,25 @@ void main() {
     expect(overrides.created, 0);
   });
 
+  // F14 (RA.D Q3): a Clear Outside link the user opens is allowed; the
+  // file that builds it imports no network code, and nothing else names
+  // the site or scrapes a sky value.
   test('no scraping code remains in lib/', () {
+    const link = 'lib/presentation/shared/clear_outside_link.dart';
     final offenders = Directory('lib')
         .listSync(recursive: true)
         .whereType<File>()
         .where((f) => f.path.endsWith('.dart'))
         .where((f) {
           final source = f.readAsStringSync();
-          return source.contains('clearoutside') ||
+          return (source.contains('clearoutside') && f.path != link) ||
               source.contains('LightPollutionRepository') ||
               source.contains('fetchBortleClass');
         })
         .map((f) => f.path)
         .toList();
     expect(offenders, isEmpty);
+    expect(File(link).readAsStringSync(), isNot(contains('import')));
   });
 
   test('a site without values is unknown', () async {

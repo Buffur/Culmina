@@ -22,9 +22,6 @@ class OpenMeteoWeatherRepository implements WeatherRepository {
   /// The provider's horizon: today plus 15 days (`forecast_days` ≤ 16).
   static const int horizonDays = 16;
 
-  static String _hour(DateTime utc) =>
-      '${utc.toIso8601String().substring(0, 13)}:00';
-
   /// The last hour the provider serves, UTC.
   DateTime horizonEndUtc() {
     final now = _clock.nowUtc();
@@ -44,17 +41,16 @@ class OpenMeteoWeatherRepository implements WeatherRepository {
     if (start.isAfter(horizon)) {
       return const WeatherFetchFailed(WeatherFailure.outOfRange);
     }
-    // `end_hour` is inclusive; the night is [start, end).
-    var last = endUtc.toUtc().subtract(const Duration(milliseconds: 1));
-    if (last.isAfter(horizon)) last = horizon;
+    // ADR-022 N7 (F14): one request serves the whole horizon, in UTC; each
+    // night is sliced from it (N6). [endUtc] only bounds the range check.
     final uri = Uri.https('api.open-meteo.com', '/v1/forecast', {
       'latitude': '$latitude',
       'longitude': '$longitude',
       'hourly': OpenMeteoForecastParser.hourlyVariables.join(','),
       'models': model,
       'timeformat': 'unixtime',
-      'start_hour': _hour(start),
-      'end_hour': _hour(last),
+      'timezone': 'UTC',
+      'forecast_days': '$horizonDays',
     });
     try {
       // Every third-party request identifies the app (TASK 16.3; S1.1).

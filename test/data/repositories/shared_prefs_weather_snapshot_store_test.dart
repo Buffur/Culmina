@@ -4,6 +4,7 @@
 
 import 'package:astroplan/data/repositories/shared_prefs_weather_snapshot_store.dart';
 import 'package:astroplan/domain/models/weather_snapshot.dart';
+import 'package:astroplan/domain/repositories/weather_snapshot_store.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,5 +59,31 @@ void main() {
     expect(await store.read('none'), isNull);
     expect(await store.read('bad'), isNull);
     expect(await store.read('future'), isNull);
+  });
+
+  // F14 A2 (ADR-022 N8; TD-049): the per-night version-1 entries are
+  // deleted on first read, never migrated; other preferences stay.
+  test('version-1 keys are deleted on first read; nothing else', () async {
+    final v1 =
+        'weather:46.05:14.51:best_match:${DateTime.utc(2026, 9, 24, 11).millisecondsSinceEpoch}';
+    SharedPreferences.setMockInitialValues({
+      v1: SharedPrefsWeatherSnapshotStore.encode(snapshot),
+      'weather_cache_46.05_14.51': '{}',
+      'activeLocationId': 3,
+    });
+    final store = SharedPrefsWeatherSnapshotStore();
+    final key = WeatherSnapshotStore.keyFor(
+      latitude: 46.05,
+      longitude: 14.51,
+      model: 'best_match',
+      forecastDays: 16,
+    );
+    expect(await store.read(key), isNull, reason: 'not migrated');
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.containsKey(v1), isFalse);
+    expect(prefs.containsKey('weather_cache_46.05_14.51'), isFalse);
+    expect(prefs.getInt('activeLocationId'), 3);
+    await store.write(key, snapshot);
+    expect((await store.read(key))!.hours, hasLength(2));
   });
 }

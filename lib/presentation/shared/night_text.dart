@@ -51,6 +51,68 @@ abstract final class WeatherText {
       'No forecast yet: the forecast covers only the next 16 days. '
       'Planning works without weather.';
 
+  /// The span the night's weather covers (ADR-022 N6): the dark span at
+  /// [limitDeg], or why there is none; [at] formats an instant.
+  static String span(
+    NightWeatherSummary s,
+    double limitDeg,
+    String Function(DateTime utc) at,
+  ) {
+    final sun = 'Sun below ${QuantityText.degrees(limitDeg)}';
+    return switch (s.span) {
+      NightWeatherSpan.dark => 'Dark ($sun): ${at(s.fromUtc)} – ${at(s.toUtc)}',
+      NightWeatherSpan.polarNight =>
+        'Dark ($sun) for the whole 24 h window: ${at(s.fromUtc)} – '
+            '${at(s.toUtc)}',
+      NightWeatherSpan.noDark =>
+        'No dark time this night ($sun never); no hours are summarized.',
+    };
+  }
+
+  /// What of the dark span the forecast has (N7, W2): null when every
+  /// instant has every value. Never a zero for a missing value.
+  static String? coverage(NightWeatherSummary s) {
+    if (s.span == NightWeatherSpan.noDark) return null;
+    if (s.totalHours == 0) return 'The dark span holds no whole hour.';
+    if (s.coveredHours == 0) return 'No forecast for these hours.';
+    final gaps = s.cloudGapHours - (s.totalHours - s.coveredHours);
+    final parts = [
+      if (!s.complete)
+        'Forecast for ${s.coveredHours} of ${s.totalHours} dark hours; the '
+            'rest have no forecast',
+      if (gaps > 0) 'Cloud: $gaps h without forecast',
+    ];
+    return parts.isEmpty ? null : parts.join('. ');
+  }
+
+  /// The forecast's lead time (N9, W3), never a reliability score.
+  static String lead(int days) => switch (days) {
+    < 0 => 'Forecast made during this night',
+    0 => 'Forecast made on the day',
+    1 => 'Forecast made 1 day ahead',
+    _ => 'Forecast made $days days ahead',
+  };
+
+  /// The dew heuristic over the dark span (N6): about N h.
+  static String dew(NightWeatherSummary s) {
+    final margin = s.dewMarginC.toStringAsFixed(1);
+    if (s.dewKnownHours == 0) {
+      return 'Dew risk: unknown (no temperature or dew point).';
+    }
+    if (s.dewRiskHours == 0) {
+      return 'Dew risk (heuristic): none of ${s.dewKnownHours} dark hours has '
+          'a temperature − dew point spread at or below $margin °C.';
+    }
+    return 'Dew risk (heuristic): about ${s.dewRiskHours} h of '
+        '${s.dewKnownHours} dark hours with a temperature − dew point spread '
+        'at or below $margin °C (the margin in Settings).';
+  }
+
+  /// Q3 (PD-18; F14 A5): the limitation, said where the forecast is.
+  static const notSeeing =
+      'Seeing and transparency are not forecast here. Visibility is '
+      'horizontal visibility near the ground, not transparency.';
+
   /// One line for a summary row (S6.5): the night's cloud range with the
   /// forecast's age (and its aging or stale wording), or why there is no
   /// forecast. Never a score or a good/bad word (ADR-012).

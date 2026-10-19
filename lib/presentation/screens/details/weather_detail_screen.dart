@@ -6,6 +6,7 @@ import '../../shared/night_text.dart';
 import '../../viewmodels/night_conditions_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
+import '../../widgets/forecast_nights_section.dart';
 import '../../widgets/weather_forecast_widget.dart';
 import 'night_moon_screen.dart';
 
@@ -34,7 +35,7 @@ class WeatherDetailScreen extends StatelessWidget {
         ),
         key: const Key('weatherDetail.summary'),
       ),
-      sections: const [WeatherForecastWidget()],
+      sections: const [WeatherForecastWidget(), ForecastNightsSection()],
     );
   }
 }

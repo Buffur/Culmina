@@ -161,30 +161,40 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('shows the night from sunset to sunrise, ranges with units, '
-      'the dew heuristic, the model and attribution', (tester) async {
+  // F14 (ADR-022 N6): the dark span at the plan's limit, not sunset to
+  // sunrise; the table and model are in Details.
+  testWidgets('shows the night\'s dark span, its facts, the dew heuristic; '
+      'ranges with units and the model in Details; attribution', (
+    tester,
+  ) async {
     await pump(tester);
 
     expect(find.text('Night weather'), findsOneWidget);
-    expect(find.textContaining('Sunset to sunrise:'), findsOneWidget);
+    expect(find.textContaining('Dark (Sun below −18°):'), findsOneWidget);
+    expect(find.textContaining('Sunset to sunrise'), findsNothing);
     expect(find.textContaining('Times in device zone'), findsOneWidget);
     expect(find.textContaining('Updated just now'), findsOneWidget);
-    expect(find.text('Model: open-meteo / best_match'), findsOneWidget);
-    expect(find.text('20 %'), findsOneWidget); // cloud cover range
-    expect(find.text('8 km/h'), findsOneWidget); // wind range
-    // Unknown variables are "no forecast", never 0.
-    expect(find.text('no forecast'), findsWidgets);
+    expect(find.byKey(const Key('weather.facts')), findsOneWidget);
     expect(find.textContaining('Dew risk (heuristic)'), findsOneWidget);
     expect(find.textContaining('at or below 2.0 °C'), findsOneWidget);
     expect(
       find.text('Weather data by Open-Meteo.com (CC BY 4.0)'),
       findsOneWidget,
     );
+    expect(find.text('Model: open-meteo / best_match'), findsNothing);
+    await tester.ensureVisible(find.byKey(const Key('weather.details')));
+    await tester.tap(find.byKey(const Key('weather.details')));
+    await tester.pumpAndSettle();
+    expect(find.text('Model: open-meteo / best_match'), findsOneWidget);
+    expect(find.text('20 %'), findsOneWidget); // cloud cover range
+    expect(find.text('8 km/h'), findsOneWidget); // wind range
+    // Unknown variables are "no forecast", never 0.
+    expect(find.text('no forecast'), findsWidgets);
 
-    // The strip starts at the hour of sunset and ends before sunrise.
+    // The strip covers the dark span's whole hours, every one forecast.
     final s = vm.nightWeatherSummary!;
     expect(s.coveredHours, s.totalHours);
-    expect(s.totalHours, inInclusiveRange(11, 14));
+    expect(s.totalHours, inInclusiveRange(8, 12));
   });
 
   testWidgets('offline with an old cache: stale, labelled, never current', (

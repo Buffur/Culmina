@@ -12,12 +12,28 @@ import 'storage_guard.dart';
 class SharedPrefsWeatherSnapshotStore implements WeatherSnapshotStore {
   static const int _formatVersion = 1;
 
+  bool _purged = false;
+
+  /// ADR-022 N8 (TD-049): the per-night version-1 keys (`weather:…`) and
+  /// the pre-TASK 9.4 `weather_cache_…` keys are deleted on the first
+  /// access, never migrated; a failure only leaves them for later.
+  Future<void> _purgeLegacy(SharedPreferences prefs) async {
+    if (_purged) return;
+    _purged = true;
+    for (final key in prefs.getKeys().where(
+      (k) => k.startsWith('weather:') || k.startsWith('weather_cache_'),
+    )) {
+      await prefs.remove(key);
+    }
+  }
+
   @override
   Future<WeatherSnapshot?> read(String key) async {
-    final text = await guardStorage(
-      'read the weather cache',
-      () async => (await SharedPreferences.getInstance()).getString(key),
-    );
+    final text = await guardStorage('read the weather cache', () async {
+      final prefs = await SharedPreferences.getInstance();
+      await _purgeLegacy(prefs);
+      return prefs.getString(key);
+    });
     if (text == null) return null;
     try {
       return decode(text);

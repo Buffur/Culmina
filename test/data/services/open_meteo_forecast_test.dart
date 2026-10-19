@@ -145,7 +145,10 @@ void main() {
       'test/fixtures/weather/open_meteo_ljubljana_best_match.json',
     ).readAsStringSync();
 
-    test('covers the night in UTC with the ADR-012 parameters', () async {
+    // F14 (ADR-022 N7): one request for the whole horizon, in UTC; nights
+    // are sliced from it, never requested one by one.
+    test('asks the whole 16-day horizon in UTC with the ADR-012 '
+        'parameters', () async {
       late Uri requested;
       final repo = OpenMeteoWeatherRepository(
         clock: clock,
@@ -163,9 +166,10 @@ void main() {
       final q = requested.queryParameters;
       expect(q['timeformat'], 'unixtime');
       expect(q['models'], 'best_match');
-      expect(q.containsKey('timezone'), isFalse, reason: 'GMT by default');
-      expect(q['start_hour'], '2026-09-24T16:00');
-      expect(q['end_hour'], '2026-09-25T06:00', reason: 'end is exclusive');
+      expect(q['timezone'], 'UTC');
+      expect(q['forecast_days'], '16');
+      expect(q.containsKey('start_hour'), isFalse);
+      expect(q.containsKey('end_hour'), isFalse);
       expect(
         q['hourly']!.split(','),
         containsAll(['cloud_cover_high', 'visibility', 'wind_gusts_10m']),
@@ -191,7 +195,7 @@ void main() {
       expect(request.headers['User-Agent'], AppIdentity.userAgent);
     });
 
-    test('the end is capped at the 16-day horizon', () async {
+    test('a night at the horizon asks the same horizon', () async {
       late Uri requested;
       final repo = OpenMeteoWeatherRepository(
         clock: clock,
@@ -206,8 +210,8 @@ void main() {
         startUtc: DateTime.utc(2026, 10, 8, 16),
         endUtc: DateTime.utc(2026, 10, 9, 16),
       );
-      // Today 2026-09-23 + 16 days − 1 h = 2026-10-08 23:00 UTC.
-      expect(requested.queryParameters['end_hour'], '2026-10-08T23:00');
+      // Today 2026-09-23 + 16 days − 1 h = 2026-10-08 23:00 UTC: in range.
+      expect(requested.queryParameters['forecast_days'], '16');
     });
 
     test(

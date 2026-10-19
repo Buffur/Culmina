@@ -5,7 +5,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../domain/models/night_weather.dart';
 import '../../domain/models/night_weather_summary.dart';
 import '../../domain/models/weather_snapshot.dart';
+import '../../domain/services/forecast_overview.dart';
+import '../shared/clear_outside_link.dart';
 import '../shared/night_time_formatter.dart';
+import '../viewmodels/settings_viewmodel.dart';
 import '../viewmodels/site_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import '../viewmodels/night_conditions_viewmodel.dart';
@@ -139,6 +142,23 @@ class WeatherForecastWidget extends StatelessWidget {
                 summary: conditionsVm.nightWeatherSummary,
                 zoneId: siteVm.displayZoneId,
                 windowStartUtc: planVm.sessionNight?.startUtc,
+                limitDeg: context
+                    .watch<SettingsViewModel>()
+                    .planningPreferences
+                    .darknessLimit
+                    .degrees,
+                leadDays: switch (planVm.eveningDate) {
+                  final night? => ForecastOverview.daysBetween(
+                    ForecastOverview.localDate(
+                      state.snapshot.fetchedAtUtc,
+                      siteVm.timeContext,
+                    ),
+                    night,
+                  ),
+                  null => null,
+                },
+                latitude: siteVm.latitude,
+                longitude: siteVm.longitude,
               ),
             },
           ),
@@ -182,12 +202,20 @@ class _AvailableBody extends StatelessWidget {
     required this.summary,
     required this.zoneId,
     required this.windowStartUtc,
+    required this.limitDeg,
+    required this.leadDays,
+    required this.latitude,
+    required this.longitude,
   });
 
   final NightWeatherAvailable state;
   final NightWeatherSummary? summary;
   final String? zoneId;
   final DateTime? windowStartUtc;
+  final double limitDeg;
+  final int? leadDays;
+  final double latitude;
+  final double longitude;
 
   @override
   Widget build(BuildContext context) {
@@ -196,16 +224,22 @@ class _AvailableBody extends StatelessWidget {
     final s = summary;
     final start = windowStartUtc;
     final snapshot = state.snapshot;
+    String at(DateTime t) => NightTimeFormatter.instant(
+      context,
+      t,
+      windowStartUtc: start ?? t,
+      zoneId: zoneId,
+    );
+    final coverage = s == null ? null : WeatherText.coverage(s);
 
+    // F14 A3: the selected night's facts first, then the hours, then the
+    // full table, model and source in Details.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _FreshnessLine(state: state),
-        Text('Model: ${snapshot.provider} / ${snapshot.model}', style: small),
         if (s != null && start != null) ...[
-          const SizedBox(height: AppSpacing.sm),
           Text(
-            _spanText(context, s, start),
+            WeatherText.span(s, limitDeg, at),
             key: const Key('weather.span'),
             style: theme.textTheme.bodyMedium,
           ),
@@ -213,57 +247,100 @@ class _AvailableBody extends StatelessWidget {
             'Times in ${NightTimeFormatter.zoneCaption(s.fromUtc, zoneId: zoneId)}',
             style: small,
           ),
-          const SizedBox(height: AppSpacing.sm),
-          if (s.coveredHours == 0)
-            const Text(
-              'No forecast for these hours.',
-              key: Key('weather.noCoverage'),
-            )
-          else ...[
-            if (s.coveredHours < s.totalHours)
-              Text(
-                'Forecast for ${s.coveredHours} of ${s.totalHours} hours; '
-                'the rest have no forecast.',
-                key: const Key('weather.partial'),
-                style: small,
-              ),
-            _Ranges(summary: s),
-            const SizedBox(height: AppSpacing.sm),
-            _DewLine(summary: s),
+          if (s.span != NightWeatherSpan.noDark && s.coveredHours > 0) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Cloud ${WeatherText.range(s.cloudCover, '%')} · '
+              'Temperature ${WeatherText.range(s.temperature, '°C')} · '
+              'Dew point ${WeatherText.range(s.dewPoint, '°C')}',
+              key: const Key('weather.facts'),
+              style: theme.textTheme.bodyMedium,
+            ),
           ],
+          if (coverage != null)
+            Text(
+              coverage,
+              key: Key(
+                s.coveredHours == 0 ? 'weather.noCoverage' : 'weather.partial',
+              ),
+              style: small,
+            ),
+        ],
+        // N9: the lead time and the retrieval age are two different facts.
+        if (leadDays case final d?)
+          Text(
+            WeatherText.lead(d),
+            key: const Key('weather.lead'),
+            style: small,
+          ),
+        _FreshnessLine(state: state),
+        if (s != null &&
+            start != null &&
+            s.span != NightWeatherSpan.noDark &&
+            s.coveredHours > 0) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            WeatherText.dew(s),
+            key: const Key('weather.dew'),
+            style: small?.copyWith(
+              color: s.dewRiskHours > 0 ? theme.colorScheme.error : null,
+            ),
+          ),
           const SizedBox(height: AppSpacing.sm),
           _HourStrip(summary: s, zoneId: zoneId),
           Text(
-            'Precipitation is the chance in the hour before each time.',
+            'Precipitation and gusts are for the hour before each time; '
+            '* marks an hour only partly in the dark span.',
             key: const Key('weather.precipNote'),
             style: small,
           ),
         ],
+        const SizedBox(height: AppSpacing.sm),
+        // Q3 (PD-18): the limitation, and a page the user opens.
+        Text(
+          WeatherText.notSeeing,
+          key: const Key('weather.notSeeing'),
+          style: small,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            key: const Key('weather.clearOutside'),
+            onPressed: () => launchUrl(
+              ClearOutsideLink.at(latitude, longitude),
+              mode: LaunchMode.externalApplication,
+            ),
+            icon: const Icon(Icons.open_in_new, size: 16),
+            label: const Text('Look at Clear Outside'),
+          ),
+        ),
+        ExpansionTile(
+          key: const Key('weather.details'),
+          tilePadding: EdgeInsets.zero,
+          childrenPadding: EdgeInsets.zero,
+          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+          title: const Text('Details'),
+          subtitle: Text(
+            'Every variable, the model and the source',
+            style: small,
+          ),
+          children: [
+            if (s != null && s.coveredHours > 0) _Ranges(summary: s),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Model: ${snapshot.provider} / ${snapshot.model}',
+              key: const Key('weather.model'),
+              style: small,
+            ),
+            Text(
+              'Retrieved ${NightTimeFormatter.clockTime(context, snapshot.fetchedAtUtc, zoneId: zoneId)}'
+              ' (${WeatherText.ago(state.ageDuration)})',
+              style: small,
+            ),
+          ],
+        ),
       ],
     );
-  }
-
-  String _spanText(
-    BuildContext context,
-    NightWeatherSummary s,
-    DateTime start,
-  ) {
-    String at(DateTime t) => NightTimeFormatter.instant(
-      context,
-      t,
-      windowStartUtc: start,
-      zoneId: zoneId,
-    );
-    return switch (s.span) {
-      NightWeatherSpan.sunsetToSunrise =>
-        'Sunset to sunrise: ${at(s.fromUtc)} – ${at(s.toUtc)}',
-      NightWeatherSpan.midnightSun =>
-        'The Sun does not set this night; the whole 24 h window is shown: '
-            '${at(s.fromUtc)} – ${at(s.toUtc)}',
-      NightWeatherSpan.polarNight =>
-        'The Sun does not rise this night; the whole 24 h window is shown: '
-            '${at(s.fromUtc)} – ${at(s.toUtc)}',
-    };
   }
 }
 
@@ -362,119 +439,120 @@ class _Ranges extends StatelessWidget {
   }
 }
 
-class _DewLine extends StatelessWidget {
-  const _DewLine({required this.summary});
-
-  final NightWeatherSummary summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final s = summary;
-    final margin = s.dewMarginC.toStringAsFixed(1);
-    final String text;
-    if (s.dewKnownHours == 0) {
-      text = 'Dew risk: unknown (no temperature or dew point).';
-    } else if (s.dewRiskHours == 0) {
-      text =
-          'Dew risk (heuristic): none of ${s.dewKnownHours} hours has a '
-          'temperature − dew point spread at or below $margin °C.';
-    } else {
-      text =
-          'Dew risk (heuristic): ${s.dewRiskHours} of ${s.dewKnownHours} '
-          'hours have a temperature − dew point spread at or below '
-          '$margin °C (the margin in Settings).';
-    }
-    final risk = s.dewRiskHours > 0;
-    return Row(
-      key: const Key('weather.dew'),
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          risk ? Icons.warning_amber_rounded : Icons.water_drop_outlined,
-          size: 16,
-          color: risk ? theme.colorScheme.error : null,
-        ),
-        const SizedBox(width: AppSpacing.xs),
-        Expanded(
-          child: Text(
-            text,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: risk ? theme.colorScheme.error : null,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// One column per hour; a legend column first gives each row's unit. The
-/// strip takes the height of its text and the columns widen with the text
-/// size, so nothing is clipped at 200 % text (S1.10; UX-31, trap 17).
-class _HourStrip extends StatelessWidget {
+/// The dark span's hours on its time axis (F14 A3; ADR-022 N6): one
+/// column per row, a legend column first giving each row's unit. Cloud is a
+/// bar under its number; temperature with dew point; wind with gusts;
+/// precipitation chance. A row without a forecast says so (a gap, never
+/// zero or clear). Tapping an hour shows its exact values, the cloud layers,
+/// humidity and visibility included. The strip takes the height of its text
+/// and the columns widen with the text size, so nothing is clipped at 200 %
+/// text (S1.10; UX-31, trap 17).
+class _HourStrip extends StatefulWidget {
   const _HourStrip({required this.summary, required this.zoneId});
 
   final NightWeatherSummary summary;
   final String? zoneId;
 
+  @override
+  State<_HourStrip> createState() => _HourStripState();
+}
+
+class _HourStripState extends State<_HourStrip> {
+  int? _selected;
+
   static const _rows = <(IconData, String)>[
     (Icons.cloud, 'cloud %'),
-    (Icons.water_drop_outlined, 'precip. %'),
-    (Icons.air, 'wind km/h'),
     (Icons.thermostat, 'temp. °C'),
-    (Icons.opacity, 'T − Td °C'),
+    (Icons.opacity, 'dew pt. °C'),
+    (Icons.air, 'wind/gust km/h'),
+    (Icons.water_drop_outlined, 'precip. %'),
   ];
+
+  @override
+  void didUpdateWidget(_HourStrip old) {
+    super.didUpdateWidget(old);
+    if (old.summary != widget.summary) _selected = null;
+  }
 
   @override
   Widget build(BuildContext context) {
     final style = Theme.of(context).textTheme.bodySmall;
-    final slots = summary.slots;
+    final s = widget.summary;
+    final slots = s.slots;
     final scale = MediaQuery.textScalerOf(context).scale(1);
-    return SingleChildScrollView(
-      key: const Key('weather.hours'),
-      scrollDirection: Axis.horizontal,
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              width: 84 * scale,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    final selected = _selected;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          label:
+              'Hourly forecast for the dark span: ${s.totalHours} hours, cloud '
+              '${WeatherText.range(s.cloudCover, '%')}, temperature '
+              '${WeatherText.range(s.temperature, '°C')}. Select an hour for '
+              'its exact values.',
+          child: SingleChildScrollView(
+            key: const Key('weather.hours'),
+            scrollDirection: Axis.horizontal,
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Hour', style: style),
-                  for (final (icon, label) in _rows) ...[
-                    // S9.6: room for the hour columns' cloud bar.
-                    if (icon == Icons.cloud) SizedBox(height: _barHeight),
-                    Row(
+                  SizedBox(
+                    width: 96 * scale,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(icon, size: 12),
-                        const SizedBox(width: AppSpacing.xs),
-                        Flexible(
-                          child: Text(
-                            label,
-                            style: style,
-                            overflow: TextOverflow.ellipsis,
+                        Text('Hour', style: style),
+                        for (final (icon, label) in _rows) ...[
+                          // S9.6: room for the hour columns' cloud bar.
+                          if (icon == Icons.cloud) SizedBox(height: _barHeight),
+                          Row(
+                            children: [
+                              Icon(icon, size: 12),
+                              const SizedBox(width: AppSpacing.xs),
+                              Flexible(
+                                child: Text(
+                                  label,
+                                  style: style,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ],
                       ],
                     ),
-                  ],
+                  ),
+                  for (final (i, slot) in slots.indexed)
+                    _HourColumn(
+                      key: Key('weather.hour.$i'),
+                      slot: slot,
+                      zoneId: widget.zoneId,
+                      style: style,
+                      width: 64 * scale,
+                      selected: i == selected,
+                      onTap: () =>
+                          setState(() => _selected = i == selected ? null : i),
+                    ),
                 ],
               ),
             ),
-            for (final slot in slots)
-              _HourColumn(
-                slot: slot,
-                zoneId: zoneId,
-                style: style,
-                width: 56 * scale,
-              ),
-          ],
+          ),
         ),
-      ),
+        if (selected != null && selected < slots.length)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.xs),
+            child: Semantics(
+              liveRegion: true,
+              child: Text(
+                _HourColumn.exact(context, slots[selected], widget.zoneId),
+                key: const Key('weather.hourDetail'),
+                style: style,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -484,79 +562,156 @@ const double _barHeight = 20;
 
 class _HourColumn extends StatelessWidget {
   const _HourColumn({
+    super.key,
     required this.slot,
     required this.zoneId,
     required this.style,
     required this.width,
+    required this.selected,
+    required this.onTap,
   });
 
   final NightWeatherSlot slot;
   final String? zoneId;
   final TextStyle? style;
   final double width;
+  final bool selected;
+  final VoidCallback onTap;
+
+  static String _v(double? x, {int digits = 0}) =>
+      x == null ? '—' : x.toStringAsFixed(digits);
+
+  /// Every value of [slot], in words with units (the selection's text).
+  static String exact(
+    BuildContext context,
+    NightWeatherSlot slot,
+    String? zoneId,
+  ) {
+    final time = NightTimeFormatter.clockTime(
+      context,
+      slot.timeUtc,
+      zoneId: zoneId,
+    );
+    final h = slot.hour;
+    if (h == null) return '$time: no forecast for this hour.';
+    String v(double? x, String unit, {int digits = 0}) =>
+        x == null ? 'no forecast' : '${x.toStringAsFixed(digits)} $unit';
+    final partial = slot.partial
+        ? ' (${slot.precedingMinutes} min of that hour in the dark span)'
+        : '';
+    return [
+      if (slot.instant) ...[
+        '$time: cloud ${v(h.cloudCoverPct, '%')} (low '
+            '${v(h.cloudCoverLowPct, '%')}, mid ${v(h.cloudCoverMidPct, '%')}, '
+            'high ${v(h.cloudCoverHighPct, '%')})',
+        'temperature ${v(h.temperatureC, '°C', digits: 1)}, dew point '
+            '${v(h.dewPointC, '°C', digits: 1)}, humidity '
+            '${v(h.relativeHumidityPct, '%')}',
+        'wind ${v(h.windSpeedKmh, 'km/h')}',
+        'visibility ${v(h.visibilityM == null ? null : h.visibilityM! / 1000, 'km', digits: 1)}',
+      ] else
+        '$time: after the dark span ends',
+      if (slot.preceding)
+        'in the hour before: gusts up to ${v(h.windGustsKmh, 'km/h')}, '
+            'precipitation chance ${v(h.precipitationProbabilityPct, '%')}'
+            '$partial',
+    ].join('; ');
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final h = slot.hour;
-    String v(double? x, {int digits = 0}) =>
-        x == null ? '—' : x.toStringAsFixed(digits);
+    final star = slot.partial ? '*' : '';
     final time = Text(
       NightTimeFormatter.clockTime(context, slot.timeUtc, zoneId: zoneId),
       style: style?.copyWith(fontWeight: FontWeight.bold),
     );
-    return SizedBox(
-      width: width,
-      child: h == null
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                time,
-                const SizedBox(height: _barHeight),
-                Text(
-                  'no\nforecast',
-                  textAlign: TextAlign.center,
-                  style: style?.copyWith(fontStyle: FontStyle.italic),
-                ),
-              ],
-            )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                time,
-                // S9.6 (08 §12): cloud cover as a bar under its number; the
-                // number is the text, so the bar is not read out.
-                _CloudBar(percent: h.cloudCoverPct),
-                Text(v(h.cloudCoverPct), style: style),
-                Text(v(h.precipitationProbabilityPct), style: style),
-                Text(v(h.windSpeedKmh), style: style),
-                Text(v(h.temperatureC), style: style),
-                // S9.6: dew risk is marked by an icon too, never by colour
-                // alone (the shared rules).
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+    String instant(double? x, {int digits = 0}) =>
+        slot.instant ? _v(x, digits: digits) : '';
+    final cloud = slot.instant && h?.cloudCoverPct != null
+        ? ', cloud ${_v(h!.cloudCoverPct)} %'
+        : h == null
+        ? ', no forecast'
+        : '';
+    return Semantics(
+      button: true,
+      selected: selected,
+      excludeSemantics: true,
+      label:
+          '${NightTimeFormatter.clockTime(context, slot.timeUtc, zoneId: zoneId)}'
+          '$cloud${slot.dewRisk == true ? ', dew risk' : ''}. Shows its exact '
+          'values',
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          width: width,
+          decoration: selected
+              ? BoxDecoration(
+                  border: Border.all(color: theme.colorScheme.primary),
+                )
+              : null,
+          child: h == null
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if (slot.dewRisk == true)
-                      Icon(
-                        Icons.water_drop,
-                        key: Key('weather.dewRisk.${slot.timeUtc.hour}'),
-                        size: 12,
-                        color: theme.colorScheme.error,
-                        semanticLabel: 'dew risk',
-                      ),
+                    time,
+                    const SizedBox(height: _barHeight),
                     Text(
-                      v(slot.dewSpreadC, digits: 1),
-                      style: slot.dewRisk == true
-                          ? style?.copyWith(
-                              color: theme.colorScheme.error,
-                              fontWeight: FontWeight.bold,
-                            )
-                          : style,
+                      'no\nforecast',
+                      textAlign: TextAlign.center,
+                      style: style?.copyWith(fontStyle: FontStyle.italic),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    time,
+                    // S9.6 (08 §12): cloud cover as a bar under its number;
+                    // the number is the text, so the bar is not read out.
+                    _CloudBar(percent: slot.instant ? h.cloudCoverPct : null),
+                    Text(instant(h.cloudCoverPct), style: style),
+                    Text(instant(h.temperatureC), style: style),
+                    // S9.6: dew risk is marked by an icon too, never by
+                    // colour alone (the shared rules).
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (slot.dewRisk == true)
+                          Icon(
+                            Icons.water_drop,
+                            key: Key('weather.dewRisk.${slot.timeUtc.hour}'),
+                            size: 12,
+                            color: theme.colorScheme.error,
+                            semanticLabel: 'dew risk',
+                          ),
+                        Text(
+                          instant(h.dewPointC),
+                          style: slot.dewRisk == true
+                              ? style?.copyWith(
+                                  color: theme.colorScheme.error,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : style,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${instant(h.windSpeedKmh)}/'
+                      '${slot.preceding ? '${_v(h.windGustsKmh)}$star' : ''}',
+                      style: style,
+                    ),
+                    Text(
+                      slot.preceding
+                          ? '${_v(h.precipitationProbabilityPct)}$star'
+                          : '',
+                      style: style,
                     ),
                   ],
                 ),
-              ],
-            ),
+        ),
+      ),
     );
   }
 }

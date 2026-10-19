@@ -266,6 +266,10 @@ abstract final class SessionSnapshotBuilder {
               for (final slot in summary.slots)
                 {
                   'tUtcMs': _ms(slot.timeUtc),
+                  // F14 (ADR-022 N6; additive): a row counted only for its
+                  // preceding hour, and a preceding hour partly in the span.
+                  if (!slot.instant) 'precedingOnly': true,
+                  if (slot.partial) 'precedingMinutes': slot.precedingMinutes,
                   if (slot.hour case final h?) ...{
                     'cloudPct': h.cloudCoverPct,
                     'cloudLowPct': h.cloudCoverLowPct,

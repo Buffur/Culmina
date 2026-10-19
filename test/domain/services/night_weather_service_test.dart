@@ -166,20 +166,92 @@ void main() {
     expect(await load(lat: 45.0), isA<NightWeatherUnavailable>());
   });
 
-  test('the key separates site, model and night', () {
+  // F14 A2 (ADR-022 N8): one key per site cell, model and horizon, format
+  // version 2; no night and no site id in it.
+  test('the key separates site, model and horizon, not nights', () {
     String key({
       double lat = 46.05,
       String model = 'best_match',
-      int day = 24,
+      int days = 16,
     }) => WeatherSnapshotStore.keyFor(
       latitude: lat,
       longitude: 14.51,
       model: model,
-      nightStartUtc: DateTime.utc(2026, 9, day, 11),
+      forecastDays: days,
     );
+    expect(key(), 'weather2:46.05:14.51:best_match:16');
     expect(key(), key(lat: 46.054)); // same 0.01 degree cell
     expect(key(), isNot(key(lat: 46.06)));
     expect(key(), isNot(key(model: 'icon_seamless')));
-    expect(key(), isNot(key(day: 25)));
+    expect(key(), isNot(key(days: 7)));
   });
+
+  // F14 A1 (N7): one request serves every night of its horizon.
+  test('one snapshot serves the next night without a request; a night it '
+      'has no row for is asked again', () async {
+    final horizon = _Horizon(clock);
+    final s = NightWeatherService(
+      repository: horizon,
+      store: store,
+      clock: clock,
+      model: 'best_match',
+    );
+    final next = SessionNightResolver.forEveningDate(
+      CalendarDate(2026, 9, 25),
+      latitude: 46.05,
+      longitude: 14.51,
+      timeContext: MeanSolarTimeContext(14.51),
+    );
+    final far = SessionNightResolver.forEveningDate(
+      CalendarDate(2026, 10, 20),
+      latitude: 46.05,
+      longitude: 14.51,
+      timeContext: MeanSolarTimeContext(14.51),
+    );
+    Future<NightWeather> at(SessionNight n) =>
+        s.load(n, latitude: 46.05, longitude: 14.51);
+    expect(await at(night), isA<NightWeatherAvailable>());
+    expect(horizon.calls, 1);
+    final second = await at(next) as NightWeatherAvailable;
+    expect(horizon.calls, 1, reason: 'the same snapshot');
+    expect(second.fromCache, isTrue);
+    await at(far);
+    expect(horizon.calls, 2, reason: 'no row for that night');
+  });
+}
+
+/// Answers with three days of hourly rows from the start of today, as one
+/// horizon request does (N7).
+class _Horizon implements WeatherRepository {
+  _Horizon(this.clock);
+  final _Clock clock;
+  int calls = 0;
+
+  @override
+  Future<WeatherFetch> fetchSnapshot({
+    required double latitude,
+    required double longitude,
+    required DateTime startUtc,
+    required DateTime endUtc,
+  }) async {
+    calls++;
+    final now = clock.nowUtc();
+    final today = DateTime.utc(now.year, now.month, now.day);
+    return WeatherFetched(
+      WeatherSnapshot(
+        provider: 'open-meteo',
+        model: 'best_match',
+        fetchedAtUtc: now,
+        latitude: latitude,
+        longitude: longitude,
+        hours: [
+          for (var h = 0; h < 72; h++)
+            WeatherHour(
+              timeUtc: today.add(Duration(hours: h)),
+              cloudCoverPct: 20,
+            ),
+        ],
+      ),
+    );
+  }
 }

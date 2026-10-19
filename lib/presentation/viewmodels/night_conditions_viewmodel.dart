@@ -17,6 +17,7 @@ import '../../domain/services/night_weather_service.dart';
 import '../../domain/services/night_weather_summarizer.dart';
 import '../../domain/services/visibility_calculator.dart';
 import '../shared/night_text.dart';
+import 'forecast_nights.dart';
 import 'session_plan_viewmodel.dart';
 import 'settings_viewmodel.dart';
 import 'site_viewmodel.dart';
@@ -151,8 +152,9 @@ class NightConditionsViewModel extends ChangeNotifier {
   SessionNight? _timelineNight;
   NightTimeline? _timeline;
 
-  /// The forecast from sunset to sunrise with the dew heuristic (TASK 9.4);
-  /// null unless a forecast is available. Cached per input (TASK 15.2).
+  /// The forecast over the night's dark span (ADR-022 N6) with the dew
+  /// heuristic (TASK 9.4); null unless a forecast is available. Cached per
+  /// input (TASK 15.2).
   NightWeatherSummary? get nightWeatherSummary {
     final weather = _nightWeather;
     if (weather is! NightWeatherAvailable) return null;
@@ -176,6 +178,11 @@ class NightConditionsViewModel extends ChangeNotifier {
 
   Object? _summaryKey;
   NightWeatherSummary? _summary;
+
+  /// The coming nights the loaded forecast serves (F14), browse only.
+  ForecastNights? get forecastNights =>
+      _nights.of(_nightWeather, _site, _settings.planningPreferences);
+  final _nights = ForecastNightsCache();
 
   /// Moon context for the night and target (TASK 6.4), cached per input.
   MoonConditions? get moonConditions {

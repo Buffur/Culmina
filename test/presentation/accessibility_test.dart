@@ -419,6 +419,10 @@ void main() {
     AppRouter.router.go(AppRouter.weather);
     await _settle(tester);
     expect(find.byKey(const Key('weather.hours')), findsOneWidget);
+    // F14 A3: the full table is in Details.
+    await tester.ensureVisible(find.byKey(const Key('weather.details')));
+    await tester.tap(find.byKey(const Key('weather.details')));
+    await _settle(tester);
     expect(find.byKey(const Key('weather.ranges')), findsOneWidget);
     // UX-31: a range label never runs into its value.
     final label = tester.getRect(find.text('Low cloud (below 3 km)'));

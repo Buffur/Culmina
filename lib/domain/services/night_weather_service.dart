@@ -15,6 +15,7 @@ class NightWeatherService {
     required this._store,
     required this._clock,
     required this.model,
+    this.forecastDays = 16,
   });
 
   final WeatherRepository _repository;
@@ -24,10 +25,14 @@ class NightWeatherService {
   /// The model the repository requests; part of the cache key.
   final String model;
 
+  /// The horizon the repository requests (ADR-022 N7); part of the key.
+  final int forecastDays;
+
   /// The weather for [night] at the site.
   ///
-  /// - A cached snapshot younger than [WeatherFreshness.agingAfter] is used
-  ///   as it is, unless [forceRefresh].
+  /// - A cached snapshot of the site (ADR-022 N8: one per site, for the
+  ///   whole horizon) younger than [WeatherFreshness.agingAfter] and with a
+  ///   row in the night's window is used as it is, unless [forceRefresh].
   /// - Otherwise the provider is asked; a success is cached and returned.
   /// - Out of range → [NightWeatherOutOfRange].
   /// - Any other failure → the cached snapshot with its age and the failure
@@ -43,12 +48,14 @@ class NightWeatherService {
       latitude: latitude,
       longitude: longitude,
       model: model,
-      nightStartUtc: night.startUtc,
+      forecastDays: forecastDays,
     );
     final cached = await _readSafely(key);
     final now = _clock.nowUtc();
 
-    if (cached != null && !forceRefresh) {
+    // One snapshot serves every night of its horizon (N7); one without a
+    // row in this night's window is asked again.
+    if (cached != null && !forceRefresh && _covers(cached, night)) {
       final age = WeatherFreshness.ageOf(cached.fetchedAtUtc, now);
       if (age == WeatherAge.current) return _available(cached, now, true);
     }
@@ -75,6 +82,11 @@ class NightWeatherService {
         return _available(cached, now, true, refreshFailed: failure);
     }
   }
+
+  static bool _covers(WeatherSnapshot s, SessionNight night) => s.hours.any(
+    (h) =>
+        !h.timeUtc.isBefore(night.startUtc) && h.timeUtc.isBefore(night.endUtc),
+  );
 
   Future<WeatherSnapshot?> _readSafely(String key) async {
     try {

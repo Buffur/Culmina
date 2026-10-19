@@ -246,11 +246,18 @@ void main() {
     expect(find.byKey(const Key('weatherDetail.summary')), findsOneWidget);
     expect(find.byKey(const Key('weather.span')), findsOneWidget);
     expect(find.byKey(const Key('weather.hours')), findsOneWidget);
-    expect(find.byKey(const Key('weather.ranges')), findsOneWidget);
     expect(find.byKey(const Key('weather.attribution')), findsOneWidget);
     expect(find.byKey(const Key('weather.refresh')), findsOneWidget);
-    expect(find.text('Model: open-meteo / best_match'), findsOneWidget);
     expect(find.textContaining('Updated'), findsWidgets);
+    // F14 A3: the night's facts first; the full table, model and source in
+    // Details, one tap away.
+    expect(find.byKey(const Key('weather.facts')), findsOneWidget);
+    expect(find.byKey(const Key('weather.ranges')), findsNothing);
+    await tester.ensureVisible(find.byKey(const Key('weather.details')));
+    await tester.tap(find.byKey(const Key('weather.details')));
+    await settle(tester);
+    expect(find.byKey(const Key('weather.ranges')), findsOneWidget);
+    expect(find.text('Model: open-meteo / best_match'), findsOneWidget);
   });
 
   testWidgets('without a forecast the row says why, and the detail offers '
@@ -282,7 +289,7 @@ void main() {
       expect(bar.heightFactor, 0.4); // 40 % cloud
     }
     expect(
-      find.bySemanticsLabel('dew risk'),
+      find.bySemanticsLabel(RegExp('dew risk')),
       findsWidgets,
       reason: 'every hour is within the dew margin',
     );

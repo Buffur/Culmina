@@ -383,6 +383,10 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** Phase 10 ("without breaking offline"). Tests: 3 repository tests with a mocked client.
 
 ## F-30 — Weather forecast display
+- **F14 (2026-10-19; ADR-022 N6–N9, N11):**
+  - **Request and cache.** One request for the 16-day horizon (UTC), cached per site cell.
+  - **Weather detail.** It leads with the plan night's dark-span facts: cloud, temperature and dew point, then coverage and gaps ("Cloud: 1 h without forecast"), the lead time ("Forecast made 2 days ahead") apart from "Updated … ago", and the dew heuristic in about-hours. Next come an hourly strip (cloud bar, temperature, dew point, wind/gusts, precipitation; a tap shows the exact values with the cloud layers, humidity and visibility) and "Seeing and transparency are not forecast here" with a Clear Outside link. Details hold the table, model and retrieval.
+  - **"Coming nights".** One card per night the forecast serves, each with its coverage (complete, partial with its reason, none, no dark time) and lead, then "No forecast from …: beyond the 16-day forecast". Opening a card changes nothing; "Plan this night" follows D9.
 - **S1.3 (2026-09-25, commit `2007dc5`):** "Updated N ago" and the aging/stale wording follow the clock while the app runs, an outdated forecast is reloaded when the app returns to the foreground, and the card follows the night when it rolls over (ENG-01/RT-01 resolved; `forecast_freshness_test.dart`).
 - **TASK 9.4 (Implemented):** "Night weather" card on `vm.nightWeather`: sunset to sunrise of the chosen night (whole window, labelled, for midnight sun or polar night), times in the site zone with a caption; per-hour strip (cloud %, precipitation chance %, wind km/h, temperature °C, dew spread °C) with "no forecast" hours; night ranges for every ADR-012 variable with units (visibility labelled horizontal, not transparency; gusts as the preceding-hour maximum); age and model; offline/aging/stale labels; unavailable with retry; out of range; no good/bad colour bands; Open-Meteo CC BY 4.0 attribution with a link. Widget-tested. The issues below are resolved by this rewrite.
 - **Status:** Implemented (was Partial)
