@@ -26,6 +26,7 @@ import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:astroplan/presentation/widgets/forecast_nights_section.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -416,5 +417,34 @@ void main() {
       );
     }
     expect(find.text('Forecast made on the day'), findsNothing);
+  });
+
+  testWidgets('A5: "Look at Clear Outside" launches the site\'s page, '
+      'outside the app', (tester) async {
+    const channel = MethodChannel('plugins.flutter.io/url_launcher');
+    final calls = <MethodCall>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      calls.add(call);
+      return true;
+    });
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        channel,
+        null,
+      ),
+    );
+    await start(tester);
+    expect(calls, isEmpty, reason: 'nothing opens without a tap');
+    final button = find.byKey(const Key('weather.clearOutside'));
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await settle(tester);
+    final launches = calls.where((c) => c.method == 'launch').toList();
+    expect(launches, hasLength(1));
+    final args = launches.single.arguments as Map;
+    expect(args['url'], 'https://clearoutside.com/forecast/46.05/14.51');
+    expect(args['useWebView'], isFalse, reason: 'an external application');
   });
 }
