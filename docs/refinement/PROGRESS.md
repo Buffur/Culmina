@@ -103,6 +103,16 @@ product is complete or released.
 | G1 | Host rows run: the full gate passed, the retracted `material_ui` replaced; remote CI, native build, emulator and live providers UNVERIFIED (see the G1 evidence) |
 | Not started — blocked | F26 (Android build, D6 measurement, owner signing), G2 (phone), G3 (owner go/no-go), G4 (publication authorization) |
 
+**Re-audit (2026-10-19, owner's question "is everything in the plan really implemented?"):**
+every F01–F25 row was read again against the code. 16 behaviour gaps were found and fixed, and
+the untested or weakly tested clauses were covered, each mutation-checked
+([`REAUDIT.md`](evidence/finalization/G1/REAUDIT.md); commits `9ac8d7b`…`fba6dc9`). The relevant
+`STAGE_11_MATRIX.md` rows are dispositioned in
+[`STAGE_11_ROWS.md`](evidence/finalization/G1/STAGE_11_ROWS.md), whose one failing host row (H2) is
+fixed. Full gate on the final inputs: PASS (`+2336 ~5`, E2E `+2`/`+1`; G1 evidence). F25 renders:
+96. The disposition is unchanged: **PARTIAL_WITH_ATTENTION**. The open rows are the owner,
+device, Android and network rows listed above.
+
 ## Next allowed action
 
 The full final-plan run is in progress (launched 2026-10-18; see "Run ledger"). Continue the next
@@ -136,7 +146,7 @@ The run is prepared, not launched: no actual task is classified as failed or ski
 | F23 A2 (Android notices) | The licence page lists the Dart packages; the native notices are not yet added | The Android libraries the build actually bundles (AndroidX, Kotlin coroutines, Play services location, their versions) come from Gradle's resolved dependency graph, which needs `dl.google.com`/`maven.google.com` (refused here, 403). A list guessed from plugin build files would not prove "match the build dependencies". Severity: medium (attribution completeness, release-relevant) | F23 close; G1 notices row | In an environment with the Android SDK: resolve `./gradlew :app:dependencies` (release runtime classpath), add the notices, compare against the licence page | OPEN (retried 2026-10-19: Gradle 9.3.1 resolved Maven Central/plugin portal, then AGP 9.1.0 from maven.google.com redirected to dl.google.com: refused) |
 | TD-031 row 9 / G1 (`material_ui` retracted) | **Resolved on the host 2026-10-19 (G1):** `flutter pub upgrade material_ui` → 1.7.0, one package; full gate passes; the F25 renders are byte-identical | Android build with the new lock not run (no SDK) | F26 | The native row of G1 builds it | HOST DONE; native pending |
 | F02 A2/A3; every native Android/emulator row (G1 REL-02, F26, F22 process death) | F02 resources fixed and host-tested; no native build, launch or capture | The container has no Android SDK and cannot get one: `dl.google.com` (SDK repository; `maven.google.com` redirects there) is refused by the network policy (403, 2026-10-18). Remote CI builds no Android. Severity: blocks F02 VERIFIED and native gate rows, not host implementation | F02 close; G1 REL-02; F26 | Run in an environment with the Android SDK (owner machine with the existing SDK, or a cloud environment whose network policy allows dl.google.com): API 26–30 emulator launch capture, Android 12+ animation-off observation | OPEN |
-| F25 A4 (owner visual acceptance) | 52 host renders with real glyphs (`evidence/finalization/F25/renders/`) and the earlier tasks' renders; the extended accessibility sweep passes | Acceptance is the owner's by definition (roadmap §2 U); an agent cannot give it. Severity: release gate | F25 close, G2/G3 sign-off | The owner reviews the renders (and a device later) and records acceptance or the concrete changes wanted | OPEN |
+| F25 A4 (owner visual acceptance) | 96 host renders since the re-audit (52 before) with real glyphs (`evidence/finalization/F25/renders/`) and the earlier tasks' renders; the extended accessibility sweep passes | Acceptance is the owner's by definition (roadmap §2 U); an agent cannot give it. Severity: release gate | F25 close, G2/G3 sign-off | The owner reviews the renders (and a device later) and records acceptance or the concrete changes wanted | OPEN |
 
 ## Owner actions outstanding
 

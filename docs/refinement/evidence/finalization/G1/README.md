@@ -81,6 +81,8 @@ native row (UNVERIFIED here).
 | --- | --- | --- |
 | `2dcb000` (F25) | `dart run tool/check.dart` | Encoding, Format, Analyze PASS; Test `+2246 ~5: All tests passed!` (the 3 opt-in render tests skipped); E2E `core_loop` `+2`, `perf_scenarios` `+1`; "Quality gate passed." |
 | `2dcb000` + `material_ui` 1.7.0 (`e13eccc`) | `dart run tool/check.dart` | the same: all six steps PASS, `+2246 ~5`, "Quality gate passed." |
+| `da0f226` (after the re-audit) | `dart run tool/check.dart` | Encoding, Analyze, Test (`+2336 ~5: All tests passed!`), E2E `core_loop` `+2` and `perf_scenarios` `+1` PASS; Format FAIL on one file (`backup_section_test.dart`, whitespace from `9ac8d7b`) |
+| `fba6dc9` (that file formatted) | `dart format --output=none --set-exit-if-changed lib test integration_test` (0 changed), `flutter analyze --no-pub` (no issues), `flutter test --no-pub` on the changed file (`+12`) | PASS. The other steps' evidence is reused (V3): the change is whitespace in one test file, whose tests were rerun |
 
 ## Disposition
 
