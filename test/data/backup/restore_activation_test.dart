@@ -189,10 +189,19 @@ void main() {
         await _rawEdit(partialFile, 26, [
           'ALTER TABLE session_logs DROP COLUMN name;',
         ]);
+        // CHK-F01.A2: a current database whose session names a site that
+        // does not exist (written with foreign keys off, as a damaged or
+        // hand-edited file would be). Integrity alone says "ok".
+        final danglingFile = File(p.join(tmp.path, 'dangling.sqlite'));
+        await danglingFile.writeAsBytes(good);
+        await _rawEdit(danglingFile, 26, [
+          'UPDATE session_logs SET site_id = 99 WHERE id = 1;',
+        ]);
         unusable = {
           'truncated': truncated,
           'without the expected schema': await emptyFile.readAsBytes(),
           'missing a column': await partialFile.readAsBytes(),
+          'with a dangling foreign key': await danglingFile.readAsBytes(),
         };
       });
 
@@ -200,6 +209,7 @@ void main() {
         'truncated',
         'without the expected schema',
         'missing a column',
+        'with a dangling foreign key',
       ]) {
         test('$kind: refused at pick time and on activation', () async {
           final liveBefore = await live.readAsBytes();
@@ -712,6 +722,47 @@ void main() {
       expect(await live.readAsBytes(), isNotEmpty);
       expect(await _siteNames(live.path), ['Old site']);
     });
+  });
+
+  test('CHK-F01.A2: a dangling foreign key is refused by the candidate '
+      'check itself; the same file without it is accepted', () async {
+    final good = await _currentDatabase(tmp, 'Fk');
+    final dangling = File(p.join(tmp.path, 'fk-dangling.sqlite'));
+    await dangling.writeAsBytes(good);
+    await _rawEdit(dangling, 26, [
+      'UPDATE session_logs SET site_id = 99 WHERE id = 1;',
+    ]);
+    // The file is otherwise sound: integrity is ok, one dangling reference.
+    final raw = _Raw(NativeDatabase(dangling), 26);
+    expect(
+      (await raw.customSelect('PRAGMA integrity_check').getSingle())
+          .data
+          .values
+          .single,
+      'ok',
+    );
+    final orphans = await raw.customSelect('PRAGMA foreign_key_check').get();
+    expect(orphans, hasLength(1));
+    expect(orphans.single.data['table'], 'session_logs');
+    expect(orphans.single.data['parent'], 'location_profiles');
+    await raw.close();
+    await expectLater(
+      checkRestoreCandidate(dangling),
+      throwsA(
+        isA<BackupException>().having(
+          (e) => e.problem,
+          'problem',
+          BackupProblem.unusable,
+        ),
+      ),
+    );
+    // The same file pointing at its existing site passes.
+    final linked = File(p.join(tmp.path, 'fk-linked.sqlite'));
+    await linked.writeAsBytes(good);
+    await _rawEdit(linked, 26, [
+      'UPDATE session_logs SET site_id = 1 WHERE id = 1;',
+    ]);
+    await checkRestoreCandidate(linked);
   });
 
   test('the candidate check touches only its own file', () async {
