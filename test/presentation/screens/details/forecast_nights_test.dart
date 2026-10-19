@@ -38,11 +38,22 @@ import '../../../support/planner_harness.dart';
 /// One horizon response: hourly rows from 00:00 UTC today for 70 hours
 /// (until 21:00 UTC two days later), with an unknown cloud value at [cloudGapAt]; counts requests.
 class _Horizon implements WeatherRepository {
-  _Horizon(this.clock, {this.cloudGapAt});
+  _Horizon(
+    this.clock, {
+    this.cloudGapAt,
+    this.rows,
+    this.fetchedAgo = Duration.zero,
+  });
 
   static const hours = 70;
   final Clock clock;
   final DateTime? cloudGapAt;
+
+  /// The rows' UTC instants instead of the default 70 hours from 00:00 UTC.
+  final List<DateTime> Function(DateTime todayUtc)? rows;
+
+  /// How long before the clock's now the snapshot was made (a stale one).
+  final Duration fetchedAgo;
   int calls = 0;
 
   @override
@@ -59,13 +70,17 @@ class _Horizon implements WeatherRepository {
       WeatherSnapshot(
         provider: 'open-meteo',
         model: 'best_match',
-        fetchedAtUtc: now,
+        fetchedAtUtc: now.subtract(fetchedAgo),
         latitude: latitude,
         longitude: longitude,
         hours: [
-          for (var h = 0; h < hours; h++)
+          for (final t
+              in rows?.call(today) ??
+                  [
+                    for (var h = 0; h < hours; h++)
+                      today.add(Duration(hours: h)),
+                  ])
             () {
-              final t = today.add(Duration(hours: h));
               return WeatherHour(
                 timeUtc: t,
                 cloudCoverPct: t == cloudGapAt ? null : 30,
@@ -102,7 +117,14 @@ void main() {
     }
   }
 
-  Future<void> start(WidgetTester tester, {DateTime? cloudGapAt}) async {
+  Future<void> start(
+    WidgetTester tester, {
+    DateTime? cloudGapAt,
+    List<DateTime> Function(DateTime todayUtc)? rows,
+    Duration fetchedAgo = Duration.zero,
+    DateTime? at,
+    ({String name, double lat, double lon, String zone})? site,
+  }) async {
     tester.view.physicalSize = const Size(800, 4000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -113,16 +135,21 @@ void main() {
       final siteId = await DriftLocationRepository(db).insertLocation(
         domain.LocationProfile(
           id: 0,
-          name: 'Ljubljana',
-          latitude: 46.05,
-          longitude: 14.51,
+          name: site?.name ?? 'Ljubljana',
+          latitude: site?.lat ?? 46.05,
+          longitude: site?.lon ?? 14.51,
           elevation: 300,
-          timeZoneId: 'Europe/Ljubljana',
+          timeZoneId: site?.zone ?? 'Europe/Ljubljana',
         ),
       );
       SharedPreferences.setMockInitialValues({'activeLocationId': siteId});
-      final clock = FixedClock(now);
-      weather = _Horizon(clock, cloudGapAt: cloudGapAt);
+      final clock = FixedClock(at ?? now);
+      weather = _Horizon(
+        clock,
+        cloudGapAt: cloudGapAt,
+        rows: rows,
+        fetchedAgo: fetchedAgo,
+      );
       vm = PlannerHarness(
         DriftTargetRepository(db),
         DriftEquipmentRepository(db),
@@ -304,5 +331,90 @@ void main() {
     );
     expect(kept!.eveningDate, tonight, reason: 'never retimed');
     expect(find.textContaining('the saved plan is unchanged'), findsOneWidget);
+  });
+
+  /// The coverage line of the card for [d], as rendered.
+  String coverageOf(WidgetTester tester, CalendarDate d) =>
+      tester.widget<Text>(find.byKey(Key(key(d, '.coverage')))).data!;
+
+  testWidgets('A1: a forecast that starts after dusk says "starts later" '
+      'with its own counts', (tester) async {
+    // Ljubljana, 10 Nov 2026: dark (Sun below −18°) from about 17:25 to
+    // 04:15 UTC, so the whole-hour instants 18:00–04:00 UTC: 11. Rows from
+    // 20:00 UTC leave 18:00 and 19:00 without a forecast.
+    await start(
+      tester,
+      rows: (today) => [
+        for (var h = 20; h < 70; h++) today.add(Duration(hours: h)),
+      ],
+    );
+    expect(
+      coverageOf(tester, tonight),
+      'Partial: 9 of 11 dark hours (the forecast starts later)',
+    );
+    expect(
+      coverageOf(tester, tonight.addDays(1)),
+      'Complete: 11 of 11 dark hours',
+    );
+  });
+
+  testWidgets('A1: rows around a night that miss its dark span: "No '
+      'forecast for the dark hours", never 0 %', (tester) async {
+    await start(
+      tester,
+      rows: (today) => [
+        for (var h = 0; h <= 12; h++) today.add(Duration(hours: h)),
+        today.add(const Duration(hours: 36)), // noon on the 11th
+      ],
+    );
+    expect(vm.conditions.forecastNights!.nights, hasLength(1));
+    expect(coverageOf(tester, tonight), 'No forecast for the dark hours');
+    final card = find.byKey(Key(key(tonight)));
+    expect(
+      find.descendant(of: card, matching: find.textContaining('Cloud ')),
+      findsNothing,
+      reason: 'no cloud range without a covered hour',
+    );
+    expect(find.byKey(const Key('weather.nights.beyond')), findsOneWidget);
+  });
+
+  testWidgets('A1: a June night at 60° N: "No dark time this night"', (
+    tester,
+  ) async {
+    final june = CalendarDate(2026, 6, 20);
+    await start(
+      tester,
+      at: DateTime.utc(2026, 6, 20, 12),
+      site: (name: 'Helsinki', lat: 60.17, lon: 24.94, zone: 'Europe/Helsinki'),
+    );
+    final nights = vm.conditions.forecastNights!.nights;
+    expect(nights, isNotEmpty);
+    for (final n in nights) {
+      expect(coverageOf(tester, n.eveningDate), 'No dark time this night');
+    }
+    expect(nights.first.eveningDate, june);
+  });
+
+  testWidgets('A1: a stale forecast: each card dates it from the fetch, '
+      'never "on the day"; the stale label is shown once above', (
+    tester,
+  ) async {
+    await start(tester, fetchedAgo: const Duration(days: 2));
+    expect(
+      find.text('Stale forecast: updated 48 h ago. Refresh to update.'),
+      findsOneWidget,
+    );
+    for (final (i, lead) in [
+      'Forecast made 2 days ahead',
+      'Forecast made 3 days ahead',
+    ].indexed) {
+      final card = find.byKey(Key(key(tonight.addDays(i))));
+      await tester.ensureVisible(card);
+      expect(
+        find.descendant(of: card, matching: find.text(lead)),
+        findsOneWidget,
+      );
+    }
+    expect(find.text('Forecast made on the day'), findsNothing);
   });
 }
