@@ -97,3 +97,9 @@ class StaleResultForm extends SessionStateError {
 class NightNotEnded extends SessionStateError {
   NightNotEnded(super.message);
 }
+
+/// F19 A2: a result for a saved night that has not started (a future
+/// night cannot be reported as acquired in advance).
+class NightNotStarted extends NightNotEnded {
+  NightNotStarted(super.message);
+}

@@ -164,6 +164,31 @@ class SessionSnapshot {
         : DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true);
   }
 
+  /// F19 A3: the forecast as saved — its age then (`current`, `aging`,
+  /// `stale`), never re-aged or replaced by today's forecast.
+  String? get weatherAgeAtSave => _section('weather')?['age'] as String?;
+
+  /// F19 A3: the saved hours' cloud cover range over the dark span, from
+  /// the hours that had a forecast; null when none had one (never 0).
+  ({int min, int max})? get weatherCloudPct {
+    final cloud = [
+      for (final h in _weatherHours)
+        if (h['cloudPct'] case final num v) v.round(),
+    ];
+    if (cloud.isEmpty) return null;
+    cloud.sort();
+    return (min: cloud.first, max: cloud.last);
+  }
+
+  /// F19 A3: saved dark-span hours that had no forecast.
+  int get weatherHoursWithoutForecast =>
+      _weatherHours.where((h) => h['noForecast'] == true).length;
+
+  List<Map<String, Object?>> get _weatherHours => [
+    for (final h in (_section('weather')?['hours'] as List?) ?? const [])
+      if (h is Map<String, Object?>) h,
+  ];
+
   String? get siteName => _section('site')?['name'] as String?;
   String? get targetName =>
       _section('target')?['commonName'] as String? ??

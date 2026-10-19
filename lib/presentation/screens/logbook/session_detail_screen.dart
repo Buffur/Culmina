@@ -170,7 +170,8 @@ class _Result extends StatelessWidget {
     final s = session;
     final r = reconciliation;
     final theme = Theme.of(context);
-    final end = SavedNightEnd.of(s);
+    // F19 A2: a result can be recorded from the saved night's start.
+    final start = SavedNightEnd.startOf(s);
     final zone = s.timeZoneId ?? s.planSnapshot?.timeZoneId;
     final counted =
         s.status == SessionStatus.completed ||
@@ -203,11 +204,11 @@ class _Result extends StatelessWidget {
         ),
         if (counted && r != null)
           Text(ResultsText.integration(r), key: const Key('detail.summary')),
-        if (upcoming && end != null)
+        if (upcoming && start != null)
           Text(
-            'A result can be recorded after the night: from '
-            '${NightTimeFormatter.eveningDate(CalendarDate.fromDateTimeFields(NightTimeFormatter.wallClock(end, zoneId: zone)))}, '
-            '${NightTimeFormatter.clockTime(context, end, zoneId: zone)}.',
+            'A result can be recorded once the night begins: from '
+            '${NightTimeFormatter.eveningDate(CalendarDate.fromDateTimeFields(NightTimeFormatter.wallClock(start, zoneId: zone)))}, '
+            '${NightTimeFormatter.clockTime(context, start, zoneId: zone)}.',
             key: const Key('detail.resultWhen'),
             style: theme.textTheme.bodySmall,
           ),
@@ -337,9 +338,25 @@ class _SnapshotSections extends StatelessWidget {
     SessionSnapshot snap,
     String Function(DateTime) at,
   ) => switch (snap.weatherState) {
+    // F19 A3: the forecast saved with the plan, with its source and its age
+    // then — never today's forecast in its place.
     'available' => {
+      'Forecast': 'as saved with the plan',
       'Source': snap.weatherSource ?? 'unknown',
       if (snap.weatherFetchedAtUtc case final t?) 'Fetched': at(t),
+      'Age when saved': switch (snap.weatherAgeAtSave) {
+        'current' => 'current',
+        'aging' => 'aging',
+        'stale' => 'stale',
+        _ => 'unknown',
+      },
+      'Cloud cover (dark hours)': switch (snap.weatherCloudPct) {
+        null => 'no forecast',
+        (:final min, :final max) when min == max => '$min %',
+        (:final min, :final max) => '$min–$max %',
+      },
+      if (snap.weatherHoursWithoutForecast case final n when n > 0)
+        'Hours without forecast': '$n',
     },
     'outOfRange' => {'Forecast': 'beyond the 16-day forecast'},
     'unavailable' => {'Forecast': 'unavailable'},
@@ -499,7 +516,8 @@ class _Actions extends StatelessWidget {
     const tall = Size.fromHeight(48);
     final sessions = context.read<SessionsViewModel>();
     final action = sessions.resultAction(s);
-    final upcoming = s.isSavedPlan && action == ResultAction.none && !s.legacy;
+    // F19 A2: tonight's saved plan offers its result and still opens.
+    final upcoming = sessions.isUpcoming(s);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

@@ -147,6 +147,22 @@ void main() {
     expect(back.eveningDate, CalendarDate(2026, 12, 15));
   });
 
+  // F19 A3: the entry's forecast reads the saved hours and their age at
+  // save, after a storage round trip; nothing is invented without them.
+  test('the saved forecast: its age then, cloud range and hours without a '
+      'forecast; none without a forecast', () {
+    final back = SessionSnapshot.tryRead(
+      (jsonDecode(jsonEncode(_build().json)) as Map).cast<String, Object?>(),
+    )!;
+    expect(back.weatherAgeAtSave, 'current');
+    expect(back.weatherCloudPct, (min: 12, max: 12));
+    expect(back.weatherHoursWithoutForecast, greaterThan(0));
+    final none = _build(full: false);
+    expect(none.weatherAgeAtSave, isNull);
+    expect(none.weatherCloudPct, isNull);
+    expect(none.weatherHoursWithoutForecast, 0);
+  });
+
   test('an unknown elevation is recorded as null, never 0 (S7.5, RG-08 = '
       'E2); an older snapshot with a value reads it unchanged', () {
     final unknown = LocationProfile(

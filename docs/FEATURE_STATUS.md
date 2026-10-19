@@ -525,6 +525,12 @@ see DATA_MODEL.md B2/B8.)
 - **Roadmap relevance:** Phase 13 (ahead of phase).
 
 ## F-42 — Planned-versus-actual logging
+- **F19 (2026-10-19; S16.4, AM-01; amends D8-1's eligibility only):** results and the Logbook.
+  - **Early report.** The current saved night can be finished early: the form, the Logbook row and the entry offer Record result from the stored night's start, with "This night is still under way…"; a future night is refused (domain, repository and UI agree; "hasn't started yet … from <date, time>"). Nothing completes a night automatically; the planner's transition, Upcoming/Past and Tonight's line still follow the dawn end.
+  - **Saved · changed during its night.** The form first asks Save changes (the planner's own plan) / Discard changes (confirmed) / Cancel, then reviews the saved plan; Cancel and a failed Save write nothing.
+  - **Logbook cards.** A due report reads "Result not recorded" with an icon; Completed, Partly and Not done carry an icon beside their word; planned against recorded integration on every saved row ("none recorded of 2 h planned" while due).
+  - **The entry's forecast** is the one saved with the plan: source, fetch time, its age then, the dark hours' cloud range and hours without a forecast.
+  - **Library deletes.** The plan's rig or target deleted from the editor's visible Delete clears the plan's selection; Cancel or a dismissal keeps everything (existing RD-09 path, now covered end to end).
 - **TASK 13.4 (commit `c1e52ce`):** the results page fills the actual and rejected light-frame totals (from the run's counters), notes and optional conditions; planned vs actual light integration is shown on the page and in Sessions; completed sessions can be corrected (timestamped events). The known issue below is resolved for sessions tracked since TASK 13.2; legacy logs keep their stored values.
 - **Status:** Implemented *(TASK 13.4; was Partial)*
 - **Current implementation:** the model and database hold `actualLightFrames`, `rejectedFrames`, environmental and processing notes; the list displays them when set.

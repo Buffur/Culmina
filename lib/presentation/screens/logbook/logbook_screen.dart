@@ -282,6 +282,15 @@ class _LogbookScreenState extends State<LogbookScreen> {
     final log = session.record;
     final action = vm.resultAction(session);
     final record = action == ResultAction.record;
+    // F19 A1: a saved night awaiting its report (from its start, never by
+    // elapsed time alone); its row's blocks are the saved plan's only when
+    // it is Saved or Not done.
+    final dueReport =
+        record && session.status != SessionStatus.inProgress && !session.legacy;
+    final plannedOnly =
+        !session.legacy &&
+        (session.status == SessionStatus.planned ||
+            session.status == SessionStatus.abandoned);
     final details = [
       if (session.name != null) targetAndNight(session),
       log.equipmentName,
@@ -312,11 +321,33 @@ class _LogbookScreenState extends State<LogbookScreen> {
                 PlanState.of(session),
                 key: Key('logbook.status.${session.id}'),
               ),
+              // F19 A1: a due report is named, in words and an icon.
+              if (dueReport)
+                Row(
+                  key: Key('logbook.noResult.${session.id}'),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.pending_actions, size: 16),
+                    const SizedBox(width: AppSpacing.xs),
+                    Flexible(child: Text(AppWords.resultNotRecorded)),
+                  ],
+                ),
               Text(details),
-              // TASK 13.4 (owner): planned vs actual for a result.
+              // TASK 13.4 (owner): planned vs actual for a result; F19 A1:
+              // the plan alone for an entry without counts.
               if (_results[session.id] case final r?)
                 Text(
                   ResultsText.integration(r),
+                  key: Key('logbook.integration.${session.id}'),
+                )
+              else if (plannedOnly)
+                Text(
+                  ResultsText.plannedOnly(
+                    SessionReconciliation.plannedOnly(session.blocks),
+                    // A Not done run may hold earlier confirmations, so
+                    // "none recorded" is said only of a due report.
+                    due: dueReport,
+                  ),
                   key: Key('logbook.integration.${session.id}'),
                 ),
               // S8.2 (I-6): Record result once the saved night has ended;

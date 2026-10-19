@@ -363,12 +363,13 @@ class DriftSessionRepository implements SessionRepository {
             'Session $id is not a saved plan; a changed one is settled first.',
           );
         }
-        if (!SavedNightEnd.hasEnded(s, _clock.nowUtc())) {
-          throw NightNotEnded('The night of session $id has not ended.');
+        // F19 A2/A5 (AM-01): from the saved night's start; never ahead.
+        if (!SavedNightEnd.hasStarted(s, _clock.nowUtc())) {
+          throw NightNotStarted('The night of session $id has not started.');
         }
       case SessionStatus.planned:
-        if (!SavedNightEnd.hasEnded(s, _clock.nowUtc())) {
-          throw NightNotEnded('The night of session $id has not ended.');
+        if (!SavedNightEnd.hasStarted(s, _clock.nowUtc())) {
+          throw NightNotStarted('The night of session $id has not started.');
         }
         if (notDone) break;
         final after = await _appendEvent(s, ExecutionEventKind.reported);

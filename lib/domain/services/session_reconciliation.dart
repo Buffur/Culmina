@@ -49,6 +49,14 @@ class SessionReconciliation {
       ),
   ]);
 
+  /// The plan alone, nothing confirmed (F19 A1: an entry without a
+  /// recorded result shows what was planned, never invented counts).
+  static SessionReconciliation plannedOnly(List<CaptureBlock> blocks) =>
+      SessionReconciliation([
+        for (final b in blocks)
+          BlockReconciliation(block: b, confirmed: 0, rejected: 0),
+      ]);
+
   Duration get plannedIntegration =>
       blocks.fold(Duration.zero, (sum, b) => sum + b.plannedIntegration);
 

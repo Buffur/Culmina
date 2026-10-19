@@ -3,12 +3,13 @@ import 'saved_night_end.dart';
 
 /// What an entry offers for its result (S8.2; ADR-019 §3.1, I-6).
 enum ResultAction {
-  /// Nothing yet: a plan whose night has not ended, a never-saved draft, or
-  /// an old log.
+  /// Nothing yet: a plan whose night has not started (F19 A2), a
+  /// never-saved draft, or an old log.
   none,
 
-  /// "Record result": a saved plan whose night has ended, or a run still in
-  /// progress from the live mode.
+  /// "Record result": a saved plan whose night has started (the current
+  /// night may be finished early, F19 A2; never a future one), or a run
+  /// still in progress from the live mode.
   record,
 
   /// "Edit result": a completed or not-done entry.
@@ -21,7 +22,7 @@ enum ResultAction {
       SessionStatus.completed || SessionStatus.abandoned => edit,
       SessionStatus.inProgress => record,
       SessionStatus.planned || SessionStatus.draft =>
-        s.isSavedPlan && SavedNightEnd.hasEnded(s, nowUtc) ? record : none,
+        s.isSavedPlan && SavedNightEnd.hasStarted(s, nowUtc) ? record : none,
     };
   }
 }

@@ -56,6 +56,9 @@ abstract final class AppWords {
   static const editResult = 'Edit result';
   static const completedAsPlanned = 'Completed as planned';
 
+  /// F19 A1 (FINALIZATION_REVIEW §31): a saved night awaiting its report.
+  static const resultNotRecorded = 'Result not recorded';
+
   /// Tonight's line after a saved night (ADR-019 §4).
   static String howDidItGo(String target) =>
       'Last night: $target. How did it go?';

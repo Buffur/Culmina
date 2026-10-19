@@ -200,6 +200,84 @@ void main() {
     expect(after, hasLength(before.length - 1));
   });
 
+  // F19 A4 (RD-09): the plan's own rig and target from the editor's visible
+  // Delete. Cancel or a dismissal keeps the record, the selection and the
+  // saved snapshot; a confirmed delete persists and the plan falls back to
+  // "Needs a rig" / "Needs a target", its saved snapshot unchanged.
+  testWidgets('F19 A4: deleting the plan\'s rig and target: Cancel and a '
+      'dismissal keep them; Delete persists and clears the selection', (
+    tester,
+  ) async {
+    await start(tester, AppRouter.libraryRigs);
+    final saved = await tester.runAsync(() => vm.analysis.saveSession());
+    final rig = vm.plan.selectedEquipment!;
+    final target = vm.plan.selectedTarget!;
+    final rigs = DriftEquipmentRepository(db),
+        targets = DriftTargetRepository(db);
+
+    await tester.tap(find.widgetWithText(ListTile, rig.name));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('confirm.cancel')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await settle(tester);
+    await tester.tapAt(const Offset(4, 4)); // outside the dialog
+    await settle(tester);
+    expect(find.text('Delete this rig?'), findsNothing);
+    expect(
+      await tester.runAsync(() => rigs.getEquipmentById(rig.id)),
+      isNotNull,
+    );
+    expect(vm.plan.selectedEquipment?.id, rig.id);
+
+    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('confirm.action')));
+    await settle(tester);
+    expect(await tester.runAsync(() => rigs.getEquipmentById(rig.id)), isNull);
+    expect(vm.plan.selectedEquipment, isNull, reason: 'Needs a rig');
+
+    AppRouter.router.go(AppRouter.libraryTargets);
+    await settle(tester);
+    await tester.enterText(find.byType(TextField).first, target.catalogId);
+    await settle(tester);
+    await tester.tap(
+      find
+          .ancestor(
+            of: find.textContaining(target.catalogId),
+            matching: find.byType(ListTile),
+          )
+          .first,
+    );
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('targetEditor.delete')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('confirm.cancel')));
+    await settle(tester);
+    expect(vm.plan.selectedTarget?.id, target.id);
+    await tester.tap(find.byKey(const Key('targetEditor.delete')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('confirm.action')));
+    await settle(tester);
+    expect(
+      await tester.runAsync(() => targets.getTargetById(target.id)),
+      isNull,
+    );
+    expect(vm.plan.selectedTarget, isNull, reason: 'Needs a target');
+
+    final entry = await tester.runAsync(
+      () => DriftSessionRepository(db).get(saved!.id),
+    );
+    expect(entry!.planSnapshot!.json, saved!.planSnapshot!.json);
+    expect(entry.planSnapshot!.rigName, rig.name);
+    expect(
+      entry.planSnapshot!.targetName,
+      target.commonName ?? target.catalogId,
+    );
+  });
+
   // S9.8 (D9-5): a save says so.
   testWidgets('saving a rig, a target and a site says so', (tester) async {
     await start(tester, AppRouter.libraryRigs);

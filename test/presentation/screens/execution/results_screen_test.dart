@@ -229,13 +229,43 @@ void main() {
   });
 
   group('a Saved plan', () {
-    testWidgets('before its night ends there is no result to record', (
+    // F19 A2 (AM-01): a future night cannot be reported in advance; the
+    // form says from when it can.
+    testWidgets('before its night starts there is no result to record', (
       tester,
     ) async {
-      await open(tester, _Kind.saved, at: DateTime.utc(2026, 12, 16, 2));
+      await open(tester, _Kind.saved, at: DateTime.utc(2026, 12, 15, 10));
       expect(find.byKey(const Key('results.review')), findsOneWidget);
       expect(find.byKey(const Key('results.notYet')), findsOneWidget);
+      expect(find.textContaining("hasn't started yet"), findsOneWidget);
+      expect(find.textContaining('from Tue, Dec 15'), findsOneWidget);
       expect(find.byKey(const Key('results.save')), findsNothing);
+      expect((await stored(tester)).status, SessionStatus.planned);
+    });
+
+    // F19 A2: the current night before dawn may be finished early, by the
+    // user's report; the form says so, and nothing completes it by itself.
+    testWidgets('during its night a result finishes it early', (tester) async {
+      await open(tester, _Kind.saved, at: DateTime.utc(2026, 12, 16, 2));
+      expect(find.byKey(const Key('results.notYet')), findsNothing);
+      expect(find.byKey(const Key('results.early')), findsOneWidget);
+      expect((await stored(tester)).status, SessionStatus.planned);
+      await tap(tester, 'results.outcome.partly');
+      await tester.enterText(find.byKey(Key('results.count.$lightId')), '9');
+      await tap(tester, 'results.save');
+      final s = await stored(tester);
+      expect(
+        (s.status, s.resultKind),
+        (SessionStatus.completed, ResultKind.partly),
+      );
+      expect(s.record.actualLightFrames, 9);
+      expect(s.completedAtUtc, DateTime.utc(2026, 12, 16, 2));
+      // The early result counts in the target's progress at once.
+      final progress = (await tester.runAsync(
+        () => vm.vms.sessionList!.targetProgress(),
+      ))!;
+      expect(progress.single.integration, const Duration(minutes: 45));
+      expect(progress.single.sessionCount, 1);
     });
 
     testWidgets('after it: nothing is chosen for the user; Completed as '
@@ -329,7 +359,140 @@ void main() {
     expect(copy!.blocks.map((b) => b.filterName), ['L', 'Ha']);
   });
 
+  // F19 A5: during the night, a Saved · changed plan resolves its changes
+  // first — Save, Discard or Cancel — and the form then reviews exactly the
+  // saved plan. Nothing is settled automatically before the night ends.
+  group('a Saved · changed plan during its night', () {
+    final night = DateTime.utc(2026, 12, 16, 2);
+
+    testWidgets('asks first; Cancel changes nothing', (tester) async {
+      await open(tester, _Kind.savedChanged, at: night);
+      expect(find.byKey(const Key('results.pending')), findsOneWidget);
+      expect(find.byKey(const Key('results.save')), findsNothing);
+      expect(
+        find.byKey(Key('results.planned.$lightId')),
+        findsNothing,
+        reason: 'the working edits are not the saved plan',
+      );
+      await tap(tester, 'results.pending.cancel');
+      final s = await stored(tester);
+      expect(s.isSavedChanged, isTrue);
+      expect(s.blocks.map((b) => b.filterName), ['L', 'Ha']);
+      expect(vm.plan.activeSessionId, id);
+      expect(await tester.runAsync(() => sessions.events(id)), isEmpty);
+    });
+
+    testWidgets('Save makes the changes the saved plan, which is then '
+        'reviewed and reported', (tester) async {
+      await open(tester, _Kind.savedChanged, at: night);
+      await tap(tester, 'results.pending.save');
+      final saved = await stored(tester);
+      expect(saved.status, SessionStatus.planned);
+      expect(saved.blocks.map((b) => b.filterName), ['L', 'Ha']);
+      expect(saved.isSavedChanged, isFalse);
+      expect(find.byKey(const Key('results.pending')), findsNothing);
+      expect(find.textContaining('Ha ·'), findsOneWidget);
+      await tap(tester, 'results.outcome.asPlanned');
+      await tap(tester, 'results.save');
+      expect((await stored(tester)).record.actualLightFrames, 30);
+    });
+
+    testWidgets('Discard, once confirmed, reviews the plan as saved', (
+      tester,
+    ) async {
+      await open(tester, _Kind.savedChanged, at: night);
+      await tap(tester, 'results.pending.discard');
+      await tap(tester, 'confirm.cancel');
+      expect(
+        (await stored(tester)).isSavedChanged,
+        isTrue,
+        reason: 'a cancelled confirmation keeps the changes',
+      );
+      await tap(tester, 'results.pending.discard');
+      await tap(tester, 'confirm.action');
+      final s = await stored(tester);
+      expect(s.status, SessionStatus.planned);
+      expect(s.blocks.map((b) => b.filterName), ['L']);
+      expect(vm.plan.captureBlocks.map((b) => b.filterName), [
+        'L',
+      ], reason: 'the planner shows the saved plan again');
+      // Reverting writes the saved blocks again (new ids).
+      expect(find.textContaining('24 planned'), findsOneWidget);
+      expect(find.textContaining('Ha ·'), findsNothing);
+      await tap(tester, 'results.outcome.asPlanned');
+      await tap(tester, 'results.save');
+      expect((await stored(tester)).record.actualLightFrames, 24);
+    });
+  });
+
   group('the Logbook', () {
+    // F19 A1: each card says whether its result is recorded — words and an
+    // icon, never colour alone, never elapsed time as completion — with
+    // Record / Edit result and planned vs recorded integration.
+    Finder icon(int id, IconData data) => find.descendant(
+      of: find.byKey(Key('logbook.status.$id')),
+      matching: find.byIcon(data),
+    );
+
+    testWidgets('F19 A1: a due report reads Result not recorded; once '
+        'recorded, Partly with its icon and integration', (tester) async {
+      await open(
+        tester,
+        _Kind.saved,
+        at: DateTime.utc(2026, 12, 16, 2),
+        route: false,
+      );
+      expect(find.byKey(Key('logbook.noResult.$id')), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(Key('logbook.noResult.$id')),
+          matching: find.text('Result not recorded'),
+        ),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.pending_actions), findsOneWidget);
+      expect(
+        find.text('Integration: none recorded of 2 h planned'),
+        findsOneWidget,
+      );
+      await tap(tester, 'logbook.recordResult.$id');
+      await tap(tester, 'results.outcome.partly');
+      await tester.enterText(find.byKey(Key('results.count.$lightId')), '9');
+      await tap(tester, 'results.save');
+
+      expect(find.byKey(Key('logbook.noResult.$id')), findsNothing);
+      expect(find.text('Partly'), findsOneWidget);
+      expect(icon(id, Icons.incomplete_circle_outlined), findsOneWidget);
+      expect(find.text('Integration: 45 min of 2 h planned'), findsOneWidget);
+      expect(find.byKey(Key('logbook.editResults.$id')), findsOneWidget);
+    });
+
+    testWidgets('F19 A1: a night ahead offers no result; Not done has its '
+        'own word and icon', (tester) async {
+      await open(
+        tester,
+        _Kind.saved,
+        at: DateTime.utc(2026, 12, 15, 10),
+        route: false,
+      );
+      expect(find.byKey(Key('logbook.noResult.$id')), findsNothing);
+      expect(find.byKey(Key('logbook.recordResult.$id')), findsNothing);
+      expect(find.text('Integration: 2 h planned'), findsOneWidget);
+
+      await tester.runAsync(() async {
+        clock.now = _morning;
+        await sessions.recordResult(id, const NotDone());
+      });
+      AppRouter.router.go(AppRouter.sessionDetail(id));
+      await settle(tester);
+      AppRouter.router.go(AppRouter.sessions);
+      await settle(tester);
+      expect(find.text('Not done'), findsOneWidget);
+      expect(icon(id, Icons.cancel_outlined), findsOneWidget);
+      expect(find.byKey(Key('logbook.noResult.$id')), findsNothing);
+      expect(find.byKey(Key('logbook.editResults.$id')), findsOneWidget);
+    });
+
     testWidgets('an ended Saved plan offers Record result, on its row and '
         'on the entry, with Copy to another night and no Open', (tester) async {
       await open(tester, _Kind.saved, at: _morning, route: false);

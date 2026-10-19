@@ -5,11 +5,13 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/quantity_text.dart';
+import '../../../domain/models/calendar_date.dart';
 import '../../../domain/models/capture_block.dart';
 import '../../../domain/models/session_result.dart';
 import '../../../domain/services/session_reconciliation.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
+import '../../shared/confirmation_patterns.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../shared/opportunity_text.dart';
@@ -164,7 +166,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
         body: const Center(child: CircularProgressIndicator()),
       );
     }
-    _fill(vm);
+    // F19 A5: the form fills from the saved plan once its changes are
+    // resolved, never from the working edits.
+    if (!vm.pendingChanges) _fill(vm);
     final theme = Theme.of(context);
     final gap = const SizedBox(height: AppSpacing.md);
     return Scaffold(
@@ -176,11 +180,27 @@ class _ResultsScreenState extends State<ResultsScreen> {
           children: [
             _Review(vm: vm),
             gap,
-            if (!vm.canRecord)
+            if (vm.pendingChanges)
+              _PendingChanges(
+                vm: vm,
+                onResolved: () => setState(() => _filled = false),
+              )
+            else if (!vm.canRecord)
               _NotYet(vm: vm)
             else ...[
               if (vm.storedOutcome != null && vm.reconciliation != null)
                 _SoFar(reconciliation: vm.reconciliation!),
+              // F19 A2: finishing early is the user's explicit choice.
+              if (vm.nightUnderWay)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Text(
+                    'This night is still under way. Saving a result now '
+                    'finishes it early; you can edit the result later.',
+                    key: const Key('results.early'),
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
               Text('How did it go?', style: theme.textTheme.titleMedium),
               _Outcomes(
                 selected: _outcome,
@@ -352,7 +372,8 @@ class _Review extends StatelessWidget {
   }
 }
 
-/// A saved night that has not ended: no result yet (ADR-019 §3.1; D8-1).
+/// A saved night that has not started: no result yet (F19 A2; ADR-019
+/// §3.1). A future night cannot be reported in advance.
 class _NotYet extends StatelessWidget {
   const _NotYet({required this.vm});
 
@@ -360,15 +381,102 @@ class _NotYet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final end = vm.endsAt;
+    final start = vm.startsAt;
     final zone = vm.review?.timeZoneId ?? vm.session?.timeZoneId;
-    final when = end == null
-        ? 'after it ends'
-        : 'from ${NightTimeFormatter.clockTime(context, end, zoneId: zone)} '
-              '(${NightTimeFormatter.zoneCaption(end, zoneId: zone)})';
+    // The start's wall date and time, in the saved plan's zone.
+    String date(DateTime utc) {
+      final w = NightTimeFormatter.wallClock(utc, zoneId: zone);
+      return NightTimeFormatter.eveningDate(
+        CalendarDate(w.year, w.month, w.day),
+      );
+    }
+
+    final when = start == null
+        ? 'once it begins'
+        : 'from ${date(start)}, '
+              '${NightTimeFormatter.clockTime(context, start, zoneId: zone)} '
+              '(${NightTimeFormatter.zoneCaption(start, zoneId: zone)})';
     return Text(
-      "This night hasn't ended yet. You can record the result $when.",
+      "This night hasn't started yet. You can record the result $when.",
       key: const Key('results.notYet'),
+    );
+  }
+}
+
+/// F19 A5: a Saved · changed plan whose night is under way. Its changes are
+/// resolved first, so the result is recorded against the exact saved plan:
+/// Save (the planner's plan only), Discard, or Cancel (nothing changes).
+class _PendingChanges extends StatelessWidget {
+  const _PendingChanges({required this.vm, required this.onResolved});
+
+  final ResultsViewModel vm;
+  final VoidCallback onResolved;
+
+  @override
+  Widget build(BuildContext context) {
+    Future<void> run(String action, Future<void> Function() change) async {
+      if (await runWithFeedback(context, action, change)) onResolved();
+    }
+
+    return Card(
+      key: const Key('results.pending'),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'This plan changed since it was saved',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            Text(
+              vm.canSaveChanges
+                  ? 'Save or discard the changes first: the result is '
+                        'recorded against the saved plan.'
+                  : 'Discard the changes first: the result is recorded '
+                        'against the saved plan. To keep them, open the '
+                        'plan and save it.',
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                if (vm.canSaveChanges)
+                  FilledButton(
+                    key: const Key('results.pending.save'),
+                    onPressed: () => run('save the plan', vm.saveChanges),
+                    child: const Text('Save changes'),
+                  ),
+                OutlinedButton(
+                  key: const Key('results.pending.discard'),
+                  onPressed: () async {
+                    final sure = await confirmDestructive(
+                      context,
+                      title: 'Discard the changes?',
+                      message:
+                          'The plan goes back to what was saved. The '
+                          "changes can't be recovered.",
+                      action: 'Discard',
+                    );
+                    if (sure && context.mounted) {
+                      await run('discard the changes', vm.discardChanges);
+                    }
+                  },
+                  child: const Text('Discard changes'),
+                ),
+                TextButton(
+                  key: const Key('results.pending.cancel'),
+                  onPressed: () => context.canPop()
+                      ? context.pop()
+                      : context.go(AppRouter.sessions),
+                  child: const Text('Cancel'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -473,6 +581,13 @@ class _Reasons extends StatelessWidget {
 abstract final class ResultsText {
   static String integration(SessionReconciliation r) =>
       'Integration: ${integrationValue(r)}';
+
+  /// F19 A1: an entry without counts. "Integration: 2 h planned", or
+  /// "Integration: none recorded of 2 h planned" once a result is due or
+  /// the night was not done.
+  static String plannedOnly(SessionReconciliation r, {required bool due}) =>
+      'Integration: ${due ? 'none recorded of ' : ''}'
+      '${OpportunityText.duration(r.plannedIntegration)} planned';
 
   /// "1 h 40 min of 2 h planned".
   static String integrationValue(SessionReconciliation r) =>

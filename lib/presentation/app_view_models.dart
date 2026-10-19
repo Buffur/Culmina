@@ -138,6 +138,20 @@ class AppViewModels {
               sessionList?.markChanged();
               await sessionList?.refreshDue();
             },
+            // F19 A5: an early result first resolves the plan's changes.
+            isPlannerPlan: (id) => plan.activeSessionId == id,
+            saveChanges: () async {
+              await analysis.saveSession();
+              sessionList?.markChanged();
+            },
+            discardChanges: (id) async {
+              if (plan.activeSessionId == id) {
+                await lifecycle.discardSavedChanges();
+              } else {
+                await sessions.revertToSaved(id);
+              }
+              sessionList?.markChanged();
+            },
           );
     theme = ThemeViewModel(display);
     disclosure = DisclosureViewModel(display);

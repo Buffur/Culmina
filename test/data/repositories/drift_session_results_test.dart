@@ -124,26 +124,47 @@ void main() {
   }
 
   group('a Saved plan after its night', () {
-    test(
-      'before its night ends every outcome is refused, nothing written',
-      () async {
-        final s = await saved();
-        clock.now = DateTime.utc(2026, 12, 16, 2); // still dark
-        for (final report in <ResultReport>[
-          const CompletedAsPlanned(),
-          PartlyDone({lightId(s, 'L'): 3}),
-          const NotDone(reason: NotDoneReason.clouds),
-        ]) {
-          await expectLater(
-            repo.recordResult(s.id, report),
-            throwsA(isA<NightNotEnded>()),
-          );
-        }
-        final after = (await repo.get(s.id))!;
-        expect(after.status, SessionStatus.planned);
-        expect(await repo.events(s.id), isEmpty);
-      },
-    );
+    // F19 A2/A5 (AM-01): a future night is refused; the current one may be
+    // finished early, by the user's report — before dawn, not automatically.
+    test('before its night starts every outcome is refused, nothing '
+        'written', () async {
+      final s = await saved();
+      clock.now = DateTime.utc(2026, 12, 15, 10, 59); // before the window
+      for (final report in <ResultReport>[
+        const CompletedAsPlanned(),
+        PartlyDone({lightId(s, 'L'): 3}),
+        const NotDone(reason: NotDoneReason.clouds),
+      ]) {
+        await expectLater(
+          repo.recordResult(s.id, report),
+          throwsA(isA<NightNotStarted>()),
+        );
+      }
+      final after = (await repo.get(s.id))!;
+      expect(after.status, SessionStatus.planned);
+      expect(await repo.events(s.id), isEmpty);
+    });
+
+    test('the current night before dawn: a result finishes it early; the '
+        'snapshot unchanged; counters equal the replay', () async {
+      final s = await saved();
+      clock.now = DateTime.utc(2026, 12, 16, 2); // still dark
+      expect(SavedNightEnd.hasEnded(s, clock.now), isFalse);
+      final done = await repo.recordResult(
+        s.id,
+        PartlyDone({lightId(s, 'L'): 3}),
+      );
+      expect(done.status, SessionStatus.completed);
+      expect(done.resultKind, ResultKind.partly);
+      expect(done.completedAtUtc, clock.now);
+      expect(done.planSnapshot!.json, s.planSnapshot!.json);
+      await expectCountersEqualReplay(s.id);
+      // A restart reads the same result.
+      expect(
+        (await DriftSessionRepository(db, clock: clock).get(s.id))!.status,
+        SessionStatus.completed,
+      );
+    });
 
     test('Completed as planned: reported, then each light block\'s planned '
         'count; the snapshot unchanged; counters equal the replay', () async {
@@ -539,9 +560,31 @@ void main() {
       expect(SavedNightEnd.of(s), DateTime.utc(2026, 12, 17));
       expect(SavedNightEnd.hasEnded(s, DateTime.utc(2026, 12, 16, 23)), false);
       expect(SavedNightEnd.hasEnded(s, DateTime.utc(2026, 12, 17)), true);
+      // F19 A2: never earlier than any site's start of that night.
+      expect(SavedNightEnd.startOf(s), DateTime.utc(2026, 12, 16));
+      expect(
+        SavedNightEnd.hasStarted(s, DateTime.utc(2026, 12, 15, 23)),
+        false,
+      );
+      expect(SavedNightEnd.hasStarted(s, DateTime.utc(2026, 12, 16)), true);
+    });
+
+    test('F19 A2: a readable night starts at its stored window, never the '
+        "live site's", () async {
+      final s = await saved();
+      expect(SavedNightEnd.startOf(s), DateTime.utc(2026, 12, 15, 11));
+      expect(
+        SavedNightEnd.hasStarted(s, DateTime.utc(2026, 12, 15, 10)),
+        false,
+      );
+      expect(SavedNightEnd.hasStarted(s, DateTime.utc(2026, 12, 15, 11)), true);
+      expect(SavedNightEnd.startOf(_unsaved()), isNull);
     });
   });
 }
+
+Session _unsaved() =>
+    Session(record: _logFor(2), status: SessionStatus.draft, legacy: false);
 
 log.SessionLog _logFor(int id) => log.SessionLog(
   id: id,

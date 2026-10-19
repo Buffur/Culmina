@@ -147,12 +147,10 @@ class PlanLifecycleViewModel {
   /// Tonight as of the last restore or rollover check (S6.4).
   CalendarDate? _tonight;
 
-  /// Follows a new night while the app runs (S6.4, TD-057; `NightClock`,
-  /// every minute and on resume, before the forecast's check). A saved plan
-  /// whose night has ended leaves the planner for a working copy (S8.3, D1);
-  /// a never-saved draft's picked night, once no longer ahead at a rollover,
-  /// rolls forward to tonight, written through the chain as no edit. Screens
-  /// that show the plan's night are told when it changes.
+  /// Follows a new night while the app runs (S6.4, TD-057; `NightClock`, each
+  /// minute and on resume): a saved plan whose night has ended leaves for a
+  /// working copy (S8.3, D1); a never-saved draft's picked night no longer
+  /// ahead at a rollover rolls forward to tonight (no edit). Screens are told.
   Future<void> followNight() async {
     if (!_plan.isLoaded) return;
     if (_current case final current?) {
@@ -196,14 +194,12 @@ class PlanLifecycleViewModel {
 
   /// Opens [session] (TASK 11.4): a draft or planned one becomes current, a
   /// frozen one is copied into a new draft; the current, editable one is left
-  /// as it is live — a caller's copy may be stale (S1.V4, TD-062).
-  ///
-  /// [discard]: the user chose Discard for the plan being left (S6.3, U1):
-  /// a Saved · changed one first goes back to what was saved (refused with
-  /// [SavedPlanUnavailable], and then nothing changes); a never-saved one is
-  /// deleted after the switch. An untouched never-saved draft is deleted
-  /// without being asked. The same holds for [newSession] and
-  /// [duplicateForNight]. [copyTo]: a new, unsaved copy on that night (S8.7).
+  /// as it is live — a caller's copy may be stale (S1.V4, TD-062). [discard]
+  /// (S6.3, U1): a Saved · changed plan being left first goes back to what
+  /// was saved ([SavedPlanUnavailable]: nothing changes); a never-saved one
+  /// is deleted after the switch, an untouched one without asking. The same
+  /// holds for [newSession] and [duplicateForNight]. [copyTo]: a new, unsaved
+  /// copy on that night (S8.7).
   Future<void> openSession(
     Session opened, {
     bool discard = false,
@@ -248,10 +244,15 @@ class PlanLifecycleViewModel {
     if (await _current?.settle(id) ?? false) _plan.markChanged();
   }
 
-  /// A new draft for tonight (RD-04, S6.8): it keeps the site and the rig,
-  /// has no target, so the status asks for one, and starts with an empty
-  /// capture plan and the offer of the example. It has no tracking override
-  /// (S7.1): the rig's default applies.
+  /// F19 A5: Discard on the current Saved · changed plan before an early
+  /// result; the planner shows the saved plan again.
+  Future<void> discardSavedChanges() async {
+    await _current?.revertSavedChanges();
+    if (_current?.session case final s?) await _plan.restoring(() => _apply(s));
+  }
+
+  /// A new draft for tonight (RD-04, S6.8): the site and rig kept, no target
+  /// (the status asks), an empty capture plan, no tracking override (S7.1).
   Future<void> newSession({bool discard = false}) async {
     if (discard) await _current?.revertSavedChanges();
     _plan.replaceNight(null);
@@ -266,8 +267,7 @@ class PlanLifecycleViewModel {
   }
 
   /// A new draft with the current plan on [date], its tracking override
-  /// included (S7.1); the original stays. The copy is a new plan that is not
-  /// saved, so leaving it asks (W1, S6.3).
+  /// included (S7.1); the original stays. Unsaved, so leaving it asks (W1).
   Future<void> duplicateForNight(
     CalendarDate date, {
     bool discard = false,

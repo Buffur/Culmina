@@ -2153,6 +2153,16 @@ Stage 4 revalidation is still required.
   end applies instead. The named date is used only to end the night later, never shown. *Rejected:* the
   SessionNight end (noon) for everything: simpler, but a result could not be recorded after imaging
   until about midday.
+  *Amended by AM-01 (owner, 2026-10-18; implemented F19 A2/A5, 2026-10-19):* eligibility for a
+  result changes only: a result may be recorded from the **start** of the stored SessionNight window
+  (`SavedNightEnd.startOf`: the snapshot's night start; without a readable snapshot, the latest start
+  any site's night with that key can have, 00:00 UTC the day after the evening date — never earlier
+  than the true start). The current night may be finished early by the user's report, before dawn;
+  nothing completes it automatically; a night not yet started is refused (`NightNotStarted`). The
+  dawn end above still governs the planner's transition, Upcoming/Past and Tonight's "how did it
+  go?" line. A Saved · changed plan during its night is not settled automatically: the form asks
+  Save (the planner's own plan only) / Discard (confirmed) / Cancel first, then reviews the saved
+  plan; after the night it is settled as before.
 - **D8-2 — Save on a saved plan (S4-DEF-01):** before its night ends, Save replaces the snapshot, a
   changed night or site included (ADR-014's "Save again": the plan is rescheduled; nothing has been
   recorded against it). After its night ends a saved plan is never the planner's plan (D8-1), so Save

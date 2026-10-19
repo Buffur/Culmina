@@ -66,4 +66,31 @@ abstract final class SavedNightEnd {
     final end = of(session);
     return end != null && !nowUtc.isBefore(end);
   }
+
+  /// F19 A2/A5 (AM-01): the result of a saved night may be reported from
+  /// the night's start — the current night before dawn (an explicit
+  /// "finish early", never automatic) or an ended one; a future night
+  /// never. The start is the saved snapshot's night, never the live site's.
+  /// Without a readable snapshot only the key is known: the latest start
+  /// any site's night with that evening date can have, the mean solar noon
+  /// at 180° W (00:00 UTC the day after), so it is never earlier than the
+  /// true start. Rollover and the planner still follow [hasEnded].
+  static DateTime? startOf(Session session) {
+    final snapshot = session.status == SessionStatus.inProgress
+        ? session.executionStartSnapshot ?? session.planSnapshot
+        : session.planSnapshot;
+    if (snapshot?.night case final night?) return night.startUtc;
+    final key = snapshot?.eveningDate ?? session.eveningDate;
+    if (key == null) return null;
+    final named = session.unreadableSnapshotNight;
+    final date = named != null && named.compareTo(key) > 0 ? named : key;
+    return DateTime.utc(date.year, date.month, date.day + 1);
+  }
+
+  /// Whether [session]'s saved night has started at [nowUtc] (A2): its
+  /// result may be reported. False without a night key.
+  static bool hasStarted(Session session, DateTime nowUtc) {
+    final start = startOf(session);
+    return start != null && !nowUtc.isBefore(start);
+  }
 }

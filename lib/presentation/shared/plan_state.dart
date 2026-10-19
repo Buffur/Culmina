@@ -59,6 +59,15 @@ enum PlanState {
     oldLog => AppWords.oldLog,
   };
 
+  /// F19 A1: a result's state carries an icon beside its word (never
+  /// colour alone); the others are words only.
+  IconData? get icon => switch (this) {
+    completed => Icons.check_circle_outline,
+    partly => Icons.incomplete_circle_outlined,
+    notDone => Icons.cancel_outlined,
+    _ => null,
+  };
+
   /// Unsaved work draws attention; a settled plan reads as primary text;
   /// the rest is quiet. A tone, never a verdict.
   Color tone(AppPalette p) => switch (this) {
@@ -87,10 +96,21 @@ class PlanStateLabel extends StatelessWidget {
         border: Border.all(color: p.border),
         borderRadius: BorderRadius.circular(AppRadius.pill),
       ),
-      child: Text(
-        state.word,
-        style: Theme.of(context).textTheme.labelMedium
-            ?.copyWith(color: state.tone(p)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (state.icon case final icon?) ...[
+            Icon(icon, size: 14, color: state.tone(p)),
+            const SizedBox(width: AppSpacing.xs),
+          ],
+          Flexible(
+            child: Text(
+              state.word,
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(color: state.tone(p)),
+            ),
+          ),
+        ],
       ),
     );
   }

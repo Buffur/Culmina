@@ -15,7 +15,12 @@ import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/models/execution.dart';
 import 'package:astroplan/domain/models/session.dart';
+import 'package:astroplan/domain/models/night_weather.dart';
+import 'package:astroplan/domain/models/weather_snapshot.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
+import 'package:astroplan/domain/services/night_weather_summarizer.dart';
+import 'package:astroplan/domain/services/session_snapshot_builder.dart';
+import 'package:astroplan/domain/services/visibility_calculator.dart';
 import 'package:astroplan/domain/services/session_exporter.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
@@ -331,6 +336,80 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('Window: ', findRichText: true), findsNothing);
+  });
+
+  // F19 A3: the entry shows the forecast saved with the plan — its source,
+  // fetch time and age then — never today's in its place.
+  testWidgets('the entry\'s forecast is the one saved with the plan', (
+    tester,
+  ) async {
+    await seed(tester);
+    await tester.runAsync(() async {
+      final night = vm.plan.sessionNight!;
+      final prefs = vm.settings.planningPreferences;
+      final span = NightWeatherSummarizer.spanOf(
+        VisibilityCalculator.calculateNightTimelineForNight(night),
+      );
+      final forecast = WeatherSnapshot(
+        provider: 'open-meteo',
+        model: 'best_match',
+        fetchedAtUtc: DateTime.utc(2026, 12, 15, 9),
+        latitude: 46.05,
+        longitude: 14.5,
+        hours: [
+          for (var h = 17; h < 24; h++)
+            WeatherHour(
+              timeUtc: DateTime.utc(2026, 12, 15, h),
+              cloudCoverPct: h < 20 ? 15 : 40,
+            ),
+        ],
+      );
+      await sessions.savePlan(
+        plannedId,
+        vm.plan.currentPlan(),
+        SessionSnapshotBuilder.build(
+          takenAtUtc: DateTime.utc(2026, 12, 15, 19),
+          night: night,
+          timeZoneId: 'Europe/Ljubljana',
+          preferences: prefs,
+          budget: vm.analysis.captureBudget,
+          blocks: vm.plan.captureBlocks,
+          site: vm.site.activeSite,
+          target: vm.plan.selectedTarget,
+          rig: vm.plan.selectedEquipment,
+          weather: NightWeatherAvailable(
+            snapshot: forecast,
+            age: WeatherAge.aging,
+            ageDuration: const Duration(hours: 10),
+            fromCache: true,
+          ),
+          weatherSummary: NightWeatherSummarizer.summarize(
+            forecast,
+            fromUtc: span.fromUtc,
+            toUtc: span.toUtc,
+            dewMarginC: prefs.dewMarginC,
+          ),
+        ),
+      );
+    });
+    await pumpAt(tester, AppRouter.sessionDetail(plannedId));
+    for (final text in [
+      'Forecast: as saved with the plan',
+      'Source: open-meteo / best_match',
+      'Age when saved: aging',
+      'Cloud cover (dark hours): 15–40 %',
+    ]) {
+      expect(
+        find.textContaining(text, findRichText: true),
+        findsOneWidget,
+        reason: text,
+      );
+    }
+    expect(
+      find.textContaining('Hours without forecast: ', findRichText: true),
+      findsOneWidget,
+      reason: 'the saved hours after midnight had none',
+    );
   });
 
   testWidgets('acceptance: a legacy log renders its stored text only', (

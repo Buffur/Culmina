@@ -33,6 +33,7 @@ void main() {
       AppWords.recordResult: 'Record result',
       AppWords.editResult: 'Edit result',
       AppWords.completedAsPlanned: 'Completed as planned',
+      AppWords.resultNotRecorded: 'Result not recorded',
       AppWords.fits: 'Fits',
       AppWords.tight: 'Tight',
       AppWords.doesNotFit: "Doesn't fit",

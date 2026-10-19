@@ -72,9 +72,12 @@ class SessionsViewModel extends ChangeNotifier {
   final SessionRepository _repository;
   final Clock _clock;
 
-  /// What [s] offers for its result now (S8.2): Record result, Edit result
-  /// or nothing.
+  /// What [s] offers for its result now (S8.2): Record, Edit or nothing.
   ResultAction resultAction(Session s) => ResultAction.of(s, _clock.nowUtc());
+
+  /// A saved plan whose night has not ended (Upcoming; F19: still opens).
+  bool isUpcoming(Session s) =>
+      s.isSavedPlan && !SavedNightEnd.hasEnded(s, _clock.nowUtc());
 
   /// The Logbook's filters and search (S8.5; UX-30, I-9), held here so they
   /// survive navigation, as the tab's state does. Search and filters
@@ -115,14 +118,11 @@ class SessionsViewModel extends ChangeNotifier {
   /// Upcoming (saved plans whose night has not ended, soonest first) and
   /// Past (the rest, newest night first); S8.5, ADR-019 §2.
   ({List<Session> upcoming, List<Session> past}) grouped(List<Session> list) {
-    final now = _clock.nowUtc();
     CalendarDate night(Session s) =>
         s.eveningDate ??
         CalendarDate.fromDateTimeFields(s.record.sessionDate.toLocal());
-    final upcoming = [
-      for (final s in list)
-        if (s.isSavedPlan && !SavedNightEnd.hasEnded(s, now)) s,
-    ]..sort((a, b) => night(a).compareTo(night(b)));
+    final upcoming = list.where(isUpcoming).toList()
+      ..sort((a, b) => night(a).compareTo(night(b)));
     final past = [
       for (final s in list)
         if (!upcoming.contains(s)) s,
@@ -149,7 +149,8 @@ class SessionsViewModel extends ChangeNotifier {
         },
         includeLegacy: false,
       )) {
-        if (resultAction(s) != ResultAction.record) continue;
+        // I-8: after its night only (F19 records earlier on request).
+        if (resultAction(s) != ResultAction.record || isUpcoming(s)) continue;
         if (due == null || s.eveningDate!.compareTo(due.eveningDate!) > 0) {
           due = s;
         }

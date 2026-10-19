@@ -21,8 +21,8 @@ abstract final class FailureText {
       'This entry changed since you opened it. Nothing was saved; check it '
           'and save again.',
     NightNotEnded() =>
-      "This night hasn't ended yet. Nothing was saved; record the result "
-          'after it.',
+      "This night hasn't started yet. Nothing was saved; record the result "
+          'once it has begun.',
     StorageFailure() =>
       "Couldn't $action: the app's data on this device could not be read "
           'or written. Please try again.',
