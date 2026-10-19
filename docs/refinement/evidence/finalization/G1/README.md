@@ -73,7 +73,7 @@ native row (UNVERIFIED here).
 | Inputs | Command | Result |
 | --- | --- | --- |
 | `2dcb000` (F25) | `dart run tool/check.dart` | Encoding, Format, Analyze PASS; Test `+2246 ~5: All tests passed!` (the 3 opt-in render tests skipped); E2E `core_loop` `+2`, `perf_scenarios` `+1`; "Quality gate passed." |
-| `2dcb000` + `material_ui` 1.7.0 (the G1 commit) | `dart run tool/check.dart` | the same: all six steps PASS, `+2246 ~5`, "Quality gate passed." |
+| `2dcb000` + `material_ui` 1.7.0 (`e13eccc`) | `dart run tool/check.dart` | the same: all six steps PASS, `+2246 ~5`, "Quality gate passed." |
 
 ## Disposition
 
