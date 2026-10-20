@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
-import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../domain/models/session.dart';
 import '../../domain/models/session_result.dart';
@@ -78,7 +77,7 @@ enum PlanState {
 }
 
 /// The plan-state label (S5.4): the state's word in its tone, in a quiet
-/// outlined pill. It wraps at large text sizes; it is not tappable.
+/// quiet icon and label. It wraps at large text sizes; it is not tappable.
 class PlanStateLabel extends StatelessWidget {
   const PlanStateLabel(this.state, {super.key});
 
@@ -87,31 +86,21 @@ class PlanStateLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs / 2,
-      ),
-      decoration: BoxDecoration(
-        border: Border.all(color: p.border),
-        borderRadius: BorderRadius.circular(AppRadius.pill),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (state.icon case final icon?) ...[
-            Icon(icon, size: 14, color: state.tone(p)),
-            const SizedBox(width: AppSpacing.xs),
-          ],
-          Flexible(
-            child: Text(
-              state.word,
-              style: Theme.of(context).textTheme.labelMedium
-                  ?.copyWith(color: state.tone(p)),
-            ),
-          ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (state.icon case final icon?) ...[
+          Icon(icon, size: 14, color: state.tone(p)),
+          const SizedBox(width: AppSpacing.xs),
         ],
-      ),
+        Flexible(
+          child: Text(
+            state.word,
+            style: Theme.of(context).textTheme.bodySmall
+                ?.copyWith(color: state.tone(p)),
+          ),
+        ),
+      ],
     );
   }
 }

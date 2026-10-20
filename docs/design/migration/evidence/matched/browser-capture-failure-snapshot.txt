@@ -1,0 +1,61 @@
+### Page
+- Page URL: http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2
+- Page Title: Plan — Culmina design preview
+### Snapshot
+```yaml
+- region "Android phone preview" [ref=f14e2]:
+  - generic [ref=f14e3]:
+    - button "Close edit block" [ref=f14e4] [cursor=pointer]
+    - heading "Edit block" [level=1] [ref=f14e7]
+    - button "Turn on field mode" [ref=f14e8] [cursor=pointer]
+  - region "Edit block" [ref=f14e12]:
+    - generic [ref=f14e13]:
+      - paragraph [ref=f14e14]: "Rig: ZWO ASI2600MC + example 72 mm f/5.6 refractor"
+      - group "Frame type" [ref=f14e15]:
+        - generic [ref=f14e17] [cursor=pointer]:
+          - radio "Light" [checked] [ref=f14e18]
+          - generic [ref=f14e19]: Light
+        - generic [ref=f14e21] [cursor=pointer]:
+          - radio "Dark" [ref=f14e22]
+          - generic [ref=f14e23]: Dark
+        - generic [ref=f14e25] [cursor=pointer]:
+          - radio "Flat" [ref=f14e26]
+          - generic [ref=f14e27]: Flat
+        - generic [ref=f14e29] [cursor=pointer]:
+          - radio "Bias" [ref=f14e30]
+          - generic [ref=f14e31]: Bias
+      - group [ref=f14e33]:
+        - generic "From a photo" [ref=f14e34] [cursor=pointer]
+        - option "Available fields" [selected]
+        - option "Some fields missing"
+        - option "Unreadable file"
+      - generic [ref=f14e35]:
+        - generic [ref=f14e36]: Exposure (seconds)
+        - textbox "Exposure (seconds)" [invalid] [ref=f14e37]: invalid
+        - generic [ref=f14e38]: For example 60, 2.5 or 1/125.
+        - generic [ref=f14e39]: Entered by you.
+        - generic [ref=f14e40]: Enter positive seconds, for example 60 or 1/125.
+      - generic [ref=f14e41]:
+        - generic [ref=f14e42]: Frames
+        - textbox "Frames" [ref=f14e43]: "100"
+      - paragraph [ref=f14e44]: Enter exposure and frames to see the total.
+      - generic [ref=f14e45]:
+        - generic [ref=f14e46]: Filter (optional)
+        - textbox "Filter (optional)" [ref=f14e47]:
+          - /placeholder: e.g. Ha, OIII or a filter name
+          - text: L
+        - generic [ref=f14e48]: Leave blank for no filter. A placeholder is not a selected filter.
+      - generic [ref=f14e49]:
+        - generic [ref=f14e50]: Gain (optional)
+        - textbox "Gain (optional)" [ref=f14e51]:
+          - /placeholder: Unrecorded
+      - group [ref=f14e52]:
+        - generic "Details Binning and timing" [ref=f14e53] [cursor=pointer]:
+          - text: Details
+          - generic [ref=f14e54]: Binning and timing
+      - paragraph [ref=f14e55]: Records describe how you plan to shoot. This preview doesn’t control a camera.
+  - generic [ref=f14e56]:
+    - paragraph [ref=f14e57]: Apply updates the draft. Save plan records it.
+    - button "Apply changes" [ref=f14e58] [cursor=pointer]
+  - status
+```

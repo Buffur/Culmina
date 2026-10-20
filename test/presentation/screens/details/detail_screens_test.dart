@@ -213,14 +213,14 @@ void main() {
     expect(find.text('Night & Moon'), findsOneWidget);
     expect(find.textContaining('Night of '), findsWidgets);
     expect(find.textContaining('Times in'), findsOneWidget);
-    // TD-078 (S6.16): the dark span and the Moon's up-times are the
-    // summary's, once; the sections below do not repeat them.
+    // Hybrid: darkness belongs to Night, Moon facts to the reachable Moon
+    // tab. Each fact is presented once on its own surface.
     expect(find.byKey(const Key('nightSummary.dark')), findsOneWidget);
     expect(find.textContaining('Dark (Sun below −18°): '), findsOneWidget);
-    expect(find.byKey(const Key('nightSummary.moon')), findsOneWidget);
-    expect(find.textContaining('Moon up'), findsOneWidget);
+    expect(find.byKey(const Key('nightSummary.moon')), findsNothing);
     expect(find.byKey(const Key('night.dark')), findsNothing);
     expect(find.byKey(const Key('sky.moonUp')), findsNothing);
+    await open(tester, find.text('Sun & twilight'));
     expect(find.text('Sun and twilight'), findsOneWidget);
     expect(find.text('Moon'), findsOneWidget);
     for (final name in [
@@ -235,7 +235,13 @@ void main() {
     ]) {
       expect(find.text(name), findsOneWidget, reason: name);
     }
+    await tester.tap(find.widgetWithText(Tab, 'Moon'));
+    await settle(tester);
+    await open(tester, find.text('Moon details'));
+    expect(find.textContaining('Moon up'), findsOneWidget);
     expect(find.textContaining('Illumination at midnight'), findsOneWidget);
+    await tester.tap(find.widgetWithText(Tab, 'Night'));
+    await settle(tester);
 
     // TD-051: the span follows the user's darkness limit.
     await tester.runAsync(
@@ -256,7 +262,7 @@ void main() {
     await start(tester, AppRouter.session());
     await open(tester, weatherRow);
     expect(find.text('Weather'), findsWidgets);
-    expect(find.byKey(const Key('weatherDetail.summary')), findsOneWidget);
+    expect(find.byKey(const Key('conditions.page.2')), findsOneWidget);
     expect(find.byKey(const Key('weather.span')), findsOneWidget);
     expect(find.byKey(const Key('weather.hours')), findsOneWidget);
     expect(find.byKey(const Key('weather.attribution')), findsOneWidget);
@@ -330,6 +336,10 @@ void main() {
   testWidgets('Night & Moon: the twilights as a bar from sunset to sunrise, '
       'deepest in the middle, with the times as its text', (tester) async {
     await start(tester, AppRouter.nightMoon);
+    final sun = find.byKey(const PageStorageKey('conditions.sun'));
+    await tester.ensureVisible(sun);
+    await tester.tap(sun);
+    await settle(tester);
     expect(find.byKey(const Key('night.twilightBar')), findsOneWidget);
     // Seven bands, keyed by position and depth: 1, 2, 3, 4, 3, 2, 1.
     for (final (i, depth) in [1, 2, 3, 4, 3, 2, 1].indexed) {
@@ -358,6 +368,9 @@ void main() {
     // 10 Nov 2026, Ljubljana: dark from about 17:25 UTC, so 17:00–18:00 is
     // only partly dark; the 22:00 UTC row is absent.
     await start(tester, AppRouter.weather, missingAt: 22);
+    await tester.ensureVisible(find.byKey(const Key('weather.details')));
+    await tester.tap(find.byKey(const Key('weather.details')));
+    await settle(tester);
     final slots = vm.conditions.nightWeatherSummary!.slots;
     Finder column(int i) => find.byKey(Key('weather.hour.$i'));
     Finder inColumn(int i, String text) =>
@@ -366,7 +379,7 @@ void main() {
     // The gap: exactly one column, at 22:00 UTC, and it says so.
     final gap = slots.indexWhere((s) => s.timeUtc.hour == 22);
     expect(slots[gap].hour, isNull);
-    expect(find.text('no\nforecast'), findsOneWidget);
+    expect(find.text('no\nforecast'), findsNWidgets(2));
     expect(inColumn(gap, 'no\nforecast'), findsOneWidget);
     expect(inColumn(gap, '8/15'), findsNothing, reason: 'never invented');
     final handle = tester.ensureSemantics();
@@ -384,7 +397,9 @@ void main() {
     await tester.tap(column(gap));
     await settle(tester);
     expect(
-      tester.widget<Text>(find.byKey(const Key('weather.hourDetail'))).data,
+      tester
+          .widget<Text>(find.byKey(const Key('weather.tableHourDetail')))
+          .data,
       endsWith(': no forecast for this hour.'),
     );
 
@@ -413,7 +428,7 @@ void main() {
     ]) {
       expect(
         find.descendant(
-          of: find.byKey(const Key('weather.hours')),
+          of: find.byKey(const Key('weather.tableHours')),
           matching: find.text(label),
         ),
         findsOneWidget,
@@ -442,6 +457,7 @@ void main() {
       ),
       now: DateTime.utc(2026, 6, 21, 12),
     );
+    await open(tester, find.text('Sun & twilight'));
     expect(find.byKey(const Key('night.twilightBar')), findsNothing);
     expect(find.byKey(const Key('night.timelineTitle')), findsOneWidget);
     expect(find.text('not tonight'), findsWidgets);
@@ -460,7 +476,7 @@ void main() {
     AppRouter.router.go(AppRouter.tonight);
     await settle(tester);
     await open(tester, find.byKey(const Key('tonight.weather')));
-    expect(find.byKey(const Key('weatherDetail.summary')), findsOneWidget);
+    expect(find.byKey(const Key('conditions.page.2')), findsOneWidget);
   });
 }
 

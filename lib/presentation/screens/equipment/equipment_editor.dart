@@ -439,6 +439,8 @@ class _EquipmentEditor {
                           _StellariumRow(
                             label: 'Resolution',
                             unit: 'px',
+                            largestValue: EquipmentLimits.resolutionPx.max
+                                .toStringAsFixed(0),
                             fieldW: TextFormField(
                               controller: resWCtrl,
                               keyboardType: TextInputType.number,
@@ -499,6 +501,8 @@ class _EquipmentEditor {
                           _StellariumRow(
                             label: 'Sensor size',
                             unit: 'mm',
+                            largestValue: EquipmentLimits.sensorSideMm.max
+                                .toStringAsFixed(2),
                             fieldW: TextFormField(
                               controller: sensorWCtrl,
                               readOnly: true,
@@ -815,18 +819,52 @@ class _StellariumRow extends StatelessWidget {
   const _StellariumRow({
     required this.label,
     required this.unit,
+    required this.largestValue,
     required this.fieldW,
     required this.fieldH,
   });
 
   final String label;
   final String unit;
-  final Widget fieldW;
-  final Widget fieldH;
+  final String largestValue;
+  final TextFormField fieldW;
+  final TextFormField fieldH;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final direction = Directionality.of(context);
+    final scaler = MediaQuery.textScalerOf(context);
+    double textWidth(String value, TextStyle? style) {
+      final painter = TextPainter(
+        text: TextSpan(text: value, style: style),
+        textDirection: direction,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      final width = painter.width;
+      painter.dispose();
+      return width;
+    }
+
+    // Match Material 3 TextField's bodyLarge style and themed content insets.
+    // Reserve the supported numeric range so typing does not repeatedly move
+    // a focused field between layouts; retain longer existing values as well.
+    final fieldTextWidth = [
+      largestValue,
+      fieldW.controller?.text ?? '',
+      fieldH.controller?.text ?? '',
+    ].map((value) => textWidth(value, theme.textTheme.bodyLarge)).reduce(max);
+    final padding =
+        theme.inputDecorationTheme.contentPadding?.resolve(direction) ??
+        const EdgeInsets.all(12);
+    final minimumFieldWidth =
+        fieldTextWidth.ceilToDouble() + padding.horizontal + 4;
+    final rowWidth =
+        2 * minimumFieldWidth +
+        textWidth('×', theme.textTheme.titleMedium) +
+        textWidth(unit, theme.textTheme.bodySmall) +
+        18;
     // S3.10 (TD-069): the label sits above the W × H fields, so the fields
     // get the dialog's whole width. Beside a fixed 90 dp label they were
     // too narrow on a phone, and the read-only sensor fields clipped
@@ -835,21 +873,37 @@ class _StellariumRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: theme.textTheme.bodyMedium),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: fieldW),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Text('×', style: theme.textTheme.titleMedium),
-            ),
-            Expanded(child: fieldH),
-            const SizedBox(width: 6),
-            Padding(
-              padding: const EdgeInsets.only(top: 14),
-              child: Text(unit, style: theme.textTheme.bodySmall),
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < rowWidth) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('Width ($unit)', style: theme.textTheme.bodySmall),
+                  fieldW,
+                  const SizedBox(height: 12),
+                  Text('Height ($unit)', style: theme.textTheme.bodySmall),
+                  fieldH,
+                ],
+              );
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: fieldW),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Text('×', style: theme.textTheme.titleMedium),
+                ),
+                Expanded(child: fieldH),
+                const SizedBox(width: 6),
+                Padding(
+                  padding: const EdgeInsets.only(top: 14),
+                  child: Text(unit, style: theme.textTheme.bodySmall),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );

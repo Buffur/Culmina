@@ -187,7 +187,7 @@ void main() {
     expect(find.text('Light · 30 s × 10 · 5 min'), findsNWidgets(2));
     expect(find.text('During the imaging window'), findsOneWidget);
     expect(find.text('Outside the imaging window'), findsOneWidget);
-    // Camera values live in the block's editor, not in the row. The dark
+    // Hybrid retains recorded camera values beside each block. The dark
     // matches no light (S7.3a), which is named in words: fields, no values.
     expect(
       find.byKey(const Key('capture.mismatch.4.matchesNoLight')),
@@ -225,9 +225,11 @@ void main() {
       for (final t in tester.widgetList<Text>(find.byType(Text)))
         if (!warning(t) && !gainLines.contains(t)) t.data ?? '',
     ];
-    expect(rowTexts.where((t) => t.contains('ISO')), isEmpty);
-    expect(rowTexts.where((t) => t.contains('bin')), isEmpty);
-    expect(find.textContaining('800'), findsNothing);
+    expect(rowTexts.where((t) => t.contains('ISO 800')), hasLength(1));
+    expect(
+      tester.widget<Text>(find.byKey(const Key('capture.records.4'))).data,
+      contains('Binning 2×2'),
+    );
     // One heading: the planner's; none of the old four.
     for (final old in ['Inputs', 'Outputs', 'Sequence Plan']) {
       expect(find.text(old), findsNothing, reason: old);
@@ -383,6 +385,40 @@ void main() {
     expect(find.textContaining('SNR'), findsNothing);
     await tester.runAsync(() => vm.plan.idle);
   });
+
+  testWidgets(
+    'Hybrid move controls reorder the draft and preserve block values',
+    (tester) async {
+      await start(tester);
+      final first = _light(30, 4, filter: 'L');
+      final second = _light(60, 8, filter: 'Ha');
+      await blocks(tester, [first, second]);
+
+      expect(
+        tester
+            .widget<IconButton>(find.byKey(const Key('capture.moveUp.0')))
+            .onPressed,
+        isNull,
+      );
+      expect(
+        tester
+            .widget<IconButton>(find.byKey(const Key('capture.moveDown.1')))
+            .onPressed,
+        isNull,
+      );
+      await tester.tap(find.byKey(const Key('capture.moveDown.0')));
+      await settle(tester);
+      await tester.runAsync(() => vm.plan.idle);
+      await tester.pumpAndSettle();
+      expect(stored(vm.captureBlocks), stored([second, first]));
+
+      await tester.tap(find.byKey(const Key('capture.moveUp.1')));
+      await settle(tester);
+      await tester.runAsync(() => vm.plan.idle);
+      await tester.pumpAndSettle();
+      expect(stored(vm.captureBlocks), stored([first, second]));
+    },
+  );
 
   testWidgets("the block dialog's Apply changes is its primary (filled) "
       'button', (tester) async {

@@ -1,3 +1,9 @@
+// Hybrid migration mode: ASTROPLAN_MIGRATION_RENDERS=<directory> captures
+// all eight roots in six theme/scale variants, with the bundled Geist font.
+// Optional ASTROPLAN_RENDER_VARIANT=light_100 and
+// ASTROPLAN_RENDER_SURFACES=home scope early checks. Host fixture only:
+// Ljubljana / 2026-11-10 and deterministic weather. A test-only browser adapter
+// consumes the exported canonical fixture; neither is native-device evidence.
 // F25 A1 (roadmap §2 "U"): host renders of the surfaces F05–F23 changed,
 // through the real app, router and database, at 412 × 915 with real fonts
 // (Roboto and the Material icons from the SDK) — light at 100 %, dark at
@@ -57,6 +63,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../support/fake_device_time_zone.dart';
 import '../../support/fake_location_service.dart';
 import '../../support/fake_reverse_geocoder.dart';
+import '../../support/hybrid_comparison_fixture.dart';
+import '../../support/in_memory_first_run.dart';
 import '../../support/in_memory_privacy_preferences.dart';
 import '../../support/planner_harness.dart';
 import '../../support/sdk_fonts.dart';
@@ -176,6 +184,10 @@ Future<void> _loadFonts() async {
     }
     await roboto.load();
   }
+  await (FontLoader('Geist')..addFont(
+        File('assets/fonts/Geist.ttf').readAsBytes().then(ByteData.sublistView),
+      ))
+      .load();
   await (FontLoader(
     'MaterialIcons',
   )..addFont(read('materialicons-regular.otf'))).load();
@@ -183,8 +195,11 @@ Future<void> _loadFonts() async {
 
 enum _Variant {
   light100(Brightness.light, 1.0, false),
+  light200(Brightness.light, 2.0, false),
+  dark100(Brightness.dark, 1.0, false),
   dark200(Brightness.dark, 2.0, false),
-  field100(Brightness.dark, 1.0, true);
+  field100(Brightness.dark, 1.0, true),
+  field200(Brightness.dark, 2.0, true);
 
   const _Variant(this.brightness, this.scale, this.field);
   final Brightness brightness;
@@ -193,8 +208,11 @@ enum _Variant {
 
   String get suffix => switch (this) {
     light100 => 'light_100',
+    light200 => 'light_200',
+    dark100 => 'dark_100',
     dark200 => 'dark_200',
     field100 => 'field_100',
+    field200 => 'field_200',
   };
 }
 
@@ -208,15 +226,28 @@ Future<void> _settle(WidgetTester tester) async {
 }
 
 void main() {
-  final out = Platform.environment[_variable];
+  final migrationOut = Platform.environment['ASTROPLAN_MIGRATION_RENDERS'];
+  final out = migrationOut ?? Platform.environment[_variable];
+  final migration = migrationOut != null;
+  final wantedVariant = Platform.environment['ASTROPLAN_RENDER_VARIANT'];
+  final wantedSurfaces = Platform.environment['ASTROPLAN_RENDER_SURFACES']
+      ?.split(',');
 
   for (final v in _Variant.values) {
+    if (!migration &&
+        ![_Variant.light100, _Variant.dark200, _Variant.field100].contains(v)) {
+      continue;
+    }
+    if (wantedVariant != null && v.suffix != wantedVariant) continue;
     testWidgets('U renders: ${v.suffix}', skip: out == null, (tester) async {
       await tester.runAsync(_loadFonts);
       tester.view.physicalSize = const Size(412, 915);
       tester.view.devicePixelRatio = 1.0;
       tester.platformDispatcher.platformBrightnessTestValue = v.brightness;
       tester.platformDispatcher.textScaleFactorTestValue = v.scale;
+      if (migration) {
+        tester.platformDispatcher.alwaysUse24HourFormatTestValue = true;
+      }
       addTearDown(tester.view.reset);
       addTearDown(tester.platformDispatcher.clearAllTestValues);
       AppRouter.router.go(AppRouter.tonight);
@@ -249,6 +280,7 @@ void main() {
       Completer<ReverseGeocodeResult>? lookup;
       final geocoder = FakeReverseGeocoder(answer: () => lookup!.future);
       final clock = FixedClock(DateTime.utc(2026, 11, 10, 18));
+      final forecast = _Forecast(clock);
       await tester.runAsync(() async {
         db = AppDatabase(NativeDatabase.memory());
         await CatalogSeeder(DriftTargetRepository(db)).seedIfNeeded();
@@ -272,7 +304,7 @@ void main() {
         vm = PlannerHarness(
           targets,
           DriftEquipmentRepository(db),
-          _Forecast(clock),
+          forecast,
           DriftLocationRepository(db),
           locationService: location,
           reverseGeocoder: geocoder,
@@ -284,6 +316,7 @@ void main() {
           displaySettings: display,
           // The app's default: place names off until chosen.
           privacyPreferences: privacy,
+          firstRun: migration ? InMemoryFirstRun(done: true) : null,
         );
         await vm.ready;
         await vm.choosePlan();
@@ -322,7 +355,15 @@ void main() {
           key: _shot,
           child: MultiProvider(
             providers: vm.providers,
-            child: const AstroPlanApp(),
+            child: migration
+                ? Builder(
+                    builder: (context) => MediaQuery(
+                      data: MediaQuery.of(context)
+                          .copyWith(alwaysUse24HourFormat: true),
+                      child: const AstroPlanApp(),
+                    ),
+                  )
+                : const AstroPlanApp(),
           ),
         ),
       );
@@ -343,7 +384,19 @@ void main() {
       }
 
       Future<void> at(String route, String name) async {
-        AppRouter.router.go(route);
+        if (migration &&
+            [
+              AppRouter.session(),
+              AppRouter.nightMoon,
+              AppRouter.moon,
+              AppRouter.weather,
+            ].contains(route)) {
+          AppRouter.router.go(AppRouter.tonight);
+          await _settle(tester);
+          unawaited(AppRouter.router.push(route));
+        } else {
+          AppRouter.router.go(route);
+        }
         await shot(name);
       }
 
@@ -354,8 +407,73 @@ void main() {
       }
 
       Future<void> close() async {
-        Navigator.of(tester.element(find.byType(Dialog).last)).pop();
+        final dialogs = find.byType(Dialog);
+        final surface = dialogs.evaluate().isNotEmpty
+            ? dialogs.last
+            : find.byType(Scaffold).last;
+        Navigator.of(tester.element(surface)).pop();
         await _settle(tester);
+      }
+
+      if (migration) {
+        expect(
+          MediaQuery.of(tester.element(find.byType(Scaffold).first))
+              .alwaysUse24HourFormat,
+          isTrue,
+          reason: 'The canonical comparison fixture declares 24-hour display.',
+        );
+        if (v == _Variant.light100) {
+          await tester.runAsync(
+            () => exportHybridComparisonFixture(
+              vm: vm,
+              db: db,
+              weather: forecast,
+              destination: File(
+                Platform.environment['ASTROPLAN_COMPARISON_FIXTURE'] ?? 'docs/design/migration/evidence/matched/canonical-fixture.json',
+              ),
+            ),
+          );
+        }
+        // Real repository/calculation fixture exported above for the isolated
+        // browser adapter. Shared input alone does not prove pixel parity.
+        for (final (route, name) in [
+          (AppRouter.tonight, 'home'),
+          (AppRouter.session(), 'plan'),
+          (AppRouter.nightMoon, 'night'),
+          (AppRouter.moon, 'moon'),
+          (AppRouter.weather, 'weather'),
+          (AppRouter.sessions, 'logbook'),
+          (AppRouter.library, 'library'),
+          (AppRouter.settings, 'settings'),
+        ]) {
+          if (wantedSurfaces != null && !wantedSurfaces.contains(name)) {
+            continue;
+          }
+          await at(route, name);
+          expect(tester.takeException(), isNull, reason: '$name ${v.suffix}');
+        }
+        if (wantedSurfaces == null ||
+            wantedSurfaces.contains('settings_sections')) {
+          for (final section in [
+            'appearance',
+            'planning',
+            'privacy',
+            'backup',
+          ]) {
+            AppRouter.router.go(AppRouter.settings);
+            await _settle(tester);
+            await tap(find.byKey(Key('settings.open.$section')));
+            await shot('settings_$section');
+            expect(
+              tester.takeException(),
+              isNull,
+              reason: 'settings $section ${v.suffix}',
+            );
+            Navigator.of(tester.element(find.byType(Scaffold).last)).pop();
+            await _settle(tester);
+          }
+        }
+        return;
       }
 
       // F20: no entry has recorded frames yet.
@@ -376,12 +494,15 @@ void main() {
       await at(AppRouter.sessionDetail(resultId), 'entry');
       await at(AppRouter.results(planId), 'results');
       await at(AppRouter.settings, 'settings');
+      await tap(find.byKey(const Key('settings.open.appearance')));
       await tester.scrollUntilVisible(
         find.byKey(const Key('settings.appearance')),
         300,
         scrollable: find.byType(Scrollable).first,
       );
       await shot('settings_display');
+      Navigator.of(tester.element(find.byType(Scaffold).last)).pop();
+      await _settle(tester);
       await at(AppRouter.librarySites, 'sites');
       await at(AppRouter.welcome, 'welcome');
 
@@ -538,11 +659,16 @@ void main() {
       await _settle(tester);
       AppRouter.router.go(AppRouter.settings);
       await _settle(tester);
-      for (final (key, name) in [
-        ('settings.unsaved', 'settings_unsaved'),
-        ('settings.placeNames.unsaved', 'settings_place_names_unsaved'),
-        ('settings.display.unsaved', 'settings_display_unsaved'),
+      for (final (key, name, section) in [
+        ('settings.unsaved', 'settings_unsaved', 'planning'),
+        (
+          'settings.placeNames.unsaved',
+          'settings_place_names_unsaved',
+          'privacy',
+        ),
+        ('settings.display.unsaved', 'settings_display_unsaved', 'appearance'),
       ]) {
+        await tap(find.byKey(Key('settings.open.$section')));
         // From the top each time.
         await tester.fling(
           find.byType(Scrollable).first,
@@ -556,6 +682,8 @@ void main() {
           scrollable: find.byType(Scrollable).first,
         );
         await shot(name);
+        Navigator.of(tester.element(find.byType(Scaffold).last)).pop();
+        await _settle(tester);
       }
 
       // F22 A1: a restored plan that was deleted meanwhile: Tonight, and

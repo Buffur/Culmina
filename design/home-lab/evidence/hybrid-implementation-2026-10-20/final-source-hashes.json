@@ -1,0 +1,125 @@
+{
+  "revision": "20261020-hybrid4",
+  "files": [
+    {
+      "path": "design/home-lab/app.js",
+      "sha256": "795a58951b48f4d4c94e2b69bb7c7dd40a5ec806607a50724356a654001a772e"
+    },
+    {
+      "path": "design/home-lab/catalog.css",
+      "sha256": "2d5ca041c8905b507b721e3a2e7f2316b5b48cf47593ed6918b9d8f851b4189c"
+    },
+    {
+      "path": "design/home-lab/catalog.js",
+      "sha256": "4f1b67416b77c139d44849f8e29b35befcef2e8478ac8c3aebcfbcfd10e98528"
+    },
+    {
+      "path": "design/home-lab/conditions.css",
+      "sha256": "d1ddf3e5cdeaa4f84c35adfe5aa877b39b085b3896ee8cc34750ced1572ba99b"
+    },
+    {
+      "path": "design/home-lab/conditions.html",
+      "sha256": "2ae97b15eee92f703cdf83571bb2a2d035b19d1bf2c80177d8e4d81bcb3b3fc7"
+    },
+    {
+      "path": "design/home-lab/conditions.js",
+      "sha256": "b56cf2489f812b146c8a186f0c3e8f43c1bd86352d6d3e2f67507aac6399b1e8"
+    },
+    {
+      "path": "design/home-lab/index.html",
+      "sha256": "df1bf3d3c7d98ec15789413477792dd9b830a83762285f7c7a563d7fce6b3568"
+    },
+    {
+      "path": "design/home-lab/inventory.json",
+      "sha256": "2f2f476e71fc7a26602a75d9e86f4c7fc8d19d993631b62c8f868ee88b8ddf29"
+    },
+    {
+      "path": "design/home-lab/library.css",
+      "sha256": "96f82cca9d51e98fe226acfc6556a5efcdbd800cb4e28d15b2a61e1782d4cc2a"
+    },
+    {
+      "path": "design/home-lab/library.js",
+      "sha256": "315bca4d01e2ae6a362dec4735881e1f379715864aa93f75aed246b51f343cb9"
+    },
+    {
+      "path": "design/home-lab/logbook.css",
+      "sha256": "16bc197d112a318cb6bf2ba12e4dfd6fccf082db06a8d197df7aac3a2733e31c"
+    },
+    {
+      "path": "design/home-lab/logbook.js",
+      "sha256": "ecde48fd2445ce99af8e5a62af5fb76740657da4eb7b03b3e69ab4c9d9eaa50e"
+    },
+    {
+      "path": "design/home-lab/night-model.js",
+      "sha256": "2eecf92b0f9d1171a2e0e98a6c64b2a8a3d626d1708a7cdeaacd5f0dc54ed4ab"
+    },
+    {
+      "path": "design/home-lab/night-ui.js",
+      "sha256": "221170236660fbb0713c62773cfbf1535aa9b5899f5b341a09fd10c672605b7a"
+    },
+    {
+      "path": "design/home-lab/night.css",
+      "sha256": "774482bbf24c0974f0b8e1084d61116c2714c64e6c24f95b9ceeeeea1eb1a9b1"
+    },
+    {
+      "path": "design/home-lab/plan-model.js",
+      "sha256": "09de3e579c8d58abbe368703e38e1b34bc962d99421f5ccae992dd66eb8953a4"
+    },
+    {
+      "path": "design/home-lab/plan.css",
+      "sha256": "1ccc61383ad037a2780642a3a81f3acf282024805cccba4625acd3b670f589d5"
+    },
+    {
+      "path": "design/home-lab/plan.html",
+      "sha256": "fc85e3ba4ed0e24549873f924999bb1f8e9a8a9fc1805ddebe1f7f63023f33c4"
+    },
+    {
+      "path": "design/home-lab/plan.js",
+      "sha256": "ff6283f3d23e4e52baf2fec1032120973abcf82b5320292780147d7de49e1a98"
+    },
+    {
+      "path": "design/home-lab/preview-backup.css",
+      "sha256": "eb8e8c65814e26678c9693c301373cb5bb88363b4d20412245bf0fd6c4b38d3c"
+    },
+    {
+      "path": "design/home-lab/preview-backup.js",
+      "sha256": "10e633714ae0d4e8ba1742084bb8369ac016f6504a52967188c4180770b8cf3a"
+    },
+    {
+      "path": "design/home-lab/preview-bridge.js",
+      "sha256": "ab06a49fe6e1f870e2a06d5a6a5ddd31c0375a858feb399bff3ea7c9dce80fa8"
+    },
+    {
+      "path": "design/home-lab/references.json",
+      "sha256": "9e3b2894e42b6dcf381cc6ed67a7523e3b613f5941e41c24fd4bcebbdba3d055"
+    },
+    {
+      "path": "design/home-lab/settings.css",
+      "sha256": "3fa5136f43e48f45ce84a101dc81a8edac049f213312bb3a065dd8462c811791"
+    },
+    {
+      "path": "design/home-lab/settings.js",
+      "sha256": "50638c2c07e0ff87555c7feb7954545ebdeb3839f4e8715cb648c3919c86a196"
+    },
+    {
+      "path": "design/home-lab/styles.css",
+      "sha256": "bb6186060577a023e1d998ba494aa6ba974c8ddcb5fe7ee52390dc9731805158"
+    },
+    {
+      "path": "design/home-lab/tokens.json",
+      "sha256": "4ab29d9b81001dfce142af786496ae8b605c593e7c9473c5b2bd77fd0a329640"
+    },
+    {
+      "path": "design/home-lab/workspace.css",
+      "sha256": "af688ae8b26e1088ce0a815550198d1ade032d9df7d40e65aa60a0df309b3425"
+    },
+    {
+      "path": "design/home-lab/workspace.html",
+      "sha256": "f4f3465cc91725056850c0124e40c5336581f887004bbe61cfd533a1bb056e0a"
+    },
+    {
+      "path": "design/home-lab/workspace.js",
+      "sha256": "f446c0d778a62f31cb84d8f7ec90299fac556a8e66d5b7490fa6f4912d7d4bfe"
+    }
+  ]
+}

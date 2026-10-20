@@ -1,0 +1,87 @@
+{
+  "captures": [
+    {
+      "name": "home",
+      "file": "qa-root-home.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide#concepts",
+      "title": "Culmina — Home design lab",
+      "hostViewport": {
+        "height": 1040,
+        "width": 1280
+      },
+      "phoneWidth": 412
+    },
+    {
+      "name": "plan",
+      "file": "qa-root-plan.png",
+      "url": "http://localhost:4173/plan.html?variant=blend",
+      "title": "Plan — Culmina design preview"
+    },
+    {
+      "name": "night",
+      "file": "qa-root-night.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0",
+      "title": "Night conditions — Culmina Android preview"
+    },
+    {
+      "name": "moon",
+      "file": "qa-root-moon.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0",
+      "title": "Night conditions — Culmina Android preview"
+    },
+    {
+      "name": "weather",
+      "file": "qa-root-weather.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0",
+      "title": "Night conditions — Culmina Android preview"
+    },
+    {
+      "name": "logbook",
+      "file": "qa-root-logbook.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=logbook&theme=light&scale=1",
+      "title": "Culmina · Android prototype"
+    },
+    {
+      "name": "library",
+      "file": "qa-root-library.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&theme=light&scale=1",
+      "title": "Culmina · Android prototype"
+    },
+    {
+      "name": "settings",
+      "file": "qa-root-settings.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=settings&theme=light&scale=1",
+      "title": "Culmina · Android prototype"
+    },
+    {
+      "name": "plan-200",
+      "file": "qa-root-plan-200.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&scale=2",
+      "title": "Plan — Culmina design preview"
+    },
+    {
+      "name": "moon-200",
+      "file": "qa-root-moon-200.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&scale=2&theme=light&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0",
+      "title": "Night conditions — Culmina Android preview"
+    },
+    {
+      "name": "weather-200",
+      "file": "qa-root-weather-200.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scale=2&theme=light&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0",
+      "title": "Night conditions — Culmina Android preview"
+    },
+    {
+      "name": "Block editor 200%",
+      "file": "qa-child-block-editor-200.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&scale=2",
+      "title": "Plan — Culmina design preview"
+    }
+  ],
+  "errors": [],
+  "viewport": {
+    "width": 412,
+    "height": 915
+  },
+  "version": "20261020-hybrid3"
+}

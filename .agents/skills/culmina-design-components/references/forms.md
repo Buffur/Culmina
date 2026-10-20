@@ -1,0 +1,16 @@
+# Form elements: API and state map
+
+Paths below are relative to the repository root. Unqualified shared filenames are under `lib/presentation/shared/`; `app_button_styles.dart` is under `lib/core/theme/`. Inspect the named API before editing; this index routes to source and does not replace it.
+
+| API/source | Inputs, variants and slots | State and interaction contract | Adopter/check |
+| --- | --- | --- | --- |
+| Material FilledButton / OutlinedButton / TextButton; `lib/core/theme/app_theme.dart`, `app_button_styles.dart` | `onPressed`, child text/icon; filled primary, outlined secondary, text tertiary; destructive styles are explicit | `onPressed: null` disables; maintain visible action words and 48 dp targets. Do not swap a spinner in a way that changes control geometry or removes its accessible name | `test/core/theme/controls_theme_test.dart`; native `test/presentation/design_system/gallery_entries.dart` |
+| TextFormField; `coordinate_input.dart` | `CoordinateInput.parse`, `validateLatitude`, `validateLongitude`; optional string input, nullable parsed result, nullable validation message | Decimal comma is accepted; non-finite/out-of-range/empty values are errors. A validator is not a generated replacement field widget | `test/presentation/shared/location_input_test.dart`; site editor |
+| `site_form_input.dart`, `target_form_input.dart`, `rig_input_text.dart` | Existing domain validators and field copy; inspect the relevant methods rather than inventing another API | Keep units, range errors, camera-class requirements and edited drafts. Field loading/error/disabled presentation belongs to the adopting form | Existing site/target/rig editor tests; search by class name |
+| `askUnsavedChanges(context, plan: ...)` in `confirmation_patterns.dart` | Returns `UnsavedChoice.save/discard/cancel`; `plan` required | Cancel/back/outside = cancel. Caller performs Save/Discard and handles failure; prompt itself does not persist | `test/presentation/design_system/design_system_gallery_test.dart`; planner leaving flow |
+| `confirmDestructive(context, title:, message:, action:)` in same source | Required item-specific title and consequence; action defaults to Delete | True only for explicit confirmation; false on cancellation/dismissal. No destructive work inside the prompt | Native gallery overlay checks |
+| `DeleteButton`, `SwipeToDelete`, `showUndo` in `delete_patterns.dart` | Button: tooltip/onPressed; swipe: itemKey/onDelete/child; undo: message/onUndo | Swipe/button delegate to the adopter. Stored-record confirmation differs from an editable-plan Undo. Respect existing stale-recovery guards in the actual caller | Native gallery and existing delete/Undo task tests |
+
+For selection: radio/segments express one of a few mutually exclusive values; searchable select expresses a larger single-choice set; checkboxes express independent selections; switches apply a binary setting. An option count does not change the underlying choice semantics. Error text must name the problem and recovery; colour is additional information.
+
+For an open component decision, compare the concrete alternatives and their input/state behavior. The Notion/Apple research's context picker and action/disclosure comparison is in `docs/design/NOTION_APPLE_STUDY_2026_10_19.md`; it does not authorize importing another product's workflow.

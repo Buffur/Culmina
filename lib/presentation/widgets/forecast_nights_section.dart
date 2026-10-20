@@ -9,6 +9,7 @@ import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../shared/plan_this_night.dart';
 import '../viewmodels/night_conditions_viewmodel.dart';
+import '../viewmodels/night_browser_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import '../viewmodels/settings_viewmodel.dart';
 import '../viewmodels/site_viewmodel.dart';
@@ -113,6 +114,9 @@ class _NightCard extends StatelessWidget {
     final key = date.toIso8601String();
     return Card(
       key: Key('weather.night.$key'),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(),
+      elevation: 0,
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: ExpansionTile(
         title: Text(
@@ -144,6 +148,12 @@ class _NightCard extends StatelessWidget {
           AppSpacing.sm,
         ),
         children: [
+          if (context.read<NightBrowserViewModel?>() case final browser?)
+            TextButton(
+              key: Key('weather.night.$key.view'),
+              onPressed: () => browser.viewNight(date),
+              child: const Text('View night'),
+            ),
           if (covered) ...[
             Text(
               'Temperature ${WeatherText.temperatureRange(s.temperature, unitsOf(context))} · dew '

@@ -59,7 +59,7 @@ void main() {
         available(WeatherAge.current, const Duration(minutes: 25)),
         null,
       ),
-      'Cloud no forecast · Updated 25 min ago',
+      'Cloud cover unknown · Updated 25 min ago',
     );
     expect(
       WeatherText.summary(

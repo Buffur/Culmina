@@ -1,0 +1,208 @@
+- generic [active] [ref=e1]:
+  - link "Skip to conditions" [ref=e2] [cursor=pointer]:
+    - /url: "#conditions-main"
+  - banner [ref=e3]:
+    - link "Culmina · Design lab" [ref=e4] [cursor=pointer]:
+      - /url: http://localhost:4173/index.html?theme=light&scale=1&variant=blend&sky=dusk&font=native#concepts
+    - paragraph [ref=e5]: Android phone · Night conditions
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - text: Theme
+        - combobox "Theme" [ref=e8]:
+          - option "Light" [selected]
+          - option "Dark"
+          - option "Field"
+      - generic [ref=e9]:
+        - text: Text
+        - combobox "Text" [ref=e10]:
+          - option "100%" [selected]
+          - option "125%"
+          - option "200%"
+  - generic [ref=e11]:
+    - paragraph [ref=e12]: Android layout preview · example data.
+    - generic [ref=e13]:
+      - text: Example state
+      - combobox "Example state" [ref=e14]:
+        - option "Ready"
+        - option "Forecast gaps"
+        - option "Cloud unknown · other values available"
+        - option "Stale snapshot" [selected]
+        - option "Offline cached snapshot"
+        - option "No forecast"
+        - option "Loading forecast"
+        - option "Forecast error"
+        - option "No dark time"
+        - option "Moon up all night"
+        - option "Moon below all night"
+        - option "Split moon-free intervals"
+        - option "Middle moon-free interval"
+        - option "Polar dark all night"
+        - option "No site"
+        - option "DST transition"
+        - option "Adoption save fails once"
+  - region "Android phone preview" [ref=e15]:
+    - generic [ref=e17]: 9:41
+    - generic [ref=e20]:
+      - link "Back to Tonight" [ref=e21] [cursor=pointer]:
+        - /url: http://localhost:4173/index.html?theme=light&scale=1&variant=blend&sky=dusk&font=native#concepts
+      - heading "Weather" [level=1] [ref=e24]
+      - button "Turn on field mode" [ref=e25] [cursor=pointer]
+    - navigation "Night conditions" [ref=e28]:
+      - button "Night" [ref=e29] [cursor=pointer]
+      - button "Moon" [ref=e30] [cursor=pointer]
+      - button "Weather" [ref=e31] [cursor=pointer]
+    - main [ref=e33]:
+      - generic [ref=e34]:
+        - paragraph [ref=e35]: Kyiv outskirts · Europe/Kyiv
+        - generic [ref=e36]:
+          - button "Previous night" [disabled] [ref=e37]
+          - generic [ref=e40]:
+            - text: Your plan’s night
+            - heading "Night of 19 Oct" [level=2] [ref=e41]
+            - generic [ref=e42]: Ends 20 Oct
+          - button "Next night" [ref=e43] [cursor=pointer]
+      - generic [ref=e46]:
+        - heading "Cloud 19–42% in the dark" [level=2] [ref=e47]
+        - paragraph [ref=e48]: Stale snapshot · example forecast, not current conditions.
+        - paragraph [ref=e49]: Dark 21:15 → 04:45 (+1) · 7 h 30 min
+        - paragraph [ref=e50]: Clearest around 00:00 (19%) · cloudiest around 03:00 (42%)
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - term [ref=e53]: Air temperature
+            - definition [ref=e54]: 5 to 6.2 °C
+          - generic [ref=e55]:
+            - term [ref=e56]: Dew point
+            - definition [ref=e57]: 2 to 2.8 °C
+          - generic [ref=e58]:
+            - term [ref=e59]: Wind and gusts
+            - definition [ref=e60]: Wind up to 18 km/hGusts up to 28.8 km/h
+          - generic [ref=e61]:
+            - term [ref=e62]: Rain chance
+            - definition [ref=e63]: 0% in sampled hours
+        - generic [ref=e64]:
+          - paragraph [ref=e65]: "Coverage: 7/7 hourly samples in dark time"
+          - paragraph [ref=e66]: Example updated 19 Oct, 01:00 GMT+3 · 40 h 41 min old
+          - button "Reload example" [ref=e67] [cursor=pointer]
+      - generic [ref=e68]:
+        - heading "Hour by hour" [level=2] [ref=e69]
+        - paragraph [ref=e70]: Select an hour for exact values. Scroll the hourly strip sideways.
+        - generic "Hourly weather chart; scroll horizontally" [ref=e71]:
+          - generic [ref=e72]:
+            - paragraph [ref=e73]: Cloud cover · %
+            - generic [ref=e74]:
+              - button "19 Oct, 22:00 GMT+3, cloud 30%" [pressed] [ref=e75] [cursor=pointer]:
+                - generic [ref=e76]: 22:00
+                - generic [ref=e79]: "30"
+              - button "19 Oct, 23:00 GMT+3, cloud 24%" [ref=e80] [cursor=pointer]:
+                - generic [ref=e81]: 23:00
+                - generic [ref=e84]: "24"
+              - button "20 Oct, 00:00 GMT+3, cloud 19%" [ref=e85] [cursor=pointer]:
+                - generic [ref=e86]: 00:00
+                - generic [ref=e89]: "19"
+              - button "20 Oct, 01:00 GMT+3, cloud 28%" [ref=e90] [cursor=pointer]:
+                - generic [ref=e91]: 01:00
+                - generic [ref=e94]: "28"
+              - button "20 Oct, 02:00 GMT+3, cloud 36%" [ref=e95] [cursor=pointer]:
+                - generic [ref=e96]: 02:00
+                - generic [ref=e99]: "36"
+              - button "20 Oct, 03:00 GMT+3, cloud 42%" [ref=e100] [cursor=pointer]:
+                - generic [ref=e101]: 03:00
+                - generic [ref=e104]: "42"
+              - button "20 Oct, 04:00 GMT+3, cloud 35%" [ref=e105] [cursor=pointer]:
+                - generic [ref=e106]: 04:00
+                - generic [ref=e109]: "35"
+              - button "20 Oct, 05:00 GMT+3, preceding-hour values only" [ref=e110] [cursor=pointer]:
+                - generic [ref=e111]: 05:00
+                - generic [ref=e114]: —
+            - paragraph [ref=e115]: Temperature (solid) and dew point (dashed) · 1 to 8 °C
+            - img "Hourly temperature and dew point; solid and dashed lines, with missing samples left disconnected" [ref=e116]
+            - paragraph [ref=e119]: Wind · km/h
+            - generic [ref=e120]:
+              - generic [ref=e121]: "7.2"
+              - generic [ref=e122]: "10.8"
+              - generic [ref=e123]: "14.4"
+              - generic [ref=e124]: "18"
+              - generic [ref=e125]: "7.2"
+              - generic [ref=e126]: "10.8"
+              - generic [ref=e127]: "14.4"
+              - generic [ref=e128]: —
+            - paragraph [ref=e129]: Gust · km/h · preceding hour
+            - generic [ref=e130]:
+              - generic [ref=e131]: "28.8"
+              - generic [ref=e132]: "14.4"
+              - generic [ref=e133]: "18"
+              - generic [ref=e134]: "21.6"
+              - generic [ref=e135]: "25.2"
+              - generic [ref=e136]: "28.8"
+              - generic [ref=e137]: "14.4"
+              - generic [ref=e138]: "18"
+            - paragraph [ref=e139]: Precipitation probability · % · preceding hour
+            - generic [ref=e140]:
+              - generic [ref=e141]: "0"
+              - generic [ref=e142]: "0"
+              - generic [ref=e143]: "0"
+              - generic [ref=e144]: "0"
+              - generic [ref=e145]: "0"
+              - generic [ref=e146]: "0"
+              - generic [ref=e147]: "0"
+              - generic [ref=e148]: "0"
+        - generic [ref=e149]:
+          - generic [ref=e150]: Temperature
+          - generic [ref=e152]: Dew point
+          - generic [ref=e154]: Cloud value missing
+        - generic [ref=e156]:
+          - text: Selected hour
+          - slider "Select weather hour" [ref=e157]: "0"
+        - generic [ref=e158]:
+          - heading "19 Oct, 22:00 GMT+3 *" [level=3] [ref=e159]
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - term [ref=e162]: Cloud cover
+              - definition [ref=e163]: 30%
+            - generic [ref=e164]:
+              - term [ref=e165]: Temperature / dew point
+              - definition [ref=e166]: 5.5 °C / 2.3 °C
+            - generic [ref=e167]:
+              - term [ref=e168]: Wind / gust
+              - definition [ref=e169]: 7.2 km/h / 28.8 km/h
+            - generic [ref=e170]:
+              - term [ref=e171]: Precipitation probability
+              - definition [ref=e172]: 0%
+            - generic [ref=e173]:
+              - term [ref=e174]: Low / middle / high cloud
+              - definition [ref=e175]: 15% / 9% / 6%
+            - generic [ref=e176]:
+              - term [ref=e177]: Humidity / visibility
+              - definition [ref=e178]: 69% / 19 km
+        - paragraph [ref=e179]: Cloud and temperature are instantaneous samples. Gust and precipitation refer to the preceding hour; * marks an hour with only partial overlap of dark time.
+      - paragraph [ref=e180]:
+        - text: This forecast does not predict astronomical seeing or transparency.
+        - link "Look at Clear Outside" [ref=e181] [cursor=pointer]:
+          - /url: https://clearoutside.com/
+      - group [ref=e182]:
+        - generic "Forecast details Hourly values, layers and source" [ref=e183] [cursor=pointer]:
+          - text: Forecast details
+          - generic [ref=e184]: Hourly values, layers and source
+      - generic [ref=e185]:
+        - heading "Coming nights" [level=2] [ref=e186]
+        - paragraph [ref=e187]: The example snapshot covers some or all of three nights. Later dates have no forecast.
+        - article [ref=e188]:
+          - generic [ref=e189]:
+            - heading "Night of 19 Oct · your plan" [level=3] [ref=e190]
+            - paragraph [ref=e191]: Stale snapshot
+            - paragraph [ref=e192]: Cloud 19–42% in covered dark hours
+          - button "View this night" [ref=e193] [cursor=pointer]
+        - article [ref=e194]:
+          - generic [ref=e195]:
+            - heading "Night of 20 Oct" [level=3] [ref=e196]
+            - paragraph [ref=e197]: Stale snapshot
+            - paragraph [ref=e198]: Cloud 19–42% in covered dark hours
+          - button "View this night" [ref=e199] [cursor=pointer]
+        - article [ref=e200]:
+          - generic [ref=e201]:
+            - heading "Night of 21 Oct" [level=3] [ref=e202]
+            - paragraph [ref=e203]: Partial dark-time coverage
+            - paragraph [ref=e204]: Cloud 19–30% in covered dark hours
+          - button "View this night" [ref=e205] [cursor=pointer]
+        - paragraph [ref=e206]: "No forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    - status

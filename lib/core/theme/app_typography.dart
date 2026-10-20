@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
 
+import 'hybrid_tokens.dart';
+
 /// The type scale (S5.1): size, line height and weight for every style,
 /// shared by the three themes. Colours come from the theme (the text roles
-/// in [AppPalette]); letter spacing stays Material's. Nothing is under
+/// in [AppPalette]); the owner-selected Geist family uses neutral tracking. Nothing is under
 /// 12 sp. The roles each style serves are in `docs/DESIGN_SYSTEM.md`.
 abstract final class AppTypography {
   static TextStyle _style(double size, double lineHeight, FontWeight weight) =>
-      TextStyle(fontSize: size, height: lineHeight / size, fontWeight: weight);
+      TextStyle(
+        fontFamily: HybridTokens.fontFamily,
+        fontSize: size,
+        height: lineHeight / size,
+        fontWeight: weight,
+        letterSpacing: 0,
+      );
+
+  /// Supporting copy, distinct from the 16 sp data/body role.
+  static final TextStyle support = _style(14, 22, FontWeight.w400);
+
+  /// Editorial night section, using the owner's Geist override.
+  static final TextStyle nightHeading = _style(
+    25,
+    32.5,
+    FontWeight.w400,
+  ).copyWith(letterSpacing: -0.5);
+
+  static final TextStyle homeHeading = _style(
+    29,
+    37.7,
+    FontWeight.w500,
+  ).copyWith(letterSpacing: -0.87);
 
   static final TextTheme scale = TextTheme(
     displayLarge: _style(57, 64, FontWeight.w400),
@@ -20,10 +44,10 @@ abstract final class AppTypography {
     titleMedium: _style(16, 24, FontWeight.w600),
     titleSmall: _style(14, 20, FontWeight.w600),
     bodyLarge: _style(16, 24, FontWeight.w400),
-    bodyMedium: _style(14, 20, FontWeight.w400),
-    bodySmall: _style(12, 16, FontWeight.w400),
+    bodyMedium: _style(16, 24, FontWeight.w400),
+    bodySmall: _style(13, 20, FontWeight.w400),
     labelLarge: _style(14, 20, FontWeight.w500),
-    labelMedium: _style(12, 16, FontWeight.w500),
-    labelSmall: _style(12, 16, FontWeight.w500),
+    labelMedium: _style(14, 21, FontWeight.w500),
+    labelSmall: _style(13, 20, FontWeight.w500),
   );
 }

@@ -28,6 +28,7 @@ Read on demand:
 - `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/DECISIONS.md`: relevant architecture, schema and accepted ADR sections.
 - `docs/FEATURE_STATUS.md`, `docs/TECH_DEBT.md`, `docs/SCIENTIFIC_INTEGRITY.md`: relevant feature/finding/calculation IDs.
 - `docs/DESIGN_SYSTEM.md`: UI tokens, accessibility and interaction patterns; `docs/EXPORT_MANIFEST.md`: export contract, updated with SessionManifestCodec and versioned for incompatible changes.
+- `docs/design/WORKFLOW.md`: the five owner-requested Culmina design skills and the isolated Home browser lab; read the relevant skill for UI work. Browser candidates are proposals, not production acceptance.
 - `docs/archive/refinement-prompts/PRODUCT_REASSESSMENT.md`: the bounded reassessment's scope and review coverage (historical: RA.R1–RA.P completed 2026-10-17).
 
 ## Post-Roadmap Workflow Governance

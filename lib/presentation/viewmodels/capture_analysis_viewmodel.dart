@@ -19,14 +19,13 @@ import 'session_plan_viewmodel.dart';
 import 'settings_viewmodel.dart';
 import 'site_viewmodel.dart';
 
-/// What the plan needs and whether it fits tonight (split out of the planner
-/// ViewModel in TASK 12.3): the capture budget (ADR-009), the fit (TASK
-/// 5.5), the rig's capability (TASK 8.6) — all computed by domain services
-/// — and Save with its snapshot (ADR-014).
+/// What the plan needs and whether it fits tonight (split out of the planner ViewModel in TASK
+/// 12.3): the capture budget (ADR-009), the fit (TASK 5.5), the rig's capability (TASK 8.6) — all
+/// computed by domain services — and Save with its snapshot (ADR-014).
 ///
-/// The budget, the fit and the fill count are cached until an input
-/// notifies or the night changes (TASK 15.2): widgets read them several
-/// times per frame and the fit is the costliest planner calculation.
+/// The budget, the fit and the fill count are cached until an input notifies or the night changes
+/// (TASK 15.2): widgets read them several times per frame and the fit is the costliest planner
+/// calculation.
 class CaptureAnalysisViewModel extends ChangeNotifier {
   CaptureAnalysisViewModel({
     required this._site,
@@ -48,8 +47,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   final NightConditionsViewModel _conditions;
   final Clock _clock;
 
-  /// Bumped on every input change; the cache is valid for one generation
-  /// and one night.
+  /// Bumped on every input change; the cache is valid for one generation and one night.
   int _generation = 0;
   Object? _cacheKey;
   CaptureBudget? _budget;
@@ -61,8 +59,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Clears the cache when the inputs or the night changed since it was
-  /// filled; the night can roll over with the clock alone.
+  /// Clears the cache when the inputs or the night changed since it was filled; the night can roll
+  /// over with the clock alone.
   void _validateCache() {
     final key = (_generation, _plan.sessionNight);
     if (_cacheKey == key) return;
@@ -95,18 +93,27 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
 
   /// Each block's frame size and what it rests on (ADR-021 C8, F07).
   List<FrameStorage> get frameStorage =>
-      StorageEstimate.ofPlan(_plan.captureBlocks, _plan.selectedEquipment);
+      _plan.planOverrides?.bytesPerFrame != null
+      ? [
+          for (final _ in _plan.captureBlocks)
+            FrameStorage(
+              basis: StorageBasis.planEstimate,
+              bytes: _plan.planOverrides!.bytesPerFrame,
+            ),
+        ]
+      : StorageEstimate.ofPlan(_plan.captureBlocks, _plan.selectedEquipment);
 
-  /// The settings' overheads, with the rig's in-camera noise reduction when
-  /// it applies (ADR-020 §8); a rig edit notifies through the plan.
+  /// The settings' overheads, with the rig's in-camera noise reduction when it applies (ADR-020
+  /// §8); a rig edit notifies through the plan.
   CaptureOverheads get _overheads => CaptureOverheads.fromPreferences(
     _settings.planningPreferences,
+    planOverrides: _plan.planOverrides,
     inCameraNoiseReduction:
         _plan.selectedEquipment?.noiseReductionApplies ?? false,
   );
 
-  /// The target's upper transit tonight, or null (5-minute resolution);
-  /// cached per night and target position.
+  /// The target's upper transit tonight, or null (5-minute resolution); cached per night and target
+  /// position.
   DateTime? get _transitUtc {
     final night = _plan.sessionNight;
     final target = _plan.selectedTarget;
@@ -160,6 +167,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
       budget: budget,
       windows: _conditions.visibilityWindows,
       marginFraction: prefs.feasibilityMarginFraction,
+      fixedMarginSeconds: _plan.planOverrides?.fixedMarginSeconds,
       transitUtc: budget.countOf(BudgetEventKind.meridianFlip) > 0
           ? _transitUtc
           : null,
@@ -168,8 +176,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     );
   }
 
-  /// Each block's calibration mismatches with the plan (S7.3a, S7.3b;
-  /// ADR-020 §6), in block order; empty for lights and matching blocks.
+  /// Each block's calibration mismatches with the plan (S7.3a, S7.3b; ADR-020 §6), in block order;
+  /// empty for lights and matching blocks.
   List<List<CalibrationMismatch>> get calibrationMismatches =>
       CalibrationMatch.ofPlan(_plan.captureBlocks, _plan.selectedEquipment);
 
@@ -186,15 +194,15 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     return i < 0 ? null : i;
   }
 
-  /// The frame count for [fillWindowBlockIndex] that fills tonight's windows
-  /// (TASK 5.6); null without a light block, 0 when none fits.
+  /// The frame count for [fillWindowBlockIndex] that fills tonight's windows (TASK 5.6); null
+  /// without a light block, 0 when none fits.
   int? get fillWindowFrameCount => fillWindowBlockIndex == null
       ? null
       : framesThatFit(fillWindowBlockIndex!);
 
-  /// What fits of the block at [index] tonight with every other block as
-  /// planned (F12; TD-074): `FitAnalyzer.maxFramesForBlock`, cached per
-  /// generation; null for a calibration block, 0 when none fits.
+  /// What fits of the block at [index] tonight with every other block as planned (F12; TD-074):
+  /// `FitAnalyzer.maxFramesForBlock`, cached per generation; null for a calibration block, 0 when
+  /// none fits.
   int? framesThatFit(int index) {
     _validateCache();
     return _fitCounts.putIfAbsent(index, () {
@@ -210,8 +218,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     });
   }
 
-  /// How many more frames of the block at [index] still fit tonight than
-  /// are planned (S6.10, "+N frames still fit"); null when none do.
+  /// How many more frames of the block at [index] still fit tonight than are planned (S6.10, "+N
+  /// frames still fit"); null when none do.
   int? spareFrames(int index) {
     final count = framesThatFit(index) ?? 0;
     final spare = count - _plan.captureBlocks[index].frameCount;
@@ -221,8 +229,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   int? get fillWindowSpareFrames =>
       fillWindowBlockIndex == null ? null : spareFrames(fillWindowBlockIndex!);
 
-  /// Applies [fillWindowFrameCount] as the user's edit of the count (its
-  /// origin entered, ADR-021 C4); false (no change) when nothing fits.
+  /// Applies [fillWindowFrameCount] as the user's edit of the count (its origin entered, ADR-021
+  /// C4); false (no change) when nothing fits.
   Future<bool> fillWindow() async {
     final index = fillWindowBlockIndex, count = fillWindowFrameCount;
     if (index == null || count == null || count < 1) return false;
@@ -260,8 +268,8 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
     );
   }
 
-  /// Save (ADR-014 §3–§4): the plan becomes a planned session with a fresh
-  /// snapshot of its whole context.
+  /// Save (ADR-014 §3–§4): the plan becomes a planned session with a fresh snapshot of its
+  /// whole context.
   Future<Session> saveSession() => _lifecycle.savePlan(_snapshot());
 
   SessionSnapshot _snapshot() {
@@ -283,6 +291,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
       target: _plan.selectedTarget,
       rig: _plan.selectedEquipment,
       trackingOverride: _plan.trackingOverride,
+      planOverrides: _plan.planOverrides,
       opportunity: _conditions.imagingOpportunity,
       weather: _conditions.nightWeather,
       weatherSummary: _conditions.nightWeatherSummary,

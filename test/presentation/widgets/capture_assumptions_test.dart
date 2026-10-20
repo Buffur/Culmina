@@ -201,7 +201,7 @@ void main() {
       findsOneWidget,
     );
     expect(CaptureAssumptionsPanel.focusReminder, contains('star'));
-    for (final control in [Slider, TextField, Switch, DropdownButton]) {
+    for (final control in [Slider, Switch, DropdownButton]) {
       expect(
         find.descendant(of: panel, matching: find.byType(control)),
         findsNothing,
@@ -216,7 +216,98 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Change in Settings'), findsOneWidget);
+    // Four explicitly approved plan assumptions, none records focus.
+    expect(find.byType(TextFormField), findsNothing);
+    await tester.tap(find.byKey(const Key('planOverride.edit')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextFormField), findsNWidgets(4));
   });
+
+  testWidgets('explicit plan overrides apply together, validate and reset', (
+    tester,
+  ) async {
+    await start(tester, PlanningPreferences());
+    final before = vm.analysis.captureBudget;
+    final global = vm.planningPreferences.perFrameOverheadSeconds;
+    await tester.tap(find.byKey(const Key('planOverride.edit')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('planOverride.0')), '7.5');
+    await tester.enterText(find.byKey(const Key('planOverride.1')), '15');
+    await tester.enterText(find.byKey(const Key('planOverride.2')), '10');
+    await tester.enterText(find.byKey(const Key('planOverride.3')), '30');
+    expect(vm.plan.planOverrides, isNull, reason: 'typing is a local draft');
+    await tester.tap(find.byKey(const Key('planOverride.apply')));
+    await tester.pumpAndSettle();
+    expect(vm.plan.planOverrides!.interframeSeconds, 7.5);
+    expect(vm.analysis.captureBudget.setupMs, 900000);
+    expect(vm.analysis.captureBudget.integrationMs, before.integrationMs);
+    expect(vm.planningPreferences.perFrameOverheadSeconds, global);
+    expect(row(tester, 'Feasibility margin'), '600 s (this plan)');
+    await tester.tap(find.byKey(const Key('planOverride.edit')));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<TextFormField>(find.byKey(const Key('planOverride.1')))
+          .controller!
+          .text,
+      '15',
+    );
+    await tester.enterText(find.byKey(const Key('planOverride.3')), '0');
+    await tester.tap(find.byKey(const Key('planOverride.apply')));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Enter a positive number or leave empty.'),
+      findsOneWidget,
+    );
+    expect(vm.plan.planOverrides!.bytesPerFrame, 30000000);
+    await tester.tap(find.byKey(const Key('planOverride.reset')));
+    await tester.pumpAndSettle();
+    expect(
+      vm.plan.planOverrides,
+      isNotNull,
+      reason: 'Reset is local until Apply',
+    );
+    await tester.tap(find.byKey(const Key('planOverride.apply')));
+    await tester.pumpAndSettle();
+    expect(vm.plan.planOverrides, isNull);
+    expect(vm.analysis.captureBudget.acquisitionMs, before.acquisitionMs);
+  });
+  testWidgets(
+    'assumptions Cancel and Back preserve values with keyboard at 200%',
+    (tester) async {
+      await start(tester, PlanningPreferences());
+      tester.view.physicalSize = const Size(412, 915);
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await tester.pump();
+      await tester.ensureVisible(find.byKey(const Key('planOverride.edit')));
+      await tester.tap(find.byKey(const Key('planOverride.edit')));
+      await tester.pumpAndSettle();
+      final field = find.byKey(const Key('planOverride.0'));
+      await tester.ensureVisible(field);
+      await tester.enterText(field, '8');
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('planOverride.apply')).hitTestable(),
+        findsOneWidget,
+      );
+      expect(vm.plan.planOverrides, isNull);
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('unsaved.cancel')));
+      await tester.pumpAndSettle();
+      expect(tester.widget<TextFormField>(field).controller!.text, '8');
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('unsaved.discard')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('planOverride.apply')), findsNothing);
+      expect(vm.plan.planOverrides, isNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   test('A3: an AF or MF record (and white balance) changes no budget, group '
       'or fit', () {
     final plain = [_light('Ha', 30), _light('OIII', 30)];

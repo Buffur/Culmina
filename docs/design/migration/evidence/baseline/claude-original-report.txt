@@ -1,0 +1,114 @@
+# Pre-implementation baseline review: Hybrid → native Flutter migration (Geist)
+
+**Mode:** read-only. I used only Read, Grep and Glob. I ran no commands or tests and edited nothing. Any "known failing" item below is evidence that is already recorded in the repository. I did not re-run any of it.
+
+## Known failing or open evidence (recorded before migration)
+
+Record these as the baseline before migration work starts, so they are neither blamed on the migration nor hidden by it.
+
+| ID | Evidence | Source |
+|---|---|---|
+| R4 | The local Windows gate has 2 failures: `test/presentation/viewmodels/planner_sky_darkness_test.dart:110` (path separator) and `test/presentation/screens/location/location_picker_tiles_failing_test.dart:80` (cache teardown, Windows error 32). Linux CI passes. | `docs/refinement/DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md:65-72` |
+| R1 | If a restore is interrupted during cleanup, the selected site (`activeLocationId`) is lost. Rated P2, still open. | same, `:47-53` |
+| R2 | `ExposureInput.parse` throws on an overlong fraction instead of showing a field error. | same, `:55-57` |
+| R3 | The FITS `GAIN` card holds conversion gain (e⁻/ADU), but it is proposed as acquisition gain. Scientific invariant. | same, `:59-63` |
+| NEEDS ATTENTION | F22 A1: process death has not been run on Android. F25 A4: the owner's visual acceptance is missing. F15 A4: phone timing is missing. | `docs/refinement/PROGRESS.md:77,84,86,102` |
+| Precedents | Migration-style edits have already broken tests here: a literal `EdgeInsets.all(24)` failed CI (F01), a raw `TextStyle` (F21), three `/night` overflows at large text (F15), and a target-editor overflow (F25). | `PROGRESS.md:63,77,84,87` |
+
+## Top 8 prospective regression risks
+
+### 1. Route and shell topology, including hidden detail routes
+The router has 4 tabs, with Logbook only present when `FeatureScope.logbook` is on. Many routes sit on the root navigator above the tabs: `/night` (one screen covering Night and Moon), `/weather`, `/plan/settings`, `/session/:id`, `/session/:id/results`, `/select/{target,rig,site}`, `/site/edit`, `/site/pick`, `/position`, `/equipment/import` and `/welcome`. The tabs also have child routes: `/tonight/candidates`, `/sessions/progress` (which must stay before `:id`), `/sessions/:id` and `/settings/about` (`lib/presentation/navigation/app_router.dart:41-95,109-282`).
+
+The Hybrid design has 8 surfaces. If the migration makes Plan a tab, or splits Night and Moon into separate screens, it changes paths and tab indices. `AppShell` assumes Tonight is index 0 for Back and root exit (`app_shell.dart:43-47`). It also changes route restoration.
+- **Tests:** `test/presentation/navigation/app_router_test.dart`; `app_shell_navigation_test.dart:149` ("every route opens"), `:191`, `:218`, `:234`; and the route list in `test/presentation/accessibility_test.dart:305-329`.
+
+### 2. Process restoration and route arguments (`extra`)
+`RestoredArgsCodec` turns any `extra` into a "lost" marker. Routes that need one (the site editor, the map picker, metadata import) then go back to their list (`app_router.dart:286-348`). Two migration patterns are risky:
+- New Hybrid detail state (selected night or hour, a block, a draft) passed through `extra`, or kept only in widget state, will be lost silently.
+- Worse, a restored screen may reopen with defaults that create or select something the user never chose.
+
+A restored planner must never re-adopt its route's plan.
+- **Tests:** `test/lifecycle/route_restoration_test.dart:109-233` and `test/lifecycle/lifecycle_matrix_test.dart`.
+- **Caveat:** this is host evidence only. The Android row is NEEDS ATTENTION (F22).
+
+### 3. Settings → night → planner propagation, and the Hybrid "override" semantics
+In the app, planning settings are **global**. `SettingsScreen.scopeNotice` says so (`lib/presentation/screens/settings/settings_screen.dart:48-51`). A saved plan keeps a copy of the preferences and budget it was saved with (`lib/domain/services/session_snapshot_builder.dart:61-63`). The only per-plan override is `trackingOverride` (`lib/domain/models/session.dart:92`).
+
+The Hybrid web design labels "Plan override / Saved budget / Global default", and its "Apply sets all four assumption overrides" (`docs/design/HYBRID_SEVEN_REFINEMENTS_2026_10_20.md:10,21`). Porting that literally would either:
+- invent per-plan persistence, which needs a schema change and an owner decision, or
+- show labels that misstate how the app actually stores settings.
+
+The darkness limit and minimum altitude also have to keep flowing into the night windows.
+- **Tests:** `test/presentation/viewmodels/planner_preferences_test.dart:69-132`, `settings_persistence_test.dart:84-272`, `test/presentation/widgets/capture_assumptions_test.dart`, `app_shell_navigation_test.dart:234`, and `planner_sky_darkness_test.dart` (already failing on Windows, see R4).
+
+### 4. Unsaved forms and discard guards
+These guards exist today:
+- `askBeforeLeavingPlan` asks Save, Discard or Cancel before New plan, Copy or Open replaces an unsaved plan (`lib/presentation/shared/unsaved_plan_prompt.dart:21-27`; `home_screen.dart:648`).
+- `PopScope` guards in `equipment_editor.dart:330`, `capture_block_dialog.dart:760`, `site_editor_screen.dart:467` (whose `canPop` must rebuild, `:148`) and `welcome_screen.dart:90`.
+- Settings shows unsaved state and Retry after a failed write.
+- The Tonight night picker changes the current plan's night directly (`tonight_home_screen.dart:153-161`).
+
+Rebuilding these as Hybrid full pages, sheets or Cancel flows can drop a `PopScope`, conflict with the shell's own `PopScope`, or add a new exit (switching tabs, a Cancel on Home) that skips the prompt.
+- **Tests:** `test/presentation/shared/unsaved_plan_prompt_test.dart`, `test/presentation/screens/secondary_forms_test.dart`, `test/presentation/widgets/light_block_form_test.dart`, `capture_blocks_undo_test.dart`, `test/presentation/viewmodels/saved_plan_transition_test.dart`, and `tonight_home_screen_test.dart:452,476,613`.
+
+### 5. Scientific unknown states versus web fixture values
+On Tonight today:
+- The needed and usable times show only when the plan has been measured (`tonight_home_screen.dart:223-305`).
+- A missing forecast is said in words, never shown as a number (`:497-518`).
+- Without a site, a site prompt replaces the night rows, and no night is computed for the default location (`:384-418`, ADR-007 §9).
+- A night with no dark time says "none" instead of showing an interval (`:449-453`).
+
+The lab states that "all displayed night, forecast and plan values are illustrative fixtures" (`design/home-lab/README.md:7,19`). Copying its layouts invites:
+- placeholder numbers, or "0 min" where the app shows unknown;
+- √N stacking gain worded as absolute SNR;
+- theoretical file sizes shown as measured.
+
+R3 also stays open, so a new UI must not show FITS gain as a known acquisition gain.
+- **Tests:** `tonight_home_screen_test.dart:130,152,171,187,209,432,543,576`; `test/presentation/shared/status_block_test.dart`; `fit_status_test.dart`; `test/presentation/quantity_text_usage_test.dart`; `stacking_gain_graph_test.dart`; `storage_display_test.dart`; `test/presentation/screens/tonight/home_night_card_test.dart`.
+
+### 6. Theme, field mode and the Geist font
+- **Field mode** is two layers: a red theme (`app_theme.dart:126-223`) plus a red colour filter over the whole app. The app content sits under a `KeyedSubtree` so its state survives switching the filter on or off (`lib/main.dart:226-256`).
+- **Restore screen:** it is started with only the light and dark themes (`main.dart:213`). From the code, a field-mode user would see a non-red screen during a restore. I did not confirm this at runtime.
+- **Geist is not bundled.** `pubspec.yaml` has no fonts section; the template is commented out at `:99`. Roboto is hard-coded in four places (`app_theme.dart:16`, then the app bar and snackbar styles at `:32,90,190,214`), while `AppTypography.scale` names no family. Switching only the scale would leave the app with mixed fonts.
+- **Licence:** the OFL licence would need registering. `main.dart:54` registers only OpenNGC today.
+- **Source-rule tests:**
+  - Hex colour tokens from `design/home-lab/tokens.json` must go through `AppColors`/`AppPalette`. `test/presentation/theme/presentation_style_rules_test.dart:23-33` forbids `Colors.*` and `Color(0x…)` literals, text under 12 sp, and shrink-wrapped tap targets.
+  - `test/presentation/secondary_consistency_test.dart:26-51` forbids literal insets.
+- **Tests:** `test/presentation/theme/field_mode_darkness_test.dart:94-163` and `test/presentation/viewmodels/theme_viewmodel_test.dart`.
+
+### 7. 200% text accessibility with real Geist glyph widths
+The default accessibility sweep runs light, dark and field at 100% and 200% text over 23 routes (`accessibility_test.dart:299-339`). It does not render real glyph widths: it uses the test font.
+- The real-glyph renders in `test/presentation/design_system/u_renders_test.dart` are opt-in and skipped unless `ASTROPLAN_U_RENDERS` is set (`:64,214`).
+- The tests that load a real font (`equipment_editor_fit_test.dart`, `reference_plan_density_test.dart`, `render_gallery_test.dart`) load **Roboto** from the SDK (`test/support/sdk_fonts.dart`).
+
+So an overflow caused by Geist's wider glyphs at 200% would pass the default gate unnoticed. Hybrid's wide or desktop compositions add risk on 412 px phones. `/plan/settings` is checked only through a separate push (`accessibility_test.dart:376`). The untracked `test/presentation/design_system/skill_application_test.dart` covers a single composition only.
+
+### 8. Import, export and backup
+The app's flows are:
+- a `.astroplan` backup, staged and applied on restart (`BackupStaging`, `FileBackupService`);
+- a restoring screen that cannot be left (`backup_section.dart:245`) and `RestoreOutcomeNotice`;
+- the export manifest (`docs/EXPORT_MANIFEST.md`);
+- the AstroBin CSV, where the share sends exactly the preview;
+- metadata import that reads the photo file's headers in place on Android (`/equipment/import`).
+
+The Hybrid design has its **own browser backup format** and its own reviewed metadata JSON (`design/home-lab/README.md:21`). Rewiring these screens risks porting the web formats, losing the restore confirmation, the outcome notice or the guarded screen, or exposing R1 more widely.
+- **Tests:** `test/data/backup/backup_restore_test.dart`, `restore_activation_test.dart`, `test/presentation/screens/settings/backup_section_test.dart`, `restore_outcome_notice_test.dart`, `test/data/export/session_manifest_codec_test.dart`, `share_astrobin_csv_exporter_test.dart`, `test/presentation/screens/logbook/astrobin_export_test.dart`, `integration_test/core_loop_test.dart`.
+
+## Cross-cutting notes
+- **Widget keys are the test contract.** There are 66 `Key('tonight.*')` references across 11 test files (47 in `tonight_home_screen_test.dart`). Keep the keys, or update the tests along with the behaviour they check. Never delete or weaken a test to make it pass (CLAUDE.md).
+- **Verification class.** Bundling Geist changes `pubspec.yaml`, which is **High-risk** under CLAUDE.md V1. Theme, router and shared-widget changes are at least **Shared behaviour**.
+
+## Read-only coverage
+
+| Area | What I read |
+|---|---|
+| Policy and state | `CLAUDE.md` (Verification Policy, given in context); `PROGRESS.md` lines 1-110; `DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md` lines 1-79 (excerpts); `design/home-lab/README.md`; grep of `HYBRID_SEVEN_REFINEMENTS_2026_10_20.md` |
+| Router and shell | `app_router.dart`, `app_shell.dart` in full |
+| Main and themes | `lib/main.dart`, `app_theme.dart`, `app_typography.dart` in full; grep of `pubspec.yaml` |
+| Tonight UI | `tonight_home_screen.dart` in full |
+| Settings, guards, snapshots | Grep only: `settings_screen.dart` (`:40-59` read), `unsaved_plan_prompt.dart`, `PopScope` sites, `session.dart`, `session_snapshot_builder.dart` |
+| Tests read | `skill_application_test.dart`, `presentation_style_rules_test.dart`, `sdk_fonts.dart` in full; `accessibility_test.dart` lines 1-60 and 230-340 |
+| Tests indexed only (names and line numbers) | Navigation, restoration, field mode, settings persistence, preferences, secondary consistency, `QuantityText` usage, Tonight, `u_renders`, backup and export tests |
+
+**Not covered:** the planner (`home_screen.dart` beyond grep), Logbook, Library, the Night & Moon and Weather screens, the Hybrid JS sources and tokens, `DESIGN_SYSTEM.md`, `ENGINEERING_GUARDRAILS.md`, ADRs, and any runtime or device behaviour.

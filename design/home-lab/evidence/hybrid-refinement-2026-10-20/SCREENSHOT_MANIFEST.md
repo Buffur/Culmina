@@ -1,0 +1,168 @@
+# Hybrid refinement screenshot manifest
+
+Generated 2026-10-20T16:29:14.400Z.
+
+- [home-412-light-1](screenshots/home-412-light-1.png) — home, light, 1×, 412px; ready state.
+- [plan-412-light-1](screenshots/plan-412-light-1.png) — plan, light, 1×, 412px; ready state.
+- [night-412-light-1](screenshots/night-412-light-1.png) — night, light, 1×, 412px; ready state.
+- [moon-412-light-1](screenshots/moon-412-light-1.png) — moon, light, 1×, 412px; ready state.
+- [weather-412-light-1](screenshots/weather-412-light-1.png) — weather, light, 1×, 412px; ready state.
+- [logbook-412-light-1](screenshots/logbook-412-light-1.png) — logbook, light, 1×, 412px; ready state.
+- [library-412-light-1](screenshots/library-412-light-1.png) — library, light, 1×, 412px; ready state.
+- [settings-412-light-1](screenshots/settings-412-light-1.png) — settings, light, 1×, 412px; ready state.
+- [home-412-light-2](screenshots/home-412-light-2.png) — home, light, 2×, 412px; ready state.
+- [home-412-light-2 (bottom)](screenshots/home-412-light-2-bottom.png) — home, light, 2×, 412px; ready state.
+- [plan-412-light-2](screenshots/plan-412-light-2.png) — plan, light, 2×, 412px; ready state.
+- [plan-412-light-2 (bottom)](screenshots/plan-412-light-2-bottom.png) — plan, light, 2×, 412px; ready state.
+- [night-412-light-2](screenshots/night-412-light-2.png) — night, light, 2×, 412px; ready state.
+- [night-412-light-2 (bottom)](screenshots/night-412-light-2-bottom.png) — night, light, 2×, 412px; ready state.
+- [moon-412-light-2](screenshots/moon-412-light-2.png) — moon, light, 2×, 412px; ready state.
+- [moon-412-light-2 (bottom)](screenshots/moon-412-light-2-bottom.png) — moon, light, 2×, 412px; ready state.
+- [weather-412-light-2](screenshots/weather-412-light-2.png) — weather, light, 2×, 412px; ready state.
+- [weather-412-light-2 (bottom)](screenshots/weather-412-light-2-bottom.png) — weather, light, 2×, 412px; ready state.
+- [logbook-412-light-2](screenshots/logbook-412-light-2.png) — logbook, light, 2×, 412px; ready state.
+- [logbook-412-light-2 (bottom)](screenshots/logbook-412-light-2-bottom.png) — logbook, light, 2×, 412px; ready state.
+- [library-412-light-2](screenshots/library-412-light-2.png) — library, light, 2×, 412px; ready state.
+- [library-412-light-2 (bottom)](screenshots/library-412-light-2-bottom.png) — library, light, 2×, 412px; ready state.
+- [settings-412-light-2](screenshots/settings-412-light-2.png) — settings, light, 2×, 412px; ready state.
+- [settings-412-light-2 (bottom)](screenshots/settings-412-light-2-bottom.png) — settings, light, 2×, 412px; ready state.
+- [home-412-dark-1](screenshots/home-412-dark-1.png) — home, dark, 1×, 412px; ready state.
+- [plan-412-dark-1](screenshots/plan-412-dark-1.png) — plan, dark, 1×, 412px; ready state.
+- [night-412-dark-1](screenshots/night-412-dark-1.png) — night, dark, 1×, 412px; ready state.
+- [moon-412-dark-1](screenshots/moon-412-dark-1.png) — moon, dark, 1×, 412px; ready state.
+- [weather-412-dark-1](screenshots/weather-412-dark-1.png) — weather, dark, 1×, 412px; ready state.
+- [logbook-412-dark-1](screenshots/logbook-412-dark-1.png) — logbook, dark, 1×, 412px; ready state.
+- [library-412-dark-1](screenshots/library-412-dark-1.png) — library, dark, 1×, 412px; ready state.
+- [settings-412-dark-1](screenshots/settings-412-dark-1.png) — settings, dark, 1×, 412px; ready state.
+- [home-412-dark-2](screenshots/home-412-dark-2.png) — home, dark, 2×, 412px; ready state.
+- [home-412-dark-2 (bottom)](screenshots/home-412-dark-2-bottom.png) — home, dark, 2×, 412px; ready state.
+- [plan-412-dark-2](screenshots/plan-412-dark-2.png) — plan, dark, 2×, 412px; ready state.
+- [plan-412-dark-2 (bottom)](screenshots/plan-412-dark-2-bottom.png) — plan, dark, 2×, 412px; ready state.
+- [night-412-dark-2](screenshots/night-412-dark-2.png) — night, dark, 2×, 412px; ready state.
+- [night-412-dark-2 (bottom)](screenshots/night-412-dark-2-bottom.png) — night, dark, 2×, 412px; ready state.
+- [moon-412-dark-2](screenshots/moon-412-dark-2.png) — moon, dark, 2×, 412px; ready state.
+- [moon-412-dark-2 (bottom)](screenshots/moon-412-dark-2-bottom.png) — moon, dark, 2×, 412px; ready state.
+- [weather-412-dark-2](screenshots/weather-412-dark-2.png) — weather, dark, 2×, 412px; ready state.
+- [weather-412-dark-2 (bottom)](screenshots/weather-412-dark-2-bottom.png) — weather, dark, 2×, 412px; ready state.
+- [logbook-412-dark-2](screenshots/logbook-412-dark-2.png) — logbook, dark, 2×, 412px; ready state.
+- [logbook-412-dark-2 (bottom)](screenshots/logbook-412-dark-2-bottom.png) — logbook, dark, 2×, 412px; ready state.
+- [library-412-dark-2](screenshots/library-412-dark-2.png) — library, dark, 2×, 412px; ready state.
+- [library-412-dark-2 (bottom)](screenshots/library-412-dark-2-bottom.png) — library, dark, 2×, 412px; ready state.
+- [settings-412-dark-2](screenshots/settings-412-dark-2.png) — settings, dark, 2×, 412px; ready state.
+- [settings-412-dark-2 (bottom)](screenshots/settings-412-dark-2-bottom.png) — settings, dark, 2×, 412px; ready state.
+- [home-412-field-1](screenshots/home-412-field-1.png) — home, field, 1×, 412px; ready state.
+- [plan-412-field-1](screenshots/plan-412-field-1.png) — plan, field, 1×, 412px; ready state.
+- [night-412-field-1](screenshots/night-412-field-1.png) — night, field, 1×, 412px; ready state.
+- [moon-412-field-1](screenshots/moon-412-field-1.png) — moon, field, 1×, 412px; ready state.
+- [weather-412-field-1](screenshots/weather-412-field-1.png) — weather, field, 1×, 412px; ready state.
+- [logbook-412-field-1](screenshots/logbook-412-field-1.png) — logbook, field, 1×, 412px; ready state.
+- [library-412-field-1](screenshots/library-412-field-1.png) — library, field, 1×, 412px; ready state.
+- [settings-412-field-1](screenshots/settings-412-field-1.png) — settings, field, 1×, 412px; ready state.
+- [home-412-field-2](screenshots/home-412-field-2.png) — home, field, 2×, 412px; ready state.
+- [home-412-field-2 (bottom)](screenshots/home-412-field-2-bottom.png) — home, field, 2×, 412px; ready state.
+- [plan-412-field-2](screenshots/plan-412-field-2.png) — plan, field, 2×, 412px; ready state.
+- [plan-412-field-2 (bottom)](screenshots/plan-412-field-2-bottom.png) — plan, field, 2×, 412px; ready state.
+- [night-412-field-2](screenshots/night-412-field-2.png) — night, field, 2×, 412px; ready state.
+- [night-412-field-2 (bottom)](screenshots/night-412-field-2-bottom.png) — night, field, 2×, 412px; ready state.
+- [moon-412-field-2](screenshots/moon-412-field-2.png) — moon, field, 2×, 412px; ready state.
+- [moon-412-field-2 (bottom)](screenshots/moon-412-field-2-bottom.png) — moon, field, 2×, 412px; ready state.
+- [weather-412-field-2](screenshots/weather-412-field-2.png) — weather, field, 2×, 412px; ready state.
+- [weather-412-field-2 (bottom)](screenshots/weather-412-field-2-bottom.png) — weather, field, 2×, 412px; ready state.
+- [logbook-412-field-2](screenshots/logbook-412-field-2.png) — logbook, field, 2×, 412px; ready state.
+- [logbook-412-field-2 (bottom)](screenshots/logbook-412-field-2-bottom.png) — logbook, field, 2×, 412px; ready state.
+- [library-412-field-2](screenshots/library-412-field-2.png) — library, field, 2×, 412px; ready state.
+- [library-412-field-2 (bottom)](screenshots/library-412-field-2-bottom.png) — library, field, 2×, 412px; ready state.
+- [settings-412-field-2](screenshots/settings-412-field-2.png) — settings, field, 2×, 412px; ready state.
+- [settings-412-field-2 (bottom)](screenshots/settings-412-field-2-bottom.png) — settings, field, 2×, 412px; ready state.
+- [home-360-light-2](screenshots/home-360-light-2.png) — home, light, 2×, 360px; ready state.
+- [home-360-light-2 (bottom)](screenshots/home-360-light-2-bottom.png) — home, light, 2×, 360px; ready state.
+- [plan-360-light-2](screenshots/plan-360-light-2.png) — plan, light, 2×, 360px; ready state.
+- [plan-360-light-2 (bottom)](screenshots/plan-360-light-2-bottom.png) — plan, light, 2×, 360px; ready state.
+- [night-360-light-2](screenshots/night-360-light-2.png) — night, light, 2×, 360px; ready state.
+- [night-360-light-2 (bottom)](screenshots/night-360-light-2-bottom.png) — night, light, 2×, 360px; ready state.
+- [moon-360-light-2](screenshots/moon-360-light-2.png) — moon, light, 2×, 360px; ready state.
+- [moon-360-light-2 (bottom)](screenshots/moon-360-light-2-bottom.png) — moon, light, 2×, 360px; ready state.
+- [weather-360-light-2](screenshots/weather-360-light-2.png) — weather, light, 2×, 360px; ready state.
+- [weather-360-light-2 (bottom)](screenshots/weather-360-light-2-bottom.png) — weather, light, 2×, 360px; ready state.
+- [logbook-360-light-2](screenshots/logbook-360-light-2.png) — logbook, light, 2×, 360px; ready state.
+- [logbook-360-light-2 (bottom)](screenshots/logbook-360-light-2-bottom.png) — logbook, light, 2×, 360px; ready state.
+- [library-360-light-2](screenshots/library-360-light-2.png) — library, light, 2×, 360px; ready state.
+- [library-360-light-2 (bottom)](screenshots/library-360-light-2-bottom.png) — library, light, 2×, 360px; ready state.
+- [settings-360-light-2](screenshots/settings-360-light-2.png) — settings, light, 2×, 360px; ready state.
+- [settings-360-light-2 (bottom)](screenshots/settings-360-light-2-bottom.png) — settings, light, 2×, 360px; ready state.
+- [home-state-empty-200](screenshots/home-state-empty-200.png) — home, light, 2×, 412px; empty state.
+- [home-state-error-200](screenshots/home-state-error-200.png) — home, light, 2×, 412px; error state.
+- [home-state-no-site-200](screenshots/home-state-no-site-200.png) — home, light, 2×, 412px; no-site state.
+- [home-state-loading-200](screenshots/home-state-loading-200.png) — home, light, 2×, 412px; loading state.
+- [weather-state-unknown-200](screenshots/weather-state-unknown-200.png) — weather, light, 2×, 412px; unknown state.
+- [weather-state-error-200](screenshots/weather-state-error-200.png) — weather, light, 2×, 412px; error state.
+- [weather-state-partial-200](screenshots/weather-state-partial-200.png) — weather, light, 2×, 412px; partial state.
+- [weather-state-missing-variable-200](screenshots/weather-state-missing-variable-200.png) — weather, light, 2×, 412px; missing-variable state.
+- [weather-state-stale-200](screenshots/weather-state-stale-200.png) — weather, light, 2×, 412px; stale state.
+- [weather-state-offline-200](screenshots/weather-state-offline-200.png) — weather, light, 2×, 412px; offline state.
+- [weather-state-no-site-200](screenshots/weather-state-no-site-200.png) — weather, light, 2×, 412px; no-site state.
+- [weather-state-no-dark-200](screenshots/weather-state-no-dark-200.png) — weather, light, 2×, 412px; no-dark state.
+- [logbook-state-empty-200](screenshots/logbook-state-empty-200.png) — logbook, light, 2×, 412px; empty state.
+- [logbook-state-error-200](screenshots/logbook-state-error-200.png) — logbook, light, 2×, 412px; error state.
+- [logbook-state-storage-error-200](screenshots/logbook-state-storage-error-200.png) — logbook, light, 2×, 412px; storage-error state.
+- [library-state-empty-200](screenshots/library-state-empty-200.png) — library, light, 2×, 412px; empty state.
+- [library-state-error-200](screenshots/library-state-error-200.png) — library, light, 2×, 412px; error state.
+- [library-state-storage-error-200](screenshots/library-state-storage-error-200.png) — library, light, 2×, 412px; storage-error state.
+- [settings-state-empty-200](screenshots/settings-state-empty-200.png) — settings, light, 2×, 412px; empty state.
+- [settings-state-error-200](screenshots/settings-state-error-200.png) — settings, light, 2×, 412px; error state.
+- [settings-state-storage-error-200](screenshots/settings-state-storage-error-200.png) — settings, light, 2×, 412px; storage-error state.
+- [plan-context-light-200](screenshots/plan-context-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-target-light-200](screenshots/plan-target-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-rig-light-200](screenshots/plan-rig-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-block-light-200](screenshots/plan-block-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-calibration-light-200](screenshots/plan-calibration-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-assumptions-light-200](screenshots/plan-assumptions-light-200.png) — plan, light, 2×, 412px; ready state.
+- [library-rigs-light-200](screenshots/library-rigs-light-200.png) — library, light, 2×, 412px; ready state.
+- [library-rig-editor-light-200](screenshots/library-rig-editor-light-200.png) — library, light, 2×, 412px; ready state.
+- [library-targets-light-200](screenshots/library-targets-light-200.png) — library, light, 2×, 412px; ready state.
+- [library-target-editor-light-200](screenshots/library-target-editor-light-200.png) — library, light, 2×, 412px; ready state.
+- [library-sites-light-200](screenshots/library-sites-light-200.png) — library, light, 2×, 412px; ready state.
+- [library-site-editor-light-200](screenshots/library-site-editor-light-200.png) — library, light, 2×, 412px; ready state.
+- [settings-planning-light-200](screenshots/settings-planning-light-200.png) — settings, light, 2×, 412px; ready state.
+- [settings-privacy-light-200](screenshots/settings-privacy-light-200.png) — settings, light, 2×, 412px; ready state.
+- [settings-backup-light-200](screenshots/settings-backup-light-200.png) — settings, light, 2×, 412px; ready state.
+- [logbook-detail-light-200](screenshots/logbook-detail-light-200.png) — logbook, light, 2×, 412px; ready state.
+- [plan-context-dark-200](screenshots/plan-context-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-target-dark-200](screenshots/plan-target-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-rig-dark-200](screenshots/plan-rig-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-block-dark-200](screenshots/plan-block-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-calibration-dark-200](screenshots/plan-calibration-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-assumptions-dark-200](screenshots/plan-assumptions-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [library-rigs-dark-200](screenshots/library-rigs-dark-200.png) — library, dark, 2×, 412px; ready state.
+- [library-rig-editor-dark-200](screenshots/library-rig-editor-dark-200.png) — library, dark, 2×, 412px; ready state.
+- [library-targets-dark-200](screenshots/library-targets-dark-200.png) — library, dark, 2×, 412px; ready state.
+- [library-target-editor-dark-200](screenshots/library-target-editor-dark-200.png) — library, dark, 2×, 412px; ready state.
+- [library-sites-dark-200](screenshots/library-sites-dark-200.png) — library, dark, 2×, 412px; ready state.
+- [library-site-editor-dark-200](screenshots/library-site-editor-dark-200.png) — library, dark, 2×, 412px; ready state.
+- [settings-planning-dark-200](screenshots/settings-planning-dark-200.png) — settings, dark, 2×, 412px; ready state.
+- [settings-privacy-dark-200](screenshots/settings-privacy-dark-200.png) — settings, dark, 2×, 412px; ready state.
+- [settings-backup-dark-200](screenshots/settings-backup-dark-200.png) — settings, dark, 2×, 412px; ready state.
+- [logbook-detail-dark-200](screenshots/logbook-detail-dark-200.png) — logbook, dark, 2×, 412px; ready state.
+- [plan-context-field-200](screenshots/plan-context-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-target-field-200](screenshots/plan-target-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-rig-field-200](screenshots/plan-rig-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-block-field-200](screenshots/plan-block-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-calibration-field-200](screenshots/plan-calibration-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-assumptions-field-200](screenshots/plan-assumptions-field-200.png) — plan, field, 2×, 412px; ready state.
+- [library-rigs-field-200](screenshots/library-rigs-field-200.png) — library, field, 2×, 412px; ready state.
+- [library-rig-editor-field-200](screenshots/library-rig-editor-field-200.png) — library, field, 2×, 412px; ready state.
+- [library-targets-field-200](screenshots/library-targets-field-200.png) — library, field, 2×, 412px; ready state.
+- [library-target-editor-field-200](screenshots/library-target-editor-field-200.png) — library, field, 2×, 412px; ready state.
+- [library-sites-field-200](screenshots/library-sites-field-200.png) — library, field, 2×, 412px; ready state.
+- [library-site-editor-field-200](screenshots/library-site-editor-field-200.png) — library, field, 2×, 412px; ready state.
+- [settings-planning-field-200](screenshots/settings-planning-field-200.png) — settings, field, 2×, 412px; ready state.
+- [settings-privacy-field-200](screenshots/settings-privacy-field-200.png) — settings, field, 2×, 412px; ready state.
+- [settings-backup-field-200](screenshots/settings-backup-field-200.png) — settings, field, 2×, 412px; ready state.
+- [logbook-detail-field-200](screenshots/logbook-detail-field-200.png) — logbook, field, 2×, 412px; ready state.
+- [r1-fresh-plan-assumptions](screenshots/r1-fresh-plan-assumptions.png) — interaction, light, 1×, 412px; ready state.
+- [home-timeline-reset-keyboard](screenshots/home-timeline-reset-keyboard.png) — interaction, light, 1×, 412px; ready state.
+- [night-timeline-reset-keyboard](screenshots/night-timeline-reset-keyboard.png) — interaction, light, 1×, 412px; ready state.
+- [moon-timeline-reset-keyboard](screenshots/moon-timeline-reset-keyboard.png) — interaction, light, 1×, 412px; ready state.
+- [home-welcome-visible-action](screenshots/home-welcome-visible-action.png) — interaction, light, 1×, 412px; ready state.
+- [library-new-target-copy](screenshots/library-new-target-copy.png) — interaction, light, 1×, 412px; ready state.
+- [metadata-rig-review-200](screenshots/metadata-rig-review-200.png) — library, light, 2×, 412px; ready state.

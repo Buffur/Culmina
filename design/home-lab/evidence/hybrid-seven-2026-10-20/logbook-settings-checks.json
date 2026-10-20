@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "method": "Named in-memory Playwright CLI session hybrid-seven-logbook, Edge, localhost:4173, 412x1000 host, 200% text",
+  "scripts": ["check-logbook-step1.js", "check-logbook-step2.js", "check-logbook-final.js"],
+  "groups": [
+    {
+      "name": "Hybrid Progress hierarchy and non-Hybrid preservation",
+      "checks": ["Short introduction", "Repeated Recorded integration label removed", "Compatibility disclosure starts closed and opens", "All 2 filter group lists match Paper text exactly", "First target visible", "Paper retains old explanation and no disclosure"]
+    },
+    {
+      "name": "Identical and differing Settings files",
+      "checks": ["Reordered identical values show Already up to date and Close, no Replace, no storage writes", "5.1 versus 5 seconds retains Replace despite equal rounded labels", "Cancel leaves storage unchanged", "Explicit restore stores 5.1", "Paper retains Replace for an identical file", "Simulated failed restore keeps error and Try again restores 5"]
+    },
+    {
+      "name": "Final render and status placement",
+      "checks": ["Light, dark and field at200% have no horizontal overflow", "Unknown sensitivity remains separate in all themes", "Settings success status occupies a separate row below scroll and above gesture inset"],
+      "geometry": {"scrollBottom": 910, "announcementTop": 910, "announcementBottom": 963, "gestureTop": 963},
+      "pageErrors": []
+    }
+  ],
+  "limitations": "Browser prototype evidence, not native device acceptance. No calculations or persistent schema changed."
+}

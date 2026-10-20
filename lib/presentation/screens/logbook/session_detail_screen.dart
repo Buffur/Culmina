@@ -1,3 +1,5 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -79,7 +81,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         final data = snapshot.data;
         if (snapshot.error case final error?) {
           return Scaffold(
-            appBar: AppBar(title: const Text(AppWords.logbook)),
+            appBar: hybridAppBar(context, title: const Text(AppWords.logbook)),
             body: LoadFailureView(
               action: 'load the entry',
               error: error,
@@ -89,7 +91,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         }
         if (data == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text(AppWords.logbook)),
+            appBar: hybridAppBar(context, title: const Text(AppWords.logbook)),
             body: Center(
               child: snapshot.connectionState == ConnectionState.done
                   ? const Text('This entry no longer exists.')
@@ -621,7 +623,7 @@ class _Actions extends StatelessWidget {
   }
 }
 
-/// A titled card of label/value rows.
+/// A flat Hybrid section of label/value rows.
 class _Section extends StatelessWidget {
   const _Section({
     super.key,
@@ -639,10 +641,13 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      margin: const EdgeInsets.only(top: 8, bottom: 4),
+    return Container(
+      margin: const EdgeInsets.only(top: 24, bottom: 4),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: theme.dividerColor)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

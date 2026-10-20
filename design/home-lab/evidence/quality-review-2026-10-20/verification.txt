@@ -1,0 +1,32 @@
+Quality refinement verification — 2026-10-20
+Scope: Android browser prototype only.
+Module syntax PASS: app.js
+Module syntax PASS: plan.js
+Module syntax PASS: plan-model.js
+Module syntax PASS: night-model.js
+Module syntax PASS: night-ui.js
+Module syntax PASS: conditions.js
+UTF-8/whitespace PASS: 21 files. Relative links PASS: 58.
+Browser evidence invariant audit PASS: 48 screen + 12 Home cases on versioned current assets.
+Independent review regression evidence PASS: all four findings resolved.
+CLI quality-conditions: is_error=False, turns=62, subtype=success.
+CLI quality-plan: is_error=True, turns=93, subtype=success.
+CLI quality-review: is_error=True, turns=12, subtype=success.
+CLI quality-integration-review: is_error=False, turns=44, subtype=success.
+Source inventory: executed self-test PASS, 21 sources/13 proposal roles/35 palette roles; native source inputs unchanged since check.
+SHA256 current implementation:
+9bf8cbdd01005e255e535bd13df78194d77b5bb03b8c87b92336629f6b83f352  design\home-lab\app.js
+a445908c48d332d965cdebce1170c4ff7ef22c7f22663e82e0f592e1f0915146  design\home-lab\plan.js
+929027b285d885354214048a3d6d7ab24cde23a82fa4fff485b6f0360d8eb442  design\home-lab\plan-model.js
+2eecf92b0f9d1171a2e0e98a6c64b2a8a3d626d1708a7cdeaacd5f0dc54ed4ab  design\home-lab\night-model.js
+71bfafd9d87e8acd3a83b164959ce1203d7d9e9852883b6800bec0762cd7b2b1  design\home-lab\night-ui.js
+966e87a5e1b6195eb22e44f5673f96fe6f073fff115624778df2fee740ddf800  design\home-lab\conditions.js
+3cc270e63c450103d7281ef502685cd485236811532a741e46bae4236d33c2a6  design\home-lab\plan.css
+692a1824a35607bf64aba77101e14f7ea88faaefc748029f22afc821ba939a5b  design\home-lab\styles.css
+1f35771741f45a0215b86660212ac54d023fb417eab9d11ba646139b16020386  design\home-lab\night.css
+62cbb672dbf67053b8bb6da42a536f438a6922f3c44d6f2e42391078f3b21018  design\home-lab\conditions.css
+a808f10ad39598d55afb5d7b00644f94b0a265ec7005bfeb2fe5c2ee04c9963a  design\home-lab\index.html
+0213adfb37d04d405fc9df54cf27c1605bf0a48d97897c13e8e151d7fbc5080c  design\home-lab\plan.html
+4e720755c8f242cc266c42e9004ff6e155157e204e367f41d322335b4b83c473  design\home-lab\conditions.html
+f61855b218be9719b7ec86fb8bb24d9172298738bfa8b982bae704be4ef97165  design\home-lab\scripts\check_quality.mjs
+57bb52889627a01597e18ee98caf54dff215e6a319988a1b4ad6be03f380ddc5  design\home-lab\scripts\serve_preview.py

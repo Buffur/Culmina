@@ -1,0 +1,5 @@
+{
+  "exit_code": 0,
+  "stdout": "{\"command\":\"update\",\"outcome\":\"ok\",\"plugin\":\"task-observer@one-skill-to-rule-them-all\",\"pluginId\":\"task-observer@one-skill-to-rule-them-all\",\"scope\":\"user\",\"message\":\"task-observer is already at the latest version (3.7.0).\",\"updateOutcome\":\"up_to_date\",\"oldVersion\":\"3.7.0\",\"newVersion\":\"3.7.0\"}\n",
+  "stderr": ""
+}

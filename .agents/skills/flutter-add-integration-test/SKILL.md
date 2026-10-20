@@ -1,6 +1,6 @@
 ---
 name: flutter-add-integration-test
-description: Configures Flutter Driver for app interaction and converts MCP actions into permanent integration tests. Use when adding integration testing to a project, exploring UI components via MCP, or automating user flows with the integration_test package.
+description: Uses integration_test with WidgetTester and converts verified interactions into permanent tests; Flutter Driver is only for existing legacy tests. Use when adding integration testing to a project, exploring UI components via MCP, or automating user flows with the integration_test package.
 metadata:
   model: models/gemini-3.1-pro-preview
   last_modified: Tue, 21 Apr 2026 18:29:20 GMT
@@ -17,16 +17,14 @@ metadata:
 
 ## Project Setup and Dependencies
 
-Configure the project to support integration testing and Flutter Driver extensions.
+Use the existing integration_test setup. Add dependencies only when the approved task requires them; a tooling refresh does not authorize changing pubspec.yaml.
 
 1. Add required development dependencies to `pubspec.yaml`:
    ```bash
    flutter pub add 'dev:integration_test:{"sdk":"flutter"}'
    flutter pub add 'dev:flutter_test:{"sdk":"flutter"}'
    ```
-2. Enable the Flutter Driver extension in your application entry point (typically `lib/main.dart` or a dedicated `lib/main_test.dart`):
-   - Import `package:flutter_driver/driver_extension.dart`.
-   - Call `enableFlutterDriverExtension();` before `runApp()`.
+2. For standard integration_test, initialize `IntegrationTestWidgetsFlutterBinding.ensureInitialized()` in the test entrypoint. Do not import Flutter Driver or call `enableFlutterDriverExtension()` in production main.dart. That extension is only relevant to maintaining an existing legacy flutter_driver test suite.
 3. Add `Key` parameters (e.g., `ValueKey('login_button')`) to critical widgets in the application code to ensure reliable targeting during tests.
 
 ## Interactive Exploration via MCP
@@ -56,13 +54,13 @@ Structure integration tests using the `flutter_test` API paradigm.
 
 ## Execution and Profiling
 
-Execute tests using the `flutter drive` command. Require a host driver script located in `test_driver/integration_test.dart` that calls `integrationDriver()`.
+For standard native integration_test tests, use `flutter test integration_test/app_test.dart -d <device-id>`. A host driver is not required by default. Use `flutter drive` and `integrationDriver()` only for a justified web/driver or profiling workflow; keep that setup separate from production main.dart.
 
 **Conditional Execution Targets:**
 - **If testing on Chrome:** Launch `chromedriver --port=4444` in a separate terminal, then run:
   `flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d chrome`
 - **If testing headless web:** Run with `-d web-server`.
-- **If testing on Android (Local):** Run `flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart`.
+- **If testing on Android (Local):** Run `flutter test integration_test/app_test.dart -d <device-id>`.
 - **If testing on Firebase Test Lab (Android):** 
   1. Build debug APK: `flutter build apk --debug`
   2. Build test APK: `./gradlew app:assembleAndroidTest`
@@ -161,3 +159,8 @@ Future<void> main() {
   );
 }
 ```
+
+
+## Local correctness amendment — 2026-10-20
+
+This owner-authorized correction supersedes conflicting upstream/plugin recipes. Standard integration_test needs no Flutter Driver extension. Reference: https://docs.flutter.dev/testing/integration-tests and https://docs.flutter.dev/release/breaking-changes/flutter-driver-migration . MCP tool names must be read from the actual connected server; do not assume tap/enter_text/get_health exist. Use the real app entrypoint for read-only runtime inspection, not a fabricated main_test.dart. Preserve existing test/dependency architecture.

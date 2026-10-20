@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
+import 'hybrid_app_bar.dart';
 
 /// One layout for the detail screens (S5.7; ADR-019 §9, addendum §3.4–§3.5):
 /// Night & Moon and Weather first. Top to bottom:
@@ -43,7 +44,7 @@ class DetailScaffold extends StatelessWidget {
     final p = AppPalette.of(buildContext);
     final text = Theme.of(buildContext).textTheme;
     return Scaffold(
-      appBar: AppBar(actions: actions),
+      appBar: hybridAppBar(buildContext, actions: actions),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.md,

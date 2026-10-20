@@ -1,0 +1,12 @@
+✔ Library selection snapshots preserve identity, camera semantics and unknown custom window (10.938ms)
+✔ Global budget changes preview current fit without mutating saved snapshot; per-plan overrides win (1.8335ms)
+✔ Corrupt collection shapes, invalid coordinates and invalid budget snapshots are rejected safely (0.427ms)
+✔ Prototype backup validates archives, protects stale state and rolls back refused writes (2.3764ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25.538

@@ -1,0 +1,39 @@
+Perform a read-only design QA of the CURRENT Culmina Hybrid browser prototype's seven authorized refinements. Use Read only. Do not edit files, run commands, fetch the network, delegate, or start a new audit. Judge the finite criteria below, distinguish concrete failures from optional preferences, and do not expand features. Read the supplied current screenshots yourself; don't infer their pixels from the filenames.
+
+Workspace: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner
+Evidence base: design/home-lab/evidence/hybrid-seven-2026-10-20/
+Implementation revision: 20261020-hybrid5. Android phone browser prototype, not native device acceptance. Only variant=blend changes. Pinned restrained Manrope/serif, scientific Unknown and explicit save boundaries, compact Home Weather widget, field-mode secondary contrast exception.
+
+Seven acceptance criteria:
+1 Plan explains when Settings defaults differ from the saved budget, adjacent to persistence status and separate from Fits/Tight. Must not blame night/target-only changes on Settings or mutate saved data.
+2 Assumption fields identify actual effective/pending source: global, explicit override, saved fallback or example. Existing Apply sets all four overrides, reset removes them. Summary shows existing percentage -> duration or fixed duration; no changed formulas and unknown windows remain unknown.
+3 Progress at200% has a shorter intro/clear target-filter-settings hierarchy and disclosed compatibility explanation; all totals/groups/unrecorded sensitivities retained.
+4 Weather detail has one prominent age warning and factual sample coverage+retrieval age. Seven point samples over7h30m must not be called seven hours. Unknown/offline/partial semantics retained. Home stays compact.
+5 Dates identify evening with Night of19Oct and following date Ends20Oct where relevant; no scientific model, timezone or (+1) changes.
+6 Hybrid workspace feedback occupies its own row, never overlays scroll data or actions/nav, including200% and long messages. Inline error/retry remains. NonHybrid retains prior feedback.
+7 Identical settings file offers Already up to date/Close and no Replace/write. Exact value equality independent of key order; differing files retain explicit confirmation, Cancel, failure/Retry.
+
+Read these current images, all relative to evidence base:
+plan-clarity/settings-budget-change.png
+plan-clarity/settings-budget-change-200.png
+plan-clarity/assumption-sources.png
+plan-clarity/global-margin-summary.png
+plan-clarity/fixed-margin-summary.png
+progress-light-200.png
+progress-dark-200.png
+conditions-weather-stale.png
+conditions-weather-field-200.png
+conditions-night-month-end.png
+home-date-2.png
+feedback-light-200.png
+feedback-download-200.png
+settings-identical-200.png
+
+Read behavior evidence: plan-clarity/checks.json, feedback-home-checks.json, conditions-results.json, logbook-settings-checks.json, continuity/continuity-checks.json.
+If a suspected issue requires source, read ONLY relevant ranges of design/home-lab/{plan.js,conditions.js,night-ui.js,logbook.js,settings.js,workspace.js,workspace.css,app.js}. No broad repository exploration.
+
+Return:
+- Seven-row pass/fail/unverified table, stating visual vs recorded behavior basis.
+- Concrete in-scope defects (P1/P2) with exact screen/trigger, if any; preferences separate.
+- Brief result and remaining practical limitations.
+- Optional re-assessment using the SAME ten Nielsen0..4 heuristics previously used (status,task match,control,consistency,error prevention,recognition,efficiency,minimalism,error recovery,help). Last QA was32/40 with eight3s and minimalism/error recovery4. Do NOT assume a higher score; explain any movement with specific current evidence. Prior Home wording complaint was closed by a fresh-image correction, so don't repeat it. If seven-flow evidence is insufficient for an app-wide new score, say so explicitly rather than manufacture one. Do not treat browser/native exclusions as missing features.

@@ -1,0 +1,7 @@
+{
+  "status": "Superseded by later approved header/calendar/workspace composition changes",
+  "fixtureSha256": "39B1DFA55E396D3A82D04776439B125E26896E12D8578EA915C4D0A19CD1F849",
+  "hostTests": "6 passed in54s",
+  "screenshots": 72,
+  "reason": "Preserves intermediate comparison evidence; final source verification and captures pending"
+}

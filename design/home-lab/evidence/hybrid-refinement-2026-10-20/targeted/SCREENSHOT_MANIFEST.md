@@ -1,0 +1,45 @@
+# Hybrid refinement screenshot manifest
+
+Generated 2026-10-20T16:30:25.165Z.
+
+- [plan-412-light-1](screenshots/plan-412-light-1.png) — plan, light, 1×, 412px; ready state.
+- [plan-412-light-2](screenshots/plan-412-light-2.png) — plan, light, 2×, 412px; ready state.
+- [plan-412-light-2 (bottom)](screenshots/plan-412-light-2-bottom.png) — plan, light, 2×, 412px; ready state.
+- [plan-412-dark-1](screenshots/plan-412-dark-1.png) — plan, dark, 1×, 412px; ready state.
+- [plan-412-dark-2](screenshots/plan-412-dark-2.png) — plan, dark, 2×, 412px; ready state.
+- [plan-412-dark-2 (bottom)](screenshots/plan-412-dark-2-bottom.png) — plan, dark, 2×, 412px; ready state.
+- [plan-412-field-1](screenshots/plan-412-field-1.png) — plan, field, 1×, 412px; ready state.
+- [plan-412-field-2](screenshots/plan-412-field-2.png) — plan, field, 2×, 412px; ready state.
+- [plan-412-field-2 (bottom)](screenshots/plan-412-field-2-bottom.png) — plan, field, 2×, 412px; ready state.
+- [plan-360-light-2](screenshots/plan-360-light-2.png) — plan, light, 2×, 360px; ready state.
+- [plan-360-light-2 (bottom)](screenshots/plan-360-light-2-bottom.png) — plan, light, 2×, 360px; ready state.
+- [plan-context-light-200](screenshots/plan-context-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-target-light-200](screenshots/plan-target-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-rig-light-200](screenshots/plan-rig-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-block-light-200](screenshots/plan-block-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-calibration-light-200](screenshots/plan-calibration-light-200.png) — plan, light, 2×, 412px; ready state.
+- [plan-assumptions-light-200](screenshots/plan-assumptions-light-200.png) — plan, light, 2×, 412px; ready state.
+- [logbook-detail-light-200](screenshots/logbook-detail-light-200.png) — logbook, light, 2×, 412px; ready state.
+- [logbook-result-light-200](screenshots/logbook-result-light-200.png) — logbook, light, 2×, 412px; ready state.
+- [plan-context-dark-200](screenshots/plan-context-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-target-dark-200](screenshots/plan-target-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-rig-dark-200](screenshots/plan-rig-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-block-dark-200](screenshots/plan-block-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-calibration-dark-200](screenshots/plan-calibration-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [plan-assumptions-dark-200](screenshots/plan-assumptions-dark-200.png) — plan, dark, 2×, 412px; ready state.
+- [logbook-detail-dark-200](screenshots/logbook-detail-dark-200.png) — logbook, dark, 2×, 412px; ready state.
+- [logbook-result-dark-200](screenshots/logbook-result-dark-200.png) — logbook, dark, 2×, 412px; ready state.
+- [plan-context-field-200](screenshots/plan-context-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-target-field-200](screenshots/plan-target-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-rig-field-200](screenshots/plan-rig-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-block-field-200](screenshots/plan-block-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-calibration-field-200](screenshots/plan-calibration-field-200.png) — plan, field, 2×, 412px; ready state.
+- [plan-assumptions-field-200](screenshots/plan-assumptions-field-200.png) — plan, field, 2×, 412px; ready state.
+- [logbook-detail-field-200](screenshots/logbook-detail-field-200.png) — logbook, field, 2×, 412px; ready state.
+- [logbook-result-field-200](screenshots/logbook-result-field-200.png) — logbook, field, 2×, 412px; ready state.
+- [r1-fresh-plan-assumptions](screenshots/r1-fresh-plan-assumptions.png) — interaction, light, 1×, 412px; ready state.
+- [r1-explicit-plan-overrides](screenshots/r1-explicit-plan-overrides.png) — interaction, light, 1×, 412px; ready state.
+- [metadata-rig-review-200](screenshots/metadata-rig-review-200.png) — library, light, 2×, 412px; ready state.
+- [metadata-rig-unreadable](screenshots/metadata-rig-unreadable.png) — library, light, 2×, 412px; ready state.
+- [metadata-plan-review](screenshots/metadata-plan-review.png) — plan, light, 2×, 412px; ready state.
+- [settings-identical-restore-review](screenshots/settings-identical-restore-review.png) — interaction, light, 1×, 412px; ready state.

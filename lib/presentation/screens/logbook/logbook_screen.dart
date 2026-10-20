@@ -1,7 +1,7 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../domain/models/calendar_date.dart';
@@ -13,10 +13,9 @@ import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/delete_patterns.dart';
-import '../../shared/entry_share_text.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/field_mode_button.dart';
 import '../../shared/night_time_formatter.dart';
-import '../../shared/display_units_of.dart';
 import '../../shared/plan_state.dart';
 import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/astrobin_export_viewmodel.dart';
@@ -44,17 +43,16 @@ Future<bool> deleteEntry(BuildContext context, Session s) async {
     title: 'Delete this entry?',
     message:
         '"${entryTitle(s)}" and its result are deleted from the '
-        'Logbook. This can\'t be undone.',
+        'Logbook. You can Undo immediately after deleting.',
   );
   if (!sure || !context.mounted) return false;
   final sessions = context.read<SessionsViewModel>();
-  final deleted = await runWithFeedback(
+  return deleteWithUndoFeedback(
     context,
-    'delete the entry',
-    () => sessions.delete(s.id),
+    action: 'delete the entry',
+    message: 'Entry deleted',
+    remove: () => sessions.deleteWithUndo(s.id),
   );
-  if (deleted && context.mounted) showDone(context, 'Entry deleted');
-  return deleted;
 }
 
 /// The Logbook (S8.5; ADR-019 §2, §8, §10; 08 §24): saved plans and their
@@ -74,7 +72,8 @@ class LogbookScreen extends StatefulWidget {
 class _LogbookScreenState extends State<LogbookScreen> {
   late Future<List<Session>> _sessionsFuture;
   final _search = TextEditingController();
-  bool _searching = false;
+  final _searchFocus = FocusNode();
+  final _filters = ExpansibleController();
 
   /// The ViewModel's [SessionsViewModel.revision] this list was read at.
   int _seen = 0;
@@ -94,7 +93,6 @@ class _LogbookScreenState extends State<LogbookScreen> {
     super.initState();
     final vm = context.read<SessionsViewModel>();
     _search.text = vm.query;
-    _searching = vm.query.isNotEmpty;
     _seen = vm.revision;
     _refresh();
   }
@@ -102,6 +100,8 @@ class _LogbookScreenState extends State<LogbookScreen> {
   @override
   void dispose() {
     _search.dispose();
+    _searchFocus.dispose();
+    _filters.dispose();
     super.dispose();
   }
 
@@ -127,12 +127,12 @@ class _LogbookScreenState extends State<LogbookScreen> {
     _refresh();
   }
 
-  void _toggleSearch(SessionsViewModel vm) {
-    setState(() => _searching = !_searching);
-    if (!_searching) {
+  void _searchAction(SessionsViewModel vm) {
+    if (_search.text.isNotEmpty) {
       _search.clear();
       vm.setQuery('');
     }
+    _searchFocus.requestFocus();
   }
 
   @override
@@ -154,40 +154,11 @@ class _LogbookScreenState extends State<LogbookScreen> {
     final count = vm.filter.count;
     final astrobin = context.read<AstroBinExportViewModel?>();
     return Scaffold(
-      appBar: AppBar(
-        title: _searching
-            ? TextField(
-                key: const Key('logbook.search'),
-                controller: _search,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search name, target, site or notes',
-                  border: InputBorder.none,
-                ),
-                onChanged: vm.setQuery,
-              )
-            : const Text(AppWords.logbook),
+      appBar: hybridAppBar(
+        context,
+        title: const Text(AppWords.logbook),
         actions: [
-          IconButton(
-            key: const Key('logbook.searchToggle'),
-            tooltip: _searching ? 'Close search' : 'Search',
-            icon: Icon(_searching ? Icons.close : Icons.search),
-            onPressed: () => _toggleSearch(vm),
-          ),
-          IconButton(
-            key: const Key('logbook.filters'),
-            tooltip: count == 0 ? 'Filters' : 'Filters, $count on',
-            icon: Badge(
-              isLabelVisible: count > 0,
-              label: Text('$count'),
-              child: const Icon(Icons.filter_list),
-            ),
-            onPressed: () => _FilterPanel.show(
-              context,
-              options: _options,
-              onChanged: _setFilter,
-            ),
-          ),
+          const FieldModeButton(),
           // TASK 14.3 (owner): every saved entry in one manifest file. S9.8:
           // a labelled item in the Logbook's menu, not an icon alone.
           if (vm.canExport || astrobin != null)
@@ -229,68 +200,147 @@ class _LogbookScreenState extends State<LogbookScreen> {
             ),
         ],
       ),
-      body: FutureBuilder<List<Session>>(
-        future: _sessionsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.error case final error?) {
-            return LoadFailureView(
-              action: 'load the Logbook',
-              error: error,
-              onRetry: _refresh,
-            );
-          }
-          final all = snapshot.data ?? const <Session>[];
-          final groups = vm.grouped(vm.searched(all));
-          final narrowed = !vm.filter.isEmpty || vm.query.trim().isNotEmpty;
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            children: [
-              ListTile(
-                key: const Key('logbook.progress'),
-                leading: const Icon(Icons.stacked_line_chart),
-                title: const Text(AppWords.progressByTarget),
-                subtitle: const Text('Integration so far, from your results'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.push(AppRouter.logbookProgress),
-              ),
-              if (count > 0)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    key: const Key('logbook.filter.clear'),
-                    onPressed: () => _setFilter(const SessionFilter()),
-                    icon: const Icon(Icons.filter_list_off),
-                    label: Text(
-                      '$count ${count == 1 ? 'filter' : 'filters'} on · Clear',
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              AppSpacing.md,
+              AppSpacing.md,
+              0,
+            ),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    key: const Key('logbook.search'),
+                    controller: _search,
+                    focusNode: _searchFocus,
+                    decoration: InputDecoration(
+                      labelText: 'Search',
+                      hintText: 'Name, target, site or notes',
+                      suffixIcon: IconButton(
+                        key: const Key('logbook.searchToggle'),
+                        tooltip: _search.text.isEmpty
+                            ? 'Search'
+                            : 'Clear search',
+                        icon: Icon(
+                          _search.text.isEmpty ? Icons.search : Icons.close,
+                        ),
+                        onPressed: () => _searchAction(vm),
+                      ),
                     ),
+                    onChanged: vm.setQuery,
                   ),
-                ),
-              if (groups.upcoming.isEmpty && groups.past.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: Text(
-                    narrowed
-                        ? 'Nothing matches the search or the filters.'
-                        : 'Nothing saved yet. Plans you save appear here, '
-                              'and their results once you record them.',
-                    key: const Key('logbook.empty'),
-                    textAlign: TextAlign.center,
+                  ExpansionTile(
+                    key: const Key('logbook.filters'),
+                    controller: _filters,
+                    maintainState: true,
+                    tilePadding: EdgeInsets.zero,
+                    title: Text(count == 0 ? 'Filters' : 'Filters · $count on'),
+                    children: [
+                      _FilterPanel.body(
+                        context,
+                        vm.filter,
+                        _options,
+                        _setFilter,
+                        onDone: _filters.collapse,
+                      ),
+                    ],
                   ),
+                  ListTile(
+                    key: const Key('logbook.progress'),
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.stacked_line_chart),
+                    title: const Text(AppWords.progressByTarget),
+                    subtitle: const Text(
+                      'Integration so far, from your results',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push(AppRouter.logbookProgress),
+                  ),
+                  const Divider(height: 1),
+                  if (count > 0)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        key: const Key('logbook.filter.clear'),
+                        onPressed: () => _setFilter(const SessionFilter()),
+                        icon: const Icon(Icons.filter_list_off),
+                        label: Text(
+                          '$count ${count == 1 ? 'filter' : 'filters'} on · Clear',
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          FutureBuilder<List<Session>>(
+            future: _sessionsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SliverToBoxAdapter(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (snapshot.error case final error?) {
+                return SliverToBoxAdapter(
+                  child: LoadFailureView(
+                    action: 'load the Logbook',
+                    error: error,
+                    onRetry: _refresh,
+                  ),
+                );
+              }
+              final all = snapshot.data ?? const <Session>[];
+              final filtered = vm.searched(all);
+              final groups = vm.grouped(filtered);
+              final narrowed = !vm.filter.isEmpty || vm.query.trim().isNotEmpty;
+              return SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                  AppSpacing.md,
                 ),
-              if (groups.upcoming.isNotEmpty) ...[
-                const _GroupHeader('Upcoming', key: Key('logbook.upcoming')),
-                for (final s in groups.upcoming) _row(context, vm, s),
-              ],
-              if (groups.past.isNotEmpty) ...[
-                const _GroupHeader('Past', key: Key('logbook.past')),
-                for (final s in groups.past) _row(context, vm, s),
-              ],
-            ],
-          );
-        },
+                sliver: SliverList.list(
+                  children: [
+                    Text(
+                      '${filtered.length} ${filtered.length == 1 ? 'entry' : 'entries'}',
+                      key: const Key('logbook.resultCount'),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    if (groups.upcoming.isEmpty && groups.past.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        child: Text(
+                          narrowed
+                              ? 'Nothing matches the search or the filters.'
+                              : 'Nothing saved yet. Plans you save appear here, '
+                                    'and their results once you record them.',
+                          key: const Key('logbook.empty'),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    if (groups.upcoming.isNotEmpty) ...[
+                      const _GroupHeader(
+                        'Upcoming',
+                        key: Key('logbook.upcoming'),
+                      ),
+                      for (final s in groups.upcoming) _row(context, vm, s),
+                    ],
+                    if (groups.past.isNotEmpty) ...[
+                      const _GroupHeader('Past', key: Key('logbook.past')),
+                      for (final s in groups.past) _row(context, vm, s),
+                    ],
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -335,9 +385,14 @@ class _LogbookScreenState extends State<LogbookScreen> {
       onDelete: () async {
         if (await deleteEntry(context, session) && mounted) _refresh();
       },
-      child: Card(
-        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Theme.of(context).dividerColor),
+          ),
+        ),
         child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
           onTap: () async {
             // TASK 14.1 (owner): the entry; the planner opens from there.
             await context.push(AppRouter.sessionDetail(session.id));
@@ -346,87 +401,86 @@ class _LogbookScreenState extends State<LogbookScreen> {
           title: Text(
             entryTitle(session),
             key: Key('logbook.title.${session.id}'),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: AppSpacing.xs),
-              PlanStateLabel(
-                PlanState.of(session),
-                key: Key('logbook.status.${session.id}'),
-              ),
-              // F19 A1: a due report is named, in words and an icon.
-              if (dueReport)
-                Row(
-                  key: Key('logbook.noResult.${session.id}'),
-                  mainAxisSize: MainAxisSize.min,
+          subtitle: DefaultTextStyle.merge(
+            style: Theme.of(context).textTheme.bodySmall
+                ?.copyWith(fontSize: 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppSpacing.xs),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Icon(Icons.pending_actions, size: 16),
-                    const SizedBox(width: AppSpacing.xs),
-                    Flexible(child: Text(AppWords.resultNotRecorded)),
+                    PlanStateLabel(
+                      PlanState.of(session),
+                      key: Key('logbook.status.${session.id}'),
+                    ),
+                    if (dueReport)
+                      Row(
+                        key: Key('logbook.noResult.${session.id}'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.pending_actions, size: 14),
+                          const SizedBox(width: AppSpacing.xs),
+                          Flexible(child: Text(AppWords.resultNotRecorded)),
+                        ],
+                      ),
                   ],
                 ),
-              Text(details),
-              // TASK 13.4 (owner): planned vs actual for a result; F19 A1:
-              // the plan alone for an entry without counts.
-              if (_results[session.id] case final r?)
-                Text(
-                  ResultsText.integration(r),
-                  key: Key('logbook.integration.${session.id}'),
-                )
-              else if (plannedOnly)
-                Text(
-                  ResultsText.plannedOnly(
-                    SessionReconciliation.plannedOnly(session.blocks),
-                    // A Not done run may hold earlier confirmations, so
-                    // "none recorded" is said only of a due report.
-                    due: dueReport,
-                  ),
-                  key: Key('logbook.integration.${session.id}'),
-                ),
-              // F19 A5: a saved night ahead offers no Record result yet;
-              // its card says from when one can be recorded, rather than
-              // leaving the action unexplained.
-              if (action == ResultAction.none && session.isSavedPlan)
-                Text(
-                  _resultWhen(context, session),
-                  key: Key('logbook.resultWhen.${session.id}'),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              // S8.2 (I-6): Record result once the saved night has ended;
-              // Edit result for a result.
-              if (action != ResultAction.none)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    key: Key(
-                      '${record ? 'logbook.recordResult' : 'logbook.editResults'}'
-                      '.${session.id}',
+                Text(details),
+                // TASK 13.4 (owner): planned vs actual for a result; F19 A1:
+                // the plan alone for an entry without counts.
+                if (_results[session.id] case final r?)
+                  Text(
+                    ResultsText.integration(r),
+                    key: Key('logbook.integration.${session.id}'),
+                  )
+                else if (plannedOnly)
+                  Text(
+                    ResultsText.plannedOnly(
+                      SessionReconciliation.plannedOnly(session.blocks),
+                      // A Not done run may hold earlier confirmations, so
+                      // "none recorded" is said only of a due report.
+                      due: dueReport,
                     ),
-                    onPressed: () async {
-                      await context.push(AppRouter.results(session.id));
-                      if (mounted) _refresh();
-                    },
-                    child: Text(
-                      record ? AppWords.recordResult : AppWords.editResult,
+                    key: Key('logbook.integration.${session.id}'),
+                  ),
+                // F19 A5: a saved night ahead offers no Record result yet;
+                // its card says from when one can be recorded, rather than
+                // leaving the action unexplained.
+                if (action == ResultAction.none && session.isSavedPlan)
+                  Text(
+                    _resultWhen(context, session),
+                    key: Key('logbook.resultWhen.${session.id}'),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                // S8.2 (I-6): Record result once the saved night has ended;
+                // Edit result for a result.
+                if (action != ResultAction.none)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: Key(
+                        '${record ? 'logbook.recordResult' : 'logbook.editResults'}'
+                        '.${session.id}',
+                      ),
+                      onPressed: () async {
+                        await context.push(AppRouter.results(session.id));
+                        if (mounted) _refresh();
+                      },
+                      child: Text(
+                        record ? AppWords.recordResult : AppWords.editResult,
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: 'Share',
-            onPressed: () => SharePlus.instance.share(
-              ShareParams(
-                text: EntryShareText.of(
-                  session,
-                  units: unitsOf(context),
-                  reconciliation: _results[session.id],
-                ),
-              ),
+              ],
             ),
           ),
+          trailing: const Icon(Icons.chevron_right),
         ),
       ),
     );
@@ -457,25 +511,6 @@ abstract final class _FilterPanel {
     SessionListStatus.completed: AppWords.completed,
     SessionListStatus.abandoned: AppWords.notDone,
   };
-
-  static Future<void> show(
-    BuildContext context, {
-    required ({Map<int, String> targets, Map<int, String> sites}) options,
-    required ValueChanged<SessionFilter> onChanged,
-  }) {
-    final vm = context.read<SessionsViewModel>();
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheet) => SafeArea(
-        child: ListenableBuilder(
-          listenable: vm,
-          builder: (context, _) =>
-              _body(context, vm.filter, options, onChanged),
-        ),
-      ),
-    );
-  }
 
   static SessionFilter _copy(
     SessionFilter f, {
@@ -518,12 +553,13 @@ abstract final class _FilterPanel {
     ),
   );
 
-  static Widget _body(
+  static Widget body(
     BuildContext context,
     SessionFilter f,
     ({Map<int, String> targets, Map<int, String> sites}) options,
-    ValueChanged<SessionFilter> onChanged,
-  ) {
+    ValueChanged<SessionFilter> onChanged, {
+    required VoidCallback onDone,
+  }) {
     String dates() {
       if (f.from == null && f.to == null) return 'Any night';
       final a = f.from == null ? '…' : NightTimeFormatter.eveningDate(f.from!);
@@ -532,14 +568,12 @@ abstract final class _FilterPanel {
     }
 
     final theme = Theme.of(context);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Filters', style: theme.textTheme.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
           Text('State', style: theme.textTheme.bodySmall),
           Wrap(
             spacing: AppSpacing.sm,
@@ -636,7 +670,7 @@ abstract final class _FilterPanel {
               Expanded(
                 child: FilledButton(
                   key: const Key('logbook.filters.done'),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: onDone,
                   child: const Text('Done'),
                 ),
               ),

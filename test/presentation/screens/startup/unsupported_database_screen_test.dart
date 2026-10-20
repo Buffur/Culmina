@@ -69,7 +69,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(confirm);
     await tester.pumpAndSettle();
-    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.byType(MaterialBanner), findsOneWidget);
     expect(tester.widget<FilledButton>(reset).onPressed, isNotNull);
   });
 

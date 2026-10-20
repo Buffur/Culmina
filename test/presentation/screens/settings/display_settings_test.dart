@@ -67,7 +67,11 @@ void main() {
     WidgetTester tester, {
     DisplaySettingsRepository? display,
     PlanningPreferencesRepository? planning,
+    String section = 'appearance',
   }) async {
+    // A restart discards the previous native settings subpage as well.
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
     tester.view.physicalSize = const Size(800, 5000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -90,6 +94,8 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
     );
+    await settle(tester);
+    await tester.tap(find.byKey(Key('settings.open.$section')));
     await settle(tester);
   }
 
@@ -139,13 +145,7 @@ void main() {
       'temperature in °F; the stored margin stays in °C', (tester) async {
     await start(tester);
     final margin = vm.settings.planningPreferences.dewMarginC;
-    expect(find.text('${(margin).toStringAsFixed(1)} °C'), findsOneWidget);
     await tapText(tester, 'settings.units.temperature', '°F');
-    expect(
-      find.text('${(margin * 9 / 5).toStringAsFixed(1)} °F'),
-      findsOneWidget,
-      reason: 'a difference: × 9/5, no +32',
-    );
     expect(vm.settings.planningPreferences.dewMarginC, margin);
     await tapText(tester, 'settings.units.wind', 'mph');
     await tapText(tester, 'settings.units.elevation', 'ft');
@@ -155,6 +155,15 @@ void main() {
     expect(p.getString('units.wind'), 'mph');
     expect(p.getString('units.elevation'), 'feet');
     expect(p.getDouble('dewPointThreshold'), isNull, reason: 'not rewritten');
+    await tester.pageBack();
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('settings.open.planning')));
+    await settle(tester);
+    expect(
+      find.text('${(margin * 9 / 5).toStringAsFixed(1)} °F'),
+      findsOneWidget,
+      reason: 'a difference: × 9/5, no +32',
+    );
   });
 
   testWidgets('A5: a unit choice that cannot be stored stays shown, marked '
@@ -186,9 +195,16 @@ void main() {
   testWidgets('A5: a planning edit that cannot be stored stays applied, the '
       'screen says it is not saved; Retry stores the newest', (tester) async {
     final planning = _FlakyPlanning();
-    await start(tester, planning: planning);
+    await start(tester, planning: planning, section: 'planning');
     await tester.ensureVisible(find.text('−12°'));
     await tester.tap(find.text('−12°'));
+    await settle(tester);
+    expect(
+      vm.settings.planningPreferences.darknessLimit,
+      DarknessLimit.astronomical,
+    );
+    expect(planning.stored.darknessLimit, DarknessLimit.astronomical);
+    await tester.tap(find.byKey(const Key('settings.savePlanning')));
     await settle(tester);
     expect(
       vm.settings.planningPreferences.darknessLimit,

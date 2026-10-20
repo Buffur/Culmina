@@ -1,3 +1,4 @@
+import '../../domain/models/plan_overrides.dart';
 import '../../domain/models/calendar_date.dart';
 import '../../domain/models/capture_block.dart';
 import '../../domain/models/execution.dart';
@@ -107,6 +108,7 @@ abstract final class SessionManifestCodec {
       'rig_id': s.rigId,
       // S7.1: the plan's tracking override; absent or null = the rig's.
       'tracking_override': s.trackingOverride?.name,
+      'plan_overrides': s.planOverrides?.toJson(),
       'created_at_utc_ms': _ms(s.createdAtUtc),
       'updated_at_utc_ms': _ms(s.updatedAtUtc),
       'planned_at_utc_ms': _ms(s.plannedAtUtc),
@@ -254,6 +256,7 @@ abstract final class SessionManifestCodec {
       siteId: j['site_id'] as int?,
       targetId: j['target_id'] as int?,
       rigId: j['rig_id'] as int?,
+      planOverrides: PlanOverrides.fromJson(j['plan_overrides']),
       trackingOverride: TrackingType.overrideFromStorage(
         j['tracking_override'] as String?,
       ),

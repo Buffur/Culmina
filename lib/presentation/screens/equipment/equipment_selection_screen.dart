@@ -1,3 +1,5 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -201,22 +203,26 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
       title: 'Delete this rig?',
       message:
           '"${eq.name}" is deleted from your rigs. Saved plans keep what '
-          "they recorded. This can't be undone.",
+          'they recorded. You can Undo immediately after deleting.',
     );
     if (!sure || !mounted) return false;
-    final deleted = await runWithFeedback(
+    final gear = context.read<GearViewModel>();
+    final plan = context.read<SessionPlanViewModel>();
+    final restoreSelection = plan.rememberEquipmentForUndo(eq.id);
+    return deleteWithUndoFeedback(
       context,
-      'delete the rig',
-      () => context.read<GearViewModel>().delete(eq.id),
+      action: 'delete the rig',
+      message: 'Rig deleted',
+      remove: () => gear.deleteWithUndo(eq.id),
+      afterDelete: () async {
+        await plan.refreshSelectedEquipment();
+        if (mounted) await _loadEquipment();
+      },
+      afterRestore: () async {
+        await restoreSelection();
+        if (mounted) await _loadEquipment();
+      },
     );
-    if (!mounted) return deleted;
-    if (deleted) showDone(context, 'Rig deleted');
-    await _loadEquipment();
-    // TD-028: clear the planner's selection if this was it.
-    if (mounted) {
-      await context.read<SessionPlanViewModel>().refreshSelectedEquipment();
-    }
-    return deleted;
   }
 
   Future<void> _showEquipmentDialog({EquipmentProfile? existing}) async {
@@ -243,7 +249,8 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
     final choosing = widget.mode == ListMode.choose;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: hybridAppBar(
+        context,
         title: Text(choosing ? AppWords.chooseRig : AppWords.rigs),
       ),
       body: _initialLoading

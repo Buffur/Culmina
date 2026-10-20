@@ -92,6 +92,7 @@ class AppRouter {
   /// The detail screens (S6.5; ADR-019 §9): the plan's night and its
   /// forecast, above the tabs.
   static const nightMoon = '/night';
+  static const moon = '/moon';
   static const weather = '/weather';
 
   static final router = GoRouter(
@@ -267,6 +268,11 @@ class AppRouter {
         path: nightMoon,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const NightMoonScreen(),
+      ),
+      GoRoute(
+        path: moon,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const NightMoonScreen(initialPage: 1),
       ),
       GoRoute(
         path: weather,

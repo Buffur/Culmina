@@ -1,0 +1,54 @@
+[
+  {
+    "name": "android-cli-plugin",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\android-cli-plugin aside: rename C:/Users/zalub/.gemini/config/plugins/android-cli-plugin C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/android-cli-plugin/.android-cli-plugin.old.cfa804172d9a1a9d.tmp: Access is denied.\n"
+  },
+  {
+    "name": "chrome-devtools-plugin",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\chrome-devtools-plugin aside: rename C:/Users/zalub/.gemini/config/plugins/chrome-devtools-plugin C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/chrome-devtools-plugin/.chrome-devtools-plugin.old.2174cff97c4cb71.tmp: Access is denied.\n"
+  },
+  {
+    "name": "firebase",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\firebase aside: rename C:/Users/zalub/.gemini/config/plugins/firebase C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/firebase/.firebase.old.1904b412615cc65e.tmp: Access is denied.\n"
+  },
+  {
+    "name": "flutter",
+    "error": "existing plugin in use; first reinstall failed Access is denied"
+  },
+  {
+    "name": "gemini-api",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\gemini-api aside: rename C:/Users/zalub/.gemini/config/plugins/gemini-api C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/gemini-api/.gemini-api.old.71f62336afb944e.tmp: Access is denied.\n"
+  },
+  {
+    "name": "google-antigravity-sdk",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\google-antigravity-sdk aside: rename C:/Users/zalub/.gemini/config/plugins/google-antigravity-sdk C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/google-antigravity-sdk/.google-antigravity-sdk.old.53691cf43fcedd4c.tmp: Access is denied.\n"
+  },
+  {
+    "name": "google_maps_platform",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\google_maps_platform aside: rename C:/Users/zalub/.gemini/config/plugins/google_maps_platform C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/google_maps_platform/.google_maps_platform.old.17467866701594e3.tmp: Access is denied.\n"
+  },
+  {
+    "name": "modern-web-guidance-plugin",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\modern-web-guidance-plugin aside: rename C:/Users/zalub/.gemini/config/plugins/modern-web-guidance-plugin C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/modern-web-guidance-plugin/.modern-web-guidance-plugin.old.13f7da3b74645939.tmp: Access is denied.\n"
+  },
+  {
+    "name": "science",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Error: plugin is in use by another process: another Antigravity process (another agy session, the Antigravity Hub, or the remote-control daemon) is running it; close it and retry: failed to move existing plugin C:\\Users\\zalub\\.gemini\\config\\plugins\\science aside: rename C:/Users/zalub/.gemini/config/plugins/science C:/Users/zalub/.gemini/antigravity-cli/cache/marketplaces/antigravity-plugins-official/plugins/science/.science.old.279c9dedf7eadad3.tmp: The process cannot access the file because it is being used by another process.\n"
+  }
+]

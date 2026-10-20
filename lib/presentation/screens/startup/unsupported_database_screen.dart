@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/config/app_identity.dart';
@@ -99,7 +100,7 @@ class _UnsupportedDatabaseScreenState extends State<UnsupportedDatabaseScreen> {
     final version = widget.foundVersion;
     final name = AppIdentity.appName;
     return Scaffold(
-      appBar: AppBar(title: Text(name)),
+      appBar: hybridAppBar(context, title: Text(name)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(24),

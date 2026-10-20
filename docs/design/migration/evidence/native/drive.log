@@ -1,0 +1,129 @@
+Running Gradle task 'assembleDebug'...                          
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/Users/zalub/.gradle/wrapper/dists/gradle-9.3.1-all/9ot9r568e8zfvvd4mn8rbu1j0/gradle-9.3.1/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin (KGP): flutter_timezone
+Future versions of Flutter will fail to build if your app uses plugins that apply KGP.
+
+Please check the changelogs of these plugins and upgrade to a version that supports Built-in Kotlin.
+If no such version exists, report the issue to the plugin. If necessary, here is a guide on filing
+an issue against a plugin: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-app-developers#report-incompatible-kotlin-gradle-plugin-usage-to-plugin-authors
+
+If you are a plugin author, please migrate your plugin to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+Running Gradle task 'assembleDebug'...                             80.9s
+√ Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...           8.5s
+D/FlutterGeolocator( 6555): Attaching Geolocator to activity
+W/.buffur.culmin( 6555): Accessing hidden method Landroid/view/accessibility/AccessibilityNodeInfo;->getSourceNodeId()J (greylist,test-api, reflection, allowed)
+W/.buffur.culmin( 6555): Accessing hidden method Landroid/view/accessibility/AccessibilityRecord;->getSourceNodeId()J (greylist, reflection, allowed)
+W/.buffur.culmin( 6555): Accessing hidden field Landroid/view/accessibility/AccessibilityNodeInfo;->mChildNodeIds:Landroid/util/LongArray; (greylist, reflection, allowed)
+W/.buffur.culmin( 6555): Accessing hidden method Landroid/util/LongArray;->get(I)J (greylist, reflection, allowed)
+D/AccessibilityBridge( 6555): Setting not found: accessibility_display_inversion_enabled, using default: 0
+D/FlutterRenderer( 6555): Width is zero. 0,0
+I/Choreographer( 6555): Skipped 570 frames!  The application may be doing too much work on its main thread.
+D/FlutterRenderer( 6555): Width is zero. 0,0
+D/FlutterRenderer( 6555): Width is zero. 0,0
+D/FlutterJNI( 6555): Sending viewport metrics to the engine.
+D/HostConnection( 6555): HostConnection::get() New Host Connection established 0x7a33d61d3a90, tid 6586
+I/Gralloc4( 6555): mapper 4.x is not supported
+D/HostConnection( 6555): HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+D/HostConnection( 6555): createUnique: call
+D/HostConnection( 6555): HostConnection::get() New Host Connection established 0x7a33d61d4d50, tid 6611
+D/EGL_emulation( 6555): eglCreateContext: 0x7a33c61f2840: maj 3 min 0 rcv 3
+D/EGL_emulation( 6555): eglMakeCurrent: 0x7a33c61f2840: ver 3 0 (tinfo 0x7a3366273df0) (first time)
+D/HostConnection( 6555): HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_0 
+VMServiceFlutterDriver: Connecting to Flutter application at http://127.0.0.1:61508/v-45PM_FseY=/
+D/FlutterGeolocator( 6555): Creating service.
+D/FlutterGeolocator( 6555): Binding to location service.
+I/Choreographer( 6555): Skipped 44 frames!  The application may be doing too much work on its main thread.
+D/FlutterGeolocator( 6555): Geolocator foreground service connected
+D/FlutterGeolocator( 6555): Initializing Geolocator services
+D/FlutterGeolocator( 6555): Flutter engine connected. Connected engine count 1
+W/.buffur.culmin( 6555): Accessing hidden method Landroid/app/ActivityThread;->currentActivityThread()Landroid/app/ActivityThread; (greylist, linking, allowed)
+W/.buffur.culmin( 6555): Accessing hidden method Landroid/app/ActivityThread;->getActivity(Landroid/os/IBinder;)Landroid/app/Activity; (greylist, linking, allowed)
+D/FlutterJNI( 6555): Sending viewport metrics to the engine.
+VMServiceFlutterDriver: Isolate found with number: 7193719067929915
+VMServiceFlutterDriver: Isolate 7193719067929915 is runnable.
+VMServiceFlutterDriver: Isolate is paused at start.
+VMServiceFlutterDriver: Attempting to resume isolate
+I/flutter ( 6555): 00:00 +0: Hybrid native roots, save/reopen, settings and night browsing
+VMServiceFlutterDriver: Connected to Flutter application.
+I/Choreographer( 6555): Skipped 41 frames!  The application may be doing too much work on its main thread.
+D/ProfileInstaller( 6555): Installing profile for io.github.buffur.culmina
+D/FlutterJNI( 6555): Sending viewport metrics to the engine.
+VMServiceFlutterDriver: request_data message is taking a long time to complete...
+W/Gralloc4( 6555): allocator 3.x is not supported
+I/flutter ( 6555): ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+I/flutter ( 6555): The following StateError was thrown running a test:
+I/flutter ( 6555): Bad state: No element
+I/flutter ( 6555): 
+I/flutter ( 6555): When the exception was thrown, this was the stack:
+I/flutter ( 6555): #0      Iterable.first (dart:core/iterable.dart:663:7)
+I/flutter ( 6555): #1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+I/flutter ( 6555): #3      Iterable.isEmpty (dart:core/iterable.dart:560:33)
+I/flutter ( 6555): #4      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2478:52)
+I/flutter ( 6555): #7      TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+I/flutter ( 6555): #8      WidgetController.dragUntilVisible (package:flutter_test/src/controller.dart:2476:27)
+I/flutter ( 6555): #9      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2439:13)
+I/flutter ( 6555): #12     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+I/flutter ( 6555): #13     WidgetController.scrollUntilVisible (package:flutter_test/src/controller.dart:2427:27)
+I/flutter ( 6555): #14     main.<anonymous closure>.reveal (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/integration_test/hybrid_migration_smoke_test.dart:193:24)
+I/flutter ( 6555): #15     main.<anonymous closure>.tap (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/integration_test/hybrid_migration_smoke_test.dart:204:15)
+I/flutter ( 6555): #16     main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/integration_test/hybrid_migration_smoke_test.dart:212:13)
+I/flutter ( 6555): <asynchronous suspension>
+I/flutter ( 6555): #17     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+I/flutter ( 6555): <asynchronous suspension>
+I/flutter ( 6555): #18     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+I/flutter ( 6555): <asynchronous suspension>
+I/flutter ( 6555): #19     TestWidgetsFlutterBinding._createTestCompletionHandler.<anonymous closure> (package:flutter_test/src/binding.dart:1707:12)
+I/flutter ( 6555): <asynchronous suspension>
+I/flutter ( 6555): (elided 5 frames from dart:async and dart:async-patch)
+I/flutter ( 6555): 
+I/flutter ( 6555): The test description was:
+I/flutter ( 6555):   Hybrid native roots, save/reopen, settings and night browsing
+I/flutter ( 6555): ════════════════════════════════════════════════════════════════════════════════════════════════════
+I/flutter ( 6555): 00:10 +0: Hybrid native roots, save/reopen, settings and night browsing [E]
+I/flutter ( 6555):   Test failed. See exception logs above.
+I/flutter ( 6555):   The test description was: Hybrid native roots, save/reopen, settings and night browsing
+I/flutter ( 6555):   
+I/flutter ( 6555): 00:10 +0 -1: (tearDownAll)
+I/flutter ( 6555): 00:10 +1 -1: Some tests failed.
+Failure Details:
+Failure in method: Hybrid native roots, save/reopen, settings and night browsing
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.isEmpty (dart:core/iterable.dart:560:33)
+#4      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2478:52)
+#7      TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#8      WidgetController.dragUntilVisible (package:flutter_test/src/controller.dart:2476:27)
+#9      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2439:13)
+#12     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#13     WidgetController.scrollUntilVisible (package:flutter_test/src/controller.dart:2427:27)
+#14     main.<anonymous closure>.reveal (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/integration_test/hybrid_migration_smoke_test.dart:193:24)
+#15     main.<anonymous closure>.tap (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/integration_test/hybrid_migration_smoke_test.dart:204:15)
+#16     main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/integration_test/hybrid_migration_smoke_test.dart:212:13)
+<asynchronous suspension>
+#17     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#18     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+#19     TestWidgetsFlutterBinding._createTestCompletionHandler.<anonymous closure> (package:flutter_test/src/binding.dart:1707:12)
+<asynchronous suspension>
+(elided 5 frames from dart:async and dart:async-patch)
+
+The test description was:
+  Hybrid native roots, save/reopen, settings and night browsing
+═════════════════════════════════════════════════════════════════
+
+end of failure 1
+
+
+

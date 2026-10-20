@@ -138,41 +138,60 @@ class NightBrowserViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  MoonCalendarRequest get _request {
-    final (y, m) = month;
+  MoonCalendarRequest _requestFor(int year, int month) {
     final ctx = _site.timeContext.id;
     return MoonCalendarRequest(
       latitude: _site.latitude,
       longitude: _site.longitude,
       zoneId: ctx == 'solar' ? null : ctx,
       limitDeg: _limit,
-      year: y,
-      month: m,
+      year: year,
+      month: month,
     );
   }
 
   final _months = <String, List<MoonCalendarDay>>{};
   final _loading = <String>{};
-  Object? _monthError;
+  final _monthErrors = <String, Object>{};
 
   /// The shown month's nights, or null while it is computed (it starts
   /// then); cached per N10 key.
-  List<MoonCalendarDay>? get monthDays {
-    final r = _request;
+  List<MoonCalendarDay>? get monthDays => calendarDays(month.$1, month.$2);
+
+  /// Reads the same cached/isolate-computed calendar for an adjacent month.
+  /// Week browsing can cross a month boundary without adopting a night or
+  /// changing the month grid's navigation state.
+  List<MoonCalendarDay>? calendarDays(int year, int month) {
+    final r = _requestFor(year, month);
     final days = _months[r.key];
-    if (days == null && _loading.add(r.key)) unawaited(_load(r));
+    if (days == null &&
+        !_monthErrors.containsKey(r.key) &&
+        _loading.add(r.key)) {
+      unawaited(_load(r));
+    }
     return days;
   }
 
   /// Why the month could not be computed, if it could not.
-  Object? get monthError => _monthError;
+  Object? get monthError => calendarError(month.$1, month.$2);
+
+  /// An adjacent month's failure must not replace the visible month's state.
+  Object? calendarError(int year, int month) =>
+      _monthErrors[_requestFor(year, month).key];
+
+  /// Explicit retry after a failed computation; no rebuild-driven retry loop.
+  void retryCalendar(int year, int month) {
+    _monthErrors.remove(_requestFor(year, month).key);
+    calendarDays(year, month);
+    notifyListeners();
+  }
 
   Future<void> _load(MoonCalendarRequest r) async {
     try {
       _months[r.key] = await _computeMonth(r);
-      _monthError = null;
+      _monthErrors.remove(r.key);
     } catch (e) {
-      _monthError = e;
+      _monthErrors[r.key] = e;
     } finally {
       _loading.remove(r.key);
     }

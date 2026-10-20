@@ -1,0 +1,138 @@
+
+|
+•   codex  Agent detected — installing non-interactively
+[?25l|
+o  Source: https://github.com/flutter/agent-plugins.git
+[?25h[?25l|
+•  Cloning repository…[1G[Jo  Cloning repository…[1G[JO  Cloning repository…[1G[J0  Cloning repository…[1G[J•  Cloning repository…[1G[Jo  Cloning repository…[1G[JO  Cloning repository…[1G[J0  Cloning repository…[1G[J•  Cloning repository….[1G[Jo  Repository cloned
+[?25h[?25l|
+[1G[Jo  Found 25 skills
+[?25h|
+•  Selected 10 skills: flutter-add-integration-test, flutter-add-widget-preview, flutter-add-widget-test, flutter-apply-architecture-best-practices, flutter-build-responsive-layout, flutter-fix-layout-issues, flutter-implement-json-serialization, flutter-setup-declarative-routing, flutter-setup-localization, flutter-use-http-package
+
+|
+o  Installation Summary -------------------------------------------------------+
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-add-integration-test           |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-add-widget-preview             |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-add-widget-test                |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro Planner\Astro-Planner\.agents\skills\flutter-appl  |
+|  y-architecture-best-practices                                               |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-build-responsive-layout        |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-fix-layout-issues              |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-implement-json-serialization   |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-setup-declarative-routing      |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-setup-localization             |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
+|  ~\OneDrive\Desktop\Astro                                                    |
+|  Planner\Astro-Planner\.agents\skills\flutter-use-http-package               |
+|    copy → Codex                                                              |
+|    overwrites: Codex                                                         |
+|                                                                              |
++------------------------------------------------------------------------------+
+|
+o  Security Risk Assessments --------------------------------------------------+
+|                                                                              |
+|                                        Gen               Socket              |
+|  Snyk                                                                        |
+|  flutter-add-integration-test          Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-add-widget-preview            Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-add-widget-test               Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-apply-architecture-best-pra…  Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-build-responsive-layout       Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-fix-layout-issues             Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-implement-json-serialization  Safe              0 alerts            |
+|  Med Risk                                                                    |
+|  flutter-setup-declarative-routing     Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-setup-localization            Safe              0 alerts            |
+|  Low Risk                                                                    |
+|  flutter-use-http-package              Safe              0 alerts            |
+|  High Risk                                                                   |
+|                                                                              |
+|  Details: https://skills.sh/flutter/agent-plugins                            |
+|                                                                              |
++------------------------------------------------------------------------------+
+[?25l|
+[1G[Jo  Installation complete
+[?25h
+|
+o  Installed 10 skills --------------------------------------------------------+
+|                                                                              |
+|  ✓ flutter-add-integration-test (copied)                                     |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-add-integration-test           |
+|  ✓ flutter-add-widget-preview (copied)                                       |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-add-widget-preview             |
+|  ✓ flutter-add-widget-test (copied)                                          |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-add-widget-test                |
+|  ✓ flutter-apply-architecture-best-practices (copied)                        |
+|    → ~\OneDrive\Desktop\Astro Planner\Astro-Planner\.agents\skills\flutter-  |
+|  apply-architecture-best-practices                                           |
+|  ✓ flutter-build-responsive-layout (copied)                                  |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-build-responsive-layout        |
+|  ✓ flutter-fix-layout-issues (copied)                                        |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-fix-layout-issues              |
+|  ✓ flutter-implement-json-serialization (copied)                             |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-implement-json-serialization   |
+|  ✓ flutter-setup-declarative-routing (copied)                                |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-setup-declarative-routing      |
+|  ✓ flutter-setup-localization (copied)                                       |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-setup-localization             |
+|  ✓ flutter-use-http-package (copied)                                         |
+|    → ~\OneDrive\Desktop\Astro                                                |
+|  Planner\Astro-Planner\.agents\skills\flutter-use-http-package               |
+|                                                                              |
++------------------------------------------------------------------------------+
+
+|
+—  Done!  Review skills before use; they run with full agent permissions.
+
+

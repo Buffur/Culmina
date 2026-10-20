@@ -1,0 +1,10 @@
+{
+  "results": [
+    "Pure validators: empty/valid accepted; unknown keys/malformed archive rejected; restore preserves other keys; stale guard; refused write rollback/partial rollback reported",
+    "Download creates actual checked browser-only JSON",
+    "Invalid upload rejected; valid file review and Cancel make no writes",
+    "Review within phone: 3 themes and 100/200%, no horizontal overflow or small controls",
+    "Explicit confirm restores checked records, shows reload action; closing restores background interaction"
+  ],
+  "errors": []
+}

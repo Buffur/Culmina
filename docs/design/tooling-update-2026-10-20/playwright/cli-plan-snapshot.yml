@@ -1,0 +1,140 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to plan" [ref=f1e2] [cursor=pointer]:
+    - /url: "#plan-main"
+  - banner [ref=f1e3]:
+    - link "Culmina · Design lab" [ref=f1e4] [cursor=pointer]:
+      - /url: index.html#concepts
+    - paragraph [ref=f1e5]: Android phone · Hybrid
+    - generic [ref=f1e6]:
+      - generic [ref=f1e7]:
+        - text: Theme
+        - combobox "Theme" [ref=f1e8]:
+          - option "Light" [selected]
+          - option "Dark"
+          - option "Field"
+      - generic [ref=f1e9]:
+        - text: Text
+        - combobox "Text" [ref=f1e10]:
+          - option "100%" [selected]
+          - option "125%"
+          - option "200%"
+  - generic [ref=f1e11]:
+    - paragraph [ref=f1e12]: Android preview · example data, not a live forecast.
+    - generic [ref=f1e13]:
+      - text: Example state
+      - combobox "Example state" [ref=f1e14]:
+        - option "Ready" [selected]
+        - option "Forecast unavailable"
+        - option "No target"
+        - option "No site"
+        - option "No rig"
+        - option "Save fails once"
+    - generic [ref=f1e15]:
+      - text: Gain graph
+      - combobox "Gain graph" [ref=f1e16]:
+        - option "A · Time curve (default)" [selected]
+        - option "B · Group bars"
+        - option "C · Block steps"
+        - option "Compare all three"
+  - region "Android phone preview" [ref=f1e17]:
+    - generic [ref=f1e19]: 9:41
+    - generic [ref=f1e22]:
+      - link "Back to Tonight" [ref=f1e23] [cursor=pointer]:
+        - /url: http://localhost:4173/index.html?theme=light&scale=1&font=native&variant=blend&sky=dusk#concepts
+      - heading "Plan" [level=1] [ref=f1e26]
+      - button "Turn on field mode" [ref=f1e27] [cursor=pointer]
+      - button "More plan actions" [ref=f1e30] [cursor=pointer]
+    - main [ref=f1e36]:
+      - generic [ref=f1e37]:
+        - generic [ref=f1e38]: Night of 19 Oct · Ends 20 Oct
+        - generic [ref=f1e39]: Saved
+      - region [ref=f1e40]:
+        - heading "Fits" [level=2] [ref=f1e41]
+        - paragraph [ref=f1e42]: "Needed in imaging window: 2 h 15 min4 h 15 min usable"
+        - paragraph [ref=f1e43]: Leaves 2 h spare in the window.
+        - paragraph [ref=f1e44]: "Example capture end: 20 Oct 2026, 02:45 GMT+3."
+      - generic [ref=f1e45]:
+        - 'button "Site and night Kyiv outskirts Site zone: Europe/Kyiv" [ref=f1e46] [cursor=pointer]':
+          - generic [ref=f1e47]:
+            - generic [ref=f1e48]: Site and night
+            - generic [ref=f1e49]: Kyiv outskirts
+            - generic [ref=f1e50]: "Site zone: Europe/Kyiv"
+        - button "Target M31 · Andromeda Galaxy Galaxy" [ref=f1e53] [cursor=pointer]:
+          - generic [ref=f1e54]:
+            - generic [ref=f1e55]: Target
+            - generic [ref=f1e56]: M31 · Andromeda Galaxy
+            - generic [ref=f1e57]: Galaxy
+        - button "Rig DSLR · 135 mm lens DSLR or mirrorless · 135 mm · tracking not recorded" [ref=f1e60] [cursor=pointer]:
+          - generic [ref=f1e64]:
+            - generic [ref=f1e65]: Rig
+            - generic [ref=f1e66]: DSLR · 135 mm lens
+            - generic [ref=f1e67]: DSLR or mirrorless · 135 mm · tracking not recorded
+      - region [ref=f1e70]:
+        - generic [ref=f1e71]:
+          - heading "Capture plan" [level=2] [ref=f1e72]
+          - paragraph [ref=f1e73]: 1 block · 120 frames
+        - list [ref=f1e74]:
+          - listitem [ref=f1e75]:
+            - heading "Light · Broadband" [level=3] [ref=f1e76]
+            - paragraph [ref=f1e77]: 120 × 60 s = 2 h integration
+            - paragraph [ref=f1e78]: ISO 800 · WB Auto · Focus unrecorded
+            - paragraph [ref=f1e79]: "Records: Recorded example"
+            - paragraph [ref=f1e80]: "Fits: room for up to 226 frames like this in the example window"
+            - generic [ref=f1e81]:
+              - button "Edit block 1, Light" [ref=f1e82] [cursor=pointer]: Edit
+              - button "Move block 1 up" [disabled] [ref=f1e83]
+              - button "Move block 1 down" [disabled] [ref=f1e86]
+              - button "Remove block 1, Light" [ref=f1e89] [cursor=pointer]: Remove
+        - generic [ref=f1e90]:
+          - button "Add block" [ref=f1e91] [cursor=pointer]
+          - button "Build calibration frames" [ref=f1e92] [cursor=pointer]
+      - region [ref=f1e93]:
+        - heading "Estimate" [level=2] [ref=f1e94]
+        - generic [ref=f1e95]:
+          - generic [ref=f1e96]:
+            - term [ref=f1e97]: Integration
+            - definition [ref=f1e98]: 2 h
+            - definition [ref=f1e99]: light exposures only
+          - generic [ref=f1e100]:
+            - term [ref=f1e101]: Total session time
+            - definition [ref=f1e102]: 2 h 30 min
+            - definition [ref=f1e103]: with overheads, setup and calibration
+          - generic [ref=f1e104]:
+            - term [ref=f1e105]: Storage
+            - definition [ref=f1e106]: 3.60 GB
+            - definition [ref=f1e107]: theoretical example, not measured
+          - generic [ref=f1e108]:
+            - term [ref=f1e109]: Relative stacking gain
+            - definition [ref=f1e110]: ×10.95
+            - definition [ref=f1e111]: vs one comparable frame · 120 frames
+        - paragraph [ref=f1e112]: Relative gain is ideal √N within comparable light frames, not absolute signal-to-noise.
+      - group [ref=f1e113]:
+        - generic "Budget and assumptions Window time, overheads and file-size basis" [ref=f1e114] [cursor=pointer]:
+          - text: Budget and assumptions
+          - generic [ref=f1e115]: Window time, overheads and file-size basis
+      - group [ref=f1e116]:
+        - generic "Stacking gain details Per-group table and time curve" [ref=f1e117] [cursor=pointer]:
+          - text: Stacking gain details
+          - generic [ref=f1e118]: Per-group table and time curve
+      - group [ref=f1e119]:
+        - generic "Rig details DSLR · 135 mm lens" [ref=f1e120] [cursor=pointer]:
+          - text: Rig details
+          - generic [ref=f1e121]: DSLR · 135 mm lens
+      - region [ref=f1e122]:
+        - heading "The night ahead" [level=2] [ref=f1e123]
+        - link "Night & Moon 7 h 30 min dark · 21:15–04:45 Moon-free 00:30–04:45 · Waxing gibbous, 62%" [ref=f1e124] [cursor=pointer]:
+          - /url: http://localhost:4173/conditions.html?view=night&from=plan&night=2026-10-19&planNight=2026-10-19&site=Kyiv+outskirts&theme=light&scale=1&font=native&variant=blend&sky=dusk&scenario=ready
+          - generic [ref=f1e125]:
+            - generic [ref=f1e126]: Night & Moon
+            - generic [ref=f1e127]: 7 h 30 min dark · 21:15–04:45
+            - generic [ref=f1e128]: Moon-free 00:30–04:45 · Waxing gibbous, 62%
+        - link "Weather Cloud 19–42% in the dark Full dark-time coverage · Stale snapshot · updated 24 h 44 min ago" [ref=f1e131] [cursor=pointer]:
+          - /url: http://localhost:4173/conditions.html?view=weather&from=plan&night=2026-10-19&planNight=2026-10-19&site=Kyiv+outskirts&theme=light&scale=1&font=native&variant=blend&sky=dusk&scenario=ready
+          - generic [ref=f1e132]:
+            - generic [ref=f1e133]: Weather
+            - generic [ref=f1e134]: Cloud 19–42% in the dark
+            - generic [ref=f1e135]: Full dark-time coverage · Stale snapshot · updated 24 h 44 min ago
+    - generic [ref=f1e138]:
+      - paragraph [ref=f1e140]: Saved in this browser.
+      - button "Save plan" [ref=f1e141] [cursor=pointer]
+    - status

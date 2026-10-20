@@ -1,0 +1,73 @@
+- generic [ref=f5e1]:
+  - link "Skip to app" [ref=f5e2] [cursor=pointer]:
+    - /url: "#workspace-main"
+  - banner [ref=f5e3]:
+    - link "Culmina · Design lab" [ref=f5e4] [cursor=pointer]:
+      - /url: http://localhost:4173/index.html?theme=light&scale=2&variant=blend&font=native&view=wide#concepts
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]:
+        - text: Theme
+        - combobox "Theme" [ref=f5e7]:
+          - option "Light" [selected]
+          - option "Dark"
+          - option "Field"
+      - generic [ref=f5e8]:
+        - text: Text
+        - combobox "Text" [ref=f5e9]:
+          - option "100%"
+          - option "125%"
+          - option "200%" [selected]
+  - generic [ref=f5e10]:
+    - paragraph [ref=f5e11]: Interactive Android prototype · local example records.
+    - generic [ref=f5e12]:
+      - text: Example state
+      - combobox "Example state" [ref=f5e13]:
+        - option "Ready" [selected]
+        - option "Empty"
+        - option "Load error"
+        - option "Save fails once"
+  - region "Android phone preview" [ref=f5e14]:
+    - generic [ref=f5e16]: 9:41
+    - generic [ref=f5e19]:
+      - button "Back" [ref=f5e20] [cursor=pointer]
+      - heading "Progress by target" [level=1] [ref=f5e23]
+      - button "Turn on field mode" [ref=f5e24] [cursor=pointer]
+    - main [ref=f5e28]:
+      - generic [ref=f5e29]:
+        - paragraph [active] [ref=f5e30]: Recorded integration by target and filter.
+        - generic [ref=f5e31]:
+          - generic [ref=f5e32]:
+            - heading "M31" [level=2] [ref=f5e33]
+            - generic [ref=f5e34]: 4 h 36 min
+          - paragraph [ref=f5e35]: 2 results · Last imaged Mon 12 Oct
+          - heading "Broadband 4 h 36 min" [level=3] [ref=f5e36]:
+            - generic [ref=f5e37]: Broadband
+            - generic [ref=f5e38]: 4 h 36 min
+          - list [ref=f5e39]:
+            - listitem [ref=f5e40]:
+              - generic [ref=f5e41]: 60 s · ISO 800 · DSLR · 135 mm lens
+              - generic [ref=f5e42]: 196 frames · 3 h 16 min · 2 nights
+            - listitem [ref=f5e43]:
+              - generic [ref=f5e44]: 120 s · ISO 800 · DSLR · 135 mm lens
+              - generic [ref=f5e45]: 30 frames · 1 h · 1 night
+            - listitem [ref=f5e46]:
+              - generic [ref=f5e47]: 30 s · ISO not recorded · DSLR · 135 mm lens
+              - generic [ref=f5e48]: 40 frames · 20 min · 1 night
+              - generic [ref=f5e49]: "Sensitivity not recorded: kept separate, never combined with another group."
+        - generic [ref=f5e50]:
+          - generic [ref=f5e51]:
+            - heading "NGC 7000" [level=2] [ref=f5e52]
+            - generic [ref=f5e53]: 4 h
+          - paragraph [ref=f5e54]: 1 result · Last imaged Thu 8 Oct
+          - heading "Dual-band 4 h" [level=3] [ref=f5e55]:
+            - generic [ref=f5e56]: Dual-band
+            - generic [ref=f5e57]: 4 h
+          - list [ref=f5e58]:
+            - listitem [ref=f5e59]:
+              - generic [ref=f5e60]: 300 s · Gain 100 · Astro camera · refractor
+              - generic [ref=f5e61]: 36 frames · 3 h · 1 night
+            - listitem [ref=f5e62]:
+              - generic [ref=f5e63]: 300 s · Gain 200 · Astro camera · refractor
+              - generic [ref=f5e64]: 12 frames · 1 h · 1 night
+        - group [ref=f5e65]:
+          - generic "How totals are grouped" [ref=f5e66] [cursor=pointer]

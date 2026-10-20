@@ -178,15 +178,15 @@ void main() {
       setUp(() async {
         final good = await _currentDatabase(tmp, 'Backup site');
         // Cut after the header and the first pages: the header still says
-        // version 26, the file is a SQLite file, its tables are gone.
+        // version 27, the file is a SQLite file, its tables are gone.
         final truncated = Uint8List.sublistView(good, 0, good.length ~/ 2);
         // A real SQLite file stamped at the current version with no tables.
         final emptyFile = File(p.join(tmp.path, 'empty.sqlite'));
-        await _rawEdit(emptyFile, 26, ['CREATE TABLE unrelated (x INTEGER);']);
+        await _rawEdit(emptyFile, 27, ['CREATE TABLE unrelated (x INTEGER);']);
         // A current database with one table's column removed.
         final partialFile = File(p.join(tmp.path, 'partial.sqlite'));
         await partialFile.writeAsBytes(good);
-        await _rawEdit(partialFile, 26, [
+        await _rawEdit(partialFile, 27, [
           'ALTER TABLE session_logs DROP COLUMN name;',
         ]);
         // CHK-F01.A2: a current database whose session names a site that
@@ -194,7 +194,7 @@ void main() {
         // hand-edited file would be). Integrity alone says "ok".
         final danglingFile = File(p.join(tmp.path, 'dangling.sqlite'));
         await danglingFile.writeAsBytes(good);
-        await _rawEdit(danglingFile, 26, [
+        await _rawEdit(danglingFile, 27, [
           'UPDATE session_logs SET site_id = 99 WHERE id = 1;',
         ]);
         unusable = {
@@ -217,7 +217,7 @@ void main() {
           final bytes = _zip(unusable[kind]!);
 
           // The header check alone would accept it (TD-106).
-          expect(service(bytes).check(bytes).preview.schemaVersion, 26);
+          expect(service(bytes).check(bytes).preview.schemaVersion, 27);
           await expectLater(
             service(bytes).pick(),
             throwsA(
@@ -266,7 +266,7 @@ void main() {
           final liveBefore = await live.readAsBytes();
           final newerFile = File(p.join(tmp.path, 'newer.sqlite'));
           await newerFile.writeAsBytes(await _currentDatabase(tmp, 'Future'));
-          await _rawEdit(newerFile, 27, const []);
+          await _rawEdit(newerFile, 28, const []);
           final bytes = await newerFile.readAsBytes();
           await expectLater(
             service(_zip(bytes)).pick(),
@@ -280,7 +280,7 @@ void main() {
           );
           // A header that hides the newer database is refused too.
           await expectLater(
-            service(_zip(bytes, headerVersion: 26)).pick(),
+            service(_zip(bytes, headerVersion: 27)).pick(),
             throwsA(isA<BackupException>()),
           );
           await BackupStaging.stage(
@@ -339,7 +339,7 @@ void main() {
           .customSelect('PRAGMA user_version')
           .getSingle()
           .then((r) => r.data.values.single),
-      26,
+      27,
     );
     expect(await db.customSelect('PRAGMA foreign_key_check').get(), isEmpty);
     expect(
@@ -729,11 +729,11 @@ void main() {
     final good = await _currentDatabase(tmp, 'Fk');
     final dangling = File(p.join(tmp.path, 'fk-dangling.sqlite'));
     await dangling.writeAsBytes(good);
-    await _rawEdit(dangling, 26, [
+    await _rawEdit(dangling, 27, [
       'UPDATE session_logs SET site_id = 99 WHERE id = 1;',
     ]);
     // The file is otherwise sound: integrity is ok, one dangling reference.
-    final raw = _Raw(NativeDatabase(dangling), 26);
+    final raw = _Raw(NativeDatabase(dangling), 27);
     expect(
       (await raw.customSelect('PRAGMA integrity_check').getSingle())
           .data
@@ -759,7 +759,7 @@ void main() {
     // The same file pointing at its existing site passes.
     final linked = File(p.join(tmp.path, 'fk-linked.sqlite'));
     await linked.writeAsBytes(good);
-    await _rawEdit(linked, 26, [
+    await _rawEdit(linked, 27, [
       'UPDATE session_logs SET site_id = 1 WHERE id = 1;',
     ]);
     await checkRestoreCandidate(linked);

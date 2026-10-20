@@ -2,8 +2,10 @@
 // editor's read-only sensor-size fields showed "9.8" for 9.89. A clipped
 // text field raises no layout error, so the accessibility sweep cannot see
 // it; this test compares each W × H field's text width with its box. It
-// loads Roboto (the Android default font) from the Flutter SDK, because the
-// test font draws every character a full em wide and would exaggerate.
+// loads the application's bundled Geist font, because an unresolved family
+// falls back to the test font and exaggerates each character's width.
+
+import 'dart:io';
 
 import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
@@ -18,20 +20,12 @@ import 'package:provider/provider.dart';
 
 import '../../../support/in_memory_equipment_repository.dart';
 import '../../../support/metadata_candidates.dart';
-import '../../../support/sdk_fonts.dart';
 
-/// Loads Roboto from the SDK that runs the test (`bin/cache/artifacts`).
-Future<void> _loadRoboto() async {
-  final loader = FontLoader('Roboto');
-  for (final f in ['roboto-regular.ttf', 'roboto-medium.ttf']) {
-    final file = sdkMaterialFont(f);
-    expect(
-      file,
-      isNotNull,
-      reason: '$f not found in ${sdkMaterialFontsDirectory().path}',
-    );
-    loader.addFont(file!.readAsBytes().then((b) => ByteData.sublistView(b)));
-  }
+Future<void> _loadGeist() async {
+  final loader = FontLoader('Geist');
+  loader.addFont(
+    File('assets/fonts/Geist.ttf').readAsBytes().then(ByteData.sublistView),
+  );
   await loader.load();
 }
 
@@ -93,7 +87,7 @@ Future<void> _open(
 }
 
 void main() {
-  setUpAll(_loadRoboto);
+  setUpAll(_loadGeist);
 
   final drafts = {
     'the M4 phone draft': EquipmentDraft.fromCandidate(phoneCandidate()),
@@ -101,7 +95,7 @@ void main() {
       EquipmentSeeder.defaults.single,
     ),
   };
-  for (final scale in [1.0, 1.3]) {
+  for (final scale in [1.0, 1.3, 2.0]) {
     for (final MapEntry(key: name, value: draft) in drafts.entries) {
       testWidgets('numeric fields show their whole value on a 375 dp phone: '
           '$name, text ${(scale * 100).round()} %', (tester) async {

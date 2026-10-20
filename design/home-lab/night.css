@@ -1,0 +1,97 @@
+/* Browser-lab semantic variables for the sky-state band, Moon lanes and weather caution.
+   Sky palette experiments are browser proposals (Dusk / Slate / Ink), requested 2026-10-20.
+   Moon/caution retain existing roles; see docs/design/QUALITY_COLOR_GUIDANCE_2026_10_20.md.
+   Prototype-only: not production tokens. Field mode stays red-on-black (brightness, not hue). */
+:root{--sky-day:#CCD9DD;--sky-civil:#BCB9CA;--sky-nautical:#8B94AD;--sky-astro:#505E79;--sky-dark:#202731;--moon-up:#607D8B;--moon-free:#37352F;--wx-caution:#9A5B00}
+:root[data-theme=dark]{--sky-day:#61757D;--sky-civil:#827F95;--sky-nautical:#53627F;--sky-astro:#293B55;--sky-dark:#0B111A;--moon-up:#B0BEC5;--moon-free:#EBEBEA;--wx-caution:#FFB74D}
+:root[data-sky=slate]{--sky-day:#CBD9DA;--sky-civil:#AABFC3;--sky-nautical:#7B9BA8;--sky-astro:#435E72;--sky-dark:#1D2933}
+:root[data-theme=dark][data-sky=slate]{--sky-day:#698289;--sky-civil:#506F7D;--sky-nautical:#355668;--sky-astro:#1B364A;--sky-dark:#09151E}
+:root[data-sky=ink]{--sky-day:#D0D9E1;--sky-civil:#B3C3D8;--sky-nautical:#859CBF;--sky-astro:#4F658A;--sky-dark:#20263A}
+:root[data-theme=dark][data-sky=ink]{--sky-day:#697B96;--sky-civil:#58759B;--sky-nautical:#3A547E;--sky-astro:#243756;--sky-dark:#0B1020}
+:root[data-theme=field]{--sky-day:#660000;--sky-civil:#4D0000;--sky-nautical:#3A0000;--sky-astro:#1C0000;--sky-dark:#000;--moon-up:#990000;--moon-free:#FF0000;--wx-caution:#FF0000}
+
+.night-slider{margin:16px 0 20px;min-width:0;--sky-h:18px;--lane-h:10px;--stack-h:60px}
+.night-slider.compact{--sky-h:14px;--lane-h:8px;--stack-h:52px}
+.slider-caption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:calc(13px * var(--text-scale));color:var(--text-secondary);margin-bottom:12px}
+.slider-caption time{color:var(--text-primary);font-variant-numeric:tabular-nums}
+
+/* One band: a continuous sky-state gradient, the explicit dark interval beneath it, then two solid Moon lanes. */
+.rail-stack{position:relative;height:var(--stack-h);margin-inline:3px}
+.rail-visual{position:absolute;inset:0;pointer-events:none}
+.sky-track{position:absolute;left:0;right:0;top:0;height:var(--sky-h);border-radius:4px;outline:1px solid var(--border-control)}
+.dark-lane{position:absolute;left:0;right:0;top:calc(var(--sky-h) + 4px);height:8px}
+.dark-bracket{position:absolute;top:0;bottom:0;box-sizing:border-box;border:2px solid var(--text-primary);border-top:0}
+.moon-lane{position:absolute;left:0;right:0;height:var(--lane-h);border-radius:3px;background:var(--surface-sunken);outline:1px solid var(--border-subtle)}
+.lane-up{top:calc(var(--sky-h) + 18px)}
+.lane-free{top:calc(var(--sky-h) + 22px + var(--lane-h))}
+.moon-bar{position:absolute;top:0;bottom:0;border-radius:3px}
+.lane-up .moon-bar{top:25%;bottom:25%;background:var(--moon-up)}
+.lane-free .moon-bar{background:var(--moon-free)}
+
+/* The range input is the only interactive layer. Its width maps 0..(24 h - 5 min) onto the same
+   percentage scale as the bars, so the thumb centre lands exactly on the instant it names. */
+.night-slider input[type=range]{appearance:none;-webkit-appearance:none;position:absolute;left:-3px;top:0;width:calc(100% * var(--range-fraction,1) + 6px);height:var(--stack-h);min-height:48px;margin:0;padding:0;border:0;background:transparent;cursor:ew-resize}
+.night-slider input[type=range]::-webkit-slider-runnable-track{height:var(--stack-h);background:transparent;border:0}
+.night-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;box-sizing:border-box;width:6px;height:calc(var(--stack-h) + 4px);margin-top:-2px;border:2px solid var(--surface-default);border-radius:3px;background:var(--text-primary)}
+.night-slider input[type=range]::-moz-range-track{height:var(--stack-h);background:transparent;border:0}
+.night-slider input[type=range]::-moz-range-thumb{box-sizing:border-box;width:6px;height:calc(var(--stack-h) + 4px);border:2px solid var(--surface-default);border-radius:3px;background:var(--text-primary)}
+.rail-stack:has(input:focus-visible){outline:2px solid var(--text-primary);outline-offset:4px;border-radius:4px}
+
+.rail-labels{display:flex;justify-content:space-between;gap:8px;margin-top:6px;padding-inline:3px;font-size:calc(12px * var(--text-scale));color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.compact .rail-labels{display:none}
+
+.rail-legend{display:grid;gap:8px;margin-top:14px;font-size:calc(12px * var(--text-scale));line-height:1.45;color:var(--text-secondary)}
+.legend-group{display:flex;flex-wrap:wrap;gap:6px 16px}
+.legend-group>span{display:flex;align-items:center;gap:6px;min-width:0}
+.key{display:inline-block;flex:none;position:relative;width:20px;height:10px;border-radius:2px}
+.key-day,.key-civil,.key-nautical,.key-astro,.key-twilight,.key-dark{outline:1px solid var(--border-control)}
+.key-day{background:var(--sky-day)}.key-civil{background:var(--sky-civil)}.key-nautical{background:var(--sky-nautical)}.key-astro{background:var(--sky-astro)}
+.key-twilight{background:linear-gradient(90deg,var(--sky-civil),var(--sky-nautical),var(--sky-astro))}
+.key-dark{background:var(--sky-dark);margin-bottom:7px}
+.key-dark::after{content:"";position:absolute;left:0;right:0;top:14px;height:5px;box-sizing:border-box;border:2px solid var(--text-primary);border-top:0}
+.key-up{background:linear-gradient(var(--moon-up),var(--moon-up)) center/100% 4px no-repeat,var(--surface-sunken);outline:1px solid var(--border-subtle)}
+.key-free{background:var(--moon-free)}
+.rail-note{font-size:calc(12px * var(--text-scale));color:var(--text-tertiary);line-height:1.5}
+
+.cursor-output{display:block;margin-top:14px;font-size:calc(15px * var(--text-scale));line-height:1.55}
+.cursor-output strong{font-weight:500}
+.cursor-output span{display:block;color:var(--text-secondary);font-size:calc(13px * var(--text-scale));margin-top:3px}
+.timeline-reset{min-width:48px;min-height:48px;border:0;background:transparent;color:var(--text-primary);padding:8px;font:inherit;line-height:1.4;text-align:right}
+.compact .slider-caption{min-height:48px;margin-bottom:4px;gap:4px 8px;align-items:center}
+.compact .slider-caption label{margin-right:auto}
+.compact .cursor-output{margin-top:10px;font-size:calc(14px * var(--text-scale))}
+.compact .rail-legend{margin-top:12px;gap:6px}
+
+.interval-row{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums;padding:8px 0}
+.interval-row>span:last-child{color:var(--text-secondary)}
+.quiet-copy{font-size:calc(13px * var(--text-scale));line-height:1.65;color:var(--text-secondary)}
+.phase-glyph{stroke:none}
+
+/* Hybrid proposal only. Sky states keep their ordered luminance; Moon lanes also differ by geometry.
+   The legacy palettes remain intact for every other concept. */
+:root[data-variant=blend],.variant-blend{--sky-day:#DFE9E9;--sky-civil:#CECDE0;--sky-nautical:#A5B2CA;--sky-astro:#7585A1;--sky-dark:#475A72;--moon-up:#607D8B;--moon-free:#37352F}
+:root[data-theme=dark][data-variant=blend],:root[data-theme=dark] .variant-blend{--sky-day:#A0B2B8;--sky-civil:#9B98B0;--sky-nautical:#778AA9;--sky-astro:#526984;--sky-dark:#2D435D;--moon-up:#B0BEC5;--moon-free:#EBEBEA}
+:root[data-sky=slate][data-variant=blend],:root[data-sky=slate] .variant-blend{--sky-day:#E0EBE9;--sky-civil:#C8DCDD;--sky-nautical:#A0BBC6;--sky-astro:#7797AA;--sky-dark:#46667D}
+:root[data-theme=dark][data-sky=slate][data-variant=blend],:root[data-theme=dark][data-sky=slate] .variant-blend{--sky-day:#9EB9BA;--sky-civil:#86ABB6;--sky-nautical:#678FA5;--sky-astro:#456E8B;--sky-dark:#244D68}
+:root[data-sky=ink][data-variant=blend],:root[data-sky=ink] .variant-blend{--sky-day:#E3EAF2;--sky-civil:#CDD9ED;--sky-nautical:#A6BCDD;--sky-astro:#7D99C3;--sky-dark:#4E6A98}
+:root[data-theme=dark][data-sky=ink][data-variant=blend],:root[data-theme=dark][data-sky=ink] .variant-blend{--sky-day:#A6B7D0;--sky-civil:#91ACD2;--sky-nautical:#6C8FBD;--sky-astro:#4D71A1;--sky-dark:#2E507C}
+:root[data-theme=field][data-variant=blend],:root[data-theme=field] .variant-blend{--sky-day:#800000;--sky-civil:#650000;--sky-nautical:#4D0000;--sky-astro:#340000;--sky-dark:#180000;--moon-up:#B00000;--moon-free:#FF0000}
+
+/* The unwanted underline was the legend's illustrative bracket (.key-dark::after), never focus.
+   Keep the actual exact-time dark bracket on the rail and the separate input focus outline. */
+:is(:root[data-variant=blend],.variant-blend) .key-dark{margin-bottom:0}
+:is(:root[data-variant=blend],.variant-blend) .key-dark::after{content:none}
+:is(:root[data-variant=blend],.variant-blend) .compact .rail-labels{display:flex}
+:is(:root[data-variant=blend],.variant-blend) .slider-caption{gap:8px 12px;align-items:center}
+:is(:root[data-variant=blend],.variant-blend) .slider-caption label{flex:1 1 100%;margin:0}
+:is(:root[data-variant=blend],.variant-blend) .slider-caption time{flex:1 1 140px;line-height:1.5}
+:is(:root[data-variant=blend],.variant-blend) .timeline-reset{flex:0 1 auto;min-height:48px;max-width:100%;padding:8px 12px;border:1px solid var(--border-control);border-radius:var(--radius-small,6px);background:var(--surface-default);text-align:center;font-size:calc(13px * var(--text-scale));font-weight:500;cursor:pointer}
+:is(:root[data-variant=blend],.variant-blend) .timeline-reset:hover{background:var(--selection)}
+:is(:root[data-variant=blend],.variant-blend) .timeline-reset:focus-visible{outline:2px solid var(--text-primary);outline-offset:3px}
+:is(:root[data-variant=blend],.variant-blend) .timeline-hint{margin:10px 0 0;font-size:calc(12px * var(--text-scale));line-height:1.5;color:var(--text-secondary)}
+:is(:root[data-variant=blend],.variant-blend) .rail-legend{gap:8px}
+:is(:root[data-variant=blend],.variant-blend) .cursor-output strong{display:inline-block;font-weight:600;text-decoration:none}
+:is(:root[data-variant=blend],.variant-blend) .rail-labels span{white-space:nowrap}
+@media(prefers-reduced-motion:no-preference){
+ :is(:root[data-variant=blend],.variant-blend) .timeline-reset{transition:background-color 120ms ease-out,border-color 120ms ease-out}
+}

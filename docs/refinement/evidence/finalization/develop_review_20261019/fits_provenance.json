@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/astropy/ccdproc",
+  "commit": "6bab63d0b98f85eab0b4f9e1cbc1ef28087cb7ad",
+  "path": "ccdproc/tests/data/a8280271.fits",
+  "sha256": "F1A33E416B601C57A77893E11AB158E0216AB1F48C634ADCABDB757D84111F02",
+  "bytes": 561600,
+  "license": "repository BSD-3-Clause; data README contains no separate exception",
+  "scope": "public real telescope fixture; not owner sample, not full F10 phone/rig acceptance"
+}

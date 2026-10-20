@@ -1,0 +1,2813 @@
+{
+  "capturedAtUtc": "2026-10-20T18:50:59.812Z",
+  "startedAtUtc": "2026-10-20T18:50:29.438Z",
+  "framing": "\n    .planner-page>.lab-toolbar,.planner-page>.plan-preview-bar,.skip-link,.skip{display:none!important}\n    .planner-page{padding:0!important;margin:0!important}\n    .planner-page>.android-device{width:412px!important;height:915px!important;min-height:915px!important;max-height:915px!important;flex:none!important;margin:0!important;border:0!important;border-radius:0!important}\n    .android-statusbar,.android-gesture{display:none!important}\n    body:not(.planner-page)>header,body:not(.planner-page)>footer,\n    body:not(.planner-page)>main>:not(#concepts),#concepts>:not(#concept-grid),\n    .concept:not([data-variant=\"blend\"]),.concept-heading,.concept-summary{display:none!important}\n    body:not(.planner-page),body:not(.planner-page)>main,#concepts,#concept-grid,\n    .concept,.preview-well,.app-frame{margin:0!important;padding:0!important;border:0!important;border-radius:0!important}\n    #concept-grid{display:block!important;width:412px!important;max-width:none!important}\n    .concept-grid .phone-viewport{width:412px!important;height:915px!important;min-height:915px!important;max-height:915px!important}\n    .concept-grid .app-brand-row:before,.concept-grid .app-nav:after{display:none!important}\n  ",
+  "storageIsolation": "local/session storage cleared on each document before canonical fixture module initialization",
+  "diagnostics": [],
+  "records": [
+    {
+      "name": "browser-home-light100.png",
+      "url": "http://127.0.0.1:4174/index.html?view=wide&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "culmina\nWelcome & setup\nTonight\n\nA clear plan for the night ahead.\n\nLjubljana\nNight of 10 Nov\nYour plan\nSaved\n\nGreat Orion Nebula\n\nM42 · ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFits in example window\n\nExample window · initial Planning settings apply (5 s between frames; 15% margin).\n\nNeeded in imaging window\n1 h 48 min 20 s\nUsable\n6 h 30 min\nOpen planner\nThe night ahead\nNight\n18:21–05:16 (+1)\n10 h 55 min dark · Europe/Ljubljana\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nMoon\nNew Moon · 3% lit\nMoon-free 18:21–05:16 (+1) · 10 h 55 min\nWeather\n-2.5 °C · wind up to 9 km/h\nExample forecast · during dark time\nWhat can I image tonight?\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-plan-light100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Plan\nNight of 10 Nov · Ends 11 Nov\nSaved\nFits\n\nNeeded in imaging window: 1 h 48 min 20 s\n6 h 30 min usable\n\nLeaves 4 h 41 min 40 s spare in the window.\n\nExample capture end: 11 Nov 2026, 00:35 GMT+1.\n\nSite and night\nLjubljana\nSite zone: Europe/Ljubljana\nTarget\nM42 · Great Orion Nebula\nNebula\nRig\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nAstro camera (colour) · 400 mm f/5.6 ·\nCapture plan\n\n3 blocks · 140 frames\n\nLight · L\n\n100 × 60 s = 1 h 40 min integration\n\nGain unrecorded · Binning 1×1\n\nFits: room for up to 360 frames like this in the example window\n\nEdit\nRemove\nDark\n\n20 × 60 s = 20 min planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nFlat · no filter\n\n20 × 2 s = 40 s planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nAdd block\nBuild calibration frames\nEstimate\nIntegration\n1 h 40 min\nlight exposures only\nTotal session time\n2 h 12 min 20 s\nwith overheads, setup and calibration\nStorage\nUnknown\ntheoretical example, not measured\nRelative stacking gain\n×10.00\nvs one comparable frame · 100 frames\n\nRelative gain is ideal √N within comparable light frames, not absolute signal-to-noise.\n\nBudget and assumptions\nWindow time, overheads and file-size basis\nStacking gain details\nPer-group table and time curve\nRig details\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nThe night ahead\nNight & Moon\n10 h 55 min dark · 18:21–05:16\nMoon-free 18:21–05:16 · New Moon, 3%\nWeather\nCloud 0–61% in the dark\nFull dark-time coverage · updated -504 h -9 min ago\n\nSaved in this browser.\n\nSave plan"
+    },
+    {
+      "name": "browser-plan_editor-light100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "first actual fixture block editor; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nFrames\n\n= 1 h 40 min of integration\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes"
+    },
+    {
+      "name": "browser-plan_editor_invalid-light100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "invalid exposure; browser validation UI only; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nEntered by you.\nEnter positive seconds, for example 60 or 1/125.\nFrames\n\nEnter exposure and frames to see the total.\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes\nCheck the highlighted fields. Your typed values are kept."
+    },
+    {
+      "name": "browser-night-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=night&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\n10 h 55 min of dark time\n\n18:21 → 05:16 (+1) · Sun limit −18°\n\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon intervals & phase\nNew Moon · 3% lit\nSun & twilight\nEvent times and darkness limits"
+    },
+    {
+      "name": "browser-moon-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=moon&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nMoon-free dark\n10 h 55 min\n18:21 → 05:16 (+1)\nMoon-free all dark time\n\nNew Moon · 3% lit\n\nPreview Moon through the night\nMoon calendar\nNovember 2026\n\nCanonical native fixture nights. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n4 h 15 min\n2\n5 h 35 min\n3\n6 h 55 min\n4\n8 h 10 min\n5\n9 h 20 min\n6\n10 h 30 min\n7\n10 h 45 min\n8\n10 h 50 min\n9\n10 h 55 min\n10\n•\n10 h 55 min\n11\n10 h 55 min\n12\n11 h\n13\n10 h 5 min\n14\n9 h 5 min\n15\n7 h 55 min\n16\n6 h 50 min\n17\n5 h 40 min\n18\n4 h 40 min\n19\n3 h 30 min\n20\n2 h 15 min\n21\n55 min\n22\n0 min\n23\n0 min\n24\n0 min\n25\n0 min\n26\n0 min\n27\n1 h 5 min\n28\n2 h 25 min\n29\n3 h 50 min\n30\n5 h 5 min\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon details\nPhase, intervals and how to read them"
+    },
+    {
+      "name": "browser-weather-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-weather-charts-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "hourly section start",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-logbook-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=logbook&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Logbook\n\nExample nights · 19 Oct 2026, 19:00 Kyiv time · saved in this browser.\n\nSearch\nFilters\nProgress by target\nIntegration so far, from your results\n\n2 entries\n\nUpcoming\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-library-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=library&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Library\n\nExample library · saved in this browser. Your plan stays unchanged.\n\nRigs\nYour cameras with their lenses or telescopes\nTargets\nThe catalogue and the targets you added\nSites\n1 example sites · choose the planning site in Plan\n\nProgress by target lives in the Logbook.\n\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Settings\n\nPreview settings · saved in this browser.\n\nNothing saved yet: the app's defaults are shown.\n\nPreferences\nAppearance\nSystem · text 100% · °C, km/h, m\nPlanning\n20° altitude · −18° Sun · 15% margin · 5 s between frames\nPrivacy\nPlace-name lookup off\nData and about\nBackup & data\nSave or restore these preview settings\nAbout\nCulmina 1.0.0 · data sources and licence\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings_appearance-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "settings appearance",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Appearance\nTheme\nTheme\nSystem\nLight\nDark\n\nSystem follows this device's light or dark setting (now Light).\n\nRed field mode\nRed on black only, to keep your night vision. The same switch as the moon button in the app bar.\nText size\nText size\n100%\n125%\n200%\n\nIn the app, text follows Android's font size. Here it scales this preview only.\n\nUnits\n\nShown units only: stored values and calculations stay in °C, km/h and m. In this preview only the dew margin uses them.\n\nTemperature\n°C\n°F\nWind\nkm/h\nmph\nm/s\nElevation\nm\nft\n\nTheme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do."
+    },
+    {
+      "name": "browser-settings_planning-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "settings planning",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Planning\n\nPlan defaults. Saved snapshots stay unchanged.\n\nCapture budget\nTime between frames\n5 s\n\nDownload and delay after each exposure. Measure your rig.\n\n0 s\n120 s\nFit margin\n15%\n\nShows Tight when less than this share of usable time remains.\n\n0%\n50%\nHow these defaults apply\nImaging window\n\nStored preference · the preview's example window stays fixed.\n\nMinimum target altitude\n20°\n\nBelow this the target is not counted as usable. Low altitude means more atmosphere, extinction and poor seeing.\n\n5°\n60°\nDarkness limit (Sun altitude)\n−18°\n−15°\n−12°\n\n−18° is full astronomical darkness. −15° or −12° give longer windows with a brighter sky background.\n\nGates and optional times\nGates: 0 of 2 on · optional times: 0 of 5 included\nGuidance\n\nStored guidance preferences · no change to this preview's fit.\n\nNPF star-trail tolerance (k)\nk = 1.0\n\nFor untracked exposures (Michaud NPF rule): 1 = round stars, up to 3 = slightly elongated. Higher allows longer sub-exposures.\n\nk = 1.0\nk = 3.0\nDew warning margin\n2 °C\n\nWarn when the air temperature is within this margin of the dew point.\n\n0 °C\n10 °C\n\nNo changes\n\nCancel\nSave"
+    },
+    {
+      "name": "browser-settings_privacy-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "settings privacy",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Privacy\nPlace names\nLook up place names\nOptional: the app sends the chosen coordinates to OpenStreetMap Nominatim. Off keeps coordinate labels.\n\nThis preview stores your choice only. No place-name request is sent.\n\nWhat leaves the device in the app"
+    },
+    {
+      "name": "browser-settings_backup-light100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=1",
+      "state": "settings backup",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Backup & data\n\nBack up this browser prototype, or just its settings. Neither file is an app database backup.\n\nFull prototype backup\n\nPlan, Logbook, Library and Settings from this browser. Review a file before restoring.\n\nPrototype backup & restore\nSave preview settings\n\nOne JSON file with the settings on these pages: appearance, units, planning and privacy. No plans, Logbook entries or app data.\n\nDownload settings file\nRestore preview settings\n\nChecked first; nothing changes until you confirm.\n\nSettings file (.json)\nApplication backup"
+    },
+    {
+      "name": "browser-home-light200.png",
+      "url": "http://127.0.0.1:4174/index.html?view=wide&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "culmina\nWelcome & setup\nTonight\n\nA clear plan for the night ahead.\n\nLjubljana\nNight of 10 Nov\nYour plan\nSaved\n\nGreat Orion Nebula\n\nM42 · ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFits in example window\n\nExample window · initial Planning settings apply (5 s between frames; 15% margin).\n\nNeeded in imaging window\n1 h 48 min 20 s\nUsable\n6 h 30 min\nOpen planner\nThe night ahead\nNight\n18:21–05:16 (+1)\n10 h 55 min dark · Europe/Ljubljana\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nMoon\nNew Moon · 3% lit\nMoon-free 18:21–05:16 (+1) · 10 h 55 min\nWeather\n-2.5 °C · wind up to 9 km/h\nExample forecast · during dark time\nWhat can I image tonight?\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-plan-light200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Plan\nNight of 10 Nov · Ends 11 Nov\nSaved\nFits\n\nNeeded in imaging window: 1 h 48 min 20 s\n6 h 30 min usable\n\nLeaves 4 h 41 min 40 s spare in the window.\n\nExample capture end: 11 Nov 2026, 00:35 GMT+1.\n\nSite and night\nLjubljana\nSite zone: Europe/Ljubljana\nTarget\nM42 · Great Orion Nebula\nNebula\nRig\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nAstro camera (colour) · 400 mm f/5.6 ·\nCapture plan\n\n3 blocks · 140 frames\n\nLight · L\n\n100 × 60 s = 1 h 40 min integration\n\nGain unrecorded · Binning 1×1\n\nFits: room for up to 360 frames like this in the example window\n\nEdit\nRemove\nDark\n\n20 × 60 s = 20 min planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nFlat · no filter\n\n20 × 2 s = 40 s planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nAdd block\nBuild calibration frames\nEstimate\nIntegration\n1 h 40 min\nlight exposures only\nTotal session time\n2 h 12 min 20 s\nwith overheads, setup and calibration\nStorage\nUnknown\ntheoretical example, not measured\nRelative stacking gain\n×10.00\nvs one comparable frame · 100 frames\n\nRelative gain is ideal √N within comparable light frames, not absolute signal-to-noise.\n\nBudget and assumptions\nWindow time, overheads and file-size basis\nStacking gain details\nPer-group table and time curve\nRig details\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nThe night ahead\nNight & Moon\n10 h 55 min dark · 18:21–05:16\nMoon-free 18:21–05:16 · New Moon, 3%\nWeather\nCloud 0–61% in the dark\nFull dark-time coverage · updated -504 h -9 min ago\n\nSaved in this browser.\n\nSave plan"
+    },
+    {
+      "name": "browser-plan_editor-light200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "first actual fixture block editor; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nFrames\n\n= 1 h 40 min of integration\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes"
+    },
+    {
+      "name": "browser-plan_editor_invalid-light200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "invalid exposure; browser validation UI only; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nEntered by you.\nEnter positive seconds, for example 60 or 1/125.\nFrames\n\nEnter exposure and frames to see the total.\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes\nCheck the highlighted fields. Your typed values are kept."
+    },
+    {
+      "name": "browser-night-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=night&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\n10 h 55 min of dark time\n\n18:21 → 05:16 (+1) · Sun limit −18°\n\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon intervals & phase\nNew Moon · 3% lit\nSun & twilight\nEvent times and darkness limits"
+    },
+    {
+      "name": "browser-moon-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=moon&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nMoon-free dark\n10 h 55 min\n18:21 → 05:16 (+1)\nMoon-free all dark time\n\nNew Moon · 3% lit\n\nPreview Moon through the night\nMoon calendar\n9 Nov–15 Nov\n\nCanonical native fixture nights. Tap to view; your plan stays unchanged.\n\n9\nNew Moon · 1% lit · 10 h 55 min moon-free dark\n10\n•\nNew Moon · 3% lit · 10 h 55 min moon-free dark\n11\nWaxing crescent · 7% lit · 10 h 55 min moon-free dark\n12\nWaxing crescent · 12% lit · 11 h moon-free dark\n13\nWaxing crescent · 19% lit · 10 h 5 min moon-free dark\n14\nWaxing crescent · 27% lit · 9 h 5 min moon-free dark\n15\nFirst quarter · 36% lit · 7 h 55 min moon-free dark\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon details\nPhase, intervals and how to read them"
+    },
+    {
+      "name": "browser-weather-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-weather-charts-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "hourly section start",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-logbook-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=logbook&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Logbook\n\nExample nights · 19 Oct 2026, 19:00 Kyiv time · saved in this browser.\n\nSearch\nFilters\nProgress by target\nIntegration so far, from your results\n\n2 entries\n\nUpcoming\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-library-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=library&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Library\n\nExample library · saved in this browser. Your plan stays unchanged.\n\nRigs\nYour cameras with their lenses or telescopes\nTargets\nThe catalogue and the targets you added\nSites\n1 example sites · choose the planning site in Plan\n\nProgress by target lives in the Logbook.\n\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Settings\n\nPreview settings · saved in this browser.\n\nNothing saved yet: the app's defaults are shown.\n\nPreferences\nAppearance\nSystem · text 200% · °C, km/h, m\nPlanning\n20° altitude · −18° Sun · 15% margin · 5 s between frames\nPrivacy\nPlace-name lookup off\nData and about\nBackup & data\nSave or restore these preview settings\nAbout\nCulmina 1.0.0 · data sources and licence\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings_appearance-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "settings appearance",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Appearance\nTheme\nTheme\nSystem\nLight\nDark\n\nSystem follows this device's light or dark setting (now Light).\n\nRed field mode\nRed on black only, to keep your night vision. The same switch as the moon button in the app bar.\nText size\nText size\n100%\n125%\n200%\n\nIn the app, text follows Android's font size. Here it scales this preview only.\n\nUnits\n\nShown units only: stored values and calculations stay in °C, km/h and m. In this preview only the dew margin uses them.\n\nTemperature\n°C\n°F\nWind\nkm/h\nmph\nm/s\nElevation\nm\nft\n\nTheme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do."
+    },
+    {
+      "name": "browser-settings_planning-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "settings planning",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Planning\n\nPlan defaults. Saved snapshots stay unchanged.\n\nCapture budget\nTime between frames\n5 s\n\nDownload and delay after each exposure. Measure your rig.\n\n0 s\n120 s\nFit margin\n15%\n\nShows Tight when less than this share of usable time remains.\n\n0%\n50%\nHow these defaults apply\nImaging window\n\nStored preference · the preview's example window stays fixed.\n\nMinimum target altitude\n20°\n\nBelow this the target is not counted as usable. Low altitude means more atmosphere, extinction and poor seeing.\n\n5°\n60°\nDarkness limit (Sun altitude)\n−18°\n−15°\n−12°\n\n−18° is full astronomical darkness. −15° or −12° give longer windows with a brighter sky background.\n\nGates and optional times\nGates: 0 of 2 on · optional times: 0 of 5 included\nGuidance\n\nStored guidance preferences · no change to this preview's fit.\n\nNPF star-trail tolerance (k)\nk = 1.0\n\nFor untracked exposures (Michaud NPF rule): 1 = round stars, up to 3 = slightly elongated. Higher allows longer sub-exposures.\n\nk = 1.0\nk = 3.0\nDew warning margin\n2 °C\n\nWarn when the air temperature is within this margin of the dew point.\n\n0 °C\n10 °C\n\nNo changes\n\nCancel\nSave"
+    },
+    {
+      "name": "browser-settings_privacy-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "settings privacy",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Privacy\nPlace names\nLook up place names\nOptional: the app sends the chosen coordinates to OpenStreetMap Nominatim. Off keeps coordinate labels.\n\nThis preview stores your choice only. No place-name request is sent.\n\nWhat leaves the device in the app"
+    },
+    {
+      "name": "browser-settings_backup-light200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=light&scale=2",
+      "state": "settings backup",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Backup & data\n\nBack up this browser prototype, or just its settings. Neither file is an app database backup.\n\nFull prototype backup\n\nPlan, Logbook, Library and Settings from this browser. Review a file before restoring.\n\nPrototype backup & restore\nSave preview settings\n\nOne JSON file with the settings on these pages: appearance, units, planning and privacy. No plans, Logbook entries or app data.\n\nDownload settings file\nRestore preview settings\n\nChecked first; nothing changes until you confirm.\n\nSettings file (.json)\nApplication backup"
+    },
+    {
+      "name": "browser-home-dark100.png",
+      "url": "http://127.0.0.1:4174/index.html?view=wide&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "culmina\nWelcome & setup\nTonight\n\nA clear plan for the night ahead.\n\nLjubljana\nNight of 10 Nov\nYour plan\nSaved\n\nGreat Orion Nebula\n\nM42 · ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFits in example window\n\nExample window · initial Planning settings apply (5 s between frames; 15% margin).\n\nNeeded in imaging window\n1 h 48 min 20 s\nUsable\n6 h 30 min\nOpen planner\nThe night ahead\nNight\n18:21–05:16 (+1)\n10 h 55 min dark · Europe/Ljubljana\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nMoon\nNew Moon · 3% lit\nMoon-free 18:21–05:16 (+1) · 10 h 55 min\nWeather\n-2.5 °C · wind up to 9 km/h\nExample forecast · during dark time\nWhat can I image tonight?\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-plan-dark100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Plan\nNight of 10 Nov · Ends 11 Nov\nSaved\nFits\n\nNeeded in imaging window: 1 h 48 min 20 s\n6 h 30 min usable\n\nLeaves 4 h 41 min 40 s spare in the window.\n\nExample capture end: 11 Nov 2026, 00:35 GMT+1.\n\nSite and night\nLjubljana\nSite zone: Europe/Ljubljana\nTarget\nM42 · Great Orion Nebula\nNebula\nRig\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nAstro camera (colour) · 400 mm f/5.6 ·\nCapture plan\n\n3 blocks · 140 frames\n\nLight · L\n\n100 × 60 s = 1 h 40 min integration\n\nGain unrecorded · Binning 1×1\n\nFits: room for up to 360 frames like this in the example window\n\nEdit\nRemove\nDark\n\n20 × 60 s = 20 min planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nFlat · no filter\n\n20 × 2 s = 40 s planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nAdd block\nBuild calibration frames\nEstimate\nIntegration\n1 h 40 min\nlight exposures only\nTotal session time\n2 h 12 min 20 s\nwith overheads, setup and calibration\nStorage\nUnknown\ntheoretical example, not measured\nRelative stacking gain\n×10.00\nvs one comparable frame · 100 frames\n\nRelative gain is ideal √N within comparable light frames, not absolute signal-to-noise.\n\nBudget and assumptions\nWindow time, overheads and file-size basis\nStacking gain details\nPer-group table and time curve\nRig details\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nThe night ahead\nNight & Moon\n10 h 55 min dark · 18:21–05:16\nMoon-free 18:21–05:16 · New Moon, 3%\nWeather\nCloud 0–61% in the dark\nFull dark-time coverage · updated -504 h -9 min ago\n\nSaved in this browser.\n\nSave plan"
+    },
+    {
+      "name": "browser-plan_editor-dark100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "first actual fixture block editor; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nFrames\n\n= 1 h 40 min of integration\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes"
+    },
+    {
+      "name": "browser-plan_editor_invalid-dark100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "invalid exposure; browser validation UI only; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nEntered by you.\nEnter positive seconds, for example 60 or 1/125.\nFrames\n\nEnter exposure and frames to see the total.\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes\nCheck the highlighted fields. Your typed values are kept."
+    },
+    {
+      "name": "browser-night-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=night&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\n10 h 55 min of dark time\n\n18:21 → 05:16 (+1) · Sun limit −18°\n\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon intervals & phase\nNew Moon · 3% lit\nSun & twilight\nEvent times and darkness limits"
+    },
+    {
+      "name": "browser-moon-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=moon&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nMoon-free dark\n10 h 55 min\n18:21 → 05:16 (+1)\nMoon-free all dark time\n\nNew Moon · 3% lit\n\nPreview Moon through the night\nMoon calendar\nNovember 2026\n\nCanonical native fixture nights. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n4 h 15 min\n2\n5 h 35 min\n3\n6 h 55 min\n4\n8 h 10 min\n5\n9 h 20 min\n6\n10 h 30 min\n7\n10 h 45 min\n8\n10 h 50 min\n9\n10 h 55 min\n10\n•\n10 h 55 min\n11\n10 h 55 min\n12\n11 h\n13\n10 h 5 min\n14\n9 h 5 min\n15\n7 h 55 min\n16\n6 h 50 min\n17\n5 h 40 min\n18\n4 h 40 min\n19\n3 h 30 min\n20\n2 h 15 min\n21\n55 min\n22\n0 min\n23\n0 min\n24\n0 min\n25\n0 min\n26\n0 min\n27\n1 h 5 min\n28\n2 h 25 min\n29\n3 h 50 min\n30\n5 h 5 min\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon details\nPhase, intervals and how to read them"
+    },
+    {
+      "name": "browser-weather-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-weather-charts-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "hourly section start",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-logbook-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=logbook&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Logbook\n\nExample nights · 19 Oct 2026, 19:00 Kyiv time · saved in this browser.\n\nSearch\nFilters\nProgress by target\nIntegration so far, from your results\n\n2 entries\n\nUpcoming\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-library-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=library&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Library\n\nExample library · saved in this browser. Your plan stays unchanged.\n\nRigs\nYour cameras with their lenses or telescopes\nTargets\nThe catalogue and the targets you added\nSites\n1 example sites · choose the planning site in Plan\n\nProgress by target lives in the Logbook.\n\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Settings\n\nPreview settings · saved in this browser.\n\nNothing saved yet: the app's defaults are shown.\n\nPreferences\nAppearance\nSystem · text 100% · °C, km/h, m\nPlanning\n20° altitude · −18° Sun · 15% margin · 5 s between frames\nPrivacy\nPlace-name lookup off\nData and about\nBackup & data\nSave or restore these preview settings\nAbout\nCulmina 1.0.0 · data sources and licence\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings_appearance-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "settings appearance",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Appearance\nTheme\nTheme\nSystem\nLight\nDark\n\nSystem follows this device's light or dark setting (now Dark).\n\nRed field mode\nRed on black only, to keep your night vision. The same switch as the moon button in the app bar.\nText size\nText size\n100%\n125%\n200%\n\nIn the app, text follows Android's font size. Here it scales this preview only.\n\nUnits\n\nShown units only: stored values and calculations stay in °C, km/h and m. In this preview only the dew margin uses them.\n\nTemperature\n°C\n°F\nWind\nkm/h\nmph\nm/s\nElevation\nm\nft\n\nTheme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do."
+    },
+    {
+      "name": "browser-settings_planning-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "settings planning",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Planning\n\nPlan defaults. Saved snapshots stay unchanged.\n\nCapture budget\nTime between frames\n5 s\n\nDownload and delay after each exposure. Measure your rig.\n\n0 s\n120 s\nFit margin\n15%\n\nShows Tight when less than this share of usable time remains.\n\n0%\n50%\nHow these defaults apply\nImaging window\n\nStored preference · the preview's example window stays fixed.\n\nMinimum target altitude\n20°\n\nBelow this the target is not counted as usable. Low altitude means more atmosphere, extinction and poor seeing.\n\n5°\n60°\nDarkness limit (Sun altitude)\n−18°\n−15°\n−12°\n\n−18° is full astronomical darkness. −15° or −12° give longer windows with a brighter sky background.\n\nGates and optional times\nGates: 0 of 2 on · optional times: 0 of 5 included\nGuidance\n\nStored guidance preferences · no change to this preview's fit.\n\nNPF star-trail tolerance (k)\nk = 1.0\n\nFor untracked exposures (Michaud NPF rule): 1 = round stars, up to 3 = slightly elongated. Higher allows longer sub-exposures.\n\nk = 1.0\nk = 3.0\nDew warning margin\n2 °C\n\nWarn when the air temperature is within this margin of the dew point.\n\n0 °C\n10 °C\n\nNo changes\n\nCancel\nSave"
+    },
+    {
+      "name": "browser-settings_privacy-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "settings privacy",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Privacy\nPlace names\nLook up place names\nOptional: the app sends the chosen coordinates to OpenStreetMap Nominatim. Off keeps coordinate labels.\n\nThis preview stores your choice only. No place-name request is sent.\n\nWhat leaves the device in the app"
+    },
+    {
+      "name": "browser-settings_backup-dark100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=1",
+      "state": "settings backup",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Backup & data\n\nBack up this browser prototype, or just its settings. Neither file is an app database backup.\n\nFull prototype backup\n\nPlan, Logbook, Library and Settings from this browser. Review a file before restoring.\n\nPrototype backup & restore\nSave preview settings\n\nOne JSON file with the settings on these pages: appearance, units, planning and privacy. No plans, Logbook entries or app data.\n\nDownload settings file\nRestore preview settings\n\nChecked first; nothing changes until you confirm.\n\nSettings file (.json)\nApplication backup"
+    },
+    {
+      "name": "browser-home-dark200.png",
+      "url": "http://127.0.0.1:4174/index.html?view=wide&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "culmina\nWelcome & setup\nTonight\n\nA clear plan for the night ahead.\n\nLjubljana\nNight of 10 Nov\nYour plan\nSaved\n\nGreat Orion Nebula\n\nM42 · ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFits in example window\n\nExample window · initial Planning settings apply (5 s between frames; 15% margin).\n\nNeeded in imaging window\n1 h 48 min 20 s\nUsable\n6 h 30 min\nOpen planner\nThe night ahead\nNight\n18:21–05:16 (+1)\n10 h 55 min dark · Europe/Ljubljana\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nMoon\nNew Moon · 3% lit\nMoon-free 18:21–05:16 (+1) · 10 h 55 min\nWeather\n-2.5 °C · wind up to 9 km/h\nExample forecast · during dark time\nWhat can I image tonight?\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-plan-dark200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Plan\nNight of 10 Nov · Ends 11 Nov\nSaved\nFits\n\nNeeded in imaging window: 1 h 48 min 20 s\n6 h 30 min usable\n\nLeaves 4 h 41 min 40 s spare in the window.\n\nExample capture end: 11 Nov 2026, 00:35 GMT+1.\n\nSite and night\nLjubljana\nSite zone: Europe/Ljubljana\nTarget\nM42 · Great Orion Nebula\nNebula\nRig\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nAstro camera (colour) · 400 mm f/5.6 ·\nCapture plan\n\n3 blocks · 140 frames\n\nLight · L\n\n100 × 60 s = 1 h 40 min integration\n\nGain unrecorded · Binning 1×1\n\nFits: room for up to 360 frames like this in the example window\n\nEdit\nRemove\nDark\n\n20 × 60 s = 20 min planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nFlat · no filter\n\n20 × 2 s = 40 s planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nAdd block\nBuild calibration frames\nEstimate\nIntegration\n1 h 40 min\nlight exposures only\nTotal session time\n2 h 12 min 20 s\nwith overheads, setup and calibration\nStorage\nUnknown\ntheoretical example, not measured\nRelative stacking gain\n×10.00\nvs one comparable frame · 100 frames\n\nRelative gain is ideal √N within comparable light frames, not absolute signal-to-noise.\n\nBudget and assumptions\nWindow time, overheads and file-size basis\nStacking gain details\nPer-group table and time curve\nRig details\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nThe night ahead\nNight & Moon\n10 h 55 min dark · 18:21–05:16\nMoon-free 18:21–05:16 · New Moon, 3%\nWeather\nCloud 0–61% in the dark\nFull dark-time coverage · updated -504 h -9 min ago\n\nSaved in this browser.\n\nSave plan"
+    },
+    {
+      "name": "browser-plan_editor-dark200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "first actual fixture block editor; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nFrames\n\n= 1 h 40 min of integration\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes"
+    },
+    {
+      "name": "browser-plan_editor_invalid-dark200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "invalid exposure; browser validation UI only; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nEntered by you.\nEnter positive seconds, for example 60 or 1/125.\nFrames\n\nEnter exposure and frames to see the total.\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes\nCheck the highlighted fields. Your typed values are kept."
+    },
+    {
+      "name": "browser-night-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=night&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\n10 h 55 min of dark time\n\n18:21 → 05:16 (+1) · Sun limit −18°\n\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon intervals & phase\nNew Moon · 3% lit\nSun & twilight\nEvent times and darkness limits"
+    },
+    {
+      "name": "browser-moon-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=moon&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nMoon-free dark\n10 h 55 min\n18:21 → 05:16 (+1)\nMoon-free all dark time\n\nNew Moon · 3% lit\n\nPreview Moon through the night\nMoon calendar\n9 Nov–15 Nov\n\nCanonical native fixture nights. Tap to view; your plan stays unchanged.\n\n9\nNew Moon · 1% lit · 10 h 55 min moon-free dark\n10\n•\nNew Moon · 3% lit · 10 h 55 min moon-free dark\n11\nWaxing crescent · 7% lit · 10 h 55 min moon-free dark\n12\nWaxing crescent · 12% lit · 11 h moon-free dark\n13\nWaxing crescent · 19% lit · 10 h 5 min moon-free dark\n14\nWaxing crescent · 27% lit · 9 h 5 min moon-free dark\n15\nFirst quarter · 36% lit · 7 h 55 min moon-free dark\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon details\nPhase, intervals and how to read them"
+    },
+    {
+      "name": "browser-weather-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-weather-charts-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "hourly section start",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-logbook-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=logbook&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Logbook\n\nExample nights · 19 Oct 2026, 19:00 Kyiv time · saved in this browser.\n\nSearch\nFilters\nProgress by target\nIntegration so far, from your results\n\n2 entries\n\nUpcoming\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-library-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=library&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Library\n\nExample library · saved in this browser. Your plan stays unchanged.\n\nRigs\nYour cameras with their lenses or telescopes\nTargets\nThe catalogue and the targets you added\nSites\n1 example sites · choose the planning site in Plan\n\nProgress by target lives in the Logbook.\n\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Settings\n\nPreview settings · saved in this browser.\n\nNothing saved yet: the app's defaults are shown.\n\nPreferences\nAppearance\nSystem · text 200% · °C, km/h, m\nPlanning\n20° altitude · −18° Sun · 15% margin · 5 s between frames\nPrivacy\nPlace-name lookup off\nData and about\nBackup & data\nSave or restore these preview settings\nAbout\nCulmina 1.0.0 · data sources and licence\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings_appearance-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "settings appearance",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Appearance\nTheme\nTheme\nSystem\nLight\nDark\n\nSystem follows this device's light or dark setting (now Dark).\n\nRed field mode\nRed on black only, to keep your night vision. The same switch as the moon button in the app bar.\nText size\nText size\n100%\n125%\n200%\n\nIn the app, text follows Android's font size. Here it scales this preview only.\n\nUnits\n\nShown units only: stored values and calculations stay in °C, km/h and m. In this preview only the dew margin uses them.\n\nTemperature\n°C\n°F\nWind\nkm/h\nmph\nm/s\nElevation\nm\nft\n\nTheme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do."
+    },
+    {
+      "name": "browser-settings_planning-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "settings planning",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Planning\n\nPlan defaults. Saved snapshots stay unchanged.\n\nCapture budget\nTime between frames\n5 s\n\nDownload and delay after each exposure. Measure your rig.\n\n0 s\n120 s\nFit margin\n15%\n\nShows Tight when less than this share of usable time remains.\n\n0%\n50%\nHow these defaults apply\nImaging window\n\nStored preference · the preview's example window stays fixed.\n\nMinimum target altitude\n20°\n\nBelow this the target is not counted as usable. Low altitude means more atmosphere, extinction and poor seeing.\n\n5°\n60°\nDarkness limit (Sun altitude)\n−18°\n−15°\n−12°\n\n−18° is full astronomical darkness. −15° or −12° give longer windows with a brighter sky background.\n\nGates and optional times\nGates: 0 of 2 on · optional times: 0 of 5 included\nGuidance\n\nStored guidance preferences · no change to this preview's fit.\n\nNPF star-trail tolerance (k)\nk = 1.0\n\nFor untracked exposures (Michaud NPF rule): 1 = round stars, up to 3 = slightly elongated. Higher allows longer sub-exposures.\n\nk = 1.0\nk = 3.0\nDew warning margin\n2 °C\n\nWarn when the air temperature is within this margin of the dew point.\n\n0 °C\n10 °C\n\nNo changes\n\nCancel\nSave"
+    },
+    {
+      "name": "browser-settings_privacy-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "settings privacy",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Privacy\nPlace names\nLook up place names\nOptional: the app sends the chosen coordinates to OpenStreetMap Nominatim. Off keeps coordinate labels.\n\nThis preview stores your choice only. No place-name request is sent.\n\nWhat leaves the device in the app"
+    },
+    {
+      "name": "browser-settings_backup-dark200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=dark&scale=2",
+      "state": "settings backup",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Backup & data\n\nBack up this browser prototype, or just its settings. Neither file is an app database backup.\n\nFull prototype backup\n\nPlan, Logbook, Library and Settings from this browser. Review a file before restoring.\n\nPrototype backup & restore\nSave preview settings\n\nOne JSON file with the settings on these pages: appearance, units, planning and privacy. No plans, Logbook entries or app data.\n\nDownload settings file\nRestore preview settings\n\nChecked first; nothing changes until you confirm.\n\nSettings file (.json)\nApplication backup"
+    },
+    {
+      "name": "browser-home-field100.png",
+      "url": "http://127.0.0.1:4174/index.html?view=wide&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "culmina\nWelcome & setup\nTonight\n\nA clear plan for the night ahead.\n\nLjubljana\nNight of 10 Nov\nYour plan\nSaved\n\nGreat Orion Nebula\n\nM42 · ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFits in example window\n\nExample window · initial Planning settings apply (5 s between frames; 15% margin).\n\nNeeded in imaging window\n1 h 48 min 20 s\nUsable\n6 h 30 min\nOpen planner\nThe night ahead\nNight\n18:21–05:16 (+1)\n10 h 55 min dark · Europe/Ljubljana\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nMoon\nNew Moon · 3% lit\nMoon-free 18:21–05:16 (+1) · 10 h 55 min\nWeather\n-2.5 °C · wind up to 9 km/h\nExample forecast · during dark time\nWhat can I image tonight?\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-plan-field100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Plan\nNight of 10 Nov · Ends 11 Nov\nSaved\nFits\n\nNeeded in imaging window: 1 h 48 min 20 s\n6 h 30 min usable\n\nLeaves 4 h 41 min 40 s spare in the window.\n\nExample capture end: 11 Nov 2026, 00:35 GMT+1.\n\nSite and night\nLjubljana\nSite zone: Europe/Ljubljana\nTarget\nM42 · Great Orion Nebula\nNebula\nRig\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nAstro camera (colour) · 400 mm f/5.6 ·\nCapture plan\n\n3 blocks · 140 frames\n\nLight · L\n\n100 × 60 s = 1 h 40 min integration\n\nGain unrecorded · Binning 1×1\n\nFits: room for up to 360 frames like this in the example window\n\nEdit\nRemove\nDark\n\n20 × 60 s = 20 min planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nFlat · no filter\n\n20 × 2 s = 40 s planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nAdd block\nBuild calibration frames\nEstimate\nIntegration\n1 h 40 min\nlight exposures only\nTotal session time\n2 h 12 min 20 s\nwith overheads, setup and calibration\nStorage\nUnknown\ntheoretical example, not measured\nRelative stacking gain\n×10.00\nvs one comparable frame · 100 frames\n\nRelative gain is ideal √N within comparable light frames, not absolute signal-to-noise.\n\nBudget and assumptions\nWindow time, overheads and file-size basis\nStacking gain details\nPer-group table and time curve\nRig details\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nThe night ahead\nNight & Moon\n10 h 55 min dark · 18:21–05:16\nMoon-free 18:21–05:16 · New Moon, 3%\nWeather\nCloud 0–61% in the dark\nFull dark-time coverage · updated -504 h -9 min ago\n\nSaved in this browser.\n\nSave plan"
+    },
+    {
+      "name": "browser-plan_editor-field100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "first actual fixture block editor; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nFrames\n\n= 1 h 40 min of integration\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes"
+    },
+    {
+      "name": "browser-plan_editor_invalid-field100.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "invalid exposure; browser validation UI only; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nEntered by you.\nEnter positive seconds, for example 60 or 1/125.\nFrames\n\nEnter exposure and frames to see the total.\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes\nCheck the highlighted fields. Your typed values are kept."
+    },
+    {
+      "name": "browser-night-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=night&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\n10 h 55 min of dark time\n\n18:21 → 05:16 (+1) · Sun limit −18°\n\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon intervals & phase\nNew Moon · 3% lit\nSun & twilight\nEvent times and darkness limits"
+    },
+    {
+      "name": "browser-moon-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=moon&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nMoon-free dark\n10 h 55 min\n18:21 → 05:16 (+1)\nMoon-free all dark time\n\nNew Moon · 3% lit\n\nPreview Moon through the night\nMoon calendar\nNovember 2026\n\nCanonical native fixture nights. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n4 h 15 min\n2\n5 h 35 min\n3\n6 h 55 min\n4\n8 h 10 min\n5\n9 h 20 min\n6\n10 h 30 min\n7\n10 h 45 min\n8\n10 h 50 min\n9\n10 h 55 min\n10\n•\n10 h 55 min\n11\n10 h 55 min\n12\n11 h\n13\n10 h 5 min\n14\n9 h 5 min\n15\n7 h 55 min\n16\n6 h 50 min\n17\n5 h 40 min\n18\n4 h 40 min\n19\n3 h 30 min\n20\n2 h 15 min\n21\n55 min\n22\n0 min\n23\n0 min\n24\n0 min\n25\n0 min\n26\n0 min\n27\n1 h 5 min\n28\n2 h 25 min\n29\n3 h 50 min\n30\n5 h 5 min\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon details\nPhase, intervals and how to read them"
+    },
+    {
+      "name": "browser-weather-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-weather-charts-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "hourly section start",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-logbook-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=logbook&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Logbook\n\nExample nights · 19 Oct 2026, 19:00 Kyiv time · saved in this browser.\n\nSearch\nFilters\nProgress by target\nIntegration so far, from your results\n\n2 entries\n\nUpcoming\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-library-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=library&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Library\n\nExample library · saved in this browser. Your plan stays unchanged.\n\nRigs\nYour cameras with their lenses or telescopes\nTargets\nThe catalogue and the targets you added\nSites\n1 example sites · choose the planning site in Plan\n\nProgress by target lives in the Logbook.\n\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Settings\n\nPreview settings · saved in this browser.\n\nNothing saved yet: the app's defaults are shown.\n\nPreferences\nAppearance\nRed field mode · text 100% · °C, km/h, m\nPlanning\n20° altitude · −18° Sun · 15% margin · 5 s between frames\nPrivacy\nPlace-name lookup off\nData and about\nBackup & data\nSave or restore these preview settings\nAbout\nCulmina 1.0.0 · data sources and licence\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings_appearance-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "settings appearance",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Appearance\nTheme\nTheme\nSystem\nLight\nDark\n\nSystem follows this device's light or dark setting (now Light). Applies when red field mode is off.\n\nRed field mode\nRed on black only, to keep your night vision. The same switch as the moon button in the app bar.\nText size\nText size\n100%\n125%\n200%\n\nIn the app, text follows Android's font size. Here it scales this preview only.\n\nUnits\n\nShown units only: stored values and calculations stay in °C, km/h and m. In this preview only the dew margin uses them.\n\nTemperature\n°C\n°F\nWind\nkm/h\nmph\nm/s\nElevation\nm\nft\n\nTheme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do."
+    },
+    {
+      "name": "browser-settings_planning-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "settings planning",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Planning\n\nPlan defaults. Saved snapshots stay unchanged.\n\nCapture budget\nTime between frames\n5 s\n\nDownload and delay after each exposure. Measure your rig.\n\n0 s\n120 s\nFit margin\n15%\n\nShows Tight when less than this share of usable time remains.\n\n0%\n50%\nHow these defaults apply\nImaging window\n\nStored preference · the preview's example window stays fixed.\n\nMinimum target altitude\n20°\n\nBelow this the target is not counted as usable. Low altitude means more atmosphere, extinction and poor seeing.\n\n5°\n60°\nDarkness limit (Sun altitude)\n−18°\n−15°\n−12°\n\n−18° is full astronomical darkness. −15° or −12° give longer windows with a brighter sky background.\n\nGates and optional times\nGates: 0 of 2 on · optional times: 0 of 5 included\nGuidance\n\nStored guidance preferences · no change to this preview's fit.\n\nNPF star-trail tolerance (k)\nk = 1.0\n\nFor untracked exposures (Michaud NPF rule): 1 = round stars, up to 3 = slightly elongated. Higher allows longer sub-exposures.\n\nk = 1.0\nk = 3.0\nDew warning margin\n2 °C\n\nWarn when the air temperature is within this margin of the dew point.\n\n0 °C\n10 °C\n\nNo changes\n\nCancel\nSave"
+    },
+    {
+      "name": "browser-settings_privacy-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "settings privacy",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Privacy\nPlace names\nLook up place names\nOptional: the app sends the chosen coordinates to OpenStreetMap Nominatim. Off keeps coordinate labels.\n\nThis preview stores your choice only. No place-name request is sent.\n\nWhat leaves the device in the app"
+    },
+    {
+      "name": "browser-settings_backup-field100.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=1",
+      "state": "settings backup",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1",
+      "visibleText": "Backup & data\n\nBack up this browser prototype, or just its settings. Neither file is an app database backup.\n\nFull prototype backup\n\nPlan, Logbook, Library and Settings from this browser. Review a file before restoring.\n\nPrototype backup & restore\nSave preview settings\n\nOne JSON file with the settings on these pages: appearance, units, planning and privacy. No plans, Logbook entries or app data.\n\nDownload settings file\nRestore preview settings\n\nChecked first; nothing changes until you confirm.\n\nSettings file (.json)\nApplication backup"
+    },
+    {
+      "name": "browser-home-field200.png",
+      "url": "http://127.0.0.1:4174/index.html?view=wide&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "culmina\nWelcome & setup\nTonight\n\nA clear plan for the night ahead.\n\nLjubljana\nNight of 10 Nov\nYour plan\nSaved\n\nGreat Orion Nebula\n\nM42 · ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFits in example window\n\nExample window · initial Planning settings apply (5 s between frames; 15% margin).\n\nNeeded in imaging window\n1 h 48 min 20 s\nUsable\n6 h 30 min\nOpen planner\nThe night ahead\nNight\n18:21–05:16 (+1)\n10 h 55 min dark · Europe/Ljubljana\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nMoon\nNew Moon · 3% lit\nMoon-free 18:21–05:16 (+1) · 10 h 55 min\nWeather\n-2.5 °C · wind up to 9 km/h\nExample forecast · during dark time\nWhat can I image tonight?\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-plan-field200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Plan\nNight of 10 Nov · Ends 11 Nov\nSaved\nFits\n\nNeeded in imaging window: 1 h 48 min 20 s\n6 h 30 min usable\n\nLeaves 4 h 41 min 40 s spare in the window.\n\nExample capture end: 11 Nov 2026, 00:35 GMT+1.\n\nSite and night\nLjubljana\nSite zone: Europe/Ljubljana\nTarget\nM42 · Great Orion Nebula\nNebula\nRig\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nAstro camera (colour) · 400 mm f/5.6 ·\nCapture plan\n\n3 blocks · 140 frames\n\nLight · L\n\n100 × 60 s = 1 h 40 min integration\n\nGain unrecorded · Binning 1×1\n\nFits: room for up to 360 frames like this in the example window\n\nEdit\nRemove\nDark\n\n20 × 60 s = 20 min planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nFlat · no filter\n\n20 × 2 s = 40 s planned calibration, not integration\n\nGain unrecorded · Binning 1×1\n\nOutside the imaging window · adds to total time\n\nEdit\nRemove\nAdd block\nBuild calibration frames\nEstimate\nIntegration\n1 h 40 min\nlight exposures only\nTotal session time\n2 h 12 min 20 s\nwith overheads, setup and calibration\nStorage\nUnknown\ntheoretical example, not measured\nRelative stacking gain\n×10.00\nvs one comparable frame · 100 frames\n\nRelative gain is ideal √N within comparable light frames, not absolute signal-to-noise.\n\nBudget and assumptions\nWindow time, overheads and file-size basis\nStacking gain details\nPer-group table and time curve\nRig details\nZWO ASI2600MC + example 72 mm f/5.6 refractor\nThe night ahead\nNight & Moon\n10 h 55 min dark · 18:21–05:16\nMoon-free 18:21–05:16 · New Moon, 3%\nWeather\nCloud 0–61% in the dark\nFull dark-time coverage · updated -504 h -9 min ago\n\nSaved in this browser.\n\nSave plan"
+    },
+    {
+      "name": "browser-plan_editor-field200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "first actual fixture block editor; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nFrames\n\n= 1 h 40 min of integration\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes"
+    },
+    {
+      "name": "browser-plan_editor_invalid-field200.png",
+      "url": "http://127.0.0.1:4174/plan.html?from=home&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "invalid exposure; browser validation UI only; no change applied",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Edit block\n\nRig: ZWO ASI2600MC + example 72 mm f/5.6 refractor\n\nFrame type\nLight\nDark\nFlat\nBias\nFrom a photo\nExposure (seconds)\nFor example 60, 2.5 or 1/125.\nEntered by you.\nEnter positive seconds, for example 60 or 1/125.\nFrames\n\nEnter exposure and frames to see the total.\n\nFilter (optional)\nLeave blank for no filter. A placeholder is not a selected filter.\nGain (optional)\nDetails\nBinning and timing\n\nRecords describe how you plan to shoot. This preview doesn’t control a camera.\n\nApply updates the draft. Save plan records it.\n\nApply changes\nCheck the highlighted fields. Your typed values are kept."
+    },
+    {
+      "name": "browser-night-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=night&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\n10 h 55 min of dark time\n\n18:21 → 05:16 (+1) · Sun limit −18°\n\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon intervals & phase\nNew Moon · 3% lit\nSun & twilight\nEvent times and darkness limits"
+    },
+    {
+      "name": "browser-moon-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=moon&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Night & Moon\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nMoon-free dark\n10 h 55 min\n18:21 → 05:16 (+1)\nMoon-free all dark time\n\nNew Moon · 3% lit\n\nPreview Moon through the night\nMoon calendar\n9 Nov–15 Nov\n\nCanonical native fixture nights. Tap to view; your plan stays unchanged.\n\n9\nNew Moon · 1% lit · 10 h 55 min moon-free dark\n10\n•\nNew Moon · 3% lit · 10 h 55 min moon-free dark\n11\nWaxing crescent · 7% lit · 10 h 55 min moon-free dark\n12\nWaxing crescent · 12% lit · 11 h moon-free dark\n13\nWaxing crescent · 19% lit · 10 h 5 min moon-free dark\n14\nWaxing crescent · 27% lit · 9 h 5 min moon-free dark\n15\nFirst quarter · 36% lit · 7 h 55 min moon-free dark\nPreview time\n10 Nov, 18:56 GMT+1\nReturn to now\n10 Nov, 12:01\n11 Nov, 12:01\n\nDrag to preview · arrow keys step 5 min.\n\nDaylight\nTwilight\nDark 18:21–05:16\nMoon above horizon\nMoon-free dark\nMoon-free dark\nMoon-free for 10 h 20 min · until 05:16\nRead the time browser\nSky, Moon lanes and exact boundaries\nMoon details\nPhase, intervals and how to read them"
+    },
+    {
+      "name": "browser-weather-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-weather-charts-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?view=weather&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "hourly section start",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Weather\nNight\nMoon\nWeather\n\nLjubljana · Europe/Ljubljana\n\nYour plan’s night\nNight of 10 Nov\nEnds 11 Nov\nCloud 0–61% in the dark\n\nDark 18:21 → 05:16 (+1) · 10 h 55 min\n\nClearest around 01:00 (0%) · cloudiest around 00:00 (61%)\n\nAir temperature\n-2.5 °C\nDew point\n-4 °C\nWind and gusts\nWind up to 9 km/h\nGusts up to 18 km/h\nRain chance\nup to 5%\n\n11 of 11 hourly samples have a dew point within 2 °C of air. A caution, not a condensation forecast.\n\nCoverage: 11/11 hourly samples in dark time\n\nExample updated 10 Nov, 19:00 GMT+1 · 0 min old\n\nReload example\nHour by hour\n\nSelect an hour for values. Scroll sideways for later hours.\n\nCloud cover · %\n\n19:00\n26\n20:00\n33\n21:00\n40\n22:00\n47\n23:00\n54\n00:00\n61\n01:00\n0\n02:00\n7\n03:00\n14\n04:00\n21\n05:00\n28\n\nTemperature / dew point · -5–-1 °C\n\nRelative humidity · 0–100%\n\nTemperature\nDew point\nHumidity · %\nCloud unknown\nSelected hour\n10 Nov, 19:00 GMT+1 *\nCloud cover\n26%\nTemperature / dew point\n-2.5 °C / -4 °C\nWind / gust\n9 km/h / 18 km/h\nPrecipitation probability\n5%\nLow / middle / high cloud\n10% / 20% / 30%\nHumidity / visibility\n82% / 24 km\n\nSamples share the same hourly positions. Gust and rain chance describe the preceding hour; * marks partial dark-time overlap.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\nNight of 1 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 2 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\nNight of 3 Nov\n\nFull dark-time coverage\n\nCloud 0–61% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "name": "browser-logbook-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=logbook&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Logbook\n\nExample nights · 19 Oct 2026, 19:00 Kyiv time · saved in this browser.\n\nSearch\nFilters\nProgress by target\nIntegration so far, from your results\n\n2 entries\n\nUpcoming\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nGreat Orion Nebula · Tue 10 Nov\nSaved\nResult not recorded\nZWO ASI2600MC + example 72 mm f/5.6 refractor · Ljubljana\nIntegration: none recorded of 1 h 40 min planned\nExample night\nRecord result\nfor Great Orion Nebula · Tue 10 Nov\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-library-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=library&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Library\n\nExample library · saved in this browser. Your plan stays unchanged.\n\nRigs\nYour cameras with their lenses or telescopes\nTargets\nThe catalogue and the targets you added\nSites\n1 example sites · choose the planning site in Plan\n\nProgress by target lives in the Logbook.\n\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "initial root",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Settings\n\nPreview settings · saved in this browser.\n\nNothing saved yet: the app's defaults are shown.\n\nPreferences\nAppearance\nRed field mode · text 200% · °C, km/h, m\nPlanning\n20° altitude · −18° Sun · 15% margin · 5 s between frames\nPrivacy\nPlace-name lookup off\nData and about\nBackup & data\nSave or restore these preview settings\nAbout\nCulmina 1.0.0 · data sources and licence\nTonight\nLogbook\nLibrary\nSettings"
+    },
+    {
+      "name": "browser-settings_appearance-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "settings appearance",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Appearance\nTheme\nTheme\nSystem\nLight\nDark\n\nSystem follows this device's light or dark setting (now Light). Applies when red field mode is off.\n\nRed field mode\nRed on black only, to keep your night vision. The same switch as the moon button in the app bar.\nText size\nText size\n100%\n125%\n200%\n\nIn the app, text follows Android's font size. Here it scales this preview only.\n\nUnits\n\nShown units only: stored values and calculations stay in °C, km/h and m. In this preview only the dew margin uses them.\n\nTemperature\n°C\n°F\nWind\nkm/h\nmph\nm/s\nElevation\nm\nft\n\nTheme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do."
+    },
+    {
+      "name": "browser-settings_planning-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "settings planning",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Planning\n\nPlan defaults. Saved snapshots stay unchanged.\n\nCapture budget\nTime between frames\n5 s\n\nDownload and delay after each exposure. Measure your rig.\n\n0 s\n120 s\nFit margin\n15%\n\nShows Tight when less than this share of usable time remains.\n\n0%\n50%\nHow these defaults apply\nImaging window\n\nStored preference · the preview's example window stays fixed.\n\nMinimum target altitude\n20°\n\nBelow this the target is not counted as usable. Low altitude means more atmosphere, extinction and poor seeing.\n\n5°\n60°\nDarkness limit (Sun altitude)\n−18°\n−15°\n−12°\n\n−18° is full astronomical darkness. −15° or −12° give longer windows with a brighter sky background.\n\nGates and optional times\nGates: 0 of 2 on · optional times: 0 of 5 included\nGuidance\n\nStored guidance preferences · no change to this preview's fit.\n\nNPF star-trail tolerance (k)\nk = 1.0\n\nFor untracked exposures (Michaud NPF rule): 1 = round stars, up to 3 = slightly elongated. Higher allows longer sub-exposures.\n\nk = 1.0\nk = 3.0\nDew warning margin\n2 °C\n\nWarn when the air temperature is within this margin of the dew point.\n\n0 °C\n10 °C\n\nNo changes\n\nCancel\nSave"
+    },
+    {
+      "name": "browser-settings_privacy-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "settings privacy",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Privacy\nPlace names\nLook up place names\nOptional: the app sends the chosen coordinates to OpenStreetMap Nominatim. Off keeps coordinate labels.\n\nThis preview stores your choice only. No place-name request is sent.\n\nWhat leaves the device in the app"
+    },
+    {
+      "name": "browser-settings_backup-field200.png",
+      "url": "http://127.0.0.1:4174/workspace.html?tab=settings&variant=blend&font=Geist&night=2026-11-10&theme=field&scale=2",
+      "state": "settings backup",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2",
+      "visibleText": "Backup & data\n\nBack up this browser prototype, or just its settings. Neither file is an app database backup.\n\nFull prototype backup\n\nPlan, Logbook, Library and Settings from this browser. Review a file before restoring.\n\nPrototype backup & restore\nSave preview settings\n\nOne JSON file with the settings on these pages: appearance, units, planning and privacy. No plans, Logbook entries or app data.\n\nDownload settings file\nRestore preview settings\n\nChecked first; nothing changes until you confirm.\n\nSettings file (.json)\nApplication backup"
+    }
+  ],
+  "fixtureSha256": "39b1dfa55e396d3a82d04776439b125e26896e12d8578ea915c4d0a19cd1f849",
+  "captureRunnerSha256": "eb12a5b2bebac07625105d7de3fff68a4e508aea359f53e254564449135bf22e",
+  "tooling": {
+    "launcher": "pinned PowerShell Playwright CLI",
+    "cli": "0.1.22",
+    "playwright": "1.64.1",
+    "screenshot": "locator screenshot, scale css, animations disabled; no pixel resizing"
+  },
+  "originalSourceReverified": 145,
+  "originalSourceChanged": false,
+  "screenshotCount": 90,
+  "screenshots": [
+    {
+      "name": "browser-home-dark100.png",
+      "bytes": 57418,
+      "sha256": "2ef855f3f5b61b42cca8d0753064ea2486d4a2167d2e90cb86ee2b4749268cc0",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-home-dark200.png",
+      "bytes": 67353,
+      "sha256": "4d90f758a138dd881b9158bdfd4ca7cdc1b43307f5571b3bf8261f83c6fb9c5c",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-home-field100.png",
+      "bytes": 33083,
+      "sha256": "6c1d94a2805cfc60a0200b435bf1d16439bb124803d87cc1034ccf37a416e371",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-home-field200.png",
+      "bytes": 38794,
+      "sha256": "8df368653cf30264736f38a38688e3c1a827d25b793646b7b0724fbc86b2f301",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-home-light100.png",
+      "bytes": 57592,
+      "sha256": "a750e94274825ca964607b1aa83d433077b025525bc8dfffdabdd510433fce35",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-home-light200.png",
+      "bytes": 68134,
+      "sha256": "fd7b58322f4f9a911767f464ba95847819785b9e916f695bf199031fdc5e0163",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-library-dark100.png",
+      "bytes": 32139,
+      "sha256": "bcf0ffa10a2d830d7ef59ae821236bc89fca9d5944c9ae260c37b83db7d754d4",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-library-dark200.png",
+      "bytes": 62175,
+      "sha256": "83c6ed139a69be63464362d50b2feb9d3ceba58c7301fce25ff07dee66ddd630",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-library-field100.png",
+      "bytes": 19464,
+      "sha256": "c5e135a95797272dade1310fbba2475a300ed9602e8f5515e82ce2567f2cfcf6",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-library-field200.png",
+      "bytes": 35451,
+      "sha256": "2cb949d6ab9d68de3737e40afa4bb96972e684b225378a0ac8281751b6c472b3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-library-light100.png",
+      "bytes": 31576,
+      "sha256": "362327c777e2a88fb38800d303693183a3941264f496487ca1af1b29780ffa71",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-library-light200.png",
+      "bytes": 62009,
+      "sha256": "a3774bdffaf0a341ec8a19075007d0b32be35b6442c68f406a282dfecb22f54a",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-logbook-dark100.png",
+      "bytes": 61765,
+      "sha256": "d292a449fc467bec9b8a17ba33ffc042c94d97294098b63a4d5dc0d1a6db4209",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-logbook-dark200.png",
+      "bytes": 58768,
+      "sha256": "5321632d9f8820dd278ebceb874f5524a28f5864a13f0492890675222e02cdb3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-logbook-field100.png",
+      "bytes": 34111,
+      "sha256": "36ca6db2336e326f57dc7534dd7aa9a6c476823ced930eabf0d26df2e85fe043",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-logbook-field200.png",
+      "bytes": 33522,
+      "sha256": "7c5b659b974b52b85e2d73e8c17ffc2a07cc02be1e794339adeac4ebaf0b4866",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-logbook-light100.png",
+      "bytes": 60291,
+      "sha256": "c3fc3aea5a355a3f74c05a928a7aec050964fb4fa03ddabf9ccfccce6aecce92",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-logbook-light200.png",
+      "bytes": 59563,
+      "sha256": "4196bc1a3dc54360adf996549e051922204d61880c2fa6b122805a76d3a9f0b5",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-dark100.png",
+      "bytes": 58423,
+      "sha256": "03e649cffc1f8c56dfd59a68837c806ded8e06c964a75b853a27c5f97da478df",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-dark200.png",
+      "bytes": 58742,
+      "sha256": "4b1e9425aba1990ec2c759a301c54e16869b2fa6e657f34983d35f7016120a46",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-field100.png",
+      "bytes": 33910,
+      "sha256": "b089c06785d75889a7c08f0eb3e7ffd79a2a1723b23a384232df32645531fac6",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-field200.png",
+      "bytes": 34726,
+      "sha256": "b9064068b4a416ea035c68a82821c4fd4c8ea574fd39e097a1c7d7eb883f1f68",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-light100.png",
+      "bytes": 58260,
+      "sha256": "f5ade5c4406ae9568b965dd4cd56537926a15b0ecabd7b6438c5705b1912e872",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-light200.png",
+      "bytes": 59630,
+      "sha256": "d6f216b3b5dce013a452cc2d7d852b88a1431121aa682b698c0027e1063b17ee",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-dark100.png",
+      "bytes": 58671,
+      "sha256": "b40a683d5e744f3d5e3eb8aa10391987ab488cbdedb2d00328d3f31c852da4e9",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-dark200.png",
+      "bytes": 59878,
+      "sha256": "842f4ca9c58c4ac7bb8d29b5063a6bd69346ab9cd674c4f42ecf2692c5d4d50e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-field100.png",
+      "bytes": 32658,
+      "sha256": "13538a9c1beda0ac037d984c33437f9731dc20c41e2b7aa4ae1308e819cbc96f",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-field200.png",
+      "bytes": 35519,
+      "sha256": "f48386eb3932cde6d4d695318dd36b6ce7c9ccbd17b0ce5db326c29d984dda78",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-light100.png",
+      "bytes": 58095,
+      "sha256": "8a9b3f8bb0e2771f2045f5c002e23c0d33468ceac71be7d6bb3cf659a7750a28",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-light200.png",
+      "bytes": 60841,
+      "sha256": "08beea6d7e2b75dda0a70ccdc64ad9214032c2d71e5900a2054b6d78f666db9e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan-dark100.png",
+      "bytes": 62899,
+      "sha256": "0d66a58922e459852f2388896f0495196629270653bd5ae2f4f741b5d8ba61e6",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan-dark200.png",
+      "bytes": 62224,
+      "sha256": "b5421480e6efaffe8939c788856d58e1fc70ea9ecfb5c90a97266031010fb4f3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan-field100.png",
+      "bytes": 34528,
+      "sha256": "1d5be690dee0baab63feb555211cc44b1a4daef40c5aabfc420ded3fa6c80cf3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan-field200.png",
+      "bytes": 35242,
+      "sha256": "373f01fac2beb5278cccbbb3a1d5a967872264b268cce9e002b3597a73cfa03a",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan-light100.png",
+      "bytes": 62682,
+      "sha256": "2feef966a29bb1d69658f7e7929aa3f1da8092d677dd05b47ef8dbb90f24d14e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan-light200.png",
+      "bytes": 62851,
+      "sha256": "d1388aedd8e7e4f9615d90d0c10fb21b87a03b563fc6ae1cbe1c6aa4ed6c298c",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor-dark100.png",
+      "bytes": 43289,
+      "sha256": "acc8e722df273ea6226d171100b4f857c4e45f8b2c6b4b853d5847a06075ea4f",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor-dark200.png",
+      "bytes": 59740,
+      "sha256": "ec965d42beae3e98962fecd8cde0086ac74fe550699365d1c7912a4e338e5881",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor-field100.png",
+      "bytes": 27587,
+      "sha256": "050654bd611b4e468e765b9dd41074b3cb40ae041def71902945c775f83f0004",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor-field200.png",
+      "bytes": 35740,
+      "sha256": "e983f3795890b5d60df95f53a0b28adb9be723bd913a452138640b39e0b5b987",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor-light100.png",
+      "bytes": 43308,
+      "sha256": "ec55d9fd02120d1facc1dfd888969531894974729cc868ce2120936bd27a9719",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor-light200.png",
+      "bytes": 60247,
+      "sha256": "a5ddfe1d3f3814e305026120cf7aed07eb07461997e40000148306d362fc48cc",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor_invalid-dark100.png",
+      "bytes": 51321,
+      "sha256": "8e7239d6ba777892c59b40da138d4adc90beba8bed113728a8fbb77d9b29f1fa",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor_invalid-dark200.png",
+      "bytes": 60446,
+      "sha256": "06efdd71844a3013b9cec22a05071a4d60847d8447eea7725537fc6ac6711228",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor_invalid-field100.png",
+      "bytes": 32551,
+      "sha256": "61b3c22fdd815f002a2aed07b011871ae26a21f2b6a5cc705f2b75b9a31d8cb3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor_invalid-field200.png",
+      "bytes": 37068,
+      "sha256": "d38cfe240a515dbede58940c1fa27991c22dc613d0f8d83928eb9e3650b6c209",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor_invalid-light100.png",
+      "bytes": 51548,
+      "sha256": "164d025c3dfe7d5fa7594e81aff541b267012cb78d5a29c12b4a09151e4a232f",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-plan_editor_invalid-light200.png",
+      "bytes": 61081,
+      "sha256": "b8b3d6a797b409c0340f713052ac62d2e3756801454d841d496274c922e6269a",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings-dark100.png",
+      "bytes": 45424,
+      "sha256": "3262b539a4cb398992a474efdcba7732c84de35f2b8c0cdb3d5987afac9dd4c6",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings-dark200.png",
+      "bytes": 61398,
+      "sha256": "c043db18817d91b110008210be4873d6dc11ee354ce851473aedd7ecbc47e9ab",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings-field100.png",
+      "bytes": 26328,
+      "sha256": "88c8f78bfe4bcaeef7ad898ab5fdbc6a75e69dc999a1017c31d39d9e224d3390",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings-field200.png",
+      "bytes": 34953,
+      "sha256": "0b8c08aae1e34cb8e5f087d1175ef102373060df85102057c5f34a10540e8ec4",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings-light100.png",
+      "bytes": 44545,
+      "sha256": "a56705fda904ffa6d525d42ab3e7e2edc1b9536df4172a1f01bdd4c46be2888c",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings-light200.png",
+      "bytes": 61741,
+      "sha256": "bbfdab9c52e6269b7277d043247faff3a408e471c39922c5cb644004dcf9c2b2",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_appearance-dark100.png",
+      "bytes": 62191,
+      "sha256": "09213581822b3ad86ebad58544c2ce94fc8a8a9a821da24ca72d75485f54d26e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_appearance-dark200.png",
+      "bytes": 60514,
+      "sha256": "b099af283cb41092921b57b64860ad6fcca519bc31c2a69714abb6644f42a259",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_appearance-field100.png",
+      "bytes": 38036,
+      "sha256": "34fe64f5899d623638d6131693b877a529de719a9ef8b6f5a662d0a26cdbf316",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_appearance-field200.png",
+      "bytes": 35124,
+      "sha256": "915cbad4b325be22624ea65fa4274896f3cfa2746f325ca0baf813c92f5d87be",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_appearance-light100.png",
+      "bytes": 60883,
+      "sha256": "1859ff97914241f991e3e202475cd0704ec2d0b0417fcec0ecd47d793eb41295",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_appearance-light200.png",
+      "bytes": 60594,
+      "sha256": "24aff42899f7846d6edf4ea9d0ea7d8fcc1c3d70270f11b58b0a1feb73744469",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_backup-dark100.png",
+      "bytes": 53578,
+      "sha256": "51a9131204029e2762c3e272c373fb19a3b3df173729a2dc5f66cf7f27998dbe",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_backup-dark200.png",
+      "bytes": 81233,
+      "sha256": "3868e686f869056916cb85158048a92dc0af8c57051f67e7f936fa833706cdd4",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_backup-field100.png",
+      "bytes": 30952,
+      "sha256": "083aa36696aa3c05e4f15999d093bf5b01eb4b77330f6604d8670321b7497c00",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_backup-field200.png",
+      "bytes": 45571,
+      "sha256": "86282701f7243d6344198e1c09ffba041360ff6d5709322553a2210b84818c73",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_backup-light100.png",
+      "bytes": 52878,
+      "sha256": "e350928f337b081f34d2c25d9bff471302dff47890d62771ef7884e3b5e6a63a",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_backup-light200.png",
+      "bytes": 82920,
+      "sha256": "d043dcd448b8acfcb1dd003de7e9e19f6b9b29ee8ca84487425b3f541bb695da",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_planning-dark100.png",
+      "bytes": 56131,
+      "sha256": "bf1b762dfd87371ffa4f0de8e1713f1926928b5c65d38ad278ab7fbe4995760c",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_planning-dark200.png",
+      "bytes": 63533,
+      "sha256": "10af39d918aa2902688e7c2ec4bbb70965c08192d8c55b0b0498c08542be0f92",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_planning-field100.png",
+      "bytes": 32183,
+      "sha256": "28253ba5c0db435ba3e1241c9d9ac89ae9079881b42f3f38d43495aa32f6c8c3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_planning-field200.png",
+      "bytes": 35856,
+      "sha256": "e065f2be2c1063e94f5c0f4e1a32294542af4d28f4652a516a465fe7fb964742",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_planning-light100.png",
+      "bytes": 55430,
+      "sha256": "d4aa9c10d15f7e9774941a3445ec027e250f2d82f422791459841b013e9153ae",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_planning-light200.png",
+      "bytes": 63954,
+      "sha256": "75cf46760a331a8eecf986128371a373f2105ff03928e1f280237e1585711cab",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_privacy-dark100.png",
+      "bytes": 26506,
+      "sha256": "feec662741acc6567ee5fff03a5440048cacdf665b67729f87f6d54cbd13f8b9",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_privacy-dark200.png",
+      "bytes": 55707,
+      "sha256": "872b77506c9299353e0b485de7736e72c5c53d6e11fc2cff0ab35ebd5bd9b9ab",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_privacy-field100.png",
+      "bytes": 15904,
+      "sha256": "777ce8921da3ab08c2039e99593098871e1003976072eb28b545b8bcea8716b6",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_privacy-field200.png",
+      "bytes": 31775,
+      "sha256": "926d29471e89178e79fc637461b4c0c8ba4b54412cae1d2a934f584f3b641832",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_privacy-light100.png",
+      "bytes": 26048,
+      "sha256": "58429b2bcc2e15dead617eefa14cd0c9c0152817c564c4d6ab5095a248045975",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-settings_privacy-light200.png",
+      "bytes": 55885,
+      "sha256": "8aa39205664dd43c3bfdceff664dc3f4c9c54d872b152920dd734cabfbb4e135",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-dark100.png",
+      "bytes": 44374,
+      "sha256": "75641e59c1f30b021325ca1e7521d8bfae38c16b311ec44751b87eef9236586a",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-dark200.png",
+      "bytes": 52105,
+      "sha256": "e4f411a7041fb862a2d21f2d35a9d4a749d020463e3db2ca9b88c079e566ecf2",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-field100.png",
+      "bytes": 26390,
+      "sha256": "79e641bcbb04d4999561c0c4c511ce4c044a8250e8bf679cb6c8295f476cd4ae",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-field200.png",
+      "bytes": 32332,
+      "sha256": "606c2239189d90e335815f3979cba6669213640021e8e90a5e8d437be972ac7d",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-light100.png",
+      "bytes": 44494,
+      "sha256": "1dea2695c8fb2cd32d90f2ce26e8389b2bc832b6b312fcbf7c7c59fb4631ba8b",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-light200.png",
+      "bytes": 53681,
+      "sha256": "f515f4726f707f6579f13d3fb408aaf18bec16afc84838685cd2404904ba807e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-dark100.png",
+      "bytes": 63766,
+      "sha256": "3d0e6d67334cc812bfbf1790b00a197e71880db117748dc17650302b8ccd28f4",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-dark200.png",
+      "bytes": 63163,
+      "sha256": "20e4d1e5b4a1a55f92dd0c35e9a1476e4dc04ca436a6dbf4b6667586cefe3cdc",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-field100.png",
+      "bytes": 35858,
+      "sha256": "61f459e245d6db88f07b72db920093885c706fac6db8607b0aadeadfbca7ee4d",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-field200.png",
+      "bytes": 37483,
+      "sha256": "2c4308f3e3bc0379f04d4ac9ed55446426df647c974e75285fcfa33cc617a5e3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-light100.png",
+      "bytes": 63114,
+      "sha256": "4e843265aad7dec354b5b1541cb8675338dd2e2cf062f93343f4631dd5818f82",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-light200.png",
+      "bytes": 64113,
+      "sha256": "84fbee70403ddb5ba5940cb7408eacd81815cccde121f9caac571882818be62e",
+      "width": 412,
+      "height": 915
+    }
+  ],
+  "matching": "Canonical native initial data for eight roots; composition differences remain. No parity acceptance."
+}

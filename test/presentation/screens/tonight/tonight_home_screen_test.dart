@@ -4,6 +4,7 @@
 // a site, and Skip / Done close it for good.
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/theme/app_typography.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
@@ -127,10 +128,20 @@ void main() {
     await settle(tester);
   }
 
+  Future<void> reveal(WidgetTester tester, String key) async {
+    await tester.scrollUntilVisible(
+      find.byKey(Key(key)),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await settle(tester);
+  }
+
   testWidgets('no site: the site prompt replaces the night rows', (
     tester,
   ) async {
     await start(tester, site: false);
+    await reveal(tester, 'tonight.noSite');
     expect(find.byKey(const Key('tonight.noSite')), findsOneWidget);
     expect(find.byKey(const Key('tonight.night')), findsNothing);
     expect(find.byKey(const Key('tonight.fit')), findsNothing);
@@ -140,6 +151,7 @@ void main() {
   testWidgets('with a site: night, Moon and weather rows', (tester) async {
     await start(tester);
     expect(find.byKey(const Key('tonight.noSite')), findsNothing);
+    await reveal(tester, 'tonight.night');
     expect(find.byKey(const Key('tonight.night')), findsOneWidget);
     // F17 A1: the dark interval, not sunset to sunrise (on Night & Moon).
     expect(find.textContaining('Sunset to sunrise:'), findsNothing);
@@ -151,6 +163,7 @@ void main() {
 
   testWidgets('no forecast: says so, never a number', (tester) async {
     await start(tester);
+    await reveal(tester, 'tonight.weather');
     final weather = find.byKey(const Key('tonight.weather'));
     expect(weather, findsOneWidget);
     expect(
@@ -192,17 +205,12 @@ void main() {
     // carries the usable time.
     final fit = vm.fitAnalysis;
     expect(fit.state, FitState.fits);
+    expect(find.text(StatusBlock.headline(fit.state)), findsOneWidget);
+    expect(find.text('Usable'), findsOneWidget);
     expect(
-      find.text(
-        StatusBlock.headline(
-          fit.state,
-          needed: Duration(milliseconds: fit.windowLoadMs),
-          usable: Duration(milliseconds: fit.availableMs),
-        ),
-      ),
+      find.text(QuantityText.duration(Duration(milliseconds: fit.availableMs))),
       findsOneWidget,
     );
-    expect(find.textContaining('usable'), findsWidgets);
     expect(find.text(fit.reason), findsOneWidget);
   });
 
@@ -210,7 +218,13 @@ void main() {
     await start(tester, lightFrames: 2000);
     final fit = vm.fitAnalysis;
     expect(fit.state, FitState.doesNotFit);
-    expect(find.textContaining("Doesn't fit:"), findsOneWidget);
+    expect(find.text(StatusBlock.headline(fit.state)), findsOneWidget);
+    expect(
+      find.text(
+        QuantityText.duration(Duration(milliseconds: fit.windowLoadMs)),
+      ),
+      findsOneWidget,
+    );
     expect(find.text(fit.reason), findsOneWidget);
   });
 
@@ -251,8 +265,9 @@ void main() {
   group('plan first (S6.13)', () {
     // F17 (S16.2): the night's facts lead, Your plan follows, then the
     // secondary candidate action; Home has no New plan.
-    testWidgets('the order: site and night, the night rows, the plan with its '
-        'answer, then the secondary action', (tester) async {
+    testWidgets('Hybrid order: site and night, plan, night rows, next action', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(800, 3000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -261,10 +276,10 @@ void main() {
       final order = [
         'tonight.title',
         'tonight.context',
+        'tonight.plan',
         'tonight.night',
         'tonight.moon',
         'tonight.weather',
-        'tonight.plan',
         'tonight.candidates',
       ];
       for (var i = 1; i < order.length; i++) {
@@ -300,15 +315,14 @@ void main() {
     // S6.16 (the owner's decisions, DECISIONS E.1 "Stage 6 corrective pass
     // decided"): the finish of the core screen.
     testWidgets('the title is a header in the scale\'s headline role; the '
-        'context is on a card', (tester) async {
+        'context is open with independent actions', (tester) async {
       await start(tester, lightFrames: 10);
       final handle = tester.ensureSemantics();
       final title = find.byKey(const Key('tonight.title'));
       expect(title, findsOneWidget);
-      final ctx = tester.element(title);
       expect(
         tester.widget<Text>(title).style?.fontSize,
-        Theme.of(ctx).textTheme.headlineSmall?.fontSize,
+        AppTypography.homeHeading.fontSize,
       );
       expect(
         tester.getSemantics(title),
@@ -320,7 +334,7 @@ void main() {
           of: find.byKey(const Key('tonight.context')),
           matching: find.byKey(const Key('context.card')),
         ),
-        findsOneWidget,
+        findsNothing,
       );
     });
 
@@ -342,8 +356,8 @@ void main() {
       final target = tester
           .widget<Text>(find.byKey(const Key('tonight.planTarget')))
           .style!;
-      expect(target.fontSize, theme.textTheme.bodyLarge?.fontSize);
-      expect(target.fontWeight, theme.textTheme.bodyLarge?.fontWeight);
+      expect(target.fontSize, theme.textTheme.titleLarge?.fontSize);
+      expect(target.fontWeight, FontWeight.w400);
     });
 
     for (final chosen in [true, false]) {
@@ -551,6 +565,7 @@ void main() {
         await settle(tester);
         final dark = vm.conditions.nightTimeline!.darkAtLimit!;
         expect(dark.thresholdDeg, limit.degrees);
+        await reveal(tester, 'tonight.night');
         final ctx = tester.element(find.byKey(const Key('tonight.night')));
         final expected = DarkText.span(
           dark,
@@ -577,6 +592,7 @@ void main() {
       tester,
     ) async {
       await start(tester, lightFrames: 10);
+      await reveal(tester, 'tonight.moon');
       final moon = vm.conditions.moonConditions!;
       final free = vm.conditions.moonFree!;
       final row = find.byKey(const Key('tonight.moon'));
@@ -723,6 +739,7 @@ void main() {
       await tester.tap(find.byKey(const Key('welcome.start')));
       await settle(tester);
       expect(find.text('Welcome to Culmina'), findsNothing);
+      await reveal(tester, 'tonight.noSite');
       expect(find.byKey(const Key('tonight.noSite')), findsOneWidget);
       expect(firstRun.done, isTrue);
     });

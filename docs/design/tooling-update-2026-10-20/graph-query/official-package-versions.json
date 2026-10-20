@@ -1,0 +1,23 @@
+{
+  "fastmcp": {
+    "version": "4.1.2",
+    "requires_python": ">=3.10",
+    "project_urls": {
+      "Documentation": "https://gofastmcp.com",
+      "Homepage": "https://gofastmcp.com",
+      "Repository": "https://github.com/PrefectHQ/fastmcp"
+    },
+    "url": "https://pypi.org/pypi/fastmcp/json"
+  },
+  "networkx": {
+    "version": "3.7",
+    "requires_python": "!=3.14.1,>=3.12",
+    "project_urls": {
+      "Bug Tracker": "https://github.com/networkx/networkx/issues",
+      "Documentation": "https://networkx.org/documentation/stable/",
+      "Homepage": "https://networkx.org/",
+      "Source Code": "https://github.com/networkx/networkx"
+    },
+    "url": "https://pypi.org/pypi/networkx/json"
+  }
+}

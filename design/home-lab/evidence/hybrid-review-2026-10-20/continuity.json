@@ -1,0 +1,16 @@
+[
+  {
+    "name": "weather-next-night",
+    "url": "http://localhost:4173/conditions.html?variant=blend&view=night",
+    "title": "Weather",
+    "date": "20 Oct–21",
+    "currentTabs": "Weather"
+  },
+  {
+    "name": "after-refresh",
+    "url": "http://localhost:4173/conditions.html?variant=blend&view=night",
+    "title": "Night & Moon",
+    "date": "19 Oct–20",
+    "currentTabs": "Night"
+  }
+]

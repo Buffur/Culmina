@@ -1,0 +1,22 @@
+{
+  "engineering": {
+    "url": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/engineering/.claude-plugin/plugin.json",
+    "version": "1.2.0"
+  },
+  "design": {
+    "url": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/main/design/.claude-plugin/plugin.json",
+    "version": "1.2.0"
+  },
+  "audit-suite": {
+    "url": "https://raw.githubusercontent.com/Recusive/Orbit-plugin/main/.claude-plugin/plugin.json",
+    "version": "1.1.0"
+  },
+  "generic-flutter": {
+    "url": "https://raw.githubusercontent.com/zakariaf/Flutter-Skills/main/.claude-plugin/plugin.json",
+    "version": "1.0.0"
+  },
+  "figma": {
+    "url": "https://raw.githubusercontent.com/figma/mcp-server-guide/main/gemini-extension.json",
+    "version": "2.2.163"
+  }
+}

@@ -17,10 +17,9 @@ import '../../domain/services/session_reference_resolver.dart';
 import 'session_plan_viewmodel.dart';
 import 'site_viewmodel.dart';
 
-/// Which plan the planner works on (ADR-014 §3; TASKs 11.3–11.4, 13.3;
-/// split out of [SessionPlanViewModel] in S6.1): restoring it at startup,
-/// opening a stored one, starting a new one, copying it to another night,
-/// and saving it. The plan's contents, their edits and the
+/// Which plan the planner works on (ADR-014 §3; TASKs 11.3–11.4, 13.3; split out of
+/// [SessionPlanViewModel] in S6.1): restoring it at startup, opening a stored one, starting a new
+/// one, copying it to another night, and saving it. The plan's contents, their edits and the
 /// autosave stay in [SessionPlanViewModel], which notifies for both.
 class PlanLifecycleViewModel {
   PlanLifecycleViewModel({
@@ -51,17 +50,15 @@ class PlanLifecycleViewModel {
   final SessionReferenceResolver _resolver;
   final Clock _clock;
 
-  /// Called after every night check (restore, rollover, resume): a saved
-  /// night may have ended, so Tonight's result line refreshes (S8.3).
+  /// Called after every night check (restore, rollover, resume): a saved night may have ended, so
+  /// Tonight's result line refreshes (S8.3).
   Future<void> Function()? onNightChecked;
 
-  /// Restores the plan (call after the site has loaded): a plan still kept
-  /// in preferences moves once into a new draft (ADR-014 §6); otherwise the
-  /// most recent open session is resumed — a past night rolls forward to
-  /// tonight (owner decision, TASK 11.4) — or a draft is created. An
-  /// unreadable saved plan is logged by the repository and dropped. Nothing
-  /// the user did not choose is selected (RD-04, S6.8): no target or rig
-  /// unless one is stored, and an empty capture plan.
+  /// Restores the plan (call after the site has loaded): a plan still kept in preferences moves
+  /// once into a new draft (ADR-014 §6); otherwise the most recent open session is resumed — a
+  /// past night rolls forward to tonight (owner decision, TASK 11.4) — or a draft is created. An
+  /// unreadable saved plan is logged by the repository and dropped. Nothing the user did not choose
+  /// is selected (RD-04, S6.8): no target or rig unless one is stored, and an empty capture plan.
   Future<void> load() => _plan
       .restoring(() async {
         final preferencesPlan = await _stateRepository
@@ -105,9 +102,9 @@ class PlanLifecycleViewModel {
         await onNightChecked?.call();
       });
 
-  /// S8.3 (ADR-019 §3.1, D1): a saved plan whose night has ended stays on
-  /// its night; the planner continues on a copy (its night if still ahead,
-  /// else tonight; written: it is never saved). Returns whether it moved.
+  /// S8.3 (ADR-019 §3.1, D1): a saved plan whose night has ended stays on its night; the planner
+  /// continues on a copy (its night if still ahead, else tonight; written: it is never saved).
+  /// Returns whether it moved.
   Future<bool> _leaveEndedSavedPlan(CurrentSession current) async {
     try {
       if (!await current.leaveEndedSavedPlan(
@@ -137,8 +134,8 @@ class PlanLifecycleViewModel {
   static bool _neverSaved(Session s) =>
       s.status == SessionStatus.draft && s.plannedAtUtc == null;
 
-  /// The night a plan keeps when tonight moves on: a picked night still
-  /// ahead, else tonight (null) — TASK 11.4's roll-forward.
+  /// The night a plan keeps when tonight moves on: a picked night still ahead, else tonight (null)
+  /// — TASK 11.4's roll-forward.
   CalendarDate? _keptNight(CalendarDate? night) =>
       night != null && night.compareTo(_plan.tonightKey) > 0 ? night : null;
 
@@ -147,10 +144,10 @@ class PlanLifecycleViewModel {
   /// Tonight as of the last restore or rollover check (S6.4).
   CalendarDate? _tonight;
 
-  /// Follows a new night while the app runs (S6.4, TD-057; `NightClock`, each
-  /// minute and on resume): a saved plan whose night has ended leaves for a
-  /// working copy (S8.3, D1); a never-saved draft's picked night no longer
-  /// ahead at a rollover rolls forward to tonight (no edit). Screens are told.
+  /// Follows a new night while the app runs (S6.4, TD-057; `NightClock`, each minute and on
+  /// resume): a saved plan whose night has ended leaves for a working copy (S8.3, D1); a
+  /// never-saved draft's picked night no longer ahead at a rollover rolls forward to tonight (no
+  /// edit). Screens are told.
   Future<void> followNight() async {
     if (!_plan.isLoaded) return;
     if (_current case final current?) {
@@ -177,8 +174,8 @@ class PlanLifecycleViewModel {
     await onNightChecked?.call();
   }
 
-  /// [session]'s references and blocks into the plan; what it lacks stays.
-  /// Its tracking override is its own (S7.1): none means the rig's default.
+  /// [session]'s references and blocks into the plan; what it lacks stays. Its tracking override is
+  /// its own (S7.1): none means the rig's default.
   Future<void> _apply(Session session) async {
     final blocks = session.blocks.isNotEmpty
         ? session.blocks
@@ -189,17 +186,16 @@ class PlanLifecycleViewModel {
       blocks: blocks,
       isExample: ExampleCapturePlan.matches(blocks),
       trackingOverride: session.trackingOverride,
+      planOverrides: session.planOverrides,
     );
   }
 
-  /// Opens [session] (TASK 11.4): a draft or planned one becomes current, a
-  /// frozen one is copied into a new draft; the current, editable one is left
-  /// as it is live — a caller's copy may be stale (S1.V4, TD-062). [discard]
-  /// (S6.3, U1): a Saved · changed plan being left first goes back to what
-  /// was saved ([SavedPlanUnavailable]: nothing changes); a never-saved one
-  /// is deleted after the switch, an untouched one without asking. The same
-  /// holds for [newSession] and [duplicateForNight]. [copyTo]: a new, unsaved
-  /// copy on that night (S8.7).
+  /// Opens [session] (TASK 11.4): a draft or planned one becomes current, a frozen one is copied
+  /// into a new draft; the current, editable one is left as it is live — a caller's copy may be
+  /// stale (S1.V4, TD-062). [discard] (S6.3, U1): a Saved · changed plan being left first goes
+  /// back to what was saved ([SavedPlanUnavailable]: nothing changes); a never-saved one is deleted
+  /// after the switch, an untouched one without asking. The same holds for [newSession] and
+  /// [duplicateForNight]. [copyTo]: a new, unsaved copy on that night (S8.7).
   Future<void> openSession(
     Session opened, {
     bool discard = false,
@@ -237,22 +233,22 @@ class PlanLifecycleViewModel {
     });
   }
 
-  /// Settles the Saved · changed entry [id] before its result is recorded
-  /// (S8.2; I-3): the entry goes back to what was saved; when it is the
-  /// planner's plan, the planner continues on the copy holding its edits.
+  /// Settles the Saved · changed entry [id] before its result is recorded (S8.2; I-3): the entry
+  /// goes back to what was saved; when it is the planner's plan, the planner continues on the copy
+  /// holding its edits.
   Future<void> settle(int id) async {
     if (await _current?.settle(id) ?? false) _plan.markChanged();
   }
 
-  /// F19 A5: Discard on the current Saved · changed plan before an early
-  /// result; the planner shows the saved plan again.
+  /// F19 A5: Discard on the current Saved · changed plan before an early result; the planner shows
+  /// the saved plan again.
   Future<void> discardSavedChanges() async {
     await _current?.revertSavedChanges();
     if (_current?.session case final s?) await _plan.restoring(() => _apply(s));
   }
 
-  /// A new draft for tonight (RD-04, S6.8): the site and rig kept, no target
-  /// (the status asks), an empty capture plan, no tracking override (S7.1).
+  /// A new draft for tonight (RD-04, S6.8): the site and rig kept, no target (the status asks), an
+  /// empty capture plan, no tracking override (S7.1).
   Future<void> newSession({bool discard = false}) async {
     if (discard) await _current?.revertSavedChanges();
     _plan.replaceNight(null);
@@ -266,8 +262,8 @@ class PlanLifecycleViewModel {
     _plan.markChanged();
   }
 
-  /// A new draft with the current plan on [date], its tracking override
-  /// included (S7.1); the original stays. Unsaved, so leaving it asks (W1).
+  /// A new draft with the current plan on [date], its tracking override included (S7.1); the
+  /// original stays. Unsaved, so leaving it asks (W1).
   Future<void> duplicateForNight(
     CalendarDate date, {
     bool discard = false,
@@ -282,8 +278,8 @@ class PlanLifecycleViewModel {
     _plan.markChanged();
   }
 
-  /// Save (ADR-014 §3; TD-085): the open session, or a new one, becomes
-  /// planned with [snapshot]. Needs a repository, a night, target and rig.
+  /// Save (ADR-014 §3; TD-085): the open session, or a new one, becomes planned with [snapshot].
+  /// Needs a repository, a night, target and rig.
   Future<Session> savePlan(SessionSnapshot snapshot) async {
     final current = _current;
     if (current == null ||

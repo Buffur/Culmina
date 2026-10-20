@@ -1,3 +1,5 @@
+import '../../domain/models/plan_overrides.dart';
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -17,10 +19,12 @@ import '../../domain/services/example_capture_plan.dart';
 import 'blocks_edit.dart';
 import 'site_viewmodel.dart';
 
-/// The plan the planner shows (ADR-014; TASKs 11.3–11.4, 12.3): its night,
-/// target, rig, tracking and capture blocks, and their edits. Every plan
-/// edit — a site change included — is autosaved into the current session
-/// before the edit call returns. Restoring, opening, starting a new plan,
+part 'session_plan_selection_undo.dart';
+part 'session_plan_block_undo.dart';
+
+/// The plan the planner shows (ADR-014; TASKs 11.3–11.4, 12.3): its night, target, rig, tracking
+/// and capture blocks, and their edits. Every plan edit — a site change included — is autosaved
+/// into the current session before the edit call returns. Restoring, opening, starting a new plan,
 /// copying, saving and starting a run are `PlanLifecycleViewModel`'s (S6.1).
 class SessionPlanViewModel extends ChangeNotifier {
   SessionPlanViewModel({
@@ -48,11 +52,20 @@ class SessionPlanViewModel extends ChangeNotifier {
   EquipmentProfile? _rig;
   List<CaptureBlock> _blocks = [];
   bool _isExample = false;
+  PlanOverrides? _planOverrides;
+  PlanOverrides? get planOverrides => _planOverrides;
+
+  Future<void> setPlanOverrides(PlanOverrides? value) async {
+    _planOverrides = value?.isEmpty == true ? null : value;
+    await _edited();
+  }
+
   TrackingType? _trackingOverride; // RD-08 = T3 (S7.1); null = the rig's
   CalendarDate? _pickedEveningDate;
   bool _loaded = false;
   Object? _siteKey;
   int _contents = 0; // bumped when the lifecycle replaces the plan (TD-079)
+  int _selectionRevision = 0;
 
   AstroTarget? get selectedTarget => _target;
   EquipmentProfile? get selectedEquipment => _rig;
@@ -86,8 +99,8 @@ class SessionPlanViewModel extends ChangeNotifier {
   /// The chosen night, or null without a site (ADR-007 §9).
   SessionNight? get sessionNight => _site.isDefaultLocation ? null : _night;
 
-  /// The chosen night per ADR-007, never from a date's Y/M/D; without a site
-  /// the default position's, used only as the draft's night key (S1.4).
+  /// The chosen night per ADR-007, never from a date's Y/M/D; without a site the default
+  /// position's, used only as the draft's night key (S1.4).
   SessionNight get _night => _site.nightAt(_pickedEveningDate);
 
   CalendarDate? get eveningDate => sessionNight?.eveningDate;
@@ -112,6 +125,7 @@ class SessionPlanViewModel extends ChangeNotifier {
     targetId: _target?.id,
     rigId: _rig?.id,
     trackingOverride: _trackingOverride,
+    planOverrides: _planOverrides,
     blocks: List.of(_blocks),
     targetLabel: _target == null
         ? '(no target)'
@@ -120,18 +134,21 @@ class SessionPlanViewModel extends ChangeNotifier {
     siteLabel: _site.locationName,
   );
 
-  /// Sets the plan's contents with no autosave and no notification: the
-  /// lifecycle's restore, open, new plan and copy (S6.1).
+  /// Sets the plan's contents with no autosave and no notification: the lifecycle's restore, open,
+  /// new plan and copy (S6.1).
   void replaceContents({
     required AstroTarget? target,
     required EquipmentProfile? rig,
     required List<CaptureBlock> blocks,
     required bool isExample,
     TrackingType? trackingOverride,
+    PlanOverrides? planOverrides,
   }) {
+    _selectionRevision++;
     _target = target;
     _rig = rig;
     _trackingOverride = trackingOverride;
+    _planOverrides = planOverrides;
     _blocks = List.of(blocks);
     _isExample = isExample;
     _contents++;
@@ -143,8 +160,8 @@ class SessionPlanViewModel extends ChangeNotifier {
   /// Tells the listeners that the lifecycle changed the plan (S6.1).
   void markChanged() => notifyListeners();
 
-  /// Runs a restore or an open (S6.1): a site change meanwhile is part of it,
-  /// not an edit; the plan then notifies once, or stays unloaded on failure.
+  /// Runs a restore or an open (S6.1): a site change meanwhile is part of it, not an edit; the plan
+  /// then notifies once, or stays unloaded on failure.
   Future<void> restoring(Future<void> Function() body) async {
     _loaded = false;
     await body();
@@ -160,8 +177,8 @@ class SessionPlanViewModel extends ChangeNotifier {
     _site.displayZoneId,
   );
 
-  /// The night key includes the site, so a site change is written into the
-  /// plan: unsaved on a saved plan (V3, S6.3), not on a new draft (S1.6).
+  /// The night key includes the site, so a site change is written into the plan: unsaved on a saved
+  /// plan (V3, S6.3), not on a new draft (S1.6).
   void _onSiteChanged() {
     notifyListeners();
     final key = _currentSiteKey();
@@ -186,11 +203,13 @@ class SessionPlanViewModel extends ChangeNotifier {
   }
 
   Future<void> setTarget(AstroTarget target) async {
+    _selectionRevision++;
     _target = target;
     await _edited();
   }
 
   Future<void> setEquipment(EquipmentProfile rig) async {
+    _selectionRevision++;
     _rig = rig;
     await _edited();
   }
@@ -201,8 +220,8 @@ class SessionPlanViewModel extends ChangeNotifier {
     return _edited();
   }
 
-  /// "Start from the example plan" (RD-04, S6.8): the example's blocks,
-  /// shown as the example until the first block edit (TASK 4.4).
+  /// "Start from the example plan" (RD-04, S6.8): the example's blocks, shown as the example until
+  /// the first block edit (TASK 4.4).
   Future<void> useExamplePlan() {
     _blocks = ExampleCapturePlan.blocks();
     _isExample = true;
@@ -232,9 +251,9 @@ class SessionPlanViewModel extends ChangeNotifier {
     if (_valid(index)) await _editBlocks((b) => b.removeAt(index));
   }
 
-  /// Undo of [deletion] (RD-09, S6.9): [block] back at [index], owning it only
-  /// (TD-082): edits since stay, the badge returns only if nothing changed
-  /// since; refused (false) once the plan was replaced.
+  /// Undo of [deletion] (RD-09, S6.9): [block] back at [index], owning it only (TD-082): edits
+  /// since stay, the badge returns only if nothing changed since; refused (false) once the plan was
+  /// replaced.
   Future<bool> restoreCaptureBlock(
     int index,
     CaptureBlock block, {
@@ -248,37 +267,23 @@ class SessionPlanViewModel extends ChangeNotifier {
     return true;
   }
 
-  /// [newIndex] is already adjusted for the removal (the `onReorderItem`
-  /// contract, TD-010) — do not re-adjust it.
+  /// [newIndex] is already adjusted for the removal (the `onReorderItem` contract, TD-010) — do
+  /// not re-adjust it.
   Future<void> reorderCaptureBlocks(int oldIndex, int newIndex) =>
       _editBlocks((b) => b.insert(newIndex, b.removeAt(oldIndex)));
 
-  /// Runs [change], a blocks edit, and returns what it replaced for
-  /// [undoBlocksEdit] (TD-079, S6.16): the blocks once applied, the session
-  /// once its autosave has finished.
-  Future<BlocksEdit> recordBlocksEdit(Future<Object?> Function() change) async {
-    final before = List.of(_blocks), example = _isExample, gen = _contents;
-    final done = change();
-    final after = List.of(_blocks);
-    await done;
-    return BlocksEdit(
-      before: before,
-      wasExample: example,
-      after: after,
-      contents: gen,
-      sessionId: activeSessionId,
-    );
-  }
+  /// Captures a block edit for scoped Undo after its autosave (TD-079).
+  Future<BlocksEdit> recordBlocksEdit(Future<Object?> Function() change) =>
+      _recordBlocksEdit(change);
 
-  /// Undo (TD-079): the blocks and badge as [edit] found them, autosaved (a
-  /// saved snapshot is never touched); refused (false) if they changed since.
-  Future<bool> undoBlocksEdit(BlocksEdit edit) async {
-    if (!edit.isCurrent(_blocks, _contents, activeSessionId)) return false;
-    _blocks = List.of(edit.before);
-    _isExample = edit.wasExample;
-    await _edited();
-    return true;
-  }
+  /// Restores unchanged blocks in the original plan; never changes snapshots.
+  Future<bool> undoBlocksEdit(BlocksEdit edit) => _undoBlocksEdit(edit);
+
+  /// Restores a deleted selection only while no later selection supersedes it.
+  Future<void> Function() rememberEquipmentForUndo(int id) =>
+      _rememberEquipmentForUndo(id);
+  Future<void> Function() rememberTargetForUndo(int id) =>
+      _rememberTargetForUndo(id);
 
   /// Re-reads the selection after an edit or delete (TASK 4.2, TD-028).
   Future<void> refreshSelectedTarget() async {

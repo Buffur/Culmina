@@ -108,10 +108,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // The dialog is still open (validation failed) and no block was added.
-    expect(
-      find.widgetWithText(AlertDialog, 'Add capture block'),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
     expect(find.text('Enter seconds, e.g. 60, 0.5 or 1/14'), findsOneWidget);
     expect(find.text('Enter a whole number of at least 1'), findsOneWidget);
     expect(vm.captureBlocks, isEmpty);
@@ -133,10 +130,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
-    expect(
-      find.widgetWithText(AlertDialog, 'Add capture block'),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
     expect(vm.captureBlocks, isEmpty);
   });
 
@@ -156,7 +150,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
-    expect(find.widgetWithText(AlertDialog, 'Add capture block'), findsNothing);
+    expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
     expect(vm.captureBlocks, hasLength(1));
     expect(vm.captureBlocks.single.exposureTimeSeconds, 120.0);
     expect(vm.captureBlocks.single.frameCount, 15);
@@ -181,10 +175,7 @@ void main() {
       await tester.tap(find.text('L · 60 s × 30 · 30 min'));
       await tester.pumpAndSettle();
 
-      expect(
-        find.widgetWithText(AlertDialog, 'Edit capture block'),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
       expect(find.text('60'), findsOneWidget);
       expect(find.text('30'), findsOneWidget);
 
@@ -195,10 +186,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Apply changes'));
       await tester.pumpAndSettle();
 
-      expect(
-        find.widgetWithText(AlertDialog, 'Edit capture block'),
-        findsNothing,
-      );
+      expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
       expect(vm.captureBlocks, hasLength(1));
       expect(vm.captureBlocks.single.frameCount, 45);
       expect(vm.captureBlocks.single.exposureTimeSeconds, 60.0);
@@ -223,7 +211,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(vm.estimatedStorageMB, isNull);
-    expect(find.text('Unknown'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('capturePlan.storage')),
+        matching: find.text('Unknown'),
+      ),
+      findsOneWidget,
+    );
     expect(find.textContaining('0.0 MB'), findsNothing);
   });
 
@@ -334,9 +328,18 @@ void main() {
     await tester.tap(find.text('Budget details'));
     await tester.pumpAndSettle();
     expect(find.text('Integration (light exposure)'), findsOneWidget);
-    expect(find.text('1 h 40 min'), findsOneWidget); // 20 x 300 s
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('budget.integration')),
+        matching: find.text('1 h 40 min'),
+      ),
+      findsOneWidget,
+    ); // 20 x 300 s, also shown in the new estimate summary.
     expect(find.text('Imaging time (lights + overheads)'), findsOneWidget);
     expect(find.text('Total time'), findsOneWidget);
+    await tester.ensureVisible(
+      find.text('Relative stacking gain (√N vs one frame)'),
+    );
     await tester.tap(find.text('Relative stacking gain (√N vs one frame)'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('capturePlan.gainHelp')), findsOneWidget);

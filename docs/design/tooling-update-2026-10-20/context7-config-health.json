@@ -1,0 +1,10 @@
+{
+  "config_uses_environment_token": true,
+  "static_authorization_removed": true,
+  "initialize": true,
+  "tools": [
+    "resolve-library-id",
+    "query-docs"
+  ],
+  "resolve_call_success": true
+}

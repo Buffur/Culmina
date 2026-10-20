@@ -1,0 +1,10 @@
+Working directory: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner
+
+PowerShell command (prompt supplied via stdin; no permission override):
+Get-Content -Raw design/home-lab/evidence/hybrid-refinement-2026-10-20/CLAUDE_QA_PROMPT.txt | & C:/Users/zalub/.local/bin/claude.exe -p --output-format json --tools Read --allowedTools Read --no-session-persistence
+
+stdout: claude-qa-original.json
+stderr: claude-qa-stderr.txt
+version: claude-version.txt
+exit: claude-exit-code.txt
+No model override; actual model/usage are reported by CLI response when available. Read only; plugin Skill was not allowed or claimed.

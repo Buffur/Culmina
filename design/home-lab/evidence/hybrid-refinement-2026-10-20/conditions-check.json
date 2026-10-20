@@ -1,0 +1,379 @@
+{
+  "toolchainInfo": {
+    "version": "1.64.1",
+    "modulePath": "C:\\Users\\zalub\\.codex\\tools\\culmina-playwright\\node_modules\\playwright",
+    "toolsRoot": "C:\\Users\\zalub\\.codex\\tools\\culmina-playwright",
+    "executablePath": "C:\\Users\\zalub\\.codex\\tools\\culmina-playwright\\browsers\\chromium-1248\\chrome-win64\\chrome.exe"
+  },
+  "results": [
+    {
+      "query": "view=night&theme=light&scale=1&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=moon&theme=light&scale=1&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=weather&theme=light&scale=1&scenario=partial",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=night&theme=light&scale=2&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=moon&theme=light&scale=2&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=weather&theme=light&scale=2&scenario=partial",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=night&theme=dark&scale=1&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=moon&theme=dark&scale=1&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=weather&theme=dark&scale=1&scenario=partial",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=night&theme=dark&scale=2&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=moon&theme=dark&scale=2&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=weather&theme=dark&scale=2&scenario=partial",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=night&theme=field&scale=1&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=moon&theme=field&scale=1&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=weather&theme=field&scale=1&scenario=partial",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=night&theme=field&scale=2&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=moon&theme=field&scale=2&scenario=ready",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "query": "view=weather&theme=field&scale=2&scenario=partial",
+      "width": 412,
+      "overflow": false,
+      "inner": [
+        {
+          "name": "android-scroll",
+          "overflow": false
+        },
+        {
+          "name": "plan-main",
+          "overflow": false
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "width": 360,
+      "view": "night",
+      "scale": 2,
+      "scrollWidth": 360,
+      "status": "PASS"
+    },
+    {
+      "width": 360,
+      "view": "moon",
+      "scale": 2,
+      "scrollWidth": 360,
+      "status": "PASS"
+    },
+    {
+      "width": 360,
+      "view": "weather",
+      "scale": 2,
+      "scrollWidth": 360,
+      "status": "PASS"
+    },
+    {
+      "width": 412,
+      "view": "night",
+      "scale": 2,
+      "scrollWidth": 412,
+      "status": "PASS"
+    },
+    {
+      "width": 412,
+      "view": "moon",
+      "scale": 2,
+      "scrollWidth": 412,
+      "status": "PASS"
+    },
+    {
+      "width": 412,
+      "view": "weather",
+      "scale": 2,
+      "scrollWidth": 412,
+      "status": "PASS"
+    },
+    {
+      "scenario": "unknown",
+      "unknownsPreserved": true,
+      "status": "PASS"
+    },
+    {
+      "scenario": "missing-variable",
+      "unknownsPreserved": true,
+      "status": "PASS"
+    },
+    {
+      "scenario": "error",
+      "unknownsPreserved": true,
+      "status": "PASS"
+    },
+    {
+      "scenario": "no-dark",
+      "unknownsPreserved": true,
+      "status": "PASS"
+    },
+    {
+      "scenario": "dst",
+      "unknownsPreserved": true,
+      "status": "PASS"
+    },
+    {
+      "reducedMotion": {
+        "transition": "0s",
+        "animation": "none"
+      },
+      "status": "PASS"
+    },
+    {
+      "variant": "paper",
+      "legacyTimeline": true,
+      "status": "PASS"
+    }
+  ],
+  "failures": [],
+  "errors": []
+}

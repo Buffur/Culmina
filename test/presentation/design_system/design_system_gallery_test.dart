@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/app_messages.dart';
 // The design-system gallery (S5.1): every shared token sample and, from
 // S5.2 on, every shared control and component (with a dialog, a message and
 // an open menu over it), in the light, dark and field themes at
@@ -67,7 +68,7 @@ Future<List<String>> _auditOverlays(
   problems.addAll(
     (await auditGallery(tester, contrast: contrast)).map((p) => 'done: $p'),
   );
-  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  ScaffoldMessenger.of(context).hideCurrentMessage();
   await tester.pumpAndSettle();
 
   await tester.tap(find.byKey(const Key('gallery.menu')));

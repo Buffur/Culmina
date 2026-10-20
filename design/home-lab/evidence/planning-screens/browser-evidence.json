@@ -1,0 +1,1393 @@
+{
+  "scope": "Android browser prototype only",
+  "layout": [
+    {
+      "view": "plan",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "plan",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "plan",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "plan",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "plan",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "plan",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "plan",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "plan",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "plan",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "plan",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "plan",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "plan",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Night of Mon 19 Oct–20\nSaved\nFits\n\n2 h 15 min needed of 4 h 15 min usable\n\nLeaves 2 h spare in the window.\n\nExample capt",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "night",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "moon",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "weather",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "night",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "moon",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "weather",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "night",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "moon",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "weather",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "night",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "moon",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "weather",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "night",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "moon",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "weather",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "night",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "moon",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "weather",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "contentWidth": 400.6666870117187,
+      "height": 1040,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 1280
+    },
+    {
+      "view": "night",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "moon",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "weather",
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "night",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "moon",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "weather",
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "night",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "moon",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "weather",
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "night",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "moon",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "weather",
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "night",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "moon",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "weather",
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "night",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\n7 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPr",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "moon",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nWaxing gibbous\n\n62% illuminated at the night’s midpoint\n\nMoon ",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    },
+    {
+      "view": "weather",
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "contentWidth": 392,
+      "height": 915,
+      "mainText": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hou",
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "smallTargets": [],
+      "width": 412
+    }
+  ],
+  "homeLayout": [
+    {
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "height": 1040,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navCount": 4,
+      "phoneWidth": 412,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 1280
+    },
+    {
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "height": 1040,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navCount": 4,
+      "phoneWidth": 412,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 1280
+    },
+    {
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "height": 1040,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navCount": 4,
+      "phoneWidth": 412,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 1280
+    },
+    {
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "height": 1040,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navCount": 4,
+      "phoneWidth": 412,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 1280
+    },
+    {
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "height": 1040,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navCount": 4,
+      "phoneWidth": 412,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 1280
+    },
+    {
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 1280,
+        "height": 1040
+      },
+      "contentOverflow": false,
+      "height": 1040,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navCount": 4,
+      "phoneWidth": 412,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 1280
+    },
+    {
+      "theme": "light",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "height": 915,
+      "navColumns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "navCount": 4,
+      "phoneWidth": 346,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 412
+    },
+    {
+      "theme": "light",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "height": 915,
+      "navColumns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "navCount": 4,
+      "phoneWidth": 346,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 412
+    },
+    {
+      "theme": "dark",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "height": 915,
+      "navColumns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "navCount": 4,
+      "phoneWidth": 346,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 412
+    },
+    {
+      "theme": "dark",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "height": 915,
+      "navColumns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "navCount": 4,
+      "phoneWidth": 346,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 412
+    },
+    {
+      "theme": "field",
+      "scale": "1",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "height": 915,
+      "navColumns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "navCount": 4,
+      "phoneWidth": 346,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 412
+    },
+    {
+      "theme": "field",
+      "scale": "2",
+      "requested": {
+        "width": 412,
+        "height": 915
+      },
+      "contentOverflow": false,
+      "height": 915,
+      "navColumns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "navCount": 4,
+      "phoneWidth": 346,
+      "planBeforeConditions": true,
+      "planShadow": "none",
+      "width": 412
+    }
+  ],
+  "shortEditor": {
+    "applyCount": 1,
+    "applyVisible": true,
+    "contentOverflow": false,
+    "height": 520,
+    "phoneWidth": 402,
+    "scrollViewport": 78,
+    "width": 412
+  },
+  "planFlows": [
+    {
+      "applyCount": 1,
+      "case": "blank validation",
+      "invalid": "true",
+      "value": ""
+    },
+    {
+      "case": "editor reload",
+      "title": "Edit block",
+      "value": ""
+    },
+    {
+      "case": "fixed editor reload after validation",
+      "exposure": "60",
+      "frames": "",
+      "iso": "800",
+      "type": "Light",
+      "wb": "Auto"
+    },
+    {
+      "block": "Light · Broadband\n    130 × 60 s = 2 h 10 min integration\n    ISO 800 · WB Auto · Focus unrecorded\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "apply and estimate hierarchy",
+      "estimateBeforeDetails": true,
+      "state": "Saved · changed"
+    },
+    {
+      "case": "keep editor",
+      "frames": "131"
+    },
+    {
+      "case": "flat proposal",
+      "exposure": "1",
+      "focusBasic": true,
+      "iso": "",
+      "wb": "Unrecorded"
+    },
+    {
+      "case": "bias proposal",
+      "exposure": "1/4000",
+      "note": "Proposal: 1/4000 s. Choose the shortest exposure supported by your camera."
+    },
+    {
+      "blocks": 2,
+      "case": "fractional block with optional records",
+      "last": "Bias · Test custom filter\n    14 × 1/14 s = 1 s planned calibration, not integration\n    ISO unrecorded · WB 4000 K · Focus MFExposure entered by you · Records: Entered\n    Outside the imaging window · adds to total time\n    EditRemove"
+    },
+    {
+      "case": "reorder",
+      "order": [
+        "Bias · Test custom filter",
+        "Light · Broadband"
+      ]
+    },
+    {
+      "blocks": 2,
+      "case": "newer edit replaces removal undo",
+      "first": "Bias · Test custom filter\n    14 × 1/14 s = 1 s planned calibration, not integration\n    ISO unrecorded · WB 4000 K · Focus MFExposure entered by you · Records: Entered\n    Outside the imaging window · adds to total time\n    EditRemove"
+    },
+    {
+      "blocks": 4,
+      "case": "calibration proposals",
+      "estimates": "\n    Integration2 hlight exposures only\n    Total time2 h 42 min 20 swith overheads, setup and calibration\n    Storage4.14 GBtheoretical example, not measured\n    Relative stacking gain×10.95vs one comparable frame · 120 frames",
+      "proposalText": [
+        "Dark\n    10 × 60 s = 10 min planned calibration, not integration\n    ISO 800 · WB unrecorded · Focus unrecordedProposal: matches the referenced light exposure. · Records: Calibration proposal · references block 1\n    Outside the imaging window · adds to total time\n    EditRemove",
+        "Flat · Broadband\n    5 × 1 s = 5 s planned calibration, not integration\n    ISO 800 · WB unrecorded · Focus unrecordedProposal: 1 s flat starting point. Adjust it to your light source. · Records: Calibration proposal · references block 1\n    Outside the imaging window · adds to total time\n    EditRemove",
+        "Bias\n    3 × 1/4000 s = 0.00075 s planned calibration, not integration\n    ISO 800 · WB unrecorded · Focus unrecordedProposal: 1/4000 s. Choose the shortest exposure supported by your camera. · Records: Calibration proposal · references block 1\n    Outside the imaging window · adds to total time\n    EditRemove"
+      ]
+    },
+    {
+      "answer": "2 h 10 min needed of 4 h 15 min usable",
+      "case": "assumptions affect budget",
+      "estimates": "\n    Integration2 hlight exposures only\n    Total time2 h 25 minwith overheads, setup and calibration\n    Storage4.80 GBtheoretical example, not measured\n    Relative stacking gain×10.95vs one comparable frame · 120 frames"
+    },
+    {
+      "binningInDetails": true,
+      "case": "astro fields",
+      "gain": true,
+      "iso": false
+    },
+    {
+      "case": "unknown camera type remedy",
+      "gain": false,
+      "iso": false,
+      "remedy": "Camera type not recorded. ISO, gain and white balance need a rig with a known camera type. Values already stored in this block are kept.Choose a rig with a known camera type"
+    },
+    {
+      "case": "nested rig picker reload and preserved camera records",
+      "frames": "120",
+      "iso": "800",
+      "screen": "Edit block",
+      "wb": "Auto"
+    },
+    {
+      "button": "Retry save",
+      "case": "save failure",
+      "error": "Couldn’t save this example plan. Your latest changes are still here.",
+      "state": "Saved · changed"
+    },
+    {
+      "block": "Light · Broadband\n    130 × 60 s = 2 h 10 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "retry and reload",
+      "state": "Saved"
+    }
+  ],
+  "conditionsFlows": [
+    {
+      "case": "night keyboard cursor",
+      "detail": "Darkness in 8 h 10 min · from 19 Oct, 21:15 GMT+3. Moon rises at 19 Oct, 16:30 GMT+3.",
+      "footerHidden": true,
+      "time": "19 Oct, 13:05 GMT+3",
+      "value": "5"
+    },
+    {
+      "action": "Plan this night",
+      "case": "browse next night",
+      "plan": "Your plan: 19 Oct–20. Browsing changes nothing.",
+      "reset": "Night start",
+      "view": "20 Oct–21"
+    },
+    {
+      "case": "large-text calendar",
+      "days": 7,
+      "layout": "block",
+      "plan": "Your plan: 19 Oct–20. Browsing changes nothing.",
+      "view": "21 Oct–22"
+    },
+    {
+      "case": "next week and month boundary",
+      "days": 7,
+      "plan": "Your plan: 19 Oct–20. Browsing changes nothing.",
+      "view": "1 Nov–2"
+    },
+    {
+      "block": "Light · Broadband\n    130 × 60 s = 2 h 10 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "back without adoption",
+      "night": "Night of Mon 19 Oct–20Saved",
+      "state": "Saved"
+    },
+    {
+      "budget": true,
+      "case": "return position/disclosure",
+      "scroll": 1664.6666259765625
+    },
+    {
+      "test": "05:00 preceding-hour-only values",
+      "text": "20 Oct, 05:00 GMT+3 *\nCloud cover\nOutside dark span\nTemperature / dew point\nOutside dark span / Outside dark span\nWind / gust\nOutside dark span / 18 km/h\nPrecipitation probability\n0%\nLow / middle / high cloud\n— / — / —\nHumidity / visibility\n— / —"
+    },
+    {
+      "test": "weather missing-variable",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: Unknown\n\nFull dark-time coverage\n\n7 of 7 hourly forecast rows in the dark. Cloud values: 0 known.\n\nRefresh\nTemperature in covered dark hours\n5 to 6.2 °C\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\n0 of 7 known hourly samples are within the example 2 °C dew margin. This is a heuristic, not a guarantee of condensation.\n\nThrough the dark hours\n\nSelect an hour for exact values. Scroll the hourly strip horizontally.\n\n22:00\nUnknown\n23:00\nUnknown\n00:00\nUnknown\n01:00\nUnknown\n02:00\nUnknown\n03:00\nUnknown\n04:00\nUnknown\n05:00\n—\nTemperature / dew point · 1 to 8 °C\n7.2 / 28.8\n10.8 / 14.4\n14.4 / 18\n18 / 21.6\n7.2 / 25.2\n10.8 / 28.8\n14.4 / 14.4\n— / 18\nWind / gust · km/h\n0%\n0%\n0%\n0%\n0%\n0%\n0%\n0%\nPrecipitation probability · preceding hour\nTemperature\nDew point\nHatched columns: cloud value missing\nSelected hour\n20 Oct, 05:00 GMT+3 *\nCloud cover\nOutside dark span\nTemperature / dew point\nOutside dark span / Outside dark span\nWind / gust\nOutside dark span / 18 km/h\nPrecipitation probability\n0%\nLow / middle / high cloud\n— / — / —\nHumidity / visibility\n— / —\n\nCloud cover is unknown. Other available variables remain visible.\n\nCloud and temperature are instantaneous samples. Gust and precipitation refer to the preceding hour; * marks an hour with only partial overlap of dark time.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nFull dark-time coverage\n\nCloud unknown\n\nView this night\n20 Oct–21\n\nFull dark-time coverage\n\nCloud unknown\n\nView this night\n21 Oct–22\n\nPartial dark-time coverage\n\nCloud unknown\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather partial",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–35%\n\nPartial dark-time coverage\n\n5 of 7 hourly forecast rows in the dark · missing rows stay unknown.\n\nRefresh\nTemperature in covered dark hours\n5 to 6.2 °C\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\n0 of 5 known hourly samples are within the example 2 °C dew margin. This is a heuristic, not a guarantee of condensation.\n\nThrough the dark hours\n\nSelect an hour for exact values. Scroll the hourly strip horizontally.\n\n22:00\n30%\n23:00\n24%\n00:00\n19%\n01:00\n28%\n02:00\nUnknown\n03:00\nUnknown\n04:00\n35%\n05:00\n—\nTemperature / dew point · 1 to 8 °C\n7.2 / 28.8\n10.8 / 14.4\n14.4 / 18\n18 / 21.6\nUnknown / Unknown\nUnknown / Unknown\n14.4 / 14.4\n— / 18\nWind / gust · km/h\n0%\n0%\n0%\n0%\nUnknown\nUnknown\n0%\n0%\nPrecipitation probability · preceding hour\nTemperature\nDew point\nHatched columns: cloud value missing\nSelected hour\n20 Oct, 05:00 GMT+3 *\nCloud cover\nOutside dark span\nTemperature / dew point\nOutside dark span / Outside dark span\nWind / gust\nOutside dark span / 18 km/h\nPrecipitation probability\n0%\nLow / middle / high cloud\n— / — / —\nHumidity / visibility\n— / —\n\nCloud and temperature are instantaneous samples. Gust and precipitation refer to the preceding hour; * marks an hour with only partial overlap of dark time.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nPartial dark-time coverage\n\nCloud 19–35% in covered dark hours\n\nView this night\n20 Oct–21\n\nPartial dark-time coverage\n\nCloud 19–42% in covered dark hours\n\nView this night\n21 Oct–22\n\nPartial dark-time coverage\n\nCloud 19–30% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather stale",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nStale snapshot\n\n7 of 7 hourly forecast rows in the dark.\n\nRefresh\nTemperature in covered dark hours\n5 to 6.2 °C\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n23 h 39 min · example snapshot\n\nThis example snapshot is stale. Retrieval age is separate from forecast lead time.\n\n0 of 7 known hourly samples are within the example 2 °C dew margin. This is a heuristic, not a guarantee of condensation.\n\nThrough the dark hours\n\nSelect an hour for exact values. Scroll the hourly strip horizontally.\n\n22:00\n30%\n23:00\n24%\n00:00\n19%\n01:00\n28%\n02:00\n36%\n03:00\n42%\n04:00\n35%\n05:00\n—\nTemperature / dew point · 1 to 8 °C\n7.2 / 28.8\n10.8 / 14.4\n14.4 / 18\n18 / 21.6\n7.2 / 25.2\n10.8 / 28.8\n14.4 / 14.4\n— / 18\nWind / gust · km/h\n0%\n0%\n0%\n0%\n0%\n0%\n0%\n0%\nPrecipitation probability · preceding hour\nTemperature\nDew point\nHatched columns: cloud value missing\nSelected hour\n20 Oct, 05:00 GMT+3 *\nCloud cover\nOutside dark span\nTemperature / dew point\nOutside dark span / Outside dark span\nWind / gust\nOutside dark span / 18 km/h\nPrecipitation probability\n0%\nLow / middle / high cloud\n— / — / —\nHumidity / visibility\n— / —\n\nCloud and temperature are instantaneous samples. Gust and precipitation refer to the preceding hour; * marks an hour with only partial overlap of dark time.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nStale snapshot\n\nCloud 19–42% in covered dark hours\n\nView this night\n20 Oct–21\n\nStale snapshot\n\nCloud 19–42% in covered dark hours\n\nView this night\n21 Oct–22\n\nPartial dark-time coverage\n\nCloud 19–30% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather offline",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nOffline · cached snapshot\n\n7 of 7 hourly forecast rows in the dark.\n\nRefresh\nTemperature in covered dark hours\n5 to 6.2 °C\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n9 h 39 min · cached example\n\nOffline, showing a cached example. No refresh request was sent.\n\n0 of 7 known hourly samples are within the example 2 °C dew margin. This is a heuristic, not a guarantee of condensation.\n\nThrough the dark hours\n\nSelect an hour for exact values. Scroll the hourly strip horizontally.\n\n22:00\n30%\n23:00\n24%\n00:00\n19%\n01:00\n28%\n02:00\n36%\n03:00\n42%\n04:00\n35%\n05:00\n—\nTemperature / dew point · 1 to 8 °C\n7.2 / 28.8\n10.8 / 14.4\n14.4 / 18\n18 / 21.6\n7.2 / 25.2\n10.8 / 28.8\n14.4 / 14.4\n— / 18\nWind / gust · km/h\n0%\n0%\n0%\n0%\n0%\n0%\n0%\n0%\nPrecipitation probability · preceding hour\nTemperature\nDew point\nHatched columns: cloud value missing\nSelected hour\n20 Oct, 05:00 GMT+3 *\nCloud cover\nOutside dark span\nTemperature / dew point\nOutside dark span / Outside dark span\nWind / gust\nOutside dark span / 18 km/h\nPrecipitation probability\n0%\nLow / middle / high cloud\n— / — / —\nHumidity / visibility\n— / —\n\nCloud and temperature are instantaneous samples. Gust and precipitation refer to the preceding hour; * marks an hour with only partial overlap of dark time.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nOffline · cached snapshot\n\nCloud 19–42% in covered dark hours\n\nView this night\n20 Oct–21\n\nOffline · cached snapshot\n\nCloud 19–42% in covered dark hours\n\nView this night\n21 Oct–22\n\nPartial dark-time coverage\n\nCloud 19–30% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather unknown",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: Unknown\n\nForecast unavailable\n\n0 of 7 hourly forecast rows in the dark.\n\nRetry forecast\nTemperature in covered dark hours\nUnknown\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\nDew indicator unavailable. This is a heuristic, not a guarantee of condensation.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nForecast unavailable\n\nCloud unknown\n\nView this night\n20 Oct–21\n\nForecast unavailable\n\nCloud unknown\n\nView this night\n21 Oct–22\n\nForecast unavailable\n\nCloud unknown\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather loading",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: Unknown\n\nLoading\n\n0 of 7 hourly forecast rows in the dark.\n\nLoading…\nTemperature in covered dark hours\nUnknown\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\nDew indicator unavailable. This is a heuristic, not a guarantee of condensation.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nLoading\n\nCloud unknown\n\nView this night\n20 Oct–21\n\nLoading\n\nCloud unknown\n\nView this night\n21 Oct–22\n\nLoading\n\nCloud unknown\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather error",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: Unknown\n\nCouldn’t load forecast\n\n0 of 7 hourly forecast rows in the dark.\n\nRetry forecast\nTemperature in covered dark hours\nUnknown\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\nDew indicator unavailable. This is a heuristic, not a guarantee of condensation.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nCouldn’t load forecast\n\nCloud unknown\n\nView this night\n20 Oct–21\n\nCouldn’t load forecast\n\nCloud unknown\n\nView this night\n21 Oct–22\n\nCouldn’t load forecast\n\nCloud unknown\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "weather no-dark",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nNo dark hours to summarize\n\nNo dark time\n\n0 of 0 hourly forecast rows in the dark.\n\nRefresh\nTemperature in covered dark hours\nUnknown\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\nDew indicator unavailable. This is a heuristic, not a guarantee of condensation.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nNo dark time\n\nNo dark hours to summarize\n\nView this night\n20 Oct–21\n\nNo dark time\n\nNo dark hours to summarize\n\nView this night\n21 Oct–22\n\nNo dark time\n\nNo dark hours to summarize\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "retry",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nYour plan’s night\n19 Oct–20\nCloud in the dark: 19–42%\n\nFull dark-time coverage\n\n7 of 7 hourly forecast rows in the dark.\n\nRefresh\nTemperature in covered dark hours\n5 to 6.2 °C\nForecast lead\n0 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\n0 of 7 known hourly samples are within the example 2 °C dew margin. This is a heuristic, not a guarantee of co"
+    },
+    {
+      "test": "last partly covered night",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n21 Oct–22\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\nCloud in the dark: 19–30%\n\nPartial dark-time coverage\n\n4 of 7 hourly forecast rows in the dark · missing rows stay unknown.\n\nRefresh\nTemperature in covered dark hours\n5.2 to 6.7 °C\nForecast lead\n2 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\n0 of 4 known hourly samples are within the example 2 °C dew margin. This is a heuristic, not a guarantee of condensation.\n\nThrough the dark hours\n\nSelect an hour for exact values. Scroll the hourly strip horizontally.\n\n22:00\n30%\n23:00\n24%\n00:00\n19%\n01:00\n28%\n02:00\nUnknown\n03:00\nUnknown\n04:00\nUnknown\n05:00\n—\nTemperature / dew point · 1 to 8 °C\n7.2 / 21.6\n10.8 / 25.2\n14.4 / 28.8\n18 / 14.4\nUnknown / Unknown\nUnknown / Unknown\nUnknown / Unknown\n— / Unknown\nWind / gust · km/h\n0%\n0%\n0%\n0%\nUnknown\nUnknown\nUnknown\nUnknown\nPrecipitation probability · preceding hour\nTemperature\nDew point\nHatched columns: cloud value missing\nSelected hour\n21 Oct, 22:00 GMT+3 *\nCloud cover\n30%\nTemperature / dew point\n6.7 °C / 3.2 °C\nWind / gust\n7.2 km/h / 21.6 km/h\nPrecipitation probability\n0%\nLow / middle / high cloud\n15% / 9% / 6%\nHumidity / visibility\n77% / 19 km\n\nCloud and temperature are instantaneous samples. Gust and precipitation refer to the preceding hour; * marks an hour with only partial overlap of dark time.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your plan\n\nFull dark-time coverage\n\nCloud 19–42% in covered dark hours\n\nView this night\n20 Oct–21\n\nFull dark-time coverage\n\nCloud 19–42% in covered dark hours\n\nView this night\n21 Oct–22\n\nPartial dark-time coverage\n\nCloud 19–30% in covered dark hours\n\nView this night\n\nNo forecast from 22 Oct: beyond this example snapshot. Night and Moon browsing remain available."
+    },
+    {
+      "test": "forecast horizon",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n22 Oct–23\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\nCloud in the dark: Unknown\n\nOutside the example forecast horizon\n\n0 of 7 hourly forecast rows in the dark.\n\nTemperature in covered dark hours\nUnknown\nForecast lead\n3 days ahead at retrieval\nSnapshot age\n6 h 39 min · example snapshot\n\nDew indicator unavailable. This is a heuristic, not a guarantee of condensation.\n\nThis forecast does not predict astronomical seeing or transparency. Look at Clear Outside\n\nForecast details\nHourly values, layers and source\nComing nights\n\nThe example snapshot covers some or all of three nights. Later dates have no forecast.\n\n19 Oct–20 · your"
+    },
+    {
+      "test": "DST fixed 24h window",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n24 Oct–25\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\n8 h 30 min of dark time\n\n21:15–04:45 (+1) · Sun limit −18°\n\nPreview time\n24 Oct, 13:00 GMT+3\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon below horizon\nDarkness in 8 h 15 min · from 24 Oct, 21:15 GMT+3. Moon rises at 24 Oct, 16:30 GMT+3.\nNight start\nSun & twilight\nSunset\n24 Oct, 18:00 GMT+3\nCivil dusk\n24 Oct, 18:35 GMT+3\nNautical dusk\n24 Oct, 19:25 GMT+3\nAstronomical dusk\n24 Oct, 21:15 GMT+3\nAstronomical dawn\n25 Oct, 04:45 GMT+2\nNautical dawn\n25 Oct, 05:35 GMT+2\nCivil dawn\n25 Oct, 06:25 GMT+2\nSunrise\n25 Oct, 07:00 GMT+2\n\nTwilight limits: civil −6°, nautical −12°, astronomical −18°. The selected dark limit is −18° in this example.\n\nWaxing gibbous\n\n98% illuminated at the night’s midpoint\n\nMoon above horizon\n24 Oct, 16:30 GMT+3 → 25 Oct, 03:25 GMT+3\nMoon-free dark\n2 h 20 min\nMoon-free in the morning\n\n03:25–04:45\n2 h 20 min\n\nMoon-free means dark time with the Moon below the horizon. Phase alone does not determine it."
+    },
+    {
+      "test": "DST last valid instant",
+      "text": "Preview time\n25 Oct, 11:55 GMT+2\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon below horizon\nDark time has ended for this night."
+    },
+    {
+      "test": "polar window end stays dark",
+      "text": "Preview time\n25 Oct, 11:55 GMT+2\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nMoon-free dark\n5 min remaining · until 25 Oct, 12:00 GMT+2"
+    },
+    {
+      "test": "Moon moon-all",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n24 Oct–25\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\nWaxing gibbous\n\n98% illuminated at the night’s midpoint\n\nMoon above horizon\nAll night\nMoon-free dark\n0 min\nNo moon-free dark\n\nThe Moon is above the horizon throughout the dark interval.\n\nMoon-free means dark time with the Moon below the horizon. Phase alone does not determine it.\n\nMoon through the night\nPreview time\n24 Oct, 13:00 GMT+3\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon above horizon\nDarkness in 8 h 15 min · from 24 Oct, 21:15 GMT+3\nNight start\nMoon calendar\nOctober 2026\n\nExample nights: 19 Oct–1 Nov. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n•\n0 min\n20\n0 min\n21\n0 min\n22\n0 min\n23\n0 min\n24\n0 min\n25\n0 min\n26\n0 min\n27\n0 min\n28\n0 min\n29\n0 min\n30\n0 min\n31\n0 min\nHow to read this night"
+    },
+    {
+      "test": "Moon moon-below",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n24 Oct–25\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\nWaxing gibbous\n\n98% illuminated at the night’s midpoint\n\nMoon above horizon\nNot during this night\nMoon-free dark\n8 h 30 min\nMoon-free all dark time\n\n21:15–04:45\n8 h 30 min\n\nMoon-free means dark time with the Moon below the horizon. Phase alone does not determine it.\n\nMoon through the night\nPreview time\n24 Oct, 13:00 GMT+3\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon below horizon\nDarkness in 8 h 15 min · from 24 Oct, 21:15 GMT+3\nNight start\nMoon calendar\nOctober 2026\n\nExample nights: 19 Oct–1 Nov. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n•\n7 h 30 min\n20\n7 h 30 min\n21\n7 h 30 min\n22\n7 h 30 min\n23\n7 h 30 min\n24\n8 h 30 min\n25\n7 h 30 min\n26\n7 h 30 min\n27\n7 h 30 min\n28\n7 h 30 min\n29\n7 h 30 min\n30\n7 h 30 min\n31\n7 h 30 min\nHow to read this night"
+    },
+    {
+      "test": "Moon mixed",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n24 Oct–25\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\nWaxing gibbous\n\n98% illuminated at the night’s midpoint\n\nMoon above horizon\n24 Oct, 23:00 GMT+3 → 25 Oct, 02:00 GMT+3\nMoon-free dark\n5 h 30 min\nSplit moon-free intervals\n\n21:15–23:00\n1 h 45 min\n\n02:00–04:45\n3 h 45 min\n\nMoon-free means dark time with the Moon below the horizon. Phase alone does not determine it.\n\nMoon through the night\nPreview time\n24 Oct, 13:00 GMT+3\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon below horizon\nDarkness in 8 h 15 min · from 24 Oct, 21:15 GMT+3. Moon rises at 24 Oct, 23:00 GMT+3.\nNight start\nMoon calendar\nOctober 2026\n\nExample nights: 19 Oct–1 Nov. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n•\n4 h 30 min\n20\n4 h 30 min\n21\n4 h 30 min\n22\n4 h 30 min\n23\n4 h 30 min\n24\n5 h 30 min\n25\n4 h 30 min\n26\n4 h 30 min\n27\n4 h 30 min\n28\n4 h 30 min\n29\n4 h 30 min\n30\n4 h 30 min\n31\n4 h 30 min\nHow to read this night"
+    },
+    {
+      "test": "Moon moon-middle",
+      "text": "Kyiv outskirts · Europe/Kyiv\n\nViewing\n24 Oct–25\n\nYour plan: 19 Oct–20. Browsing changes nothing.\n\nBack to your plan’s night\nWaxing gibbous\n\n98% illuminated at the night’s midpoint\n\nMoon above horizon\nUp at window start → 24 Oct, 23:00 GMT+3; 25 Oct, 02:00 GMT+3 → still up at window end\nMoon-free dark\n3 h\nMoon-free in the middle of dark time\n\n23:00–02:00\n3 h\n\nMoon-free means dark time with the Moon below the horizon. Phase alone does not determine it.\n\nMoon through the night\nPreview time\n24 Oct, 13:00 GMT+3\n13:00 · 24 Oct\n12:00 · 25 Oct\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon above horizon\nDarkness in 8 h 15 min · from 24 Oct, 21:15 GMT+3. Moon sets at 24 Oct, 23:00 GMT+3.\nNight start\nMoon calendar\nOctober 2026\n\nExample nights: 19 Oct–1 Nov. Tap to view; your plan stays unchanged.\n\nM\nT\nW\nT\nF\nS\nS\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n•\n3 h\n20\n3 h\n21\n3 h\n22\n3 h\n23\n3 h\n24\n3 h\n25\n3 h\n26\n3 h\n27\n3 h\n28\n3 h\n29\n3 h\n30\n3 h\n31\n3 h\nHow to read this night"
+    },
+    {
+      "test": "Home slider changes only time, not plan",
+      "planUnchanged": true,
+      "readout": "Time\n19 Oct, 13:05 GMT+3\nNow\nDark · −18° Sun limit\nMoon above horizon\nMoon-free dark\nDaylight · Moon below horizon\nDarkness in 8 h 10 min"
+    },
+    {
+      "test": "no-site conditions",
+      "text": "Set an observing site\n\nNight, Moon and weather belong to a place and its time zone. No default-location forecast is substituted.\n\nChoose a site in Plan"
+    }
+  ],
+  "lifecycle": [
+    {
+      "case": "adoption save failure",
+      "dialogOpen": true,
+      "error": "Example save failed. The source and your changes remain here; retry or cancel.",
+      "source": "Your plan: 19 Oct–20. Browsing changes nothing.",
+      "view": "20 Oct–21"
+    },
+    {
+      "block": "Light · Broadband\n    131 × 60 s = 2 h 11 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "cancel after failed copy",
+      "night": "Night of Mon 19 Oct–20Saved · changed"
+    },
+    {
+      "case": "guarded new plan",
+      "description": "Your saved plan has changes that are not saved.",
+      "title": "Start a new plan?"
+    },
+    {
+      "block": "Light · Broadband\n    130 × 60 s = 2 h 10 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "discard restored source",
+      "night": "Night of Mon 19 Oct–20Saved"
+    },
+    {
+      "block": "Light · Broadband\n    130 × 60 s = 2 h 10 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "discard then draft copy",
+      "feedback": "Created a draft copy for 2026-10-20. The saved original is unchanged.",
+      "night": "Night of Tue 20 Oct–21Not saved",
+      "state": "Not saved"
+    },
+    {
+      "block": "Light · Broadband\n    133 × 60 s = 2 h 13 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "explicit save then copy",
+      "night": "Night of Tue 20 Oct–21Not saved",
+      "state": "Not saved"
+    },
+    {
+      "block": "Light · Broadband\n    133 × 60 s = 2 h 13 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "source after explicit pre-copy save",
+      "night": "Night of Mon 19 Oct–20Saved",
+      "state": "Saved"
+    },
+    {
+      "block": "Light · Broadband\n    133 × 60 s = 2 h 13 min integration\n    ISO 800 · WB Auto · Focus unrecordedRecords: Entered\n    Fits: room for up to 226 frames like this in the example window\n    EditRemove",
+      "case": "clean copy saved and reopened",
+      "night": "Night of Wed 21 Oct–22Saved",
+      "state": "Saved"
+    },
+    {
+      "blocks": 0,
+      "case": "never-saved draft adopts in place",
+      "feedback": "Draft night changed to 2026-10-22. Not saved.",
+      "night": "Night of Thu 22 Oct–23Not saved",
+      "state": "Not saved"
+    },
+    {
+      "answer": "Add light frames to estimateOne step before a fit answer. You can already save this plan.Add light frames",
+      "blocks": 0,
+      "case": "empty capture plan eligible",
+      "saveEnabled": true
+    },
+    {
+      "blocks": 0,
+      "case": "empty plan saved without forecast",
+      "saveEnabled": true,
+      "state": "Saved"
+    },
+    {
+      "case": "all missing prerequisites",
+      "disabled": true,
+      "items": [
+        "Choose an observing site",
+        "Choose a target",
+        "Choose a rig",
+        "Add light frames"
+      ],
+      "reason": "To save, choose an observing site."
+    },
+    {
+      "test": "night requires site",
+      "disabled": true
+    },
+    {
+      "test": "missing prerequisites remedied; empty capture save eligible",
+      "saveEnabled": true
+    }
+  ],
+  "returnBaseline": {
+    "budget": true,
+    "scroll": 1664.6666259765625
+  }
+}

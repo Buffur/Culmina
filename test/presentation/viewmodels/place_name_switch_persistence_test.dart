@@ -208,6 +208,8 @@ void main() {
       ),
     );
     await tester.pump();
+    await tester.tap(find.byKey(const Key('settings.open.privacy')));
+    await tester.pumpAndSettle();
     final tile = find.byKey(const Key('settings.placeNames'));
     await tester.ensureVisible(tile);
     await tester.pumpAndSettle();

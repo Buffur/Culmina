@@ -1,0 +1,13 @@
+{
+  "results": [
+    "List query survives reload",
+    "Comparison before disclosed immutable snapshot; selected entry survives reload",
+    "Compact editor outcome first; invalid frames blocked; Cancel guard and result Save preserve snapshot",
+    "Text export omits notes/coordinates; full JSON exports exact selected entry without mutation",
+    "Detail Back retains list scroll; tab return retains query",
+    "Delete/Undo preserves snapshot; unknown sensitivity stays separate in Progress",
+    "Detail disclosures/export controls: light/dark/field at 100% and 200%, no horizontal overflow or <48px targets",
+    "No page errors; plan/checkpoint sentinels unchanged"
+  ],
+  "errors": []
+}

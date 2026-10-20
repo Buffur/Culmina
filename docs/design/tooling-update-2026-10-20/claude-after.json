@@ -1,0 +1,68 @@
+[
+  {
+    "id": "dart-flutter@dart-flutter",
+    "version": "1.0.7",
+    "scope": "user",
+    "enabled": true
+  },
+  {
+    "id": "figma@claude-plugins-official",
+    "version": "2.2.157",
+    "scope": "user",
+    "enabled": true
+  },
+  {
+    "id": "superpowers@superpowers-dev",
+    "version": "7.0.0",
+    "scope": "user",
+    "enabled": true
+  },
+  {
+    "id": "task-observer@one-skill-to-rule-them-all",
+    "version": "3.7.0",
+    "scope": "user",
+    "enabled": true
+  },
+  {
+    "id": "graph-query-mcp@synced",
+    "version": "0.1.0",
+    "scope": "synced",
+    "enabled": true
+  },
+  {
+    "id": "audit-suite@synced",
+    "version": "1.1.0",
+    "scope": "synced",
+    "enabled": true
+  },
+  {
+    "id": "engineering@synced",
+    "version": "1.2.0",
+    "scope": "synced",
+    "enabled": true
+  },
+  {
+    "id": "design@synced",
+    "version": "1.2.0",
+    "scope": "synced",
+    "enabled": true
+  },
+  {
+    "id": "figma@synced",
+    "version": "2.2.157",
+    "scope": "synced",
+    "enabled": false
+  },
+  {
+    "id": "flutter@synced",
+    "version": "1.0.0",
+    "scope": "synced",
+    "enabled": false
+  },
+  {
+    "id": "dart-flutter@synced",
+    "version": "1.0.5",
+    "scope": "synced",
+    "enabled": false
+  }
+]

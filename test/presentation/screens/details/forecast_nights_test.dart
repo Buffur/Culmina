@@ -27,6 +27,8 @@ import 'package:astroplan/domain/services/forecast_overview.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/shared/night_text.dart';
+import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
+import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
 import 'package:astroplan/presentation/widgets/forecast_nights_section.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -206,12 +208,10 @@ void main() {
     await start(tester, cloudGapAt: DateTime.utc(2026, 11, 10, 22));
     final s = vm.conditions.nightWeatherSummary!;
     expect(find.byKey(const Key('weather.span')), findsOneWidget);
-    expect(
-      find.text(
-        'Cloud 30 % · Temperature 3 °C · Dew point −1 °C'.replaceAll('−', '-'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Cloud 30 % in 10/11 known dark hours'), findsOneWidget);
+    expect(find.text('Air temperature'), findsOneWidget);
+    expect(find.text('3 °C'), findsOneWidget);
+    expect(find.text('-1 °C'), findsOneWidget);
     // W2: the unknown cloud value is a gap of 1 h, never 0 %.
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.partial'))).data,
@@ -235,7 +235,8 @@ void main() {
     );
     handle.dispose();
     expect(find.byKey(const Key('weather.hourDetail')), findsNothing);
-    await tester.tap(find.byKey(const Key('weather.hour.1')));
+    await tester.ensureVisible(find.byKey(const Key('weather.plot.hour.1')));
+    await tester.tap(find.byKey(const Key('weather.plot.hour.1')));
     await settle(tester);
     final detail = tester
         .widget<Text>(find.byKey(const Key('weather.hourDetail')))
@@ -353,6 +354,64 @@ void main() {
     );
     expect(kept!.eveningDate, tonight, reason: 'never retimed');
     expect(find.textContaining('the saved plan is unchanged'), findsOneWidget);
+  });
+
+  testWidgets('View night changes scoped conditions, keeping the saved plan', (
+    tester,
+  ) async {
+    await start(tester);
+    await tester.runAsync(() async {
+      await vm.setTarget(
+        (await DriftTargetRepository(db).getAllTargets()).first,
+      );
+      await vm.setEquipment(
+        (await DriftEquipmentRepository(db).getAllEquipment()).first,
+      );
+      await vm.plan.idle;
+      await vm.saveSession();
+    });
+    await settle(tester);
+    final saved = vm.activeSession!;
+    final before = (await tester.runAsync(() => sessions.get(saved.id)))!;
+    final context = tester.element(find.byKey(const Key('weather.span')));
+    final browser = context.read<NightBrowserViewModel>();
+    final scoped = context.read<NightConditionsViewModel>();
+    final originalNight = scoped.sessionNight!;
+    final requestsBeforeBrowse = weather.calls;
+    final next = tonight.addDays(1);
+    final card = find.byKey(Key(key(next)));
+    await tester.ensureVisible(card);
+    await tester.tap(
+      find.descendant(of: card, matching: find.byType(ListTile)).first,
+    );
+    await settle(tester);
+    final view = find.byKey(Key(key(next, '.view')));
+    await tester.ensureVisible(view);
+    await tester.tap(view);
+    await settle(tester);
+    await tester.runAsync(() => scoped.idle);
+    await settle(tester);
+    expect(browser.viewedDate, next);
+    expect(
+      scoped.sessionNight!.startUtc,
+      originalNight.startUtc.add(const Duration(days: 1)),
+    );
+    expect(
+      vm.conditions.sessionNight!.startUtc,
+      originalNight.startUtc,
+      reason: 'plan conditions keep their original night',
+    );
+    expect(vm.eveningDate, tonight);
+    expect(vm.activeSession!.id, saved.id);
+    final after = (await tester.runAsync(() => sessions.get(saved.id)))!;
+    expect(after.eveningDate, before.eveningDate);
+    expect(after.planSnapshot!.json, before.planSnapshot!.json);
+    expect(after.plannedAtUtc, before.plannedAtUtc);
+    expect(
+      weather.calls,
+      requestsBeforeBrowse,
+      reason: 'browse reuses the fetched horizon',
+    );
   });
 
   /// The coverage line of the card for [d], as rendered.

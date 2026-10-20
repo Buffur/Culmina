@@ -1,3 +1,5 @@
+import '../../domain/models/plan_overrides.dart';
+
 import 'package:drift/drift.dart';
 
 import '../../core/diagnostics/app_log.dart';
@@ -16,13 +18,16 @@ import '../../domain/services/saved_night_end.dart';
 import '../../domain/services/saved_plan_reader.dart';
 import '../../domain/services/session_reconciliation.dart';
 import '../database/app_database.dart';
+import '../../domain/repositories/undoable_deletion.dart';
+import 'drift_deletion.dart';
 
 /// [SessionRepository] on the v16 `session_logs` table (ADR-014; TASK 11.3).
 ///
 /// Every write runs in one transaction. A session row is only ever changed
 /// with a partial `write` of the columns concerned, never a full-row
 /// replace (TASK 11.2).
-class DriftSessionRepository implements SessionRepository {
+class DriftSessionRepository
+    implements SessionRepository, UndoableDeletionRepository {
   DriftSessionRepository(this._db, {Clock? clock})
     : _clock = clock ?? const SystemClock();
 
@@ -30,6 +35,10 @@ class DriftSessionRepository implements SessionRepository {
   final Clock _clock;
 
   int get _nowMs => _clock.nowUtc().millisecondsSinceEpoch;
+
+  @override
+  Future<DeletionReceipt> deleteWithUndo(int id) =>
+      DriftDeletion(_db).delete(DeletedResource.session, id, () => delete(id));
 
   // Writes --------------------------------------------------------------------
 
@@ -53,6 +62,7 @@ class DriftSessionRepository implements SessionRepository {
               targetId: Value(plan.targetId),
               rigId: Value(plan.rigId),
               trackingOverride: Value(plan.trackingOverride?.name),
+              planOverrides: Value(plan.planOverrides?.toJson()),
               createdAtUtcMs: Value(now),
               updatedAtUtcMs: Value(now),
             ),
@@ -477,6 +487,7 @@ class DriftSessionRepository implements SessionRepository {
         rigLabel: s.record.equipmentName,
         siteLabel: s.record.locationName,
         trackingOverride: s.trackingOverride,
+        planOverrides: s.planOverrides,
       );
       final copy = await create(working);
       final snapshot = s.planSnapshot;
@@ -530,6 +541,7 @@ class DriftSessionRepository implements SessionRepository {
       rigLabel: plan.rigLabel,
       siteLabel: plan.siteLabel,
       trackingOverride: plan.trackingOverride,
+      planOverrides: plan.planOverrides,
     );
   }
 
@@ -622,6 +634,7 @@ class DriftSessionRepository implements SessionRepository {
         targetId: Value(plan.targetId),
         rigId: Value(plan.rigId),
         trackingOverride: Value(plan.trackingOverride?.name),
+        planOverrides: Value(plan.planOverrides?.toJson()),
       ),
     );
   }
@@ -851,6 +864,7 @@ class DriftSessionRepository implements SessionRepository {
       targetId: row.targetId,
       rigId: row.rigId,
       trackingOverride: _trackingOverride(row),
+      planOverrides: PlanOverrides.fromJson(row.planOverrides),
       createdAtUtc: _instant(row.createdAtUtcMs),
       updatedAtUtc: _instant(row.updatedAtUtcMs),
       plannedAtUtc: _instant(row.plannedAtUtcMs),

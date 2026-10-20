@@ -214,6 +214,7 @@ void main() {
     await settle(tester);
     await tester.tap(find.byKey(const Key('logbook.filter.completed')));
     await settle(tester);
+    await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
     await tester.tap(find.byKey(const Key('logbook.filters.done')));
     await settle(tester);
     expect(find.byKey(Key('logbook.status.$completedId')), findsOneWidget);
@@ -236,6 +237,7 @@ void main() {
     await tester.tap(find.byKey(const Key('logbook.pick.1')));
     await settle(tester);
     expect(find.text('Orion Nebula'), findsOneWidget, reason: 'the panel');
+    await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
     await tester.tap(find.byKey(const Key('logbook.filters.done')));
     await settle(tester);
     expect(find.byKey(Key('logbook.status.$completedId')), findsOneWidget);

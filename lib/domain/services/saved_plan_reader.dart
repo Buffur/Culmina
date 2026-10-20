@@ -1,3 +1,4 @@
+import '../models/plan_overrides.dart';
 import '../models/calendar_date.dart';
 import '../models/capture_block.dart';
 import '../models/session.dart';
@@ -15,6 +16,14 @@ import '../models/tracking_type.dart';
 abstract final class SavedPlanReader {
   static SessionPlan? read(SessionSnapshot snapshot) {
     final json = snapshot.json;
+    final PlanOverrides? overrides;
+    try {
+      overrides = PlanOverrides.fromJson(json['planOverrides']);
+    } on FormatException {
+      return null;
+    } on ArgumentError {
+      return null;
+    }
     final night = _map(json['night']);
     final eveningDate = _date(night?['eveningDate']);
     final blocks = _blocks(json['blocks']);
@@ -45,6 +54,7 @@ abstract final class SavedPlanReader {
       // S7.1: the plan's override when the snapshot says the plan chose
       // it; a snapshot taken before S7.1 has no `tracking` and had none.
       trackingOverride: override,
+      planOverrides: overrides,
     );
   }
 

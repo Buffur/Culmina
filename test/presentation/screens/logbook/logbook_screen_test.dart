@@ -12,6 +12,10 @@ import 'package:astroplan/domain/repositories/session_repository.dart';
 import 'package:astroplan/presentation/screens/logbook/logbook_screen.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
+import 'package:astroplan/presentation/viewmodels/theme_viewmodel.dart';
+
+import '../../../support/in_memory_display_preferences.dart';
+
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,6 +36,9 @@ void main() {
     providers: [
       Provider<SessionRepository>.value(value: repo),
       ChangeNotifierProvider.value(value: vm),
+      ChangeNotifierProvider(
+        create: (_) => ThemeViewModel(InMemoryDisplayPreferences()),
+      ),
       ChangeNotifierProvider<SessionPlanViewModel>(
         create: (_) => _MockSessionPlanViewModel(),
       ),
@@ -67,6 +74,9 @@ void main() {
   tearDown(() async => db.close());
 
   Future<void> pumpList(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(wrap());
     await settle(tester);
   }
@@ -138,7 +148,11 @@ void main() {
 
     await tester.tap(find.byKey(const Key('logbook.searchToggle')));
     await settle(tester);
-    expect(title(1), findsOneWidget, reason: 'closing the search clears it');
+    expect(
+      title(1),
+      findsOneWidget,
+      reason: 'clearing the visible search restores all rows',
+    );
   });
 
   testWidgets('the filters sit in one panel; they combine with the search, '
@@ -149,6 +163,7 @@ void main() {
     await settle(tester);
     await tester.tap(find.byKey(const Key('logbook.filter.completed')));
     await settle(tester);
+    await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
     await tester.tap(find.byKey(const Key('logbook.filters.done')));
     await settle(tester);
 
@@ -176,6 +191,42 @@ void main() {
     expect(vm.filter.isEmpty, isTrue);
     expect(title(3), findsOneWidget);
   });
+
+  testWidgets(
+    'visible search keeps its caret and focus while the result count updates',
+    (tester) async {
+      await seed(tester);
+      await pumpList(tester);
+      final search = find.byKey(const Key('logbook.search'));
+      expect(search, findsOneWidget);
+      expect(find.text('3 entries'), findsOneWidget);
+      await tester.tap(search);
+      tester.testTextInput.updateEditingValue(
+        const TextEditingValue(
+          text: 'M42',
+          selection: TextSelection.collapsed(offset: 1),
+        ),
+      );
+      await settle(tester);
+      final field = tester.widget<TextField>(search);
+      expect(field.controller!.selection.baseOffset, 1);
+      expect(field.focusNode!.hasFocus, isTrue);
+      expect(find.text('1 entry'), findsOneWidget);
+      expect(title(2), findsOneWidget);
+      await tester.tap(find.byKey(const Key('logbook.searchToggle')));
+      await settle(tester);
+      expect(find.text('3 entries'), findsOneWidget);
+      expect(field.focusNode!.hasFocus, isTrue);
+      await tester.tap(find.byKey(const Key('logbook.filters')));
+      await settle(tester);
+      expect(find.byType(BottomSheet), findsNothing);
+      expect(find.byKey(const Key('logbook.filter.completed')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
+      await tester.tap(find.byKey(const Key('logbook.filters.done')));
+      await settle(tester);
+      expect(find.byKey(const Key('logbook.filter.completed')), findsNothing);
+    },
+  );
 
   testWidgets('a swipe asks before deleting; Cancel keeps the entry', (
     tester,

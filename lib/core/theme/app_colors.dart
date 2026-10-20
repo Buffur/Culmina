@@ -35,6 +35,7 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFFA5A5A3); // 6.2:1
   static const Color darkTextTertiary = Color(0xFF8F8F8D); // 4.7:1
   static const Color darkTextDisabled = Color(0xFF6B6B69);
+  static const Color darkSelection = Color(0xFF343432);
   static const Color darkBorder = Color(0xFF2F2F2F);
   static const Color darkControlBorder = Color(0xFF6F6F6D); // 3.0:1
   static const Color darkError = Color(0xFFF28B82); // 6.4:1

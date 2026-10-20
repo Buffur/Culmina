@@ -1,0 +1,20 @@
+{
+  "responses": [
+    {
+      "file": "fonts/roboto-8.woff2",
+      "status": 200,
+      "bytes": 43136
+    },
+    {
+      "file": "preview-backup.css",
+      "status": 200,
+      "bytes": 2831
+    }
+  ],
+  "homePhoneWidth": 412,
+  "failures": [],
+  "extraCaptures": [
+    "qa-child-moon-calendar-200.png",
+    "qa-child-weather-hourly-200.png"
+  ]
+}

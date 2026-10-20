@@ -1,0 +1,43 @@
+{
+  "exitCode": 1,
+  "unitWidget": {
+    "passed": 2386,
+    "skipped": 5,
+    "failed": 19
+  },
+  "coreLoop": {
+    "passed": 1,
+    "failed": 1
+  },
+  "nativeSmokeHost": {
+    "skipped": 1
+  },
+  "perfHost": {
+    "passed": 1
+  },
+  "failures": [
+    "00:07 +214 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/data/database/unsupported_database_test.dart: through the production connection v27 is refused as newer, typed, and the file is unchanged [E]",
+    "00:10 +373 ~1 -2: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/data/database/unsupported_database_test.dart: the confirmed reset a newer database is refused before anything changes [E]",
+    "01:01 +1354 ~5 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/performance/reference_plan_density_test.dart: the reference plan at 412 px, 100 % text [E]",
+    "01:02 +1356 ~5 -4: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/quantity_text_usage_test.dart: lib/presentation and lib/domain format covered quantities through QuantityText [E]",
+    "01:14 +1395 ~5 -5: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/equipment/equipment_editor_fit_test.dart: numeric fields show their whole value on a 375 dp phone: the M4 phone draft, text 100 % [E]",
+    "01:15 +1398 ~5 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/equipment/equipment_editor_fit_test.dart: numeric fields show their whole value on a 375 dp phone: the seeded rig, text 100 % [E]",
+    "01:16 +1402 ~5 -7: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/equipment/equipment_editor_fit_test.dart: numeric fields show their whole value on a 375 dp phone: the M4 phone draft, text 130 % [E]",
+    "01:16 +1402 ~5 -8: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/equipment/equipment_editor_fit_test.dart: numeric fields show their whole value on a 375 dp phone: the seeded rig, text 130 % [E]",
+    "01:52 +1538 ~5 -9: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/location/location_picker_tiles_failing_test.dart: the map and its controls stay usable, and a typed position is shown and used [E]",
+    "02:25 +1706 ~5 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/secondary_consistency_test.dart: the secondary screens use the text roles and spacing tokens [E]",
+    "02:39 +1918 ~5 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/theme/presentation_style_rules_test.dart: no hard-coded colour in lib/presentation [E]",
+    "02:39 +1918 ~5 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/theme/presentation_style_rules_test.dart: no font size under 12 sp in lib/presentation [E]",
+    "02:42 +1945 ~5 -13: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/stage11_host_fixes_test.dart: S11H-02: \"Altitude now\" below the horizon reads with a typographic minus [E]",
+    "02:44 +1967 ~5 -14: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/theme/field_mode_darkness_test.dart: Settings has the field-mode switch [E]",
+    "02:53 +2094 ~5 -15: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/viewmodels/planner_sky_darkness_test.dart: no scraping code remains in lib/ [E]",
+    "02:54 +2116 ~5 -16: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/viewmodels/viewmodel_rules_test.dart: no ViewModel is over about 250 lines of code [E]",
+    "03:31 +2362 ~5 -17: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/stacking_gain_graph_test.dart: no overflow at 200 % text (light) [E]",
+    "03:32 +2377 ~5 -18: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/stacking_gain_graph_test.dart: no overflow at 200 % text (dark) [E]",
+    "03:32 +2379 ~5 -19: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/stacking_gain_graph_test.dart: no overflow at 200 % text (field) [E]",
+    "00:29 +0 -1: the core loop: site to export, with a restart after the night [E]"
+  ],
+  "changedInputsDuringRun": [
+    "tool/design/comparison/capture-cli.js"
+  ]
+}

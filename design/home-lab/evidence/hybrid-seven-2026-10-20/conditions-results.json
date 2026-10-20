@@ -1,0 +1,30 @@
+{
+  "tool": "Playwright CLI, isolated headless Edge session hybrid-conditions-seven",
+  "command": "npx --yes --package @playwright/cli playwright-cli -s=hybrid-conditions-seven run-code --filename design/home-lab/scripts/check_seven_conditions.cli.js",
+  "clock": "Date.now fixed to 2026-10-19T16:00:00Z in this isolated test profile",
+  "cases": [
+    "ready: coverage/status/unknown/date semantics",
+    "stale: coverage/status/unknown/date semantics",
+    "partial: coverage/status/unknown/date semantics",
+    "offline: coverage/status/unknown/date semantics",
+    "unknown: coverage/status/unknown/date semantics",
+    "error: coverage/status/unknown/date semantics",
+    "loading: coverage/status/unknown/date semantics",
+    "missing-variable: coverage/status/unknown/date semantics",
+    "no-dark: coverage/status/unknown/date semantics",
+    "light: 200% no horizontal overflow",
+    "dark: 200% no horizontal overflow",
+    "field: 200% no horizontal overflow",
+    "DST dates, (+1), next-night/reload, no plan or draft write",
+    "cross-month calendar label",
+    "Paper comparison retains original date/weather presentation"
+  ],
+  "pageErrors": [],
+  "screenshots": [
+    "conditions-weather-stale.png",
+    "conditions-weather-light-200.png",
+    "conditions-weather-dark-200.png",
+    "conditions-weather-field-200.png",
+    "conditions-night-month-end.png"
+  ]
+}

@@ -1,3 +1,4 @@
+import 'plan_overrides.dart';
 import 'calendar_date.dart';
 import 'capture_block.dart';
 import 'session_log.dart';
@@ -73,6 +74,7 @@ class SessionPlan {
     required this.rigLabel,
     this.siteLabel,
     this.trackingOverride,
+    this.planOverrides,
   });
 
   final CalendarDate eveningDate;
@@ -90,6 +92,7 @@ class SessionPlan {
   /// The plan's tracking override (RD-08 = T3; S7.1): one of
   /// [TrackingType.overrides], or null for the rig's default.
   final TrackingType? trackingOverride;
+  final PlanOverrides? planOverrides;
 
   /// Light frames in the plan (the pre-v16 `planned_light_frames` label).
   int get lightFrameCount => blocks
@@ -135,6 +138,7 @@ class Session {
     this.targetId,
     this.rigId,
     this.trackingOverride,
+    this.planOverrides,
     this.createdAtUtc,
     this.updatedAtUtc,
     this.plannedAtUtc,
@@ -168,6 +172,7 @@ class Session {
 
   /// The plan's tracking override (S7.1); null = the rig's default.
   final TrackingType? trackingOverride;
+  final PlanOverrides? planOverrides;
   final DateTime? createdAtUtc;
   final DateTime? updatedAtUtc;
   final DateTime? plannedAtUtc;

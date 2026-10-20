@@ -161,16 +161,16 @@ class _Choice extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, color: p.textSecondary),
+                Icon(icon, size: 18, color: p.textSecondary),
                 const SizedBox(width: AppSpacing.xs),
                 Flexible(
                   child: Text(
                     text,
-                    style: Theme.of(context).textTheme.titleSmall
+                    style: Theme.of(context).textTheme.bodySmall
                         ?.copyWith(color: p.textPrimary),
                   ),
                 ),
-                Icon(Icons.arrow_drop_down, color: p.textSecondary),
+                Icon(Icons.arrow_drop_down, size: 18, color: p.textSecondary),
               ],
             ),
           ),

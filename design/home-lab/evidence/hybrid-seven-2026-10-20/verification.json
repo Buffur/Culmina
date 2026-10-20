@@ -1,0 +1,34 @@
+{
+  "revision": "20261020-hybrid6",
+  "requirements": {
+    "1": "PASS",
+    "2": "PASS",
+    "3": "PASS",
+    "4": "PASS",
+    "5": "PASS",
+    "6": "PASS",
+    "7": "PASS"
+  },
+  "models": {
+    "plan": 14,
+    "night": 46,
+    "quality": 15,
+    "bridge_backup": 4
+  },
+  "browser_groups": {
+    "plan": 7,
+    "home_feedback": 10,
+    "conditions": 15,
+    "logbook_settings": 3,
+    "continuity": 6,
+    "regression": 11
+  },
+  "claude_initial_is_error": false,
+  "claude_confirmation_is_error": false,
+  "qa_open_P1_P2": 0,
+  "app_wide_score": "Not rescored; previous32/40 remains historical baseline",
+  "source_hashes_verified": 30,
+  "native_inventory_sources": 21,
+  "preview_server": "http://127.0.0.1:4173",
+  "owner_storage": "untouched"
+}

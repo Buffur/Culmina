@@ -38,6 +38,11 @@ void main() {
   }
 
   Future<void> pick(WidgetTester tester) async {
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('metadata.pick')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.byKey(const Key('metadata.pick')));
     await tester.pumpAndSettle();
   }
@@ -134,7 +139,7 @@ void main() {
 
     files.error(const MetadataReadException(MetadataReadError.io, 'busy'));
     await pick(tester);
-    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.byType(MaterialBanner), findsOneWidget);
     expect(find.byKey(const Key('metadata.result')), findsNothing);
     expect(vm.busy, isFalse);
   });

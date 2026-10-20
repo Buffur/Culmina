@@ -49,3 +49,11 @@ AstroPlan_Development_Plan.md
 key.properties
 *.jks
 *.keystore
+
+# Local AI-tool state and raw agent transcripts: they carry account identity
+# (emails, plans) and machine-local settings, so they stay on this machine.
+.claude/settings.local.json
+.playwright-cli/
+__pycache__/
+*-stream.jsonl
+docs/design/tooling-update-2026-10-20/codex-health-stderr.txt

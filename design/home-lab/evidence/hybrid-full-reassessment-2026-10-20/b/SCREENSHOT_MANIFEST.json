@@ -1,0 +1,596 @@
+{
+  "revision": "20261020-hybrid6",
+  "generatedAt": "2026-10-20T15:04:01.291Z",
+  "scope": "Current browser prototype only; isolated headless Edge localhost; owner profile and 127.0.0.1 storage untouched. No native acceptance. No scoring.",
+  "sourceUnchanged": true,
+  "rows": [
+    {
+      "name": "root-home-light-1",
+      "file": "root-home-light-1.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=light&scale=1#concepts"
+    },
+    {
+      "name": "root-plan-light-1",
+      "file": "root-plan-light-1.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&theme=light&scale=1"
+    },
+    {
+      "name": "root-night-light-1",
+      "file": "root-night-light-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-moon-light-1",
+      "file": "root-moon-light-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-weather-light-1",
+      "file": "root-weather-light-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-home-light-2",
+      "file": "root-home-light-2.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=light&scale=2#concepts"
+    },
+    {
+      "name": "root-plan-light-2",
+      "file": "root-plan-light-2.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&theme=light&scale=2"
+    },
+    {
+      "name": "root-night-light-2",
+      "file": "root-night-light-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=light&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-moon-light-2",
+      "file": "root-moon-light-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=light&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-weather-light-2",
+      "file": "root-weather-light-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=light&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-home-dark-1",
+      "file": "root-home-dark-1.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=dark&scale=1#concepts"
+    },
+    {
+      "name": "root-plan-dark-1",
+      "file": "root-plan-dark-1.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&theme=dark&scale=1"
+    },
+    {
+      "name": "root-night-dark-1",
+      "file": "root-night-dark-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=dark&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-moon-dark-1",
+      "file": "root-moon-dark-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=dark&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-weather-dark-1",
+      "file": "root-weather-dark-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=dark&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-home-dark-2",
+      "file": "root-home-dark-2.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=dark&scale=2#concepts"
+    },
+    {
+      "name": "root-plan-dark-2",
+      "file": "root-plan-dark-2.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&theme=dark&scale=2"
+    },
+    {
+      "name": "root-night-dark-2",
+      "file": "root-night-dark-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=dark&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-moon-dark-2",
+      "file": "root-moon-dark-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=dark&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-weather-dark-2",
+      "file": "root-weather-dark-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=dark&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-home-field-1",
+      "file": "root-home-field-1.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=field&scale=1#concepts"
+    },
+    {
+      "name": "root-plan-field-1",
+      "file": "root-plan-field-1.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&theme=field&scale=1"
+    },
+    {
+      "name": "root-night-field-1",
+      "file": "root-night-field-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=field&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-moon-field-1",
+      "file": "root-moon-field-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=field&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-weather-field-1",
+      "file": "root-weather-field-1.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=field&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-home-field-2",
+      "file": "root-home-field-2.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=field&scale=2#concepts"
+    },
+    {
+      "name": "root-plan-field-2",
+      "file": "root-plan-field-2.png",
+      "url": "http://localhost:4173/plan.html?variant=blend&theme=field&scale=2"
+    },
+    {
+      "name": "root-night-field-2",
+      "file": "root-night-field-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=field&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-moon-field-2",
+      "file": "root-moon-field-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=field&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "root-weather-field-2",
+      "file": "root-weather-field-2.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=field&scale=2&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "home-site",
+      "file": "home-site.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide#concepts"
+    },
+    {
+      "name": "home-date",
+      "file": "home-date.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide#concepts"
+    },
+    {
+      "name": "home-candidates",
+      "file": "home-candidates.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide#concepts"
+    },
+    {
+      "name": "home-welcome",
+      "file": "home-welcome.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide#concepts"
+    },
+    {
+      "name": "plan-context",
+      "file": "plan-context.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "night-guides",
+      "file": "night-guides.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=night&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "moon-guides",
+      "file": "moon-guides.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "moon-calendar",
+      "file": "moon-calendar.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=moon&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-guides",
+      "file": "weather-guides.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-hourly",
+      "file": "weather-hourly.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=2&month=2026-10&week=0"
+    },
+    {
+      "name": "home-state-empty",
+      "file": "home-state-empty.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&scenario=empty#concepts"
+    },
+    {
+      "name": "home-state-error",
+      "file": "home-state-error.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&scenario=error#concepts"
+    },
+    {
+      "name": "home-state-no-site",
+      "file": "home-state-no-site.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&scenario=no-site#concepts"
+    },
+    {
+      "name": "home-state-loading",
+      "file": "home-state-loading.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&scenario=loading#concepts"
+    },
+    {
+      "name": "weather-state-unknown",
+      "file": "weather-state-unknown.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scenario=unknown&theme=light&scale=1&night=2026-10-19&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-state-offline",
+      "file": "weather-state-offline.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scenario=offline&theme=light&scale=1&night=2026-10-19&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-state-stale",
+      "file": "weather-state-stale.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scenario=stale&theme=light&scale=1&night=2026-10-19&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-state-error",
+      "file": "weather-state-error.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scenario=error&theme=light&scale=1&night=2026-10-19&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-state-partial",
+      "file": "weather-state-partial.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scenario=partial&theme=light&scale=1&night=2026-10-19&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather-state-missing-variable",
+      "file": "weather-state-missing-variable.png",
+      "url": "http://localhost:4173/conditions.html?variant=blend&view=weather&scenario=missing-variable&theme=light&scale=1&night=2026-10-19&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "logbook-state-empty",
+      "file": "logbook-state-empty.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=logbook&scenario=empty&theme=light&scale=1"
+    },
+    {
+      "name": "logbook-state-error",
+      "file": "logbook-state-error.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=logbook&scenario=error&theme=light&scale=1"
+    },
+    {
+      "name": "logbook-state-storage-error",
+      "file": "logbook-state-storage-error.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=logbook&scenario=storage-error&theme=light&scale=1"
+    },
+    {
+      "name": "library-state-empty",
+      "file": "library-state-empty.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&scenario=empty&theme=light&scale=1"
+    },
+    {
+      "name": "library-state-error",
+      "file": "library-state-error.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&scenario=error&theme=light&scale=1"
+    },
+    {
+      "name": "library-state-storage-error",
+      "file": "library-state-storage-error.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&scenario=storage-error&theme=light&scale=1"
+    },
+    {
+      "name": "settings-state-empty",
+      "file": "settings-state-empty.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=settings&scenario=empty&theme=light&scale=1"
+    },
+    {
+      "name": "settings-state-error",
+      "file": "settings-state-error.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=settings&scenario=error&theme=light&scale=1"
+    },
+    {
+      "name": "settings-state-storage-error",
+      "file": "settings-state-storage-error.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=settings&scenario=storage-error&theme=light&scale=1"
+    },
+    {
+      "name": "custom-target-detail",
+      "file": "custom-target-detail.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&theme=light&scale=1"
+    },
+    {
+      "name": "custom-target-edit",
+      "file": "custom-target-edit.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&theme=light&scale=1"
+    },
+    {
+      "name": "site-position-denied",
+      "file": "site-position-denied.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&theme=light&scale=1"
+    },
+    {
+      "name": "rig-metadata-json",
+      "file": "rig-metadata-json.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&theme=light&scale=1"
+    },
+    {
+      "name": "logbook-exports",
+      "file": "logbook-exports.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=logbook&theme=light&scale=1"
+    },
+    {
+      "name": "settings-restore-review",
+      "file": "settings-restore-review.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=settings&theme=light&scale=1"
+    },
+    {
+      "name": "full-prototype-backup",
+      "file": "full-prototype-backup.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=settings&theme=light&scale=1"
+    },
+    {
+      "name": "home-412-light-1-top",
+      "file": "home-412-light-1-top.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=light&scale=1#concepts"
+    },
+    {
+      "name": "home-412-light-1-bottom",
+      "file": "home-412-light-1-bottom.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=light&scale=1#concepts"
+    },
+    {
+      "name": "home-412-light-2-top",
+      "file": "home-412-light-2-top.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=light&scale=2#concepts"
+    },
+    {
+      "name": "home-412-light-2-bottom",
+      "file": "home-412-light-2-bottom.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=light&scale=2#concepts"
+    },
+    {
+      "name": "home-412-dark-1-top",
+      "file": "home-412-dark-1-top.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=dark&scale=1#concepts"
+    },
+    {
+      "name": "home-412-dark-1-bottom",
+      "file": "home-412-dark-1-bottom.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=dark&scale=1#concepts"
+    },
+    {
+      "name": "home-412-field-1-top",
+      "file": "home-412-field-1-top.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=field&scale=1#concepts"
+    },
+    {
+      "name": "home-412-field-1-bottom",
+      "file": "home-412-field-1-bottom.png",
+      "url": "http://localhost:4173/index.html?variant=blend&view=wide&theme=field&scale=1#concepts"
+    },
+    {
+      "name": "fresh-plan-context",
+      "file": "fresh-plan-context.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "fresh-plan-target",
+      "file": "fresh-plan-target.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "fresh-plan-rig",
+      "file": "fresh-plan-rig.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "fresh-plan-block",
+      "file": "fresh-plan-block.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "fresh-plan-calibration",
+      "file": "fresh-plan-calibration.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "fresh-plan-assumptions",
+      "file": "fresh-plan-assumptions.png",
+      "url": "http://localhost:4173/plan.html?variant=blend"
+    },
+    {
+      "name": "metadata-review",
+      "file": "metadata-review.png",
+      "url": "http://localhost:4173/workspace.html?variant=blend&tab=library&theme=light&scale=1"
+    },
+    {
+      "name": "library-dark-1",
+      "file": "matrix/library-dark-1.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "library-light-1",
+      "file": "matrix/library-light-1.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "library-light-2",
+      "file": "matrix/library-light-2.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "logbook-dark-1",
+      "file": "matrix/logbook-dark-1.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "logbook-light-1",
+      "file": "matrix/logbook-light-1.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "logbook-light-2",
+      "file": "matrix/logbook-light-2.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-logbook-detail-200",
+      "file": "matrix/qa-inner-logbook-detail-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-progress-200",
+      "file": "matrix/qa-inner-progress-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-result-editor-200",
+      "file": "matrix/qa-inner-result-editor-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-rig-detail-200",
+      "file": "matrix/qa-inner-rig-detail-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-rig-editor-200",
+      "file": "matrix/qa-inner-rig-editor-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-rigs-list-200",
+      "file": "matrix/qa-inner-rigs-list-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-settings-about-200",
+      "file": "matrix/qa-inner-settings-about-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-settings-appearance-200",
+      "file": "matrix/qa-inner-settings-appearance-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-settings-backup-200",
+      "file": "matrix/qa-inner-settings-backup-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-settings-planning-200",
+      "file": "matrix/qa-inner-settings-planning-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-settings-privacy-200",
+      "file": "matrix/qa-inner-settings-privacy-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-site-detail-200",
+      "file": "matrix/qa-inner-site-detail-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-site-editor-200",
+      "file": "matrix/qa-inner-site-editor-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-sites-list-200",
+      "file": "matrix/qa-inner-sites-list-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-target-detail-200",
+      "file": "matrix/qa-inner-target-detail-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-target-editor-200",
+      "file": "matrix/qa-inner-target-editor-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "qa-inner-targets-list-200",
+      "file": "matrix/qa-inner-targets-list-200.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "settings-dark-1",
+      "file": "matrix/settings-dark-1.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "settings-light-1",
+      "file": "matrix/settings-light-1.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "settings-light-2",
+      "file": "matrix/settings-light-2.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-dark-dusk",
+      "file": "matrix/sky-dark-dusk.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-dark-ink",
+      "file": "matrix/sky-dark-ink.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-dark-slate",
+      "file": "matrix/sky-dark-slate.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-field-dusk",
+      "file": "matrix/sky-field-dusk.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-field-ink",
+      "file": "matrix/sky-field-ink.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-field-slate",
+      "file": "matrix/sky-field-slate.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-light-dusk",
+      "file": "matrix/sky-light-dusk.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-light-ink",
+      "file": "matrix/sky-light-ink.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    },
+    {
+      "name": "sky-light-slate",
+      "file": "matrix/sky-light-slate.png",
+      "coverage": "Current existing matrix screenshot; see matrix/browser-matrix.json"
+    }
+  ],
+  "matrixCounts": {
+    "roots": 36,
+    "inners": 51,
+    "home": 12,
+    "palettes": 9,
+    "states": 9
+  },
+  "captureHarnessNotes": "Initial Plan enumeration retained local draft editor context; fresh-plan-* recaptures clear isolated storage before navigation and supersede failed Plan attempts. Home 356px captures supplement consistent home-412-* phone captures."
+}

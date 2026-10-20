@@ -26,6 +26,7 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
+import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -75,7 +76,11 @@ void main() {
     await settle(tester);
   }
 
-  Future<void> start(WidgetTester tester, {double textScale = 1}) async {
+  Future<void> start(
+    WidgetTester tester, {
+    double textScale = 1,
+    bool activeSite = true,
+  }) async {
     tester.view.physicalSize = const Size(800, 5000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -95,7 +100,9 @@ void main() {
           timeZoneId: 'Europe/Ljubljana',
         ),
       );
-      SharedPreferences.setMockInitialValues({'activeLocationId': siteId});
+      SharedPreferences.setMockInitialValues({
+        if (activeSite) 'activeLocationId': siteId,
+      });
       final clock = FixedClock(now);
       vm = PlannerHarness(
         DriftTargetRepository(db),
@@ -116,7 +123,16 @@ void main() {
       MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
     );
     await settle(tester);
+    if (!activeSite) return;
+    // Hybrid separates Moon/calendar into its own reachable tab.
+    expect(find.byKey(const Key('conditions.page.0')), findsOneWidget);
+    await tester.tap(find.widgetWithText(Tab, 'Moon'));
+    await settle(tester);
     await month(tester);
+    // Full scientific readout remains reachable in Hybrid's reading disclosure.
+    await tester.ensureVisible(find.text('Read the time browser'));
+    await tester.tap(find.text('Read the time browser'));
+    await settle(tester);
   }
 
   NightBrowserViewModel browser(WidgetTester tester) =>
@@ -127,6 +143,18 @@ void main() {
 
   String textOf(WidgetTester tester, String key) =>
       tester.widget<Text>(find.byKey(Key(key))).data!;
+
+  testWidgets('missing-site conditions offer the real site picker', (
+    tester,
+  ) async {
+    await start(tester, activeSite: false);
+    expect(find.text('Set an observing site'), findsOneWidget);
+    expect(find.byKey(const Key('nightMoon.bar')), findsNothing);
+    await tester.tap(find.byKey(const Key('conditions.chooseSite')));
+    await settle(tester);
+    expect(find.widgetWithText(AppBar, 'Choose a site'), findsOneWidget);
+    expect(vm.site.isDefaultLocation, isTrue);
+  });
 
   testWidgets('A1: the plan\'s night with the bar, legend, text alternative '
       'and the month; the calendar agrees with the detail', (tester) async {
@@ -150,6 +178,31 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets(
+    'Hybrid tabs retain viewed night and weather follows it without adopting',
+    (tester) async {
+      await start(tester);
+      final b = browser(tester);
+      final planNight = vm.eveningDate;
+      b.viewNight(viewed);
+      await settle(tester);
+      await tester.tap(find.widgetWithText(Tab, 'Weather'));
+      await settle(tester);
+      final conditions = tester
+          .element(find.byKey(const Key('conditions.page.2')))
+          .read<NightConditionsViewModel>();
+      expect(conditions.sessionNight!.eveningDate, viewed);
+      expect(vm.conditions.sessionNight!.eveningDate, planNight);
+      expect(vm.eveningDate, planNight);
+      await tester.tap(find.widgetWithText(Tab, 'Night'));
+      await settle(tester);
+      expect(identical(browser(tester), b), isTrue);
+      expect(b.viewedDate, viewed);
+      expect(vm.eveningDate, planNight);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   // H2 (G1-S11-01): a day cell's label replaces the InkWell's semantics, so
   // the labelled node itself must carry the tap, and it views that night.
@@ -399,8 +452,9 @@ void main() {
     SemanticsNode node() =>
         find.semantics.byFlag(SemanticsFlag.isSlider).evaluate().single;
     expect(node().value, isNotEmpty);
-    expect(node().label, node().value);
-    expect(readout(), startsWith('${node().value}, '));
+    expect(node().value, startsWith('${node().label}: '));
+    expect(node().value, contains('Moon'));
+    expect(readout(), startsWith('${node().label}, '));
     expect(
       node().getSemanticsData().hasAction(SemanticsAction.increase),
       isTrue,
@@ -428,7 +482,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await settle(tester);
     expect(b.cursorUtc, before.add(const Duration(minutes: 5)));
-    expect(readout(), startsWith('${node().value}, '));
+    expect(readout(), startsWith('${node().label}, '));
     expect(node().value, up);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);

@@ -1,3 +1,5 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -124,22 +126,26 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
       title: 'Delete this target?',
       message:
           '"${_name(target)}" is deleted from your targets. Saved plans keep '
-          "what they recorded. This can't be undone.",
+          'what they recorded. You can Undo immediately after deleting.',
     );
     if (!sure || !mounted) return false;
-    final deleted = await runWithFeedback(
+    final targets = context.read<TargetsViewModel>();
+    final plan = context.read<SessionPlanViewModel>();
+    final restoreSelection = plan.rememberTargetForUndo(target.id);
+    return deleteWithUndoFeedback(
       context,
-      'delete the target',
-      () => context.read<TargetsViewModel>().delete(target.id),
+      action: 'delete the target',
+      message: 'Target deleted',
+      remove: () => targets.deleteWithUndo(target.id),
+      afterDelete: () async {
+        await plan.refreshSelectedTarget();
+        if (mounted) await _loadTargets();
+      },
+      afterRestore: () async {
+        await restoreSelection();
+        if (mounted) await _loadTargets();
+      },
     );
-    if (!mounted) return deleted;
-    if (deleted) showDone(context, 'Target deleted');
-    await _loadTargets();
-    // TD-028: clear the planner's selection if this was it.
-    if (mounted) {
-      await context.read<SessionPlanViewModel>().refreshSelectedTarget();
-    }
-    return deleted;
   }
 
   /// "Plan this target" (S9.1, D9-1): a new plan with [target], after the
@@ -377,7 +383,8 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
     final choosing = widget.mode == ListMode.choose;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: hybridAppBar(
+        context,
         title: Text(choosing ? AppWords.chooseTarget : AppWords.targets),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60.0),

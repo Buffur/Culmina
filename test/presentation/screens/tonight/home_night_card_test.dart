@@ -131,7 +131,9 @@ void main() {
       untilHour: 1, // rows end at 01:00 UTC: the night is cut short
     );
     final weather = lines(tester, 'tonight.weather');
-    expect(weather, contains('Cloud in the dark 30 %'));
+    // Hybrid's compact row shows temperature/wind; absent fields remain
+    // unknown. The known cloud value remains reachable in the detail.
+    expect(weather, contains('Temperature unknown · wind unknown'));
     expect(
       weather.any(
         (l) => l.startsWith('Forecast for ') && l.contains('dark hours'),
@@ -153,7 +155,11 @@ void main() {
     // Each row opens its detail.
     await tester.tap(find.byKey(const Key('tonight.weather')));
     await settle(tester);
-    expect(find.byKey(const Key('weatherDetail.summary')), findsOneWidget);
+    expect(find.byKey(const Key('conditions.page.2')), findsOneWidget);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('weather.facts'))).data,
+      startsWith('Cloud 30 %'),
+    );
   });
 
   testWidgets('no dark time: said in the night and weather rows', (

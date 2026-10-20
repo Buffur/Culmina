@@ -1,0 +1,912 @@
+[
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "HYBRID_CONTINUATION_2026_10_20.md",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "HYBRID_FULL_REASSESSMENT_2026_10_20.md",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/DATA_CONTRACTS.md",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/LIBRARY_IMPORT.md",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/browser-checks.json",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/CONDITIONS_VISUAL.md",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/comparison.html",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/implementation.diff",
+    "exists": true
+  },
+  {
+    "from": "docs\\design\\HYBRID_REFINEMENT_2026_10_20.md",
+    "target": "../../design/home-lab/evidence/hybrid-refinement-2026-10-20/source-hashes.json",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-light-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-dark-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-dark-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-dark-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-field-1.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-field-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-412-field-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-360-light-2.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-360-light-2-bottom.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-state-empty-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-state-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-state-no-site-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-state-loading-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-unknown-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-partial-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-missing-variable-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-stale-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-offline-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-no-site-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/weather-state-no-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-state-empty-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-state-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/logbook-state-storage-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-state-empty-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-state-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-state-storage-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-state-empty-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-state-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-state-storage-error-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-context-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-target-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-rig-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-block-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-calibration-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-assumptions-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-rigs-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-rig-editor-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-targets-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-target-editor-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-sites-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-site-editor-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-planning-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-privacy-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-backup-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/logbook-detail-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-context-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-target-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-rig-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-block-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-calibration-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-assumptions-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-rigs-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-rig-editor-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-targets-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-target-editor-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-sites-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-site-editor-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-planning-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-privacy-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-backup-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/logbook-detail-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-context-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-target-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-rig-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-block-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-calibration-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/plan-assumptions-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-rigs-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-rig-editor-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-targets-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-target-editor-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-sites-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-site-editor-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-planning-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-privacy-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/settings-backup-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/logbook-detail-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/r1-fresh-plan-assumptions.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-timeline-reset-keyboard.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/night-timeline-reset-keyboard.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/moon-timeline-reset-keyboard.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/home-welcome-visible-action.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "screenshots/library-new-target-copy.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/metadata-rig-review-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/logbook-result-light-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/logbook-result-dark-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/logbook-result-field-200.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/r1-explicit-plan-overrides.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/metadata-rig-unreadable.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted-metadata/screenshots/metadata-plan-review.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted/screenshots/settings-identical-restore-review.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\BROWSER_QA_FINAL.md",
+    "target": "targeted-metadata/screenshots/metadata-plan-error.png",
+    "exists": true
+  },
+  {
+    "from": "design\\home-lab\\evidence\\hybrid-refinement-2026-10-20\\CONDITIONS_VISUAL.md",
+    "target": "conditions-check.json",
+    "exists": true
+  }
+]

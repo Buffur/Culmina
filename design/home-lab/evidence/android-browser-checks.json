@@ -1,0 +1,482 @@
+{
+  "planLayouts": [
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "scale": "1",
+      "smallTargets": [],
+      "theme": "light",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "scale": "2",
+      "smallTargets": [],
+      "theme": "light",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "scale": "1",
+      "smallTargets": [],
+      "theme": "dark",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "scale": "2",
+      "smallTargets": [],
+      "theme": "dark",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "scale": "1",
+      "smallTargets": [],
+      "theme": "field",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 412,
+      "saveVisible": true,
+      "scale": "2",
+      "smallTargets": [],
+      "theme": "field",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "scale": "1",
+      "smallTargets": [],
+      "theme": "light",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "scale": "2",
+      "smallTargets": [],
+      "theme": "light",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "scale": "1",
+      "smallTargets": [],
+      "theme": "dark",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "scale": "2",
+      "smallTargets": [],
+      "theme": "dark",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "scale": "1",
+      "smallTargets": [],
+      "theme": "field",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "oneColumn": true,
+      "pageOverflow": false,
+      "phoneWidth": 402,
+      "saveVisible": true,
+      "scale": "2",
+      "smallTargets": [],
+      "theme": "field",
+      "viewport": [
+        412,
+        915
+      ]
+    }
+  ],
+  "finalHomeNavigation": [
+    {
+      "columns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "contentOverflow": false,
+      "navLabelSize": "22px",
+      "scale": "2",
+      "targets": [
+        {
+          "height": 93,
+          "name": "Tonight",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Logbook",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Library",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Settings",
+          "overflow": false,
+          "width": 83
+        }
+      ],
+      "variant": "Hybrid",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "columns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "contentOverflow": false,
+      "navLabelSize": "22px",
+      "scale": "2",
+      "targets": [
+        {
+          "height": 93,
+          "name": "Tonight",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Logbook",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Library",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Settings",
+          "overflow": false,
+          "width": 83
+        }
+      ],
+      "variant": "Hybrid · Page",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "columns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "contentOverflow": false,
+      "navLabelSize": "22px",
+      "scale": "2",
+      "targets": [
+        {
+          "height": 93,
+          "name": "Tonight",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Logbook",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Library",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Settings",
+          "overflow": false,
+          "width": 83
+        }
+      ],
+      "variant": "Hybrid · Soft",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "columns": "82.6667px 82.6667px 82.6667px 82.6667px",
+      "contentOverflow": false,
+      "navLabelSize": "22px",
+      "scale": "2",
+      "targets": [
+        {
+          "height": 93,
+          "name": "Tonight",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Logbook",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Library",
+          "overflow": false,
+          "width": 83
+        },
+        {
+          "height": 93,
+          "name": "Settings",
+          "overflow": false,
+          "width": 83
+        }
+      ],
+      "variant": "Hybrid · Desk",
+      "viewport": [
+        412,
+        915
+      ]
+    }
+  ],
+  "constrainedEditor": {
+    "apply": {
+      "bottom": 475.3333435058594,
+      "height": 66,
+      "left": 16,
+      "right": 386,
+      "top": 409.3333435058594,
+      "width": 370,
+      "x": 16,
+      "y": 409.3333435058594
+    },
+    "overflow": false,
+    "scale": "2",
+    "screen": "Edit block",
+    "scrollArea": 114,
+    "visibleInput": {
+      "bottom": 332.0000228881836,
+      "height": 73.33333587646484,
+      "left": 16,
+      "right": 376,
+      "top": 258.66668701171875,
+      "width": 360,
+      "x": 16,
+      "y": 258.66668701171875
+    }
+  },
+  "interactions": {
+    "validationBlankFrames": "aria-invalid=true; blank retained",
+    "apply130": "saved changed",
+    "back": "Save/Discard/Cancel displayed; Cancel retained changes",
+    "saveFailure": "Retry save displayed; latest 130 frames retained",
+    "retryReload": "130 frames restored",
+    "fixtureRestored": "120 frames saved",
+    "missingForecast": "Forecast unavailable; Unknown not 0",
+    "missingSite": "night absent; Save disabled",
+    "homeToPlan": "selected context passed"
+  },
+  "initialHomeLayoutObservations": [
+    {
+      "contentOverflow": false,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navWidth": 410.6666870117187,
+      "phoneWidth": 412,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navWidth": 410.6666870117187,
+      "phoneWidth": 412,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid · Page",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navWidth": 410.6666870117187,
+      "phoneWidth": 412,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid · Soft",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "99.1667px 99.1667px 99.1667px 99.1667px",
+      "navWidth": 410.6666870117187,
+      "phoneWidth": 412,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid · Desk",
+      "viewport": [
+        1280,
+        1040
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "167.333px 167.333px",
+      "navWidth": 344.66668701171875,
+      "phoneWidth": 346,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "167.333px 167.333px",
+      "navWidth": 344.66668701171875,
+      "phoneWidth": 346,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid · Page",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "167.333px 167.333px",
+      "navWidth": 344.66668701171875,
+      "phoneWidth": 346,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid · Soft",
+      "viewport": [
+        412,
+        915
+      ]
+    },
+    {
+      "contentOverflow": false,
+      "navColumns": "167.333px 167.333px",
+      "navWidth": 344.66668701171875,
+      "phoneWidth": 346,
+      "planBorder": "0px",
+      "planShadow": "none",
+      "singleColumn": true,
+      "variant": "Hybrid · Desk",
+      "viewport": [
+        412,
+        915
+      ]
+    }
+  ],
+  "initialHomeLayoutNote": "Initial layout observations preceded the final navigation correction. Scale was selected but not asserted in those observations; use finalHomeNavigation for verified 200% navigation.",
+  "sourceHashes": {
+    "plan.html": "65d65c9077ab036ada9d02a002e10e574b9f6a2eddea14f45ec7479e68fee66e",
+    "plan.css": "2b350d5bf87828991313aefa93ca8a8bceddb31752425d5aa44313bebf74e624",
+    "plan.js": "400798e51dc53f160b042af217ccf119cbc58f4413e99f407a5041bf0221f41a",
+    "styles.css": "b972cf42f1deda22444fadb75aff43a1623e5969e8bb07e3800ee5305067b776",
+    "app.js": "a21ff8ecd8ed6746325a926a7edad12eddd256a6af79d5b49a346bb22992cd2a",
+    "index.html": "154f252148998634c38db6cee530dd2bb51859f6e90ffccd01ba4f0b29651041"
+  }
+}

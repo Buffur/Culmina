@@ -1,14 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../core/diagnostics/app_log.dart';
+import '../../domain/repositories/undoable_deletion.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import 'app_messages.dart';
+import 'failure_feedback.dart';
 
 // Deleting (S5.8; RD-09 = M + S1, DECISIONS E.1):
 // - an edit inside a plan (a capture block) happens at once, with an Undo
 //   message: [showUndo];
 // - a stored record (a rig, a target, a site, a Logbook entry) is deleted
 //   only after the shared confirmation (`confirmDestructive`);
+//   production repositories then offer a scoped, transactional Undo;
 // - every deletable item has a visible Delete ([DeleteButton]); a swipe
 //   ([SwipeToDelete]) is a shortcut to the same handler.
 
@@ -25,7 +31,7 @@ Future<bool> showUndo(
   Duration duration = const Duration(seconds: 6),
 }) async {
   final messenger = ScaffoldMessenger.of(context);
-  messenger.hideCurrentSnackBar();
+  messenger.hideCurrentMessage();
   final reason = await messenger
       .showMessage(
         SnackBar(
@@ -45,6 +51,97 @@ Future<bool> showUndo(
     onCommit?.call();
   }
   return undone;
+}
+
+/// Deletes a stored graph and offers its one in-memory Undo. The messenger is
+/// captured before awaiting storage so the action survives an editor/detail
+/// route being popped. Failed restoration remains retryable and never reports
+/// success. A store without the optional capability gets no misleading Undo.
+/// Stored Undo stays until Dismiss or replacement, matching Hybrid's workspace
+/// affordance. The older capture-block Undo above retains its timed contract.
+Future<bool> deleteWithUndoFeedback(
+  BuildContext context, {
+  required String action,
+  required String message,
+  required Future<DeletionReceipt?> Function() remove,
+  Future<void> Function()? afterDelete,
+  Future<void> Function()? afterRestore,
+}) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final DeletionReceipt? receipt;
+  try {
+    receipt = await remove();
+  } catch (error, stack) {
+    AppLog.error('ui', 'Could not $action', error: error, stackTrace: stack);
+    if (messenger.mounted) {
+      messenger.showMessage(
+        SnackBar(content: Text(FailureText.message(action, error))),
+      );
+    }
+    return false;
+  }
+  var feedback = message;
+  try {
+    await afterDelete?.call();
+  } catch (error, stack) {
+    // The delete committed already. A refresh failure must not discard its
+    // receipt or tell the user the record is still present.
+    AppLog.error(
+      'ui',
+      'Could not refresh after deletion',
+      error: error,
+      stackTrace: stack,
+    );
+    feedback = '$message. The list could not be refreshed.';
+  }
+  if (!messenger.mounted) return true;
+  if (receipt == null) {
+    messenger.showMessage(SnackBar(content: Text(feedback)));
+    return true;
+  }
+  Future<void> restore() async {
+    try {
+      await receipt!.restore();
+      await afterRestore?.call();
+      if (messenger.mounted) {
+        messenger.showMessage(const SnackBar(content: Text('Deletion undone')));
+      }
+    } catch (error, stack) {
+      AppLog.error(
+        'ui',
+        'Could not undo deletion',
+        error: error,
+        stackTrace: stack,
+      );
+      if (!messenger.mounted) return;
+      messenger.showMessage(
+        SnackBar(
+          content: Text(FailureText.message('undo the deletion', error)),
+          persist: true,
+          action: SnackBarAction(
+            label: 'Retry Undo',
+            onPressed: () => unawaited(restore()),
+          ),
+        ),
+      );
+    }
+  }
+
+  unawaited(
+    messenger
+        .showMessage(
+          SnackBar(
+            content: Text(feedback),
+            persist: true,
+            action: SnackBarAction(label: 'Undo', onPressed: () {}),
+          ),
+        )
+        .closed
+        .then((reason) async {
+          if (reason == SnackBarClosedReason.action) await restore();
+        }),
+  );
+  return true;
 }
 
 /// The visible Delete (S1; UX-38): an icon button with its label as the

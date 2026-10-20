@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Plan — Culmina design preview</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='%2337352F'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20261020-hybrid7">
+  <link rel="stylesheet" href="styles.css?v=20261020-hybrid7">
+  <link rel="stylesheet" href="plan.css?v=20261020-hybrid7">
+  <link rel="stylesheet" href="hybrid-refinement.css?v=20261020-hybrid7">
+  <script type="module" src="hybrid-ui.js?v=20261020-hybrid7"></script>
+  <script type="module" src="plan.js?v=20261020-hybrid7"></script>
+</head>
+<body class="planner-page plan-page">
+  <a class="skip" href="#plan-main">Skip to plan</a>
+  <header class="lab-toolbar">
+    <a id="lab-home" href="index.html#concepts">Culmina · Design lab</a>
+    <p>Android phone · Hybrid</p>
+    <div class="plan-display-controls">
+      <label>Theme<select id="plan-theme"><option value="light">Light</option><option value="dark">Dark</option><option value="field">Field</option></select></label>
+      <label>Text<select id="plan-scale"><option value="1">100%</option><option value="1.25">125%</option><option value="2">200%</option></select></label>
+    </div>
+  </header>
+  <div class="plan-preview-bar"><p>Android preview · example data, not a live forecast.</p><label>Example state<select id="plan-scenario"><option value="ready">Ready</option><option value="unknown">Forecast unavailable</option><option value="empty">No target</option><option value="no-site">No site</option><option value="no-rig">No rig</option><option value="save-error">Save fails once</option></select></label><label>Gain graph<select id="gain-view"><option value="curve">A · Time curve (default)</option><option value="bars">B · Group bars</option><option value="steps">C · Block steps</option><option value="all">Compare all three</option></select></label></div>
+  <section class="android-device" aria-label="Android phone preview">
+    <div class="android-statusbar" aria-hidden="true"><span>9:41</span><svg viewBox="0 0 64 20"><path d="M2 16h3V12H2zm6 0h3V8H8zm6 0h3V4h-3zM24 6q8-7 16 0l-8 10zM47 4h12v12H47zM51 2h4"/></svg></div>
+    <header class="android-appbar">
+      <a id="back-home" class="android-icon-button" href="index.html#concepts" aria-label="Back to Tonight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4m7-7-7 7 7 7"/></svg></a>
+      <button id="back-editor" class="android-icon-button" data-cancel-editor hidden aria-label="Close editor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      <h1 id="appbar-title">Plan</h1>
+      <button id="plan-field-mode" class="android-icon-button" aria-label="Turn on field mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a8 8 0 0 1-11-11 8 8 0 1 0 11 11Z"/></svg></button>
+      <button id="plan-menu-button" class="android-icon-button" aria-label="More plan actions" aria-haspopup="menu" aria-expanded="false" aria-controls="plan-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg></button>
+    </header>
+    <div id="plan-menu" class="plan-menu" role="menu" aria-label="Plan actions" hidden>
+      <button role="menuitem" data-menu="new">New plan</button>
+      <button role="menuitem" data-menu="copy">Copy to another night</button>
+    </div>
+    <div class="android-scroll">
+      <main id="plan-main" class="plan-main" tabindex="-1"></main>
+      <section id="block-screen" class="plan-main scoped-screen" aria-label="Capture block editor" hidden></section>
+    </div>
+    <div id="plan-savebar" class="plan-savebar"></div>
+    <div class="android-gesture" aria-hidden="true"><span></span></div>
+    <div id="plan-announcement" class="plan-announcement" role="status" aria-live="polite"></div>
+  </section>
+  <dialog id="leave-plan" aria-labelledby="leave-title" aria-describedby="leave-description">
+    <h2 id="leave-title">Unsaved changes</h2>
+    <p id="leave-description">Your plan has changes that are not saved.</p>
+    <p id="leave-reason"></p>
+    <p id="leave-error" class="save-error" role="alert"></p>
+    <div class="leave-actions"><button data-leave="cancel" class="secondary-button">Cancel</button><button data-leave="discard" class="secondary-button">Discard</button><button id="leave-save" data-leave="save" class="primary-button">Save and leave</button></div>
+  </dialog>
+  <dialog id="discard-edit" aria-labelledby="discard-title" aria-describedby="discard-description">
+    <h2 id="discard-title">Discard this edit?</h2>
+    <p id="discard-description">Unapplied fields in this editor will be discarded. Changes you already applied to the draft remain.</p>
+    <div class="leave-actions"><button data-discard-edit="keep" class="secondary-button">Keep editing</button><button data-discard-edit="discard" class="primary-button">Discard edit</button></div>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,23 @@
+✔ search normalizes actual catalogue aliases and retains exact-match priority (1.9069ms)
+✔ search examples are real bundled catalogue records, never new objects (2.5298ms)
+✔ new filter is genuinely empty; recorded sample filter remains intact (0.2928ms)
+✔ WB edit bounds match domain sanity bounds, Custom tint is not Kelvin (0.3594ms)
+✔ time graph includes planned normalization and uses the app curve formula (0.4048ms)
+✔ graph block steps remain within one comparable group with diminishing increments (0.5485ms)
+✔ weather digest keeps temperatures when cloud alone is unknown (3.1487ms)
+✔ weather digest distinguishes no forecast from zero precipitation (0.6023ms)
+✔ preceding-only hour contributes gust but cannot contaminate instantaneous temperature (0.6411ms)
+✔ unavailable rows with residual values do not enter digest aggregates (0.4902ms)
+✔ local day tags survive DST, and moon-free text retains next-day meaning (2.6896ms)
+✔ sky gradient represents all known event classes without moving model intervals (0.6162ms)
+✔ Home weather is a compact measured temperature and wind summary, not a cloud verdict (1.3983ms)
+✔ smooth sky ramp uses ordered stops and preserves exact dark boundary colours (2.4754ms)
+✔ Forecast age warns independently of full coverage without changing measured values (0.2969ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26.102

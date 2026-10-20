@@ -1,3 +1,4 @@
+import '../models/plan_overrides.dart';
 import '../models/altitude_curve.dart';
 import '../models/capture_block.dart';
 import '../models/planning_preferences.dart';
@@ -30,8 +31,11 @@ class CaptureOverheads {
   factory CaptureOverheads.fromPreferences(
     PlanningPreferences p, {
     bool inCameraNoiseReduction = false,
+    PlanOverrides? planOverrides,
   }) => CaptureOverheads(
-    perFrameMs: _ms(p.perFrameOverheadSeconds),
+    perFrameMs: _ms(
+      planOverrides?.interframeSeconds ?? p.perFrameOverheadSeconds,
+    ),
     ditherEveryNFrames: p.ditherEveryNFrames,
     ditherMs: _ms(p.ditherSettleSeconds),
     refocusEveryMs: p.refocusEveryMinutes == null
@@ -44,7 +48,11 @@ class CaptureOverheads {
     meridianFlipMs: p.meridianFlipSeconds == null
         ? null
         : _ms(p.meridianFlipSeconds!),
-    setupMs: p.setupMinutes == null ? null : _ms(p.setupMinutes! * 60),
+    setupMs: planOverrides?.outsideSetupSeconds != null
+        ? _ms(planOverrides!.outsideSetupSeconds!)
+        : p.setupMinutes == null
+        ? null
+        : _ms(p.setupMinutes! * 60),
     inCameraNoiseReduction: inCameraNoiseReduction,
   );
 

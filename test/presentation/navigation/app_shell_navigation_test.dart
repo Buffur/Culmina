@@ -18,6 +18,8 @@ import 'package:astroplan/domain/repositories/target_repository.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
+import 'package:astroplan/domain/models/equipment_profile.dart';
+import 'package:astroplan/domain/repositories/storage_failure.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
@@ -42,9 +44,21 @@ import '../../support/test_clock.dart';
 
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
+class _GearRepository extends DriftEquipmentRepository {
+  _GearRepository(super.db);
+  bool failReads = false;
+
+  @override
+  Future<List<EquipmentProfile>> getAllEquipment() {
+    if (failReads) throw const StorageFailure('load library rigs');
+    return super.getAllEquipment();
+  }
+}
+
 void main() {
   late AppDatabase db;
   late PlannerHarness vm;
+  late _GearRepository gearRepository;
 
   Future<void> pumpApp(WidgetTester tester) async {
     tester.view.physicalSize = const Size(900, 2000);
@@ -54,6 +68,7 @@ void main() {
     late DriftSessionRepository sessions;
     await tester.runAsync(() async {
       db = AppDatabase(NativeDatabase.memory());
+      gearRepository = _GearRepository(db);
       await CatalogSeeder(DriftTargetRepository(db)).seedIfNeeded();
       await EquipmentSeeder(DriftEquipmentRepository(db)).seedIfNeeded();
       final siteId = await DriftLocationRepository(db).insertLocation(
@@ -69,7 +84,7 @@ void main() {
       sessions = DriftSessionRepository(db, clock: testEvening);
       vm = PlannerHarness(
         DriftTargetRepository(db),
-        DriftEquipmentRepository(db),
+        gearRepository,
         _NoWeather(),
         DriftLocationRepository(db),
         locationService: FakeLocationService(),
@@ -89,12 +104,8 @@ void main() {
           ChangeNotifierProvider(
             create: (_) => TargetsViewModel(DriftTargetRepository(db)),
           ),
-          Provider<EquipmentRepository>.value(
-            value: DriftEquipmentRepository(db),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => GearViewModel(DriftEquipmentRepository(db)),
-          ),
+          Provider<EquipmentRepository>.value(value: gearRepository),
+          ChangeNotifierProvider(create: (_) => GearViewModel(gearRepository)),
           Provider<LocationRepository>.value(
             value: DriftLocationRepository(db),
           ),
@@ -143,6 +154,32 @@ void main() {
         findsOneWidget,
       );
     }
+  });
+
+  testWidgets('Library counts refresh after edits and a failed read offers '
+      'retry without presenting stale counts', (tester) async {
+    await pumpApp(tester);
+    await tapTab(tester, 'Library');
+    final rigs = (await tester.runAsync(gearRepository.getAllEquipment))!;
+    expect(find.textContaining('${rigs.length} rigs ·'), findsOneWidget);
+    final gear = Provider.of<GearViewModel>(
+      tester.element(title('Library')),
+      listen: false,
+    );
+    gearRepository.failReads = true;
+    await tester.runAsync(() => gear.update(rigs.first));
+    await settle(tester);
+    expect(find.textContaining('${rigs.length} rigs ·'), findsNothing);
+    expect(find.byKey(const Key('library.retryCounts')), findsOneWidget);
+    expect(title('Library'), findsOneWidget);
+    gearRepository.failReads = false;
+    await tester.tap(find.byKey(const Key('library.retryCounts')));
+    await settle(tester);
+    expect(find.textContaining('${rigs.length} rigs ·'), findsOneWidget);
+    expect(find.byKey(const Key('library.retryCounts')), findsNothing);
+    await tester.runAsync(() => gear.delete(rigs.last.id));
+    await settle(tester);
+    expect(find.textContaining('${rigs.length - 1} rigs ·'), findsOneWidget);
   });
 
   // Acceptance: every screen is reachable per the map.
@@ -264,7 +301,7 @@ void main() {
     expect(find.text(SettingsScreen.scopeNotice), findsOneWidget);
     for (final kept in [
       'Imaging window',
-      'Fit and capture time',
+      'Capture budget',
       'Advanced',
       'Guidance',
     ]) {

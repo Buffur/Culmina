@@ -205,7 +205,13 @@ void main() {
     };
     // ignore: avoid_print
     print('DENSITY ${jsonEncode(record)}');
-    expect(sections.keys, containsAll(['Target', 'Rig', 'Capture plan']));
+    expect(sections.keys, containsAll(['Capture plan', 'The night ahead']));
+    position().jumpTo(0);
+    await tester.pump();
+    expect(find.byKey(const Key('planner.target')), findsOneWidget);
+    expect(find.byKey(const Key('planner.rig')), findsOneWidget);
+    expect(find.byTooltip('Target details'), findsOneWidget);
+    expect(find.byTooltip('Rig details'), findsOneWidget);
     expect(extent, greaterThan(position().viewportDimension));
   });
 }

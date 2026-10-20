@@ -101,6 +101,7 @@ class FitAnalyzer {
     required CaptureBudget budget,
     required List<VisibilityWindow> windows,
     double marginFraction = 0.15,
+    double? fixedMarginSeconds,
     DateTime? transitUtc,
     String noWindowReason = 'No usable window tonight.',
     bool inputMissing = false,
@@ -218,9 +219,15 @@ class FitAnalyzer {
 
     // Uses the time actually placed: a flip the budget counted but the fit
     // dropped (ADR-009 §4) does not eat into the margin.
-    final tight = placed > (1 - margin) * available;
+    final requiredMargin = fixedMarginSeconds == null
+        ? margin * available
+        : fixedMarginSeconds * 1000;
+    final tight = available - placed < requiredMargin;
     final free = available - placed;
     final pct = (margin * 100).round();
+    final marginText = fixedMarginSeconds == null
+        ? QuantityText.percent(pct)
+        : _fmt(requiredMargin.round());
     final flipNote = flipDropped
         ? ' The meridian flip is not needed: the plan ends before the '
               'target crosses the meridian.'
@@ -229,7 +236,7 @@ class FitAnalyzer {
       state: tight ? FitState.tight : FitState.fits,
       reason: tight
           ? 'Everything fits, but only ${_fmt(free)} of window time is left '
-                '(less than your ${QuantityText.percent(pct)} margin).$flipNote'
+                '(less than your $marginText margin).$flipNote'
           : 'Everything fits with ${_fmt(free)} of window time to spare.'
                 '$flipNote',
       availableMs: available,

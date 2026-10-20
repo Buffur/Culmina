@@ -52,6 +52,8 @@ class _Weather implements WeatherRepository {
   final _Clock clock;
   WeatherFailure? failWith;
   bool empty = false;
+  double temperatureC = 10;
+  double windSpeedKmh = 8;
 
   @override
   Future<WeatherFetch> fetchSnapshot({
@@ -85,8 +87,8 @@ class _Weather implements WeatherRepository {
                   WeatherHour(
                     timeUtc: t,
                     cloudCoverPct: 20,
-                    windSpeedKmh: 8,
-                    temperatureC: 10,
+                    windSpeedKmh: windSpeedKmh,
+                    temperatureC: temperatureC,
                     dewPointC: 9,
                   ),
               ],
@@ -107,7 +109,7 @@ void main() {
     weather = _Weather(clock);
   });
 
-  Future<void> pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester, {bool showZone = true}) async {
     tester.view.physicalSize = const Size(800, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -146,9 +148,11 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: vm.providers,
-        child: const MaterialApp(
+        child: MaterialApp(
           home: Scaffold(
-            body: SingleChildScrollView(child: WeatherForecastWidget()),
+            body: SingleChildScrollView(
+              child: WeatherForecastWidget(showZone: showZone),
+            ),
           ),
         ),
       ),
@@ -169,7 +173,8 @@ void main() {
   ) async {
     await pump(tester);
 
-    expect(find.text('Night weather'), findsOneWidget);
+    expect(find.text('Night weather'), findsNothing);
+    expect(find.byKey(const Key('weather.refresh')), findsOneWidget);
     expect(find.textContaining('Dark (Sun below −18°):'), findsOneWidget);
     expect(find.textContaining('Sunset to sunrise'), findsNothing);
     expect(find.textContaining('Times in device zone'), findsOneWidget);
@@ -215,6 +220,32 @@ void main() {
     );
     expect(find.textContaining('Updated'), findsNothing);
   });
+
+  testWidgets(
+    'headline leads the span, fractions remain, shared zone can hide',
+    (tester) async {
+      weather.temperatureC = -2.5;
+      weather.windSpeedKmh = 9.25;
+      await pump(tester, showZone: false);
+      expect(find.byKey(const Key('weather.zone')), findsNothing);
+      expect(find.textContaining('Times in'), findsNothing);
+      expect(find.text('-2.5 °C'), findsOneWidget);
+      expect(find.text('9.3 km/h\nGusts no forecast'), findsOneWidget);
+      expect(
+        tester.getTopLeft(find.byKey(const Key('weather.facts'))).dy,
+        lessThan(tester.getTopLeft(find.byKey(const Key('weather.span'))).dy),
+      );
+      expect(
+        tester.getTopLeft(find.byKey(const Key('weather.span'))).dy,
+        lessThan(tester.getTopLeft(find.text('Air temperature')).dy),
+      );
+      expect(
+        vm.nightWeatherSummary!.temperature!.min,
+        -2.5,
+        reason: 'display rounding does not mutate the forecast',
+      );
+    },
+  );
 
   testWidgets('offline with nothing cached: unavailable with a retry', (
     tester,

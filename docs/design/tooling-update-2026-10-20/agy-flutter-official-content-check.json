@@ -1,0 +1,35 @@
+{
+  "catalogue_version": "1.0.6",
+  "url": "https://www.gstatic.com/antigravity/plugins/flutter/flutter.zip?v=405234c23fed",
+  "archive_sha256": "405234c23fedc7bc752458e30e774abb074bcc433099e161d9551fe52bd11003",
+  "checksum_matches": true,
+  "archive_files": 38,
+  "sample_paths": [
+    "README.md",
+    "agents/a11y_agent.md",
+    "mcp_config.json",
+    "plugin.json",
+    "rules/flutter-hot-reload.md",
+    "rules/flutter-hot-reload.mdc"
+  ],
+  "compared": 28,
+  "different": [
+    "README.md",
+    "agents\\a11y_agent.md",
+    "plugin.json",
+    "skills\\dart-build-cli-app\\SKILL.md",
+    "skills\\dart-use-pattern-matching\\SKILL.md"
+  ],
+  "missing": [
+    "rules\\flutter-hot-reload.mdc",
+    "skills\\dart-build-cli-app\\examples\\multi_command_runner.dart",
+    "skills\\dart-build-cli-app\\examples\\single_command_tool.dart",
+    "skills\\dart-build-cli-app\\references\\aot_sdk_discovery.md",
+    "skills\\dart-build-cli-app\\references\\signals_and_terminal.md",
+    "skills\\dart-use-doc-examples\\SKILL.md",
+    "skills\\dart-use-path-package\\SKILL.md",
+    "skills\\dart-use-path-package\\examples\\cross_platform_paths.dart",
+    "skills\\dart-use-path-package\\examples\\file_system_context.dart",
+    "skills\\dart-use-pattern-matching\\examples\\json_patterns.dart"
+  ]
+}

@@ -1,3 +1,6 @@
+import 'plan_overrides_editor.dart';
+import '../../../domain/models/plan_overrides.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -29,10 +32,10 @@ class CaptureAssumptionsPanel extends StatelessWidget {
 
   /// The collapsed summary, a fact: "Darkness limit −18° · minimum
   /// altitude 30° · margin 15 %".
-  static String summary(PlanningPreferences p) =>
+  static String summary(PlanningPreferences p, [PlanOverrides? overrides]) =>
       '${AppWords.darknessLimit} ${QuantityText.degrees(p.darknessLimit.degrees)}'
       ' · minimum altitude ${QuantityText.degrees(p.minAltitudeDeg)}'
-      ' · margin ${QuantityText.percent(p.feasibilityMarginPercent)}';
+      ' · margin ${overrides?.fixedMarginSeconds == null ? QuantityText.percent(p.feasibilityMarginPercent) : _s(overrides!.fixedMarginSeconds!)}';
 
   /// PD-10 (F2): a reminder in the plan, nothing more.
   static const focusReminder =
@@ -42,9 +45,9 @@ class CaptureAssumptionsPanel extends StatelessWidget {
       'adds.';
 
   static const scope =
-      'These settings are global: they apply to every plan, and this one '
-      'updates as soon as you change one. Each Save keeps a copy of the '
-      'values it used with the saved plan.';
+      'Settings are global defaults. This plan uses them unless an override '
+      'is entered for this plan. Each Save keeps the effective values and explicit '
+      'overrides with the saved plan.';
 
   static String _s(double s) => '${QuantityText.number(s)} s';
   static String _min(double m) => '${QuantityText.number(m)} min';
@@ -62,8 +65,12 @@ class CaptureAssumptionsPanel extends StatelessWidget {
     PlanningPreferences p,
     CaptureBudget budget, {
     String? inCameraNoiseReduction,
+    PlanOverrides? overrides,
   }) => [
-    ('Time between frames', _s(p.perFrameOverheadSeconds)),
+    (
+      'Time between frames',
+      _s(overrides?.interframeSeconds ?? p.perFrameOverheadSeconds),
+    ),
     (
       'Dither',
       p.ditherEveryNFrames == null
@@ -95,14 +102,21 @@ class CaptureAssumptionsPanel extends StatelessWidget {
     ),
     (
       'Setup',
-      p.setupMinutes == null
+      overrides?.outsideSetupSeconds != null
+          ? '${_s(overrides!.outsideSetupSeconds!)} before the first window (this plan)'
+          : p.setupMinutes == null
           ? 'Not included'
           : '${_min(p.setupMinutes!)} before the first window',
     ),
     // S7.3b (ADR-020 §8): the rig's setting, for the types that have it.
     if (inCameraNoiseReduction != null)
       ('In-camera noise reduction', inCameraNoiseReduction),
-    ('Feasibility margin', QuantityText.percent(p.feasibilityMarginPercent)),
+    (
+      'Feasibility margin',
+      overrides?.fixedMarginSeconds == null
+          ? QuantityText.percent(p.feasibilityMarginPercent)
+          : '${_s(overrides!.fixedMarginSeconds!)} (this plan)',
+    ),
     (AppWords.darknessLimit, QuantityText.degrees(p.darknessLimit.degrees)),
     ('Minimum target altitude', QuantityText.degrees(p.minAltitudeDeg)),
     // F12 A1: the optional gates (ADR-013 G4/G5) shape the window the fit
@@ -126,20 +140,30 @@ class CaptureAssumptionsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.watch<SettingsViewModel>().planningPreferences;
     final budget = context.watch<CaptureAnalysisViewModel>().captureBudget;
-    final rig = context.watch<SessionPlanViewModel>().selectedEquipment;
+    final plan = context.watch<SessionPlanViewModel>();
+    final rig = plan.selectedEquipment;
+    final overrides = plan.planOverrides;
     final small = Theme.of(context).textTheme.bodySmall;
     return CollapsibleSection(
       key: const Key('capturePlan.assumptions'),
       sectionKey: PlannerSections.assumptions,
       title: 'Assumptions',
-      summary: summary(p),
+      summary: summary(p, overrides),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          OutlinedButton(
+            key: const Key('planOverride.edit'),
+            onPressed: () => Navigator.of(context).push<void>(
+              MaterialPageRoute(builder: (_) => const PlanOverridesEditor()),
+            ),
+            child: const Text('Edit plan assumptions'),
+          ),
           Text('Preferences, not laws — measure your rig.', style: small),
           for (final (label, value) in rows(
             p,
             budget,
+            overrides: overrides,
             inCameraNoiseReduction:
                 rig != null && rig.cameraClass.offersInCameraNoiseReduction
                 ? rig.inCameraNoiseReduction

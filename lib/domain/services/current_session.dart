@@ -3,6 +3,7 @@ import '../models/session.dart';
 import '../models/session_snapshot.dart';
 import '../repositories/planner_state_repository.dart';
 import '../repositories/session_repository.dart';
+import '../repositories/undoable_deletion.dart';
 import 'example_capture_plan.dart';
 import 'saved_night_end.dart';
 
@@ -23,6 +24,48 @@ class CurrentSession {
   Future<void> _chain = Future.value();
   Object? _writeFailure;
   bool _edited = false;
+  int _identityRevision = 0;
+
+  /// Serializes user deletion with autosaves. Detaching a deleted current
+  /// session means the next edit creates a new draft, never writes a dead ID.
+  Future<DeletionReceipt?> deleteWithUndo(int id) => _inChain(() async {
+    final before = _session;
+    final edited = _edited;
+    final repository = _repository;
+    final DeletionReceipt? receipt;
+    if (repository is UndoableDeletionRepository) {
+      receipt = await (repository as UndoableDeletionRepository).deleteWithUndo(
+        id,
+      );
+    } else {
+      await repository.delete(id);
+      receipt = null;
+    }
+    final wasCurrent = before?.id == id;
+    if (wasCurrent) {
+      _session = null;
+      _edited = false;
+      await _mark(null);
+      _identityRevision++;
+      onWriteFailureChanged?.call();
+    }
+    final revision = _identityRevision;
+    if (receipt == null) return null;
+    return DeletionReceipt(
+      resource: receipt.resource,
+      id: id,
+      restore: () => _inChain(() async {
+        await receipt!.restore();
+        if (wasCurrent && _session == null && _identityRevision == revision) {
+          _session = await _repository.get(id);
+          _edited = edited;
+          await _mark(edited ? id : null);
+          _identityRevision++;
+          onWriteFailureChanged?.call();
+        }
+      }),
+    );
+  });
 
   Session? get session => _session;
 
@@ -201,6 +244,7 @@ class CurrentSession {
   /// Runs an operation after which the plan counts as unedited; if it
   /// fails, the changes still count as unsaved (S1.6).
   Future<T> _replacing<T>(Future<T> Function() run) async {
+    _identityRevision++;
     final was = _edited;
     _edited = false;
     try {
@@ -236,6 +280,7 @@ class CurrentSession {
   /// [writeFailure] and logged. [edit] is false for a write the user did not
   /// make in the plan itself (a site change, S1.6).
   Future<void> write(SessionPlan Function() plan, {bool edit = true}) {
+    _identityRevision++;
     if (edit) _edited = true;
     return _chain = _chain.then((_) async {
       final current = _session;

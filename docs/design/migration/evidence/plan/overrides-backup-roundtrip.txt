@@ -1,0 +1,102 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/data/backup/backup_restore_test.dart
+00:00 +0: acceptance: a restore on a clean install reproduces all sessions
+00:00 +1: a restore pick always clears the picker cache after a good backup is read
+WARNING (drift): It looks like you've created the database class AppDatabase multiple times. When these two databases use the same QueryExecutor, race conditions will occur and might corrupt the database. 
+Try to follow the advice at https://drift.simonbinder.eu/faq/#using-the-database or, if you know what you're doing, set driftRuntimeOptions.dontWarnAboutMultipleDatabases = true
+Here is the stacktrace from when the database was opened a second time:
+#0      GeneratedDatabase._handleInstantiated (package:drift/src/runtime/api/db_base.dart:96:30)
+#1      GeneratedDatabase._whenConstructed (package:drift/src/runtime/api/db_base.dart:73:12)
+#2      new GeneratedDatabase (package:drift/src/runtime/api/db_base.dart:64:5)
+#3      new _$AppDatabase (package:astroplan/data/database/app_database.g.dart:8734:36)
+#4      new AppDatabase (package:astroplan/data/database/app_database.dart:292:7)
+#5      checkRestoreCandidate (package:astroplan/data/backup/restore_candidate.dart:25:20)
+#6      FileBackupService.checkFully (package:astroplan/data/backup/file_backup_service.dart:162:28)
+<asynchronous suspension>
+#7      FileBackupService.pick (package:astroplan/data/backup/file_backup_service.dart:183:23)
+<asynchronous suspension>
+#8      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/data/backup/backup_restore_test.dart:227:22)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+This warning will only appear on debug builds.
+00:00 +2: a restore pick always clears the picker cache after a cancel, a refused file and a failed read
+00:00 +3: a restore pick always clears the picker cache a failed cleanup never hides the pick result
+00:00 +4: the backup also carries the manifest
+00:00 +5: restoring over existing data keeps a safety copy
+00:00 +6: cancel removes a staged restore; nothing staged, nothing applied
+00:00 +7: refused backups a newer schema is refused
+00:00 +8: refused backups below the floor is refused
+00:00 +9: refused backups an older supported schema is accepted (migrations upgrade it)
+00:00 +10: refused backups a backup carries no application id, so it restores across ids
+00:00 +11: refused backups a header that disagrees with the database is refused
+00:00 +12: refused backups not a backup at all
+00:00 +13: refused backups version 2 without settings, or with a bad value, is refused
+00:00 +14: S8.9: settings in the backup (TD-056, ENG-14) only the carried settings are written, by type
+00:00 +15: S8.9: settings in the backup (TD-056, ENG-14) a round trip restores the settings and leaves no stale id
+WARNING (drift): It looks like you've created the database class AppDatabase multiple times. When these two databases use the same QueryExecutor, race conditions will occur and might corrupt the database. 
+Try to follow the advice at https://drift.simonbinder.eu/faq/#using-the-database or, if you know what you're doing, set driftRuntimeOptions.dontWarnAboutMultipleDatabases = true
+Here is the stacktrace from when the database was opened a second time:
+#0      GeneratedDatabase._handleInstantiated (package:drift/src/runtime/api/db_base.dart:96:30)
+#1      GeneratedDatabase._whenConstructed (package:drift/src/runtime/api/db_base.dart:73:12)
+#2      new GeneratedDatabase (package:drift/src/runtime/api/db_base.dart:64:5)
+#3      new _$AppDatabase (package:astroplan/data/database/app_database.g.dart:8734:36)
+#4      new AppDatabase (package:astroplan/data/database/app_database.dart:292:7)
+#5      checkRestoreCandidate (package:astroplan/data/backup/restore_candidate.dart:25:20)
+#6      BackupStaging.apply (package:astroplan/data/backup/backup_staging.dart:109:20)
+<asynchronous suspension>
+#7      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/data/backup/backup_restore_test.dart:492:7)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+This warning will only appear on debug builds.
+00:00 +16: S8.9: settings in the backup (TD-056, ENG-14) ENG-14: a restore whose site ids differ keeps no stale id
+00:00 +17: S8.9: settings in the backup (TD-056, ENG-14) a version 1 archive restores: the device keeps its settings, not its active site or plan ids
+WARNING (drift): It looks like you've created the database class AppDatabase multiple times. When these two databases use the same QueryExecutor, race conditions will occur and might corrupt the database. 
+Try to follow the advice at https://drift.simonbinder.eu/faq/#using-the-database or, if you know what you're doing, set driftRuntimeOptions.dontWarnAboutMultipleDatabases = true
+Here is the stacktrace from when the database was opened a second time:
+#0      GeneratedDatabase._handleInstantiated (package:drift/src/runtime/api/db_base.dart:96:30)
+#1      GeneratedDatabase._whenConstructed (package:drift/src/runtime/api/db_base.dart:73:12)
+#2      new GeneratedDatabase (package:drift/src/runtime/api/db_base.dart:64:5)
+#3      new _$AppDatabase (package:astroplan/data/database/app_database.g.dart:8734:36)
+#4      new AppDatabase (package:astroplan/data/database/app_database.dart:292:7)
+#5      checkRestoreCandidate (package:astroplan/data/backup/restore_candidate.dart:25:20)
+#6      BackupStaging.apply (package:astroplan/data/backup/backup_staging.dart:109:20)
+<asynchronous suspension>
+#7      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/data/backup/backup_restore_test.dart:581:7)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+This warning will only appear on debug builds.
+WARNING (drift): It looks like you've created the database class AppDatabase multiple times. When these two databases use the same QueryExecutor, race conditions will occur and might corrupt the database. 
+Try to follow the advice at https://drift.simonbinder.eu/faq/#using-the-database or, if you know what you're doing, set driftRuntimeOptions.dontWarnAboutMultipleDatabases = true
+Here is the stacktrace from when the database was opened a second time:
+#0      GeneratedDatabase._handleInstantiated (package:drift/src/runtime/api/db_base.dart:96:30)
+#1      GeneratedDatabase._whenConstructed (package:drift/src/runtime/api/db_base.dart:73:12)
+#2      new GeneratedDatabase (package:drift/src/runtime/api/db_base.dart:64:5)
+#3      new _$AppDatabase (package:astroplan/data/database/app_database.g.dart:8734:36)
+#4      new AppDatabase (package:astroplan/data/database/app_database.dart:292:7)
+#5      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/data/backup/backup_restore_test.dart:589:24)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#7      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#8      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+This warning will only appear on debug builds.
+00:00 +18: S8.9: settings in the backup (TD-056, ENG-14) cancel removes the staged settings; a version 1 stage drops older staged settings
+00:00 +19: S8.9: settings in the backup (TD-056, ENG-14) keys a backup does not carry are never applied
+00:00 +20: All tests passed!
+EXIT_CODE=0

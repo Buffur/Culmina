@@ -1,0 +1,1768 @@
+{
+  "head": "8048cfa4e7fd5eadc99cba708a02f055ceddd53f",
+  "baseline": "P6-2026-10-18-08 / AM-05",
+  "criteria": [
+    {
+      "id": "CHK-F01.A1",
+      "criterion": "valid ZIPs containing truncated SQLite, missing expected schema, and unsupported/newer versions are refused at pick time, before the confirmation and before live DB/preferences change; activation repeats the check.",
+      "check": "valid ZIPs with truncated/missing/newer DB: pick-time AND activation refusal, compare unchanged live DB/preferences",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F01",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/backup/restore_activation_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F01/README.md"
+    },
+    {
+      "id": "CHK-F01.A2",
+      "criterion": "a real supported old database migrates, passes integrity, applicable FK checks and expected repository reads, and restores identifiable content/settings.",
+      "check": "real old-schema SQLite through production lazy/background open: integrity/FK/schema/repository contents/settings",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F01",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/backup/restore_activation_test.dart",
+        "test/data/backup/backup_restore_test.dart",
+        "test/presentation/screens/settings/backup_section_test.dart",
+        "test/presentation/screens/settings/restore_outcome_notice_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F01/README.md"
+    },
+    {
+      "id": "CHK-F01.A3",
+      "criterion": "interruption at each activation boundary recovers to a coherent old or fully validated new state; restart never leaves mismatched preferences.",
+      "check": "failure injection at each preferences/file/WAL swap boundary; restart yields coherent old or validated new pair",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F01",
+      "status": "FAIL — R1",
+      "assessment": "Independent cleanup snapshot loses backed-up active site; old rollback probe now passes.",
+      "tests": [
+        "test/data/backup/restore_activation_test.dart",
+        "test/data/backup/backup_restore_test.dart",
+        "test/presentation/screens/settings/backup_section_test.dart",
+        "test/presentation/screens/settings/restore_outcome_notice_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F01/README.md"
+    },
+    {
+      "id": "CHK-F01.A4",
+      "criterion": "Confirmation states recoverable actions truthfully and follows accepted D2/D7: no new Undo control, one newest safety copy retained with deterministic interruption recovery; prune only after safe successful activation and never the pending/only recovery copy. Back up first runs existing backup and returns to the same candidate confirmation only after success; backup failure/Cancel never activates. Restore and restart immediately enters a non-editable activation path, with no edit gap, including on returning from Recents. An activation refusal/failure preserves a coherent recoverable state.",
+      "check": "confirmation widget + literal D7 phone Recents path; no Undo control (D2 A); backup-first success→same confirmation; Cancel/failure→no activation; immediate no-edit activation/Recents; safe-retention interruption fixtures",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F01",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/backup/restore_activation_test.dart",
+        "test/data/backup/backup_restore_test.dart",
+        "test/presentation/screens/settings/backup_section_test.dart",
+        "test/presentation/screens/settings/restore_outcome_notice_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F01/README.md"
+    },
+    {
+      "id": "CHK-F01.A5",
+      "criterion": "The new running instance reports the actual durable applied/refused/recovered outcome once and clears consumed staging; Settings never shows a nonexistent pending restore. Pre-activation refusal says current data is unchanged; interrupted recovery reports the coherent selected old/new state rather than falsely claiming unchanged data after a new state committed.",
+      "check": "applied/refused/interrupted outcome widget appears once; staged state cleared; applied/refused/recovered old/new outcomes exactly once; interrupted committed-new does not claim unchanged",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F01",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/settings/restore_outcome_notice_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F01/README.md"
+    },
+    {
+      "id": "CHK-F02.A1",
+      "criterion": "resources no longer use the incompatible bitmap/adaptive-icon combination.",
+      "check": "resource regression rejects bitmap/adaptive-icon combination",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F02",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/core/config/app_identity_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F02/README.md"
+    },
+    {
+      "id": "CHK-F02.A2",
+      "criterion": "an API 26–30 launch shows the static mark, background and transition.",
+      "check": "API 26–30 compiled-app native launch capture, static mark/background/transition",
+      "required_layer": "DEVICE/emulator native launch; PLANNED",
+      "task": "F02",
+      "status": "EMULATOR PASS (API 30)",
+      "assessment": "Static mark/background observed and transition to Welcome; diagnostic debug build, no phone timing claim.",
+      "tests": [
+        "test/core/config/app_identity_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F02/README.md"
+    },
+    {
+      "id": "CHK-F02.A3",
+      "criterion": "Android 12+ retains its approved animation/exit and animation-off behavior; first-frame and visible-content times are distinguished. API 24/25 coverage, if available, is recorded separately rather than inferred.",
+      "check": "Android 12+ animation-off/on device observation; first-frame/content timings separately; final G2 repeats explicit",
+      "required_layer": "TEST + native DEVICE; physical timing/reduced-motion G2; PLANNED",
+      "task": "F02",
+      "status": "PENDING NATIVE",
+      "assessment": "API 12+ animation/animation-off and final timing not rerun; API 30 cannot establish this row.",
+      "tests": [
+        "test/core/config/app_identity_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F02/README.md"
+    },
+    {
+      "id": "CHK-F03.A1",
+      "criterion": "each contract choice has a concrete recommendation and accepted result, including D3–D5 below; missing legacy origins stay unrecorded.",
+      "check": "numbered accepted ADR-021 sheet including D3-D5, required field dependencies/sources and legacy unrecorded",
+      "required_layer": "OWNER local ADR-021 contract + source/reference fixtures; PLANNED",
+      "task": "F03",
+      "status": "VERIFIED (own contract)",
+      "assessment": "ADR-021 documentary approval; current migration/round-trip/refusal tests pass.",
+      "tests": [
+        "test/domain/models/capture_evidence_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F03/README.md"
+    },
+    {
+      "id": "CHK-F03.A2",
+      "criterion": "v25→v26 preserves rigs, aliases, blocks, original snapshots/forecasts, results, legacy events and preferences; schema equality and repository reads pass.",
+      "check": "v25-v26 schema equality and repository/derived-state preservation fixtures for all named content",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F03",
+      "status": "VERIFIED (own contract)",
+      "assessment": "ADR-021 documentary approval; current migration/round-trip/refusal tests pass.",
+      "tests": [
+        "test/data/database/schema_migration_test.dart",
+        "test/data/backup/restore_activation_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F03/README.md"
+    },
+    {
+      "id": "CHK-F03.A3",
+      "criterion": "WB/focus-mode/source/measurement-mode associations survive save/reopen, additive manifest and backup round trips; old data defaults are explicit, not invented.",
+      "check": "WB/source/mode save/reopen, manifest v2 additive and backup round-trip matrix",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F03",
+      "status": "VERIFIED (own contract)",
+      "assessment": "ADR-021 documentary approval; current migration/round-trip/refusal tests pass.",
+      "tests": [
+        "test/data/capture_contract_round_trip_test.dart",
+        "test/domain/models/capture_evidence_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F03/README.md"
+    },
+    {
+      "id": "CHK-F03.A4",
+      "criterion": "pinned schema tests are updated; newer-schema refusal remains data-safe.",
+      "check": "pinned-version/refusal regressions; unsupported newer DB and bytes/version unchanged",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F03",
+      "status": "VERIFIED (own contract)",
+      "assessment": "ADR-021 documentary approval; current migration/round-trip/refusal tests pass.",
+      "tests": [
+        "test/data/database/unsupported_database_test.dart",
+        "test/data/backup/restore_activation_test.dart",
+        "test/data/backup/backup_restore_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F03/README.md"
+    },
+    {
+      "id": "CHK-F03.A5",
+      "criterion": "the FITS sample gate is raised at task start: identify an available owner file or licensed fixture; record absence early without blocking independent tasks.",
+      "check": "sample identity/licence/absence record at task start; missing FITS does not stall independent tasks",
+      "required_layer": "DOCUMENTED resource availability (no private values); PLANNED",
+      "task": "F03",
+      "status": "VERIFIED (own contract)",
+      "assessment": "Criterion requires early resource/absence recording, not completion of real-file F10 A3. Task-start absence was documented; independent tasks continued.",
+      "tests": [
+        "test/data/database/schema_migration_test.dart",
+        "test/data/capture_contract_round_trip_test.dart",
+        "test/data/database/unsupported_database_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F03/README.md"
+    },
+    {
+      "id": "CHK-F04.A1",
+      "criterion": "each field has tag-level provenance and correct absence/conflict/invalid handling.",
+      "check": "tag-level source/absent/conflict/invalid fixtures per approved field",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F04",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/metadata/capture_metadata_f04_test.dart",
+        "test/data/metadata/real_samples_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F04/README.md"
+    },
+    {
+      "id": "CHK-F04.A2",
+      "criterion": "DNG neutral values remain vectors; JPEG/HEIC modes do not invent Kelvin.",
+      "check": "DNG neutral-vector and JPEG/HEIC mode fixtures; no Kelvin invention",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F04",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/metadata/capture_metadata_f04_test.dart",
+        "test/data/metadata/real_samples_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F04/README.md"
+    },
+    {
+      "id": "CHK-F04.A3",
+      "criterion": "unsupported compression/layout/asymmetric binning is explicit; bounded reads remain bounded.",
+      "check": "bounded compressed/layout/axis/asymmetry/invalid-value fixtures",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F04",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/metadata/capture_metadata_f04_test.dart",
+        "test/data/metadata/real_samples_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F04/README.md"
+    },
+    {
+      "id": "CHK-F04.A4",
+      "criterion": "synthetic and local real DNG/JPEG/HEIC samples exercise the extension; the common FITS contract exists without requiring its reader yet.",
+      "check": "synthetic PLUS local real DNG/JPEG/HEIC result; common FITS types separate from reader",
+      "required_layer": "TEST EXECUTED with synthetic + local REAL FILE; PLANNED",
+      "task": "F04",
+      "status": "PENDING REAL FILE",
+      "assessment": "Four private expected.json references do not exist; new extension keys also absent from that manifest.",
+      "tests": [
+        "test/data/metadata/real_samples_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F04/README.md"
+    },
+    {
+      "id": "CHK-F05.A1",
+      "criterion": "list, empty state and missing-rig actions expose both choices.",
+      "check": "list/empty/Planner/Tonight/onboarding labelled dual-choice widget matrix",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F05",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/equipment/rig_creation_test.dart",
+        "test/presentation/screens/equipment/rig_created_for_plan_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F05/README.md"
+    },
+    {
+      "id": "CHK-F05.A2",
+      "criterion": "synthetic phone JPEG containing focal length, aperture, 35 mm-equivalent focal length and dimensions reaches a saved rig without typed sensor values.",
+      "check": "synthetic phone JPEG FocalLength/FNumber/35mm/dimensions -> saved rig, no typed sensor inputs",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F05",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/equipment/rig_created_for_plan_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F05/README.md"
+    },
+    {
+      "id": "CHK-F05.A3",
+      "criterion": "Incomplete metadata names missing inputs and explains which calculations require each, without guessed defaults; Not sure selects explicit Unknown and explains that it does not infer sensor facts. Existing rigs retain class. New-install example class has cited seed evidence and changes no existing row.",
+      "check": "incomplete metadata -> named missing inputs/no guessing; existing class preserved; missing-field→reason→dependent calculation; Not sure→Unknown; sourced new-install seed, existing rig class unchanged",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F05",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/metadata/metadata_import_review_db_test.dart",
+        "test/presentation/screens/equipment/rig_creation_test.dart",
+        "test/presentation/camera_class_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F05/README.md"
+    },
+    {
+      "id": "CHK-F05.A4",
+      "criterion": "class-specific block fields follow the accepted contract; U and the setup portion of W pass.",
+      "check": "class-specific block field regressions + U captures/W1 path; proposed A+ seed-class case",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F05",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/calibration_blocks_test.dart",
+        "test/presentation/camera_class_test.dart",
+        "test/presentation/in_camera_noise_reduction_ui_test.dart",
+        "test/presentation/screens/equipment/rig_creation_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F05/README.md"
+    },
+    {
+      "id": "CHK-F05.A5",
+      "criterion": "Accepted D8: Save from a plan missing-rig action on Planner/Tonight or onboarding returns to its caller with that saved rig selected exactly once, missing-rig status cleared and Rig saved and chosen for this plan feedback; Cancel changes/selects nothing. Library creation only saves. Both manual and photo paths carry caller and saved identity; a Save failure preserves edits without selection.",
+      "check": "D8 create-save-return/select/message widgets per entry; Library save-only; Cancel unchanged; manual/photo/from-existing invoking caller vs Library; saved identity selects once; save failure/Cancel no selection",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F05",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/equipment/rig_created_for_plan_test.dart",
+        "test/presentation/screens/equipment/rig_creation_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F05/README.md"
+    },
+    {
+      "id": "CHK-F05.A6",
+      "criterion": "a changed rig editor asks before discarding on Back or a tap outside, with the existing Discard prompt or the site editor's full-screen route pattern (as TD-084 required of the site editor); an unchanged editor closes at once (UXA-C4).",
+      "check": "dirty/unchanged Back/tap-outside guard widgets; fullscreen route if required by U",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F05",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/equipment/rig_creation_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F05/README.md"
+    },
+    {
+      "id": "CHK-F06.A1",
+      "criterion": "unchanged valid custom light/flat filters survive edit and Use other values; null remains null; domain length validation stays.",
+      "check": "custom/null filter unchanged edit AND Use other values; domain length/type-switch cases, reopen/snapshot; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F06",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_settings_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F06.A2",
+      "criterion": "Origin markers survive switch/edit/reorder/delete-Undo/copy/save/reopen and snapshot/backup. User edits replace only the applicable origin; Cancel changes nothing. Inline reviewed proposals and compact visible source/Unknown/conflict labels lead to detailed provenance/WB/storage; no critical conflict is hidden. Immutable source descriptors survive source edit/deletion without changing copied values or historical snapshots.",
+      "check": "source operations: switch/edit/reorder/delete-Undo/newer edit/copy/save/reopen/backup; Cancel unchanged; inline field review; compact source/Unknown/conflict remains visible; source edit/delete immutable descriptor and saved derived-state round trips; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F06",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_settings_test.dart",
+        "test/presentation/widgets/block_values_in_plan_test.dart",
+        "test/data/capture_contract_round_trip_test.dart",
+        "test/domain/services/calibration_match_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F06.A3",
+      "criterion": "flat/bias do not inherit an unintended light exposure; default filter follows class.",
+      "check": "flat/bias type switch exposure and class-filter-default widgets; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F06",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_settings_test.dart",
+        "test/data/capture_contract_round_trip_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F06.A4",
+      "criterion": "WB and optional AF/MF focus mode appear in snapshot, entry, manifest and share text and survive copy, save/reopen and backup; old missing values remain unrecorded. Neither changes exposure, budget, storage, relative gain or calibration matching; there is no numeric focus input or camera control.",
+      "check": "WB/focus snapshot/entry/manifest/share/copy/reopen/backup/legacy round trips; budget/exposure/storage/gain/calibration unchanged; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F06",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_values_in_plan_test.dart",
+        "test/domain/services/calibration_match_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F06.A5",
+      "criterion": "Basic Phone/DSLR entry exposes frame type, exposure, count, ISO, WB and optional AF/MF recording, plus applicable filter and a concise estimate. Exposure accepts positive decimal seconds and familiar fractions (for example 1/14 s); invalid/zero-denominator fractions fail by the field, canonical seconds and existing bounds stay unchanged. ISO/WB/focus may remain unrecorded and never block an otherwise valid save. The explicit rig class selects ISO for Phone/DSLR and gain for astro cameras, without a per-block ISO/GAIN choice; Unknown offers a clear camera-class remedy or honest unrecorded state, never a guessed ISO/gain kind. Binning is applicable astro-camera Details, not mandatory basic Phone/DSLR input; source/storage and expert WB details stay reachable. Preserve hidden historical values, actual validation/Unknown/conflict reasons and all calculations. Charts are not a prerequisite; U covers 412x915, 200% text, keyboard and density. WB guarantees no identical colors.",
+      "check": "Phone/DSLR ISO/WB/AF-MF visible and optional; explicit class selects sensitivity; astro-only advanced binning; fractional/decimal exposure including invalid/zero-denominator vectors; 412x915 at 200% with keyboard, U/density record and no identical-colour promise; AM-04 supersedes the affected AM-01 Details hierarchy; all essential estimates readable before charts; keyboard/200% reachable Save",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F06",
+      "status": "FAIL — R2",
+      "assessment": "Normal fractions/classes pass; overlong numerator/denominator throws FormatException in field validator.",
+      "tests": [
+        "test/domain/services/exposure_input_test.dart",
+        "test/presentation/widgets/light_block_form_test.dart",
+        "test/presentation/widgets/light_block_form_test.dart",
+        "test/presentation/widgets/calibration_blocks_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F06.A6",
+      "criterion": "Changed block editor Back/tap outside uses the existing discard guard, dismissal = Cancel; pending file proposals count as dirty. Explicit local Cancel never applies; unchanged closes immediately. At 412×915/200%/keyboard use the full-screen route pattern if needed, with reachable persistent Apply changes and preserved typed values on errors.",
+      "check": "dirty/pending-proposal/unchanged Back and explicit Cancel; Apply changes above IME and correct guard labels; no parent Save",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F06",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_settings_test.dart",
+        "test/data/capture_contract_round_trip_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F06.A7",
+      "criterion": "Use Add block for creation and Apply changes for editing a block; reserve Save plan for recording the parent plan. Block apply still changes the working plan/autosave with existing Undo, not an implicit parent Save or a second persistence mechanism. Context and concise feedback explain the scope without extra confirmation. Cancel/guard dismissal applies nothing; primary labels and semantics remain reachable at200%/IME; update affected interaction keys/copy tests.",
+      "check": "Add block/Apply changes/Save plan scope; apply→Undo→Back/reopen→explicit parent Save; Cancel no change; semantics200%/IME",
+      "required_layer": "TEST interaction + RENDER/U/W; PLANNED",
+      "task": "F06",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_values_in_plan_test.dart",
+        "test/presentation/widgets/capture_blocks_undo_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F06/README.md"
+    },
+    {
+      "id": "CHK-F07.A1",
+      "criterion": "compatible measured file wins; mode changes invalidate or explicitly reconfirm it; an already-binned file is never scaled again.",
+      "check": "measured priority and changed-mode invalidation/reconfirm; already-binned measurement unchanged",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F07",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/shared/equipment_draft_storage_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F07/README.md"
+    },
+    {
+      "id": "CHK-F07.A2",
+      "criterion": "theoretical output requires evidenced uncompressed DNG, supported FITS layout, or explicitly confirmed declared format; distinguish pixel payload and container bytes. Unknown compression/layout remains Unknown.",
+      "check": "DNG uncompressed evidence/FITS supported layout/declared format vectors; payload vs container distinction",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F07",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/storage_estimate_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F07/README.md"
+    },
+    {
+      "id": "CHK-F07.A3",
+      "criterion": "camera class never selects a size assumption; Unknown offers file/manual-size action.",
+      "check": "no class-derived size; Unknown reason and file/manual action widgets",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F07",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/storage_estimate_test.dart",
+        "test/presentation/widgets/capture_outputs_test.dart",
+        "test/presentation/widgets/storage_display_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F07/README.md"
+    },
+    {
+      "id": "CHK-F07.A4",
+      "criterion": "unread-format behavior follows accepted D3 A, with mode-unread/content-variation wording; CR3 length vector uses decimal MB.",
+      "check": "D3 unread synthetic CR3 length/decimal MB and honest mode/content wording",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F07",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/storage_display_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F07/README.md"
+    },
+    {
+      "id": "CHK-F07.A5",
+      "criterion": "S1–S4, compressed boundary and binning vectors pass; MB/GB use `QuantityText`, 10^6/10^9 bytes, visible source and assumption.",
+      "check": "independent S1-S4/compressed/binning/integer-floating FITS/padding vectors + QuantityText/source labels",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F07",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/storage_estimate_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F07/README.md"
+    },
+    {
+      "id": "CHK-F08.A1",
+      "criterion": "Inline review shows only approved class-applicable fields, values/sources and visible conflicts before Save; no exposure/ISO change reaches the rig. Proposed values remain local; explicit acceptance/edits preserve per-field origin under F03/F06.",
+      "check": "class-applicable proposal/source preview; rig exposure/ISO unchanged; inline applicable field/source/conflict review; no stored or rig mutation before Save",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F08",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/block_proposal_test.dart",
+        "test/presentation/widgets/block_from_photo_plan_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F08/README.md"
+    },
+    {
+      "id": "CHK-F08.A2",
+      "criterion": "Cancel/read failure leaves stored block/rig unchanged; repeat picks, edited proposals and differing dimensions have deterministic visible outcomes; an unsaved proposal counts as a change for F06's discard guard (UXA-C4).",
+      "check": "Cancel/read error/repeat/edited proposal/dimension conflict deterministic; dirty proposal guard",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F08",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/block_proposal_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F08/README.md"
+    },
+    {
+      "id": "CHK-F08.A3",
+      "criterion": "TD-072's size conflict is independent of pick order; custom filters and persisted sources survive.",
+      "check": "size conflict both pick orders, custom filter/source persist",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F08",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/block_from_photo_test.dart",
+        "test/domain/services/block_proposal_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F08/README.md"
+    },
+    {
+      "id": "CHK-F08.A4",
+      "criterion": "DNG/JPEG/HEIC Save/reopen works on device; U and W's DSLR proposal/edit/cancel path pass.",
+      "check": "real DNG/JPEG/HEIC phone Save/reopen + DSLR W2; FITS separately F10",
+      "required_layer": "TEST + DEVICE real DNG/JPEG/HEIC + U/W; PLANNED",
+      "task": "F08",
+      "status": "PENDING DEVICE",
+      "assessment": "Host proposals pass; real DNG/JPEG/HEIC phone Save/reopen remains outstanding.",
+      "tests": [
+        "test/presentation/widgets/block_from_photo_test.dart",
+        "test/domain/services/block_proposal_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F08/README.md"
+    },
+    {
+      "id": "CHK-F09.A1",
+      "criterion": "lights Ha/bin1 + OIII/bin2 with flat Ha/bin2 do not satisfy either full tuple incorrectly; both warnings and missing coverage use that rule. Ha=HA; H-alpha≠Ha.",
+      "check": "Ha/bin1 + OIII/bin2 + flat Ha/bin2; warnings and coverage agree; HA=Ha, H-alpha distinct",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F09",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/calibration_match_test.dart",
+        "test/domain/services/calibration_coverage_test.dart",
+        "test/presentation/widgets/calibration_preview_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F09/README.md"
+    },
+    {
+      "id": "CHK-F09.A2",
+      "criterion": "Unknown sensitivity does not prove known-value coverage; unresolved preview requirements remain visible and proven duplicates omitted. A labelled Build calibration frames entry and relevant missing-flat warning shortcut open CAL-1 preview. Counts remain editable proposals; generated flat exposure is entered for the flat, never inherited blindly from a light. Calibration review uses the same class-appropriate basic fields as F06; matching still uses the established modeled tuple, never WB or focus mode. No optional include-switch redesign is introduced.",
+      "check": "unknown/known sensitivity not proven coverage; duplicate omission/unresolved preview; labelled CAL-1 and missing-flat shortcut; counts editable; positive flat-specific exposure, never inherited light exposure; no unknown proof",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F09",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/calibration_match_test.dart",
+        "test/domain/services/calibration_coverage_test.dart",
+        "test/presentation/widgets/calibration_preview_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F09/README.md"
+    },
+    {
+      "id": "CHK-F09.A3",
+      "criterion": "LENR suppresses dark proposals; counts stay proposals; library/timing policies and budget remain correct, calibration never counts as integration.",
+      "check": "LENR/no darks; class/count/library/timing; unchanged integration/budget",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F09",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/calibration_coverage_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F09/README.md"
+    },
+    {
+      "id": "CHK-F09.A4",
+      "criterion": "preview Cancel changes nothing; confirm persists; Undo after a newer edit preserves that edit.",
+      "check": "preview Cancel/confirm persistence and Undo after a newer edit preserves it",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F09",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/capture_blocks_undo_test.dart",
+        "test/presentation/widgets/calibration_preview_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F09/README.md"
+    },
+    {
+      "id": "CHK-F09.A5",
+      "criterion": "custom/imported FILTER and hidden-class binning tests pass; example-action replacement E2E and U pass.",
+      "check": "custom/imported filter/class-hidden binning + replacement E2E/U",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F09",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/calibration_match_test.dart",
+        "test/domain/services/calibration_coverage_test.dart",
+        "test/presentation/widgets/calibration_preview_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F09/README.md"
+    },
+    {
+      "id": "CHK-F09.A6",
+      "criterion": "with no blocks, the Capture Plan names the next step with labelled actions — for example “Add light frames”, plus “Take from a photo” where F08 (for astro cameras, F10) supports the rig's class — and says calibration can be built from the lights afterwards; the empty state's actions are not icon-only; the E2E that replaces `capturePlan.useExample` starts from this state (UXA-C5).",
+      "check": "no blocks -> labelled Add light/Take from photo supported-class actions and calibration explanation; E2E starts here",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F09",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/calibration_match_test.dart",
+        "test/domain/services/calibration_coverage_test.dart",
+        "test/presentation/widgets/calibration_preview_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F09/README.md"
+    },
+    {
+      "id": "CHK-F10.A1",
+      "criterion": "record boundaries, missing END, read/axis/overflow limits, floating BITPIX, conflicting exposure, arbitrary FILTER and absent/asymmetric binning have tested outcomes.",
+      "check": "record/END/read/axis/overflow/floating/conflicting tags/custom filter/asymmetry synthetic cases",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F10",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/metadata/fits_metadata_reader_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F10/README.md"
+    },
+    {
+      "id": "CHK-F10.A2",
+      "criterion": "binned/unbinned writer vectors normalize geometry exactly once; unsupported meanings/layouts stay explicit.",
+      "check": "binned/unbinned writer fixtures normalize geometry once; unsupported stays explicit",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F10",
+      "status": "FAIL — R3",
+      "assessment": "Public real FITS GAIN / e-/ADU is proposed as acquisition gain. Synthetic layout tests pass.",
+      "tests": [
+        "test/domain/metadata/fits_metadata_reader_test.dart",
+        "test/presentation/widgets/block_from_fits_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F10/README.md"
+    },
+    {
+      "id": "CHK-F10.A3",
+      "criterion": "real FITS runs through reader, reviewed saved rig, applicable block proposals and storage; Cancel stores nothing.",
+      "check": "owner or licensed real FITS through reader->review rig->block->storage; Cancel stores nothing; phone evidence",
+      "required_layer": "TEST + REAL FILE + DEVICE; licensed provenance; PLANNED",
+      "task": "F10",
+      "status": "PARTIAL REAL FILE",
+      "assessment": "Public telescope fixture reader/proposal/measured storage pass; full reviewed rig/block/cancel and phone path not established.",
+      "tests": [
+        "test/presentation/screens/metadata/fits_import_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F10/README.md"
+    },
+    {
+      "id": "CHK-F10.A4",
+      "criterion": "photo-choice labels now advertise FITS; recognized-only RAW remains honestly described. Only already approved block fields become controls.",
+      "check": "readable-format label changes; recognized-only RAW honest; approved controls only",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F10",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/equipment/rig_creation_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F10/README.md"
+    },
+    {
+      "id": "CHK-F11.A1",
+      "criterion": "ratios 0.5/1/2 yield 0.7071/1/1.4142 within the recorded vector tolerance.",
+      "check": "independent ratio 0.5/1/2 -> 0.7071/1/1.4142 vectors with explicit tolerance; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F11",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/light_groups_test.dart",
+        "test/domain/services/stacking_gain_curve_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F11/README.md"
+    },
+    {
+      "id": "CHK-F11.A2",
+      "criterion": "zero integration, mixed and unknown settings yield truthful group/empty/text states; unknown never proves equivalence.",
+      "check": "zero/mixed/unknown groups empty/group/text states; unknown not proof of equivalence; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F11",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/light_groups_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F11/README.md"
+    },
+    {
+      "id": "CHK-F11.A3",
+      "criterion": "Primary Capture Plan output shows a concise estimated relative stacking gain against one comparable light frame, with its reference explicit and a short assumptions link. It never claims absolute physical SNR. Integration-time curve/reference and text remain available in Details, not repeated large graphs before Save. Known incompatible groups remain separate; unknown comparability is explained rather than combined. U and W visible-explanation checks pass.",
+      "check": "axes/planned point/relative-label/text/semantics; no absolute SNR; U/W visible explanation; AM-01 concise gain/reference and honest relative label; detailed curves reachable without blocking Save; mixed/unknown groups not merged",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F11",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/stacking_gain_graph_test.dart",
+        "test/presentation/performance/reference_plan_density_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F11/README.md"
+    },
+    {
+      "id": "CHK-F12.A1",
+      "criterion": "displayed assumptions are the effective calculation values.",
+      "check": "effective-assumption labels equal actual calculation inputs, not stale Settings defaults; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F12",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/capture_assumptions_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F12/README.md"
+    },
+    {
+      "id": "CHK-F12.A2",
+      "criterion": "evaluable blocks get FitAnalyzer-derived guidance; unavailable results name the missing inputs without hiding still-valid results.",
+      "check": "all evaluable blocks FitAnalyzer guidance; missing input named, valid results remain; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F12",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/capture_outputs_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F12/README.md"
+    },
+    {
+      "id": "CHK-F12.A3",
+      "criterion": "focus guidance remains a reminder; the optional AF/MF record of F06 has no numeric control/value, alters no calculation and operates no camera.",
+      "check": "focus reminder plus optional AF/MF record has no numeric input, hardware effect or calculation change; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F12",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/widgets/capture_assumptions_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F12/README.md"
+    },
+    {
+      "id": "CHK-F12.A4",
+      "criterion": "Change in Settings opens planning Settings over the current plan with an explicit global-scope notice; Back returns to the same plan/section and preserves edits/results. Main settings retain darkness/minimum-altitude, frame interval and feasibility margin. Advanced groups contain optional Moon/cloud gates and dither/refocus/filter/flip/setup time; NPF is guidance for untracked exposure and dew margin is weather guidance. Display/privacy/backup/About remain distinct. Every retained setting has a visible consequence; U and fit/error/Unknown/W checks pass.",
+      "check": "Settings link/return/fit/error/Unknown widgets and U/W visible explanation; open Settings over dirty/saved plan, global notice, Back same plan/section; effective values unchanged by navigation; AM-01 basic/advanced/guidance/privacy/data groups; every setting retains effect and values; same-plan return/global notice",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F12",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/navigation/app_shell_navigation_test.dart",
+        "test/presentation/screens/settings/settings_rebuilt_test.dart",
+        "test/presentation/screens/settings/settings_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F12/README.md"
+    },
+    {
+      "id": "CHK-F13.A1",
+      "criterion": "the topocentric sampling predicate is derived as equivalent to geocentric h₀, rather than copying the numeric threshold into the wrong frame.",
+      "check": "independent coordinate-frame derivation accepted in ADR-022; topocentric predicate equivalent to geocentric h0",
+      "required_layer": "DERIVATION + independent TEST reference vectors; OWNER local ADR-022; PLANNED",
+      "task": "F13",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/moon_up_predicate_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F13/README.md"
+    },
+    {
+      "id": "CHK-F13.A2",
+      "criterion": "rise/set, dark counts, gate and annotations agree at the boundary; high-latitude/polar cases and batch=single pass.",
+      "check": "rise/set/gate/count/annotations boundary+polar+batch=single tests",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F13",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/moon_up_predicate_test.dart",
+        "test/domain/services/moon_conditions_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F13/README.md"
+    },
+    {
+      "id": "CHK-F13.A3",
+      "criterion": "dark∩Moon-below intervals distinguish evening/morning/all-night/none/mixed-disjoint/no-dark; phase name follows phase longitude, never substitutes for interval calculation.",
+      "check": "dark intersection classifications none/evening/morning/all/mixed/disjoint/no-dark and phase longitude vectors",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F13",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/shared/night_summary_text_test.dart",
+        "test/presentation/widgets/sky_darkness_moon_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F13/README.md"
+    },
+    {
+      "id": "CHK-F13.A4",
+      "criterion": "SI-015 and relevant vectors are reconciled; no universal good-night threshold.",
+      "check": "SI-015/CALC reconciliation and independent reference vectors, no universal score",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F13",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/moon_up_predicate_test.dart",
+        "test/domain/services/moon_conditions_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F13/README.md"
+    },
+    {
+      "id": "CHK-F13.A5",
+      "criterion": "ADR-022 records accepted D9 A with exact controls/renders: Home/Planner context edits the active plan; calendar/day/forecast View this night only browse with viewed-versus-plan labels. Plan this night alone adopts a never-saved draft or guarded saved-plan copy. Save failure/Cancel stops replacement; Discard restores saved state before copy. Explicit pre-copy Save has its ordinary write effect; adoption/copy does not retime or rewrite the source as saved after that Save. Back without adoption changes no plan/result; feedback names draft change versus copy. The scientific/reference-vector local acceptance remains explicit.",
+      "check": "accepted D9 rendered flow: every control browse/edit, unsaved/saved/dirty/adopt/confirmation table; every control assigned edit/browse/adopt; draft/saved/dirty Save/Discard/Cancel/failure; compare source after explicit pre-copy Save",
+      "required_layer": "TEST + RENDER control matrix; OWNER ADR-022; PLANNED",
+      "task": "F13",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/moon_up_predicate_test.dart",
+        "test/domain/services/moon_conditions_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F13/README.md"
+    },
+    {
+      "id": "CHK-F14.A1",
+      "criterion": "an up-to-16-day response is not presented as 16 complete nights; first/last partial, DST, absent-variable, no-dark, stale/offline and out-of-range states are explicit, never zero/clear defaults.",
+      "check": "UTC horizon first/last partial, DST/missing variable/no-dark/stale/offline/out-of-range fixtures; no zero defaults; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F14",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/forecast_overview_test.dart",
+        "test/presentation/screens/details/forecast_nights_test.dart",
+        "test/presentation/widgets/weather_forecast_widget_test.dart",
+        "test/domain/services/night_weather_service_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F14/README.md"
+    },
+    {
+      "id": "CHK-F14.A2",
+      "criterion": "same-ID coordinate changes and late responses cannot attach data to the wrong site.",
+      "check": "same-id coordinate edit and out-of-order response/cache-identity tests; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F14",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/night_weather_service_test.dart",
+        "test/data/repositories/shared_prefs_weather_snapshot_store_test.dart",
+        "test/presentation/viewmodels/weather_site_race_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F14/README.md"
+    },
+    {
+      "id": "CHK-F14.A3",
+      "criterion": "Night weather leads with selected-night facts and a readable hourly visualization on the night/darkness time axis: cloud cover, temperature with dew point, compact wind/gust and precipitation rows, and selection of an hour for exact values. Low/mid/high cloud layers and humidity remain reachable in detail. Gaps/no forecast have explicit discontinuities, never fabricated clear weather or smoothed certainty; legend, units and text alternative are provided. Full table/model/source/age stays in Details; no decorative UV/AQI/feels-like dashboard or new provider.",
+      "check": "card hierarchy/hourly layer/gust/humidity/dew widgets and dark-span vectors; AM-01 hourly cloud/temp/dew/wind/precip visual and selected-hour exact values; unknown gaps/text/field/200% tests",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F14",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/details/forecast_nights_test.dart",
+        "test/presentation/screens/details/detail_screens_test.dart",
+        "test/presentation/widgets/weather_forecast_widget_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F14/README.md"
+    },
+    {
+      "id": "CHK-F14.A4",
+      "criterion": "snapshot-relative “forecast N days ahead” is separate from retrieval age; no reliability score.",
+      "check": "snapshot lead-time vs retrieval-age text assertions; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F14",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/forecast_overview_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F14/README.md"
+    },
+    {
+      "id": "CHK-F14.A5",
+      "criterion": "seeing/transparency limitation and user-opened Clear Outside link are explicit; request budget recorded; U passes.",
+      "check": "seeing limitation/manual link/privacy/request budget and U; G1 actual service; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F14",
+      "status": "HOST + LIVE SUPPORTED; U pending",
+      "assessment": "Production live forecast passes; seeing limitation/manual link reviewed; 10 public endpoint responses HTTP 200.",
+      "tests": [
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F14/README.md"
+    },
+    {
+      "id": "CHK-F14.A6",
+      "criterion": "opening a night's card changes no plan; adopting that night follows D9 (UXA-C3).",
+      "check": "overview opens without plan mutation; explicit D9 adopt test; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F14",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/details/forecast_nights_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F14/README.md"
+    },
+    {
+      "id": "CHK-F15.A1",
+      "criterion": "Offline month computation runs in an isolate with relevant site/zone/night-definition/model cache identity; calendar/detail values agree and invalidate with context. Weekday/date/selection and large-text week view remain. The primary selected-night view has a labelled shared daylight/twilight/darkness and Moon-up timeline, legend and text alternative; preserve disjoint/no-dark/Unknown and field hatching distinctions.",
+      "check": "calendar/detail numeric agreement and relevant cache-input invalidation; offline month isolate/cache; readable month/week; bar/legend/text/disjoint/no-dark and field hatching; calendar/detail parity; AM-01 shared night and Moon timeline plus unchanged calendar/detail equivalence",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F15",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/night_view_test.dart",
+        "test/presentation/screens/details/night_moon_browse_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F15/README.md"
+    },
+    {
+      "id": "CHK-F15.A2",
+      "criterion": "Browsing/back leaves current and saved plans/results intact and labels viewed versus plan night. Accepted D9 adoption follows F13 A5, including guarded Save/Discard/Cancel and source comparison after any explicit pre-copy Save; no silent retiming or second plan store.",
+      "check": "browse/back/dirty/saved/adopt lifecycle with browse label and Save/Discard/Cancel; read-only browse/back and explicit adoption; pre-copy Save normal effect, Cancel preserves contents and derived UI; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F15",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/details/forecast_nights_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F15/README.md"
+    },
+    {
+      "id": "CHK-F15.A3",
+      "criterion": "site change and restart preserve original snapshot/results.",
+      "check": "site change/restart content+derived-state original snapshot/result comparison; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F15",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/details/night_moon_browse_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F15/README.md"
+    },
+    {
+      "id": "CHK-F15.A4",
+      "criterion": "U passes; phone timing is measured against the applicable existing runbook criterion, with no invented performance PASS.",
+      "check": "U real-font/native capture and phone calendar timing per existing threshold, not HOST timing; Task verification and original checks remain applicable",
+      "required_layer": "RENDER/U + measured PHONE timing (G2 permitted carry); PLANNED",
+      "task": "F15",
+      "status": "PENDING PHONE + OWNER",
+      "assessment": "96 renders regenerated, but no physical calendar timing or owner visual acceptance.",
+      "tests": [
+        "test/presentation/screens/details/night_moon_browse_test.dart",
+        "test/domain/services/night_view_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F15/README.md"
+    },
+    {
+      "id": "CHK-F15.A5",
+      "criterion": "A time slider browses an instant inside the viewed SessionNight without editing the plan, its start or saved results. Show the site-local time/date/zone and the corresponding dark/Moon state and end of the relevant interval; clearly distinguish time until darkness from time remaining in it. Reset to Now only when now lies in the viewed night; otherwise offer the night start. Date/site changes reset or revalidate the cursor. Keyboard/semantics/large text, DST labels and no-dark/polar cases pass; text offers the same facts. No simulator/playback or new astronomy engine.",
+      "check": "AM-01 cursor-only time scrub; site-zone/date/reset/Now bounds, midnight/DST/no-dark/disjoint, semantics/field/200%; saved and draft contents/results unchanged",
+      "required_layer": "TEST + RENDER/U; named PHONE/OWNER rows retained; PLANNED",
+      "task": "F15",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/details/night_moon_browse_test.dart",
+        "test/domain/services/night_view_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F15/README.md"
+    },
+    {
+      "id": "CHK-F16.A1",
+      "criterion": "loaded first-run flag determines the first frame; no Tonight flash.",
+      "check": "first rendered route determined by loaded firstRun flag; no post-frame Tonight flash",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F16",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/tonight/tonight_home_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F16/README.md"
+    },
+    {
+      "id": "CHK-F16.A2",
+      "criterion": "One Welcome to Culmina screen has concise purpose/permission rationale, optional site and class→rig setup, no target step and no Skip. Both setup steps may be omitted through Start planning; GPS is requested only on explicit tap; denial retains choose/manual paths and planning stays reachable.",
+      "check": "both optional setup steps omitted/permission denied still enter planning; GPS only on tap; one-screen/title/concise rationale/no target/no Skip; optional omissions, explicit GPS denied/manual/Back states",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F16",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/lifecycle/lifecycle_matrix_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F16/README.md"
+    },
+    {
+      "id": "CHK-F16.A3",
+      "criterion": "class-specific labeled manual/photo paths and cancellation work; a rig saved there becomes the plan's rig per D8 and the setup screen shows it (UXA-C2); missing required inputs are explained without fake defaults.",
+      "check": "manual/photo/class/cancel/D8 chosen rig and visible setup status; no fake inputs",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F16",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/equipment/rig_created_for_plan_test.dart",
+        "test/presentation/screens/metadata/fits_import_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F16/README.md"
+    },
+    {
+      "id": "CHK-F16.A4",
+      "criterion": "first-run/returning-run core-loop, U and W setup checks pass.",
+      "check": "first-run/returning E2E+U/W1; proposed A+ one-screen/no target/no Skip/title/rationale",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F16",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "integration_test/core_loop_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F16/README.md"
+    },
+    {
+      "id": "CHK-F17.A1",
+      "criterion": "Title and field-mode toggle share a compact wrapping header; tappable site/night/zone context precedes the night card. Card shows dark interval, phase/moon-free hours, dark-span cloud coverage/freshness and detail links with honest missing/partial/stale/no-dark states. Candidate selection remains a secondary action.",
+      "check": "empty/partial night card values, detail links, coverage/freshness states; title/toggle/context/order/candidates; missing/partial/stale/no-dark state renders 100/200 all themes",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F17",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/tonight/tonight_home_screen_test.dart",
+        "test/presentation/screens/tonight/home_night_card_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F17/README.md"
+    },
+    {
+      "id": "CHK-F17.A2",
+      "criterion": "Your plan/Open planner resumes the current plan with one context/store. Home has no New plan action; Planner keeps its distinct guarded New plan menu lifecycle.",
+      "check": "Open planner opens same active/saved plan, one store; same-plan Open; Home New plan absent, guarded Planner New plan remains distinct",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F17",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/tonight/tonight_home_screen_test.dart",
+        "test/presentation/screens/tonight/home_night_card_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F17/README.md"
+    },
+    {
+      "id": "CHK-F17.A3",
+      "criterion": "Accepted D9 A keeps Home/Planner subtitle editing the active plan; the night card and Your plan describe the same site/night. Picker Cancel preserves edits/results; separate calendar/forecast viewing is labelled and adopts only through F13 A5.",
+      "check": "D9 night/plan context consistency + dirty Cancel content/results unchanged; active plan context on Home; picker Cancel; browse separate; saved/dirty copy original after Save",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F17",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/tonight/tonight_home_screen_test.dart",
+        "test/presentation/screens/tonight/home_night_card_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F17/README.md"
+    },
+    {
+      "id": "CHK-F17.A4",
+      "criterion": "empty/loading/offline/error/saved states, U and relevant W path pass.",
+      "check": "empty/loading/offline/error/saved U/W; proposed A+ title/context/candidates/no New plan",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F17",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/tonight/home_night_card_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F17/README.md"
+    },
+    {
+      "id": "CHK-F17.A5",
+      "criterion": "Home uses the shared plan-night phrase: “tonight” only when the active plan's SessionNight is the current SessionNight, otherwise that night's date (for example “on Fri, Dec 18”). This covers the night card's lines, the candidate action and the candidates screen's title, whose list is for the plan's night. By owner choice AM03-T = B (§5) the bottom-navigation tab label stays “Tonight”, and the page title reads “Tonight” for the current night and the plan's night otherwise (for example “Night of Fri, Dec 18”). Calculations and accepted D9 A context editing are unchanged.",
+      "check": "plan night = current night keeps the existing Home wording; plan night ≠ current night: no “tonight” in the night card, candidate action or candidates title, the date phrase present and the candidate list for the plan's night; tab label “Tonight” in both cases; page title “Tonight” for the current night and the plan's night otherwise",
+      "required_layer": "TEST with independent fixture/interaction expectation + RENDER/U; PLANNED",
+      "task": "F17",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/tonight/tonight_home_screen_test.dart",
+        "test/presentation/screens/tonight/home_night_card_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F17/README.md"
+    },
+    {
+      "id": "CHK-F18.A1",
+      "criterion": "The primary simple workflow is intended frames → estimated integration/total duration/storage/relative stacking gain → Save, with compact site/night/target/rig context and working missing-input checklist. Remove Tonight for this target and its chart/window-list/placeholder from Plan for this release; retain ImagingOpportunity/FitAnalyzer, compact availability/fit reason and night/weather detail access. Target appears once; selected-plan-night facts lead. Altitude now belongs in explicitly labelled secondary detail when the selected night differs from now, never presented as an altitude at the planned time. Advanced details remain reachable; only identical global warnings merge.",
+      "check": "simple outputs; Plan block/placeholder absent; future selected night vs current altitude; secondary current-sky detail and original domain results preserved",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F18",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/home/planner_f18_test.dart",
+        "test/presentation/screens/home/planner_structure_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F18/README.md"
+    },
+    {
+      "id": "CHK-F18.A2",
+      "criterion": "save success clears banner; error keeps recoverable draft and correct status.",
+      "check": "successful Save clears autosave banner; failure retains recoverable draft/status; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F18",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/current_session_failure_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F18/README.md"
+    },
+    {
+      "id": "CHK-F18.A3",
+      "criterion": "Cancel/back/browse/adopt follows accepted D9/F13 A5 and agrees with Home/calendar. Adoption/copy preserves the original snapshot/result as saved after any explicit pre-copy Save; Save failure/Cancel stops replacement and derived UI remains consistent.",
+      "check": "Home/calendar/Planner browse/back/dirty Save/Discard/Cancel snapshot/results unchanged; draft/saved/dirty browse/adopt/cancel/restart/site change; original after pre-copy Save plus derived-state comparisons; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F18",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/details/forecast_nights_test.dart",
+        "test/presentation/screens/details/night_moon_browse_test.dart",
+        "test/presentation/shared/unsaved_plan_prompt_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F18/README.md"
+    },
+    {
+      "id": "CHK-F18.A4",
+      "criterion": "fit and relative gain explanations are visible in W; U and before/after reference-plan scroll record pass.",
+      "check": "W visible fit/gain, U and reference-plan scroll/section deltas; AM-01 target/Plan-chart removal/weather; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F18",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/performance/reference_plan_density_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F18/README.md"
+    },
+    {
+      "id": "CHK-F18.A5",
+      "criterion": "After Planner loads, keep a stable visible Save plan affordance. When existing site/target/rig or other actual save prerequisites are missing, show a readable reason with the direct corrective action; disabled state has adjacent accessible text, not tooltip-only explanation. Eligibility remains the existing domain/lifecycle rule, with no partial-rig model or new restriction on empty plans. Missing weather/network alone is not a new prerequisite. Once eligible, saving/error/retry preserves the draft and correct state; the button never disappears merely because an input is missing.",
+      "check": "loaded Planner missing site/target/rig separately and combined; stable visible Save plus action/reason; valid state, offline weather, failed save/retry,200%/keyboard",
+      "required_layer": "TEST interaction + RENDER/U/W; PLANNED",
+      "task": "F18",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/home/planner_f18_test.dart",
+        "test/presentation/screens/home/home_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F18/README.md"
+    },
+    {
+      "id": "CHK-F18.A6",
+      "criterion": "Planner text that describes the plan's night uses one shared plan-night phrase: “tonight” only when the plan's SessionNight is the current SessionNight, otherwise that night's date. This covers status and fit actions (fill or trim to the window, not even one frame fits), per-block what-fits rows, no-window and missing-input reasons including FitAnalyzer and opportunity reason strings, target-card window labels and conditions text. With a plan night other than the current night no Planner text says “tonight”; with the current night the existing wording stays. Windows, fit results and every displayed value are unchanged.",
+      "check": "fixed clock with plan night ≠ current night: no built Planner text contains “tonight” across status, block rows, target card, reasons and conditions, and the date phrase is present; a current-night fixture keeps the existing wording; fit, window and budget values identical in both",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W; PLANNED",
+      "task": "F18",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/home/planner_f18_test.dart",
+        "test/presentation/shared/plan_night_phrase_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F18/README.md"
+    },
+    {
+      "id": "CHK-F19.A1",
+      "criterion": "Each Logbook card distinguishes Result not recorded from Completed/Partly/Not done, with text plus an appropriate icon/tone; never color alone and never elapsed time as completion. Provide direct Record result/Edit result and planned versus recorded integration. Entries/Progress and Plan this target retain RD-07 roles; guarded copies preserve original snapshot/result.",
+      "check": "copy/other-night reuse: original snapshot/result bytes and derived UI unchanged; Entries/Progress segment and row Plan this target; Library manages, Logbook records; copy/source after Save; AM-01 distinct no-result/completed/partial/not-done cards, direct action, icons+text and current-before-dawn card placement",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F19",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/execution/results_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F19/README.md"
+    },
+    {
+      "id": "CHK-F19.A2",
+      "criterion": "Completed/partial/not-done reports save, reopen and update progress consistently. A user may explicitly finish and record the current saved night before dawn; never auto-complete. Current means now is within the stored SessionNight window; future means now precedes that stored start. Future saved nights cannot be marked acquired in advance. This amends only the old report-after-night-end eligibility, not SessionNight/astronomical darkness or automatic saved-plan rollover. Results remain manual reports, not measured acquisition.",
+      "check": "all result statuses save/reopen and progress totals agree; AM-01 current saved-night manual early result, future refusal, no time-based auto-completion; progress/snapshot preservation",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F19",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/repositories/drift_session_results_test.dart",
+        "test/presentation/screens/execution/results_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F19/README.md"
+    },
+    {
+      "id": "CHK-F19.A3",
+      "criterion": "entry forecast is the stored snapshot with its original age/source, not current weather substituted silently.",
+      "check": "entry forecast equals original snapshot/source/age, not live substitution; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F19",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/logbook/session_detail_test.dart",
+        "test/domain/services/session_snapshot_builder_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F19/README.md"
+    },
+    {
+      "id": "CHK-F19.A4",
+      "criterion": "Visible stored rig/target Delete uses confirmDestructive under RD-09; Cancel/Back/dismissal preserves record/selection/snapshot, confirmed deletion persists and yields a valid derived selection/fallback. No stored-record Undo is added. In-plan Undo remains F06/F09. U and W returning multi-night journey pass.",
+      "check": "stored record confirmation/Cancel/delete persists with correct derived selection; U and returning W; stored Delete confirmation/dismiss/Cancel/confirm/reopen selection; no stored Undo; in-plan stale Undo covered F06/F09; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F19",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/library/library_manage_mode_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F19/README.md"
+    },
+    {
+      "id": "CHK-F19.A5",
+      "criterion": "The same early-report eligibility is enforced by domain/repository and UI, using the saved night, not the live selected site/night. A saved-changed plan first resolves explicit Save/Discard/Cancel and reviews the exact saved snapshot; Save failure/Cancel changes no result. Unreadable/legacy records retain honest limitations, no fabricated counts. Stale-form/concurrent-update guards, transaction/event counters, original forecast, corrections and progress remain consistent; future-night refusal, current-before-dawn success, ended-night success, process restart and derived UI checks pass. Show an explanatory unavailable state instead of an unexplained missing action.",
+      "check": "AM-01 UI+repository parity, saved-context vs live-context, dirty Save/Discard/Cancel/failure, unreadable/legacy/stale form, event counters and derived UI after restart",
+      "required_layer": "TEST production repository/persistence/reconciliation + UI/derived state; H/full gate; PLANNED",
+      "task": "F19",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/execution/results_screen_test.dart",
+        "test/presentation/viewmodels/results_unreadable_plan_test.dart",
+        "test/data/repositories/drift_session_results_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F19/README.md"
+    },
+    {
+      "id": "CHK-F20.A1",
+      "criterion": "fixtures cover completed/partial/not-done/no-result/legacy/mixed-group/multiple-night records; unsupported acquisition data is explicitly unavailable, not fabricated from a plan.",
+      "check": "independent completed/partial/not-done/no-result/legacy/mixed/multinight acquisition CSV fixtures",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F20",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/astrobin_acquisitions_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F20/README.md"
+    },
+    {
+      "id": "CHK-F20.A2",
+      "criterion": "unknown stays blank, never invented zero/date; escaping and units match the cited contract.",
+      "check": "blank unknown/date/count semantics and escaping/units vs refreshed primary contract",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F20",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/astrobin_acquisitions_test.dart",
+        "test/presentation/screens/logbook/astrobin_export_test.dart",
+        "test/data/export/share_astrobin_csv_exporter_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F20/README.md"
+    },
+    {
+      "id": "CHK-F20.A3",
+      "criterion": "Names never occupy numeric-ID fields; separate filter rows and share-text name order are deterministic. Before sharing, show the same ordered CSV row/filter-name list; no equipment-ID lookup/account/mapping store is added.",
+      "check": "numeric filter column empty; deterministic separated rows/name-share ordering; numeric ID blank; per-filter separate rows; preview and share ordered row/name association plus escaping",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F20",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/logbook/astrobin_export_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F20/README.md"
+    },
+    {
+      "id": "CHK-F20.A4",
+      "criterion": "Calibration counts require supported recorded acquisition evidence AND proven F09 whole-tuple association. A planned or compatible library block never establishes acquired count; ordinary unrecorded manual-result calibration stays blank. Supported historical evidence may supply recorded counts. Mismatched/Unknown coverage stays blank; existing manifest export remains compatible (TF-01).",
+      "check": "TF-01: supported recorded acquisition count AND proven F09 tuple, otherwise blank; completed-light/planned-only/library-only/unknown-tuple negative cases; existing manifest export unchanged; TF-01 completed/partial lights plus compatible planned/library calibration→blank; supported recorded calibration plus proven tuple→recorded; unknown/mismatch→blank",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F20",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/domain/services/astrobin_acquisitions_test.dart",
+        "test/data/export/session_manifest_codec_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F20/README.md"
+    },
+    {
+      "id": "CHK-F21.A1",
+      "criterion": "every preference value round-trips; old backups get documented defaults, unknown future values safe fallback.",
+      "check": "every preference/default/unknown-future enum restart+backup round trip",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F21",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/backup/preferences_round_trip_test.dart",
+        "test/data/backup/backup_restore_test.dart",
+        "test/core/units/display_units_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F21/README.md"
+    },
+    {
+      "id": "CHK-F21.A2",
+      "criterion": "°C/°F, km/h/mph/m/s, m/ft flow through affected UI/share paths; scientific storage and calculations remain canonical.",
+      "check": "canonical storage unchanged, temperature/wind/elevation all display/share paths matrix",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F21",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/core/units/display_units_test.dart",
+        "test/presentation/shared/display_units_paths_test.dart",
+        "test/presentation/shared/entry_share_text_test.dart",
+        "test/presentation/screens/execution/results_screen_test.dart",
+        "test/presentation/screens/settings/display_settings_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F21/README.md"
+    },
+    {
+      "id": "CHK-F21.A3",
+      "criterion": "absolute temperature conversion and temperature-difference/dew-margin conversion are separately tested.",
+      "check": "separate absolute C/F and temperature-difference/dew-margin conversion vectors",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F21",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/core/units/display_units_test.dart",
+        "test/presentation/screens/settings/display_settings_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F21/README.md"
+    },
+    {
+      "id": "CHK-F21.A4",
+      "criterion": "Accepted D1 A keeps neutral tokens and System default, including new installs; field mode remains accepted behavior. Light/dark AA vectors and documented existing field-mode exception, U, restart and backup checks pass. No navy/ice-blue redesign or new-install Dark default is inferred.",
+      "check": "accepted D1 AA changed pairs, field mode and U/restart/backup; neutral/System initial/default/restart/backup; light/dark contrast and existing field exception; no unapproved brand/default",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F21",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/settings/display_settings_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F21/README.md"
+    },
+    {
+      "id": "CHK-F21.A5",
+      "criterion": "Planning preferences and F21 display/unit updates distinguish in-memory edits from durably confirmed settings. Keep latest edits visibly pending/unsaved when persistence fails; provide actionable failure and Retry of the newest complete configuration. Do not falsely report saved or silently discard edits. Serialize/coalesce completion so older requests cannot mark newer values saved or overwrite them; do not require an architecture/debounce redesign. Reload/restart/backup must expose a coherent confirmed configuration or an explicit recoverable failure, never silently mix partially saved fields. Preserve legacy defaults, snapshot history and existing privacy opt-in semantics. Inject failure at relevant write boundaries, reverse delayed completions and verify retry/latest-value/unrelated-field preservation plus derived UI. Exact compatible write strategy is an implementation detail.",
+      "check": "injected write failures and reopen/backup; persistent unsaved cue and Retry newest configuration; delayed A/B completions reversed; no stale saved acknowledgement/torn config; canonical values/history unchanged",
+      "required_layer": "TEST production preferences/failure/concurrency/restart/backup + derived UI; H/full gate; PLANNED",
+      "task": "F21",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/viewmodels/settings_persistence_test.dart",
+        "test/presentation/screens/settings/display_settings_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F21/README.md"
+    },
+    {
+      "id": "CHK-F21.A6",
+      "criterion": "The place-name lookup switch follows the same honest-persistence rule: after a failed write the screen never shows a choice different from the stored one unless it is visibly unsaved with Retry, or it restores the stored choice and says so. While Off is shown, no position is sent. Reload and restart show the stored choice. The default (off), consent wording, provider, attribution and call limits are unchanged.",
+      "check": "injected place-name write failure for Off and for On; shown choice equals the stored one or is visibly unsaved with Retry; no lookup request while Off is shown; reload/restart shows the stored choice; default and consent copy unchanged",
+      "required_layer": "TEST production privacy preference/failure/restart + derived UI; H with F21; PLANNED",
+      "task": "F21",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/viewmodels/place_name_switch_persistence_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F21/README.md"
+    },
+    {
+      "id": "CHK-F22.A1",
+      "criterion": "Background process death on Planner and a representative existing form returns to the intended valid route. If its referenced plan was deleted, use a valid fallback and report The plan you had open was deleted. Showing Tonight. Preserve all existing lifecycle/data rules; no second draft store.",
+      "check": "emulator/phone background process death Planner/form -> intended route or explicit deleted-item fallback; process death representative form/planner; deleted-plan valid Tonight fallback plus explicit message; no stale-context adoption",
+      "required_layer": "TEST + emulator process death; physical repeat G2; PLANNED",
+      "task": "F22",
+      "status": "EMULATOR SUPPORTED; phone/U pending",
+      "assessment": "API 30 actual background kill after Android saved state; Planner restores; form fallback recorded in native observations.",
+      "tests": [
+        "test/lifecycle/route_restoration_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F22/README.md"
+    },
+    {
+      "id": "CHK-F22.A2",
+      "criterion": "restored arguments never adopt another site/night or overwrite a saved result; cancel remains safe.",
+      "check": "restored args never adopt another night/site or overwrite result; Cancel safe",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F22",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/lifecycle/route_restoration_test.dart",
+        "test/lifecycle/lifecycle_matrix_test.dart",
+        "test/data/database/schema_migration_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F22/README.md"
+    },
+    {
+      "id": "CHK-F22.A3",
+      "criterion": "named plan and every existing result field, including not-done reason and supported reported events, survive relevant kill and v24→v25→v26 paths. Any unsupported unsaved-form restoration is documented against the existing contract before claiming completion.",
+      "check": "named plan and all result statuses/reasons/legacy events kill+v24-v25-v26 comparisons",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F22",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/lifecycle/route_restoration_test.dart",
+        "test/lifecycle/lifecycle_matrix_test.dart",
+        "test/data/database/schema_migration_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F22/README.md"
+    },
+    {
+      "id": "CHK-F23.A1",
+      "criterion": "municipality-only response names the place; absent/invalid values still fall back to coordinates; existing precedence stays tested.",
+      "check": "municipality-only/absent/invalid/precedence mapper fixtures -> name or coordinates; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F23",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/services/nominatim_reverse_geocoder_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F23.A2",
+      "criterion": "Dart/native notices and accepted permission are visible and match the build dependencies.",
+      "check": "Dart/native dependency-notice comparison and About accepted permission visible; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F23",
+      "status": "NOT MET — native notices",
+      "assessment": "Permission is visible; Android dependency graph now resolves, but native notices remain absent from app.",
+      "tests": [
+        "test/presentation/screens/about/about_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F23.A3",
+      "criterion": "each TD-031 subitem is resolved with evidence, retained as an explicit non-blocking limitation, or reported as a concrete release blocker; no generic “all legal risks fixed.”",
+      "check": "each TD-031 registered subitem resolved/limited/blocker with concrete evidence; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F23",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/services/nominatim_reverse_geocoder_test.dart",
+        "test/presentation/screens/sites/sites_screen_test.dart",
+        "test/presentation/shared/site_label_test.dart",
+        "test/presentation/screens/about/about_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F23.A4",
+      "criterion": "provider changes are not invented to close the register; U passes for changed pages.",
+      "check": "no provider replacement; changed pages U/opt-in/call limits preserved; Task verification and original checks remain applicable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F23",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/data/services/nominatim_reverse_geocoder_test.dart",
+        "test/presentation/screens/sites/sites_screen_test.dart",
+        "test/presentation/shared/site_label_test.dart",
+        "test/presentation/screens/about/about_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F23.A5",
+      "criterion": "Use current position in the new-site/editor flow obtains GPS coordinates and automatically proposes a place name through the existing consented lookup. If lookup is disabled, offer its existing opt-in explanation/action without sending coordinates until accepted; coordinates-only/manual entry still works. Lookup never overwrites a manual/existing name or a later name/position edit; ignore stale responses. Loading/offline/not-found/failure never blocks coordinate entry/Save; use an honest coordinate fallback. No site is saved or active saved site looked up until its approved explicit operation. Preserve attribution and update actual privacy/help copy when implemented.",
+      "check": "AM-01 GPS→consent→name proposal with manual edit/position race; disabled consent sends no request; offline/failure coordinates Save succeeds; saved site untouched before Save",
+      "required_layer": "TEST + RENDER/U; named PHONE/OWNER rows retained; PLANNED",
+      "task": "F23",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/sites/sites_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F23.A6",
+      "criterion": "In the site editor a position fix from Use current position fills the coordinates only if both coordinate fields are unchanged since the tap. A typed edit or a map pick made while the fix is pending is kept, and the fix is not applied without the user's explicit choice. A reply after leaving the editor writes nothing. Locating never blocks typing, picking on the map or Save.",
+      "check": "controlled GPS completer: untouched fields filled; typed edit and map pick during locating kept and the fix not applied without a choice; reply after leaving writes nothing; typing, map pick and Save available while locating",
+      "required_layer": "TEST interaction; PLANNED",
+      "task": "F23",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/sites/sites_screen_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F23.A7",
+      "criterion": "A remembered transient position without a known place name is never labelled “Current position”. Wherever it is shown (Home and Planner context, the Welcome site status, the Sites list) it reads as an unsaved position, with its coordinates where space allows, before and after restart. A saved site keeps its name and a looked-up name keeps its attribution. No automatic GPS request and no change to how a position is chosen or stored.",
+      "check": "transient position from GPS, map pick and typed coordinates with lookup off, before and after restart: no “Current position” label on Home, Planner, Welcome or Sites; unsaved-position label with coordinates where space allows; saved-site name and looked-up attribution unchanged",
+      "required_layer": "TEST + RENDER/U; PLANNED",
+      "task": "F23",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/shared/site_label_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F23/README.md"
+    },
+    {
+      "id": "CHK-F24.A1",
+      "criterion": "Harness/repository tests that depend on night/date use fixed injected clocks",
+      "check": "fixed injected clocks at formerly failing morning/evening cases",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F24",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/target/target_search_race_test.dart",
+        "test/presentation/screens/location/location_picker_tiles_failing_test.dart",
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F24/README.md"
+    },
+    {
+      "id": "CHK-F24.A2",
+      "criterion": "Existing all-tiles-fail probe becomes a committed test, with host path_provider fake",
+      "check": "permanent all-tiles-fail test with path_provider fake; controls/coordinates usable",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F24",
+      "status": "FAIL (Windows verification) — R4",
+      "assessment": "Controls work; committed offline-map test fails in teardown on a locked temporary cache directory, twice.",
+      "tests": [
+        "test/presentation/screens/target/target_search_race_test.dart",
+        "test/presentation/screens/location/location_picker_tiles_failing_test.dart",
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F24/README.md"
+    },
+    {
+      "id": "CHK-F24.A3",
+      "criterion": "Orphan cleanup uses AppLog",
+      "check": "AppLog cleanup source assertion + failure/log regression",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F24",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/target/target_search_race_test.dart",
+        "test/presentation/screens/location/location_picker_tiles_failing_test.dart",
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F24/README.md"
+    },
+    {
+      "id": "CHK-F24.A4",
+      "criterion": "Enable the already planned unawaited_futures rule and resolve actual findings",
+      "check": "unawaited_futures analysis and affected async failure tests; no unrelated campaign",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F24",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/target/target_search_race_test.dart",
+        "test/presentation/screens/location/location_picker_tiles_failing_test.dart",
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F24/README.md"
+    },
+    {
+      "id": "CHK-F24.A5",
+      "criterion": "Recheck only the registered startup/network barrier, site/zone behavior and named historical test gaps",
+      "check": "current TD-002/020/025 evidence; obsolete close or focused reproduced invariant fix only",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F24",
+      "status": "PARTIAL (Windows verification) — R4",
+      "assessment": "Clear Outside link is allowed; no-scraping test compares unnormalized paths and fails on Windows, twice.",
+      "tests": [
+        "test/presentation/screens/target/target_search_race_test.dart",
+        "test/presentation/screens/location/location_picker_tiles_failing_test.dart",
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F24/README.md"
+    },
+    {
+      "id": "CHK-F24.A6",
+      "criterion": "Target search accepts success/error/loading/empty results only for the newest requested query and current mounted generation. A late old response/failure cannot replace a newer list or selection; pending results cannot masquerade as belonging to new text. Respect choose/manage modes and disposal; debounce is optional. Record current reproduction first; if already safe, prove it without unnecessary refactoring",
+      "check": "deterministic delayed A/B success and error in reverse order, clear query, disposal/navigation and selection; old result ignored and newest query alone authoritative",
+      "required_layer": "TEST deterministic async selector regression; CODE scenario must not be called executed reproduction; PLANNED",
+      "task": "F24",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/screens/target/target_search_race_test.dart",
+        "test/presentation/screens/location/location_picker_tiles_failing_test.dart",
+        "test/presentation/viewmodels/planner_sky_darkness_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F24/README.md"
+    },
+    {
+      "id": "CHK-F25.A1",
+      "criterion": "every changed surface has U evidence including real glyphs and relevant error/keyboard states.",
+      "check": "all changed screens/editors/filter/map U rows, keyboard/errors with real glyphs/native evidence",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F25",
+      "status": "HOST RENDERS SUPPORTED; U pending",
+      "assessment": "96 fresh real-glyph captures, three variants; six theme/text variants in automated accessibility sweep. Owner review still absent.",
+      "tests": [
+        "test/presentation/design_system/u_renders_test.dart",
+        "test/presentation/accessibility_test.dart",
+        "test/presentation/quantity_text_usage_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F25/README.md"
+    },
+    {
+      "id": "CHK-F25.A2",
+      "criterion": "no hand-formatted covered quantity bypasses QuantityText; field mode and approved contrast remain correct.",
+      "check": "bounded QuantityText source-enforcement test + approved AA/field mode",
+      "required_layer": "TEST with independent fixture/interaction expectation; applicable U/W and named G2 carries; PLANNED",
+      "task": "F25",
+      "status": "HOST SUPPORTED; shared acceptance pending",
+      "assessment": "Automated contract checks supported by current host/CI; apply task-specific U/W/device/owner carries below, not an unconditional PASS.",
+      "tests": [
+        "test/presentation/quantity_text_usage_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F25/README.md"
+    },
+    {
+      "id": "CHK-F25.A3",
+      "criterion": "all four W journeys have step records, with fit/Unknown/relative-gain explanations and issues classified; comprehension remains separately labeled.",
+      "check": "four W action/issue/visible explanation records; comprehension separately HUMAN/UNVERIFIED",
+      "required_layer": "W step records/functional TEST; HUMAN comprehension separately UNVERIFIED where accepted; PLANNED",
+      "task": "F25",
+      "status": "HOST functional; HUMAN unverified",
+      "assessment": "Four W records refer to executed tests; no independent participant or final physical walkthrough.",
+      "tests": [
+        "test/presentation/design_system/u_renders_test.dart",
+        "test/presentation/accessibility_test.dart",
+        "test/presentation/quantity_text_usage_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F25/README.md"
+    },
+    {
+      "id": "CHK-F25.A4",
+      "criterion": "owner final visual acceptance is recorded; no unresolved functional/accessibility blocker remains. Later relevant changes invalidate only affected rows.",
+      "check": "owner final visual decision; no unresolved functional/accessibility blocker; V3 invalidation by affected row",
+      "required_layer": "OWNER final visual acceptance + blocker disposition; PLANNED",
+      "task": "F25",
+      "status": "OWNER + BLOCKERS OUTSTANDING",
+      "assessment": "Final owner visual acceptance absent; R1–R3 survive the final code, R4 prevents Windows host gate PASS.",
+      "tests": [
+        "test/presentation/design_system/u_renders_test.dart",
+        "test/presentation/accessibility_test.dart",
+        "test/presentation/quantity_text_usage_test.dart"
+      ],
+      "task_evidence": "docs/refinement/evidence/finalization/F25/README.md"
+    },
+    {
+      "id": "CHK-F26.A1",
+      "criterion": "absent/debug/wrong certificate is refused; selected APKs use `io.github.buffur.culmina`, expected signer, matching pubspec/AppIdentity version, increasing versionCode, required SDK settings and 16 KB native-library alignment.",
+      "check": "absent/debug/wrong signer rejected; id/version/versionCode/SDK/native 16 KB checks",
+      "required_layer": "TEST rejection cases + actual APK signer/metadata/alignment; PLANNED",
+      "task": "F26",
+      "status": "NOT STARTED",
+      "assessment": "Diagnostic build is not the expected-signer release candidate. G1, D6, production signing/artifact evidence remain prerequisites.",
+      "tests": [],
+      "task_evidence": null
+    },
+    {
+      "id": "CHK-F26.A2",
+      "criterion": "D6 uses actual measured sizes; every selected APK is checked and hashed.",
+      "check": "measure universal/arm64 download+installed bytes then explicit D6; every selected APK hash/check",
+      "required_layer": "MEASURED APK download/installed sizes + OWNER D6 + artifact checks/hash; PLANNED",
+      "task": "F26",
+      "status": "NOT STARTED",
+      "assessment": "Diagnostic build is not the expected-signer release candidate. G1, D6, production signing/artifact evidence remain prerequisites.",
+      "tests": [],
+      "task_evidence": null
+    },
+    {
+      "id": "CHK-F26.A3",
+      "criterion": "final code/tooling/version inputs pass the full gate and actual remote CI on the release commit; native build/Kotlin results are valid for those inputs.",
+      "check": "final-input full gate/native Kotlin/actual remote CI on release commit; no key needed in public CI",
+      "required_layer": "final-input full gate/native/Kotlin + actual remote CI; PLANNED",
+      "task": "F26",
+      "status": "NOT STARTED",
+      "assessment": "Diagnostic build is not the expected-signer release candidate. G1, D6, production signing/artifact evidence remain prerequisites.",
+      "tests": [],
+      "task_evidence": null
+    },
+    {
+      "id": "CHK-F26.A4",
+      "criterion": "commit/toolchain/id/version/certificate/APK SHA-256 and live policy URL are recorded.",
+      "check": "manifest commit/toolchain/id/version/public cert/SHA256/live-policy URL",
+      "required_layer": "artifact provenance/live URL record; PLANNED",
+      "task": "F26",
+      "status": "NOT STARTED",
+      "assessment": "Diagnostic build is not the expected-signer release candidate. G1, D6, production signing/artifact evidence remain prerequisites.",
+      "tests": [],
+      "task_evidence": null
+    },
+    {
+      "id": "CHK-F26.A5",
+      "criterion": "signature-mismatch instructions require a verified independent backup before any owner-authorized uninstall; no destructive action is automated as a packaging shortcut.",
+      "check": "signature mismatch backup instructions; no automated uninstall or secret access",
+      "required_layer": "DOCUMENT instructions + isolated recovery rehearsal; no owner uninstall implied; PLANNED",
+      "task": "F26",
+      "status": "NOT STARTED",
+      "assessment": "Diagnostic build is not the expected-signer release candidate. G1, D6, production signing/artifact evidence remain prerequisites.",
+      "tests": [],
+      "task_evidence": null
+    }
+  ]
+}

@@ -41,6 +41,8 @@ archived prompts are not instructions.
 | [`FEATURE_STATUS.md`](FEATURE_STATUS.md) | What exists, feature by feature (F-##) |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md), [`DATA_MODEL.md`](DATA_MODEL.md) | Design intent (Part A) and the actual architecture and schema (Part B; schema v25) |
 | [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) | UI tokens, accessibility and interaction patterns |
+| [`design/WORKFLOW.md`](design/WORKFLOW.md) | Project design skills, restrained visual direction, font examples and the isolated Home browser lab |
+| [`design/WEB_TO_FLUTTER_MIGRATION.md`](design/WEB_TO_FLUTTER_MIGRATION.md) | In-progress Hybrid / Geist web → Flutter migration ledger; resume via [`design/migration/CONTINUATION_PROMPT_2026_10_20.md`](design/migration/CONTINUATION_PROMPT_2026_10_20.md) |
 | [`IA_WIREFRAMES.md`](IA_WIREFRAMES.md), [`IA_WIREFRAMES_ADDENDUM.md`](IA_WIREFRAMES_ADDENDUM.md) | Accepted information-architecture intent (ADR-015, ADR-019) |
 | [`PRODUCT_SPEC.md`](PRODUCT_SPEC.md) | The Phase 0 product specification (design intent; the current direction is `PRODUCT_DIRECTION.md`) |
 

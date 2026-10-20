@@ -12,6 +12,7 @@ import 'package:astroplan/data/services/catalog_seeder.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/models/session.dart';
+import 'package:astroplan/domain/models/plan_overrides.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 
 import '../../support/planner_harness.dart';
@@ -97,6 +98,45 @@ void main() {
     expect(second.id, first.id);
     expect(await sessions.list(), hasLength(1));
   });
+
+  test(
+    'plan assumptions recompute, save, reopen, copy and reset independently',
+    () async {
+      final vm = await build();
+      final globals = vm.settings.planningPreferences;
+      final before = vm.analysis.captureBudget;
+      final values = PlanOverrides(
+        interframeSeconds: 7.5,
+        outsideSetupSeconds: 900,
+        fixedMarginSeconds: 600,
+        bytesPerFrame: 30000000,
+      );
+      await vm.plan.setPlanOverrides(values);
+      final after = vm.analysis.captureBudget;
+      expect(after.integrationMs, before.integrationMs);
+      expect(after.acquisitionMs, isNot(before.acquisitionMs));
+      expect(after.setupMs, 900000);
+      expect(after.storageMB, isNotNull);
+      expect(identical(vm.settings.planningPreferences, globals), isTrue);
+      final saved = await vm.saveSession();
+      expect(saved.planOverrides!.toJson(), values.toJson());
+      await vm.newSession();
+      expect(vm.plan.planOverrides, isNull);
+      await vm.openSession((await sessions.get(saved.id))!);
+      expect(vm.plan.planOverrides!.toJson(), values.toJson());
+      expect(vm.analysis.captureBudget.acquisitionMs, after.acquisitionMs);
+      await vm.lifecycle.duplicateForNight(vm.eveningDate!);
+      expect(vm.activeSessionId, isNot(saved.id));
+      expect(vm.plan.planOverrides!.toJson(), values.toJson());
+      await vm.plan.setPlanOverrides(null);
+      expect(vm.analysis.captureBudget.acquisitionMs, before.acquisitionMs);
+      expect(vm.analysis.captureBudget.setupMs, before.setupMs);
+      expect(
+        (await sessions.get(saved.id))!.planOverrides!.toJson(),
+        values.toJson(),
+      );
+    },
+  );
 
   test('a frozen session is never modified: saving after opening it creates '
       'a new one', () async {

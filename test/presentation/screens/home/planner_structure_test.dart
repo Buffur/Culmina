@@ -130,15 +130,24 @@ void main() {
       // 2–4. The verdict with time needed and usable time.
       onFirstScreen(
         tester,
-        find.text(
-          StatusBlock.headline(
-            fit.state,
-            needed: Duration(milliseconds: fit.windowLoadMs),
-            usable: Duration(milliseconds: fit.availableMs),
-          ),
-        ),
+        find.text(StatusBlock.headline(fit.state)),
         'the verdict with time needed and usable time',
       );
+      for (final (label, milliseconds) in [
+        ('Needed in imaging window', fit.windowLoadMs),
+        ('Usable', fit.availableMs),
+      ]) {
+        onFirstScreen(
+          tester,
+          find.descendant(
+            of: find.byKey(Key('status.number.$label')),
+            matching: find.text(
+              QuantityText.duration(Duration(milliseconds: milliseconds)),
+            ),
+          ),
+          label,
+        );
+      }
       // 5. The integration planned.
       onFirstScreen(
         tester,
@@ -180,16 +189,21 @@ void main() {
       await settle(tester);
       final fit = vm.fitAnalysis;
       seen.add(fit.state);
-      expect(
-        find.text(
-          StatusBlock.headline(
-            fit.state,
-            needed: Duration(milliseconds: fit.windowLoadMs),
-            usable: Duration(milliseconds: fit.availableMs),
+      expect(find.text(StatusBlock.headline(fit.state)), findsOneWidget);
+      for (final (label, milliseconds) in [
+        ('Needed in imaging window', fit.windowLoadMs),
+        ('Usable', fit.availableMs),
+      ]) {
+        expect(
+          find.descendant(
+            of: find.byKey(Key('status.number.$label')),
+            matching: find.text(
+              QuantityText.duration(Duration(milliseconds: milliseconds)),
+            ),
           ),
-        ),
-        findsOneWidget,
-      );
+          findsOneWidget,
+        );
+      }
       expect(find.text(fit.reason), findsOneWidget);
     }
     expect(seen, containsAll([FitState.fits, FitState.doesNotFit]));
@@ -199,16 +213,7 @@ void main() {
     await settle(tester);
     final filled = vm.fitAnalysis;
     expect(filled.state, anyOf(FitState.fits, FitState.tight));
-    expect(
-      find.text(
-        StatusBlock.headline(
-          filled.state,
-          needed: Duration(milliseconds: filled.windowLoadMs),
-          usable: Duration(milliseconds: filled.availableMs),
-        ),
-      ),
-      findsOneWidget,
-    );
+    expect(find.text(StatusBlock.headline(filled.state)), findsOneWidget);
 
     // A target that never rises here: no window, in the fit's words.
     await tester.runAsync(
@@ -275,14 +280,14 @@ void main() {
         reason: '${order[i].$1} after ${order[i - 1].$1}',
       );
     }
-    // The finish (S6.16): the context on a card, the answer marked in its
-    // status colour, the sections in the section-heading role.
+    // Hybrid uses an open context row; the status retains its semantic
+    // marker and sections retain the shared heading role.
     expect(
       find.descendant(
         of: find.byKey(const Key('planner.context')),
         matching: find.byKey(const Key('context.card')),
       ),
-      findsOneWidget,
+      findsNothing,
     );
     expect(find.byKey(const Key('planner.statusMark')), findsOneWidget);
     final heading = tester.widget<Text>(find.text(AppWords.capturePlan));

@@ -56,7 +56,7 @@ void main() {
     final ok = await runWithFeedback(context, 'save', () async {});
     await tester.pump();
     expect(ok, isTrue);
-    expect(find.byType(SnackBar), findsNothing);
+    expect(find.byType(MaterialBanner), findsNothing);
     expect(AppLog.recent, isEmpty);
   });
 

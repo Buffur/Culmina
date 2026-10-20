@@ -1,0 +1,8 @@
+Working directory: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner
+
+Get-Content -Raw design/home-lab/evidence/hybrid-refinement-2026-10-20/CLAUDE_CORRECTION_PROMPT.txt | & C:/Users/zalub/.local/bin/claude.exe -p --output-format json --tools Read --allowedTools Read --no-session-persistence
+
+stdout: claude-correction-original.json
+stderr: claude-correction-stderr.txt
+exit: claude-correction-exit-code.txt
+Bounded confirmation only; no full rescoring. Model configured by CLI (no override).

@@ -1,0 +1,23 @@
+{
+  "file": "assets/fonts/Geist.ttf",
+  "sha256": "73894e0448cae90a92b6c2f8732b7bb9acb7b94c418bff559dad4a18e1de9659",
+  "bytes": 169056,
+  "unicodeCoverageCount": 728,
+  "specimen": "ІіЇїЄєҐґ°×−0O1Il0123456789",
+  "missingCodepoints": [],
+  "variableAxes": [
+    {
+      "tag": "wght",
+      "min": 100.0,
+      "default": 400.0,
+      "max": 900.0
+    }
+  ],
+  "evidence": "SFNT cmap/fvar inspection only; native glyph rendering still requires visual QA",
+  "retrievedDate": "2026-10-20",
+  "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/geist/Geist%5Bwght%5D.ttf",
+  "license": "OFL-Geist.txt",
+  "licenseSource": "https://raw.githubusercontent.com/google/fonts/main/ofl/geist/OFL.txt",
+  "licenseSha256": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f",
+  "browserReference": "design/home-lab/fonts/sources.json; same official Google Fonts family, full TTF replaces five WOFF2 subsets; binary identity is not asserted across formats"
+}

@@ -1,0 +1,226 @@
+{
+  "cases": [
+    "Feedback light/1: in-flow, no content/nav overlap, clears on destination change",
+    "Feedback light/2: in-flow, no content/nav overlap, clears on destination change",
+    "Feedback dark/1: in-flow, no content/nav overlap, clears on destination change",
+    "Feedback dark/2: in-flow, no content/nav overlap, clears on destination change",
+    "Feedback field/1: in-flow, no content/nav overlap, clears on destination change",
+    "Feedback field/2: in-flow, no content/nav overlap, clears on destination change",
+    "Real download confirmation at200% wraps in own row without covering record/actions",
+    "Non-Hybrid Paper retains original floating feedback",
+    "Home Weather remains one compact widget; no expanded metrics, hourly table or chips",
+    "Hybrid Home/date100/200 labels and Cancel no writes; Paper date unchanged"
+  ],
+  "errors": [],
+  "geometry": [
+    {
+      "theme": "light",
+      "scale": "1",
+      "scroll": {
+        "top": 256,
+        "bottom": 778,
+        "left": 0,
+        "right": 412
+      },
+      "note": {
+        "top": 778,
+        "bottom": 813,
+        "left": 16,
+        "right": 396
+      },
+      "nav": {
+        "top": 813,
+        "bottom": 878,
+        "left": 0,
+        "right": 412
+      },
+      "phone": {
+        "top": 163,
+        "bottom": 903,
+        "left": 0,
+        "right": 412
+      },
+      "position": "static",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "scale": "2",
+      "scroll": {
+        "top": 256,
+        "bottom": 751,
+        "left": 0,
+        "right": 412
+      },
+      "note": {
+        "top": 751,
+        "bottom": 804,
+        "left": 16,
+        "right": 396
+      },
+      "nav": {
+        "top": 804,
+        "bottom": 878,
+        "left": 0,
+        "right": 412
+      },
+      "phone": {
+        "top": 163,
+        "bottom": 903,
+        "left": 0,
+        "right": 412
+      },
+      "position": "static",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "scale": "1",
+      "scroll": {
+        "top": 256,
+        "bottom": 778,
+        "left": 0,
+        "right": 412
+      },
+      "note": {
+        "top": 778,
+        "bottom": 813,
+        "left": 16,
+        "right": 396
+      },
+      "nav": {
+        "top": 813,
+        "bottom": 878,
+        "left": 0,
+        "right": 412
+      },
+      "phone": {
+        "top": 163,
+        "bottom": 903,
+        "left": 0,
+        "right": 412
+      },
+      "position": "static",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "scale": "2",
+      "scroll": {
+        "top": 256,
+        "bottom": 751,
+        "left": 0,
+        "right": 412
+      },
+      "note": {
+        "top": 751,
+        "bottom": 804,
+        "left": 16,
+        "right": 396
+      },
+      "nav": {
+        "top": 804,
+        "bottom": 878,
+        "left": 0,
+        "right": 412
+      },
+      "phone": {
+        "top": 163,
+        "bottom": 903,
+        "left": 0,
+        "right": 412
+      },
+      "position": "static",
+      "overflow": false
+    },
+    {
+      "theme": "field",
+      "scale": "1",
+      "scroll": {
+        "top": 256,
+        "bottom": 778,
+        "left": 0,
+        "right": 412
+      },
+      "note": {
+        "top": 778,
+        "bottom": 813,
+        "left": 16,
+        "right": 396
+      },
+      "nav": {
+        "top": 813,
+        "bottom": 878,
+        "left": 0,
+        "right": 412
+      },
+      "phone": {
+        "top": 163,
+        "bottom": 903,
+        "left": 0,
+        "right": 412
+      },
+      "position": "static",
+      "overflow": false
+    },
+    {
+      "theme": "field",
+      "scale": "2",
+      "scroll": {
+        "top": 256,
+        "bottom": 751,
+        "left": 0,
+        "right": 412
+      },
+      "note": {
+        "top": 751,
+        "bottom": 804,
+        "left": 16,
+        "right": 396
+      },
+      "nav": {
+        "top": 804,
+        "bottom": 878,
+        "left": 0,
+        "right": 412
+      },
+      "phone": {
+        "top": 163,
+        "bottom": 903,
+        "left": 0,
+        "right": 412
+      },
+      "position": "static",
+      "overflow": false
+    },
+    {
+      "longMessage": {
+        "top": 753,
+        "bottom": 878,
+        "scrollBottom": 753,
+        "gestureTop": 878,
+        "overflow": false
+      }
+    },
+    {
+      "pickerFonts": {
+        "scale": "1",
+        "p": 14,
+        "label": 14,
+        "select": 14,
+        ".primary-button": 14,
+        ".secondary-button": 14
+      }
+    },
+    {
+      "pickerFonts": {
+        "scale": "2",
+        "p": 28,
+        "label": 28,
+        "select": 28,
+        ".primary-button": 28,
+        ".secondary-button": 28
+      }
+    }
+  ]
+}

@@ -93,6 +93,9 @@ void main() {
   }
 
   Future<void> openCurves(WidgetTester tester) async {
+    await tester.ensureVisible(
+      find.byKey(const Key('section.${PlannerSections.gainCurve}')),
+    );
     await tester.tap(
       find.byKey(const Key('section.${PlannerSections.gainCurve}')),
     );

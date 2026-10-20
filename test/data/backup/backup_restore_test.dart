@@ -1,3 +1,4 @@
+import 'package:astroplan/domain/models/plan_overrides.dart';
 // TASK 14.4: backup and restore. Acceptance: a restore on a clean install
 // reproduces all sessions (backup → check → stage → apply at next start →
 // open). Also: newer schemas refused, older ones below the floor refused,
@@ -40,6 +41,12 @@ import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _clock = FixedClock(DateTime.utc(2026, 12, 16, 8));
+final _planOverrides = PlanOverrides(
+  interframeSeconds: 7.5,
+  outsideSetupSeconds: 900,
+  fixedMarginSeconds: 600,
+  bytesPerFrame: 30000000,
+);
 
 /// For tests of the staging mechanics with placeholder bytes: the
 /// candidate check itself is covered by `restore_activation_test.dart`.
@@ -67,9 +74,14 @@ Future<void> _seed(DriftSessionRepository repo, AppDatabase db) async {
       timeContextId: 'Europe/Ljubljana',
     ),
     preferences: prefs,
+    planOverrides: _planOverrides,
     budget: CaptureBudgetCalculator.calculate(
       blocks: _blocks,
-      overheads: CaptureOverheads.fromPreferences(prefs),
+      overheads: CaptureOverheads.fromPreferences(
+        prefs,
+        planOverrides: _planOverrides,
+      ),
+      frameBytes: [_planOverrides.bytesPerFrame],
       targetTransitsInWindow: false,
     ),
     blocks: _blocks,
@@ -83,6 +95,7 @@ Future<void> _seed(DriftSessionRepository repo, AppDatabase db) async {
     blocks: _blocks,
     targetLabel: t,
     rigLabel: 'Rig',
+    planOverrides: _planOverrides,
   );
   final run = await repo.start((await repo.create(plan('M42'))).id, snapshot);
   await repo.record(
@@ -158,7 +171,7 @@ void main() {
       // The new phone: a clean install stages the checked backup ...
       final checked = service.check(bytes);
       expect(checked.preview.sessionCount, 3);
-      expect(checked.preview.schemaVersion, 26); // the app schema (F03)
+      expect(checked.preview.schemaVersion, 27); // the app schema (F03)
       expect(checked.preview.appVersion, AppIdentity.version);
       await service.stage(checked);
       expect(await BackupStaging.isStaged(newPhone), isTrue);
@@ -254,7 +267,7 @@ void main() {
     await db.close();
     // The archive is a ZIP; the manifest is readable without the app.
     expect(String.fromCharCodes(bytes.sublist(0, 2)), 'PK');
-    expect(BackupArchive.sqliteUserVersion(service.check(bytes).database), 26);
+    expect(BackupArchive.sqliteUserVersion(service.check(bytes).database), 27);
   });
 
   test('restoring over existing data keeps a safety copy', () async {
@@ -563,7 +576,7 @@ void main() {
       });
       final checked = service.check(v1);
       expect(checked.preferences, isNull);
-      expect(checked.preview.schemaVersion, 26);
+      expect(checked.preview.schemaVersion, 27);
       await service.stage(checked);
       await BackupStaging.apply(newPhone, nowUtc: _clock.nowUtc());
 

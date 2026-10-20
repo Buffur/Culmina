@@ -1,0 +1,2829 @@
+{
+  "generatedAtUtc": "2026-10-20T18:51:21.407087+00:00",
+  "scope": "8 roots \u00d73 themes \u00d7100/200%; original browser vs Flutter host; not Android acceptance",
+  "pairCount": 48,
+  "supplementalPairCount": 24,
+  "expectedPairCount": 48,
+  "records": [
+    {
+      "id": "home-light100",
+      "surface": "home",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-home-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a750e94274825ca964607b1aa83d433077b025525bc8dfffdabdd510433fce35"
+      },
+      "flutterHost": {
+        "path": "flutter/home_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ff1dd1600d36031dee8f808dc1d154d71b16b9eb2baa26be71cb58d654a47a88"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/home-light100-overlay.png",
+        "absoluteDifference": "diagnostics/home-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          29.334415618865723,
+          29.331457902275982,
+          29.896013051090243
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "home-light200",
+      "surface": "home",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-home-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "fd7b58322f4f9a911767f464ba95847819785b9e916f695bf199031fdc5e0163"
+      },
+      "flutterHost": {
+        "path": "flutter/home_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "db9237ae476af99a03343c1832f09b885e8ed3875d3fc32cc48d3db400a0f6e7"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/home-light200-overlay.png",
+        "absoluteDifference": "diagnostics/home-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.95772720038198,
+          21.120051461616,
+          21.761255239004722
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "home-dark100",
+      "surface": "home",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-home-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "2ef855f3f5b61b42cca8d0753064ea2486d4a2167d2e90cb86ee2b4749268cc0"
+      },
+      "flutterHost": {
+        "path": "flutter/home_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4191d33e60fb6a59fb845c201ead9d6d467e4ed7e0a3427d3840ac54c5d52fc0"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/home-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/home-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          31.434298901798503,
+          31.61552336994005,
+          31.673444214547192
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "home-dark200",
+      "surface": "home",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-home-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4d90f758a138dd881b9158bdfd4ca7cdc1b43307f5571b3bf8261f83c6fb9c5c"
+      },
+      "flutterHost": {
+        "path": "flutter/home_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "62edbb9a9b2d5b5f5f94e3893240acec97ee2ace1f615a883684d0f7f38d0796"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/home-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/home-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          22.399381930075865,
+          22.36770120430792,
+          22.203602313120058
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "home-field100",
+      "surface": "home",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-home-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "6c1d94a2805cfc60a0200b435bf1d16439bb124803d87cc1034ccf37a416e371"
+      },
+      "flutterHost": {
+        "path": "flutter/home_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "14736d83a1c163ba4ead102237301af2b4e24d23a57ece49e47601b60152573b"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/home-field100-overlay.png",
+        "absoluteDifference": "diagnostics/home-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          29.00276937768582,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "home-field200",
+      "surface": "home",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-home-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "8df368653cf30264736f38a38688e3c1a827d25b793646b7b0724fbc86b2f301"
+      },
+      "flutterHost": {
+        "path": "flutter/home_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "f8402d42b18d6db92517d960a16eda7cecf9ef58aa0844bd63bb452146078e7a"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/home-field200-overlay.png",
+        "absoluteDifference": "diagnostics/home-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          25.542392169345852,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan-light100",
+      "surface": "plan",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-plan-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "2feef966a29bb1d69658f7e7929aa3f1da8092d677dd05b47ef8dbb90f24d14e"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "e33875a8b3f1dd94e0278db4a8a4639f3e02efc0028212067134ad3d9b2e0090"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan-light100-overlay.png",
+        "absoluteDifference": "diagnostics/plan-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          13.275632659557536,
+          13.394453286646506,
+          13.778473659080058
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan-light200",
+      "surface": "plan",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-plan-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d1388aedd8e7e4f9615d90d0c10fb21b87a03b563fc6ae1cbe1c6aa4ed6c298c"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "622be89b760eec694149a7fc082e3d8ba1d5a10cf9f249631bbf4e86e10bd5d0"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan-light200-overlay.png",
+        "absoluteDifference": "diagnostics/plan-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.685596052841,
+          20.879725714892036,
+          21.494556740410633
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan-dark100",
+      "surface": "plan",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-plan-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "0d66a58922e459852f2388896f0495196629270653bd5ae2f4f741b5d8ba61e6"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "f657abe5073334613dcde349ebaef530361d8f7cb26cafdc8ea098e0b329f067"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/plan-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          15.550519921481246,
+          15.53204944559393,
+          15.413674465488885
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan-dark200",
+      "surface": "plan",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-plan-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b5421480e6efaffe8939c788856d58e1fc70ea9ecfb5c90a97266031010fb4f3"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "0594b5792da3ce5a766266be9703fbe28ddbc76fd0473ac9dbcc66cd4bd503af"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/plan-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          21.664403947159002,
+          21.655427343625657,
+          21.528553238898617
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan-field100",
+      "surface": "plan",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-plan-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "1d5be690dee0baab63feb555211cc44b1a4daef40c5aabfc420ded3fa6c80cf3"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c3f7574180c50ee15256044a00b782e7b63827ed9a580fb63329e29342bee405"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan-field100-overlay.png",
+        "absoluteDifference": "diagnostics/plan-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          15.904687251313067,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan-field200",
+      "surface": "plan",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-plan-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "373f01fac2beb5278cccbbb3a1d5a967872264b268cce9e002b3597a73cfa03a"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "db396e03520823b2e72ebf1e52f63cc1540c822c92d5de4a97e93a7d7049a043"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan-field200-overlay.png",
+        "absoluteDifference": "diagnostics/plan-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          23.48252427184466,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "night-light100",
+      "surface": "night",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-night-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "8a9b3f8bb0e2771f2045f5c002e23c0d33468ceac71be7d6bb3cf659a7750a28"
+      },
+      "flutterHost": {
+        "path": "flutter/night_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4b109852ced2c1e647f746bf7666b90f8cfaf93c3c3be3ef70db4a9889162286"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/night-light100-overlay.png",
+        "absoluteDifference": "diagnostics/night-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          15.579667356358428,
+          15.32941535359966,
+          15.371990556528198
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "night-light200",
+      "surface": "night",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-night-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "08beea6d7e2b75dda0a70ccdc64ad9214032c2d71e5900a2054b6d78f666db9e"
+      },
+      "flutterHost": {
+        "path": "flutter/night_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c3b95099abf4a574e8018ffcdd836b63be4567846e847c542ff96f37c43f727b"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/night-light200-overlay.png",
+        "absoluteDifference": "diagnostics/night-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          27.289840309830762,
+          27.1447663005995,
+          27.451899305002918
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "night-dark100",
+      "surface": "night",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-night-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b40a683d5e744f3d5e3eb8aa10391987ab488cbdedb2d00328d3f31c852da4e9"
+      },
+      "flutterHost": {
+        "path": "flutter/night_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "975c8639cddaf86c008430260e8b25922b49c4f87f10a8c4f9ef6c454555355e"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/night-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/night-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          18.610318849806355,
+          19.02606239057775,
+          19.431508302827737
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "night-dark200",
+      "surface": "night",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-night-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "842f4ca9c58c4ac7bb8d29b5063a6bd69346ab9cd674c4f42ecf2692c5d4d50e"
+      },
+      "flutterHost": {
+        "path": "flutter/night_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "35d6c4a70f87aad5303a0c04691f3102be262153ea46e58ea4f3939ea21b6a99"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/night-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/night-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          29.576245424160433,
+          30.033272322139105,
+          30.40242983712664
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "night-field100",
+      "surface": "night",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-night-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "13538a9c1beda0ac037d984c33437f9731dc20c41e2b7aa4ae1308e819cbc96f"
+      },
+      "flutterHost": {
+        "path": "flutter/night_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "f2959d43f06f2db17a1b7892361acf0b2ef4fcd4a5e446c498bbf1d5fbb4ccc7"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/night-field100-overlay.png",
+        "absoluteDifference": "diagnostics/night-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          19.96203512122659,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "night-field200",
+      "surface": "night",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-night-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "f48386eb3932cde6d4d695318dd36b6ce7c9ccbd17b0ce5db326c29d984dda78"
+      },
+      "flutterHost": {
+        "path": "flutter/night_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "22a6b9140fb2181fd6e93a1c250b99dc82801e9cf1474b4252d3f7218f692963"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/night-field200-overlay.png",
+        "absoluteDifference": "diagnostics/night-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          32.74140803225635,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "moon-light100",
+      "surface": "moon",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-moon-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "f5ade5c4406ae9568b965dd4cd56537926a15b0ecabd7b6438c5705b1912e872"
+      },
+      "flutterHost": {
+        "path": "flutter/moon_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "9e78d6c0360f737b4a7a99bb6db2d1d6f558e97b800fc83820ba12fdb2e9bdbf"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/moon-light100-overlay.png",
+        "absoluteDifference": "diagnostics/moon-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          11.332476523953526,
+          11.123354024086158,
+          11.37507825348825
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "moon-light200",
+      "surface": "moon",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-moon-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d6f216b3b5dce013a452cc2d7d852b88a1431121aa682b698c0027e1063b17ee"
+      },
+      "flutterHost": {
+        "path": "flutter/moon_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "eff5772b8b3ee868209e05b10e13ad220b397ecde9c1822ce94b604c80a61afc"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/moon-light200-overlay.png",
+        "absoluteDifference": "diagnostics/moon-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          23.99559923603374,
+          24.23436256565335,
+          24.950230781473817
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "moon-dark100",
+      "surface": "moon",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-moon-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "03e649cffc1f8c56dfd59a68837c806ded8e06c964a75b853a27c5f97da478df"
+      },
+      "flutterHost": {
+        "path": "flutter/moon_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a5ddab8d6013400ae74f531c95700f447a7189b159c3085968e1cc0238a6893c"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/moon-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/moon-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          13.04158310785718,
+          13.187776539869489,
+          13.30682264311104
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "moon-dark200",
+      "surface": "moon",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-moon-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4b1e9425aba1990ec2c759a301c54e16869b2fa6e657f34983d35f7016120a46"
+      },
+      "flutterHost": {
+        "path": "flutter/moon_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "796343df8c541dbf593a7fb5a71145a00d0b4fcc3bfc0755381cc35da0d68f77"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/moon-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/moon-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          27.43140750172423,
+          27.436399809008435,
+          27.301228181866414
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "moon-field100",
+      "surface": "moon",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-moon-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b089c06785d75889a7c08f0eb3e7ffd79a2a1723b23a384232df32645531fac6"
+      },
+      "flutterHost": {
+        "path": "flutter/moon_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "73726cc7d3a322dd7e49053d695560c516b85e9bc9d14e343da38f6d30214ed9"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/moon-field100-overlay.png",
+        "absoluteDifference": "diagnostics/moon-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          14.61792933312112,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "moon-field200",
+      "surface": "moon",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-moon-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b9064068b4a416ea035c68a82821c4fd4c8ea574fd39e097a1c7d7eb883f1f68"
+      },
+      "flutterHost": {
+        "path": "flutter/moon_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b6b182c092bf8041b6e8516bf50271bc9d360e80511d039f87ae99a7584be596"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/moon-field200-overlay.png",
+        "absoluteDifference": "diagnostics/moon-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          30.46416255504271,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "weather-light100",
+      "surface": "weather",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-weather-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4e843265aad7dec354b5b1541cb8675338dd2e2cf062f93343f4631dd5818f82"
+      },
+      "flutterHost": {
+        "path": "flutter/weather_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "e51c7245698d0ebc22250e74b205fe20f9402278bbe13a57b11d14113a8cc7c1"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/weather-light100-overlay.png",
+        "absoluteDifference": "diagnostics/weather-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          13.280184625179055,
+          13.631593187967532,
+          14.47253435195501
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "weather-light200",
+      "surface": "weather",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-weather-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "84fbee70403ddb5ba5940cb7408eacd81815cccde121f9caac571882818be62e"
+      },
+      "flutterHost": {
+        "path": "flutter/weather_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a183366991de8b3f66e999dea873f14e8bea812dc86b22ef181fe448972156ce"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/weather-light200-overlay.png",
+        "absoluteDifference": "diagnostics/weather-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          22.010321502466976,
+          22.238431747042284,
+          22.901636691601677
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "weather-dark100",
+      "surface": "weather",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-weather-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "3d0e6d67334cc812bfbf1790b00a197e71880db117748dc17650302b8ccd28f4"
+      },
+      "flutterHost": {
+        "path": "flutter/weather_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "453711b101347d484c70153b2befc3ae6a2b2eb4da8afaf99cc1871ddfdc61db"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/weather-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/weather-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          17.25293914796541,
+          16.806167435938246,
+          16.232213910552282
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "weather-dark200",
+      "surface": "weather",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-weather-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "20e4d1e5b4a1a55f92dd0c35e9a1476e4dc04ca436a6dbf4b6667586cefe3cdc"
+      },
+      "flutterHost": {
+        "path": "flutter/weather_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "2f94f3b7d592efaf82d0eeda27fd140f680d06344cbd40df454865e1bf388394"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/weather-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/weather-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          25.429330468459867,
+          25.411072205422037,
+          25.29166268767574
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "weather-field100",
+      "surface": "weather",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-weather-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "61f459e245d6db88f07b72db920093885c706fac6db8607b0aadeadfbca7ee4d"
+      },
+      "flutterHost": {
+        "path": "flutter/weather_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a6a5fd115c695bede1497ba27a2412870112f8c8d751513eaf27d7a8ad260c08"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/weather-field100-overlay.png",
+        "absoluteDifference": "diagnostics/weather-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          18.18906308026951,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "weather-field200",
+      "surface": "weather",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-weather-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "2c4308f3e3bc0379f04d4ac9ed55446426df647c974e75285fcfa33cc617a5e3"
+      },
+      "flutterHost": {
+        "path": "flutter/weather_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "6915a156bafdac6e271660254b87bc1bfe99c0244d8570d9f026098b2aa41b10"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/weather-field200-overlay.png",
+        "absoluteDifference": "diagnostics/weather-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          28.378975011936973,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "logbook-light100",
+      "surface": "logbook",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-logbook-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c3fc3aea5a355a3f74c05a928a7aec050964fb4fa03ddabf9ccfccce6aecce92"
+      },
+      "flutterHost": {
+        "path": "flutter/logbook_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "847824e233e7f5388078b906f259eab6cc050c2c3b94e433605b54e7dc9e90e3"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/logbook-light100-overlay.png",
+        "absoluteDifference": "diagnostics/logbook-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          10.59448511857393,
+          10.671300864767362,
+          10.987948962809698
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "logbook-light200",
+      "surface": "logbook",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-logbook-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4196bc1a3dc54360adf996549e051922204d61880c2fa6b122805a76d3a9f0b5"
+      },
+      "flutterHost": {
+        "path": "flutter/logbook_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "9e21579177fe53b38cc5a2f8d29ebba066337bb1bcd709142ee11d65d7b71623"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/logbook-light200-overlay.png",
+        "absoluteDifference": "diagnostics/logbook-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.504429943233063,
+          20.681757652925885,
+          21.278749535784392
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "logbook-dark100",
+      "surface": "logbook",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-logbook-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d292a449fc467bec9b8a17ba33ffc042c94d97294098b63a4d5dc0d1a6db4209"
+      },
+      "flutterHost": {
+        "path": "flutter/logbook_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "cecadd30f9d18d6e250f4ee7a1851b11af094f0171d0af7a48eea154c7a6a3b1"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/logbook-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/logbook-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          12.052994853838399,
+          12.020611173006525,
+          11.95527083664916
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "logbook-dark200",
+      "surface": "logbook",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-logbook-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "5321632d9f8820dd278ebceb874f5524a28f5864a13f0492890675222e02cdb3"
+      },
+      "flutterHost": {
+        "path": "flutter/logbook_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "7ea65c7179386d9350b3da48bb14727434b88c6b492b6f94c7eb9df9befb7f71"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/logbook-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/logbook-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          21.80828691177251,
+          21.797031672767787,
+          21.60054644808743
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "logbook-field100",
+      "surface": "logbook",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-logbook-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "36ca6db2336e326f57dc7534dd7aa9a6c476823ced930eabf0d26df2e85fe043"
+      },
+      "flutterHost": {
+        "path": "flutter/logbook_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "017666f65bff1f81a60409b563536814b95b749497512c0796b4be91b155e880"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/logbook-field100-overlay.png",
+        "absoluteDifference": "diagnostics/logbook-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          13.314586980741684,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "logbook-field200",
+      "surface": "logbook",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-logbook-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "7c5b659b974b52b85e2d73e8c17ffc2a07cc02be1e794339adeac4ebaf0b4866"
+      },
+      "flutterHost": {
+        "path": "flutter/logbook_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "0f2586667bae1d7d282f6f648599f0f7e6b3086adc3d2b3af22cf6195a6b8b4c"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/logbook-field200-overlay.png",
+        "absoluteDifference": "diagnostics/logbook-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          25.17616053902064,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "library-light100",
+      "surface": "library",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-library-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "362327c777e2a88fb38800d303693183a3941264f496487ca1af1b29780ffa71"
+      },
+      "flutterHost": {
+        "path": "flutter/library_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "119f2a9c00101e5a95400ff46e44000a7feaf26cc9381be5f59c4d052d448d1d"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/library-light100-overlay.png",
+        "absoluteDifference": "diagnostics/library-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          5.045896334023025,
+          5.065629476364794,
+          5.235410366597698
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "library-light200",
+      "surface": "library",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-library-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a3774bdffaf0a341ec8a19075007d0b32be35b6442c68f406a282dfecb22f54a"
+      },
+      "flutterHost": {
+        "path": "flutter/library_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "65aeb9ad86ac20d91d13a097bc8d7e825bf7158ba64b06bd350ed421d4690491"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/library-light200-overlay.png",
+        "absoluteDifference": "diagnostics/library-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          16.91829274762587,
+          17.011406440659982,
+          17.463647938882698
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "library-dark100",
+      "surface": "library",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-library-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "bcf0ffa10a2d830d7ef59ae821236bc89fca9d5944c9ae260c37b83db7d754d4"
+      },
+      "flutterHost": {
+        "path": "flutter/library_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "4aec19b3815d4cac914584de3e375866f9fd434e4ff89581d1d3ed2f0a07593a"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/library-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/library-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          5.573192211788424,
+          5.5473473393814,
+          5.515239535253859
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "library-dark200",
+      "surface": "library",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-library-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "83c6ed139a69be63464362d50b2feb9d3ceba58c7301fce25ff07dee66ddd630"
+      },
+      "flutterHost": {
+        "path": "flutter/library_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "9ab4820b134d091bdcac84c5c9f39cb186aa813e6d04fe7b4456d0e4c461ca12"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/library-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/library-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          17.613982174120643,
+          17.573656427396678,
+          17.355411427661945
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "library-field100",
+      "surface": "library",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-library-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c5e135a95797272dade1310fbba2475a300ed9602e8f5515e82ce2567f2cfcf6"
+      },
+      "flutterHost": {
+        "path": "flutter/library_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ae4864b7cb5d915dd0cfd4b448a044986e6dc53b90fe56c077feaf01e224d0ea"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/library-field100-overlay.png",
+        "absoluteDifference": "diagnostics/library-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          6.301729534723328,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "library-field200",
+      "surface": "library",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-library-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "2cb949d6ab9d68de3737e40afa4bb96972e684b225378a0ac8281751b6c472b3"
+      },
+      "flutterHost": {
+        "path": "flutter/library_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "256dcf41575082ca51aaf9cca5db9944872da31e34509105b7a087bc546dcfa9"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/library-field200-overlay.png",
+        "absoluteDifference": "diagnostics/library-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.351806461881267,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings-light100",
+      "surface": "settings",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a56705fda904ffa6d525d42ab3e7e2edc1b9536df4172a1f01bdd4c46be2888c"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "524e44dc6a05064561b2805b080f37cf965125276554adfa32366e596052e888"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings-light100-overlay.png",
+        "absoluteDifference": "diagnostics/settings-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          7.616740941163988,
+          7.655273489309778,
+          7.886248607353175
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings-light200",
+      "surface": "settings",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "bbfdab9c52e6269b7277d043247faff3a408e471c39922c5cb644004dcf9c2b2"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ebfb60f6b00d2921a046fc95c1bbb62d48a4de87d6e39ea06b8111474ff9b2cf"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings-light200-overlay.png",
+        "absoluteDifference": "diagnostics/settings-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          17.381062655843813,
+          17.533343943975808,
+          18.054395458645022
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings-dark100",
+      "surface": "settings",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "3262b539a4cb398992a474efdcba7732c84de35f2b8c0cdb3d5987afac9dd4c6"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ae51e996aa0bd4c8b54abccad47e42c5abe7422895db2686ac4930188f6104e6"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/settings-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          8.68332007003024,
+          8.65405591808584,
+          8.58618494349833
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings-dark200",
+      "surface": "settings",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c043db18817d91b110008210be4873d6dc11ee354ce851473aedd7ecbc47e9ab"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "14c71542f257af096c6da64745b83c1bdd6736915b7a6bfd95b607d2637983fb"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/settings-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          18.636147806249667,
+          18.639919889649317,
+          18.46646771712027
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings-field100",
+      "surface": "settings",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "88c8f78bfe4bcaeef7ad898ab5fdbc6a75e69dc999a1017c31d39d9e224d3390"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c06f1a7ebaf1ec54eb28072f28d9a2d494f3bdde0979648d6ced01b256960396"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings-field100-overlay.png",
+        "absoluteDifference": "diagnostics/settings-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          9.91453658018993,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings-field200",
+      "surface": "settings",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "root",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "0b8c08aae1e34cb8e5f087d1175ef102373060df85102057c5f34a10540e8ec4"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "234471807e8fd90f0e1c129da38c017d2c07cce26a34f7b10dfb9e435d6285c1"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings-field200-overlay.png",
+        "absoluteDifference": "diagnostics/settings-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          22.14031513608149,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_appearance-light100",
+      "surface": "settings_appearance",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_appearance-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "1859ff97914241f991e3e202475cd0704ec2d0b0417fcec0ecd47d793eb41295"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_appearance_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "88337d73b1a4a2c02d78539dcc89d864f5266c54bc8d253d14443b485fd4afc0"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_appearance-light100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_appearance-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          12.613568359064141,
+          12.671176189718288,
+          13.179203140750172
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_appearance-light200",
+      "surface": "settings_appearance",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_appearance-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "24aff42899f7846d6edf4ea9d0ea7d8fcc1c3d70270f11b58b0a1feb73744469"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_appearance_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ad3fefc3f6e5f198d42d851a7f7517fe0bd345a932662d83a90796f02ed49272"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_appearance-light200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_appearance-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.821184147700144,
+          20.96361345429466,
+          21.643068597803598
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_appearance-dark100",
+      "surface": "settings_appearance",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_appearance-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "09213581822b3ad86ebad58544c2ce94fc8a8a9a821da24ca72d75485f54d26e"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_appearance_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "1a58a61f01bb5d1d58c889dd7882f604bbc1696b5fed71fdebae08ebc50f6483"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_appearance-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_appearance-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          14.147296938829646,
+          14.104005517534087,
+          13.815587033794896
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_appearance-dark200",
+      "surface": "settings_appearance",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_appearance-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b099af283cb41092921b57b64860ad6fcca519bc31c2a69714abb6644f42a259"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_appearance_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "100aba5137a61bdad146ffc79288692bd2f371a4f1ce2288d94410155691a473"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_appearance-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_appearance-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          22.820295506392913,
+          22.776073001220222,
+          22.45280120961324
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_appearance-field100",
+      "surface": "settings_appearance",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_appearance-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "34fe64f5899d623638d6131693b877a529de719a9ef8b6f5a662d0a26cdbf316"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_appearance_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c93f3e742afb3f39269f478c5b9964453a7d60dc0c47cc6cd3e36fd33ad10296"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_appearance-field100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_appearance-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          18.733938139954375,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_appearance-field200",
+      "surface": "settings_appearance",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_appearance-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "915cbad4b325be22624ea65fa4274896f3cfa2746f325ca0baf813c92f5d87be"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_appearance_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "7c634c4352a0b9125b98c3997bb984a6677eeea39bf8f6be72a240be1ee46e9e"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_appearance-field200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_appearance-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          28.942686614674518,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_planning-light100",
+      "surface": "settings_planning",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_planning-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d4aa9c10d15f7e9774941a3445ec027e250f2d82f422791459841b013e9153ae"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_planning_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "141b1abc7c7ba1cbc7e2542573677dc5911eb2752091c65eaa705d1251e88cd3"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_planning-light100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_planning-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          23.703766778078414,
+          23.889588307071993,
+          24.59876386015173
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_planning-light200",
+      "surface": "settings_planning",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_planning-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "75cf46760a331a8eecf986128371a373f2105ff03928e1f280237e1585711cab"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_planning_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "83ce1ac31c9828fb691689b1efbf4575559f74f3ca7391107c6088c7c0cfb3b1"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_planning-light200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_planning-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          33.99433656957929,
+          34.334375828956446,
+          35.33261180964507
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_planning-dark100",
+      "surface": "settings_planning",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_planning-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "bf1b762dfd87371ffa4f0de8e1713f1926928b5c65d38ad278ab7fbe4995760c"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_planning_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "36a680bdf8883ff8b60aebc2b28100b9109d1d1b81c11c9343f33b99c4887d9c"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_planning-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_planning-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          27.18051355509576,
+          27.12309936866677,
+          27.01688683749801
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_planning-dark200",
+      "surface": "settings_planning",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_planning-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "10af39d918aa2902688e7c2ec4bbb70965c08192d8c55b0b0498c08542be0f92"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_planning_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a232ca50306e3c83140abc20118907609b8d8dc50e8ca2e1b6a7a07637de59c6"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_planning-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_planning-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          37.606353122181545,
+          37.61439598917715,
+          37.465194440023346
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_planning-field100",
+      "surface": "settings_planning",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_planning-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "28253ba5c0db435ba3e1241c9d9ac89ae9079881b42f3f38d43495aa32f6c8c3"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_planning_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d5b561a4616158e63e364b07c2289a5083c78b7bc14c25f81be9739c529c40c7"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_planning-field100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_planning-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          29.07200912515253,
+          4.185203459069447,
+          4.185203459069447
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_planning-field200",
+      "surface": "settings_planning",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_planning-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "e065f2be2c1063e94f5c0f4e1a32294542af4d28f4652a516a465fe7fb964742"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_planning_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "8345e8a25813cc8cf71f642454a7317b5099a2a7563ecc71d45d8afc816fecee"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_planning-field200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_planning-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          39.42580242983713,
+          2.8995384370523634,
+          2.8995384370523634
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_privacy-light100",
+      "surface": "settings_privacy",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_privacy-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "58429b2bcc2e15dead617eefa14cd0c9c0152817c564c4d6ab5095a248045975"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_privacy_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "1462c80c794a291f9e57c1d3017e139e3e78495d1ff9ed4cfd83b84f1766b9f7"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_privacy-light100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_privacy-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          4.892140166587087,
+          4.925192317894848,
+          5.080455196562152
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_privacy-light200",
+      "surface": "settings_privacy",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_privacy-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "8aa39205664dd43c3bfdceff664dc3f4c9c54d872b152920dd734cabfbb4e135"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_privacy_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "cbbc78144596f8827466773f213b14d1cacde2f778e1b713338faf91703322f8"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_privacy-light200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_privacy-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          18.178359594673456,
+          18.324892567244948,
+          18.860281712557697
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_privacy-dark100",
+      "surface": "settings_privacy",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_privacy-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "feec662741acc6567ee5fff03a5440048cacdf665b67729f87f6d54cbd13f8b9"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_privacy_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "edb84b1777677ec9658b499a71845315056f8af5563bdbbd834171affefc1f77"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_privacy-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_privacy-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          5.464061753939201,
+          5.45020956018887,
+          5.4160804286699555
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_privacy-dark200",
+      "surface": "settings_privacy",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_privacy-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "872b77506c9299353e0b485de7736e72c5c53d6e11fc2cff0ab35ebd5bd9b9ab"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_privacy_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ac435881b63af084dcf14a3ba425e1c3025dee9370c5f40f8fc7c3f546ce8f6b"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_privacy-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_privacy-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          19.12841264788583,
+          19.12059790970343,
+          18.91886041699825
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_privacy-field100",
+      "surface": "settings_privacy",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_privacy-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "777ce8921da3ab08c2039e99593098871e1003976072eb28b545b8bcea8716b6"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_privacy_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "97f501d5de6acf5b684d84ec40d053d19807476f4f4ba86c511d347e19e2e4c8"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_privacy-field100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_privacy-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          6.150153854315879,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_privacy-field200",
+      "surface": "settings_privacy",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_privacy-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "926d29471e89178e79fc637461b4c0c8ba4b54412cae1d2a934f584f3b641832"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_privacy_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "06bd52da455bd748261c26c79f3431f919cc8c46357572664feba34b7c9b37ec"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_privacy-field200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_privacy-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          22.431110403734944,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_backup-light100",
+      "surface": "settings_backup",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_backup-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "e350928f337b081f34d2c25d9bff471302dff47890d62771ef7884e3b5e6a63a"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_backup_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "fbdb9791eee32e5cf2b9f25f26f11e56b311a2892c7ff3018c5be4e6a2b91b1b"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_backup-light100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_backup-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          7.946201389994164,
+          7.994158841317842,
+          8.244774258581357
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_backup-light200",
+      "surface": "settings_backup",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_backup-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d043dcd448b8acfcb1dd003de7e9e19f6b9b29ee8ca84487425b3f541bb695da"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_backup_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "2ac643e74640a0a488c9ba9db0675482718a3d62a891231f8af0911e8dbe05f4"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_backup-light200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_backup-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.852716324473448,
+          21.02531964560454,
+          21.630203193803386
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_backup-dark100",
+      "surface": "settings_backup",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_backup-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "51a9131204029e2762c3e272c373fb19a3b3df173729a2dc5f66cf7f27998dbe"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_backup_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "14f926d219acc8e812b7e338ff4f5efac3fd06c9617bd192a7270a3685b4c39a"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_backup-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_backup-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          9.568605761578864,
+          9.522560878561197,
+          9.504933948750597
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_backup-dark200",
+      "surface": "settings_backup",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_backup-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "3868e686f869056916cb85158048a92dc0af8c57051f67e7f936fa833706cdd4"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_backup_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "55ccdb07838d0dbb1f897da3a13f2c7a7754a0240cd9213d005b517664f5f49b"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_backup-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_backup-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          23.485076131359754,
+          23.437060321502468,
+          23.298838134649053
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_backup-field100",
+      "surface": "settings_backup",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_backup-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "083aa36696aa3c05e4f15999d093bf5b01eb4b77330f6604d8670321b7497c00"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_backup_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "73c76815c7c8fd454da32654dedfe8b1d3505a88b825466764360caff3192f68"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_backup-field100-overlay.png",
+        "absoluteDifference": "diagnostics/settings_backup-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          11.49462040426548,
+          0.5997745238474189,
+          0.6007480502944453
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "settings_backup-field200",
+      "surface": "settings_backup",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "settings section",
+      "review": {
+        "status": "awaiting visual inspection",
+        "notes": "Capture existence is not visual acceptance."
+      },
+      "web": {
+        "path": "browser-settings_backup-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "86282701f7243d6344198e1c09ffba041360ff6d5709322553a2210b84818c73"
+      },
+      "flutterHost": {
+        "path": "flutter/settings_backup_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "dd16477fe5c1e078125f18157f9f707e97197e25d996c8c71ea44c1fc23dffa4"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/settings_backup-field200-overlay.png",
+        "absoluteDifference": "diagnostics/settings_backup-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          27.968507613135976,
+          0.0,
+          0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    }
+  ],
+  "browser-capture-manifest.json": {
+    "path": "../browser-capture-manifest.json",
+    "sha256": "03f7e5657fcae9ab6eaeb6d2cb75f89b925ee27b70b6016527135d49ce698e49"
+  },
+  "browser-source-manifest.json": {
+    "path": "../browser-source-manifest.json",
+    "sha256": "325774cfcbfd8bae7d92b37391f46f472ee7d45b7b2b6db379b49c91979b3ae3"
+  },
+  "canonical-fixture.json": {
+    "path": "../canonical-fixture.json",
+    "sha256": "39b1dfa55e396d3a82d04776439b125e26896e12d8578ea915c4d0a19cd1f849"
+  }
+}

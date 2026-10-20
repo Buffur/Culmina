@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -37,18 +38,18 @@ class SitesScreen extends StatelessWidget {
       message: active
           ? '"${site.name}" is the active site. Its position stays as your '
                 'current position, but its time zone and sky data no longer '
-                "apply. Saved plans keep what they recorded. This can't be "
-                'undone.'
+                'apply. Saved plans keep what they recorded. You can Undo '
+                'immediately after deleting.'
           : '"${site.name}" is deleted from your sites. Saved plans keep what '
-                "they recorded. This can't be undone.",
+                'they recorded. You can Undo immediately after deleting.',
     );
     if (!confirmed || !context.mounted) return;
-    final deleted = await runWithFeedback(
+    await deleteWithUndoFeedback(
       context,
-      'delete the site',
-      () => viewModel.deleteSite(site.id),
+      action: 'delete the site',
+      message: 'Site deleted',
+      remove: () => viewModel.deleteWithUndo(site.id),
     );
-    if (deleted && context.mounted) showDone(context, 'Site deleted');
   }
 
   void _open(BuildContext context, LocationProfile site) =>
@@ -63,7 +64,8 @@ class SitesScreen extends StatelessWidget {
 
     final choosing = mode == ListMode.choose;
     return Scaffold(
-      appBar: AppBar(
+      appBar: hybridAppBar(
+        context,
         title: Text(choosing ? AppWords.chooseSite : AppWords.sites),
       ),
       body: ListView(

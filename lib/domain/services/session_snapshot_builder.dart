@@ -1,3 +1,4 @@
+import '../models/plan_overrides.dart';
 import '../models/astro_target.dart';
 import '../models/capture_block.dart';
 import '../models/equipment_profile.dart';
@@ -29,6 +30,7 @@ abstract final class SessionSnapshotBuilder {
     AstroTarget? target,
     EquipmentProfile? rig,
     TrackingType? trackingOverride,
+    PlanOverrides? planOverrides,
     ImagingOpportunity? opportunity,
     NightWeather? weather,
     NightWeatherSummary? weatherSummary,
@@ -58,7 +60,14 @@ abstract final class SessionSnapshotBuilder {
               rigDefault: rig.trackingType,
             ),
           ),
-    'preferences': _preferences(preferences),
+    'planOverrides': planOverrides?.toJson(),
+    'preferences': {
+      ..._preferences(preferences),
+      'perFrameOverheadS': ?planOverrides?.interframeSeconds,
+      if (planOverrides?.outsideSetupSeconds case final seconds?)
+        'setupMin': seconds / 60,
+      'fixedMarginS': ?planOverrides?.fixedMarginSeconds,
+    },
     'blocks': [for (final b in blocks) _block(b)],
     'budget': _budget(budget),
     'opportunity': opportunity == null ? null : _opportunity(opportunity),

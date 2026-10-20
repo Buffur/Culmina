@@ -164,6 +164,8 @@ void main() {
     await start(tester, fieldMode: false);
     AppRouter.router.go(AppRouter.settings);
     await settle(tester);
+    await tester.tap(find.byKey(const Key('settings.open.appearance')));
+    await settle(tester);
     final tile = find.byKey(const Key('fieldMode.tile'));
     await tester.scrollUntilVisible(tile, 300);
     await tester.tap(tile);

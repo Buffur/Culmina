@@ -2,7 +2,7 @@
 // keeps what it is given. A custom filter stays itself. Each field keeps its
 // origin until the user changes it. Flats and bias never keep a light's
 // proposed exposure. White balance and AF/MF are optional records. Exposure
-// may be a fraction. A changed editor asks before Back or a tap outside
+// may be a fraction. A changed editor asks before Back or Close
 // discards it, and its actions say Add block / Apply changes, never Save.
 
 import 'package:astroplan/domain/models/camera_class.dart';
@@ -482,6 +482,12 @@ void main() {
       tester.view.viewInsets = const FakeViewPadding(bottom: 320);
       addTearDown(tester.view.resetViewInsets);
       await open(tester, size: const Size(412, 915), textScale: 2);
+      expect(
+        tester.getRect(find.byKey(const Key('blockEditor.screen'))),
+        const Rect.fromLTWH(0, 0, 412, 915),
+        reason: 'the scoped editor occupies the native page, not a modal card',
+      );
+      expect(find.byKey(const Key('blockEditor.close')), findsOneWidget);
       for (final key in [
         'blockDialog.exposure',
         'blockDialog.count',
@@ -521,12 +527,12 @@ void main() {
       expect(result.single, isNull);
     });
 
-    testWidgets('a tap outside asks; dismissing the prompt is Cancel', (
+    testWidgets('the full-page close asks; dismissing the prompt is Cancel', (
       tester,
     ) async {
       await open(tester);
       await type(tester, 'blockDialog.exposure', '30');
-      await tester.tapAt(const Offset(2, 2));
+      await tester.tap(find.byKey(const Key('blockEditor.close')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
       await tester.tapAt(const Offset(2, 2)); // dismiss the prompt
@@ -554,7 +560,7 @@ void main() {
       expect(result.single, isNull);
 
       await open(tester, initial: _light());
-      await tester.tapAt(const Offset(2, 2));
+      await tester.tap(find.byKey(const Key('blockEditor.close')));
       await tester.pumpAndSettle();
       expect(result.single, isNull);
 

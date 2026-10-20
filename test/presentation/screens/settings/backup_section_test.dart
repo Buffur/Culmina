@@ -105,7 +105,9 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: vm.providers,
-        child: const MaterialApp(home: SettingsScreen()),
+        child: const MaterialApp(
+          home: SettingsScreen(section: SettingsSection.backup),
+        ),
       ),
     );
     await tester.pumpAndSettle();

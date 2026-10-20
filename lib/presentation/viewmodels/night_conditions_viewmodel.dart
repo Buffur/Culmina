@@ -22,11 +22,12 @@ import 'session_plan_viewmodel.dart';
 import 'settings_viewmodel.dart';
 import 'site_viewmodel.dart';
 
-/// Tonight's conditions for the plan (split out of the planner ViewModel in
-/// TASK 12.3): the night timeline, the forecast (ADR-012), the Moon, the
-/// imaging opportunity (ADR-013). Tonight's candidates moved to
-/// `CandidatesViewModel` (S6.5). The forecast reloads whenever the night or
-/// the site changes.
+part 'night_forecast_loading.dart';
+
+/// Tonight's conditions for the plan (split out of the planner ViewModel in TASK 12.3): the night
+/// timeline, the forecast (ADR-012), the Moon, the imaging opportunity (ADR-013). Tonight's
+/// candidates moved to `CandidatesViewModel` (S6.5). The forecast reloads whenever the night or the
+/// site changes.
 class NightConditionsViewModel extends ChangeNotifier {
   NightConditionsViewModel({
     required this._site,
@@ -34,10 +35,13 @@ class NightConditionsViewModel extends ChangeNotifier {
     required this._settings,
     required this._weatherService,
     required this._clock,
+    this._viewedNight,
+    this._viewedNightChanges,
   }) {
     for (final source in [_site, _plan, _settings]) {
       source.addListener(_onInputsChanged);
     }
+    _viewedNightChanges?.addListener(_onInputsChanged);
   }
 
   final SiteViewModel _site;
@@ -45,11 +49,33 @@ class NightConditionsViewModel extends ChangeNotifier {
   final SettingsViewModel _settings;
   final NightWeatherService _weatherService;
   final Clock _clock;
+  final SessionNight? Function()? _viewedNight;
+  final Listenable? _viewedNightChanges;
 
+  /// The presentation's night. The main instance follows the active plan; a scoped browser instance
+  /// follows viewing state without editing that plan.
+  SessionNight? get sessionNight =>
+      _viewedNight == null ? _plan.sessionNight : _viewedNight();
+
+  NightConditionsViewModel forViewedNight({
+    required SessionNight? Function() night,
+    required Listenable changes,
+  }) => NightConditionsViewModel(
+    site: _site,
+    plan: _plan,
+    settings: _settings,
+    weatherService: _weatherService,
+    clock: _clock,
+    viewedNight: night,
+    viewedNightChanges: changes,
+  ).._forecastSource = this;
+
+  NightConditionsViewModel? _forecastSource;
   NightWeather _nightWeather = const NightWeatherIdle();
   int _weatherRequest = 0;
   Future<void> _weatherLoad = Future.value();
   bool _active = false;
+  bool _disposed = false;
   Object? _weatherKey;
 
   /// The chosen night's forecast state (TASK 9.3); idle without a site.
@@ -61,34 +87,32 @@ class NightConditionsViewModel extends ChangeNotifier {
   /// "Now" from the injected clock (the chart's current-time marker).
   DateTime get nowUtc => _clock.nowUtc();
 
-  /// Starts following the night: records it now and loads its forecast
-  /// after the first frame — weather never holds up the first screen.
+  /// Starts following the night: records it now and loads its forecast after the first frame —
+  /// weather never holds up the first screen.
   void begin() {
     _active = true;
     _weatherKey = _currentWeatherKey();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      unawaited(_loadWeather());
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // Startup and a directly opened conditions route can begin in the same
+      // frame. Let the plan's identical request populate the shared cache
+      // before the scoped view asks for it; viewing needs no duplicate fetch.
+      final source = _forecastSource;
+      if (source != null &&
+          source._active &&
+          source._currentWeatherKey() == _currentWeatherKey()) {
+        await source.idle;
+      }
+      if (!_disposed) unawaited(_loadWeather());
     });
   }
 
-  Object? _currentWeatherKey() {
-    final night = _plan.sessionNight;
-    return night == null ? null : (night, _site.latitude, _site.longitude);
-  }
-
-  void _onInputsChanged() {
-    notifyListeners();
-    final key = _currentWeatherKey();
-    if (!_active || key == _weatherKey) return;
-    _weatherKey = key;
-    unawaited(_loadWeather());
-  }
+  void _announceWeatherChange() => notifyListeners();
 
   Future<void> refreshWeather() => _loadWeather(forceRefresh: true);
 
-  /// Follows a night that has rolled over and re-ages the forecast against
-  /// the clock (ADR-012 §6; S1.3); notifies only when its wording changes.
-  /// Run every minute by `NightClock` and before a snapshot is taken.
+  /// Follows a night that has rolled over and re-ages the forecast against the clock (ADR-012 §6;
+  /// S1.3); notifies only when its wording changes. Run every minute by `NightClock` and before a
+  /// snapshot is taken.
   void checkClock() {
     if (_active && _currentWeatherKey() != _weatherKey) {
       return _onInputsChanged();
@@ -107,35 +131,10 @@ class NightConditionsViewModel extends ChangeNotifier {
     if (_active && _nightWeather.isOutdated) unawaited(_loadWeather());
   }
 
-  /// Loads the night's forecast (cache → fetch → typed states, TASK 9.3); a
-  /// slow answer for a previous site or night is dropped.
-  Future<void> _loadWeather({bool forceRefresh = false}) =>
-      _weatherLoad = () async {
-        final night = _plan.sessionNight;
-        final request = ++_weatherRequest;
-        if (night == null) {
-          _nightWeather = const NightWeatherIdle();
-          notifyListeners();
-          return;
-        }
-        _nightWeather = const NightWeatherLoading();
-        notifyListeners();
-        final result = await _weatherService.load(
-          night,
-          latitude: _site.latitude,
-          longitude: _site.longitude,
-          forceRefresh: forceRefresh,
-        );
-        if (request != _weatherRequest) return;
-        _nightWeather = result;
-        notifyListeners();
-      }();
-
-  /// The Sun's dusk/dawn timeline with the dark span at the user's limit
-  /// (S6.5), or null without a site (ADR-007 §8-§9); cached per night and
-  /// limit (TASK 15.2).
+  /// The Sun's dusk/dawn timeline with the dark span at the user's limit (S6.5), or null without a
+  /// site (ADR-007 §8-§9); cached per night and limit (TASK 15.2).
   NightTimeline? get nightTimeline {
-    final night = _plan.sessionNight;
+    final night = sessionNight;
     if (night == null) return null;
     final limit = _settings.planningPreferences.darknessLimit.degrees;
     if (_timelineNight != night ||
@@ -152,9 +151,8 @@ class NightConditionsViewModel extends ChangeNotifier {
   SessionNight? _timelineNight;
   NightTimeline? _timeline;
 
-  /// The forecast over the night's dark span (ADR-022 N6) with the dew
-  /// heuristic (TASK 9.4); null unless a forecast is available. Cached per
-  /// input (TASK 15.2).
+  /// The forecast over the night's dark span (ADR-022 N6) with the dew heuristic (TASK 9.4); null
+  /// unless a forecast is available. Cached per input (TASK 15.2).
   NightWeatherSummary? get nightWeatherSummary {
     final weather = _nightWeather;
     if (weather is! NightWeatherAvailable) return null;
@@ -186,7 +184,7 @@ class NightConditionsViewModel extends ChangeNotifier {
 
   /// Moon context for the night and target (TASK 6.4), cached per input.
   MoonConditions? get moonConditions {
-    final night = _plan.sessionNight;
+    final night = sessionNight;
     if (night == null) return null;
     final target = _plan.selectedTarget;
     final key = (night, target?.rightAscension, target?.declination);
@@ -210,7 +208,7 @@ class NightConditionsViewModel extends ChangeNotifier {
 
   /// The night's moon-free dark time at the user's limit (ADR-022 N4).
   MoonFreeNight? get moonFree {
-    final night = _plan.sessionNight;
+    final night = sessionNight;
     final moon = moonConditions;
     if (night == null || moon == null) return null;
     if (_sunTrack?.night != night) _sunTrack = SunTrack.forNight(night);
@@ -232,10 +230,10 @@ class NightConditionsViewModel extends ChangeNotifier {
         : null;
   }
 
-  /// When and why the target can be imaged tonight (ADR-013, TASK 10.2):
-  /// null without a night or target; cached per input.
+  /// When and why the target can be imaged tonight (ADR-013, TASK 10.2): null without a night or
+  /// target; cached per input.
   ImagingOpportunity? get imagingOpportunity {
-    final night = _plan.sessionNight;
+    final night = sessionNight;
     final target = _plan.selectedTarget;
     if (night == null || target == null) return null;
     final prefs = _settings.planningPreferences;
@@ -291,6 +289,10 @@ class NightConditionsViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    // Ignore a forecast completing after this scoped browser was removed.
+    _disposed = true;
+    _weatherRequest++;
+    _viewedNightChanges?.removeListener(_onInputsChanged);
     for (final source in [_site, _plan, _settings]) {
       source.removeListener(_onInputsChanged);
     }

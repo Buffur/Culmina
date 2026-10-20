@@ -4,6 +4,7 @@ import '../../domain/models/astro_target.dart';
 import '../../domain/models/equipment_profile.dart';
 import '../../domain/repositories/equipment_repository.dart';
 import '../../domain/repositories/target_repository.dart';
+import '../../domain/repositories/undoable_deletion.dart';
 
 export 'sessions_viewmodel.dart';
 
@@ -31,6 +32,25 @@ class GearViewModel extends ChangeNotifier {
     await _repository.deleteEquipment(id);
     notifyListeners();
   }
+
+  Future<DeletionReceipt?> deleteWithUndo(int id) async {
+    final repository = _repository;
+    if (repository is! UndoableDeletionRepository) {
+      await delete(id);
+      return null;
+    }
+    final receipt = await (repository as UndoableDeletionRepository)
+        .deleteWithUndo(id);
+    notifyListeners();
+    return DeletionReceipt(
+      resource: receipt.resource,
+      id: id,
+      restore: () async {
+        await receipt.restore();
+        notifyListeners();
+      },
+    );
+  }
 }
 
 /// The Library's targets (TASK 12.3).
@@ -57,5 +77,24 @@ class TargetsViewModel extends ChangeNotifier {
   Future<void> delete(int id) async {
     await _repository.deleteTarget(id);
     notifyListeners();
+  }
+
+  Future<DeletionReceipt?> deleteWithUndo(int id) async {
+    final repository = _repository;
+    if (repository is! UndoableDeletionRepository) {
+      await delete(id);
+      return null;
+    }
+    final receipt = await (repository as UndoableDeletionRepository)
+        .deleteWithUndo(id);
+    notifyListeners();
+    return DeletionReceipt(
+      resource: receipt.resource,
+      id: id,
+      restore: () async {
+        await receipt.restore();
+        notifyListeners();
+      },
+    );
   }
 }

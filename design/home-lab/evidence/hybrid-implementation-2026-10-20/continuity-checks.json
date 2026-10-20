@@ -1,0 +1,11 @@
+{
+  "cases": [
+    "Home phone-bound pickers at100/200%, Cancel leaves draft absent; Welcome is reachable",
+    "Settings changes current budget/fit without touching saved plan; explicit Save captures budget; Off setup means zero",
+    "Explicit plan override wins; Use global defaults removes overrides rather than freezing a copy",
+    "Actual Library target/rig/site CRUD→Plan pickers→explicit snapshot save; later Library edit leaves plan unchanged and custom window unknown",
+    "Settings dispatch mounts phone-bound full prototype backup",
+    "Plan still mounts when browser storage is denied"
+  ],
+  "errors": []
+}

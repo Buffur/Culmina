@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_palette.dart';
 import '../../../domain/services/capture_budget_calculator.dart';
 import '../../shared/app_words.dart';
 import '../../shared/change_mark.dart';
@@ -18,9 +19,9 @@ import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../../core/utils/quantity_text.dart';
 
-/// A millisecond duration in the app's one duration form (S1.7).
+/// A millisecond capture budget, retaining seconds as the Hybrid plan does.
 String formatBudgetDuration(int ms) =>
-    QuantityText.duration(Duration(milliseconds: ms));
+    QuantityText.budgetDuration(Duration(milliseconds: ms));
 
 /// The capture plan's outputs (ADR-009 §2, §7; TASK 5.6): the budget
 /// breakdown, relative stacking gain per group and storage. The fit, its
@@ -58,6 +59,77 @@ class CaptureBudgetSummary extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Semantics(
+          header: true,
+          child: Text('Estimate', style: theme.textTheme.titleMedium),
+        ),
+        const SizedBox(height: 10),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final singleColumn =
+                MediaQuery.textScalerOf(context).scale(14) >= 24 ||
+                constraints.maxWidth < 280;
+            final width = singleColumn
+                ? constraints.maxWidth
+                : (constraints.maxWidth - 20) / 2;
+            return Wrap(
+              spacing: 20,
+              runSpacing: 16,
+              children: [
+                SizedBox(
+                  width: width,
+                  child: _Estimate(
+                    key: const Key('estimate.integration'),
+                    label: 'Integration',
+                    value: formatBudgetDuration(budget.integrationMs),
+                    note: 'Light exposures only',
+                  ),
+                ),
+                SizedBox(
+                  width: width,
+                  child: _Estimate(
+                    key: const Key('estimate.sessionTime'),
+                    label: 'Total session time',
+                    value: formatBudgetDuration(budget.sessionBudgetMs),
+                    note: 'With overheads, setup and calibration',
+                  ),
+                ),
+                SizedBox(
+                  width: width,
+                  child: _Estimate(
+                    key: const Key('capturePlan.storage'),
+                    label: 'Estimated storage',
+                    value: budget.storageMB != null
+                        ? QuantityText.storage(budget.storageMB! * 1e6)
+                        : 'Unknown',
+                    note: '',
+                  ),
+                ),
+                SizedBox(
+                  width: width,
+                  child: _Estimate(
+                    key: const Key('estimate.gain'),
+                    label: 'Relative stacking gain',
+                    value: budget.lightGroups.length == 1
+                        ? '${budget.lightGroups.single.relativeStackingGain.toStringAsFixed(2)}×'
+                        : budget.lightGroups.isEmpty
+                        ? 'Unknown'
+                        : '${budget.lightGroups.length} groups',
+                    note: budget.lightGroups.isEmpty
+                        ? 'Needs light frames'
+                        : 'Against one frame of the same group',
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Ideal √N within comparable light frames, not absolute signal-to-noise.',
+          style: theme.textTheme.bodySmall,
+        ),
+        const SizedBox(height: 24),
         // S6.7 (ADR-019 §7): every ADR-009 line on its own line, one tap
         // away; the status above shows the answer's numbers.
         // S6.10 (P6.9): Time needed · Total time stay in view, marked
@@ -208,14 +280,6 @@ class CaptureBudgetSummary extends StatelessWidget {
         const SizedBox(height: 12),
         // F07 (ADR-021 C8–C12): each block's frame size from its first
         // compatible evidence; the total only when every block's is known.
-        _Line(
-          'Estimated storage',
-          budget.storageMB != null
-              ? QuantityText.storage(budget.storageMB! * 1e6)
-              : 'Unknown',
-          key: const Key('capturePlan.storage'),
-          emphasis: true,
-        ),
         // S6.10 (P6.9; the trace's case C): a known value says what it
         // rests on; an unknown one says why, and how to supply it.
         Text(
@@ -263,6 +327,57 @@ class CaptureBudgetSummary extends StatelessWidget {
   static const notComparable =
       'ISO or gain not recorded: each such block is shown on its own, never '
       'combined with another.';
+}
+
+/// One responsive Hybrid estimate cell. Values come from the existing budget;
+/// the presentation does not substitute the prototype's sample arithmetic.
+class _Estimate extends StatelessWidget {
+  const _Estimate({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.note,
+  });
+
+  final String label;
+  final String value;
+  final String note;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    final palette = AppPalette.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: palette.border)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: text.bodySmall?.copyWith(color: palette.textSecondary),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              value,
+              style: text.titleLarge?.copyWith(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            if (note.isNotEmpty)
+              Text(
+                note,
+                style: text.bodySmall?.copyWith(color: palette.textSecondary),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _Line extends StatelessWidget {

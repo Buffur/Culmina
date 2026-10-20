@@ -174,10 +174,7 @@ void main() {
 
     await tester.tap(find.text('Ha · 300 s × 20 · 1 h 40 min'));
     await settle(tester);
-    expect(
-      find.widgetWithText(AlertDialog, 'Edit capture block'),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Frame count'),
       '7',

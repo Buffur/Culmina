@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:url_launcher/url_launcher.dart';
@@ -31,7 +32,7 @@ class AboutScreen extends StatelessWidget {
     const gap = SizedBox(height: AppSpacing.sm);
     const divider = Divider(height: AppSpacing.xl);
     return Scaffold(
-      appBar: AppBar(title: const Text('About & data sources')),
+      appBar: hybridAppBar(context, title: const Text('About & data sources')),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [

@@ -836,7 +836,7 @@ void main() {
       await tester.tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.byType(MaterialBanner), findsOneWidget);
       final lat = tester.widget<TextFormField>(
         find.widgetWithText(TextFormField, 'Latitude (°)'),
       );

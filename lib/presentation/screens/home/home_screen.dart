@@ -1,3 +1,5 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
+import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -59,7 +61,8 @@ class HomeScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: hybridAppBar(
+        context,
         // S6.2: the plan's target, night and state are in the strip below
         // (it wraps at large text, which an app bar's title cannot).
         title: const Text(AppWords.plan),
@@ -73,7 +76,6 @@ class HomeScreen extends StatelessWidget {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                const _PlanIdentity(),
                 if (siteVm.isDefaultLocation) const _DefaultLocationBanner(),
                 if (planVm.autosaveFailure != null)
                   const _AutosaveFailureBanner(),
@@ -85,13 +87,15 @@ class HomeScreen extends StatelessWidget {
                   // conditions. Without a target or a rig the structure
                   // stays, with a neutral status.
                   child: ListView(
-                    padding: const EdgeInsets.all(16.0),
+                    key: const Key('planner.scroll'),
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                     children: [
-                      const PlanStatus(),
+                      const _PlanIdentity(),
+                      const PlanStatus(showFillAction: false),
                       KeyedSubtree(
                         key: const Key('planner.context'),
                         child: ContextLine(
-                          framed: true,
+                          framed: false,
                           siteName: SiteLabel.of(siteVm),
                           night: planVm.eveningDate,
                           zoneId: siteVm.displayZoneId,
@@ -112,15 +116,16 @@ class HomeScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      _SectionHeader('Target'),
                       if (target != null) ...[
                         PlannerSummaryCard(
                           key: const Key('planner.target'),
+                          label: 'Target',
+                          caption: target.type,
                           title:
                               (target.commonName != null &&
                                   target.commonName != target.catalogId)
-                              ? 'Target: ${target.commonName} (${target.catalogId})'
-                              : 'Target: ${target.commonName ?? target.catalogId}',
+                              ? '${target.catalogId} · ${target.commonName}'
+                              : target.commonName ?? target.catalogId,
                           data: {
                             'Type': target.type,
                             // ADR-010 §3: existing moving-type targets
@@ -173,11 +178,15 @@ class HomeScreen extends StatelessWidget {
                           action: 'Choose a target',
                           onTap: () => context.push(AppRouter.selectTarget),
                         ),
-                      _SectionHeader(AppWords.rig),
                       if (equipment != null) ...[
                         PlannerSummaryCard(
                           key: const Key('planner.rig'),
-                          title: '${AppWords.rig}: ${equipment.name}',
+                          label: AppWords.rig,
+                          caption:
+                              '${equipment.isExample ? '${ExampleText.rig} · ' : ''}'
+                              '${_trimNumber(equipment.focalLengthMm)} mm · '
+                              '${_focalRatio(equipment)}',
+                          title: equipment.name,
                           data: {
                             // RD-04 (S6.8): the example says it is one.
                             if (equipment.isExample)
@@ -247,13 +256,17 @@ class HomeScreen extends StatelessWidget {
                           onTap: () => context.push(AppRouter.selectRigForPlan),
                         ),
                       _SectionHeader(AppWords.capturePlan),
-                      const CapturePlanWidget(),
+                      CapturePlanWidget(
+                        blockActions: PlanStatus.missingInput(planVm) == null
+                            ? FillWindowAction(fit: analysisVm.fitAnalysis)
+                            : null,
+                      ),
                       // AM-01 (F18 A1): "Tonight for this target", its chart,
                       // window list and placeholder are out of the plan for
                       // this release; the status keeps the availability and
                       // the fit's reason, and Night & Moon and Weather stay
                       // one tap away below.
-                      _SectionHeader('Conditions'),
+                      _SectionHeader('The night ahead'),
                       // S6.5 (UX-06, UX-10): the night and its
                       // forecast in full are on their detail screens;
                       // here one factual row each. Without a site the
@@ -327,13 +340,13 @@ class HomeScreen extends StatelessWidget {
           // TASK 15.3: not a BottomAppBar — its fixed 80 px height squeezed
           // the buttons below the 48 px tap target (and clips large text).
           : Material(
-              color: Theme.of(context).colorScheme.surfaceContainer,
-              elevation: 3,
+              color: Theme.of(context).scaffoldBackgroundColor,
+              elevation: 0,
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
+                    horizontal: 20.0,
+                    vertical: 12.0,
                   ),
                   child: _SaveBar(words: words),
                 ),
@@ -421,8 +434,8 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(
         top: 24.0,
         bottom: 12.0,
-        left: 4.0,
-        right: 4.0,
+        left: 0.0,
+        right: 0.0,
       ),
       child: Semantics(
         header: true,
@@ -491,10 +504,10 @@ class _ChooseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+    return Material(
+      color: HybridTokens.transparent,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Wrap(
           spacing: 12,
           runSpacing: 8,
@@ -566,13 +579,12 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      clipBehavior: Clip.antiAlias,
+    return Material(
+      color: HybridTokens.transparent,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             children: [
               Expanded(
@@ -700,16 +712,11 @@ class _PlanIdentity extends StatelessWidget {
       key: const Key('planner.identity'),
       container: true,
       child: Material(
-        color: Theme.of(context).colorScheme.surfaceContainer,
+        color: HybridTokens.transparent,
         child: SizedBox(
           width: double.infinity,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md,
-              AppSpacing.xs,
-              AppSpacing.md,
-              AppSpacing.sm,
-            ),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
             child: Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.xs,
@@ -720,7 +727,7 @@ class _PlanIdentity extends StatelessWidget {
                       ? 'No night without a site'
                       : '${AppWords.nightOf} '
                             '${NightTimeFormatter.eveningDate(evening)}',
-                  style: text.bodyMedium,
+                  style: text.bodySmall,
                 ),
                 if (session != null) PlanStateLabel(PlanState.of(session)),
               ],

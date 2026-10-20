@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../shared/site_label.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../domain/models/night_timeline.dart';
 import '../../../domain/models/night_weather.dart';
 import '../../../domain/services/fit_analyzer.dart';
@@ -13,6 +14,7 @@ import '../../../core/utils/quantity_text.dart';
 import '../../shared/app_words.dart';
 import '../../shared/context_line.dart';
 import '../../shared/example_text.dart';
+import '../../shared/display_units_of.dart';
 import '../../shared/field_mode_button.dart';
 import '../../shared/location_feedback.dart';
 import '../../shared/night_text.dart';
@@ -25,6 +27,9 @@ import '../../shared/status_block.dart';
 import '../../viewmodels/capture_analysis_viewmodel.dart';
 import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/night_conditions_viewmodel.dart';
+import '../../viewmodels/night_browser_viewmodel.dart';
+import '../../viewmodels/settings_viewmodel.dart';
+import '../../widgets/night_browser_sections.dart';
 import '../../widgets/plan_status.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
@@ -73,15 +78,15 @@ class TonightHomeScreen extends StatelessWidget {
           AppSpacing.md,
           AppSpacing.md,
         ),
-        // F17 (S16.2): the night's facts lead; Your plan follows, then the
-        // secondary candidate action.
+        // Owner Hybrid adoption: plan first, then conditions and next actions.
         children: const [
           _Title(),
           _Context(),
+          SizedBox(height: AppSpacing.lg),
+          _PlanCard(),
+          SizedBox(height: AppSpacing.lg),
           _NightCard(),
           _ResultDue(),
-          _PlanCard(),
-          SizedBox(height: 8),
           _QuickActions(),
         ],
       );
@@ -105,26 +110,50 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final plan = context.watch<SessionPlanViewModel>();
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: AppSpacing.sm),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: AppSpacing.sm,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    key: const Key('tonight.welcome'),
+                    onPressed: () => context.push(AppRouter.welcome),
+                    icon: const Icon(Icons.nights_stay_outlined, size: 20),
+                    label: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [Text('culmina'), Text('Welcome & setup')],
+                    ),
+                  ),
+                ),
+              ),
+              const FieldModeButton(),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.lg),
           Semantics(
+            container: true,
             header: true,
             child: Text(
               PlanNightPhrase.title(plan.eveningDate, plan.tonightKey),
               key: const Key('tonight.title'),
-              style: theme.textTheme.headlineSmall?.copyWith(
+              style: AppTypography.homeHeading.copyWith(
                 color: AppPalette.of(context).textPrimary,
               ),
             ),
           ),
-          const FieldModeButton(),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'A clear plan for the night ahead.',
+            style: AppTypography.support.copyWith(
+              color: AppPalette.of(context).textSecondary,
+            ),
+          ),
         ],
       ),
     );
@@ -144,11 +173,12 @@ class _Context extends StatelessWidget {
     return KeyedSubtree(
       key: const Key('tonight.context'),
       child: ContextLine(
-        framed: true,
+        framed: false,
         siteName: SiteLabel.of(siteVm),
         night: planVm.eveningDate,
         zoneId: siteVm.displayZoneId,
-        nightStartUtc: planVm.sessionNight?.startUtc,
+        // The explicit zone stays with the clock times in the Night row.
+        // Repeating it above this summary adds an unrelated extra line.
         onSite: () => context.push(AppRouter.selectSite),
         onNight: () async {
           final picked = await pickNight(context, initial: planVm.eveningDate);
@@ -180,22 +210,20 @@ class _ResultDue extends StatelessWidget {
     final tonight = context.watch<SessionPlanViewModel>().tonightKey;
     final lastNight = night == tonight || night.addDays(1) == tonight;
     final target = s.record.targetName;
-    return Card(
+    return ListTile(
       key: const Key('tonight.resultDue'),
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: const Icon(Icons.edit_note_outlined),
-        title: Text(
-          lastNight
-              ? AppWords.howDidItGo(target)
-              : AppWords.howDidItGoOn(
-                  target,
-                  NightTimeFormatter.eveningDate(night),
-                ),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => context.push(AppRouter.results(s.id)),
+      contentPadding: EdgeInsets.zero,
+      leading: const Icon(Icons.edit_note_outlined),
+      title: Text(
+        lastNight
+            ? AppWords.howDidItGo(target)
+            : AppWords.howDidItGoOn(
+                target,
+                NightTimeFormatter.eveningDate(night),
+              ),
       ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => context.push(AppRouter.results(s.id)),
     );
   }
 }
@@ -235,16 +263,19 @@ class _PlanCard extends StatelessWidget {
 
     return Card(
       key: const Key('tonight.plan'),
-      margin: const EdgeInsets.only(bottom: 12),
+      color: theme.scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(),
+      elevation: 0,
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
+              0,
               AppSpacing.md,
-              AppSpacing.md,
-              AppSpacing.md,
+              0,
               AppSpacing.sm,
             ),
             child: Column(
@@ -279,7 +310,8 @@ class _PlanCard extends StatelessWidget {
                       ? 'No target chosen'
                       : target.commonName ?? target.catalogId,
                   key: const Key('tonight.planTarget'),
-                  style: theme.textTheme.bodyLarge?.copyWith(
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w400,
                     color: target == null
                         ? palette.textSecondary
                         : palette.textPrimary,
@@ -295,6 +327,12 @@ class _PlanCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.md),
                 StatusBlock(
                   key: const Key('tonight.status'),
+                  separateFigures: true,
+                  figuresBeforeReason: false,
+                  headingStyle: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                   state: missing != null ? FitState.needsInput : fit.state,
                   missing: missing?.headline,
                   needed: measured
@@ -338,7 +376,10 @@ class _PlanCard extends StatelessWidget {
             const Divider(height: 1),
           ],
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.only(
+              top: AppSpacing.md,
+              bottom: AppSpacing.sm,
+            ),
             child: FilledButton.icon(
               key: const Key('tonight.openPlanner'),
               onPressed: () => context.push(AppRouter.session()),
@@ -456,6 +497,20 @@ class _NightCard extends StatelessWidget {
           onTap: openNight,
         ),
       );
+      rows.add(
+        ChangeNotifierProvider(
+          create: (c) => NightBrowserViewModel(
+            site: c.read<SiteViewModel>(),
+            plan: c.read<SessionPlanViewModel>(),
+            settings: c.read<SettingsViewModel>(),
+            nowUtc: () => c.read<NightConditionsViewModel>().nowUtc,
+          ),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+            child: NightBarSection(compact: true),
+          ),
+        ),
+      );
       if (moon != null) {
         final free = conditions.moonFree;
         rows.add(
@@ -473,7 +528,7 @@ class _NightCard extends StatelessWidget {
               ].join(', '),
               if (free != null) MoonText.moonFree(free, at),
             ],
-            onTap: openNight,
+            onTap: () => context.push(AppRouter.moon),
           ),
         );
       }
@@ -483,14 +538,27 @@ class _NightCard extends StatelessWidget {
         key: const Key('tonight.weather'),
         icon: Icons.cloud_outlined,
         label: 'Weather',
-        lines: _weatherLines(conditions, phrase),
+        lines: _weatherLines(context, conditions, phrase),
         onTap: () => context.push(AppRouter.weather),
       ),
     );
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Column(children: rows),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
+              'The night ahead',
+              style: theme.textTheme.headlineSmall,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ...rows,
+        ],
+      ),
     );
   }
 
@@ -498,6 +566,7 @@ class _NightCard extends StatelessWidget {
   /// of the span it covers, and its age; no dark time, or why there is no
   /// forecast. Unknown is never shown as 0 (SI-008).
   static List<String> _weatherLines(
+    BuildContext context,
     NightConditionsViewModel c,
     String phrase,
   ) => switch (c.nightWeather) {
@@ -510,7 +579,7 @@ class _NightCard extends StatelessWidget {
       switch (c.nightWeatherSummary) {
         final s? when s.span == NightWeatherSpan.noDark =>
           'No dark time $phrase: no hours to forecast',
-        final s => 'Cloud in the dark ${WeatherText.range(s?.cloudCover, '%')}',
+        final s => WeatherText.compactConditions(s, unitsOf(context)),
       },
       if (c.nightWeatherSummary case final s?) ?WeatherText.coverage(s),
       WeatherText.freshness(a),
@@ -528,7 +597,7 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final plan = context.watch<SessionPlanViewModel>();
     if (_offersTargets(plan)) return const SizedBox.shrink();
-    return OutlinedButton.icon(
+    return TextButton.icon(
       key: const Key('tonight.candidates'),
       onPressed: () => context.push(AppRouter.candidates),
       icon: const Icon(Icons.format_list_numbered),
@@ -561,7 +630,7 @@ class _Row extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 48),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

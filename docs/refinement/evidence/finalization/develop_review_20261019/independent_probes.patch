@@ -1,0 +1,155 @@
+diff --git a/build/finalization/develop_review_20261019/cleanup_probe_test.dart b/build/finalization/develop_review_20261019/cleanup_probe_test.dart
+new file mode 100644
+--- /dev/null
++++ b/build/finalization/develop_review_20261019/cleanup_probe_test.dart
+@@ -0,0 +1,71 @@
++// Independent review: reachable crash snapshot at successful restore cleanup.
++import 'dart:io';
++
++import 'package:astroplan/data/backup/backup_staging.dart';
++import 'package:astroplan/data/database/app_database.dart';
++import 'package:astroplan/domain/services/backup_service.dart';
++import 'package:drift/native.dart';
++import 'package:flutter_test/flutter_test.dart';
++import 'package:path/path.dart' as p;
++import 'package:shared_preferences/shared_preferences.dart';
++
++class _Death extends Error {}
++
++void main() {
++  TestWidgetsFlutterBinding.ensureInitialized();
++  test('F01 A3: committed restore cleanup must preserve backup selection on restart', () async {
++    final dir = await Directory.systemTemp.createTemp('culmina_f01_cleanup_review_');
++    final live = File(p.join(dir.path, BackupStaging.database));
++    Future<void> make(File f, int id) async {
++      final db = AppDatabase(NativeDatabase(f));
++      try {
++        await db.customStatement(
++          'INSERT INTO location_profiles (id,name,latitude,longitude,elevation,time_zone) '
++          "VALUES (?, 'Review site', 46.05, 14.51, 300, 'Europe/Ljubljana')",
++          [id],
++        );
++      } finally { await db.close(); }
++    }
++    Future<(int,int?)> pair() async {
++      final db = AppDatabase(openDatabaseConnection(() async => live));
++      try {
++        final row = await db.customSelect('SELECT id FROM location_profiles').getSingle();
++        return (row.read<int>('id'), (await SharedPreferences.getInstance()).getInt('activeLocationId'));
++      } finally { await db.close(); }
++    }
++    try {
++      SharedPreferences.setMockInitialValues({'activeLocationId': 1});
++      await make(live, 1);
++      final backup = File(p.join(dir.path, 'source.sqlite'));
++      await make(backup, 2);
++      await BackupStaging.stage(dir, await backup.readAsBytes(), preferences: {
++        'version': 1, 'bool': <String,bool>{},
++        'int': <String,int>{'activeLocationId': 2},
++        'double': <String,double>{}, 'string': <String,String>{},
++      });
++      final now = DateTime.utc(2026,10,19,12);
++      await expectLater(BackupStaging.apply(dir, nowUtc: now, onStep: (step) async {
++        if (step == 'commit') throw _Death();
++      }), throwsA(isA<_Death>()));
++      expect(await pair(), (2,2));
++      // Materialize precisely the next reachable on-disk state in production:
++      // _writeOutcome(applied) completed, stagedPreferences deleted, journal
++      // not deleted yet. There is no onStep hook at this cleanup boundary.
++      await File(p.join(dir.path, BackupStaging.outcomeFile)).writeAsString('{"result":"applied"}', flush: true);
++      await File(p.join(dir.path, BackupStaging.stagedPreferences)).delete();
++      expect(File(p.join(dir.path, BackupStaging.journal)).existsSync(), isTrue);
++      final outcome = await BackupStaging.apply(dir, nowUtc: now.add(const Duration(minutes: 1)));
++      final observed = await pair();
++      // ignore: avoid_print
++      print('REVIEW_F01_CLEANUP result=${outcome?.result.name} databaseSite=${observed.$1} selectedSite=${observed.$2}');
++      expect(observed, (2,2), reason: 'A completed restore must keep the backup selection after cleanup interruption');
++    } finally {
++      final target = dir.resolveSymbolicLinksSync();
++      final root = Directory.systemTemp.resolveSymbolicLinksSync();
++      if (!p.isWithin(root,target) || !p.basename(target).startsWith('culmina_f01_cleanup_review_')) {
++        throw StateError('Unexpected probe cleanup target');
++      }
++      await dir.delete(recursive: true);
++    }
++  });
++}
+diff --git a/build/finalization/develop_review_20261019/exposure_probe_test.dart b/build/finalization/develop_review_20261019/exposure_probe_test.dart
+new file mode 100644
+--- /dev/null
++++ b/build/finalization/develop_review_20261019/exposure_probe_test.dart
+@@ -0,0 +1,11 @@
++import 'package:astroplan/domain/services/exposure_input.dart';
++import 'package:flutter_test/flutter_test.dart';
++
++void main() {
++  test('F06 A5: out-of-range fraction must produce a field problem', () {
++    expect(ExposureInput.problem('18446744073709551616/1'), isNotNull);
++  });
++  test('F06 A5: large denominator must not throw in a field validator', () {
++    expect(ExposureInput.problem('1/18446744073709551616'), isNotNull);
++  });
++}
+diff --git a/build/finalization/develop_review_20261019/external_probe_test.dart b/build/finalization/develop_review_20261019/external_probe_test.dart
+new file mode 100644
+--- /dev/null
++++ b/build/finalization/develop_review_20261019/external_probe_test.dart
+@@ -0,0 +1,58 @@
++import 'dart:io';
++import 'package:astroplan/core/time/clock.dart';
++import 'package:astroplan/data/metadata/file_metadata_source.dart';
++import 'package:astroplan/data/repositories/open_meteo_weather_repository.dart';
++import 'package:astroplan/domain/metadata/capture_metadata_reader.dart';
++import 'package:astroplan/domain/metadata/capture_metadata.dart';
++import 'package:astroplan/domain/metadata/metadata_source.dart';
++import 'package:astroplan/domain/models/camera_class.dart';
++import 'package:astroplan/domain/models/capture_block.dart';
++import 'package:astroplan/domain/models/weather_snapshot.dart';
++import 'package:astroplan/domain/services/block_proposal.dart';
++import 'package:astroplan/domain/services/storage_estimate.dart';
++import 'package:flutter_test/flutter_test.dart';
++
++void main() {
++  test('G1: live public-site forecast through production repository', () async {
++    final now = DateTime.utc(2026,10,19,14);
++    final result = await OpenMeteoWeatherRepository(clock: FixedClock(now)).fetchSnapshot(
++      latitude: 46.05, longitude: 14.51,
++      startUtc: now, endUtc: now.add(const Duration(days: 1)),
++    );
++    expect(result, isA<WeatherFetched>());
++    final snapshot = (result as WeatherFetched).snapshot;
++    expect(snapshot.hours.length, 384);
++    expect(snapshot.hours.first.timeUtc.isUtc, isTrue);
++    // ignore: avoid_print
++    print('REVIEW_LIVE_FORECAST hours=${snapshot.hours.length} source=${snapshot.source}');
++  });
++  Future<BlockProposal> fromFits() async {
++    final file = File('build/finalization/develop_review_20261019/a8280271.fits');
++    final source = BudgetedMetadataSource(await FileMetadataSource.open(file));
++    try {
++      final reading = await CaptureMetadataReader.read(source);
++      expect(reading, isA<MetadataRead>());
++      return BlockProposal.of(name: 'a8280271.fits', reading: reading,
++        lengthBytes: await file.length(), cameraClass: CameraClass.astroMono);
++    } finally { await source.close(); }
++  }
++  test('F10 A3 partial: public telescope FITS reader, proposal, measured storage', () async {
++    final p = await fromFits();
++    expect(p.exposure!.value, 150.040);
++    expect(p.file!.width, 536);
++    expect(p.file!.height, 520);
++    final block = CaptureBlock(frameType: FrameType.light,
++      exposureTimeSeconds: p.exposure!.value, frameCount: 1, fileEvidence: p.file);
++    final storage = StorageEstimate.of(block, null);
++    expect(storage.basis, StorageBasis.blockFile);
++    expect(storage.bytes, 561600);
++  });
++  test('F10 A2: a FITS GAIN explicitly in electrons per ADU is not acquisition gain', () async {
++    final p = await fromFits();
++    // In the real public header GAIN = 1.9 / e-/ADU. This is a conversion
++    // factor, not a camera-driver acquisition setting (SI-004).
++    // ignore: avoid_print
++    print('REVIEW_FITS_GAIN proposedAcquisitionGain=${p.gain?.value.value}');
++    expect(p.gain, isNull, reason: 'Conversion e-/ADU must not be proposed as driver gain');
++  });
++}

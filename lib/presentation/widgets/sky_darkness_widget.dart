@@ -412,10 +412,13 @@ class TwilightBar extends StatelessWidget {
 /// when it is up is the detail's summary alone, and the section has its own
 /// heading.
 class MoonSection extends StatelessWidget {
-  const MoonSection({super.key, this.view});
+  const MoonSection({super.key, this.view, this.compact = false});
 
   /// A browsed night (F15); else the plan's night.
   final NightView? view;
+
+  /// Moon's dedicated view already provides its heading and moon-free summary.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -431,15 +434,16 @@ class MoonSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Icon(Icons.nightlight_round, color: AppPalette.of(context).moon),
-            const SizedBox(width: AppSpacing.sm),
-            const Expanded(child: _SectionTitle('Moon')),
-          ],
-        ),
+        if (!compact)
+          Row(
+            children: [
+              Icon(Icons.nightlight_round, color: AppPalette.of(context).moon),
+              const SizedBox(width: AppSpacing.sm),
+              const Expanded(child: _SectionTitle('Moon')),
+            ],
+          ),
         Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.xl),
+          padding: EdgeInsets.only(left: compact ? 0 : AppSpacing.xl),
           child: Text(
             'Illumination at midnight: $lunarIllum',
             key: const Key('sky.moonIllumination'),
@@ -448,35 +452,52 @@ class MoonSection extends StatelessWidget {
         ),
         if (moonConditions?.phaseName case final phase?)
           Padding(
-            padding: const EdgeInsets.only(left: AppSpacing.xl),
+            padding: EdgeInsets.only(left: compact ? 0 : AppSpacing.xl),
             child: Text(
               'Phase: ${MoonText.phaseName(phase)}',
               key: const Key('sky.moonPhase'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-        if (moonFree case final free?)
-          if (moonConditions case final c?)
-            Padding(
-              padding: const EdgeInsets.only(
-                left: AppSpacing.xl,
-                top: AppSpacing.xs,
-              ),
-              child: Text(
-                MoonText.moonFree(
-                  free,
-                  (utc) => NightTimeFormatter.instant(
-                    context,
-                    utc,
-                    windowStartUtc: c.night.startUtc,
-                    zoneId: zoneId,
-                  ),
+        if (!compact)
+          if (moonFree case final free?)
+            if (moonConditions case final c?)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: AppSpacing.xl,
+                  top: AppSpacing.xs,
                 ),
-                key: const Key('sky.moonFree'),
-                style: Theme.of(context).textTheme.bodyMedium,
+                child: Text(
+                  MoonText.moonFree(
+                    free,
+                    (utc) => NightTimeFormatter.instant(
+                      context,
+                      utc,
+                      windowStartUtc: c.night.startUtc,
+                      zoneId: zoneId,
+                    ),
+                  ),
+                  key: const Key('sky.moonFree'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+        if (compact && moonConditions != null)
+          Text(
+            MoonText.up(
+              moonConditions,
+              (utc) => NightTimeFormatter.instant(
+                context,
+                utc,
+                windowStartUtc: moonConditions.night.startUtc,
+                zoneId: zoneId,
               ),
             ),
-        _MoonDetails(conditions: moonConditions, zoneId: zoneId),
+          ),
+        _MoonDetails(
+          conditions: moonConditions,
+          zoneId: zoneId,
+          compact: compact,
+        ),
       ],
     );
   }
@@ -506,12 +527,17 @@ class _SectionTitle extends StatelessWidget {
 /// How close the Moon comes to the target tonight (its up-times are the
 /// detail's summary, S6.16).
 class _MoonDetails extends StatelessWidget {
-  const _MoonDetails({required this.conditions, required this.zoneId});
+  const _MoonDetails({
+    required this.conditions,
+    required this.zoneId,
+    this.compact = false,
+  });
 
   final MoonConditions? conditions;
 
   /// The site's IANA zone, or null for the device zone (TASK 7.1).
   final String? zoneId;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -537,7 +563,10 @@ class _MoonDetails extends StatelessWidget {
 
     if (sepText == null) return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.only(left: AppSpacing.xl, top: AppSpacing.xs),
+      padding: EdgeInsets.only(
+        left: compact ? 0 : AppSpacing.xl,
+        top: AppSpacing.xs,
+      ),
       child: Text(sepText, key: const Key('sky.moonSeparation'), style: style),
     );
   }

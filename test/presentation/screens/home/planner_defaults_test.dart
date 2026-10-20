@@ -176,7 +176,13 @@ void main() {
     expect(vm.captureBlocks, isEmpty);
     expect(inStatus(AppWords.needsTarget), findsOneWidget);
     expect(find.byKey(const Key('status.choose')), findsOneWidget);
-    expect(find.textContaining('${AppWords.rig}: ${rig.name}'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('planner.rig')),
+        matching: find.text(rig.name),
+      ),
+      findsOneWidget,
+    );
     expect(offer, findsOneWidget);
   });
 
@@ -186,6 +192,8 @@ void main() {
     await tester.runAsync(() => vm.choosePlan());
     await settle(tester);
     expect(vm.selectedEquipment!.isExample, isTrue);
+    await tester.tap(find.byTooltip('Rig details'));
+    await settle(tester);
     expect(find.text(ExampleText.rigNote), findsOneWidget);
 
     unawaited(AppRouter.router.push(AppRouter.selectRig));

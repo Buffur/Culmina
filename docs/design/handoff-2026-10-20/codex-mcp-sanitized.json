@@ -1,0 +1,44 @@
+[
+  {
+    "name": "code-review",
+    "enabled": false,
+    "transport": "stdio",
+    "endpoint": null,
+    "auth_status": "unsupported"
+  },
+  {
+    "name": "codex_app",
+    "enabled": false,
+    "transport": "stdio",
+    "endpoint": null,
+    "auth_status": "unsupported"
+  },
+  {
+    "name": "context7",
+    "enabled": true,
+    "transport": "streamable_http",
+    "endpoint": "https://mcp.context7.com/mcp",
+    "auth_status": "bearer_token"
+  },
+  {
+    "name": "cua_repl",
+    "enabled": true,
+    "transport": "stdio",
+    "endpoint": null,
+    "auth_status": "unsupported"
+  },
+  {
+    "name": "graphify",
+    "enabled": true,
+    "transport": "streamable_http",
+    "endpoint": "https://api.graphify.com/mcp",
+    "auth_status": "o_auth"
+  },
+  {
+    "name": "node_repl",
+    "enabled": true,
+    "transport": "stdio",
+    "endpoint": null,
+    "auth_status": "unsupported"
+  }
+]

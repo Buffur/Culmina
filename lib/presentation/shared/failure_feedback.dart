@@ -56,7 +56,7 @@ Future<bool> runWithFeedback(
 /// by the theme. Call it after the action succeeded.
 void showDone(BuildContext context, String message) {
   ScaffoldMessenger.maybeOf(context)
-    ?..hideCurrentSnackBar()
+    ?..hideCurrentMessage()
     ..showMessage(
       SnackBar(content: Text(message), duration: const Duration(seconds: 3)),
     );
@@ -67,7 +67,7 @@ void showDone(BuildContext context, String message) {
 /// [FailureText] or is a validation message; never the raw error.
 void showFailure(BuildContext context, String text) {
   ScaffoldMessenger.maybeOf(context)
-    ?..hideCurrentSnackBar()
+    ?..hideCurrentMessage()
     ..showMessage(SnackBar(content: Text(text)));
 }
 

@@ -207,6 +207,10 @@ class SessionLogs extends Table {
   /// `tracked` or `guided`; NULL = the rig's default.
   TextColumn get trackingOverride => text().nullable()();
 
+  /// Explicit per-plan assumptions; NULL inherits legacy global defaults.
+  TextColumn get planOverrides =>
+      text().nullable().map(const JsonMapConverter())();
+
   /// How a completed session's counts were reported (S8.1, v24; I-1):
   /// `asPlanned` or `partly`; NULL for rows completed live or before v24.
   TextColumn get resultKind => text().nullable()();
@@ -290,7 +294,7 @@ class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 26;
+  int get schemaVersion => 27;
 
   @override
   MigrationStrategy get migration {
@@ -628,6 +632,14 @@ class AppDatabase extends _$AppDatabase {
                 // S8.6: the optional plan name. Additive only; every
                 // existing plan has none (NULL), shown as target · night.
                 await m.addColumn(schema.sessionLogs, schema.sessionLogs.name);
+              },
+              from26To27: (m, schema) async {
+                // Nullable explicit plan assumptions. Existing rows continue
+                // to inherit global settings and their original storage basis.
+                await m.addColumn(
+                  schema.sessionLogs,
+                  schema.sessionLogs.planOverrides,
+                );
               },
               from25To26: (m, schema) async {
                 // ADR-021 C19 (F03): the capture contract. Additive and

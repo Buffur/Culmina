@@ -136,9 +136,23 @@ void main() {
       ),
     );
     await tester.pump();
+    await tester.tap(find.byKey(const Key('settings.open.planning')));
+    await tester.pumpAndSettle();
     // F12 (AM-01): the gates and optional times are one tap away.
     await tester.tap(find.byKey(const Key('settings.advanced')));
     await tester.pumpAndSettle();
+  }
+
+  Future<void> save(WidgetTester tester, {bool reopen = false}) async {
+    await tester.tap(find.byKey(const Key('settings.savePlanning')));
+    await tester.runAsync(() => pumpEventQueue());
+    await tester.pumpAndSettle();
+    if (reopen) {
+      await tester.tap(find.byKey(const Key('settings.open.planning')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('settings.advanced')));
+      await tester.pumpAndSettle();
+    }
   }
 
   Finder inTile(String key, Type type) =>
@@ -148,16 +162,12 @@ void main() {
     tester,
   ) async {
     await build(tester);
-    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('Planning'), findsOneWidget);
     final headings = [
+      'Capture budget',
       'Imaging window',
-      'Fit and capture time',
       'Advanced',
       'Guidance',
-      'Display',
-      'Privacy',
-      'Data',
-      'About',
     ];
     final ys = [
       for (final h in headings) tester.getTopLeft(find.text(h).first).dy,
@@ -177,7 +187,7 @@ void main() {
 
     await tester.tap(inTile('settings.moonGate', Switch));
     await tester.pump();
-    expect(vm.planningPreferences.moonGateEnabled, isTrue);
+    expect(vm.planningPreferences.moonGateEnabled, isFalse);
     expect(
       find.text('Excludes time when the Moon is up and at least 50 % lit.'),
       findsOneWidget,
@@ -188,11 +198,13 @@ void main() {
       const Offset(-2000, 0),
     );
     await tester.pump();
-    expect(vm.planningPreferences.moonGateMinIlluminationPct, 0);
-    expect(vm.imagingOpportunity!.usableTime, lessThan(before));
+    expect(vm.imagingOpportunity!.usableTime, before);
 
     await tester.tap(inTile('settings.cloudGate', Switch));
     await tester.pump();
+    await save(tester);
+    expect(vm.planningPreferences.moonGateMinIlluminationPct, 0);
+    expect(vm.imagingOpportunity!.usableTime, lessThan(before));
     expect(vm.planningPreferences.optionalGates.cloudMaxPct, 50);
     await tester.runAsync(() async {
       final prefs = await SharedPreferences.getInstance();
@@ -210,6 +222,8 @@ void main() {
     expect(before, greaterThan(Duration.zero));
     await tester.tap(inTile('settings.cloudGate', Switch));
     await tester.pump();
+    expect(vm.imagingOpportunity!.usableTime, before);
+    await save(tester, reopen: true);
     expect(
       vm.imagingOpportunity!.usableTime,
       Duration.zero,
@@ -220,6 +234,7 @@ void main() {
       const Offset(3000, 0),
     );
     await tester.pump();
+    await save(tester);
     expect(vm.planningPreferences.cloudGateMaxPct, 100);
     expect(vm.imagingOpportunity!.usableTime, before);
   });
@@ -233,6 +248,7 @@ void main() {
       const Offset(3000, 0),
     );
     await tester.pump();
+    await save(tester);
     expect(
       vm.planningPreferences.perFrameOverheadSeconds,
       PlanningPreferences.perFrameRange.$2,
@@ -247,10 +263,12 @@ void main() {
     final load = vm.captureBudget.windowLoadMs;
     await tester.tap(find.byTooltip('Settle: more'));
     await tester.pump();
-    expect(vm.planningPreferences.ditherSettleSeconds, 20);
-    expect(vm.captureBudget.windowLoadMs, greaterThan(load));
+    expect(vm.captureBudget.windowLoadMs, load);
     await tester.tap(find.byTooltip('Every: less'));
     await tester.pump();
+    await save(tester, reopen: true);
+    expect(vm.planningPreferences.ditherSettleSeconds, 20);
+    expect(vm.captureBudget.windowLoadMs, greaterThan(load));
     expect(vm.planningPreferences.ditherEveryNFrames, 2);
     await tester.runAsync(() async {
       final prefs = await SharedPreferences.getInstance();
@@ -261,6 +279,7 @@ void main() {
       await tester.tap(find.byTooltip('Every: less'));
       await tester.pump();
     }
+    await save(tester);
     expect(vm.planningPreferences.ditherEveryNFrames, 1, reason: 'the floor');
   });
 
@@ -268,6 +287,9 @@ void main() {
     await build(tester, preferences: _Broken());
     await tester.tap(inTile('settings.cloudGate', Switch));
     await tester.pump();
-    expect(find.textContaining("Couldn't save the setting"), findsOneWidget);
+    await save(tester);
+    expect(find.byKey(const Key('settings.unsaved')), findsOneWidget);
+    expect(vm.planningPreferences.cloudGateEnabled, isTrue);
+    expect(find.text('Applied · not saved'), findsOneWidget);
   });
 }

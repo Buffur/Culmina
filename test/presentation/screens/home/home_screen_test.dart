@@ -133,16 +133,22 @@ void main() {
     // S6.6: no empty state; the structure stays with a neutral status and
     // an action where the target and the rig go.
     expect(find.byKey(const Key('planner.status')), findsOneWidget);
+    final plannerScrollable = find
+        .descendant(
+          of: find.byKey(const Key('planner.scroll')),
+          matching: find.byType(Scrollable),
+        )
+        .first;
     await tester.scrollUntilVisible(
       find.byKey(const Key('planner.noTarget')),
-      300,
-      scrollable: find.byType(Scrollable).first,
+      100,
+      scrollable: plannerScrollable,
     );
     expect(find.byKey(const Key('planner.noTarget')), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('planner.noRig')),
-      300,
-      scrollable: find.byType(Scrollable).first,
+      100,
+      scrollable: plannerScrollable,
     );
     expect(find.byKey(const Key('planner.noRig')), findsOneWidget);
 
@@ -152,8 +158,8 @@ void main() {
     );
     await tester.scrollUntilVisible(
       choose,
-      -300,
-      scrollable: find.byType(Scrollable).first,
+      -100,
+      scrollable: plannerScrollable,
     );
     await tester.tap(choose);
     await tester.pumpAndSettle();

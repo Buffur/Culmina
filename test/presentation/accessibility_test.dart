@@ -361,7 +361,9 @@ void main() {
         );
         AppRouter.router.go(AppRouter.settings);
         await _settle(tester);
-        // F12: the optional gates and times are one tap away.
+        await tester.tap(find.byKey(const Key('settings.open.planning')));
+        await _settle(tester);
+        // F12: optional gates remain reachable in Planning settings.
         await tester.tap(find.byKey(const Key('settings.advanced')));
         await _settle(tester);
         expect(find.byTooltip('Settle: more'), findsOneWidget);

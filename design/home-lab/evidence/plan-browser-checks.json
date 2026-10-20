@@ -1,0 +1,352 @@
+{
+  "interactions": [
+    {
+      "case": "invalid-count",
+      "errors": [
+        "Enter a positive whole number of frames."
+      ],
+      "invalid": 1,
+      "saveDisabled": true
+    },
+    {
+      "case": "invalid-count",
+      "count": "",
+      "errors": [
+        "Enter a positive whole number of frames."
+      ],
+      "saveDisabled": true
+    },
+    {
+      "answer": "Fits · 3 h 22 min 30 s needed of 4 h 15 min usableThe planned time fits the example imaging window.",
+      "case": "applied-block",
+      "estimate": "Integration3 hTime needed3 h 22 min 30 sTotal time3 h 37 min 30 sEstimated storage5.40 GB",
+      "state": "Saved · changed"
+    },
+    {
+      "case": "unsaved-guard",
+      "visible": true
+    },
+    {
+      "button": "Retry save",
+      "case": "save-failure",
+      "error": "Couldn’t save this example. Your latest changes are still here.",
+      "state": "Saved · changed"
+    },
+    {
+      "block": "180 × 60 s · Broadband · ISO 800",
+      "case": "saved-reload",
+      "state": "Saved"
+    },
+    {
+      "case": "class-switch-preserves-edit",
+      "exposure": "1/125",
+      "gain": true,
+      "iso": false
+    },
+    {
+      "answer": "Needs a block",
+      "case": "remove-last-block",
+      "saveDisabled": true
+    },
+    {
+      "blocks": 1,
+      "case": "undo-block",
+      "state": "Saved"
+    },
+    {
+      "case": "unknown-weather",
+      "text": "The night aheadSelected nightOct 19–20Target window00:30–04:45Moon-free dark00:30–04:45WeatherForecast unavailableUnknown is not 0% cloud. The target window above is illustrative.Retry forecast example"
+    },
+    {
+      "answer": "Needs a site",
+      "case": "no-site",
+      "nightSelects": 0,
+      "saveDisabled": true
+    },
+    {
+      "case": "constrained-editor-200",
+      "document": 402,
+      "editor": 362,
+      "editorScroll": 362,
+      "height": 520,
+      "saveBottom": 520.0000152587891,
+      "saveDisabled": true,
+      "viewport": 402
+    },
+    {
+      "case": "undo-disabled-during-block-edit",
+      "disabled": true
+    },
+    {
+      "blocks": 1,
+      "case": "post-fix-load-undo",
+      "saveEnabled": true,
+      "state": "Saved"
+    },
+    {
+      "case": "final-mobile-200",
+      "document": 402,
+      "height": 915,
+      "saveBottom": 915.3333587646484,
+      "viewport": 402
+    }
+  ],
+  "layouts": [
+    {
+      "document": 1270,
+      "height": 1000,
+      "main": 1120,
+      "mainScroll": 1120,
+      "saveBottom": 1000.0000457763672,
+      "saveEnabled": true,
+      "scale": "1",
+      "theme": "light",
+      "viewport": 1270,
+      "width": 1280
+    },
+    {
+      "document": 1270,
+      "height": 1000,
+      "main": 1120,
+      "mainScroll": 1120,
+      "saveBottom": 1000.0000457763672,
+      "saveEnabled": true,
+      "scale": "1",
+      "theme": "dark",
+      "viewport": 1270,
+      "width": 1280
+    },
+    {
+      "document": 1270,
+      "height": 1000,
+      "main": 1120,
+      "mainScroll": 1120,
+      "saveBottom": 1000.0000457763672,
+      "saveEnabled": true,
+      "scale": "1",
+      "theme": "field",
+      "viewport": 1270,
+      "width": 1280
+    },
+    {
+      "document": 1270,
+      "height": 1000,
+      "main": 1120,
+      "mainScroll": 1120,
+      "saveBottom": 1000.0000457763672,
+      "saveEnabled": true,
+      "scale": "2",
+      "theme": "light",
+      "viewport": 1270,
+      "width": 1280
+    },
+    {
+      "document": 1270,
+      "height": 1000,
+      "main": 1120,
+      "mainScroll": 1120,
+      "saveBottom": 1000.0000457763672,
+      "saveEnabled": true,
+      "scale": "2",
+      "theme": "dark",
+      "viewport": 1270,
+      "width": 1280
+    },
+    {
+      "document": 1270,
+      "height": 1000,
+      "main": 1120,
+      "mainScroll": 1120,
+      "saveBottom": 1000.0000457763672,
+      "saveEnabled": true,
+      "scale": "2",
+      "theme": "field",
+      "viewport": 1270,
+      "width": 1280
+    },
+    {
+      "document": 402,
+      "height": 915,
+      "main": 402,
+      "mainScroll": 402,
+      "saveBottom": 915.3333587646484,
+      "saveEnabled": true,
+      "scale": "1",
+      "theme": "light",
+      "viewport": 402,
+      "width": 412
+    },
+    {
+      "document": 402,
+      "height": 915,
+      "main": 402,
+      "mainScroll": 402,
+      "saveBottom": 915.3333587646484,
+      "saveEnabled": true,
+      "scale": "1",
+      "theme": "dark",
+      "viewport": 402,
+      "width": 412
+    },
+    {
+      "document": 402,
+      "height": 915,
+      "main": 402,
+      "mainScroll": 402,
+      "saveBottom": 915.3333587646484,
+      "saveEnabled": true,
+      "scale": "1",
+      "theme": "field",
+      "viewport": 402,
+      "width": 412
+    },
+    {
+      "document": 402,
+      "height": 915,
+      "main": 402,
+      "mainScroll": 402,
+      "saveBottom": 915.3333587646484,
+      "saveEnabled": true,
+      "scale": "2",
+      "theme": "light",
+      "viewport": 402,
+      "width": 412
+    },
+    {
+      "document": 402,
+      "height": 915,
+      "main": 402,
+      "mainScroll": 402,
+      "saveBottom": 915.3333587646484,
+      "saveEnabled": true,
+      "scale": "2",
+      "theme": "dark",
+      "viewport": 402,
+      "width": 412
+    },
+    {
+      "document": 402,
+      "height": 915,
+      "main": 402,
+      "mainScroll": 402,
+      "saveBottom": 915.3333587646484,
+      "saveEnabled": true,
+      "scale": "2",
+      "theme": "field",
+      "viewport": 402,
+      "width": 412
+    }
+  ],
+  "home": [
+    {
+      "case": "content-order",
+      "concepts": [
+        {
+          "border": "0px",
+          "first": "plan-section",
+          "key": "blend",
+          "radius": "0px",
+          "shadow": "none"
+        },
+        {
+          "border": "0px",
+          "first": "plan-section",
+          "key": "manuscript",
+          "radius": "0px",
+          "shadow": "none"
+        },
+        {
+          "border": "0px",
+          "first": "plan-section",
+          "key": "soft",
+          "radius": "0px",
+          "shadow": "none"
+        },
+        {
+          "border": "0px",
+          "first": "plan-section",
+          "key": "desk",
+          "radius": "0px",
+          "shadow": "none"
+        }
+      ],
+      "document": 402,
+      "order": "plan-first",
+      "viewport": 402
+    },
+    {
+      "case": "content-order",
+      "concepts": [
+        {
+          "border": "0px",
+          "first": "conditions",
+          "key": "blend",
+          "radius": "0px",
+          "shadow": "none"
+        },
+        {
+          "border": "0px",
+          "first": "conditions",
+          "key": "manuscript",
+          "radius": "0px",
+          "shadow": "none"
+        },
+        {
+          "border": "0px",
+          "first": "conditions",
+          "key": "soft",
+          "radius": "0px",
+          "shadow": "none"
+        },
+        {
+          "border": "0px",
+          "first": "conditions",
+          "key": "desk",
+          "radius": "0px",
+          "shadow": "none"
+        }
+      ],
+      "document": 402,
+      "order": "conditions-first",
+      "viewport": 402
+    },
+    {
+      "border": "0px",
+      "case": "home-mobile-200",
+      "first": "plan-section",
+      "frame": 345,
+      "frameScroll": 345,
+      "theme": "light",
+      "viewport": 402,
+      "width": 402
+    },
+    {
+      "border": "0px",
+      "case": "home-mobile-200",
+      "first": "plan-section",
+      "frame": 345,
+      "frameScroll": 345,
+      "theme": "dark",
+      "viewport": 402,
+      "width": 402
+    },
+    {
+      "border": "0px",
+      "case": "home-mobile-200",
+      "first": "plan-section",
+      "frame": 345,
+      "frameScroll": 345,
+      "theme": "field",
+      "viewport": 402,
+      "width": 402
+    },
+    {
+      "case": "home-wide-leading-plan",
+      "conditionsLeft": 749.1979370117188,
+      "conditionsTop": 796.1146240234375,
+      "planLeft": 288.66668701171875,
+      "planTop": 796.1146240234375
+    }
+  ],
+  "finalNewTabLogs": []
+}

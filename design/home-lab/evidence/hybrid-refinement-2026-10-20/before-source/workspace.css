@@ -1,0 +1,31 @@
+/* Shared Android shell for the three existing tab destinations. */
+.workspace-page .android-appbar{padding-inline:16px}
+.workspace-page .app-nav{position:relative;flex:none;grid-template-columns:repeat(4,minmax(0,1fr));padding:8px 4px 0}
+.workspace-page .app-nav button{min-width:48px;min-height:56px;font-family:Roboto,sans-serif;font-size:calc(11px * var(--text-scale));font-weight:400;overflow-wrap:anywhere}
+.workspace-page .app-nav button[aria-current=page]{font-weight:600}
+.workspace-page svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.workspace-page .android-statusbar svg{fill:currentColor;stroke:none}
+.workspace-page .plan-main{font-size:calc(14px * var(--text-scale));padding-top:12px}
+.workspace-section{margin-top:28px}.workspace-section:first-child{margin-top:0}
+.workspace-section>h2{margin-bottom:12px}
+.workspace-row{display:flex;align-items:center;gap:16px;width:100%;padding:16px 0;border-bottom:1px solid var(--border-subtle);text-align:left;color:var(--text-primary);font:inherit;background:transparent;line-height:1.5}
+.workspace-row>svg{width:24px;height:24px;flex:none}.workspace-row>span{flex:1;min-width:0}.workspace-row>svg:last-child{width:18px;color:var(--text-secondary)}
+.workspace-row:hover{background:var(--selection)}
+.workspace-copy{font-size:calc(13px * var(--text-scale));color:var(--text-secondary);line-height:1.6}
+.workspace-form{display:grid;gap:20px}.workspace-form textarea{resize:vertical;width:100%;min-height:112px;font:inherit;background:transparent;border:1px solid var(--border-control);border-radius:6px;padding:12px;color:var(--text-primary)}
+.workspace-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.workspace-actions>*{flex:1 1 120px}
+.workspace-facts{display:grid;gap:16px;margin:16px 0}.workspace-facts dt{font-size:calc(12px * var(--text-scale));color:var(--text-secondary)}.workspace-facts dd{margin:4px 0 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.workspace-empty{padding:28px 0}.workspace-empty h2{margin-bottom:12px}.workspace-empty p{color:var(--text-secondary);margin-bottom:16px}
+.workspace-error{color:var(--error);font-size:calc(13px * var(--text-scale));line-height:1.6}.workspace-error:empty{display:none}
+.workspace-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0}.workspace-toolbar>*{min-width:0;max-width:100%}
+.workspace-page input:not([type=checkbox]):not([type=radio]):not([type=range]),.workspace-page select,.workspace-page textarea{max-width:100%;min-width:0;width:100%;border:1px solid var(--border-control);border-radius:6px;padding:10px 12px;background:transparent;color:var(--text-primary);font:inherit;caret-color:var(--text-primary)}
+.workspace-page input::placeholder,.workspace-page textarea::placeholder{color:var(--text-secondary);opacity:1}
+.workspace-page input[type=checkbox],.workspace-page input[type=radio]{accent-color:var(--action);width:24px;height:24px;min-height:24px;flex:none}
+.workspace-page label:has(>input[type=checkbox]),.workspace-page label:has(>input[type=radio]){min-height:48px;display:flex;align-items:center;gap:12px}
+.workspace-page :focus-visible{outline:2px solid var(--text-primary);outline-offset:3px}
+.workspace-page ::selection{background:var(--selection);color:var(--text-primary)}
+.workspace-page .plan-announcement{bottom:100px}
+html[data-variant=blend] .workspace-page .plan-announcement{position:static;display:none;flex:0 0 auto;max-height:26%;overflow:auto;margin:0 16px;padding:8px 0;border-radius:0;border-top:1px solid var(--border-subtle);background:var(--surface-default);color:var(--text-secondary);font-size:calc(12px * var(--text-scale));line-height:1.5;opacity:1;pointer-events:auto;overflow-wrap:anywhere}
+html[data-variant=blend] .workspace-page .plan-announcement.visible{display:block}
+.workspace-page summary{min-height:48px;cursor:pointer;padding:12px 0}
+@media(max-width:600px){.workspace-page .android-device{min-height:280px}.workspace-page .lab-toolbar>p{display:none}}

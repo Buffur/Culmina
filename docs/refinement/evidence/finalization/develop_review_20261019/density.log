@@ -1,0 +1,4 @@
+00:00 +0: loading <repo>/test/presentation/performance/reference_plan_density_test.dart
+00:00 +0: the reference plan at 412 px, 100 % text
+DENSITY {"width":412,"textScale":1.0,"theme":"light","scrollExtent":3152,"viewport":761,"sections":{"Target":388,"Rig":712,"Capture plan":1216,"Conditions":2692}}
+00:01 +1: All tests passed!

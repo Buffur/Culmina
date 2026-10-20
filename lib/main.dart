@@ -1,11 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'presentation/shared/hybrid_focus_highlight.dart';
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 
 import 'core/units/display_units.dart';
 import 'core/diagnostics/app_log.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/font_licenses.dart';
 import 'presentation/navigation/app_router.dart';
 import 'core/time/clock.dart';
 import 'presentation/app_view_models.dart';
@@ -50,6 +54,7 @@ import 'core/config/app_identity.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AppFontLicenses.register();
   // TASK 8.2: the target catalog's CC BY-SA 4.0 notice in the licence page.
   LicenseRegistry.addLicense(() async* {
     yield LicenseEntryWithLineBreaks(const [
@@ -249,7 +254,9 @@ class AstroPlanApp extends StatelessWidget {
       builder: (context, child) {
         final content = KeyedSubtree(
           key: _content,
-          child: RestoreOutcomeNotice(child: NightClock(child: child!)),
+          child: HybridFocusHighlight(
+            child: RestoreOutcomeNotice(child: NightClock(child: child!)),
+          ),
         );
         return themeVM.isFieldMode
             ? ColorFiltered(colorFilter: AppTheme.fieldFilter, child: content)

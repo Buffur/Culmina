@@ -6,17 +6,17 @@ import 'package:flutter/widgets.dart';
 /// turns motion off. See `docs/DESIGN_SYSTEM.md`.
 abstract final class AppMotion {
   /// A state change in place: a pressed control, a chevron turning.
-  static const Duration short = Duration(milliseconds: 150);
+  static const Duration short = Duration(milliseconds: 120);
 
   /// Content appearing or collapsing: a section opening, a row leaving.
-  static const Duration medium = Duration(milliseconds: 250);
+  static const Duration medium = Duration(milliseconds: 180);
 
   /// A brief mark on what an edit changed, fading out (S6.9: a capture
   /// block just added or edited). Long enough to be seen, never repeated.
   static const Duration highlight = Duration(milliseconds: 1500);
 
   /// The one curve: fast out, gentle in.
-  static const Curve curve = Curves.easeOutCubic;
+  static const Curve curve = Cubic(0.16, 1, 0.3, 1);
 
   /// [base], or zero when the user asked the platform for less motion.
   static Duration duration(BuildContext context, Duration base) =>

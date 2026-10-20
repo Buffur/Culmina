@@ -3,71 +3,32 @@ import 'package:flutter/foundation.dart';
 import '../../core/diagnostics/app_log.dart';
 import '../../core/time/clock.dart';
 import '../../domain/models/calendar_date.dart';
+import 'sessions_filter.dart';
 import '../../domain/models/session.dart';
 import '../../domain/repositories/session_repository.dart';
+import '../../domain/repositories/undoable_deletion.dart';
+import '../../domain/services/current_session.dart';
 import '../../domain/services/result_action.dart';
 import '../../domain/services/saved_night_end.dart';
 import '../../domain/services/session_exporter.dart';
 import '../../domain/services/session_reconciliation.dart';
 import '../../domain/services/target_progress.dart';
 
-/// The Sessions list's status chips (TASK 14.1). Planned includes a saved
-/// plan edited since ("unsaved changes"); legacy logs are completed.
-enum SessionListStatus {
-  planned({SessionStatus.draft, SessionStatus.planned}),
-  inProgress({SessionStatus.inProgress}),
-  completed({SessionStatus.completed}),
-  abandoned({SessionStatus.abandoned});
-
-  const SessionListStatus(this.stored);
-  final Set<SessionStatus> stored;
-}
-
-/// The Sessions list's filters; empty means "all" (TASK 14.1).
-class SessionFilter {
-  const SessionFilter({
-    this.statuses = const {},
-    this.targetId,
-    this.siteId,
-    this.from,
-    this.to,
-  });
-
-  final Set<SessionListStatus> statuses;
-  final int? targetId;
-  final int? siteId;
-  final CalendarDate? from;
-  final CalendarDate? to;
-
-  bool get isEmpty =>
-      statuses.isEmpty &&
-      targetId == null &&
-      siteId == null &&
-      from == null &&
-      to == null;
-
-  /// How many filters are set (S8.5: the Filters button's badge).
-  int get count =>
-      statuses.length +
-      (targetId == null ? 0 : 1) +
-      (siteId == null ? 0 : 1) +
-      (from == null && to == null ? 0 : 1);
-}
-
-/// A session for its detail page: the planned vs actual of its run (null
-/// for legacy) and its target's progress so far (TASK 14.2).
-typedef SessionDetail = ({
-  Session session,
-  SessionReconciliation? reconciliation,
-  TargetProgress? progress,
-});
+export 'sessions_filter.dart';
 
 /// The Sessions tab (TASKs 11.3–11.4; TASK 12.3): the saved sessions the
 /// logbook lists — every non-draft session, a draft saved before
 /// ("unsaved changes"), and the legacy logs (owner decisions).
 class SessionsViewModel extends ChangeNotifier {
-  SessionsViewModel(this._repository, {this._exporter, Clock? clock})
-    : _clock = clock ?? const SystemClock();
+  SessionsViewModel(
+    this._repository, {
+    this._exporter,
+    Clock? clock,
+    CurrentSession? currentSession,
+  }) : _clock = clock ?? const SystemClock(),
+       _current = currentSession;
+
+  final CurrentSession? _current;
 
   final SessionRepository _repository;
   final Clock _clock;
@@ -296,5 +257,33 @@ class SessionsViewModel extends ChangeNotifier {
     await _repository.delete(id);
     markChanged();
     await refreshDue();
+  }
+
+  Future<DeletionReceipt?> deleteWithUndo(int id) async {
+    final repository = _repository;
+    final current = _current;
+    final DeletionReceipt? receipt;
+    if (current != null) {
+      receipt = await current.deleteWithUndo(id);
+    } else if (repository is UndoableDeletionRepository) {
+      receipt = await (repository as UndoableDeletionRepository).deleteWithUndo(
+        id,
+      );
+    } else {
+      await delete(id);
+      return null;
+    }
+    markChanged();
+    await refreshDue();
+    if (receipt == null) return null;
+    return DeletionReceipt(
+      resource: receipt.resource,
+      id: id,
+      restore: () async {
+        await receipt!.restore();
+        markChanged();
+        await refreshDue();
+      },
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,7 +61,7 @@ class _MetadataImportScreenState extends State<MetadataImportScreen> {
   Widget build(BuildContext context) {
     final vm = context.watch<MetadataImportViewModel?>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Add from a photo')),
+      appBar: hybridAppBar(context, title: const Text('Add from a photo')),
       body: vm == null
           ? const Padding(
               padding: EdgeInsets.all(16),

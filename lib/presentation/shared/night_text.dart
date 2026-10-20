@@ -34,10 +34,22 @@ abstract final class WeatherText {
   }
 
   /// "10–40 %", "20 %", or "no forecast" — never 0 for unknown (SI-008).
-  static String range(WeatherRange? r, String unit, {int digits = 0}) {
+  static String range(
+    WeatherRange? r,
+    String unit, {
+    int digits = 0,
+    bool trimTrailingZeros = false,
+  }) {
     if (r == null) return 'no forecast';
-    final lo = r.min.toStringAsFixed(digits);
-    final hi = r.max.toStringAsFixed(digits);
+    String format(double value) {
+      final fixed = value.toStringAsFixed(digits);
+      if (!trimTrailingZeros) return fixed;
+      final rounded = double.parse(fixed);
+      return QuantityText.number(rounded == 0 ? 0.0 : rounded);
+    }
+
+    final lo = format(r.min);
+    final hi = format(r.max);
     return lo == hi ? '$lo $unit' : '$lo–$hi $unit';
   }
 
@@ -47,13 +59,23 @@ abstract final class WeatherText {
         ? null
         : WeatherRange(u.temperatureOf(r.min), u.temperatureOf(r.max)),
     u.temperature.symbol,
+    digits: 1,
+    trimTrailingZeros: true,
   );
 
   /// F21: a wind-speed range (stored in km/h) in the chosen unit.
   static String windRange(WeatherRange? r, DisplayUnits u) => range(
     r == null ? null : WeatherRange(u.windOf(r.min), u.windOf(r.max)),
     u.wind.symbol,
+    digits: 1,
+    trimTrailingZeros: true,
   );
+
+  /// Compact temperature/wind facts. Each missing quantity stays explicit
+  /// even when another variable in the provider snapshot is available.
+  static String compactConditions(NightWeatherSummary? s, DisplayUnits u) =>
+      '${s?.temperature == null ? 'Temperature unknown' : temperatureRange(s!.temperature, u)}'
+      ' · ${s?.windSpeed == null ? 'wind unknown' : 'wind ${windRange(s!.windSpeed, u)}'}';
 
   static String failure(WeatherFailure failure) => switch (failure) {
     WeatherFailure.unavailable => 'Offline or the service did not answer.',
@@ -136,16 +158,18 @@ abstract final class WeatherText {
   /// One line for a summary row (S6.5): the night's cloud range with the
   /// forecast's age (and its aging or stale wording), or why there is no
   /// forecast. Never a score or a good/bad word (ADR-012).
-  static String summary(NightWeather state, NightWeatherSummary? s) =>
-      switch (state) {
-        NightWeatherIdle() => 'Set a site to see the forecast.',
-        NightWeatherLoading() => loading,
-        NightWeatherOutOfRange() => outOfRange,
-        NightWeatherUnavailable(:final failure) =>
-          'No forecast. ${WeatherText.failure(failure)}',
-        NightWeatherAvailable() =>
-          'Cloud ${range(s?.cloudCover, '%')} · ${freshness(state)}',
-      };
+  static String summary(
+    NightWeather state,
+    NightWeatherSummary? s,
+  ) => switch (state) {
+    NightWeatherIdle() => 'Set a site to see the forecast.',
+    NightWeatherLoading() => loading,
+    NightWeatherOutOfRange() => outOfRange,
+    NightWeatherUnavailable(:final failure) =>
+      'No forecast. ${WeatherText.failure(failure)}',
+    NightWeatherAvailable() =>
+      '${s?.cloudCover == null ? 'Cloud cover unknown' : 'Cloud ${range(s!.cloudCover, '%')}'} · ${freshness(state)}',
+  };
 }
 
 /// The dark span at the user's darkness limit (S6.5, TD-051): the Sun below

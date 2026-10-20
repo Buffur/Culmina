@@ -14,6 +14,8 @@ abstract final class StorageText {
     final size = f.bytes == null ? null : QuantityText.storage(f.bytes!);
     final skipped = _skipped(f);
     final text = switch (f.basis) {
+      StorageBasis.planEstimate =>
+        'Plan estimate: $size a frame (user entered).',
       StorageBasis.blockFile || StorageBasis.rigFile when !f.read =>
         'From the size of ${f.label}: $size a frame (mode not read; '
             'compressed sizes vary with content).',

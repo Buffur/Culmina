@@ -10,28 +10,31 @@ import '../shared/clear_outside_link.dart';
 import '../shared/night_time_formatter.dart';
 import '../viewmodels/settings_viewmodel.dart';
 import '../viewmodels/site_viewmodel.dart';
-import '../viewmodels/session_plan_viewmodel.dart';
 import '../viewmodels/night_conditions_viewmodel.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/theme/hybrid_tokens.dart';
 import '../../core/units/display_units.dart';
 import '../shared/display_units_of.dart';
 import '../shared/night_text.dart';
 import '../../core/theme/app_spacing.dart';
+import 'weather_hourly_charts.dart';
 
-/// The chosen night's weather (ADR-012; TASK 9.4): sunset to sunrise only,
+/// The chosen night's weather (ADR-022 N6): the selected dark span,
 /// per-hour indicators and per-variable ranges with explicit units, the
 /// forecast's age and model, and no score or good/bad colouring. Hours
 /// without a forecast say so; they are never shown as zero.
 class WeatherForecastWidget extends StatelessWidget {
   final VoidCallback? onTap;
 
-  const WeatherForecastWidget({super.key, this.onTap});
+  /// False when the enclosing conditions browser already states the site zone.
+  final bool showZone;
+
+  const WeatherForecastWidget({super.key, this.onTap, this.showZone = true});
 
   @override
   Widget build(BuildContext context) {
     final conditionsVm = context.watch<NightConditionsViewModel>();
-    final planVm = context.watch<SessionPlanViewModel>();
     final siteVm = context.watch<SiteViewModel>();
     final theme = Theme.of(context);
     final state = conditionsVm.nightWeather;
@@ -40,68 +43,27 @@ class WeatherForecastWidget extends StatelessWidget {
     );
 
     return Card(
+      color: theme.scaffoldBackgroundColor,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                AppSpacing.md,
-                AppSpacing.sm,
-                AppSpacing.sm,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Night weather',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        // S9.6: the place name when there is one; the
-                        // detail's header already names the site.
-                        if (siteVm.locationName case final name?)
-                          Text(
-                            name,
-                            style: small,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        // Required with a place name (TASK 7.2).
-                        if (siteVm.locationName != null &&
-                            siteVm.locationNameAttribution != null)
-                          Text(
-                            'Place name ${siteVm.locationNameAttribution}',
-                            style: small,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    key: const Key('weather.refresh'),
-                    tooltip: 'Refresh forecast',
-                    icon: const Icon(Icons.refresh),
-                    onPressed: state is NightWeatherLoading
-                        ? null
-                        : () => conditionsVm.refreshWeather(),
-                  ),
-                ],
+          if (onTap != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: onTap,
+                child: const Text('Open weather details'),
               ),
             ),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md,
               0,
-              AppSpacing.md,
+              AppSpacing.sm,
+              0,
               AppSpacing.sm,
             ),
             child: switch (state) {
@@ -142,15 +104,17 @@ class WeatherForecastWidget extends StatelessWidget {
               ),
               NightWeatherAvailable() => _AvailableBody(
                 state: state,
+                showZone: showZone,
+                onRefresh: () => conditionsVm.refreshWeather(),
                 summary: conditionsVm.nightWeatherSummary,
                 zoneId: siteVm.displayZoneId,
-                windowStartUtc: planVm.sessionNight?.startUtc,
+                windowStartUtc: conditionsVm.sessionNight?.startUtc,
                 limitDeg: context
                     .watch<SettingsViewModel>()
                     .planningPreferences
                     .darknessLimit
                     .degrees,
-                leadDays: switch (planVm.eveningDate) {
+                leadDays: switch (conditionsVm.sessionNight?.eveningDate) {
                   final night? => ForecastOverview.daysBetween(
                     ForecastOverview.localDate(
                       state.snapshot.fetchedAtUtc,
@@ -165,13 +129,10 @@ class WeatherForecastWidget extends StatelessWidget {
               ),
             },
           ),
+          if (siteVm.locationNameAttribution case final attribution?)
+            Text('Place name $attribution', style: small),
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md,
-              0,
-              AppSpacing.md,
-              AppSpacing.md,
-            ),
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
             child: InkWell(
               onTap: () => launchUrl(
                 Uri.parse('https://open-meteo.com/'),
@@ -202,6 +163,8 @@ class WeatherForecastWidget extends StatelessWidget {
 class _AvailableBody extends StatelessWidget {
   const _AvailableBody({
     required this.state,
+    required this.showZone,
+    required this.onRefresh,
     required this.summary,
     required this.zoneId,
     required this.windowStartUtc,
@@ -212,6 +175,8 @@ class _AvailableBody extends StatelessWidget {
   });
 
   final NightWeatherAvailable state;
+  final bool showZone;
+  final VoidCallback onRefresh;
   final NightWeatherSummary? summary;
   final String? zoneId;
   final DateTime? windowStartUtc;
@@ -241,24 +206,31 @@ class _AvailableBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (s != null && start != null) ...[
+          if (s.span != NightWeatherSpan.noDark && s.coveredHours > 0) ...[
+            Text(
+              s.cloudCover == null
+                  ? 'Cloud cover unknown'
+                  : 'Cloud ${WeatherText.range(s.cloudCover, '%')} '
+                        '${s.cloudGapHours > 0 ? 'in ${s.totalHours - s.cloudGapHours}/${s.totalHours} known dark hours' : 'in the dark'}',
+              key: const Key('weather.facts'),
+              style: theme.textTheme.headlineSmall,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+          ],
           Text(
             WeatherText.span(s, limitDeg, at),
             key: const Key('weather.span'),
             style: theme.textTheme.bodyMedium,
           ),
-          Text(
-            'Times in ${NightTimeFormatter.zoneCaption(s.fromUtc, zoneId: zoneId)}',
-            style: small,
-          ),
-          if (s.span != NightWeatherSpan.noDark && s.coveredHours > 0) ...[
-            const SizedBox(height: AppSpacing.xs),
+          if (showZone)
             Text(
-              'Cloud ${WeatherText.range(s.cloudCover, '%')} · '
-              'Temperature ${WeatherText.temperatureRange(s.temperature, unitsOf(context))} · '
-              'Dew point ${WeatherText.temperatureRange(s.dewPoint, unitsOf(context))}',
-              key: const Key('weather.facts'),
-              style: theme.textTheme.bodyMedium,
+              'Times in ${NightTimeFormatter.zoneCaption(s.fromUtc, zoneId: zoneId)}',
+              key: const Key('weather.zone'),
+              style: small,
             ),
+          if (s.span != NightWeatherSpan.noDark && s.coveredHours > 0) ...[
+            const SizedBox(height: AppSpacing.md),
+            _WeatherFacts(summary: s),
           ],
           if (coverage != null)
             Text(
@@ -277,6 +249,15 @@ class _AvailableBody extends StatelessWidget {
             style: small,
           ),
         _FreshnessLine(state: state),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            key: const Key('weather.refresh'),
+            onPressed: onRefresh,
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('Refresh forecast'),
+          ),
+        ),
         if (s != null &&
             start != null &&
             s.span != NightWeatherSpan.noDark &&
@@ -286,11 +267,17 @@ class _AvailableBody extends StatelessWidget {
             WeatherText.dew(s, unitsOf(context)),
             key: const Key('weather.dew'),
             style: small?.copyWith(
-              color: s.dewRiskHours > 0 ? theme.colorScheme.error : null,
+              color: s.dewRiskHours > 0
+                  ? theme.extension<HybridTokens>()?.weatherCaution
+                  : null,
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          _HourStrip(summary: s, zoneId: zoneId),
+          WeatherHourlyCharts(
+            slots: s.slots,
+            zoneId: zoneId,
+            exactDescription: _HourColumn.exact,
+          ),
           Text(
             'Precipitation and gusts are for the hour before each time; '
             '* marks an hour only partly in the dark span.',
@@ -328,7 +315,12 @@ class _AvailableBody extends StatelessWidget {
             style: small,
           ),
           children: [
-            if (s != null && s.coveredHours > 0) _Ranges(summary: s),
+            if (s != null && s.coveredHours > 0) ...[
+              _Ranges(summary: s),
+              const SizedBox(height: AppSpacing.md),
+              Text('Hourly values', style: theme.textTheme.titleSmall),
+              _HourStrip(summary: s, zoneId: zoneId),
+            ],
             const SizedBox(height: AppSpacing.xs),
             Text(
               'Model: ${snapshot.provider} / ${snapshot.model}',
@@ -343,6 +335,60 @@ class _AvailableBody extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _WeatherFacts extends StatelessWidget {
+  const _WeatherFacts({required this.summary});
+  final NightWeatherSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final units = unitsOf(context);
+    final text = Theme.of(context).textTheme;
+    final facts = [
+      (
+        'Air temperature',
+        WeatherText.temperatureRange(summary.temperature, units),
+      ),
+      ('Dew point', WeatherText.temperatureRange(summary.dewPoint, units)),
+      (
+        'Wind and gusts',
+        '${WeatherText.windRange(summary.windSpeed, units)}\n'
+            'Gusts ${WeatherText.windRange(summary.windGusts, units)}',
+      ),
+      (
+        'Rain chance',
+        '${WeatherText.range(summary.precipitationProbability, '%')} '
+            'in sampled hours',
+      ),
+    ];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final large = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
+        final width = large
+            ? constraints.maxWidth
+            : (constraints.maxWidth - 16) / 2;
+        return Wrap(
+          spacing: 16,
+          runSpacing: 24,
+          children: [
+            for (final (label, value) in facts)
+              SizedBox(
+                width: width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: text.bodySmall),
+                    const SizedBox(height: 4),
+                    Text(value, style: text.bodyMedium),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
@@ -363,18 +409,19 @@ class _FreshnessLine extends StatelessWidget {
         ? 'Offline, showing the cached forecast. '
         : 'Refresh failed, showing the cached forecast. ';
     final warn = failed != null || state.age != WeatherAge.current;
+    final caution = theme.extension<HybridTokens>()?.weatherCaution;
     return Row(
       key: const Key('weather.freshness'),
       children: [
         if (warn) ...[
-          Icon(Icons.history, size: 16, color: theme.colorScheme.error),
+          Icon(Icons.history, size: 16, color: caution),
           const SizedBox(width: AppSpacing.xs),
         ],
         Expanded(
           child: Text(
             '$prefix$text',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: warn ? theme.colorScheme.error : null,
+              color: warn ? caution : null,
               fontWeight: warn ? FontWeight.bold : null,
             ),
           ),
@@ -500,7 +547,7 @@ class _HourStripState extends State<_HourStrip> {
               '${WeatherText.temperatureRange(s.temperature, unitsOf(context))}. Select an hour for '
               'its exact values.',
           child: SingleChildScrollView(
-            key: const Key('weather.hours'),
+            key: const Key('weather.tableHours'),
             scrollDirection: Axis.horizontal,
             child: IntrinsicHeight(
               child: Row(
@@ -558,7 +605,7 @@ class _HourStripState extends State<_HourStrip> {
               liveRegion: true,
               child: Text(
                 _HourColumn.exact(context, slots[selected], widget.zoneId),
-                key: const Key('weather.hourDetail'),
+                key: const Key('weather.tableHourDetail'),
                 style: style,
               ),
             ),
@@ -707,14 +754,22 @@ class _HourColumn extends StatelessWidget {
                             Icons.water_drop,
                             key: Key('weather.dewRisk.${slot.timeUtc.hour}'),
                             size: 12,
-                            color: theme.colorScheme.error,
+                            color:
+                                theme
+                                    .extension<HybridTokens>()
+                                    ?.weatherCaution ??
+                                AppPalette.of(context).caution,
                             semanticLabel: 'dew risk',
                           ),
                         Text(
                           instant(t(h.dewPointC)),
                           style: slot.dewRisk == true
                               ? style?.copyWith(
-                                  color: theme.colorScheme.error,
+                                  color:
+                                      theme
+                                          .extension<HybridTokens>()
+                                          ?.weatherCaution ??
+                                      AppPalette.of(context).caution,
                                   fontWeight: FontWeight.bold,
                                 )
                               : style,
@@ -764,7 +819,7 @@ class _CloudBar extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: FractionallySizedBox(
-                    key: const Key('weather.cloudBar'),
+                    key: const Key('weather.tableCloudBar'),
                     heightFactor: (pct / 100).clamp(0.0, 1.0),
                     widthFactor: 1,
                     child: ColoredBox(color: p.muted),

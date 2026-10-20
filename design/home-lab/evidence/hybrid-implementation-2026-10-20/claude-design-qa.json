@@ -1,0 +1,99 @@
+{
+  "duration_api_ms": 153378,
+  "stop_reason": "end_turn",
+  "session_id": "ba7dca9f-7d09-473e-8a28-04a3aecddda8",
+  "total_cost_usd": 0.8320104000000001,
+  "usage": {
+    "input_tokens": 22,
+    "cache_creation_input_tokens": 59954,
+    "cache_read_input_tokens": 444752,
+    "output_tokens": 13167,
+    "output_tokens_details": {
+      "thinking_tokens": 5334
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 59954,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5155,
+        "cache_read_input_tokens": 59683,
+        "cache_creation_input_tokens": 1941,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1941
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "claude-opus-5-5": {
+      "inputTokens": 22,
+      "outputTokens": 13167,
+      "cacheReadInputTokens": 444752,
+      "cacheCreationInputTokens": 59954,
+      "webSearchRequests": 0,
+      "costUSD": 0.8320104000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 5334,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "safety_stops": 0,
+  "is_error": false,
+  "num_turns": 41,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "# Hybrid (`variant=blend`) design QA, 2026-10-20\n\nI read all 35 screenshots. I checked three suspected issues in the source: `preview-bridge.js` in full, plus the first lines of `plan.js` and `settings.js`. I edited nothing and ran no commands.\n\n## What this covers\n- **Seen:** Home in light, dark and field mode; the site, date, candidate and Welcome sheets; Plan at 100% and 200%; the block, calibration and assumptions editors; Night, Moon and Weather; the Logbook list, detail, result editor at 200% and Progress; Library; the rig, target and site editors at 200%; metadata review; location permission denied (field mode); Settings and its Appearance, Planning, Privacy and Backup pages at 200%; About; the settings-file restore screen; the full backup review.\n- **Not seen:** keyboard focus, announcements and URL reload (C02, C14); editing a custom target; optional rig and site fields; text and JSON export; stale-file and rollback failures; the window shown for custom coordinates (C17); Home at 200%; Library pickers inside the Plan; any Unknown, offline or stale Weather state; \"Total session time\". Several 200% screenshots only show the top of a scrolling form, so I don't count unseen controls as missing.\n- The screenshots can't show 48 px touch targets or AA contrast. Field-mode contrast 2.71 is existing documented debt, not a new problem.\n\n## C01–C17\nEach line says whether the verdict rests on the screenshots, the source, or inference.\n\n| ID | Result | Basis |\n|---|---|---|\n| C01 | **Pass** (bundled targets) | Seen: title \"Dumbbell Nebula (M27)\", no \"undefined\"; \"Bundled catalogue · read-only\"; RA labelled J2000. Editing a custom target is unseen. |\n| C02 | **Partial** | Seen: Moon calendar says \"Tap to view; your plan stays unchanged\"; the date sheet exists. Focus and reload can't be judged from images. |\n| C03 | **Partial** | Seen: site, date and candidate sheets fill the phone, controls are in English, Cancel is next to Apply. The cancel wording differs between the two sheets (P2-4). Home at 200% is unseen. |\n| C04 | **Pass** | Seen: \"Moon-free dark 4 h 15 min, 00:30 → 04:45 (+1)\" with the calendar on the first screen. Night has disclosures for \"Read the time browser\" and \"Moon intervals & phase\", and keeps Europe/Kyiv and (+1). |\n| C05 | **Partial** | Seen: Weather opens with its answer; \"7/7 hourly rows · snapshot age 23 h 11 min\" is shown with Refresh. No stale label is visible on a 23-hour-old snapshot, and the Unknown and offline states are unseen. Home's Weather row is below the first screen. |\n| C06 | **Pass** (first screen) | Seen: outcome \"Partly\" and \"1 h 42 min of 3 h planned\" come first, then Planned/Recorded per group. The full snapshot further down is unseen. |\n| C07 | **Partial** | Seen: Progress groups by target, then filter, then settings; \"ISO not recorded\" is kept separate; no goals or scores. Future entries are short. At 200% the result editor's title and identity fill about 60% of the screen before the outcome (P2-2). |\n| C08 | **Partial** | Seen: name and \"What takes the pictures?\" come first. Optional manufacturer/model and the full Unknown record are unseen. |\n| C09 | **Partial** | Seen: \"Coordinates and time zone\" group; \"choose it separately in the Plan\", so no automatic activation. Sky darkness and provenance are unseen. |\n| C10 | **Partial** | Seen: assumptions copy separates \"Overrides for this plan\" from global settings; real switches on Appearance and Privacy; \"What leaves the device\" disclosure; About links on separate lines. The Planning 200% screenshot is mid-scroll, so the first control is unconfirmed, and its header overlaps the content (P2-2). |\n| C11 | **Partial** | Seen: \"Needed in imaging window: 2 h 15 min\" is distinct from \"2 h integration\"; Apply changes, Save plan and Save result are distinct; provenance (\"Records: Recorded example\") sits below the main text. \"Total session time\" doesn't appear in any screenshot. |\n| C12 | **Partial** (pass on source) | Source: `preview-bridge.js:29-38` copies the chosen record into the plan as a snapshot, and IDs carry a `library:` prefix, so later Library edits can't change the plan. The pickers themselves are unseen. |\n| C13 | **Pass on source** | `preview-bridge.js:20-28`: no saved preferences returns `null`, so the old fixture stays; setup switched off counts as 0 when preferences exist; only the three named preferences are applied; the margin percentage is taken of the usable window. That override values win was not checked (`assumptionsFor`). The screenshots are consistent: Settings shows \"Nothing saved yet\" and Plan shows \"Saved\". |\n| C14 | **Unseen** | Can't be judged from screenshots. |\n| C15 | **Partial** | Seen: Welcome; the JSON review shows \"Unknown → 6248 …\", \"Nothing applied or saved\" and \"Save rig is still required\"; location denied leaves coordinates unchanged, offers manual entry, and says there are no map tiles. Export is unseen. |\n| C16 | **Partial** | Seen: the review lists the five records with counts, says \"Not stored\" means defaults and that other browser keys stay unchanged, offers \"Download current data first\" and Cancel/Confirm, and shows \"Nothing has been restored\". The settings-file restore is a separate screen. Stale-file and rollback failures are unseen. That restore screen also contradicts itself (P2-1). |\n| C17 | **Inferred pass, visually unseen** | `preview-bridge.js:28`: a custom target or site passes no usable window, so no fit margin is calculated. Not checked in any screenshot. |\n\n## P2 issues still open (no P0/P1 found)\n1. **The restore-settings screen contradicts itself** (`qa-settings-json-confirm.png`). The review says \"Nothing: the file matches your current preview settings\" with \"Replace settings\" enabled. At the same time a message reads \"The file was not applied: this file is not a Culmina preview settings file, or it is damaged\". This is probably a leftover message from an earlier invalid file (inferred, not traced in `settings.js`). Either way the user can't tell which state is true. Clear the message when a new review starts.\n2. **Headers at 200% text.** Titles wrap onto two or three lines and then repeat as the body heading: target detail (\"Dumbbell Nebula (M27)\" twice), result editor (\"How did it go?\" twice), Backup. On Planning at 200%, the scrolled \"−15°\" option shows under the \"Planning\" title, so the header overlaps the content.\n3. **Fit margin uses two different units.** Settings says \"15% margin\"; the plan's assumptions say \"Fit margin (minutes) 15\". The source converts on purpose (percentage × usable window), but the screen doesn't explain the conversion or say which value applies.\n4. **The Home sheets word Cancel differently.** The site sheet says \"Save plan records the change\"; the date sheet says \"Cancel leaves the draft unchanged\". They do the same thing, so the wording should match.\n5. **Small polish items:**\n   - Weather \"Rain chance up to 0%\" reads oddly.\n   - A 23-hour snapshot labelled \"Full dark-time coverage\" has no stale wording in view; check the stale threshold.\n   - Pop-up messages cover data on Logbook detail and Progress.\n   - The red-mode toggle shows a sun icon on Home but a moon on inner screens.\n   - At 200% the rig-name placeholder is cut off.\n   - \"19 Oct–20\" can read as a range.\n\nThe current global settings marking a saved plan as changed is intended behaviour (C13), not a bug.\n\n## Nielsen heuristics: 30/40 (prior 29/40)\nThese are my expert judgement from screenshots and source, not measured usability.\n\n| Heuristic | Score /4 |\n|---|---|\n| Visibility of status | 3 |\n| Match to the task | 3 |\n| Control and freedom | 3 |\n| Consistency and standards | 3 (was 2: Home sheets now fit the phone; issues 4 and 5 remain) |\n| Error prevention | 3 |\n| Recognition over recall | 3 |\n| Efficiency | 3 |\n| Minimalist design | 3 (not 4 because of the 200% title duplication) |\n| Error recovery | 3 (issue 1 stops a 4) |\n| Help and explanation | 3 |\n\nThe one-point gain comes from consistency. Nothing here supports claims about native behaviour, the science engine, real devices or AA contrast.",
+  "ttft_ms": 4021,
+  "type": "result",
+  "duration_ms": 154915,
+  "uuid": "8e83a8d5-bbec-4e8a-8c7b-ce1f88828aaa",
+  "ttft_stream_ms": 3864,
+  "time_to_request_ms": 107,
+  "first_content_frame_ms": 3864,
+  "queued_turn_count": 0,
+  "result_index": 0
+}

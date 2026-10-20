@@ -1,0 +1,199 @@
+{
+  "passed": true,
+  "syntax": [
+    {
+      "file": "design\\home-lab\\app.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\night-ui.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\plan.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\plan-model.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\conditions.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\workspace.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\logbook.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\library.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\settings.js",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\scripts\\check_quality.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\scripts\\check_tabs_browser.cjs",
+      "exitCode": 0
+    },
+    {
+      "file": "design\\home-lab\\scripts\\check_tabs_interactions.cjs",
+      "exitCode": 0
+    }
+  ],
+  "markdownLinks": 88,
+  "catalogueRecords": [
+    "M27",
+    "M31",
+    "M33",
+    "M42",
+    "M45",
+    "NGC 7000"
+  ],
+  "inventory": {
+    "result": "PASS",
+    "sources": 21,
+    "proposalRoles": 13,
+    "paletteUsage": 35,
+    "selfTest": true,
+    "problems": []
+  },
+  "gitDiffCheckExit": 0,
+  "trackedModifiedFiles": [
+    ".agents/skills/README.md",
+    "CLAUDE.md",
+    "docs/README.md"
+  ],
+  "files": {
+    "design\\home-lab\\index.html": {
+      "sha256": "a680e6e696951072b2c47fde8af9f86cf3d0f0548c8673e512bb00873e6f8873",
+      "bytes": 12274
+    },
+    "design\\home-lab\\app.js": {
+      "sha256": "547e6f7d87bb8f9adeb28077a7e5d4484db3ad37f79cfa4cb175cbf37b26168e",
+      "bytes": 30855
+    },
+    "design\\home-lab\\night-ui.js": {
+      "sha256": "b98a39eb9d508c3e73528a6306913134e472aa26a32861ce86a8f2a0fa24ffb7",
+      "bytes": 11681
+    },
+    "design\\home-lab\\night.css": {
+      "sha256": "9b0e8fdf5ba60c3f14e639762c7f3cca9fbf1e9a9a2c8d405061fecc92da93e4",
+      "bytes": 6597
+    },
+    "design\\home-lab\\plan.html": {
+      "sha256": "9e8d37904551596f74488d70e6870e9c4651488868204b3aae3598d99f92276b",
+      "bytes": 5138
+    },
+    "design\\home-lab\\plan.js": {
+      "sha256": "2613fc0a37421554432497e9cd95820459a2f20b4af6fc58e6412b6293d3c3bb",
+      "bytes": 74505
+    },
+    "design\\home-lab\\plan-model.js": {
+      "sha256": "e5032feaa75be58608c82d9164a72a081052eb7ee9004544e0a93a0088314e3e",
+      "bytes": 17305
+    },
+    "design\\home-lab\\conditions.html": {
+      "sha256": "f0677768fd453b449564659315c8e12b408786e3f3bb0c5bd7fda1fab6a084a8",
+      "bytes": 4441
+    },
+    "design\\home-lab\\conditions.js": {
+      "sha256": "81f3a5bffc0aba5d181363edf6f9da25c8bde0c6ab22499c0b881ec4afa8986e",
+      "bytes": 27772
+    },
+    "design\\home-lab\\workspace.html": {
+      "sha256": "dd59a32043c60dbcaabea7757efa83d049cd0ab3df89eb7650617feb8f5829fc",
+      "bytes": 2925
+    },
+    "design\\home-lab\\workspace.js": {
+      "sha256": "daa538a9188071ad03babbd1b89d24b08281afe3a469f387383bf43ff706d710",
+      "bytes": 7619
+    },
+    "design\\home-lab\\workspace.css": {
+      "sha256": "f93ebbc984c987162817e544e3c70346eb51bf42b1c6f8821682f9a49c40518a",
+      "bytes": 3554
+    },
+    "design\\home-lab\\logbook.js": {
+      "sha256": "54e4699f75965365eec9579f2484eda9d634c35219d2c52715f0751ed2925103",
+      "bytes": 57378
+    },
+    "design\\home-lab\\logbook.css": {
+      "sha256": "e7722a5061cad0ec5491ef17a94266380cc2bc65e707b3bba97292e9b1737178",
+      "bytes": 7462
+    },
+    "design\\home-lab\\library.js": {
+      "sha256": "30f4f99719048a633c3d7b35fa652d18054b42f77cc4431e4ad115066c00d617",
+      "bytes": 78983
+    },
+    "design\\home-lab\\library.css": {
+      "sha256": "6dda9cbf6ab14231d7077b8d7692fbc4afbe7b1fe28e7ab46bbb2cda2ee5295a",
+      "bytes": 3916
+    },
+    "design\\home-lab\\settings.js": {
+      "sha256": "051cac4d96c3047ed64d699a8cc5259474a4f6bf9c3a9de82399239c47f2d3ae",
+      "bytes": 54946
+    },
+    "design\\home-lab\\settings.css": {
+      "sha256": "215ab8b94137b0c171b73b24d5eb8296901b4cb243c614663cf9bf0e4902b7c1",
+      "bytes": 4504
+    },
+    "design\\home-lab\\scripts\\check_quality.mjs": {
+      "sha256": "a47287062d5a343c62d05cdf46812a5077523875ede58cc160d815fbf8c63e3f",
+      "bytes": 6711
+    },
+    "design\\home-lab\\scripts\\check_tabs_browser.cjs": {
+      "sha256": "326997071c6b458ff8e4fe86b4ead9a6d5089977576336e83823124e30c5a39c",
+      "bytes": 8172
+    },
+    "design\\home-lab\\scripts\\check_tabs_interactions.cjs": {
+      "sha256": "e5dfa067fe2236ec7a7c76c18d4c54ff34332dd54621b87c95ac5daa95f6821e",
+      "bytes": 16359
+    },
+    "docs\\design\\ANDROID_TABS_2026_10_20.md": {
+      "sha256": "89c156ee6d0168b85e530b5fb7daf861a17ce8d3968705cd66c001db756a9168",
+      "bytes": 5054
+    },
+    "design\\home-lab\\evidence\\TABS_PREVIEW.md": {
+      "sha256": "1239765e8b6fea9cfa63d1d1e4663a6b2dc03c89490f5a8233430a5b4a49387a",
+      "bytes": 7290
+    },
+    "design\\home-lab\\evidence\\TABS_LIBRARY.md": {
+      "sha256": "e8a80bd7038315ad3a69176c0d1848a6912fe588d77f5f7c2d8ec77eaa042894",
+      "bytes": 2508
+    },
+    "design\\home-lab\\evidence\\TABS_SETTINGS.md": {
+      "sha256": "7b704caf71d4bd20819281fcc4a1ecbc0e62cad0924ea43f15a86800c74f1c35",
+      "bytes": 2480
+    },
+    "design\\home-lab\\evidence\\TABS_LOGBOOK.md": {
+      "sha256": "577c686988934850c4c6f7b92cd7b7805cde2d4c130361a938ef5d44db37d35f",
+      "bytes": 7917
+    },
+    "docs\\design\\QUALITY_REFINEMENT_2026_10_20.md": {
+      "sha256": "8ccb8d1b4969472a9be119cee29e7b7d55bb36b8a11cbd9c63dda67082af2cd4",
+      "bytes": 6975
+    },
+    "design\\home-lab\\evidence\\QUALITY_REFINEMENT.md": {
+      "sha256": "f4ca212bf1d565531a8ea697de30b26c756837a9df3877be502d08ee99ff0df1",
+      "bytes": 9258
+    },
+    "docs/design/CHAT_HANDOFF_2026_10_20.md": {
+      "sha256": "2edbe7df5947307ec66cc4a3e77ed8c03328c4c61a5446dd3e4d6ba90e0b7541",
+      "bytes": 26310
+    },
+    "docs/AI_TOOL_CAPABILITIES_2026_10_20.md": {
+      "sha256": "7e5c248d0d5d06db61f5c42df9c84e38ee0e9a416debd60f154383dca17b0784",
+      "bytes": 9258
+    }
+  },
+  "problems": []
+}

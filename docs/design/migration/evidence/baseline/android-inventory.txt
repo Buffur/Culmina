@@ -1,0 +1,37 @@
+SDK root: C:\Users\zalub\AppData\Local\Android\sdk AVDs:
+accel:
+0
+WHPX(10.0.26300) is installed and usable.
+accel
+List of devices attached
+
+Installed package metadata:
+C:\Users\zalub\AppData\Local\Android\Sdk\system-images\android-30\google_apis\x86_64\source.properties
+
+Pkg.Desc=System Image x86_64 with Google APIs.
+Pkg.Revision=16
+AndroidVersion.ApiLevel=30
+SystemImage.Abi=x86_64
+C:\Users\zalub\AppData\Local\Android\Sdk\platforms\android-35\source.properties
+Pkg.Desc=Android SDK Platform 15
+Pkg.Revision=2
+AndroidVersion.ApiLevel=35
+C:\Users\zalub\AppData\Local\Android\Sdk\platforms\android-36\source.properties
+Pkg.Desc=Android SDK Platform 16
+Pkg.Revision=2
+AndroidVersion.ApiLevel=36
+C:\Users\zalub\AppData\Local\Android\Sdk\platforms\android-37.0\source.properties
+Pkg.Desc=Android SDK Platform 17
+Pkg.Revision=2
+AndroidVersion.ApiLevel=37.0
+C:\Users\zalub\AppData\Local\Android\Sdk\build-tools\36.0.0\source.properties
+Pkg.Revision=36.0.0
+#Pkg.Revision=36.0.0 rc5
+C:\Users\zalub\AppData\Local\Android\Sdk\ndk\28.2.13676358\source.properties
+Pkg.Desc = Android NDK
+Pkg.Revision = 28.2.13676358
+C:\Users\zalub\AppData\Local\Android\Sdk\cmake\3.22.1\source.properties
+Pkg.Revision = 3.22.1
+Pkg.Desc = CMake 3.22.1
+
+

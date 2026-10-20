@@ -1,0 +1,20 @@
+This is the single bounded confirmation after your initial independent design QA, not a fresh feature audit. Read the prior result at the first path below, the eight new/current images, and source snippets when needed. Read only; no edits, shell, network or memory. Review confirmed P2 corrections; do not infer missing controls from a 200% scrolled crop. Return a concise English confirmation, remaining actionable P1/P2 if any, and final ten Nielsen scores/40 (prior initial assessment30/40 and preimplementation29/40). A score may remain the same; do not chase a predetermined improvement.
+Corrections: valid settings-file review replaces prior invalid-file status; stale file-read revision guard; restore scope distinguishes saved snapshots from working budget; Library detail no repeated full name; result editor context disclosed and legend Outcome (all3outcomes visible at200% in narrow test); fixed-minute plan margin help explains globalpercentage and priority; Home date/site copy consistent; field mode icon consistent; shorter rig placeholder; Weather age uses existing native3haging/12hstale rules independently of full sample coverage, warning immediately below answer; rain0%wording and Reload example label. No forecast/calculation values changed.
+Adjudication of alleged Planning header overlap: measured appbar bottom253.671875 equals scroll viewport top253.671875, overlapfalse. Earlier image was deliberately mid-scroll: the partial radio is clipped at the scroll viewport boundary, not painted under the header. New image shows first budget control at200%. Please assess this evidence honestly.
+Only read screenshots/source/evidence, no tools other than Read. All browser tests isolatedlocalhost; no native/device certification. Full model suites78 before new freshness regression, now79; six integration groups pass; previous browser36roots/51inner/12Home plus11interactiongroups pass. Exact tests overlap. EarliervisualQA partial/unseen findings remain honest limits to that visualmethod; functional evidence is available rather than asserted unseen pixels.
+Prior QA:
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\CLAUDE_DESIGN_QA.md
+Images:
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-fixed-settings-json-confirm.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-fixed-target-200.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\logbook-result-200-qa-fix.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-fixed-weather.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-fixed-margin.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-fixed-planning-first-control.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-home-site.png
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-home-date.png
+Optional evidence:
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\qa-header-geometry.json
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\logbook-result-200-qa-fix.json
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\library-settings.md
+C:\Users\zalub\OneDrive\Desktop\Astro Planner\Astro-Planner\design\home-lab\evidence\hybrid-implementation-2026-10-20\continuity-checks.json

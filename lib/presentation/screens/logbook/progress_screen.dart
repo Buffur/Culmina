@@ -1,6 +1,8 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_spacing.dart';
 import '../../../domain/services/target_progress.dart';
 import '../../shared/app_words.dart';
 import '../../shared/night_time_formatter.dart';
@@ -27,7 +29,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppWords.progressByTarget)),
+      appBar: hybridAppBar(
+        context,
+        title: const Text(AppWords.progressByTarget),
+      ),
       body: FutureBuilder<List<TargetProgress>>(
         future: _progress,
         builder: (context, snapshot) {
@@ -41,7 +46,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           if (list.isEmpty) {
             return const Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
+                padding: EdgeInsets.all(AppSpacing.lg),
                 child: Text(
                   'No results yet. Integration adds up here once you record '
                   'how a saved plan went.',
@@ -52,7 +57,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             );
           }
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.md),
             children: [for (final p in list) TargetProgressCard(progress: p)],
           );
         },
@@ -72,11 +77,16 @@ class TargetProgressCard extends StatelessWidget {
     final p = progress;
     final theme = Theme.of(context);
     final night = p.lastNight;
-    return Card(
+    return Container(
       key: Key('progress.${p.targetId}'),
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

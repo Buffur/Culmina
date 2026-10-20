@@ -1,0 +1,268 @@
+{
+  "status": "PARTIAL_V3_V5_RV01",
+  "applicationCodeChanged": false,
+  "sourcesMatchPreviousFinal": true,
+  "sources": [
+    {
+      "file": "app.js",
+      "expected": "90e071dc0ace4924a505f7f83b3be695134006c7bea92fd76e34402311f75f52",
+      "current": "90e071dc0ace4924a505f7f83b3be695134006c7bea92fd76e34402311f75f52",
+      "match": true
+    },
+    {
+      "file": "catalog.css",
+      "expected": "2d5ca041c8905b507b721e3a2e7f2316b5b48cf47593ed6918b9d8f851b4189c",
+      "current": "2d5ca041c8905b507b721e3a2e7f2316b5b48cf47593ed6918b9d8f851b4189c",
+      "match": true
+    },
+    {
+      "file": "catalog.js",
+      "expected": "4f1b67416b77c139d44849f8e29b35befcef2e8478ac8c3aebcfbcfd10e98528",
+      "current": "4f1b67416b77c139d44849f8e29b35befcef2e8478ac8c3aebcfbcfd10e98528",
+      "match": true
+    },
+    {
+      "file": "conditions.css",
+      "expected": "625188a4c335826a2b68857bffb13a7bd04ad936d08ea543c8a6bfb528c49ba3",
+      "current": "625188a4c335826a2b68857bffb13a7bd04ad936d08ea543c8a6bfb528c49ba3",
+      "match": true
+    },
+    {
+      "file": "conditions.html",
+      "expected": "dcd22e97739ed725d180cc998a3167e1dc5a8f45dec1a78d24d5a68d3f46d726",
+      "current": "dcd22e97739ed725d180cc998a3167e1dc5a8f45dec1a78d24d5a68d3f46d726",
+      "match": true
+    },
+    {
+      "file": "conditions.js",
+      "expected": "cb54484dc4144b47566ea75b83ab0fa063411de633bdda892b7a7d7129290825",
+      "current": "cb54484dc4144b47566ea75b83ab0fa063411de633bdda892b7a7d7129290825",
+      "match": true
+    },
+    {
+      "file": "hybrid-refinement.css",
+      "expected": "78e957d2c9708c154f1056ccb2003750f4008f8d1269a7de8e0d93314f658591",
+      "current": "78e957d2c9708c154f1056ccb2003750f4008f8d1269a7de8e0d93314f658591",
+      "match": true
+    },
+    {
+      "file": "hybrid-ui.js",
+      "expected": "64f027c0fc713cf2fb3e0a1e853060af865fb6bb54ec8add1a53bac2542bf99b",
+      "current": "64f027c0fc713cf2fb3e0a1e853060af865fb6bb54ec8add1a53bac2542bf99b",
+      "match": true
+    },
+    {
+      "file": "index.html",
+      "expected": "698e3d6502eb5229a914dcb415cdc3ff29571bba11103dd6c7f2e5575ff23676",
+      "current": "698e3d6502eb5229a914dcb415cdc3ff29571bba11103dd6c7f2e5575ff23676",
+      "match": true
+    },
+    {
+      "file": "inventory.json",
+      "expected": "2f2f476e71fc7a26602a75d9e86f4c7fc8d19d993631b62c8f868ee88b8ddf29",
+      "current": "2f2f476e71fc7a26602a75d9e86f4c7fc8d19d993631b62c8f868ee88b8ddf29",
+      "match": true
+    },
+    {
+      "file": "library.css",
+      "expected": "96f82cca9d51e98fe226acfc6556a5efcdbd800cb4e28d15b2a61e1782d4cc2a",
+      "current": "96f82cca9d51e98fe226acfc6556a5efcdbd800cb4e28d15b2a61e1782d4cc2a",
+      "match": true
+    },
+    {
+      "file": "library.js",
+      "expected": "91b1cbb5d52e3b6d1fbb2ece1879693520c5f18e2da076c102eb808a6903dbfa",
+      "current": "91b1cbb5d52e3b6d1fbb2ece1879693520c5f18e2da076c102eb808a6903dbfa",
+      "match": true
+    },
+    {
+      "file": "logbook.css",
+      "expected": "40138414e556c78ad149c36a0acb3ccb86f0293cf266548423d4e0570d38e413",
+      "current": "40138414e556c78ad149c36a0acb3ccb86f0293cf266548423d4e0570d38e413",
+      "match": true
+    },
+    {
+      "file": "logbook.js",
+      "expected": "c0422fa4d6957543efbcb8378732d51ad35a541af25a59f96f7d7f4101051a3b",
+      "current": "c0422fa4d6957543efbcb8378732d51ad35a541af25a59f96f7d7f4101051a3b",
+      "match": true
+    },
+    {
+      "file": "night-model.js",
+      "expected": "2eecf92b0f9d1171a2e0e98a6c64b2a8a3d626d1708a7cdeaacd5f0dc54ed4ab",
+      "current": "2eecf92b0f9d1171a2e0e98a6c64b2a8a3d626d1708a7cdeaacd5f0dc54ed4ab",
+      "match": true
+    },
+    {
+      "file": "night-ui.js",
+      "expected": "d48e4655e938b0871ae068c1eb634d6b64c1cf5f5e7bbfe3d395cb31fca91366",
+      "current": "d48e4655e938b0871ae068c1eb634d6b64c1cf5f5e7bbfe3d395cb31fca91366",
+      "match": true
+    },
+    {
+      "file": "night.css",
+      "expected": "0f3c26236abb2fe509c186917082d0ae9155f3cfc2391c39b73de87d15b8467f",
+      "current": "0f3c26236abb2fe509c186917082d0ae9155f3cfc2391c39b73de87d15b8467f",
+      "match": true
+    },
+    {
+      "file": "plan-model.js",
+      "expected": "8d67aa43a7650fd84d19b663badc70bc4d92f53ffcd6b725e03c7f33e8bc5833",
+      "current": "8d67aa43a7650fd84d19b663badc70bc4d92f53ffcd6b725e03c7f33e8bc5833",
+      "match": true
+    },
+    {
+      "file": "plan.css",
+      "expected": "f386f154f45cc77ea48ec577e1eeb17b06e635e415ca580647c6e3dbcbf57fa9",
+      "current": "f386f154f45cc77ea48ec577e1eeb17b06e635e415ca580647c6e3dbcbf57fa9",
+      "match": true
+    },
+    {
+      "file": "plan.html",
+      "expected": "ddcc18d101ec1f346541d6fa13810a9e1c9f0d87bdcf8f5577b1e8fa2d99e3e5",
+      "current": "ddcc18d101ec1f346541d6fa13810a9e1c9f0d87bdcf8f5577b1e8fa2d99e3e5",
+      "match": true
+    },
+    {
+      "file": "plan.js",
+      "expected": "65387336c1c4e065819c6ac4861bd9f0644fa50b1a794a992e488affa7f261b1",
+      "current": "65387336c1c4e065819c6ac4861bd9f0644fa50b1a794a992e488affa7f261b1",
+      "match": true
+    },
+    {
+      "file": "preview-backup.css",
+      "expected": "eb8e8c65814e26678c9693c301373cb5bb88363b4d20412245bf0fd6c4b38d3c",
+      "current": "eb8e8c65814e26678c9693c301373cb5bb88363b4d20412245bf0fd6c4b38d3c",
+      "match": true
+    },
+    {
+      "file": "preview-backup.js",
+      "expected": "5909a3dd2238a7858986f945e1cbedf7050c16ac761cdaf4f039ff1b42b9a3b2",
+      "current": "5909a3dd2238a7858986f945e1cbedf7050c16ac761cdaf4f039ff1b42b9a3b2",
+      "match": true
+    },
+    {
+      "file": "preview-bridge.js",
+      "expected": "22ea3085144aa0dc4495ea1a6053082b30771f7649362f9a9b188da06c60f3e8",
+      "current": "22ea3085144aa0dc4495ea1a6053082b30771f7649362f9a9b188da06c60f3e8",
+      "match": true
+    },
+    {
+      "file": "references.json",
+      "expected": "9e3b2894e42b6dcf381cc6ed67a7523e3b613f5941e41c24fd4bcebbdba3d055",
+      "current": "9e3b2894e42b6dcf381cc6ed67a7523e3b613f5941e41c24fd4bcebbdba3d055",
+      "match": true
+    },
+    {
+      "file": "settings.css",
+      "expected": "3fa5136f43e48f45ce84a101dc81a8edac049f213312bb3a065dd8462c811791",
+      "current": "3fa5136f43e48f45ce84a101dc81a8edac049f213312bb3a065dd8462c811791",
+      "match": true
+    },
+    {
+      "file": "settings.js",
+      "expected": "286ab96c16b8a829f1b552cff9bdecc8bba242784e433292401a69b77ddf02ae",
+      "current": "286ab96c16b8a829f1b552cff9bdecc8bba242784e433292401a69b77ddf02ae",
+      "match": true
+    },
+    {
+      "file": "styles.css",
+      "expected": "659f3b6b06425a578cce82ce7bad96d0fe40e71680943b79cfab48d779a6a477",
+      "current": "659f3b6b06425a578cce82ce7bad96d0fe40e71680943b79cfab48d779a6a477",
+      "match": true
+    },
+    {
+      "file": "tokens.json",
+      "expected": "0eae21439d1af5bd9cadd6805d329057da97c245519a61a2165e971950ddbb51",
+      "current": "0eae21439d1af5bd9cadd6805d329057da97c245519a61a2165e971950ddbb51",
+      "match": true
+    },
+    {
+      "file": "workspace.css",
+      "expected": "fd83bf0ae30e9ed4bd08518a45cca7a745a883a823a89893affd0ee6b55645f3",
+      "current": "fd83bf0ae30e9ed4bd08518a45cca7a745a883a823a89893affd0ee6b55645f3",
+      "match": true
+    },
+    {
+      "file": "workspace.html",
+      "expected": "a090fdd51df1832c9bf81fdc26415423156b763869c6448d92b3126b1a5836dc",
+      "current": "a090fdd51df1832c9bf81fdc26415423156b763869c6448d92b3126b1a5836dc",
+      "match": true
+    },
+    {
+      "file": "workspace.js",
+      "expected": "af453caf32e30bfe8beff89ddee131cf5ad069d803d54feb89a4487d89666826",
+      "current": "af453caf32e30bfe8beff89ddee131cf5ad069d803d54feb89a4487d89666826",
+      "match": true
+    }
+  ],
+  "captures": 54,
+  "pageErrors": [],
+  "focusChecks": 12,
+  "focusWordBreaks": 6,
+  "scrollerChecks": 6,
+  "scrollersPass": true,
+  "gallery": {
+    "rows": [
+      {
+        "theme": "dark",
+        "scale": "1",
+        "articles": 9,
+        "images": 20,
+        "loaded": true
+      },
+      {
+        "theme": "dark",
+        "scale": "2",
+        "articles": 9,
+        "images": 20,
+        "loaded": true
+      },
+      {
+        "theme": "light",
+        "scale": "1",
+        "articles": 9,
+        "images": 20,
+        "loaded": true
+      },
+      {
+        "theme": "light",
+        "scale": "2",
+        "articles": 9,
+        "images": 20,
+        "loaded": true
+      },
+      {
+        "theme": "field",
+        "scale": "1",
+        "articles": 9,
+        "images": 20,
+        "loaded": true
+      },
+      {
+        "theme": "field",
+        "scale": "2",
+        "articles": 9,
+        "images": 20,
+        "loaded": true
+      }
+    ],
+    "errors": []
+  },
+  "priorReport": {
+    "originalSHA256": "1227d68ffaf920592d7c72cef2ba98363393d8a82ae29b652241e99ba8233350",
+    "preservedCopySHA256": "1227d68ffaf920592d7c72cef2ba98363393d8a82ae29b652241e99ba8233350",
+    "amendedSHA256": "02c0f038fb2abfc7c9287b01acb42232cef46b510786e14b85b6753cbc219fdf"
+  },
+  "newReportSHA256": "ad31baf02ec6880b137c97e514c6183c0635b6f294371a464cab787646440e7f",
+  "artifacts": {
+    "checks.json": "433466fae4d5c6ccdc09fa7ea885ae5d94f461b9e1bb147b216a30ab08bafe3d",
+    "comparison.html": "86adc78694d3e8310382770a4ffdc7237e1a320a580ea7c49cd8c1411fcdf32c",
+    "focus-labels.json": "e6da6116e043d1d2251117fd25a5c331bfe62e318f4dad4454d668c8fe1b01a9",
+    "gallery-overview.png": "0d49e3e5c0e77c988469ad320f8a6879b760c1ff006dcfe973006e870bcd1a36",
+    "prior-report-before-reference-verification.md": "1227d68ffaf920592d7c72cef2ba98363393d8a82ae29b652241e99ba8233350",
+    "report.md": "ad31baf02ec6880b137c97e514c6183c0635b6f294371a464cab787646440e7f",
+    "scroller-initial-attempt.json": "115bd118ea940e99692c6b4b1882eb6f351b4cde618a245177ac7374fa066627",
+    "scrollers.json": "db7bf83ef550dca4676df6724a32c083afce140a4981162605f3fdd74f6e8055"
+  }
+}

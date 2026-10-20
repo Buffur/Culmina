@@ -1,0 +1,74 @@
+00:00 +0: loading <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart
+00:00 +0: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: a location change makes no network call
+00:00 +1: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: no scraping code remains in lib/
+00:01 +1 -1: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: no scraping code remains in lib/ [E]
+  Expected: empty
+    Actual: ['lib\\presentation\\shared\\clear_outside_link.dart']
+  
+  package:matcher                                                    expect
+  package:flutter_test/src/widget_tester.dart 473:18                 expect
+  test\presentation\viewmodels\planner_sky_darkness_test.dart 116:5  main.<fn>
+  
+00:01 +1 -1: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: a site without values is unknown
+00:01 +2 -1: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: a site's Bortle and SQM come with their sources
+00:01 +3 -1: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: Bortle and SQM are context only: no verdict, same windows
+00:01 +4 -1: <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: Bortle for a transient position is marked as not saved
+00:18 +5 -1: <repo>/test/presentation/screens/location/location_picker_tiles_failing_test.dart: the map and its controls stay usable, and a typed position is shown and used
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/15/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/16/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/15/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/16/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/15/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/16/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/14/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/17/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/14/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/17/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/14/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/17/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/15/8.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/16/8.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/15/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/16/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/14/8.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/17/8.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/13/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/18/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/14/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/17/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/13/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/18/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/13/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/18/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/13/8.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/18/8.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/13/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/18/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/16/13.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/17/13.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/19/11.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/15/13.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/18/13.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/19/10.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/19/12.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/19/9.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/14/13.png
+ClientException with SocketException: offline (test), uri=https://tile.openstreetmap.org/5/19/13.png
+00:25 +5 -2: <repo>/test/presentation/screens/location/location_picker_tiles_failing_test.dart: the map and its controls stay usable, and a typed position is shown and used [E]
+  PathAccessException: Deletion failed, path = '<temporary>/picker_tiles_7ead48ba' (OS Error: The process cannot access the file because it is being used by another process, errno = 32)
+  dart:io                                                                           FileSystemEntity.deleteSync
+  test\presentation\screens\location\location_picker_tiles_failing_test.dart 80:11  main.<fn>
+  
+00:25 +5 -2: Some tests failed.
+
+Failing tests:
+  <repo>/test/presentation/screens/location/location_picker_tiles_failing_test.dart: the map and its controls stay usable, and a typed position is shown and used
+  <repo>/test/presentation/viewmodels/planner_sky_darkness_test.dart: no scraping code remains in lib/

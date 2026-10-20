@@ -1,0 +1,130 @@
+[
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\app.js",
+    "Hash": "90E071DC0ACE4924A505F7F83B3BE695134006C7BEA92FD76E34402311F75F52"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\catalog.css",
+    "Hash": "2D5CA041C8905B507B721E3A2E7F2316B5B48CF47593ED6918B9D8F851B4189C"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\catalog.js",
+    "Hash": "4F1B67416B77C139D44849F8E29B35BEFCEF2E8478AC8C3AEBCFBCFD10E98528"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\conditions.css",
+    "Hash": "625188A4C335826A2B68857BFFB13A7BD04AD936D08EA543C8A6BFB528C49BA3"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\conditions.html",
+    "Hash": "DCD22E97739ED725D180CC998A3167E1DC5A8F45DEC1A78D24D5A68D3F46D726"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\conditions.js",
+    "Hash": "CB54484DC4144B47566EA75B83AB0FA063411DE633BDDA892B7A7D7129290825"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\hybrid-refinement.css",
+    "Hash": "78E957D2C9708C154F1056CCB2003750F4008F8D1269A7DE8E0D93314F658591"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\hybrid-ui.js",
+    "Hash": "64F027C0FC713CF2FB3E0A1E853060AF865FB6BB54EC8ADD1A53BAC2542BF99B"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\index.html",
+    "Hash": "698E3D6502EB5229A914DCB415CDC3FF29571BBA11103DD6C7F2E5575FF23676"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\inventory.json",
+    "Hash": "2F2F476E71FC7A26602A75D9E86F4C7FC8D19D993631B62C8F868EE88B8DDF29"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\library.css",
+    "Hash": "96F82CCA9D51E98FE226ACFC6556A5EFCDBD800CB4E28D15B2A61E1782D4CC2A"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\library.js",
+    "Hash": "91B1CBB5D52E3B6D1FBB2ECE1879693520C5F18E2DA076C102EB808A6903DBFA"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\logbook.css",
+    "Hash": "40138414E556C78AD149C36A0ACB3CCB86F0293CF266548423D4E0570D38E413"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\logbook.js",
+    "Hash": "C0422FA4D6957543EFBCB8378732D51AD35A541AF25A59F96F7D7F4101051A3B"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\night-model.js",
+    "Hash": "2EECF92B0F9D1171A2E0E98A6C64B2A8A3D626D1708A7CDEAACD5F0DC54ED4AB"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\night-ui.js",
+    "Hash": "D48E4655E938B0871AE068C1EB634D6B64C1CF5F5E7BBFE3D395CB31FCA91366"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\night.css",
+    "Hash": "0F3C26236ABB2FE509C186917082D0AE9155F3CFC2391C39B73DE87D15B8467F"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\plan-model.js",
+    "Hash": "8D67AA43A7650FD84D19B663BADC70BC4D92F53FFCD6B725E03C7F33E8BC5833"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\plan.css",
+    "Hash": "F386F154F45CC77EA48EC577E1EEB17B06E635E415CA580647C6E3DBCBF57FA9"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\plan.html",
+    "Hash": "DDCC18D101EC1F346541D6FA13810A9E1C9F0D87BDCF8F5577B1E8FA2D99E3E5"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\plan.js",
+    "Hash": "65387336C1C4E065819C6AC4861BD9F0644FA50B1A794A992E488AFFA7F261B1"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\preview-backup.css",
+    "Hash": "EB8E8C65814E26678C9693C301373CB5BB88363B4D20412245BF0FD6C4B38D3C"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\preview-backup.js",
+    "Hash": "5909A3DD2238A7858986F945E1CBEDF7050C16AC761CDAF4F039FF1B42B9A3B2"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\preview-bridge.js",
+    "Hash": "22EA3085144AA0DC4495EA1A6053082B30771F7649362F9A9B188DA06C60F3E8"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\references.json",
+    "Hash": "9E3B2894E42B6DCF381CC6ED67A7523E3B613F5941E41C24FD4BCEBBDBA3D055"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\settings.css",
+    "Hash": "3FA5136F43E48F45CE84A101DC81A8EDAC049F213312BB3A065DD8462C811791"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\settings.js",
+    "Hash": "286AB96C16B8A829F1B552CFF9BDECC8BBA242784E433292401A69B77DDF02AE"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\styles.css",
+    "Hash": "659F3B6B06425A578CCE82CE7BAD96D0FE40E71680943B79CFAB48D779A6A477"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\tokens.json",
+    "Hash": "0EAE21439D1AF5BD9CADD6805D329057DA97C245519A61A2165E971950DDBB51"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\workspace.css",
+    "Hash": "FD83BF0AE30E9ED4BD08518A45CCA7A745A883A823A89893AFFD0EE6B55645F3"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\workspace.html",
+    "Hash": "A090FDD51DF1832C9BF81FDC26415423156B763869C6448D92B3126B1A5836DC"
+  },
+  {
+    "Path": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\docs\\design\\migration\\evidence\\reference\\workspace.js",
+    "Hash": "AF453CAF32E30BFE8BEFF89DDEE131CF5AD069D803D54FEB89A4487D89666826"
+  }
+]

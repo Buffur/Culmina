@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,8 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     // A list left open across the rollover follows the new night (S6.4).
     if (night != null && night != _rowsNight) _load();
     return Scaffold(
-      appBar: AppBar(
+      appBar: hybridAppBar(
+        context,
         // F17 A5: the list is for the plan's night.
         title: Text(
           PlanNightPhrase.candidatesTitle(

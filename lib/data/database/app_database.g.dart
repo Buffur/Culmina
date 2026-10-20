@@ -4787,6 +4787,18 @@ class $SessionLogsTable extends SessionLogs
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, Object?>?, String>
+  planOverrides =
+      GeneratedColumn<String>(
+        'plan_overrides',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Map<String, Object?>?>(
+        $SessionLogsTable.$converterplanOverridesn,
+      );
   static const VerificationMeta _resultKindMeta = const VerificationMeta(
     'resultKind',
   );
@@ -4855,6 +4867,7 @@ class $SessionLogsTable extends SessionLogs
     planSnapshot,
     executionStartSnapshot,
     trackingOverride,
+    planOverrides,
     resultKind,
     notDoneReason,
     name,
@@ -5319,6 +5332,12 @@ class $SessionLogsTable extends SessionLogs
         DriftSqlType.string,
         data['${effectivePrefix}tracking_override'],
       ),
+      planOverrides: $SessionLogsTable.$converterplanOverridesn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}plan_overrides'],
+        ),
+      ),
       resultKind: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}result_kind'],
@@ -5348,6 +5367,12 @@ class $SessionLogsTable extends SessionLogs
   static TypeConverter<Map<String, Object?>?, String?>
   $converterexecutionStartSnapshotn = NullAwareTypeConverter.wrap(
     $converterexecutionStartSnapshot,
+  );
+  static TypeConverter<Map<String, Object?>, String> $converterplanOverrides =
+      const JsonMapConverter();
+  static TypeConverter<Map<String, Object?>?, String?>
+  $converterplanOverridesn = NullAwareTypeConverter.wrap(
+    $converterplanOverrides,
   );
 }
 
@@ -5408,6 +5433,9 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
   /// `tracked` or `guided`; NULL = the rig's default.
   final String? trackingOverride;
 
+  /// Explicit per-plan assumptions; NULL inherits legacy global defaults.
+  final Map<String, Object?>? planOverrides;
+
   /// How a completed session's counts were reported (S8.1, v24; I-1):
   /// `asPlanned` or `partly`; NULL for rows completed live or before v24.
   final String? resultKind;
@@ -5455,6 +5483,7 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
     this.planSnapshot,
     this.executionStartSnapshot,
     this.trackingOverride,
+    this.planOverrides,
     this.resultKind,
     this.notDoneReason,
     this.name,
@@ -5561,6 +5590,11 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
     if (!nullToAbsent || trackingOverride != null) {
       map['tracking_override'] = Variable<String>(trackingOverride);
     }
+    if (!nullToAbsent || planOverrides != null) {
+      map['plan_overrides'] = Variable<String>(
+        $SessionLogsTable.$converterplanOverridesn.toSql(planOverrides),
+      );
+    }
     if (!nullToAbsent || resultKind != null) {
       map['result_kind'] = Variable<String>(resultKind);
     }
@@ -5666,6 +5700,9 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
       trackingOverride: trackingOverride == null && nullToAbsent
           ? const Value.absent()
           : Value(trackingOverride),
+      planOverrides: planOverrides == null && nullToAbsent
+          ? const Value.absent()
+          : Value(planOverrides),
       resultKind: resultKind == null && nullToAbsent
           ? const Value.absent()
           : Value(resultKind),
@@ -5725,6 +5762,9 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
         json['executionStartSnapshot'],
       ),
       trackingOverride: serializer.fromJson<String?>(json['trackingOverride']),
+      planOverrides: serializer.fromJson<Map<String, Object?>?>(
+        json['planOverrides'],
+      ),
       resultKind: serializer.fromJson<String?>(json['resultKind']),
       notDoneReason: serializer.fromJson<String?>(json['notDoneReason']),
       name: serializer.fromJson<String?>(json['name']),
@@ -5773,6 +5813,7 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
         executionStartSnapshot,
       ),
       'trackingOverride': serializer.toJson<String?>(trackingOverride),
+      'planOverrides': serializer.toJson<Map<String, Object?>?>(planOverrides),
       'resultKind': serializer.toJson<String?>(resultKind),
       'notDoneReason': serializer.toJson<String?>(notDoneReason),
       'name': serializer.toJson<String?>(name),
@@ -5815,6 +5856,7 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
     Value<Map<String, Object?>?> planSnapshot = const Value.absent(),
     Value<Map<String, Object?>?> executionStartSnapshot = const Value.absent(),
     Value<String?> trackingOverride = const Value.absent(),
+    Value<Map<String, Object?>?> planOverrides = const Value.absent(),
     Value<String?> resultKind = const Value.absent(),
     Value<String?> notDoneReason = const Value.absent(),
     Value<String?> name = const Value.absent(),
@@ -5884,6 +5926,9 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
     trackingOverride: trackingOverride.present
         ? trackingOverride.value
         : this.trackingOverride,
+    planOverrides: planOverrides.present
+        ? planOverrides.value
+        : this.planOverrides,
     resultKind: resultKind.present ? resultKind.value : this.resultKind,
     notDoneReason: notDoneReason.present
         ? notDoneReason.value
@@ -5981,6 +6026,9 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
       trackingOverride: data.trackingOverride.present
           ? data.trackingOverride.value
           : this.trackingOverride,
+      planOverrides: data.planOverrides.present
+          ? data.planOverrides.value
+          : this.planOverrides,
       resultKind: data.resultKind.present
           ? data.resultKind.value
           : this.resultKind,
@@ -6029,6 +6077,7 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
           ..write('planSnapshot: $planSnapshot, ')
           ..write('executionStartSnapshot: $executionStartSnapshot, ')
           ..write('trackingOverride: $trackingOverride, ')
+          ..write('planOverrides: $planOverrides, ')
           ..write('resultKind: $resultKind, ')
           ..write('notDoneReason: $notDoneReason, ')
           ..write('name: $name')
@@ -6073,6 +6122,7 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
     planSnapshot,
     executionStartSnapshot,
     trackingOverride,
+    planOverrides,
     resultKind,
     notDoneReason,
     name,
@@ -6116,6 +6166,7 @@ class SessionLog extends DataClass implements Insertable<SessionLog> {
           other.planSnapshot == this.planSnapshot &&
           other.executionStartSnapshot == this.executionStartSnapshot &&
           other.trackingOverride == this.trackingOverride &&
+          other.planOverrides == this.planOverrides &&
           other.resultKind == this.resultKind &&
           other.notDoneReason == this.notDoneReason &&
           other.name == this.name);
@@ -6157,6 +6208,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
   final Value<Map<String, Object?>?> planSnapshot;
   final Value<Map<String, Object?>?> executionStartSnapshot;
   final Value<String?> trackingOverride;
+  final Value<Map<String, Object?>?> planOverrides;
   final Value<String?> resultKind;
   final Value<String?> notDoneReason;
   final Value<String?> name;
@@ -6196,6 +6248,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
     this.planSnapshot = const Value.absent(),
     this.executionStartSnapshot = const Value.absent(),
     this.trackingOverride = const Value.absent(),
+    this.planOverrides = const Value.absent(),
     this.resultKind = const Value.absent(),
     this.notDoneReason = const Value.absent(),
     this.name = const Value.absent(),
@@ -6236,6 +6289,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
     this.planSnapshot = const Value.absent(),
     this.executionStartSnapshot = const Value.absent(),
     this.trackingOverride = const Value.absent(),
+    this.planOverrides = const Value.absent(),
     this.resultKind = const Value.absent(),
     this.notDoneReason = const Value.absent(),
     this.name = const Value.absent(),
@@ -6279,6 +6333,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
     Expression<String>? planSnapshot,
     Expression<String>? executionStartSnapshot,
     Expression<String>? trackingOverride,
+    Expression<String>? planOverrides,
     Expression<String>? resultKind,
     Expression<String>? notDoneReason,
     Expression<String>? name,
@@ -6322,6 +6377,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
       if (executionStartSnapshot != null)
         'execution_start_snapshot': executionStartSnapshot,
       if (trackingOverride != null) 'tracking_override': trackingOverride,
+      if (planOverrides != null) 'plan_overrides': planOverrides,
       if (resultKind != null) 'result_kind': resultKind,
       if (notDoneReason != null) 'not_done_reason': notDoneReason,
       if (name != null) 'name': name,
@@ -6364,6 +6420,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
     Value<Map<String, Object?>?>? planSnapshot,
     Value<Map<String, Object?>?>? executionStartSnapshot,
     Value<String?>? trackingOverride,
+    Value<Map<String, Object?>?>? planOverrides,
     Value<String?>? resultKind,
     Value<String?>? notDoneReason,
     Value<String?>? name,
@@ -6406,6 +6463,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
       executionStartSnapshot:
           executionStartSnapshot ?? this.executionStartSnapshot,
       trackingOverride: trackingOverride ?? this.trackingOverride,
+      planOverrides: planOverrides ?? this.planOverrides,
       resultKind: resultKind ?? this.resultKind,
       notDoneReason: notDoneReason ?? this.notDoneReason,
       name: name ?? this.name,
@@ -6528,6 +6586,11 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
     if (trackingOverride.present) {
       map['tracking_override'] = Variable<String>(trackingOverride.value);
     }
+    if (planOverrides.present) {
+      map['plan_overrides'] = Variable<String>(
+        $SessionLogsTable.$converterplanOverridesn.toSql(planOverrides.value),
+      );
+    }
     if (resultKind.present) {
       map['result_kind'] = Variable<String>(resultKind.value);
     }
@@ -6578,6 +6641,7 @@ class SessionLogsCompanion extends UpdateCompanion<SessionLog> {
           ..write('planSnapshot: $planSnapshot, ')
           ..write('executionStartSnapshot: $executionStartSnapshot, ')
           ..write('trackingOverride: $trackingOverride, ')
+          ..write('planOverrides: $planOverrides, ')
           ..write('resultKind: $resultKind, ')
           ..write('notDoneReason: $notDoneReason, ')
           ..write('name: $name')
@@ -11457,6 +11521,7 @@ typedef $$SessionLogsTableCreateCompanionBuilder =
       Value<Map<String, Object?>?> planSnapshot,
       Value<Map<String, Object?>?> executionStartSnapshot,
       Value<String?> trackingOverride,
+      Value<Map<String, Object?>?> planOverrides,
       Value<String?> resultKind,
       Value<String?> notDoneReason,
       Value<String?> name,
@@ -11498,6 +11563,7 @@ typedef $$SessionLogsTableUpdateCompanionBuilder =
       Value<Map<String, Object?>?> planSnapshot,
       Value<Map<String, Object?>?> executionStartSnapshot,
       Value<String?> trackingOverride,
+      Value<Map<String, Object?>?> planOverrides,
       Value<String?> resultKind,
       Value<String?> notDoneReason,
       Value<String?> name,
@@ -11773,6 +11839,16 @@ class $$SessionLogsTableFilterComposer
   ColumnFilters<String> get trackingOverride => $composableBuilder(
     column: $table.trackingOverride,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, Object?>?,
+    Map<String, Object>?,
+    String
+  >
+  get planOverrides => $composableBuilder(
+    column: $table.planOverrides,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get resultKind => $composableBuilder(
@@ -12079,6 +12155,11 @@ class $$SessionLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get planOverrides => $composableBuilder(
+    column: $table.planOverrides,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get resultKind => $composableBuilder(
     column: $table.resultKind,
     builder: (column) => ColumnOrderings(column),
@@ -12325,6 +12406,12 @@ class $$SessionLogsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumnWithTypeConverter<Map<String, Object?>?, String>
+  get planOverrides => $composableBuilder(
+    column: $table.planOverrides,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get resultKind => $composableBuilder(
     column: $table.resultKind,
     builder: (column) => column,
@@ -12529,6 +12616,8 @@ class $$SessionLogsTableTableManager
                 Value<Map<String, Object?>?> executionStartSnapshot =
                     const Value.absent(),
                 Value<String?> trackingOverride = const Value.absent(),
+                Value<Map<String, Object?>?> planOverrides =
+                    const Value.absent(),
                 Value<String?> resultKind = const Value.absent(),
                 Value<String?> notDoneReason = const Value.absent(),
                 Value<String?> name = const Value.absent(),
@@ -12568,6 +12657,7 @@ class $$SessionLogsTableTableManager
                 planSnapshot: planSnapshot,
                 executionStartSnapshot: executionStartSnapshot,
                 trackingOverride: trackingOverride,
+                planOverrides: planOverrides,
                 resultKind: resultKind,
                 notDoneReason: notDoneReason,
                 name: name,
@@ -12611,6 +12701,8 @@ class $$SessionLogsTableTableManager
                 Value<Map<String, Object?>?> executionStartSnapshot =
                     const Value.absent(),
                 Value<String?> trackingOverride = const Value.absent(),
+                Value<Map<String, Object?>?> planOverrides =
+                    const Value.absent(),
                 Value<String?> resultKind = const Value.absent(),
                 Value<String?> notDoneReason = const Value.absent(),
                 Value<String?> name = const Value.absent(),
@@ -12650,6 +12742,7 @@ class $$SessionLogsTableTableManager
                 planSnapshot: planSnapshot,
                 executionStartSnapshot: executionStartSnapshot,
                 trackingOverride: trackingOverride,
+                planOverrides: planOverrides,
                 resultKind: resultKind,
                 notDoneReason: notDoneReason,
                 name: name,

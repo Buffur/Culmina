@@ -1,0 +1,1240 @@
+{
+  "kind": "Flutter production source freeze for migration capture",
+  "capturedAtUtc": "2026-10-20T18:34:46.0564836Z",
+  "gitHead": "8048cfa4e7fd5eadc99cba708a02f055ceddd53f",
+  "entries": [
+    {
+      "path": "assets/branding/icon_512.png",
+      "sha256": "9e562f5d842019ca8de5ac2ddbed4dd8dd3ce63b5a7d0af70c51332e4620929a"
+    },
+    {
+      "path": "assets/catalog/catalog_v2.json",
+      "sha256": "900e6f75dc30dec106222bbf00589f69689c053ab913a13290dd7fdc8baacac5"
+    },
+    {
+      "path": "assets/catalog/OPENNGC_NOTICE.txt",
+      "sha256": "ce6378e24989e2c4f8d8f48bdd0376a0c7e6fec80e1e0de5692b2c7c47cdaebc"
+    },
+    {
+      "path": "assets/fonts/Geist.source.json",
+      "sha256": "8674041633f92262805fd5c11324d6e74889c2b388ee7b43591d4294dda71b10"
+    },
+    {
+      "path": "assets/fonts/Geist.ttf",
+      "sha256": "73894e0448cae90a92b6c2f8732b7bb9acb7b94c418bff559dad4a18e1de9659"
+    },
+    {
+      "path": "assets/fonts/OFL-Geist.txt",
+      "sha256": "1781d2806a07d91c4edf4740b88449fab7d0eadad53f7c351b94cd4d4eb8c00f"
+    },
+    {
+      "path": "lib/core/config/app_identity.dart",
+      "sha256": "5c604c95ce42c83edbdefcda43fd170cb617b5675479e2a80a4951d01c1659fe"
+    },
+    {
+      "path": "lib/core/config/feature_scope.dart",
+      "sha256": "4e74bbee57a51ff7dba5576cee0af42f38850de30b45a21245c83e570137ba57"
+    },
+    {
+      "path": "lib/core/diagnostics/app_log.dart",
+      "sha256": "e81461aa4165c0a3e24e43a5e369c950be3a785e02c3a16cf44cb07a1ad3e472"
+    },
+    {
+      "path": "lib/core/theme/app_button_styles.dart",
+      "sha256": "9e5c2458be612d11d1b8239cd53db5761a66fabe14b846b1d1c54d9c69348288"
+    },
+    {
+      "path": "lib/core/theme/app_colors.dart",
+      "sha256": "4710ac7caef59dbb630a4b69988ff076b14b7eeec6576db7210bc77378902e23"
+    },
+    {
+      "path": "lib/core/theme/app_motion.dart",
+      "sha256": "47e3bec4caa93d17f250767931ba128fb644cabb43130f2432d9637e0fdb5147"
+    },
+    {
+      "path": "lib/core/theme/app_palette.dart",
+      "sha256": "31ed7caf1ed64800f18837c4fda0ad2443304a41bec81035c2acf02d01f8542d"
+    },
+    {
+      "path": "lib/core/theme/app_radius.dart",
+      "sha256": "3c282e656d8e5fe607c089563b32caba406908a06abe40b52427997319cb1dd2"
+    },
+    {
+      "path": "lib/core/theme/app_spacing.dart",
+      "sha256": "3cf97d94913a4f8c9a3fe5c5af1c3f6b0ca32a1baff512e412bb9385c4c9d75e"
+    },
+    {
+      "path": "lib/core/theme/app_theme.dart",
+      "sha256": "380b0f83db8534c524b052422b837779df168165e4f44ecc0d28f81bea04eaad"
+    },
+    {
+      "path": "lib/core/theme/app_typography.dart",
+      "sha256": "db469e0fd7f3f26ee1e50caf62e55e18e067ddc61fc3cddcf579a4285ac1d8e2"
+    },
+    {
+      "path": "lib/core/theme/font_licenses.dart",
+      "sha256": "4d7b893d31fafa32a160736178ec79426052c38b6869dba004985ca09243d04b"
+    },
+    {
+      "path": "lib/core/theme/hybrid_tokens.dart",
+      "sha256": "dc7d6f414deefa3c4b1fcc3faeb803d4eb7039d470b98fae75d7565e53f155e4"
+    },
+    {
+      "path": "lib/core/theme/hybrid_view_entrance.dart",
+      "sha256": "1cc32808cdc631992fb23f8d7a7f89ac46c24717cd871026705ec4df317214af"
+    },
+    {
+      "path": "lib/core/time/clock.dart",
+      "sha256": "c6eef635a481e6adb226fbd512dcc3f943b69360411b9e482f699ee533ffa118"
+    },
+    {
+      "path": "lib/core/units/display_units.dart",
+      "sha256": "07ee8deb11f5690fc8b93417e04667c7ed3afbd535de64a32f4be8e810fa36ba"
+    },
+    {
+      "path": "lib/core/utils/astro_math.dart",
+      "sha256": "fb75bc5024892649beb88e251fb41920d13485bd0f9300e2e74df86ccdcca484"
+    },
+    {
+      "path": "lib/core/utils/quantity_text.dart",
+      "sha256": "e0e565cae24319a1692939cadedddb526b5ed59c753c34cacfb45534581ecebf"
+    },
+    {
+      "path": "lib/data/backup/backup_archive.dart",
+      "sha256": "69a8ce0566ea6aaa785e4676fb3b4981f765bfd593e94cd373be4e7fabb786fe"
+    },
+    {
+      "path": "lib/data/backup/backup_preferences.dart",
+      "sha256": "4a8ab33bfa6fe477715f01e2b046f06903da8e723b5406dd49f86996f1f7d8d4"
+    },
+    {
+      "path": "lib/data/backup/backup_staging.dart",
+      "sha256": "a45f892193efe3dd8fc9ab28256add6cfe70a34b88d32823867821f73755deab"
+    },
+    {
+      "path": "lib/data/backup/file_backup_service.dart",
+      "sha256": "1a89b38b7d2da149d86dc45c95dd05ff21f7285ee66d00c29fb20b54049918aa"
+    },
+    {
+      "path": "lib/data/backup/restore_candidate.dart",
+      "sha256": "86467e5a59054c35cabb3cce0f102c0c6c52b5a2a769d4ab7b6f8a0fa8f23d92"
+    },
+    {
+      "path": "lib/data/database/app_database.dart",
+      "sha256": "c8450f9bef3d3d0ee0d5685694b1dc1559e6af9eb8092ec993ffaab0d07383f0"
+    },
+    {
+      "path": "lib/data/database/app_database.g.dart",
+      "sha256": "e07f1e16b44944be4d9e03ace517482dc394b0f75ce78fed3cb2e4af66932b0a"
+    },
+    {
+      "path": "lib/data/database/database_reset.dart",
+      "sha256": "901649736795988f9645d2ad6a35913565a65eeb19d3b14b2e4cb1b60f0d1ce3"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v10.dart",
+      "sha256": "a81e96b1572a8b4f77ce989c982830bfd97045549050479b750907b8639464a5"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v11.dart",
+      "sha256": "6c648993303014c803ffc7b6c137aabcb136ce8271ca903923557574702f2e3b"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v12.dart",
+      "sha256": "17ef033ecee1d26fac98d5f65001a6b49cc8116c642254bc363097447983a00c"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v13.dart",
+      "sha256": "9aa54c29d1b578fab3d2a5b2365ea0a3f3bb3f4312f0f862bb61adab54093122"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v14.dart",
+      "sha256": "86756d6184d56c745280f68460ff620943fcbe70870b1750cd39c6ce57056587"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v15.dart",
+      "sha256": "d7edb9563170ad431e09203ddd2f9059841385bf825a2e3eeacc77f116e9f5e0"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v16.dart",
+      "sha256": "38aea9035739734a047697be35e33e036b4bda14259d4990db610b78deb6dec7"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v17.dart",
+      "sha256": "ac0a00126f79fb2d5613a740edd40cf379a7ad8387fcfeb894511fc144b7b7d5"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v18.dart",
+      "sha256": "f85998471e7c3378da6c466a762dbf36c4792228e069f0e46e1442e861610604"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v19.dart",
+      "sha256": "34a8a09281573eb1783c769b39da5f6f3f1945aa4c5571e0fe02032bd32296eb"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v20.dart",
+      "sha256": "f6b64429d736047d63840c074157a69ec8ca0ed98eae0c10251733e9f79d4f12"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v21.dart",
+      "sha256": "0586c1747d11fc4d0f8a822d5eadb140c536d213e713250452d3de229c49c834"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v22.dart",
+      "sha256": "b9a9cd4bd37bfde5acce104a6f0c94b70a296ff52156c6e7870f01ecd8560f29"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v23.dart",
+      "sha256": "58f50df30246e367869c895d97b770cdec209baf85c70e8599839276c5e07ef2"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v24.dart",
+      "sha256": "3ffaf880db67f7edac1f2f25e59b647fdd5b194d09a4787ecb4dee2bc345b672"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v25.dart",
+      "sha256": "d10b70dec0bb2d2640cb0d45c6b04ff960f514eeb081e1f7926d7a6ec367cb69"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v26.dart",
+      "sha256": "432abc960c2b1587f7a483204851a555669c9e5e8b2f456537fb080cea673819"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v27.dart",
+      "sha256": "2adf1e144fc4b4ef6ce31bae0e2f5b9f737117288fa780816d7b3b177804409e"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v8.dart",
+      "sha256": "2972fad3c1c0d8d1e4e54b71667b5c581716537279e1bb26d940db04ae990ec8"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema_v9.dart",
+      "sha256": "c514a6c8d864b0e0e5be69c18d204b9fef6501d732c6e6630bbff5e0f178fb88"
+    },
+    {
+      "path": "lib/data/database/generated_migrations/schema.dart",
+      "sha256": "0f9199c6ad5dc8315dfc7836168f249bfb7910aaac90e99e012889bce5bfd140"
+    },
+    {
+      "path": "lib/data/database/json_map_converter.dart",
+      "sha256": "d4511ec799b290525d8cc2dfd1f96b686ed1fecd0344855ce7b1e5daba0bbc12"
+    },
+    {
+      "path": "lib/data/database/schema_versions.dart",
+      "sha256": "e8b8f5b74feecb185a1b6ff1b5f488cccc24efed358920b2f3216ef08eaef239"
+    },
+    {
+      "path": "lib/data/database/storage_failure_interceptor.dart",
+      "sha256": "ac811b586b03da59c9e87863f0c3ef9c9b4c28e1c38bd784818940177aafdc67"
+    },
+    {
+      "path": "lib/data/database/tables/equipment_foundation_tables.dart",
+      "sha256": "d6cef21913e9a1d675a014bd36b650b92f93694e032ae726b2c38d2da789622b"
+    },
+    {
+      "path": "lib/data/database/tables/locations_table.dart",
+      "sha256": "bc3b0d3e4c86e35fdc38d752c02b0335040263491b33969dd9ec66ca430749a1"
+    },
+    {
+      "path": "lib/data/database/tables/targets_table.dart",
+      "sha256": "7f925b0cdeabcafd1f315f2185ce3154bc863c0dd28324e5139c5ff2feb89fe6"
+    },
+    {
+      "path": "lib/data/export/session_manifest_codec.dart",
+      "sha256": "5127406478d5a802cb03e1fd418c523f6221596778b539937564113a847b7fe5"
+    },
+    {
+      "path": "lib/data/export/share_session_exporter.dart",
+      "sha256": "2b179f0fec54da3f8f11015cef7a6a939b818b681b6ce002444480f55c356ea4"
+    },
+    {
+      "path": "lib/data/metadata/android_capture_file_access.dart",
+      "sha256": "6878cabb250577abd55af93dcc5dec989663beb3a163c2dc4f6dde11ddb03faa"
+    },
+    {
+      "path": "lib/data/metadata/file_metadata_source.dart",
+      "sha256": "ac7923ff4183c6403d1dda10c4ed1fe3109a5bb69fffe351e32cae4a3d738faf"
+    },
+    {
+      "path": "lib/data/repositories/drift_deletion.dart",
+      "sha256": "55b76ad1efffec6b49c8fc5435a042cfabb69a2b88fa1c3e5f23df33cb180c7d"
+    },
+    {
+      "path": "lib/data/repositories/drift_equipment_repository.dart",
+      "sha256": "cd3d0f3b17fa344c19fcec6e8149c4eecf1c374c866dec6583c18358cab2f2c9"
+    },
+    {
+      "path": "lib/data/repositories/drift_location_repository.dart",
+      "sha256": "697b970301c2b612d58e97f054ad16f041dba09f31c5e0ced1a1441787d7b8a7"
+    },
+    {
+      "path": "lib/data/repositories/drift_session_repository.dart",
+      "sha256": "22ef9e6e5d05e77a1ff9e89b2c37d7d2cffc33ccd19b5451d0d7acf26f2b5d5e"
+    },
+    {
+      "path": "lib/data/repositories/drift_target_repository.dart",
+      "sha256": "960f51d3d722afbcf99d84bcd493d7da7b8c6ea5ab6e94963f18f7a30712131c"
+    },
+    {
+      "path": "lib/data/repositories/open_meteo_weather_repository.dart",
+      "sha256": "6c7d728b448d8e504aaf47d4f38fe4be5eeef6dc877dbb66869759cfb1af84da"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_display_preferences_repository.dart",
+      "sha256": "177a835b33df886ba43f9b65302e67671ef6089dd6d3c57860e179c34cf35e2c"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_display_settings_repository.dart",
+      "sha256": "e456b617bdb68fcc6337b49b41c94d138f21225581f1f85bfd97d3eb4c1afb34"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_first_run_repository.dart",
+      "sha256": "43d5307dda5838992a3e08939a0d0f34b974adf5a642453074f6ef57827022bc"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_planner_state_repository.dart",
+      "sha256": "22471844a264ae76c69c1100cfaa0dfe5db0febe19f9814daead609d0308712c"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_planning_preferences_repository.dart",
+      "sha256": "07226a01a97d6928f77e68c7912fd06b8068f84900e7c8e08c325fcd58b84b3c"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_privacy_preferences_repository.dart",
+      "sha256": "81f4c7468f883c932cd79560b8147278a4c0e103d6546d2f8d3ee782d5c3650c"
+    },
+    {
+      "path": "lib/data/repositories/shared_prefs_weather_snapshot_store.dart",
+      "sha256": "434295489a8718de76fe0e059853cdbb0459236c9112ef2c8657f826b47fe397"
+    },
+    {
+      "path": "lib/data/repositories/storage_guard.dart",
+      "sha256": "6b4ceb77c249a68bc0cecd25ab9e31012c39977694e9e8bb228ced17d3ba1e1b"
+    },
+    {
+      "path": "lib/data/services/catalog_seeder.dart",
+      "sha256": "ac2de3fbd2347502ed75f1303ccd7408f04861edbd17a3ecf93e1606b7ba8db5"
+    },
+    {
+      "path": "lib/data/services/equipment_seeder.dart",
+      "sha256": "1004a3f1b7f88eb45e47aee5e0f1deb7511e7b80007f846e1d11e62d34d6e39c"
+    },
+    {
+      "path": "lib/data/services/flutter_timezone_device_time_zone.dart",
+      "sha256": "1a30f577f4060d5a39d78760afa06e1f7c1efe9fd6c6e01f768cc7d38d6b4384"
+    },
+    {
+      "path": "lib/data/services/geolocator_location_service.dart",
+      "sha256": "2f915c97d18d267decc267437a7ea1eb8e78b34b4d693c059c0f14faf08ddaf4"
+    },
+    {
+      "path": "lib/data/services/nominatim_reverse_geocoder.dart",
+      "sha256": "c37521d56495ec66e528c5e75b998ea81c30c947cf6f0e53939b88f2fa6431ef"
+    },
+    {
+      "path": "lib/data/services/open_meteo_forecast_parser.dart",
+      "sha256": "fcd2550b41bdc9932ce070730984545ba615f0cab21b231f6122c6f51d5f6ee4"
+    },
+    {
+      "path": "lib/domain/equipment_import/equipment_candidate.dart",
+      "sha256": "94daa0a00852353a27c696c5f5f3438c86cc38d06358b67046d79ff8f42d16cb"
+    },
+    {
+      "path": "lib/domain/equipment_import/equipment_matcher.dart",
+      "sha256": "269c3a1c768d4be2d305e4b8bcb1cd65d4268c62777aa96d1420b02dbbc9e175"
+    },
+    {
+      "path": "lib/domain/equipment_import/sensor_geometry_estimate.dart",
+      "sha256": "fcdfc9b585b1efb11d5436b58c07bb67977388ae1b675e9ce51334f6bfffb57f"
+    },
+    {
+      "path": "lib/domain/metadata/capture_file_access.dart",
+      "sha256": "02da827c113d61fb98362ac4751b06064ee9d23018ce781842e3f4622ff6242a"
+    },
+    {
+      "path": "lib/domain/metadata/capture_metadata_reader.dart",
+      "sha256": "306f15e43ce4fd11be59559572cbb98af95600c11c453ca1e2a97ccfb24329de"
+    },
+    {
+      "path": "lib/domain/metadata/capture_metadata.dart",
+      "sha256": "b82144b6b0bbc08eebe0edf6762723af2f9cf4cb93a4d64d27be895dadb22f2b"
+    },
+    {
+      "path": "lib/domain/metadata/dng_metadata_reader.dart",
+      "sha256": "9ad19192cb51cb53f8c34e955a2932ebf079535a72ce31c2b2d5428625b93b91"
+    },
+    {
+      "path": "lib/domain/metadata/exif_structure.dart",
+      "sha256": "7ceb28b994da00935e5f73b19fca27714db36c137926f3640d8d95e1dbf93eb7"
+    },
+    {
+      "path": "lib/domain/metadata/exif_values.dart",
+      "sha256": "e23e88c73630f2c05279abef972a05fc3c561e5a8a5523e49c7228c3ed638fb4"
+    },
+    {
+      "path": "lib/domain/metadata/fits_metadata_reader.dart",
+      "sha256": "2a95a98af9d7d432d5b9c16154db3ac0e3fc987e42ff90bde5e6a3dbbddb15b8"
+    },
+    {
+      "path": "lib/domain/metadata/heif_metadata_reader.dart",
+      "sha256": "d2cd1532819bce6c75cd03e9eda7abe54c04da09cc861cbd30b2d6f17dbd4f1d"
+    },
+    {
+      "path": "lib/domain/metadata/jpeg_metadata_reader.dart",
+      "sha256": "1b7e4a4230497135c0a979faa96db6da389b111741fdb0168f6d036f4fea4fc9"
+    },
+    {
+      "path": "lib/domain/metadata/metadata_format.dart",
+      "sha256": "43b01215e1ed2f10c4b3496b24f1cfdc9a9668ef1016f097e3ddd21f75664c1c"
+    },
+    {
+      "path": "lib/domain/metadata/metadata_source.dart",
+      "sha256": "ad84bf90c9dbda12393c3086fb5b60a53fdfb838855f5f2b96b3028df08a4876"
+    },
+    {
+      "path": "lib/domain/metadata/metadata_value.dart",
+      "sha256": "1ea1fb134b298af8af8664c4998ce2399afcbce6060e271c3fa6ef5545f66c4b"
+    },
+    {
+      "path": "lib/domain/models/altitude_curve.dart",
+      "sha256": "4104f5b4bd55fb25a7ca0becdcd0536474057f09bd5722dfbf21ca245db414ce"
+    },
+    {
+      "path": "lib/domain/models/astro_target.dart",
+      "sha256": "0351fb8b92d63cfb1f06273ae743a352548891c99297abe552ef71b0ed590940"
+    },
+    {
+      "path": "lib/domain/models/calendar_date.dart",
+      "sha256": "7474f8c70b1a056d93bba6cd5300f54b24be641dbe31f4d68c84d489411f4733"
+    },
+    {
+      "path": "lib/domain/models/camera_class.dart",
+      "sha256": "bc5403f39b19f42513c5cbb7ba7a69b15f18f2ac5cb7f7e11e39ff20d3588a9c"
+    },
+    {
+      "path": "lib/domain/models/capture_block.dart",
+      "sha256": "eba2c0d896d4fb478d8e8dadd223ceb0472fd88d640018b37412ee65f7fa5f20"
+    },
+    {
+      "path": "lib/domain/models/capture_evidence.dart",
+      "sha256": "db5f6dd51214e9ddbb5af9b56915d1fcf6c6d650e8ff7176ada2e148d808bf05"
+    },
+    {
+      "path": "lib/domain/models/equipment_limits.dart",
+      "sha256": "37698981a1fa54ddeac6c87d5801c7248a6bbd42523c1c2864cb15d80367cde5"
+    },
+    {
+      "path": "lib/domain/models/equipment_profile.dart",
+      "sha256": "666696f58440159c5d8420ef5284025cd1bbafd754ed567a6dd14507eed7b4ac"
+    },
+    {
+      "path": "lib/domain/models/execution.dart",
+      "sha256": "423560805fb194a738df0a054b510caefe8839978146f93dc0151b57d6b50a80"
+    },
+    {
+      "path": "lib/domain/models/iana_time_context.dart",
+      "sha256": "cb18b5a7d0b1a4541724dd1086781b40b4244f75c82c17a182e00239bc37299f"
+    },
+    {
+      "path": "lib/domain/models/imaging_opportunity.dart",
+      "sha256": "a18df09106c24f11b216575059ec27cefe7f51e5a8b3cdde82462f91e8e2b1be"
+    },
+    {
+      "path": "lib/domain/models/location_profile.dart",
+      "sha256": "baa6c6b29424897ba5d15cd09d55638909af47e9e9e5976ebf498d875e147fc3"
+    },
+    {
+      "path": "lib/domain/models/moon_conditions.dart",
+      "sha256": "9f88cfee5ad650d60c6cf7d593f0791d730e57c8d481f9cc1a80f79595f61cfd"
+    },
+    {
+      "path": "lib/domain/models/night_timeline.dart",
+      "sha256": "3b3a8d7b3c235eb6b110b70d9c29e73a9bfc1e0ed94ef05ceabc003f9ab7b1e1"
+    },
+    {
+      "path": "lib/domain/models/night_weather_summary.dart",
+      "sha256": "e7749d33144e04d4724d04daea9895d4d8c1b03d88d7e9f6762284722cfb6db0"
+    },
+    {
+      "path": "lib/domain/models/night_weather.dart",
+      "sha256": "19a23c4b9563b498cb4fb3e388fa22bbb3d7736cc1eba62020ccf8c87273fdc4"
+    },
+    {
+      "path": "lib/domain/models/plan_overrides.dart",
+      "sha256": "a8938c9ffd99b4ace356b2c3f4adf4259089581201042b40de3eed8bb4570a2e"
+    },
+    {
+      "path": "lib/domain/models/planning_preferences.dart",
+      "sha256": "06860d4479ea1ad58a3e7e57b7456c0789923653d1c56ddae139362997d1c724"
+    },
+    {
+      "path": "lib/domain/models/session_log.dart",
+      "sha256": "d9f9da6d46144a60234f5bba951326b2400d15cae8d696147f9438c222378134"
+    },
+    {
+      "path": "lib/domain/models/session_night.dart",
+      "sha256": "f3296d21f5f16b42679f78df54c1a8652b591742b51686e65a896821dc610117"
+    },
+    {
+      "path": "lib/domain/models/session_result.dart",
+      "sha256": "e570dd8c4d1a95a5f725f78b336218e4cbaee251e6b7b075fcc7b34f6e2518f3"
+    },
+    {
+      "path": "lib/domain/models/session_snapshot.dart",
+      "sha256": "6203357abcf03cd9d4424caa4bd627a3e55f83fdd54a1602b558c303780043d3"
+    },
+    {
+      "path": "lib/domain/models/session.dart",
+      "sha256": "a59c5d07cb08e79543dbaa432955f5d37d601124ac5f5c2179997c7784465bfe"
+    },
+    {
+      "path": "lib/domain/models/site_time_context.dart",
+      "sha256": "4100bc2c0a55bb09cd83f5e53593a94cac25cc56e5d9374912e98641fb7834ab"
+    },
+    {
+      "path": "lib/domain/models/sky_darkness.dart",
+      "sha256": "afd13b1cb1d7c06e2f83b1cb109e47e537bc7f87c4aeba1ed036d49898cfc85a"
+    },
+    {
+      "path": "lib/domain/models/spec_confidence.dart",
+      "sha256": "20025cb1e760a76313c47524a28208edabbfc239d563b5f96103dc1e86352951"
+    },
+    {
+      "path": "lib/domain/models/spec_provenance.dart",
+      "sha256": "bfdc5744233d3553683e725228281562e4aafa70f51cb725fee2c8dbd65aae7f"
+    },
+    {
+      "path": "lib/domain/models/target_alias.dart",
+      "sha256": "406fa60855a1987fa1ed4207cb683967010bc5bd3ec7274d36dc1c7be3069fb7"
+    },
+    {
+      "path": "lib/domain/models/target_types.dart",
+      "sha256": "034c89b5efc7ca7e1be7c380efad1c2c4cb5ae187e4f4b07b29bee19ebf062fe"
+    },
+    {
+      "path": "lib/domain/models/tracking_type.dart",
+      "sha256": "8adce4d4b0a2c0b4e0c88a3ac2ce4669a2082c7c96ac36ffdb62ef06e60e693f"
+    },
+    {
+      "path": "lib/domain/models/visibility_window.dart",
+      "sha256": "443aa4de6bc86cd9430a5553d72bfaf5f6485a4c1989a018b8654e5dca331d0d"
+    },
+    {
+      "path": "lib/domain/models/weather_snapshot.dart",
+      "sha256": "3f795406ee9cec3214f6c5f44132ed61cba116700c200588390499d87ed7fe22"
+    },
+    {
+      "path": "lib/domain/repositories/display_preferences_repository.dart",
+      "sha256": "f2efacd776ce8dd058ca61f9e39d9a93ca413c630094b767627c1a1ffdd58c4d"
+    },
+    {
+      "path": "lib/domain/repositories/display_settings_repository.dart",
+      "sha256": "4a42bb2469cf24140422556092fb6e0c43a2162a01a7b45892405699672e0b5b"
+    },
+    {
+      "path": "lib/domain/repositories/equipment_repository.dart",
+      "sha256": "aa375f53d96a5151d9969ac672038aafab960966ceacacd85ca9c6f71f0a9123"
+    },
+    {
+      "path": "lib/domain/repositories/first_run_repository.dart",
+      "sha256": "4238fd76d3925ab6b9966fc77c8bdffee8ccb1fcbe57225be1f5f7a64e8fa07a"
+    },
+    {
+      "path": "lib/domain/repositories/location_repository.dart",
+      "sha256": "94c516cd8ab7a3b33a85a2096bbed2c1f9c3f6d86aacba72cae7a852ec01b3b8"
+    },
+    {
+      "path": "lib/domain/repositories/planner_state_repository.dart",
+      "sha256": "e02bb5809572e829e0f8ba9c2bd87e73980155956e674ce0ec7878edc4ecebbc"
+    },
+    {
+      "path": "lib/domain/repositories/planning_preferences_repository.dart",
+      "sha256": "b270a56af50d2f21af237a257f7677ddcdadb356ff9e7ef8805783af9fe56b37"
+    },
+    {
+      "path": "lib/domain/repositories/privacy_preferences_repository.dart",
+      "sha256": "671cc699a5ea7eb54b6fb3ebf26fffdb88ce44a7ece6d4c04f4e4455dfa8147d"
+    },
+    {
+      "path": "lib/domain/repositories/session_repository.dart",
+      "sha256": "5c5a58fa7f63a83a7a0430bc8f5599629926f7b230aae2844c6a4fbdc23277af"
+    },
+    {
+      "path": "lib/domain/repositories/storage_failure.dart",
+      "sha256": "5f3bce8eb2caa11218a9ec867f1d8e523d83ffab4a84bbfda8d627d740e1d0be"
+    },
+    {
+      "path": "lib/domain/repositories/target_repository.dart",
+      "sha256": "3d58c02fa515406a86555e80675efc102dbe8046ef24e6af082f68fa91f2592f"
+    },
+    {
+      "path": "lib/domain/repositories/undoable_deletion.dart",
+      "sha256": "84c4eb02f73ce51584f1d45a053837a9ca82181bd10320af2c6b167c20e1dfb7"
+    },
+    {
+      "path": "lib/domain/repositories/weather_repository.dart",
+      "sha256": "d83d9d0f7ca47b05c42c0ddd0ab06743abcf1311e6ee3ae790b24ea0780489eb"
+    },
+    {
+      "path": "lib/domain/repositories/weather_snapshot_store.dart",
+      "sha256": "a2a7d7d46aefaa66dd38b0dcaf07def8fe514392e09443e03589e82c5f83d343"
+    },
+    {
+      "path": "lib/domain/services/astrobin_acquisitions.dart",
+      "sha256": "90304c3e5462eb53ba0713b0b6a3679f167290673b5012505585b3a2f2ff4a78"
+    },
+    {
+      "path": "lib/domain/services/astronomical_engine.dart",
+      "sha256": "4b1d994ad9922b19db327905299127cd7145b41f8896e88c412b04d1c5d9d266"
+    },
+    {
+      "path": "lib/domain/services/backup_service.dart",
+      "sha256": "a9b79b03c44a9c7e7ae1a91aeef5a1f2cca9cc5ec22070ef390ef53aaacfc590"
+    },
+    {
+      "path": "lib/domain/services/block_proposal.dart",
+      "sha256": "183d891da70b40dd521979e3b4c1294cce542270432ebb60d07ab7b27be6d548"
+    },
+    {
+      "path": "lib/domain/services/calibration_builder.dart",
+      "sha256": "9cecf56b9524d3149292b4ffad8539c171f50411197a2c10ea2c127a3f39299b"
+    },
+    {
+      "path": "lib/domain/services/calibration_match.dart",
+      "sha256": "105c1a25122d11b5351a7401d3b6ee4bd1ed57588cbc5cb1e57d4bf829e6c2cf"
+    },
+    {
+      "path": "lib/domain/services/candidate_evaluator.dart",
+      "sha256": "2d7865367a16e53a2eac2662de5c85a8bb59b018794ec1b3c69939d6a86ce0ec"
+    },
+    {
+      "path": "lib/domain/services/capability_calculator.dart",
+      "sha256": "e063dc83809a53d9cee8d66639b9cb823292b078cfb828613894a2f4c34c4de6"
+    },
+    {
+      "path": "lib/domain/services/capture_budget_calculator.dart",
+      "sha256": "591d13baa71d719fa3adff85524afa7c46da708285580e275d277d7a8665929a"
+    },
+    {
+      "path": "lib/domain/services/current_session.dart",
+      "sha256": "90182d61e19beb6a65f19c76f63a33f7b9dad78577795294cb1e6576fab42244"
+    },
+    {
+      "path": "lib/domain/services/device_time_zone.dart",
+      "sha256": "9f884716569e8680b42b99b4ba313b421b25fa60f4610e9e8f579b2302f7b3cd"
+    },
+    {
+      "path": "lib/domain/services/example_capture_plan.dart",
+      "sha256": "c57f48bb9da0aa2caed8f464abc70b6d79e25dbec7ed487b218e26c3c63f6eab"
+    },
+    {
+      "path": "lib/domain/services/execution_machine.dart",
+      "sha256": "ad5cad20f8c618e7417fb4da07e06244c2d8a18d39292678b99188b20aa42f79"
+    },
+    {
+      "path": "lib/domain/services/exposure_input.dart",
+      "sha256": "c79e2f52747920ac95047f6715fcebfa806b8096f3742a4154d8646175d01a46"
+    },
+    {
+      "path": "lib/domain/services/fit_analyzer.dart",
+      "sha256": "8aa4d71d4371e7723ee73f303148b4dd0d2c1544758db258644499932b23ee3c"
+    },
+    {
+      "path": "lib/domain/services/forecast_overview.dart",
+      "sha256": "b812b8b6e0cca99f3b416ff9befad296728a983f603aca31f84656d9edc733d7"
+    },
+    {
+      "path": "lib/domain/services/imaging_opportunity_calculator.dart",
+      "sha256": "ea9a5018c201a93841654d6e9de9be178bc7be4099fc3b68ac019d40b13f323e"
+    },
+    {
+      "path": "lib/domain/services/location_service.dart",
+      "sha256": "be6eb79a423c747db71dbb34e6750e69ac287b3ea68b6fd53dc87fd85d52372c"
+    },
+    {
+      "path": "lib/domain/services/moon_calculator.dart",
+      "sha256": "f8b1263e2e28715c427ce3b5303473af30298c3297069c0005bcdc8739431d24"
+    },
+    {
+      "path": "lib/domain/services/moon_calendar.dart",
+      "sha256": "72a2b13021c9814718c08c1539a0c234f3ff300ea0afccf0fa8e533a92849ea1"
+    },
+    {
+      "path": "lib/domain/services/moon_series.dart",
+      "sha256": "798254a8a88208a5383f2458d2d21d411eb8863d3550eeff32ea86e91576396d"
+    },
+    {
+      "path": "lib/domain/services/night_view.dart",
+      "sha256": "a4a2be58167cf94713d2c1ea8bcd77e8edc8d71da40a25543cac21e637d3ef95"
+    },
+    {
+      "path": "lib/domain/services/night_weather_service.dart",
+      "sha256": "ca3ab708a5e0740f604429ef1428271fe353fedd62be10dd430722ecbec7071a"
+    },
+    {
+      "path": "lib/domain/services/night_weather_summarizer.dart",
+      "sha256": "d1733e014180690e0671841cef97f741a2fc8d4ba3cecba25eae5f5e1cb588f0"
+    },
+    {
+      "path": "lib/domain/services/opt_in_reverse_geocoder.dart",
+      "sha256": "8bec34df9862f6f39cf256bf5aca001a6d97be7d8317051956e76c38d06ae514"
+    },
+    {
+      "path": "lib/domain/services/optical_calculator.dart",
+      "sha256": "bae42d791bef92645560c2885ca1536c17a93b9a4d2baeff00c64fa5ba533159"
+    },
+    {
+      "path": "lib/domain/services/result_action.dart",
+      "sha256": "383fbb28b98d3ad8ee9c54a7ef247b3577fff01ecc7d69567e2123562a04dff1"
+    },
+    {
+      "path": "lib/domain/services/reverse_geocoder.dart",
+      "sha256": "9d0cae06c700634272e08ad36bf167839329869698e6055e4cd5c1c1aa5d0ee4"
+    },
+    {
+      "path": "lib/domain/services/saved_night_end.dart",
+      "sha256": "ccc7b15aa231683cc0e7862801988311f15f08cb1d7292a438603db8f24a57e6"
+    },
+    {
+      "path": "lib/domain/services/saved_plan_reader.dart",
+      "sha256": "2f6cbb02f58c3eb4fd8ae89c22364cf2cb9c001b4030d7e3c40be58bc4c7f482"
+    },
+    {
+      "path": "lib/domain/services/session_exporter.dart",
+      "sha256": "00e14f24c47b9a3318ceafdf6f4a8ac4307261406b88a1703a59070c3f211120"
+    },
+    {
+      "path": "lib/domain/services/session_night_resolver.dart",
+      "sha256": "efc25a9f805fc2f73487a3024f9f512d3b959110f6ed59c8531d013a577b8f41"
+    },
+    {
+      "path": "lib/domain/services/session_reconciliation.dart",
+      "sha256": "affac3b8db5a56a79bbac261a688362c8571f8e71a6c9d7d9a295d8b4feb6787"
+    },
+    {
+      "path": "lib/domain/services/session_reference_resolver.dart",
+      "sha256": "366aa20f8bef47f622b17600ccc7c1d6c64a8fcfe91c640a394f0989e1fecad1"
+    },
+    {
+      "path": "lib/domain/services/session_snapshot_builder.dart",
+      "sha256": "91d33dea49eaea9d01be4de7226ab853aa5567a09fe8a474d0db39e1d93fa62a"
+    },
+    {
+      "path": "lib/domain/services/stacking_gain_curve.dart",
+      "sha256": "40010d29bf2bb7f85df05f94a730bf22e112f7aaec5fd80506b96b693f60714c"
+    },
+    {
+      "path": "lib/domain/services/storage_estimate.dart",
+      "sha256": "174a600dbe2e1f6e1a04af1b323f3ef17850d4542c3a420051701e3f9c803135"
+    },
+    {
+      "path": "lib/domain/services/target_progress.dart",
+      "sha256": "3dfe95438804c73f3c02e68e7c3597326cbda5f59b8ccc6f719f6ca9241b72a0"
+    },
+    {
+      "path": "lib/domain/services/target_search.dart",
+      "sha256": "bad01972c6670be01b7a8a1b66b90690fc5418ec978d4eddc87ec2280a302238"
+    },
+    {
+      "path": "lib/domain/services/visibility_calculator.dart",
+      "sha256": "a7ef7f5774e1c91183e68297eebdd0d41cf3c2859313554b6c31bd4073edfba8"
+    },
+    {
+      "path": "lib/main.dart",
+      "sha256": "c7494ee95cf158a980c887e4ada256ee939bbee29fbb3740d451613966e896d4"
+    },
+    {
+      "path": "lib/presentation/app_view_models.dart",
+      "sha256": "6cbf2e23d0118816408d4a4b61f86397e3bcaf1ced02bf02a4afa1ef804d4f10"
+    },
+    {
+      "path": "lib/presentation/navigation/app_router.dart",
+      "sha256": "d0e92324e6112e8a2d96d7f633ab1f60bd9c67786ce574cddec69f4e8c04cd8e"
+    },
+    {
+      "path": "lib/presentation/navigation/app_shell.dart",
+      "sha256": "fc54b2e45b25c3a4df1c7c1fbc17c2628da7ab8ae51f804f2f2ce643a5e5d628"
+    },
+    {
+      "path": "lib/presentation/screens/about/about_screen.dart",
+      "sha256": "a713713a59ca78454e712d89c9b995193276a0e62f102e020a213a934404bc08"
+    },
+    {
+      "path": "lib/presentation/screens/details/night_moon_screen.dart",
+      "sha256": "07b3e3fa17462acc9d439cb280e9faf2f5bf5f617b838890943fc184b18c8859"
+    },
+    {
+      "path": "lib/presentation/screens/details/weather_detail_screen.dart",
+      "sha256": "2988b080e195dba24e65c5fb20ce4bae7c5fb8b00b55be03fd16517398059aab"
+    },
+    {
+      "path": "lib/presentation/screens/equipment/add_rig_panel.dart",
+      "sha256": "237a35aa9b33e6d7005741b68c461a5e5f2319cd2aabf15c5d2fe25a2690cac7"
+    },
+    {
+      "path": "lib/presentation/screens/equipment/equipment_editor.dart",
+      "sha256": "79596fd2537a5f34aa602b1cfe766270a13a73c1787d3f2495345a9a4a3fde6c"
+    },
+    {
+      "path": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+      "sha256": "7eb910aa64f5eb7dfc380e23f4e1ad6c81b8445b284463e94e5a7f568b9ee41a"
+    },
+    {
+      "path": "lib/presentation/screens/execution/results_screen.dart",
+      "sha256": "858b63d7112542eea201d4569d2dde39416b6cd6d89f7a153e1097c252dc717d"
+    },
+    {
+      "path": "lib/presentation/screens/home/home_screen.dart",
+      "sha256": "b8f0acf7f3620e0d8ed0a359a9f0bc84d8ba613e9235d61ade932d70caa9901b"
+    },
+    {
+      "path": "lib/presentation/screens/home/session_planner_route.dart",
+      "sha256": "f12e2d2a3ff06c0a72a963f54e6b1308f6dcfb89d47c468d1bfe3b59c569d8d9"
+    },
+    {
+      "path": "lib/presentation/screens/library/library_screen.dart",
+      "sha256": "0db5f424f37a6a618bc2d9a9460b2ea9a1f1f2e9b835f6900b1564c3e2d4e595"
+    },
+    {
+      "path": "lib/presentation/screens/location/location_picker_screen.dart",
+      "sha256": "c9d6fb949d52daeb66605815363a5bb5cbbe5f4cb7b87f2ec5f32137bd1bb46b"
+    },
+    {
+      "path": "lib/presentation/screens/logbook/astrobin_export.dart",
+      "sha256": "8b1d72a21a85d9b88b321514f85d2bbe4e659ecb1f059f63bc0b4315e68f05ee"
+    },
+    {
+      "path": "lib/presentation/screens/logbook/logbook_screen.dart",
+      "sha256": "29b814435e5fd0acd1054d724a78209780ab4351fc7a599bea5bca6584e875a6"
+    },
+    {
+      "path": "lib/presentation/screens/logbook/progress_screen.dart",
+      "sha256": "b60ff603a4cf13fec07a0a1df7936f69e013316fbf2f24403c8211bd281ae2a7"
+    },
+    {
+      "path": "lib/presentation/screens/logbook/session_detail_screen.dart",
+      "sha256": "1b9a1137462acfb7cb7ea40ebba62ff252faf1a051a8453ccc66342a06d10741"
+    },
+    {
+      "path": "lib/presentation/screens/metadata/metadata_import_screen.dart",
+      "sha256": "88dd846d7eb8b6d7b59d91433188e859f524ca24aa495a013f6bba8345ea9542"
+    },
+    {
+      "path": "lib/presentation/screens/settings/backup_section.dart",
+      "sha256": "f725d6e548ce985006dbe3ef9d676cdc39cae0c485417abe7fd4117d44ef9ca6"
+    },
+    {
+      "path": "lib/presentation/screens/settings/display_settings_section.dart",
+      "sha256": "6230f9d4da49c1670edfbbd79ab03ec217e98f01fe571e0eb3ab9634f8d46b32"
+    },
+    {
+      "path": "lib/presentation/screens/settings/settings_screen.dart",
+      "sha256": "3346ce4e6be1a4998c01ca0ac5c1339b1858f3e6c0a4eedad1790be6544d10a7"
+    },
+    {
+      "path": "lib/presentation/screens/sites/site_editor_screen.dart",
+      "sha256": "cbf130974a0d93e964592ebd8b790bd186fa1928bf97d801b13f33b6175b0d6a"
+    },
+    {
+      "path": "lib/presentation/screens/sites/sites_screen.dart",
+      "sha256": "654e8de32e7cdf94b15ceef24a14f9490c246c590f6b02ae599668a506b04615"
+    },
+    {
+      "path": "lib/presentation/screens/sites/zone_picker_dialog.dart",
+      "sha256": "438967bc1f897d2061cc4059370a7244c9fe393ff1786da131ae68cb81c22ac0"
+    },
+    {
+      "path": "lib/presentation/screens/startup/unsupported_database_screen.dart",
+      "sha256": "c51231fceaa56abc70c5b4b70360291edfa2451f02251f526d1d5c4d66356cff"
+    },
+    {
+      "path": "lib/presentation/screens/target/target_selection_screen.dart",
+      "sha256": "7f0dd43f5c4857c49ca6ec9686589187e7243276e7b04c4719691a7c0e7f11d3"
+    },
+    {
+      "path": "lib/presentation/screens/tonight/tonight_candidates_screen.dart",
+      "sha256": "bb734e9ce120e8b4ef5ae64f273f215f685fcdcbbe627ac8a4508e9d4471c2dd"
+    },
+    {
+      "path": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+      "sha256": "8298fd95f215affd3892384f7dd6dd39dc516eb7b373801e3e52fd458d9f21a9"
+    },
+    {
+      "path": "lib/presentation/screens/welcome/welcome_screen.dart",
+      "sha256": "93a02b603e22a2137a923032c859e31d77ae90a82c4e05637422374dda90b94b"
+    },
+    {
+      "path": "lib/presentation/shared/app_messages.dart",
+      "sha256": "c7af1bf2ff2f36818a546927a0a840bc321a52acae13ba21853b59986abceebc"
+    },
+    {
+      "path": "lib/presentation/shared/app_words.dart",
+      "sha256": "20568284684e9e1b58c1bb1e6c26306b4d922ec6a7ac2e7cd4b500da00eb582e"
+    },
+    {
+      "path": "lib/presentation/shared/block_text.dart",
+      "sha256": "170de8725d81928eb3151edd1783af4635abcac12f11ca83d43d478115aece4c"
+    },
+    {
+      "path": "lib/presentation/shared/calibration_text.dart",
+      "sha256": "f6656f49728eae7d62e0734b54d906192a5244106247518c4e5f7302223b139a"
+    },
+    {
+      "path": "lib/presentation/shared/capability_text.dart",
+      "sha256": "569da46f510633a5450d9667cd909aa308cf323440d613307702b7d69f45a554"
+    },
+    {
+      "path": "lib/presentation/shared/capture_settings_text.dart",
+      "sha256": "59a8f2672f424e0d7a7f8766a17fb9be47ba59f34117ccb7171c68da3f1fa7bb"
+    },
+    {
+      "path": "lib/presentation/shared/change_mark.dart",
+      "sha256": "5bd6f87cd66732d8428e9b724d5dcbbb4cf88082570abd1de3cc748eaff0b283"
+    },
+    {
+      "path": "lib/presentation/shared/clear_outside_link.dart",
+      "sha256": "49549ec3d119d113d9f834e7725cb53bc1265d92989a176b9aa7f7d7a381f2cd"
+    },
+    {
+      "path": "lib/presentation/shared/collapsible_section.dart",
+      "sha256": "e2fafef749aaa4692d2a4a249d8b38d954d8de52d60a27676ff140457da5d713"
+    },
+    {
+      "path": "lib/presentation/shared/confirmation_patterns.dart",
+      "sha256": "d0c237f41a1a5ddf80bdc6cf57333ab98d4621b48afebd03740fde169610043d"
+    },
+    {
+      "path": "lib/presentation/shared/context_line.dart",
+      "sha256": "117b01064c769d5678b3cc3fc87783e48cc3e1926c762c2a45778501a6be2793"
+    },
+    {
+      "path": "lib/presentation/shared/coordinate_input.dart",
+      "sha256": "f67c97d0d2c48d0cf6e9cadee88a3ae88943ce0922e728d780a5db30eb24a719"
+    },
+    {
+      "path": "lib/presentation/shared/delete_patterns.dart",
+      "sha256": "861f3070e953fdc88597805b011878b09b877e2c8828c28e08a5f2e3416bdb32"
+    },
+    {
+      "path": "lib/presentation/shared/deleted_plan_fallback.dart",
+      "sha256": "4424d81b93136d2f22c974e8a7280680e90f249990ccd27f00905bcbd833d2d5"
+    },
+    {
+      "path": "lib/presentation/shared/detail_scaffold.dart",
+      "sha256": "f227aecd38eee5eae179bf32aed04b8224f3ecf6faca4561ed22121b17f3b817"
+    },
+    {
+      "path": "lib/presentation/shared/display_units_of.dart",
+      "sha256": "fc289bbe281a55c09f9a075638254ef9559d6a0140c38ed8192f4be043faa288"
+    },
+    {
+      "path": "lib/presentation/shared/entry_share_text.dart",
+      "sha256": "7c01321162a9aff6bed7645b73848f118f529d6d54301874413742885791d1fc"
+    },
+    {
+      "path": "lib/presentation/shared/equipment_draft.dart",
+      "sha256": "42fd1d5b24ecaaba2921157f04c79bb475350d1c46d96c2993536baa46898165"
+    },
+    {
+      "path": "lib/presentation/shared/equipment_form_input.dart",
+      "sha256": "4d302c56eab092ea538f1502b2bf6d9f514321f8131f88c2e26566fb365cfca1"
+    },
+    {
+      "path": "lib/presentation/shared/equipment_import_text.dart",
+      "sha256": "75de89329ab32baed6c112a68d51978a23513f6ccb3d72d8e68deead16827053"
+    },
+    {
+      "path": "lib/presentation/shared/example_text.dart",
+      "sha256": "4cd055a0203df0cc7ef8334544853f834d295fac9675339b4c45d1839f191893"
+    },
+    {
+      "path": "lib/presentation/shared/failure_feedback.dart",
+      "sha256": "44cc274938e0974f6f7bcff38d1ff27755cddf7a748737f9af9a94b2f559893a"
+    },
+    {
+      "path": "lib/presentation/shared/field_mode_button.dart",
+      "sha256": "a6ae5fe1e89b4c22b349593952b74289628271438caa21cafaff04eb1cfb207f"
+    },
+    {
+      "path": "lib/presentation/shared/hybrid_focus_highlight.dart",
+      "sha256": "418cf7d3a1ef3bc9658c4a3b099a3ba95b2459538afafb53f5de88cf74d37ef1"
+    },
+    {
+      "path": "lib/presentation/shared/info_row.dart",
+      "sha256": "400e0b8e90458886c88a698b60c3ed3020707fdd6d6d9296fda0a4c20fd956e8"
+    },
+    {
+      "path": "lib/presentation/shared/light_pollution_map_link.dart",
+      "sha256": "0fdd1e50a848a62b6033b76d2a0873c84793ea073c9a37a725b73903589f636f"
+    },
+    {
+      "path": "lib/presentation/shared/list_mode.dart",
+      "sha256": "2b6ae1440b212892fd7cb2a8ff0565c377a268bbe9223d6fd0e391750ceb60b0"
+    },
+    {
+      "path": "lib/presentation/shared/location_failure_text.dart",
+      "sha256": "5ad76f13ccc37bd3f20652106aad9acb230fcc5a1cb14459f21ee38c281b65da"
+    },
+    {
+      "path": "lib/presentation/shared/location_feedback.dart",
+      "sha256": "03a8c6d0d6740b281b0722a9c549fbd30b286c66c6ac1784071e30ff99adaff6"
+    },
+    {
+      "path": "lib/presentation/shared/metadata_text.dart",
+      "sha256": "8d47d4f4c1c913c7a0ad1e108685a089c743bdebf35b2add6f5a97662e128fc0"
+    },
+    {
+      "path": "lib/presentation/shared/night_text.dart",
+      "sha256": "a992d61a1889216cdd6ceee9530ce97659c617727366e1b6002469d7105aa133"
+    },
+    {
+      "path": "lib/presentation/shared/night_time_formatter.dart",
+      "sha256": "5b8fc1b7368c0c2eac85df787ddbe625c43f5da56716a2f04a19fa781cc2d367"
+    },
+    {
+      "path": "lib/presentation/shared/opportunity_text.dart",
+      "sha256": "36f46891285667cf9ada30f88a20fbca9100df2ce573691740324b1c6274b480"
+    },
+    {
+      "path": "lib/presentation/shared/plan_night_phrase.dart",
+      "sha256": "86bcc91373ac8dc69b9c63a90714349d377a2d74bec34b2c2ea70497fee538bd"
+    },
+    {
+      "path": "lib/presentation/shared/plan_state.dart",
+      "sha256": "4dd28dd9ebff4be00dfc5cab4941781639bf4311afa35ca4f799e35c5cf929f6"
+    },
+    {
+      "path": "lib/presentation/shared/plan_this_night.dart",
+      "sha256": "b68b80101940bd931724b8045ebeada816e384d1623e7107fe486ce9995db216"
+    },
+    {
+      "path": "lib/presentation/shared/proposal_text.dart",
+      "sha256": "92f8dcf5ccf3623b30d425d1fa69611862095c7b840e1e25eae46b4a7cda6f76"
+    },
+    {
+      "path": "lib/presentation/shared/rig_input_text.dart",
+      "sha256": "aa406acf333ee88fd7c174a9bed1a4088e8a83acdc486bdf9f8e5f58ab6f70c2"
+    },
+    {
+      "path": "lib/presentation/shared/section_header.dart",
+      "sha256": "32d3eaa6a60188fcf2be7a58a2e023d9fd41d8ac16a4b4d6377f9ac06bfab705"
+    },
+    {
+      "path": "lib/presentation/shared/site_form_input.dart",
+      "sha256": "9af239512c0050fc30d7363d3160db0c0293c1b2aeb0347435cfbb426323ddfd"
+    },
+    {
+      "path": "lib/presentation/shared/site_label.dart",
+      "sha256": "0bd755851095aa85cf7611d3c071785607389bb62868b79fa51101dbcf78890f"
+    },
+    {
+      "path": "lib/presentation/shared/sky_color_interpolation.dart",
+      "sha256": "6bb11c243121ce0ca38f882f618be5bd7821de38056aa8217fed2012a094958c"
+    },
+    {
+      "path": "lib/presentation/shared/startup_mark.dart",
+      "sha256": "a121b8c115fd8c64829bea8033b1b7eab9842d25ebffe885ff64d52705f395a1"
+    },
+    {
+      "path": "lib/presentation/shared/status_block.dart",
+      "sha256": "8a58a4754797d6f2399e2d3b75fab371c00ff14c7b56b6c77a97f8a114995696"
+    },
+    {
+      "path": "lib/presentation/shared/storage_text.dart",
+      "sha256": "5d8e70127c54610f24715ccbcef771ff6e7f04313dbbe8153dc38c35c8e886ca"
+    },
+    {
+      "path": "lib/presentation/shared/target_form_input.dart",
+      "sha256": "75ae5a3fa0f9547720576383955f523897122fe02c1275bce0a586fb1198eff6"
+    },
+    {
+      "path": "lib/presentation/shared/twilight_bands.dart",
+      "sha256": "0b1124a93dce805f666f7f211467386e8ba86218e6560aa4c5742faa0d41fb73"
+    },
+    {
+      "path": "lib/presentation/shared/unsaved_plan_prompt.dart",
+      "sha256": "9a7503e64edb1695caaf19808931cde0268af82e69543ecce2bbe79c7c1b699c"
+    },
+    {
+      "path": "lib/presentation/viewmodels/astrobin_export_viewmodel.dart",
+      "sha256": "c7dac850269aa6e022a2c3a01471e33f91cd7f8a8d686ac360ecab9bfe18bdd7"
+    },
+    {
+      "path": "lib/presentation/viewmodels/backup_viewmodel.dart",
+      "sha256": "e05fd601177e49682fbb19aef824c3df7bd89aec9dffc3cc6eac6fc07df28acb"
+    },
+    {
+      "path": "lib/presentation/viewmodels/blocks_edit.dart",
+      "sha256": "82c14d99a2ce354fb9afd6694705509a9c34fe33a0f47ad292dd63bcf13e3ee5"
+    },
+    {
+      "path": "lib/presentation/viewmodels/candidates_viewmodel.dart",
+      "sha256": "fdd35856676cf4908c54abbdc0bee884d3bbb80c469431efb69d3d594feca536"
+    },
+    {
+      "path": "lib/presentation/viewmodels/capture_analysis_viewmodel.dart",
+      "sha256": "670b86265987f29e8f2b0d8aac0ef84aaccb5718d07c27ea1e85ab4e94d08f59"
+    },
+    {
+      "path": "lib/presentation/viewmodels/disclosure_viewmodel.dart",
+      "sha256": "7ebf2293287918fc4fb9396eb95046b2ce02db51b47e710771f13c42e91fe8e1"
+    },
+    {
+      "path": "lib/presentation/viewmodels/display_settings_viewmodel.dart",
+      "sha256": "baad9c464a497edcf82ed0404193b52b7a6ca896518f147c5a462080cd0052b4"
+    },
+    {
+      "path": "lib/presentation/viewmodels/forecast_nights.dart",
+      "sha256": "7eef4a8be4df8f9a508b2b71cfb6b0ecaadba0601d9c4238a7a473e88fa8d4c5"
+    },
+    {
+      "path": "lib/presentation/viewmodels/library_viewmodels.dart",
+      "sha256": "51f5353076a2ddae41f8b174cbafc005d794625e910bbe7eb1259080b47442cb"
+    },
+    {
+      "path": "lib/presentation/viewmodels/metadata_import_viewmodel.dart",
+      "sha256": "7706ec228d088f5e61135642ea67abce4651f45b0454a03c7d6f6f1b4f1a3f16"
+    },
+    {
+      "path": "lib/presentation/viewmodels/night_browser_viewmodel.dart",
+      "sha256": "cef8eccf18af4032d3401139ab3fd24b4e3f03e770a84bc904025ea580a44271"
+    },
+    {
+      "path": "lib/presentation/viewmodels/night_conditions_viewmodel.dart",
+      "sha256": "48ebb351d19e9f89c2cc2949d9ad15381ae526618d19626c20dbc87ae001782f"
+    },
+    {
+      "path": "lib/presentation/viewmodels/plan_lifecycle_viewmodel.dart",
+      "sha256": "6b696b299f4d7a527fc5978462e656612cb5a9e3593eba8f191f975b6a59d69b"
+    },
+    {
+      "path": "lib/presentation/viewmodels/results_viewmodel.dart",
+      "sha256": "00259c3a2042789ca5eb4607d5513b207d6f4ebfe2f24eaba5ee97fe4c18d77c"
+    },
+    {
+      "path": "lib/presentation/viewmodels/session_plan_viewmodel.dart",
+      "sha256": "dd78543e455be6ea361a092304a74e0da10b0d38625851b2412db7e730ced5a7"
+    },
+    {
+      "path": "lib/presentation/viewmodels/sessions_viewmodel.dart",
+      "sha256": "7c5e82075ae0049b8efa52506e633226f5575c1aa7e49849b8ce0f0c0bbc5311"
+    },
+    {
+      "path": "lib/presentation/viewmodels/settings_viewmodel.dart",
+      "sha256": "059e89c809da5a03f7d7d21e381979acb1aa9de44af263d2339594a7960e6187"
+    },
+    {
+      "path": "lib/presentation/viewmodels/site_viewmodel.dart",
+      "sha256": "4bbe3aa0a35ac54e51de5d9d896e4262ce1b81427c78bd4e1eb92b9b6386663e"
+    },
+    {
+      "path": "lib/presentation/viewmodels/startup_viewmodel.dart",
+      "sha256": "bd11396ccc4de3f505b5328de9b96b1939c212afd4071a240bd7f051bec766c9"
+    },
+    {
+      "path": "lib/presentation/viewmodels/theme_viewmodel.dart",
+      "sha256": "18acb0ebfef517e2e126e727bc586f5f0b23ec8ff98d4fd676a1e4879372b159"
+    },
+    {
+      "path": "lib/presentation/viewmodels/tonight_viewmodel.dart",
+      "sha256": "d49b798660907433983b8f32a156c676cc5ca74e2f7ba4071cf3aa17fbd83c01"
+    },
+    {
+      "path": "lib/presentation/widgets/altitude_chart_widget.dart",
+      "sha256": "2c23f80764ae1f01be783c42e4f5131818a25cd6cdff2e18189dda6cdd524aa3"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan_widget.dart",
+      "sha256": "1a7146e12e0488b4ea5f45bbd665251005bc29153a8a19374c8ca66e2ec17a66"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/blocks_undo.dart",
+      "sha256": "6c8ebf8e4daeaf1fbef50a0bda28ba7ae26216e99fc1b01cb7ef4b208a416419"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/calibration_preview_dialog.dart",
+      "sha256": "4e37686d7836f92cfada82eeb385b3f5cb2582554242da685cb83af2c5fca3ea"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/capture_assumptions_panel.dart",
+      "sha256": "d9d5164b3d12b9ef66e4df70e651d8dfc96497dba36e54d4299cfeacb792dc36"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/capture_block_dialog.dart",
+      "sha256": "74715a0e55a8ecbb49bc9cd29c0b7b5b5fdef47865a9e2a4cc7dd325343f61d2"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/capture_budget_summary.dart",
+      "sha256": "ddc8936342647c9e43c5a54793f5917172934940d2b4b1b84cf5f8e6d18930a5"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/plan_overrides_editor.dart",
+      "sha256": "de76dba7c3d4af511f401d4298bf4e4b8b84d5b39bc6786dcc6f5fb06f627344"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/stacking_gain_graph.dart",
+      "sha256": "fac436c0ae878ee9505f8083fa479a36aa7b5a05a4d0dd389f1ac81d6e5358f2"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/storage_actions.dart",
+      "sha256": "2351d077f1764a2f668325604f4bf2d266bdb36e3973e25150a72432f53d3662"
+    },
+    {
+      "path": "lib/presentation/widgets/forecast_nights_section.dart",
+      "sha256": "8f4bd7fb75059ecb395c7d8bfbc654ad9ddee48deba7230a71ddd52b83289d3f"
+    },
+    {
+      "path": "lib/presentation/widgets/night_browser_sections.dart",
+      "sha256": "18870301a8e2f8eedfe6ac1f648bc4322aa5e32baf61ed012f4aab6866537773"
+    },
+    {
+      "path": "lib/presentation/widgets/night_clock.dart",
+      "sha256": "f0f283d444c2f5a9f8d4518f9cd4c9c827dce73f63ef71e1bc6765c638f102ea"
+    },
+    {
+      "path": "lib/presentation/widgets/plan_status.dart",
+      "sha256": "db635a7aa7a6ef513fb8dd50ab8b47256f9d95a8865dffcd862a86e543645799"
+    },
+    {
+      "path": "lib/presentation/widgets/plan_tracking.dart",
+      "sha256": "28616fe790324360f155cac21b7665d0588717ad94ca4af589218f81c80a10ba"
+    },
+    {
+      "path": "lib/presentation/widgets/planner_sections.dart",
+      "sha256": "3c2892fb2346af361e1898cf16e89b2bd7f57416d0d2bed30acbbf3d1d3a76db"
+    },
+    {
+      "path": "lib/presentation/widgets/planner_summary_card.dart",
+      "sha256": "01a16027c2d779b316d3437cb2f221a8a3cdb8e217463ecd07367b68a768f459"
+    },
+    {
+      "path": "lib/presentation/widgets/sky_darkness_widget.dart",
+      "sha256": "d9272a474a2e87105f18618800b29359784ad62fdc6082667136c9c6c54f3e13"
+    },
+    {
+      "path": "lib/presentation/widgets/timeline_data.dart",
+      "sha256": "8eb8739c708b2fdc9defb5eab616feb0a855a672e515c3be1acc9db5cb1f43bd"
+    },
+    {
+      "path": "lib/presentation/widgets/tonight_opportunity_widget.dart",
+      "sha256": "bf709435eca16daf0afd0e246dbb84bb23be781f713a2c10b7b12040a30d2250"
+    },
+    {
+      "path": "lib/presentation/widgets/weather_forecast_widget.dart",
+      "sha256": "e8e62c4814f9789fdd64cf90af5bb34b1f7b1655debeb97b454459debcdb7a18"
+    },
+    {
+      "path": "lib/presentation/widgets/weather_hourly_charts.dart",
+      "sha256": "40e98eae9b640e8176d89f078796161a50c36ad13a8c191d55b81bc303b1778b"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "e212a424393f60536586300fdb39bb70003d02038865cdbc7e0bfb8e303afdc2"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "c05607c6f2d8e7b4892929cffa988f9d5e44d201d52d47d5e8082a7546cbb70e"
+    }
+  ],
+  "notes": "Includes production lib, assets, dependencies. Host/browser/emulator evidence remains separate. Verify hashes again after all captures."
+}

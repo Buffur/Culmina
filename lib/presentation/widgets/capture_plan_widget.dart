@@ -37,24 +37,23 @@ import 'plan_tracking.dart';
 /// heading (UX-09), and each row says what will be captured. Composes
 /// smaller widgets; no calculations happen here.
 class CapturePlanWidget extends StatelessWidget {
-  const CapturePlanWidget({super.key});
+  const CapturePlanWidget({super.key, this.blockActions});
+  final Widget? blockActions;
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
-      margin: EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _BlockList(),
-            Divider(height: 32),
-            CaptureBudgetSummary(),
-            SizedBox(height: 8),
-            CaptureAssumptionsPanel(),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _BlockList(),
+          ?blockActions,
+          const SizedBox(height: 28),
+          const CaptureBudgetSummary(),
+          const SizedBox(height: 8),
+          const CaptureAssumptionsPanel(),
+        ],
       ),
     );
   }
@@ -241,41 +240,41 @@ class _BlockListState extends State<_BlockList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Wrap(
+          spacing: 12,
+          runSpacing: 8,
           children: [
             // TASK 15.3: the badge wraps rather than push the add button off
             // a narrow screen.
-            Expanded(
-              child: Wrap(
-                children: [
-                  if (viewModel.isExampleCapturePlan)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: scheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        ExampleText.plan,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: scheme.onPrimaryContainer,
-                        ),
+            Wrap(
+              children: [
+                if (viewModel.isExampleCapturePlan)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: scheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      ExampleText.plan,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: scheme.onPrimaryContainer,
                       ),
                     ),
-                ],
+                  ),
+              ],
+            ),
+            if (blocks.isNotEmpty)
+              Text(
+                '${blocks.length} blocks · '
+                '${blocks.fold<int>(0, (sum, block) => sum + block.frameCount)} frames',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-            ),
-            IconButton(
-              tooltip: 'Add capture block',
-              icon: const Icon(Icons.add_circle),
-              color: scheme.primary,
-              onPressed: _add,
-            ),
           ],
         ),
         // RD-04 (S6.8): a plan starts empty. F09 A6 (UXA-C5): the next step
@@ -300,7 +299,7 @@ class _BlockListState extends State<_BlockList> {
                     FilledButton.tonalIcon(
                       key: const Key('capturePlan.addLights'),
                       onPressed: _add,
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(Icons.add_circle),
                       label: const Text('Add light frames'),
                     ),
                     // F10: FITS is read, so every class has a file to take.
@@ -359,94 +358,141 @@ class _BlockListState extends State<_BlockList> {
                 // regardless of position, and stays stable across a drag.
                 key: ObjectKey(block),
                 fresh: fresh,
-                builder: (tint) => ListTile(
-                  tileColor: tint,
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () => _edit(index, block),
-                  title: Text(BlockText.row(block, budget)),
-                  subtitle:
-                      placement == null &&
-                          !exceeds &&
-                          fits == null &&
-                          mismatch.isEmpty
-                      ? null
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (placement != null) Text(placement),
-                            if (fits != null)
-                              Text(
-                                fits,
-                                key: Key('capture.whatFits.$index'),
-                                style: TextStyle(
-                                  color: unplaced
-                                      ? palette.statusDoesNotFit
-                                      : palette.textSecondary,
-                                ),
+                builder: (tint) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Divider(height: 1),
+                    ListTile(
+                      tileColor: tint,
+                      contentPadding: EdgeInsets.zero,
+                      onTap: () => _edit(index, block),
+                      title: Text(BlockText.row(block, budget)),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _records(block),
+                            key: Key('capture.records.$index'),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          if (placement != null) Text(placement),
+                          if (fits != null)
+                            Text(
+                              fits,
+                              key: Key('capture.whatFits.$index'),
+                              style: TextStyle(
+                                color: unplaced
+                                    ? palette.statusDoesNotFit
+                                    : palette.textSecondary,
                               ),
-                            // S6.9 (UX-15 (1); RD-08): a known tracking's
-                            // exceedance is a warning, in words and the
-                            // status colour; unknown tracking is a missing
-                            // input, neutral, with the way to set it.
-                            if (exceeds &&
-                                !capability.recommendationIsConditional)
-                              Text(
-                                CapabilityText.subWarningFor(
-                                  capability,
-                                  viewModel.effectiveTracking,
-                                ),
-                                key: const Key('capture.subWarning'),
-                                style: TextStyle(
-                                  color: palette.statusDoesNotFit,
-                                ),
+                            ),
+                          // S6.9 (UX-15 (1); RD-08): a known tracking's
+                          // exceedance is a warning, in words and the
+                          // status colour; unknown tracking is a missing
+                          // input, neutral, with the way to set it.
+                          if (exceeds &&
+                              !capability.recommendationIsConditional)
+                            Text(
+                              CapabilityText.subWarningFor(
+                                capability,
+                                viewModel.effectiveTracking,
                               ),
-                            if (exceeds &&
-                                capability.recommendationIsConditional) ...[
-                              Text(
-                                CapabilityText.unknownTracking(capability),
-                                key: const Key('capture.trackingUnknown'),
-                                style: TextStyle(color: palette.statusNeutral),
+                              key: const Key('capture.subWarning'),
+                              style: TextStyle(color: palette.statusDoesNotFit),
+                            ),
+                          if (exceeds &&
+                              capability.recommendationIsConditional) ...[
+                            Text(
+                              CapabilityText.unknownTracking(capability),
+                              key: const Key('capture.trackingUnknown'),
+                              style: TextStyle(color: palette.statusNeutral),
+                            ),
+                            // S7.1: the plan's own tracking (RD-08 = T3).
+                            TextButton(
+                              key: const Key('capture.setTracking'),
+                              onPressed: () => pickPlanTracking(context),
+                              child: const Text(
+                                'Set the tracking for this plan',
                               ),
-                              // S7.1: the plan's own tracking (RD-08 = T3).
-                              TextButton(
-                                key: const Key('capture.setTracking'),
-                                onPressed: () => pickPlanTracking(context),
-                                child: const Text(
-                                  'Set the tracking for this plan',
-                                ),
-                              ),
-                            ],
-                            for (final m in mismatch)
-                              Text(
-                                CalibrationText.mismatch(m, block.frameType),
-                                key: Key('capture.mismatch.$index.${m.name}'),
-                                style: TextStyle(color: palette.statusTight),
-                              ),
-                            if (mismatch.any((m) => m.fixable) &&
-                                CalibrationMatch.defaultSource(block, blocks) !=
-                                    null)
-                              TextButton(
-                                key: Key('capture.match.$index'),
-                                onPressed: () => _match(index, block),
-                                child: Text(
-                                  CalibrationText.match(block.frameType),
-                                ),
-                              ),
+                            ),
                           ],
-                        ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DeleteButton(
-                        tooltip: 'Delete block',
-                        onPressed: () => _delete(index, block),
+                          for (final m in mismatch)
+                            Text(
+                              CalibrationText.mismatch(m, block.frameType),
+                              key: Key('capture.mismatch.$index.${m.name}'),
+                              style: TextStyle(color: palette.statusTight),
+                            ),
+                          if (mismatch.any((m) => m.fixable) &&
+                              CalibrationMatch.defaultSource(block, blocks) !=
+                                  null)
+                            TextButton(
+                              key: Key('capture.match.$index'),
+                              onPressed: () => _match(index, block),
+                              child: Text(
+                                CalibrationText.match(block.frameType),
+                              ),
+                            ),
+                        ],
                       ),
-                      Icon(Icons.drag_indicator, color: palette.textTertiary),
-                    ],
-                  ),
+                      // Explicit controls remain usable without a drag gesture.
+                      // The whole row also retains its original editor action.
+                    ),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          key: Key('capture.edit.$index'),
+                          onPressed: () => _edit(index, block),
+                          child: const Text('Edit'),
+                        ),
+                        IconButton(
+                          key: Key('capture.moveUp.$index'),
+                          tooltip: 'Move block ${index + 1} up',
+                          onPressed: index == 0
+                              ? null
+                              : () => viewModel.reorderCaptureBlocks(
+                                  index,
+                                  index - 1,
+                                ),
+                          icon: const Icon(Icons.arrow_upward),
+                        ),
+                        IconButton(
+                          key: Key('capture.moveDown.$index'),
+                          tooltip: 'Move block ${index + 1} down',
+                          onPressed: index == blocks.length - 1
+                              ? null
+                              : () => viewModel.reorderCaptureBlocks(
+                                  index,
+                                  index + 1,
+                                ),
+                          icon: const Icon(Icons.arrow_downward),
+                        ),
+                        DeleteButton(
+                          tooltip: 'Delete block',
+                          onPressed: () => _delete(index, block),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                 ),
               );
             },
+          ),
+        if (blocks.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Tooltip(
+              message: 'Add capture block',
+              child: OutlinedButton.icon(
+                key: const Key('capturePlan.addBlock'),
+                onPressed: _add,
+                icon: const Icon(Icons.add_circle),
+                label: const Text('Add block'),
+              ),
+            ),
           ),
         if (flatsMissing.isNotEmpty)
           Padding(
@@ -479,6 +525,23 @@ class _BlockListState extends State<_BlockList> {
       ],
     );
   }
+}
+
+String _records(CaptureBlock block) {
+  final gain = block.gain;
+  final sensitivity = switch (gain.kind) {
+    GainKind.iso => 'ISO ${gain.value!.toInt()}',
+    GainKind.gain => 'Gain ${gain.value}',
+    GainKind.unknown =>
+      gain.value == null
+          ? 'ISO or gain unrecorded'
+          : 'ISO or gain ${gain.value} (type unknown)',
+  };
+  return [
+    sensitivity,
+    'Binning ${block.binning}×${block.binning}',
+    ?CaptureSettingsText.of(block),
+  ].join(' · ');
 }
 
 /// Briefly marks a row an edit just changed (S6.9; P6.9's notes): a tint

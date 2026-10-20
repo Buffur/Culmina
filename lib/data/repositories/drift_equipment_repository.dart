@@ -8,11 +8,19 @@ import '../../domain/models/spec_confidence.dart';
 import '../../domain/models/spec_provenance.dart';
 import '../../domain/models/tracking_type.dart';
 import '../database/app_database.dart';
+import '../../domain/repositories/undoable_deletion.dart';
+import 'drift_deletion.dart';
 
-class DriftEquipmentRepository implements EquipmentRepository {
+class DriftEquipmentRepository
+    implements EquipmentRepository, UndoableDeletionRepository {
   final AppDatabase _db;
 
   DriftEquipmentRepository(this._db);
+
+  @override
+  Future<DeletionReceipt> deleteWithUndo(int id) =>
+      DriftDeletion(_db)
+          .delete(DeletedResource.rig, id, () => deleteEquipment(id));
 
   domain.EquipmentProfile _mapToDomain(TypedResult row) {
     final rig = row.readTable(_db.opticalRigs);

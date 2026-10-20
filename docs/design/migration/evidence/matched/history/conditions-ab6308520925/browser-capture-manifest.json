@@ -1,0 +1,607 @@
+{
+  "capturedAtUtc": "2026-10-20T18:06:30.301Z",
+  "framing": "\n    .planner-page>.lab-toolbar,.planner-page>.plan-preview-bar,.skip-link{display:none!important}\n    .planner-page{padding:0!important;margin:0!important}\n    .planner-page>.android-device{width:412px!important;height:915px!important;min-height:915px!important;max-height:915px!important;flex:none!important;margin:0!important;border:0!important;border-radius:0!important}\n    .android-statusbar,.android-gesture{display:none!important}\n  ",
+  "records": [
+    {
+      "name": "browser-night-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=night&theme=light&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-moon-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=moon&theme=light&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-weather-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=light&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-weather-charts-light100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=light&scale=1",
+      "view": "hourly section start"
+    },
+    {
+      "name": "browser-night-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=night&theme=light&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-moon-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=moon&theme=light&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-weather-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=light&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-weather-charts-light200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=light&scale=2",
+      "view": "hourly section start"
+    },
+    {
+      "name": "browser-night-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=night&theme=dark&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-moon-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=moon&theme=dark&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-weather-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=dark&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-weather-charts-dark100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=dark&scale=1",
+      "view": "hourly section start"
+    },
+    {
+      "name": "browser-night-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=night&theme=dark&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-moon-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=moon&theme=dark&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-weather-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=dark&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-weather-charts-dark200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=dark&scale=2",
+      "view": "hourly section start"
+    },
+    {
+      "name": "browser-night-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=night&theme=field&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-moon-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=moon&theme=field&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-weather-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=field&scale=1",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "1"
+    },
+    {
+      "name": "browser-weather-charts-field100.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=field&scale=1",
+      "view": "hourly section start"
+    },
+    {
+      "name": "browser-night-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=night&theme=field&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-moon-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=moon&theme=field&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-weather-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=field&scale=2",
+      "viewport": [
+        412,
+        915
+      ],
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 915,
+        "top": 0,
+        "right": 412,
+        "bottom": 915,
+        "left": 0
+      },
+      "font": "Geist, sans-serif",
+      "fontLoaded": true,
+      "bodyOverflow": false,
+      "scale": "2"
+    },
+    {
+      "name": "browser-weather-charts-field200.png",
+      "url": "http://127.0.0.1:4174/conditions.html?variant=blend&font=Geist&night=2026-11-10&view=weather&theme=field&scale=2",
+      "view": "hourly section start"
+    }
+  ],
+  "fixtureSha256": "ab6308520925d1846a329ccdc30bacd61e8c0511872d9cc1e3ae3b40f6bcfab4",
+  "originalSourceReverified": 145,
+  "originalSourceChanged": false,
+  "screenshotCount": 24,
+  "screenshots": [
+    {
+      "name": "browser-moon-dark100.png",
+      "bytes": 58423,
+      "sha256": "03e649cffc1f8c56dfd59a68837c806ded8e06c964a75b853a27c5f97da478df",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-dark200.png",
+      "bytes": 58749,
+      "sha256": "176c9ffcd8c25d36b15a29c51daf041d54828392f433011cc1dc359be7bac438",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-field100.png",
+      "bytes": 33926,
+      "sha256": "deeb429f040e8cc29b02dc7f166cb50c8e2afb6dd9c6cd3f49297c023c41c6fc",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-field200.png",
+      "bytes": 34748,
+      "sha256": "73e20e557a4d4013a13a2b5d76f366ff51fe0e085252eb34a37a9d7b5bb7cdcc",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-light100.png",
+      "bytes": 58260,
+      "sha256": "f5ade5c4406ae9568b965dd4cd56537926a15b0ecabd7b6438c5705b1912e872",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-moon-light200.png",
+      "bytes": 59635,
+      "sha256": "4771e9f8000b63572dbbca5f1344044e66aa5bb76b556a050ade1ee02a5867f8",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-dark100.png",
+      "bytes": 58702,
+      "sha256": "6c95f21ae066bf32a00f08a4c09f8f65752795e42fe5868cb14bef36948a983f",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-dark200.png",
+      "bytes": 59849,
+      "sha256": "895d79ba00c5c336f90c00002d1ee311109d2f3f19c2b1184e7a1156cf4b6f96",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-field100.png",
+      "bytes": 32658,
+      "sha256": "13538a9c1beda0ac037d984c33437f9731dc20c41e2b7aa4ae1308e819cbc96f",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-field200.png",
+      "bytes": 35532,
+      "sha256": "c14b5e8bec9a3540401e0de8c9b53e1c63e77a2cf361842c63738131fa3382e2",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-light100.png",
+      "bytes": 58095,
+      "sha256": "8a9b3f8bb0e2771f2045f5c002e23c0d33468ceac71be7d6bb3cf659a7750a28",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-night-light200.png",
+      "bytes": 60841,
+      "sha256": "08beea6d7e2b75dda0a70ccdc64ad9214032c2d71e5900a2054b6d78f666db9e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-dark100.png",
+      "bytes": 44374,
+      "sha256": "75641e59c1f30b021325ca1e7521d8bfae38c16b311ec44751b87eef9236586a",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-dark200.png",
+      "bytes": 52105,
+      "sha256": "e4f411a7041fb862a2d21f2d35a9d4a749d020463e3db2ca9b88c079e566ecf2",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-field100.png",
+      "bytes": 26390,
+      "sha256": "79e641bcbb04d4999561c0c4c511ce4c044a8250e8bf679cb6c8295f476cd4ae",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-field200.png",
+      "bytes": 32332,
+      "sha256": "606c2239189d90e335815f3979cba6669213640021e8e90a5e8d437be972ac7d",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-light100.png",
+      "bytes": 44494,
+      "sha256": "1dea2695c8fb2cd32d90f2ce26e8389b2bc832b6b312fcbf7c7c59fb4631ba8b",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-charts-light200.png",
+      "bytes": 53681,
+      "sha256": "f515f4726f707f6579f13d3fb408aaf18bec16afc84838685cd2404904ba807e",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-dark100.png",
+      "bytes": 63766,
+      "sha256": "3d0e6d67334cc812bfbf1790b00a197e71880db117748dc17650302b8ccd28f4",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-dark200.png",
+      "bytes": 63163,
+      "sha256": "20e4d1e5b4a1a55f92dd0c35e9a1476e4dc04ca436a6dbf4b6667586cefe3cdc",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-field100.png",
+      "bytes": 35919,
+      "sha256": "727857109b28c711be4fecee3d969c41ac3e2d6a7371fc8fe512b4d96dbe24b1",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-field200.png",
+      "bytes": 37483,
+      "sha256": "2c4308f3e3bc0379f04d4ac9ed55446426df647c974e75285fcfa33cc617a5e3",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-light100.png",
+      "bytes": 63128,
+      "sha256": "002392ac34d86557c1bc16c3d34be1fd05cea910f397575c3abf38e2dfeee2b0",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "browser-weather-light200.png",
+      "bytes": 64113,
+      "sha256": "84fbee70403ddb5ba5940cb7408eacd81815cccde121f9caac571882818be62e",
+      "width": 412,
+      "height": 915
+    }
+  ],
+  "matching": "Canonical conditions data; composition differences remain. No parity acceptance."
+}

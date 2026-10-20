@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -93,7 +94,8 @@ class WelcomeScreen extends StatelessWidget {
         if (!didPop) _close(context);
       },
       child: Scaffold(
-        appBar: AppBar(
+        appBar: hybridAppBar(
+          context,
           title: const Text('Welcome to ${AppIdentity.appName}'),
           automaticallyImplyLeading: false,
         ),

@@ -23,6 +23,9 @@ class StatusBlock extends StatelessWidget {
     this.missing,
     this.keyNumbers = const [],
     this.action,
+    this.separateFigures = false,
+    this.headingStyle,
+    this.figuresBeforeReason,
   });
 
   final FitState state;
@@ -44,6 +47,15 @@ class StatusBlock extends StatelessWidget {
 
   final Widget? action;
 
+  /// Hybrid shows the verdict, then labelled measurements rather than a
+  /// sentence that repeats both values in the heading.
+  final bool separateFigures;
+  final TextStyle? headingStyle;
+
+  /// Plan shows figures before its explanation; Tonight retains its summary
+  /// reason above them. Existing sentence-headline adopters keep their order.
+  final bool? figuresBeforeReason;
+
   /// The headline in the glossary's words (RD-14). Pure.
   static String headline(
     FitState state, {
@@ -55,8 +67,8 @@ class StatusBlock extends StatelessWidget {
         ? word
         : AppWords.headline(
             word,
-            QuantityText.duration(needed),
-            QuantityText.duration(usable),
+            QuantityText.budgetDuration(needed),
+            QuantityText.budgetDuration(usable),
           );
     return switch (state) {
       FitState.fits => measured(AppWords.fits),
@@ -73,27 +85,41 @@ class StatusBlock extends StatelessWidget {
     final theme = Theme.of(context);
     final p = AppPalette.of(context);
     final text = theme.textTheme;
+    final figures = [
+      if (separateFigures && needed != null)
+        ('Needed in imaging window', QuantityText.budgetDuration(needed!)),
+      if (separateFigures && usable != null)
+        ('Usable', QuantityText.budgetDuration(usable!)),
+      ...keyNumbers,
+    ];
+    final figuresFirst = figuresBeforeReason ?? separateFigures;
+    final explanation = Text(
+      reason ?? '',
+      style: text.bodyMedium?.copyWith(color: p.textSecondary),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(
           header: true,
           child: Text(
-            headline(state, needed: needed, usable: usable, missing: missing),
+            headline(
+              state,
+              needed: separateFigures ? null : needed,
+              usable: separateFigures ? null : usable,
+              missing: missing,
+            ),
             key: const Key('status.headline'),
-            style: text.titleMedium?.copyWith(
+            style: (headingStyle ?? text.titleMedium)?.copyWith(
               color: FitText.color(state, theme.colorScheme, p),
             ),
           ),
         ),
-        if (reason != null) ...[
+        if (reason != null && !figuresFirst) ...[
           const SizedBox(height: AppSpacing.xs),
-          Text(
-            reason!,
-            style: text.bodyMedium?.copyWith(color: p.textSecondary),
-          ),
+          explanation,
         ],
-        if (keyNumbers.isNotEmpty) ...[
+        if (figures.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.md),
           // S6.16: each number as a label above its value, so the answer's
           // figures read as a set (the scale's caption and group roles).
@@ -101,7 +127,7 @@ class StatusBlock extends StatelessWidget {
             spacing: AppSpacing.lg,
             runSpacing: AppSpacing.sm,
             children: [
-              for (final (label, value) in keyNumbers)
+              for (final (label, value) in figures)
                 MergeSemantics(
                   child: Column(
                     key: Key('status.number.$label'),
@@ -121,6 +147,10 @@ class StatusBlock extends StatelessWidget {
                 ),
             ],
           ),
+        ],
+        if (reason != null && figuresFirst) ...[
+          const SizedBox(height: AppSpacing.sm),
+          explanation,
         ],
         if (action != null) ...[const SizedBox(height: AppSpacing.md), action!],
       ],

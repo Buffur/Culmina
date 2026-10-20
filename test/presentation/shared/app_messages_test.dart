@@ -5,10 +5,46 @@
 import 'dart:io';
 
 import 'package:astroplan/presentation/shared/failure_feedback.dart';
+import 'package:astroplan/presentation/shared/app_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets(
+    'feedback reserves layout space and Dismiss closes its outcome at 200%',
+    (tester) async {
+      late BuildContext host;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  host = context;
+                  return const SizedBox.expand(key: Key('message.body'));
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      final message = ScaffoldMessenger.of(host)
+          .showMessage(const SnackBar(content: Text('Plan saved')));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getRect(find.byKey(const Key('message.body'))).top,
+        greaterThanOrEqualTo(
+          tester.getRect(find.byType(MaterialBanner)).bottom,
+        ),
+      );
+      await tester.tap(find.byKey(const Key('appMessage.dismiss')));
+      await tester.pumpAndSettle();
+      expect(await message.closed, SnackBarClosedReason.dismiss);
+      expect(find.text('Plan saved'), findsNothing);
+    },
+  );
+
   test('lib/presentation calls showSnackBar only through AppMessages', () {
     final offenders = [
       for (final f
@@ -47,7 +83,7 @@ void main() {
     await tester.tap(find.text('go'));
     await tester.pump(); // the message is added
     await tester.pump(const Duration(milliseconds: 50));
-    return tester.widget<SnackBar>(find.byType(SnackBar)).animation;
+    return tester.widget<MaterialBanner>(find.byType(MaterialBanner)).animation;
   }
 
   testWidgets('TD-081: under reduced motion a message is in place at once', (
@@ -58,7 +94,7 @@ void main() {
     expect(find.text('Rig saved'), findsOneWidget);
   });
 
-  testWidgets('otherwise it still slides in', (tester) async {
+  testWidgets('otherwise the layout row animates in', (tester) async {
     final animation = await show(tester, reduceMotion: false);
     expect(animation!.value, lessThan(1.0));
     await tester.pumpAndSettle();

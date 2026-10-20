@@ -1,0 +1,386 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart
+00:00 +0: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A1: the plan's night with the bar, legend, text alternative and the month; the calendar agrees with the detail
+00:01 +0: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: no site: the site prompt replaces the night rows
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _KeyWidgetFinder:<Found 0 widgets with key [<'tonight.noSite'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:134:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 134
+The test description was:
+  no site: the site prompt replaces the night rows
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A1: the plan's night with the bar, legend, text alternative and the month; the calendar agrees with the detail
+00:01 +0 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: no site: the site prompt replaces the night rows [E]
+  Test failed. See exception logs above.
+  The test description was: no site: the site prompt replaces the night rows
+  
+Warning: At least one test in this suite creates an HttpClient. When running a test suite that uses
+TestWidgetsFlutterBinding, all HTTP requests will return status code 400, and no network request
+will actually be made. Any test expecting a real network connection and status code will fail.
+To test code that needs an HttpClient, provide your own HttpClient implementation to the code under
+test, so that your test can consistently provide a testable response to the code under test.
+00:02 +1 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A1: the plan's night with the bar, legend, text alternative and the month; the calendar agrees with the detail
+00:02 +1 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: with a site: night, Moon and weather rows
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _KeyWidgetFinder:<Found 0 widgets with key [<'tonight.night'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:143:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 143
+The test description was:
+  with a site: night, Moon and weather rows
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +1 -2: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A1: the plan's night with the bar, legend, text alternative and the month; the calendar agrees with the detail
+00:02 +1 -2: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: with a site: night, Moon and weather rows [E]
+  Test failed. See exception logs above.
+  The test description was: with a site: night, Moon and weather rows
+  
+00:02 +2 -2: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:02 +2 -2: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: no forecast: says so, never a number
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _KeyWidgetFinder:<Found 0 widgets with key [<'tonight.weather'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:155:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 155
+The test description was:
+  no forecast: says so, never a number
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +2 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:02 +2 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: no forecast: says so, never a number [E]
+  Test failed. See exception logs above.
+  The test description was: no forecast: says so, never a number
+  
+00:03 +3 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:03 +4 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:03 +5 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:03 +6 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:03 +7 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:03 +8 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:04 +8 -3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the order: site and night, the night rows, the plan with its answer, then the secondary action
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than <1183.0>
+  Actual: <312.0>
+   Which: is not a value greater than <1183.0>
+tonight.plan
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:271:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 271
+The test description was:
+  the order: site and night, the night rows, the plan with its answer, then the secondary action
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +8 -4: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:04 +8 -4: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the order: site and night, the night rows, the plan with its answer, then the secondary action [E]
+  Test failed. See exception logs above.
+  The test description was: the order: site and night, the night rows, the plan with its answer, then the secondary action
+  
+00:04 +9 -4: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:04 +9 -4: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the title is a header in the scale's headline role; the context is on a card
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: has semantics with label: Tonight without actions: [tap, focus, longPress, scrollLeft,
+scrollRight, scrollUp, scrollDown, increase, decrease, showOnScreen, moveCursorForwardByCharacter,
+moveCursorBackwardByCharacter, setSelection, copy, cut, paste, didGainAccessibilityFocus,
+didLoseAccessibilityFocus, dismiss, moveCursorForwardByWord, moveCursorBackwardByWord, setText]
+with flags: isHeader  without flags: hasCheckedState, isChecked, isCheckStateMixed, isSelected,
+hasSelectedState, isButton, isSlider, isKeyboardKey, isLink, isTextField, isReadOnly, isFocused,
+isFocusable, hasEnabledState, isEnabled, isInMutuallyExclusiveGroup, isObscured, isMultiline,
+namesRoute, scopesRoute, isHidden, isImage, isLiveRegion, hasToggledState, isToggled,
+hasImplicitScrolling, hasExpandedState, isExpanded, hasRequiredState, isRequired  with validation
+result: SemanticsValidationResult.none
+  Actual: SemanticsNode:<SemanticsNode#6(Rect.fromLTRB(16.0, 0.0, 784.0, 172.0), tags:
+[RenderViewport.twoPane], flags: [isHeader], label: "Tonight\nA clear plan for the night ahead.",
+textDirection: ltr, indexInParent: 0)>
+   Which: label was Tonight
+          A clear plan for the night ahead.
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:313:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 313
+The test description was:
+  the title is a header in the scale's headline role; the context is on a card
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +9 -5: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:04 +9 -5: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the title is a header in the scale's headline role; the context is on a card [E]
+  Test failed. See exception logs above.
+  The test description was: the title is a header in the scale's headline role; the context is on a card
+  
+00:05 +9 -5: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) TD-077: "Your plan" is the card's heading; the target and rig read below it
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <16.0>
+  Actual: <20.0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:345:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 345
+The test description was:
+  TD-077: "Your plan" is the card's heading; the target and rig read below it
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +9 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:05 +9 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) TD-077: "Your plan" is the card's heading; the target and rig read below it [E]
+  Test failed. See exception logs above.
+  The test description was: TD-077: "Your plan" is the card's heading; the target and rig read below it
+  
+00:05 +10 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:05 +11 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:05 +12 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:05 +13 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:05 +14 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:05 +15 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:06 +16 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:06 +17 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:07 +18 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:07 +18 -6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Dark row is the dark span at the user's limit (-18°; TD-054)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:554:28)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  the Dark row is the dark span at the user's limit (-18°; TD-054)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +18 -7: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:07 +18 -7: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Dark row is the dark span at the user's limit (-18°; TD-054) [E]
+  Test failed. See exception logs above.
+  The test description was: the Dark row is the dark span at the user's limit (-18°; TD-054)
+  
+00:07 +19 -7: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:07 +19 -7: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Dark row is the dark span at the user's limit (-15°; TD-054)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:554:28)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  the Dark row is the dark span at the user's limit (-15°; TD-054)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +19 -8: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:07 +19 -8: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Dark row is the dark span at the user's limit (-15°; TD-054) [E]
+  Test failed. See exception logs above.
+  The test description was: the Dark row is the dark span at the user's limit (-15°; TD-054)
+  
+00:08 +19 -8: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Dark row is the dark span at the user's limit (-12°; TD-054)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:554:28)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  the Dark row is the dark span at the user's limit (-12°; TD-054)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +19 -9: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +19 -9: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Dark row is the dark span at the user's limit (-12°; TD-054) [E]
+  Test failed. See exception logs above.
+  The test description was: the Dark row is the dark span at the user's limit (-12°; TD-054)
+  
+00:08 +19 -9: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Moon row gives the phase and the moon-free dark time
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _DescendantWidgetFinder:<Found 0 widgets with text containing First quarter descending
+from widgets with key [<'tonight.moon'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:583:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 583
+The test description was:
+  the Moon row gives the phase and the moon-free dark time
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +19 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +19 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: plan first (S6.13) the Moon row gives the phase and the moon-free dark time [E]
+  Test failed. See exception logs above.
+  The test description was: the Moon row gives the phase and the moon-free dark time
+  
+00:09 +20 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +21 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +22 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +23 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +24 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A2/A5: tapping a night views it; the slider browses it; nothing about the plan changes; Back to the plan
+00:10 +24 -10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: first run (owner decisions; F16) one page with two optional steps; Start planning closes it for good
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _KeyWidgetFinder:<Found 0 widgets with key [<'tonight.noSite'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart:726:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart line 726
+The test description was:
+  one page with two optional steps; Start planning closes it for good
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +24 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A2/A5: tapping a night views it; the slider browses it; nothing about the plan changes; Back to the plan
+00:10 +24 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: first run (owner decisions; F16) one page with two optional steps; Start planning closes it for good [E]
+  Test failed. See exception logs above.
+  The test description was: one page with two optional steps; Start planning closes it for good
+  
+00:10 +25 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A2/A5: tapping a night views it; the slider browses it; nothing about the plan changes; Back to the plan
+00:10 +26 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A2/A5: tapping a night views it; the slider browses it; nothing about the plan changes; Back to the plan
+00:10 +27 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: back pops within a tab, then returns to Tonight
+00:11 +28 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: back pops within a tab, then returns to Tonight
+00:11 +29 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: back pops within a tab, then returns to Tonight
+00:11 +30 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: back pops within a tab, then returns to Tonight
+00:11 +31 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: back pops within a tab, then returns to Tonight
+00:12 +32 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A2: Plan this night adopts a viewed night through D9; a saved plan is copied and keeps its night
+00:13 +33 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: each tab keeps its place
+00:14 +34 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A3: a site change while viewing keeps the plan and the saved snapshot; reopening starts on the plan's night
+00:15 +35 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A3: a site change while viewing keeps the plan and the saved snapshot; reopening starts on the plan's night
+00:17 +36 -11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Change in Settings opens over the plan; Back returns to the same plan and section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: at least one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "Fit and capture time": []>
+   Which: means none were found but some were expected
+Fit and capture time
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart:271:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart line 271
+The test description was:
+  Change in Settings opens over the plan; Back returns to the same plan and section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:19 +36 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A5: across the October DST change the readout names each instant's zone; the month view follows the viewed night
+00:19 +36 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Change in Settings opens over the plan; Back returns to the same plan and section [E]
+  Test failed. See exception logs above.
+  The test description was: Change in Settings opens over the plan; Back returns to the same plan and section
+  
+00:20 +37 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A5 polar: under the midnight Sun (78° N, June) the readout says there is no more dark time, all night
+00:24 +38 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A5 polar: in the polar night (88° N, December) the readout says dark until the night ends, with no dark-time change
+00:27 +39 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: A5: the slider moves by keyboard, five minutes per arrow key, and reads its instant to assistive technology
+00:30 +40 -12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/details/night_moon_browse_test.dart: large text: the month becomes a week list
+00:31 +41 -12: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Change in Settings opens over the plan; Back returns to the same plan and section
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: first run (owner decisions; F16) one page with two optional steps; Start planning closes it for good
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: no forecast: says so, never a number
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/tonight/tonight_home_screen_test.dart: no site: the site prompt replaces the night rows
+  ... and 8 more

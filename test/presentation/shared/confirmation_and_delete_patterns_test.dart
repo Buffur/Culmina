@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/app_messages.dart';
 // S5.8 (ADR-019 §3; RD-09 = M + S1): the shared patterns for confirming,
 // reporting and deleting. Every way out of a prompt is tested; a
 // confirmation cannot be dismissed into a delete; the undo message reports
@@ -200,7 +201,7 @@ void main() {
         onCommit: () => calls.add('commit 2'),
       );
       await tester.pumpAndSettle();
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).hideCurrentMessage();
       await tester.pumpAndSettle();
       expect([await first, await second], [false, false]);
       expect(calls, ['commit 1', 'commit 2']);

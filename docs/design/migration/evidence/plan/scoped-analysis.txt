@@ -1,0 +1,4 @@
+Analyzing home, capture_plan_widget.dart, capture_budget_summary.dart, planner_summary_card.dart, home_screen_test.dart, planner_defaults_test.dart, planner_structure_test.dart, capture_blocks_test.dart, capture_plan_widget_test.dart...
+No issues found!
+
+EXIT_CODE=0

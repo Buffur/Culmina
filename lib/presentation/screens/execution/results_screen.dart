@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -187,7 +188,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
     }
     if (vm == null || session == null || session.id != widget.sessionId) {
       return Scaffold(
-        appBar: AppBar(title: const Text('How did it go?')),
+        appBar: hybridAppBar(context, title: const Text('How did it go?')),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -197,7 +198,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
     final theme = Theme.of(context);
     final gap = const SizedBox(height: AppSpacing.md);
     return Scaffold(
-      appBar: AppBar(title: const Text('How did it go?')),
+      appBar: hybridAppBar(context, title: const Text('How did it go?')),
       body: Form(
         key: _form,
         child: ListView(

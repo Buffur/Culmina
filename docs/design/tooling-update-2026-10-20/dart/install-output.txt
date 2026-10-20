@@ -1,0 +1,15 @@
+Generated: c:\users\zalub\appdata\local\temp\6c7c2bab\build\bundle\bin\dart_mcp_server.exe
+    --dart-sdk               The path to the root of the desired Dart SDK. Defaults to the DART_ROOT environment variable.
+    --flutter-sdk            The path to the root of the desired Flutter SDK. Defaults to the FLUTTER_ROOT environment variable, then searching up from the Dart SDK.
+    --log-file               Path to a file to log all MPC protocol traffic to. File will be overwritten if it exists.
+-x, --disable                The names or categories of features to disable. Disabled features by name take precedence over enabled features by name and category, and disabled features by category take precedence over enabled features by category, but not name.
+                             [analyze_files, create_project, dart_fix, dart_format, dtd, flutter_driver_command, get_active_location, get_app_logs, get_runtime_errors, hot_reload, hot_restart, launch_app, list_devices, list_running_apps, lsp, pub, pub_dev_search, read_package_uris, rip_grep_packages, roots, run_tests, stop_app, vm_service, widget_inspector, flutter_driver_user_journey_test, all, analysis, cli, dart, flutter, flutter_app_lifecycle, flutter_driver, dart_tooling_daemon, package_deps]
+    --enable                 The names or categories of features to enable. Most features are enabled by default, but some are not and must be enabled by name or by category. See the README for which tools are enabled by default. This can also be used to override a disabled category to re-enable more specific features under that category.
+                             [analyze_files, create_project, dart_fix, dart_format, dtd, flutter_driver_command, get_active_location, get_app_logs, get_runtime_errors, hot_reload, hot_restart, launch_app, list_devices, list_running_apps, lsp, pub, pub_dev_search, read_package_uris, rip_grep_packages, roots, run_tests, stop_app, vm_service, widget_inspector, flutter_driver_user_journey_test, all, analysis, cli, dart, flutter, flutter_app_lifecycle, flutter_driver, dart_tooling_daemon, package_deps]
+    --tools                  [Deprecated] Use `--enable` and `--disable` instead.
+
+          [all] (default)    Enables all Dart and Flutter tools
+          [dart]             Enables only tools relevant to pure Dart projects. Replace with `--disable flutter`.
+
+    --[no-]version           Show the version of the MCP server and then exit
+-h, --[no-]help              Show usage text

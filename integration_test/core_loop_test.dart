@@ -357,6 +357,7 @@ void main() {
     expect(device.vm.plan.activeSessionId, isNot(savedId));
 
     // "Last night: … How did it go?" opens the result form (S8.2, S8.3).
+    await scrollTo(tester, find.byKey(const Key('tonight.resultDue')));
     await tap(tester, find.byKey(const Key('tonight.resultDue')));
     expect(find.byKey(const Key('results.review')), findsOneWidget);
     await tap(tester, find.byKey(const Key('results.outcome.asPlanned')));

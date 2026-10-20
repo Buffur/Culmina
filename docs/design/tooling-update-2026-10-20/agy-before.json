@@ -1,0 +1,195 @@
+[
+  {
+    "name": "android-cli-plugin",
+    "enabled": true,
+    "version": "1.0.16500706",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\android-cli-plugin",
+    "skills": [
+      "android-cli"
+    ]
+  },
+  {
+    "name": "chrome-devtools-plugin",
+    "enabled": true,
+    "version": "1.10.1",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\chrome-devtools-plugin",
+    "skills": [
+      "a11y-debugging",
+      "chrome-devtools",
+      "cookie-debugging",
+      "debug-optimize-lcp",
+      "memory-leak-debugging",
+      "troubleshooting"
+    ]
+  },
+  {
+    "name": "firebase",
+    "enabled": false,
+    "version": "1.0.3",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\firebase",
+    "skills": [
+      "extension-to-functions-codebase",
+      "firebase-ai-logic-basics",
+      "firebase-app-hosting-basics",
+      "firebase-auth-basics",
+      "firebase-basics",
+      "firebase-crashlytics",
+      "firebase-data-connect",
+      "firebase-firestore",
+      "firebase-hosting-basics",
+      "firebase-remote-config-basics",
+      "firebase-security-rules-auditor",
+      "firestore-rules-creation",
+      "xcode-project-setup"
+    ],
+    "agents": [
+      "firestore-rules-author"
+    ]
+  },
+  {
+    "name": "flutter",
+    "enabled": true,
+    "version": "1.0.5",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\flutter",
+    "skills": [
+      "dart-add-unit-test",
+      "dart-build-cli-app",
+      "dart-collect-coverage",
+      "dart-fix-runtime-errors",
+      "dart-generate-test-mocks",
+      "dart-migrate-to-checks-package",
+      "dart-resolve-package-conflicts",
+      "dart-run-static-analysis",
+      "dart-setup-ffi-assets",
+      "dart-use-ffigen",
+      "dart-use-pattern-matching",
+      "dart-use-primary-constructors",
+      "dart-write-documentation",
+      "flutter-add-integration-test",
+      "flutter-add-widget-preview",
+      "flutter-add-widget-test",
+      "flutter-apply-architecture-best-practices",
+      "flutter-build-responsive-layout",
+      "flutter-fix-layout-issues",
+      "flutter-implement-json-serialization",
+      "flutter-setup-declarative-routing",
+      "flutter-setup-localization",
+      "flutter-use-http-package"
+    ],
+    "agents": [
+      "flutter_a11y_agent"
+    ],
+    "rules": [
+      "flutter-hot-reload.md"
+    ],
+    "mcpServers": [
+      "dart-mcp-server"
+    ]
+  },
+  {
+    "name": "gemini-api",
+    "enabled": true,
+    "version": "2.3.0",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\gemini-api",
+    "skills": [
+      "gemini-api-dev",
+      "gemini-live-api-dev",
+      "gemini-omni-flash-api"
+    ],
+    "mcpServers": [
+      "gemini-api-docs"
+    ]
+  },
+  {
+    "name": "google-antigravity-sdk",
+    "enabled": true,
+    "version": "0.0.9",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\google-antigravity-sdk",
+    "skills": [
+      "google-antigravity-sdk"
+    ]
+  },
+  {
+    "name": "google_maps_platform",
+    "enabled": true,
+    "version": "1.0.0",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\google_maps_platform",
+    "skills": [
+      "google-maps-platform"
+    ]
+  },
+  {
+    "name": "modern-web-guidance-plugin",
+    "enabled": true,
+    "version": "0.0.195",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\modern-web-guidance-plugin",
+    "skills": [
+      "chrome-extensions",
+      "modern-web-guidance"
+    ]
+  },
+  {
+    "name": "science",
+    "enabled": true,
+    "version": "1.3.0",
+    "source": "antigravity-plugins-official",
+    "path": "C:\\Users\\zalub\\.gemini\\config\\plugins\\science",
+    "skills": [
+      "alphafold-database-fetch-and-analyze",
+      "alphagenome-atlas-website-links",
+      "alphagenome-single-variant-analysis",
+      "alphagenome-variant-impact-score",
+      "biomolecular-structure-viewer",
+      "chembl-database",
+      "clinical-trials-database",
+      "clinvar-database",
+      "credentials",
+      "dbsnp-database",
+      "embl-ebi-ols",
+      "encode-ccres-database",
+      "ensembl-database",
+      "foldseek-structural-search",
+      "gnomad-database",
+      "gtex-database",
+      "human-protein-atlas-database",
+      "interpro-database",
+      "jaspar-database",
+      "literature-search-arxiv",
+      "literature-search-biorxiv",
+      "literature-search-europepmc",
+      "literature-search-openalex",
+      "ncbi-sequence-fetch",
+      "openfda-database",
+      "opentargets-database",
+      "pdb-database",
+      "predictingthepast",
+      "protein-sequence-msa",
+      "protein-sequence-similarity-search",
+      "pubchem-database",
+      "pubmed-database",
+      "pymol",
+      "quickgo-database",
+      "reactome-database",
+      "string-database",
+      "ucsc-conservation-and-tfbs",
+      "unibind-database",
+      "uniprot-database",
+      "uv",
+      "workflow-skill-creator"
+    ],
+    "rules": [
+      "AGENTS.md"
+    ],
+    "mcpServers": [
+      "biomolecular_structure_viewer_mcp"
+    ]
+  }
+]

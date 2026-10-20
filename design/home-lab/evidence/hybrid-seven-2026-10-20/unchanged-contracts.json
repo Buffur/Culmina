@@ -1,0 +1,22 @@
+[
+  {
+    "path": "design/home-lab/plan-model.js",
+    "unchangedExceptCacheRevision": true
+  },
+  {
+    "path": "design/home-lab/night-model.js",
+    "unchangedExceptCacheRevision": true
+  },
+  {
+    "path": "design/home-lab/preview-bridge.js",
+    "unchangedExceptCacheRevision": true
+  },
+  {
+    "path": "design/home-lab/preview-backup.js",
+    "unchangedExceptCacheRevision": true
+  },
+  {
+    "path": "design/home-lab/tokens.json",
+    "unchangedExceptCacheRevision": true
+  }
+]

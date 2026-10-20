@@ -4,6 +4,26 @@ import '../units/display_units.dart';
 /// UX-19), shared by the domain's reason texts and the presentation, so the
 /// same value reads the same everywhere. Formatting only.
 abstract final class QuantityText {
+  /// Capture budgets keep whole seconds ("1 h 48 min 20 s"), including
+  /// sub-second values at three significant figures. Night/calendar durations
+  /// continue to use [duration]'s intentional minute rounding.
+  static String budgetDuration(Duration d) {
+    if (d.isNegative) return '−${budgetDuration(-d)}';
+    final seconds = d.inMicroseconds / Duration.microsecondsPerSecond;
+    if (seconds > 0 && seconds < 1) {
+      return '${number(double.parse(seconds.toStringAsPrecision(3)))} s';
+    }
+    final total = seconds.round();
+    final hours = total ~/ 3600;
+    final minutes = total % 3600 ~/ 60;
+    final remainder = total % 60;
+    return [
+      if (hours > 0) '$hours h',
+      if (minutes > 0) '$minutes min',
+      if (remainder > 0 || (hours == 0 && minutes == 0)) '$remainder s',
+    ].join(' ');
+  }
+
   /// A duration rounded to the nearest minute: "5 h 35 min", "45 min",
   /// "3 h", "0 min"; under a minute (but not zero) in seconds: "30 s".
   /// A negative duration gets a minus sign.

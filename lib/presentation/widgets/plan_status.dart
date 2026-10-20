@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/services/fit_analyzer.dart';
@@ -11,7 +10,6 @@ import '../shared/plan_night_phrase.dart';
 import '../shared/app_words.dart';
 import '../shared/change_mark.dart';
 import '../shared/failure_feedback.dart';
-import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../shared/status_block.dart';
 import '../viewmodels/capture_analysis_viewmodel.dart';
@@ -36,7 +34,8 @@ typedef MissingInput = ({
 /// `FitAnalyzer` and `CaptureBudget` through the ViewModel; no percentage,
 /// score or good/bad rating. A missing site, target or rig is neutral.
 class PlanStatus extends StatelessWidget {
-  const PlanStatus({super.key});
+  const PlanStatus({super.key, this.showFillAction = true});
+  final bool showFillAction;
 
   /// The missing-input headlines for a site and a rig (S6.6).
   static const needsSite = 'Needs a site';
@@ -103,6 +102,9 @@ class PlanStatus extends StatelessWidget {
     final action = missing?.action;
     return Card(
       key: const Key('planner.status'),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(),
+      elevation: 0,
       margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
       // S6.16 (the primary surface's finish): the answer's card is marked at
@@ -110,18 +112,7 @@ class PlanStatus extends StatelessWidget {
       // words still carry the meaning.
       child: DecoratedBox(
         key: const Key('planner.statusMark'),
-        decoration: BoxDecoration(
-          border: Border(
-            left: BorderSide(
-              color: FitText.color(
-                state,
-                Theme.of(context).colorScheme,
-                AppPalette.of(context),
-              ),
-              width: AppSpacing.xs,
-            ),
-          ),
-        ),
+        decoration: const BoxDecoration(),
         // S6.10 (P6.9's cause and effect): an edit that changes the verdict,
         // its numbers or the integration marks the status briefly.
         child: ChangeMark(
@@ -133,8 +124,11 @@ class PlanStatus extends StatelessWidget {
             analysis.captureBudget.integrationMs,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
             child: StatusBlock(
+              separateFigures: true,
+              headingStyle: Theme.of(context).textTheme.titleLarge
+                  ?.copyWith(fontSize: 22, fontWeight: FontWeight.w500),
               state: state,
               missing: missing?.headline,
               needed: measured
@@ -150,7 +144,7 @@ class PlanStatus extends StatelessWidget {
                 // details, and integration needs no site, target or rig.
                 (
                   AppWords.integration,
-                  QuantityText.duration(
+                  QuantityText.budgetDuration(
                     Duration(
                       milliseconds: analysis.captureBudget.integrationMs,
                     ),
@@ -176,7 +170,7 @@ class PlanStatus extends StatelessWidget {
                       onPressed: () => context.push(missing!.route!),
                       child: Text(action),
                     )
-                  : measured
+                  : measured && showFillAction
                   ? FillWindowAction(fit: fit)
                   : null,
             ),

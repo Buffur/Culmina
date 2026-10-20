@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "markdown_files": 4,
+  "local_links": 633,
+  "criteria": 127,
+  "task_source_clauses": 26,
+  "fresh_renders": 96,
+  "application_tracked_diff": "empty",
+  "evidence_bytes": 2245898
+}

@@ -1,0 +1,128 @@
+[
+  {
+    "pluginId": "documents@openai-primary-runtime",
+    "name": "documents",
+    "version": "26.1017.22135",
+    "enabled": true
+  },
+  {
+    "pluginId": "pdf@openai-primary-runtime",
+    "name": "pdf",
+    "version": "26.1017.22135",
+    "enabled": true
+  },
+  {
+    "pluginId": "spreadsheets@openai-primary-runtime",
+    "name": "spreadsheets",
+    "version": "26.1017.22135",
+    "enabled": true
+  },
+  {
+    "pluginId": "presentations@openai-primary-runtime",
+    "name": "presentations",
+    "version": "26.1017.22135",
+    "enabled": true
+  },
+  {
+    "pluginId": "template-creator@openai-primary-runtime",
+    "name": "template-creator",
+    "version": "26.1017.22135",
+    "enabled": true
+  },
+  {
+    "pluginId": "codex-app-tools@openai-bundled",
+    "name": "codex-app-tools",
+    "version": "0.1.6",
+    "enabled": true
+  },
+  {
+    "pluginId": "browser@openai-bundled",
+    "name": "browser",
+    "version": "26.1013.40934",
+    "enabled": true
+  },
+  {
+    "pluginId": "unified-computer-use@openai-bundled",
+    "name": "unified-computer-use",
+    "version": "26.1013.40934",
+    "enabled": true
+  },
+  {
+    "pluginId": "computer-use@openai-bundled",
+    "name": "computer-use",
+    "version": "26.1013.40934",
+    "enabled": true
+  },
+  {
+    "pluginId": "code-review@openai-bundled",
+    "name": "code-review",
+    "version": "26.1013.40934",
+    "enabled": true
+  },
+  {
+    "pluginId": "visualize@openai-bundled",
+    "name": "visualize",
+    "version": "1.0.50",
+    "enabled": true
+  },
+  {
+    "pluginId": "github@openai-curated-remote",
+    "name": "github",
+    "version": "0.1.12-5f7cd798dc99",
+    "enabled": true
+  },
+  {
+    "pluginId": "app-6a314a73f8ac819195b0d55e36b9c609@openai-curated-remote",
+    "name": "app-6a314a73f8ac819195b0d55e36b9c609",
+    "version": "2.5.0",
+    "enabled": true
+  },
+  {
+    "pluginId": "app-69fb9378663481919a68e8a2109644e5@openai-curated-remote",
+    "name": "app-69fb9378663481919a68e8a2109644e5",
+    "version": "1.0.0",
+    "enabled": true
+  },
+  {
+    "pluginId": "app-69ef18c674308191a2f952431f91ea61@openai-curated-remote",
+    "name": "app-69ef18c674308191a2f952431f91ea61",
+    "version": "1.0.0",
+    "enabled": true
+  },
+  {
+    "pluginId": "app-6abc0fbac98c81918f369408e5d2890d@openai-curated-remote",
+    "name": "app-6abc0fbac98c81918f369408e5d2890d",
+    "version": "1.0.2",
+    "enabled": true
+  },
+  {
+    "pluginId": "openai-templates@openai-curated-remote",
+    "name": "openai-templates",
+    "version": "0.1.6",
+    "enabled": true
+  },
+  {
+    "pluginId": "pages@openai-curated-remote",
+    "name": "pages",
+    "version": "0.1.23",
+    "enabled": true
+  },
+  {
+    "pluginId": "sites@openai-curated-remote",
+    "name": "sites",
+    "version": "1.0.2-remix-b.1",
+    "enabled": true
+  },
+  {
+    "pluginId": "plugin-management@openai-curated-remote",
+    "name": "plugin-management",
+    "version": "0.1.0",
+    "enabled": true
+  },
+  {
+    "pluginId": "work-pets@openai-curated-remote",
+    "name": "work-pets",
+    "version": "0.1.6",
+    "enabled": true
+  }
+]

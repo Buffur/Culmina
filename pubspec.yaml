@@ -79,6 +79,12 @@ flutter:
   assets:
     - assets/catalog/catalog_v2.json
     - assets/catalog/OPENNGC_NOTICE.txt
+    - assets/fonts/OFL-Geist.txt
+
+  fonts:
+    - family: Geist
+      fonts:
+        - asset: assets/fonts/Geist.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

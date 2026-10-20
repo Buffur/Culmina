@@ -1,0 +1,259 @@
+{
+  "method": "Independent A: source + isolated localhost browser screenshots and DOM; no previous scores or detector",
+  "score": 31,
+  "max": 40,
+  "rootCaptures": [
+    {
+      "name": "home",
+      "theme": "light",
+      "url": "http://localhost:4173/index.html?view=wide&variant=blend&theme=light"
+    },
+    {
+      "name": "plan",
+      "theme": "light",
+      "url": "http://localhost:4173/plan.html?&variant=blend&theme=light"
+    },
+    {
+      "name": "night",
+      "theme": "light",
+      "url": "http://localhost:4173/conditions.html?view=night&variant=blend&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "moon",
+      "theme": "light",
+      "url": "http://localhost:4173/conditions.html?view=moon&variant=blend&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather",
+      "theme": "light",
+      "url": "http://localhost:4173/conditions.html?view=weather&variant=blend&theme=light&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "logbook",
+      "theme": "light",
+      "url": "http://localhost:4173/workspace.html?tab=logbook&variant=blend&theme=light&scale=1"
+    },
+    {
+      "name": "library",
+      "theme": "light",
+      "url": "http://localhost:4173/workspace.html?tab=library&variant=blend&theme=light&scale=1"
+    },
+    {
+      "name": "settings",
+      "theme": "light",
+      "url": "http://localhost:4173/workspace.html?tab=settings&variant=blend&theme=light&scale=1"
+    },
+    {
+      "name": "home",
+      "theme": "dark",
+      "url": "http://localhost:4173/index.html?view=wide&variant=blend&theme=dark"
+    },
+    {
+      "name": "plan",
+      "theme": "dark",
+      "url": "http://localhost:4173/plan.html?&variant=blend&theme=dark"
+    },
+    {
+      "name": "night",
+      "theme": "dark",
+      "url": "http://localhost:4173/conditions.html?view=night&variant=blend&theme=dark&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "moon",
+      "theme": "dark",
+      "url": "http://localhost:4173/conditions.html?view=moon&variant=blend&theme=dark&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather",
+      "theme": "dark",
+      "url": "http://localhost:4173/conditions.html?view=weather&variant=blend&theme=dark&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "logbook",
+      "theme": "dark",
+      "url": "http://localhost:4173/workspace.html?tab=logbook&variant=blend&theme=dark&scale=1"
+    },
+    {
+      "name": "library",
+      "theme": "dark",
+      "url": "http://localhost:4173/workspace.html?tab=library&variant=blend&theme=dark&scale=1"
+    },
+    {
+      "name": "settings",
+      "theme": "dark",
+      "url": "http://localhost:4173/workspace.html?tab=settings&variant=blend&theme=dark&scale=1"
+    },
+    {
+      "name": "home",
+      "theme": "field",
+      "url": "http://localhost:4173/index.html?view=wide&variant=blend&theme=field"
+    },
+    {
+      "name": "plan",
+      "theme": "field",
+      "url": "http://localhost:4173/plan.html?&variant=blend&theme=field"
+    },
+    {
+      "name": "night",
+      "theme": "field",
+      "url": "http://localhost:4173/conditions.html?view=night&variant=blend&theme=field&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "moon",
+      "theme": "field",
+      "url": "http://localhost:4173/conditions.html?view=moon&variant=blend&theme=field&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "weather",
+      "theme": "field",
+      "url": "http://localhost:4173/conditions.html?view=weather&variant=blend&theme=field&scale=1&night=2026-10-19&scenario=ready&cursor=0&hour=0&month=2026-10&week=0"
+    },
+    {
+      "name": "logbook",
+      "theme": "field",
+      "url": "http://localhost:4173/workspace.html?tab=logbook&variant=blend&theme=field&scale=1"
+    },
+    {
+      "name": "library",
+      "theme": "field",
+      "url": "http://localhost:4173/workspace.html?tab=library&variant=blend&theme=field&scale=1"
+    },
+    {
+      "name": "settings",
+      "theme": "field",
+      "url": "http://localhost:4173/workspace.html?tab=settings&variant=blend&theme=field&scale=1"
+    }
+  ],
+  "deepCaptures": [
+    "home-phone-light",
+    "home-phone-dark",
+    "home-phone-field",
+    "welcome",
+    "logbook-empty",
+    "logbook-error",
+    "logbook-storage-error",
+    "library-empty",
+    "library-error",
+    "library-storage-error",
+    "settings-empty",
+    "settings-error",
+    "settings-storage-error",
+    "night-no-site",
+    "night-unknown",
+    "night-no-dark",
+    "night-partial",
+    "moon-no-site",
+    "moon-unknown",
+    "moon-no-dark",
+    "moon-partial",
+    "weather-no-site",
+    "weather-unknown",
+    "weather-no-dark",
+    "weather-partial",
+    "scale2-plan.html",
+    "scale2-conditions.htmlmoon",
+    "scale2-workspace.htmllogbook",
+    "scale2-workspace.htmlsettings",
+    "logbook-filters",
+    "logbook-progress",
+    "logbook-detail",
+    "logbook-result",
+    "settings-appearance",
+    "settings-planning",
+    "settings-privacy",
+    "settings-backup",
+    "settings-about",
+    "library-rigs",
+    "library-rigs-detail",
+    "library-rigs-editor",
+    "metadata",
+    "metadata-error",
+    "library-targets",
+    "library-targets-detail",
+    "library-sites",
+    "library-sites-detail",
+    "library-sites-editor",
+    "geolocation",
+    "plan-block"
+  ],
+  "supplement": [
+    {
+      "name": "plan-target"
+    },
+    {
+      "name": "plan-rig"
+    },
+    {
+      "name": "plan-context"
+    },
+    {
+      "name": "plan-save-error"
+    },
+    {
+      "name": "restore-review"
+    },
+    {
+      "name": "restore-error"
+    },
+    {
+      "name": "target-custom-editor"
+    },
+    {
+      "name": "moon-calendar-scale2"
+    }
+  ],
+  "visualInspection": [
+    "contact-light",
+    "contact-dark",
+    "contact-field",
+    "home-phone-light",
+    "plan-light",
+    "scale2-plan.html",
+    "scale2-conditions.htmlmoon",
+    "moon-calendar-scale2",
+    "logbook-filters",
+    "logbook-progress",
+    "library-rigs-editor",
+    "settings-planning",
+    "settings-backup",
+    "contact-states",
+    "contact-deep",
+    "contact-final0",
+    "contact-final1",
+    "contact-final2"
+  ],
+  "limits": [
+    "Native Android controls and device validation out of scope",
+    "Not exhaustive theme by editor Cartesian coverage",
+    "Metadata success, geolocation success/denial, calibration/assumptions and all result outcome interactions not exercised by A",
+    "Storage-error roots captured; save failure executed for Plan",
+    "Some scenario snapshots captured and text inspected but not pixels individually inspected"
+  ],
+  "harnessCorrections": [
+    {
+      "name": "library-targets-editor",
+      "error": "locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-edit]').first()\u001b[22m\n",
+      "resolution": "Catalogue is read-only; added custom target editor captured"
+    },
+    {
+      "name": "plan-target",
+      "error": "locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-open=\"target\"]').first()\u001b[22m\n",
+      "resolution": "Fresh context captured in supplement"
+    },
+    {
+      "name": "plan-rig",
+      "error": "locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-open=\"rig\"]').first()\u001b[22m\n",
+      "resolution": "Fresh context captured in supplement"
+    },
+    {
+      "name": "plan-context",
+      "error": "locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-open=\"context\"]').first()\u001b[22m\n",
+      "resolution": "Fresh context captured in supplement"
+    },
+    {
+      "name": "plan-save-error",
+      "error": "locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-save-plan]')\u001b[22m\n",
+      "resolution": "Fresh context captured in supplement"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="uk">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hybrid — перевірка дев’яти фото</title>
+<style>
+:root{color-scheme:light dark;font:16px/1.5 system-ui,sans-serif;background:#18191b;color:#eee}body{max-width:1100px;margin:auto;padding:24px}h1{font-size:28px}h2{font-size:21px;margin-top:0}a{color:#accfff}p{max-width:85ch}label{display:inline-flex;gap:8px;align-items:center;margin-right:20px}select{font:inherit;padding:8px}nav{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}nav a{padding:8px}article{margin:36px 0;border-top:1px solid #65666b;padding-top:24px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:24px}figure{margin:0;min-width:0}figcaption{font-weight:600;margin:0 0 12px}img{max-width:100%;height:auto;display:block;border:1px solid #777}.finding{border-left:4px solid #ebbf7a;padding:12px 16px;background:#302b23}.note{color:#c5c7cb}details{margin-top:16px}details img{margin-top:12px}summary{cursor:pointer;padding:10px 0}@media(max-width:700px){.columns{grid-template-columns:1fr}body{padding:16px}}
+</style>
+<h1>Hybrid: дев’ять фото → поточний результат</h1>
+<p>Адресна перевірка <strong>blend · 20261020-hybrid7</strong> за попередніми R/V/F-вимогами. Ліворуч — надане фото; праворуч — поточний browser crop. Початково вибрано dark / 100%, як у референсах. Для поточного стану доступні три теми й 100/200% тексту.</p>
+<p class="finding"><strong>Залишкова проблема RV-01:</strong> при 200% слово <a href="#ref-09">Unrecorded у Focus mode</a> розривається всередині слова. V3/V5 частково виконані. Код застосунку під час цієї перевірки не змінювався.</p>
+<p class="note">54 crops: 9 поверхонь × 3 теми × 2 масштаби. Viewport 412 × 1050 CSS px. При 200% графіки прокручуються горизонтально; правий край показано окремо. Довгі crops можуть містити sticky header/footer preview. Розміри оригінальних фото й поточного preview відрізняються.</p>
+<label>Тема поточного кадру <select id="theme"><option value="dark">Dark</option><option value="light">Light</option><option value="field">Field</option></select></label>
+<label>Текст поточного кадру <select id="scale"><option value="1">100%</option><option value="2">200%</option></select></label>
+<nav aria-label="Перейти до фото"></nav>
+<main></main>
+<p><a href="report.md">Повний звіт (текстова копія)</a> · <a href="checks.json">Виміри й captures</a> · <a href="focus-labels.json">12 перевірок Focus mode</a> · <a href="scrollers.json">Перевірки графіків</a></p>
+<script>
+const entries=[
+ ['Крива інтеграції','V1: half-time marker і третій пункт видимої легенди прибрано. План, одиниці й відносний gain збережено.','gain'],
+ ['Capture actions','V3: другорядні кнопки за вмістом; при 200% переходять на окремі рядки.'],
+ ['Шкала часу / Dark','R3/V2: underline легенди прибрано, інтервал темряви на шкалі збережено; є reset і підказка.'],
+ ['Дві наступні дії','V4: одна Next actions група й дата обраної ночі.'],
+ ['Site / Target / Rig','V6/V7: однаковий лівий край без одиничної іконки; контекст розділено відступами.'],
+ ['Capture plan / розділювачі','V7: збережені лінії пояснюють межі capture block і загальних actions; це дозволено вимогою.'],
+ ['Погода / вологість','V1/V8: humidity dotted line, окрема шкала 0–100%, спільні години; temperature/dew мають °C.','weather'],
+ ['Night / Moon','V9: логічні часові фрагменти й (+1) збережено; природний дворядковий заголовок при 200% допустимий.'],
+ ['Focus mode / MF','F2: числової позиції лінзи модель не має, описовий MF правильний. RV-01: при 200% Unrecorded розривається всередині слова.']
+];
+const main=document.querySelector('main'),nav=document.querySelector('nav');
+entries.forEach(([title,note,chart],i)=>{const id=String(i+1).padStart(2,'0');const article=document.createElement('article');article.id=`ref-${id}`;article.innerHTML=`<h2>${id}. ${title}</h2><p${i===8?' class="finding"':''}>${note}</p><div class="columns"><figure><figcaption>Надане фото</figcaption><a href="references/reference-${id}.png"><img src="references/reference-${id}.png" alt="Оригінал: ${title}" loading="lazy"></a></figure><figure><figcaption class="current-caption">Поточний результат</figcaption><a class="current-link"><img class="current-image" data-id="${id}" alt="Поточний Hybrid: ${title}" loading="lazy"></a></figure></div>${chart?`<details><summary>Правий край графіка при 200%</summary><img data-chart="${chart}" alt="${title}: правий край при 200%" loading="lazy"></details>`:''}`;main.append(article);const link=document.createElement('a');link.href=`#ref-${id}`;link.textContent=id;nav.append(link);});
+function update(){const theme=document.querySelector('#theme').value,scale=document.querySelector('#scale').value;document.querySelectorAll('.current-image').forEach(img=>{img.src=`current/${img.dataset.id}-${theme}-${scale}.png`;img.parentElement.href=img.src;img.closest('figure').querySelector('figcaption').textContent=`Поточний Hybrid · ${theme} · ${scale==='1'?'100':'200'}%`;});document.querySelectorAll('[data-chart]').forEach(img=>img.src=`current/${img.dataset.chart}-right-${theme}-2.png`);}
+document.querySelectorAll('select').forEach(e=>e.addEventListener('change',update));update();
+</script>
+</html>

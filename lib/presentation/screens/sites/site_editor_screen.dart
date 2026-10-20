@@ -1,3 +1,5 @@
+import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
+
 import '../../shared/night_time_formatter.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -475,7 +477,8 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
 
   Widget _form(BuildContext context, TextInputType numberKeyboard) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: hybridAppBar(
+        context,
         title: Text(_isNew ? AppWords.newSite : AppWords.editSite),
       ),
       // S9.2: one primary Save, always in reach (DESIGN_SYSTEM §9).

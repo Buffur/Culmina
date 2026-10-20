@@ -5,11 +5,19 @@ import '../../domain/models/astro_target.dart' as domain;
 import '../../domain/models/target_alias.dart';
 import '../../domain/services/target_search.dart';
 import '../database/app_database.dart';
+import '../../domain/repositories/undoable_deletion.dart';
+import 'drift_deletion.dart';
 
-class DriftTargetRepository implements TargetRepository {
+class DriftTargetRepository
+    implements TargetRepository, UndoableDeletionRepository {
   final AppDatabase _db;
 
   DriftTargetRepository(this._db);
+
+  @override
+  Future<DeletionReceipt> deleteWithUndo(int id) =>
+      DriftDeletion(_db)
+          .delete(DeletedResource.target, id, () => deleteTarget(id));
 
   domain.AstroTarget _mapToDomain(AstroTarget dbTarget) {
     return domain.AstroTarget(

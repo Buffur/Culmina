@@ -1,0 +1,33 @@
+# Selected final images
+
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/home-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/plan-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/night-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/moon-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/weather-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/logbook-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/library-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/settings-412-light-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/home-360-light-2.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/plan-360-light-2.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/night-360-light-2.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/moon-360-light-2.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/library-360-light-2.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/settings-360-light-2.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/home-412-dark-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/plan-412-dark-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/weather-412-dark-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/library-412-dark-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/home-412-field-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/plan-412-field-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/weather-412-field-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/library-412-field-1.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/weather-state-partial-200.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/metadata-rig-review-200.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/logbook-state-empty-200.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/library-state-error-200.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/home-welcome-visible-action.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/screenshots/settings-backup-light-200.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/humidity-light.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/humidity-field.png
+- C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/design/home-lab/evidence/hybrid-refinement-2026-10-20/humidity-dark.png

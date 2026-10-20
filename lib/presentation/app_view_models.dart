@@ -129,7 +129,12 @@ class AppViewModels {
     targetList = TargetsViewModel(targets);
     sessionList = sessions == null
         ? null
-        : SessionsViewModel(sessions, exporter: exporter, clock: clock);
+        : SessionsViewModel(
+            sessions,
+            exporter: exporter,
+            clock: clock,
+            currentSession: current,
+          );
     // S8.3: a night check or a recorded result may change Tonight's line.
     lifecycle.onNightChecked = sessionList?.refreshDue;
     this.backup = backup == null ? null : BackupViewModel(backup);

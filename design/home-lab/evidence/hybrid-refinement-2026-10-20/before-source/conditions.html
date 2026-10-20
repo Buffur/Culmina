@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Night conditions — Culmina Android preview</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='%2337352F'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="fonts/fonts.css?v=20261020-hybrid6">
+  <link rel="stylesheet" href="styles.css?v=20261020-hybrid6">
+  <link rel="stylesheet" href="plan.css?v=20261020-hybrid6">
+  <link rel="stylesheet" href="night.css?v=20261020-hybrid6"><link rel="stylesheet" href="conditions.css?v=20261020-hybrid6"><script type="module" src="conditions.js?v=20261020-hybrid6"></script>
+</head>
+<body class="planner-page conditions-page">
+  <a class="skip" href="#conditions-main">Skip to conditions</a>
+  <header class="lab-toolbar">
+    <a id="lab-home" href="index.html#concepts">Culmina · Design lab</a>
+    <p>Android phone · Night conditions</p>
+    <div class="plan-display-controls">
+      <label>Theme<select id="plan-theme"><option value="light">Light</option><option value="dark">Dark</option><option value="field">Field</option></select></label>
+      <label>Text<select id="plan-scale"><option value="1">100%</option><option value="1.25">125%</option><option value="2">200%</option></select></label>
+    </div>
+  </header>
+  <div class="plan-preview-bar"><p>Android layout preview · example data.</p><label>Example state<select id="conditions-scenario"><option value="ready">Ready</option><option value="partial">Forecast gaps</option><option value="missing-variable">Cloud unknown · other values available</option><option value="stale">Stale snapshot</option><option value="offline">Offline cached snapshot</option><option value="unknown">No forecast</option><option value="loading">Loading forecast</option><option value="error">Forecast error</option><option value="no-dark">No dark time</option><option value="moon-all">Moon up all night</option><option value="moon-below">Moon below all night</option><option value="mixed">Split moon-free intervals</option><option value="moon-middle">Middle moon-free interval</option><option value="polar-dark">Polar dark all night</option><option value="no-site">No site</option><option value="dst">DST transition</option><option value="save-error">Adoption save fails once</option></select></label></div>
+  <section class="android-device" aria-label="Android phone preview">
+    <div class="android-statusbar" aria-hidden="true"><span>9:41</span><svg viewBox="0 0 64 20"><path d="M2 16h3V12H2zm6 0h3V8H8zm6 0h3V4h-3zM24 6q8-7 16 0l-8 10zM47 4h12v12H47zM51 2h4"/></svg></div>
+    <header class="android-appbar">
+      <a id="back-home" class="android-icon-button" href="index.html#concepts" aria-label="Back to Tonight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4m7-7-7 7 7 7"/></svg></a>
+      <h1 id="appbar-title">Night & Moon</h1>
+      <button id="plan-field-mode" class="android-icon-button" aria-label="Turn on field mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a8 8 0 0 1-11-11 8 8 0 1 0 11 11Z"/></svg></button>
+    </header>
+    <nav class="condition-tabs" aria-label="Night conditions"><button data-view="night" aria-current="page">Night</button><button data-view="moon">Moon</button><button data-view="weather">Weather</button></nav>
+    <div class="android-scroll"><main id="conditions-main" class="plan-main" tabindex="-1"></main></div>
+    <div id="plan-savebar" class="plan-savebar"></div>
+    <div class="android-gesture" aria-hidden="true"><span></span></div>
+    <div id="plan-announcement" class="plan-announcement" role="status" aria-live="polite"></div>
+  </section>
+  <dialog id="adopt-dialog" aria-labelledby="adopt-title"><h2 id="adopt-title">Plan this night?</h2><p id="adopt-description"></p><p id="adopt-error" role="alert"></p><div class="leave-actions"><button data-adopt-choice="cancel" class="secondary-button">Cancel</button><button data-adopt-choice="discard" class="secondary-button">Discard changes and copy</button><button data-adopt-choice="save" class="primary-button">Save changes and copy</button><button data-adopt-choice="continue" class="primary-button">Create draft copy</button></div></dialog>
+</body>
+</html>

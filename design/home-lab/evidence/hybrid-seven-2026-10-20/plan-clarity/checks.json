@@ -1,0 +1,12 @@
+{
+  "cases": [
+    "Settings changes explain persistence separately from fit; canonical bytes untouched; effective and pending override sources accurate",
+    "Reset preview accurately retains saved file-size fallback and only changes the draft on Apply",
+    "A night-only edit is not falsely attributed to Settings; date chooser names evening and following morning",
+    "Explicit overrides shield the saved plan from unrelated global changes and retain fixed-minute margin",
+    "Known fixed margin remains visible while custom-coordinate fit/window remains Unknown",
+    "Legacy plan without saved budget or global settings labels all fields Example default",
+    "Paper retains prior date, assumption copy and source-free form rendering"
+  ],
+  "pageErrors": []
+}

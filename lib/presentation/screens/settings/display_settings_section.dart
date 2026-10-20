@@ -36,6 +36,9 @@ class DisplaySettingsSection extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           SegmentedButton<T>(
             key: Key(key),
+            direction: MediaQuery.textScalerOf(context).scale(14) > 21
+                ? Axis.vertical
+                : Axis.horizontal,
             segments: [
               for (final (v, label) in options)
                 ButtonSegment(value: v, label: Text(label)),

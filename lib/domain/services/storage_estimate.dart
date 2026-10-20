@@ -6,6 +6,9 @@ import '../models/equipment_profile.dart';
 
 /// What one frame's size rests on (ADR-021 C8), in its order of use.
 enum StorageBasis {
+  /// A user-entered estimate explicitly scoped to this plan.
+  planEstimate,
+
   /// The block's own compatible measured file (C6).
   blockFile,
 

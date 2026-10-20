@@ -107,7 +107,8 @@ void main() {
         .where((f) => f.path.endsWith('.dart'))
         .where((f) {
           final source = f.readAsStringSync();
-          return (source.contains('clearoutside') && f.path != link) ||
+          return (source.contains('clearoutside') &&
+                  f.path.replaceAll('\\', '/') != link) ||
               source.contains('LightPollutionRepository') ||
               source.contains('fetchBortleClass');
         })

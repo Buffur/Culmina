@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 
 import 'app_colors.dart';
 import 'app_palette.dart';
 import 'app_radius.dart';
 import 'app_typography.dart';
+import 'app_motion.dart';
+import 'hybrid_tokens.dart';
+import 'hybrid_view_entrance.dart';
 
 /// The app's three themes (TASK 12.4): light, dark and red field mode.
 /// Colours come from [AppColors] and [AppPalette] tokens; text is never
@@ -13,10 +17,11 @@ import 'app_typography.dart';
 /// [AppTypography.scale] sets every style's size and weight.
 class AppTheme {
   /// The family of the styles the theme builds by hand (F25).
-  static const _family = 'Roboto';
+  static const _family = HybridTokens.fontFamily;
 
   static final ThemeData light = _withTokens(
     ThemeData(
+      fontFamily: _family,
       brightness: Brightness.light,
       primaryColor: AppColors.lightTextPrimary,
       scaffoldBackgroundColor: AppColors.lightBackground,
@@ -26,17 +31,19 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
+        toolbarHeight: HybridTokens.appBarHeight,
         titleTextStyle: TextStyle(
-          // F25 (U): named, so it is never the engine's bare default; Roboto
-          // is Android's system font, so the app looks as before.
+          // Owner-selected bundled family, including Ukrainian glyphs.
           fontFamily: _family,
           color: AppColors.lightTextPrimary,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontSize: 22,
+          height: 1.25,
+          fontWeight: FontWeight.w500,
         ),
       ),
       colorScheme: const ColorScheme.light(
         primary: AppColors.lightTextPrimary,
+        onPrimary: AppColors.lightBackground,
         secondary: AppColors.lightTextSecondary,
         // Selected segments and the navigation indicator: a light fill
         // with primary text (Material would derive them from secondary).
@@ -72,6 +79,7 @@ class AppTheme {
 
   static final ThemeData dark = _withTokens(
     ThemeData(
+      fontFamily: _family,
       brightness: Brightness.dark,
       primaryColor: AppColors.darkTextPrimary,
       scaffoldBackgroundColor: AppColors.darkBackground,
@@ -81,17 +89,21 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
+        toolbarHeight: HybridTokens.appBarHeight,
         titleTextStyle: TextStyle(
-          // F25 (U): named, so it is never the engine's bare default; Roboto
-          // is Android's system font, so the app looks as before.
+          // Owner-selected bundled family, including Ukrainian glyphs.
           fontFamily: _family,
           color: AppColors.darkTextPrimary,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontSize: 22,
+          height: 1.25,
+          fontWeight: FontWeight.w500,
         ),
       ),
       colorScheme: const ColorScheme.dark(
         primary: AppColors.darkTextPrimary,
+        onPrimary: AppColors.darkBackground,
+        secondaryContainer: AppColors.darkSelection,
+        onSecondaryContainer: AppColors.darkTextPrimary,
         secondary: AppColors.darkTextSecondary,
         surface: AppColors.darkSurface,
         onSurface: AppColors.darkTextPrimary,
@@ -163,6 +175,7 @@ class AppTheme {
 
   static final ThemeData fieldTheme = _withTokens(
     ThemeData(
+      fontFamily: _family,
       colorScheme: fieldColorScheme,
       primaryColor: AppColors.fieldTextPrimary,
       scaffoldBackgroundColor: AppColors.fieldBackground,
@@ -184,13 +197,14 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
+        toolbarHeight: HybridTokens.appBarHeight,
         titleTextStyle: TextStyle(
-          // F25 (U): named, so it is never the engine's bare default; Roboto
-          // is Android's system font, so the app looks as before.
+          // Owner-selected bundled family, including Ukrainian glyphs.
           fontFamily: _family,
           color: AppColors.fieldTextPrimary,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontSize: 22,
+          height: 1.25,
+          fontWeight: FontWeight.w500,
         ),
       ),
       dividerTheme: const DividerThemeData(
@@ -246,6 +260,11 @@ class AppTheme {
     Color? textColor,
     bool field = false,
   }) {
+    final hybrid = field
+        ? HybridTokens.field
+        : base.brightness == Brightness.dark
+        ? HybridTokens.dark
+        : HybridTokens.light;
     TextTheme readable(TextTheme t) {
       final scaled = t.merge(AppTypography.scale);
       return textColor == null
@@ -255,7 +274,16 @@ class AppTheme {
 
     return _withControls(
       base.copyWith(
-        extensions: [palette],
+        extensions: [palette, hybrid],
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: HybridPageTransitionsBuilder(),
+            TargetPlatform.windows: HybridPageTransitionsBuilder(),
+            TargetPlatform.linux: HybridPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
         textTheme: readable(base.textTheme),
         primaryTextTheme: readable(base.primaryTextTheme),
       ),
@@ -273,6 +301,7 @@ class AppTheme {
     required bool field,
   }) {
     final s = t.colorScheme;
+    final hybrid = t.extension<HybridTokens>()!;
     final text = t.textTheme;
     final shape = WidgetStatePropertyAll(
       RoundedRectangleBorder(
@@ -303,6 +332,10 @@ class AppTheme {
         );
     final secondary = ButtonStyle(
       minimumSize: tall,
+      animationDuration: AppMotion.short,
+      padding: const WidgetStatePropertyAll(
+        EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
       shape: shape,
       textStyle: label,
       foregroundColor: onOff(p.textPrimary),
@@ -322,8 +355,24 @@ class AppTheme {
         style: ButtonStyle(
           minimumSize: tall,
           shape: shape,
-          textStyle: label,
-          overlayColor: overlay(s.onPrimary),
+          textStyle: WidgetStatePropertyAll(
+            text.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          ),
+          animationDuration: AppMotion.short,
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.disabled)
+                ? hybrid.action.withValues(alpha: 0.12)
+                : hybrid.action,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.disabled)
+                ? p.textDisabled
+                : hybrid.onAction,
+          ),
+          overlayColor: overlay(hybrid.onAction),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(style: secondary),
@@ -341,6 +390,8 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
+          minimumSize: tall,
+          animationDuration: AppMotion.short,
           shape: shape,
           textStyle: label,
           foregroundColor: onOff(p.textPrimary),
@@ -349,12 +400,36 @@ class AppTheme {
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
-        style: ButtonStyle(overlayColor: overlay(p.textPrimary)),
+        style: ButtonStyle(
+          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+          overlayColor: overlay(p.textPrimary),
+        ),
       ),
       // A quiet underline (08 §6): the enabled line is the control border
       // (colorScheme.outline, which Material reads); focus draws it 2 px in
       // the primary colour. Labels and hints are text roles (AA).
       inputDecorationTheme: InputDecorationThemeData(
+        contentPadding: const EdgeInsets.all(12),
+        constraints: const BoxConstraints(minHeight: 48),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.small),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.small),
+          borderSide: BorderSide(color: p.controlBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.small),
+          borderSide: BorderSide(color: p.textPrimary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.small),
+          borderSide: BorderSide(color: s.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.small),
+          borderSide: BorderSide(color: s.error, width: 2),
+        ),
         labelStyle: TextStyle(color: p.textSecondary),
         floatingLabelStyle: WidgetStateTextStyle.resolveWith(
           (states) => TextStyle(

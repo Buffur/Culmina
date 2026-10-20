@@ -4,11 +4,19 @@ import '../../domain/models/calendar_date.dart';
 import '../../domain/models/location_profile.dart' as domain;
 import '../../domain/repositories/location_repository.dart';
 import '../database/app_database.dart';
+import '../../domain/repositories/undoable_deletion.dart';
+import 'drift_deletion.dart';
 
-class DriftLocationRepository implements LocationRepository {
+class DriftLocationRepository
+    implements LocationRepository, UndoableDeletionRepository {
   final AppDatabase _db;
 
   DriftLocationRepository(this._db);
+
+  @override
+  Future<DeletionReceipt> deleteWithUndo(int id) =>
+      DriftDeletion(_db)
+          .delete(DeletedResource.site, id, () => deleteLocation(id));
 
   domain.LocationProfile _mapToDomain(LocationProfile row) {
     return domain.LocationProfile(
