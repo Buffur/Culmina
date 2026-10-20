@@ -31,10 +31,14 @@ ledger and the state recorded here, verified against the actual tree.
 4. Design skills: `.agents/skills/culmina-design-{tokens,typography,spacing,components,rules}/`
    and `docs/design/WORKFLOW.md`, when touching UI.
 
-The owner's original full brief to Codex (`pasted-text-1.txt`) is **not in the
-repository**. Its substance is summarized in the ledger's "Objective and
-authority" and "Accepted decisions"; treat those as binding. If something
-cannot be decided from them, ask the owner — do not invent requirements.
+The owner's original full brief to Codex (`pasted-text-1.txt`) is in
+`docs/design/migration/OWNER_BRIEF_2026_10_20.md` (verbatim, Ukrainian). It is
+**the task contract**: read it in full right after `CLAUDE.md`. Its §8 (the
+completion criteria and the eight-item final report to the owner, in
+Ukrainian) defines when and how this work ends. Owner decisions recorded
+later in the ledger ("Accepted decisions") refine it and are equally binding. If
+something cannot be decided from these, ask the owner — do not invent
+requirements.
 
 ## 2. What the migration is (one paragraph)
 

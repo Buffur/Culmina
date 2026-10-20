@@ -18,7 +18,8 @@ acceptance.
 Implement the approved original Hybrid design in the existing Flutter/Dart app,
 with Geist, while preserving every existing capability, real data source,
 calculation, validation, persistence format and platform integration. The full
-owner requirements are in the attached `pasted-text-1.txt`; both matrices below
+owner requirements are in the attached `pasted-text-1.txt`, kept verbatim as
+[OWNER_BRIEF_2026_10_20.md](migration/OWNER_BRIEF_2026_10_20.md); both matrices below
 are the working implementation and verification checklist.
 
 | Source | Authority / frozen identity |
