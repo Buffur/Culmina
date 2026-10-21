@@ -52,3 +52,6 @@ dialog{background:var(--surface-raised);color:var(--text-primary);border:1px sol
 #detail.phone-detail #detail-body select{min-width:0}
 #detail.phone-detail #detail-body .dialog-actions>*{flex:1 1 144px;min-width:0;white-space:normal}
 .concept-blend .due-result{color:var(--text-primary);padding-block:16px}.concept-blend .due-result strong{font-weight:650}
+/* Owner QA 2026-10-22: sheet actions stack full width, so long labels stay on one line (block-1 rule). */
+#detail .dialog-actions{flex-direction:column}
+#detail .dialog-actions>*{flex:none;width:100%}

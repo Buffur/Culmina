@@ -69,8 +69,9 @@
 
 /* Hybrid proposal only. Sky states keep their ordered luminance; Moon lanes also differ by geometry.
    The legacy palettes remain intact for every other concept. */
-:root[data-variant=blend],.variant-blend{--sky-day:#DFE9E9;--sky-civil:#CECDE0;--sky-nautical:#A5B2CA;--sky-astro:#7585A1;--sky-dark:#475A72;--moon-up:#607D8B;--moon-free:#37352F}
-:root[data-theme=dark][data-variant=blend],:root[data-theme=dark] .variant-blend{--sky-day:#A0B2B8;--sky-civil:#9B98B0;--sky-nautical:#778AA9;--sky-astro:#526984;--sky-dark:#2D435D;--moon-up:#B0BEC5;--moon-free:#EBEBEA}
+/* Owner 2026-10-22: the night is black, not blue; twilight steps are neutral greys (Notion's mono palette). */
+:root[data-variant=blend],.variant-blend{--sky-day:#E9ECEE;--sky-civil:#CFD3D8;--sky-nautical:#A3A9B1;--sky-astro:#5F656D;--sky-dark:#121314;--moon-up:#607D8B;--moon-free:#37352F}
+:root[data-theme=dark][data-variant=blend],:root[data-theme=dark] .variant-blend{--sky-day:#8C979C;--sky-civil:#737B84;--sky-nautical:#555C66;--sky-astro:#30353C;--sky-dark:#000000;--moon-up:#B0BEC5;--moon-free:#EBEBEA}
 :root[data-sky=slate][data-variant=blend],:root[data-sky=slate] .variant-blend{--sky-day:#E0EBE9;--sky-civil:#C8DCDD;--sky-nautical:#A0BBC6;--sky-astro:#7797AA;--sky-dark:#46667D}
 :root[data-theme=dark][data-sky=slate][data-variant=blend],:root[data-theme=dark][data-sky=slate] .variant-blend{--sky-day:#9EB9BA;--sky-civil:#86ABB6;--sky-nautical:#678FA5;--sky-astro:#456E8B;--sky-dark:#244D68}
 :root[data-sky=ink][data-variant=blend],:root[data-sky=ink] .variant-blend{--sky-day:#E3EAF2;--sky-civil:#CDD9ED;--sky-nautical:#A6BCDD;--sky-astro:#7D99C3;--sky-dark:#4E6A98}
@@ -95,3 +96,10 @@
 @media(prefers-reduced-motion:no-preference){
  :is(:root[data-variant=blend],.variant-blend) .timeline-reset{transition:background-color 120ms ease-out,border-color 120ms ease-out}
 }
+
+/* Owner 2026-10-22: two icon buttons jump to the start or end of dark time (replaces Return to night start). */
+:is(:root[data-variant=blend],.variant-blend) .timeline-jumps{display:inline-flex;gap:8px;flex:0 0 auto}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump{width:48px;height:48px;display:grid;place-items:center;padding:0;border:1px solid var(--border-control);border-radius:var(--radius-small,6px);background:transparent;color:var(--text-primary);cursor:pointer}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump:hover{background:var(--selection)}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump:focus-visible{outline:2px solid var(--text-primary);outline-offset:3px}

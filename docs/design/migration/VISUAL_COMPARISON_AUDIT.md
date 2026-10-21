@@ -452,3 +452,68 @@ OneDrive here (Windows error -4094); run on a copy of design/home-lab outside On
 
 Outside block 1 (not changed, owner decision): Tonight, Plan, Night and Weather use 12 px widely
 (Weather 86 text runs, Plan 47) and their own heading sizes (25–29 px).
+
+## Home, Plan, Night & Moon and Weather (owner goal, 2026-10-22), accepted by the owner
+
+Sources read: `design/home-lab/references.json` (Notion, Apple, Material, Linear, Things, Craft) and
+`docs/design/NOTION_APPLE_STUDY_2026_10_19.md`. Notion is the main reference, translated as an open
+document rhythm: sections on one canvas divided by thin rules, labels aligned with values, restrained
+borders, toggles for optional detail; no Notion navigation or brand. Recorded findings reused from
+`HYBRID_FULL_REASSESSMENT_2026_10_20.md` (time-browser affordance, partial-forecast headline, repeated
+copy); the owner's compact-weather-on-Home rule stands.
+
+QA (375 primary, 412 control, dark spot check; Home in 10 scenarios, Plan with its editors and
+disclosures, Night, Moon, Weather incl. partial/stale/unknown, no-dark night) and changes:
+- Home had no separation: context, plan, conditions and next actions ran together. Now four
+  document sections, each opened by one thin rule with even 16 px spacing; "Your plan" uses the
+  section role (18/600); Moon and Weather rows divided; Record result and What can I image are two
+  matching rows with chevrons on one text edge; no-site / loading / error messages sized to content
+  (were min-height 450 px, leaving a large empty gap) and divided from Your plan.
+- Type scale on all four screens: context chips, captions, notes, plan row labels and captions,
+  estimate captions, block meta, rail labels/legend, view context and date-browser labels 12 → 13.
+  Kept 12 px only for dense data: hourly table, hourly strip, Moon calendar, chart axes. Kept the
+  accepted Hybrid Home roles (title 29, target 21, serif night heading 25; Plan's night heading
+  26 → 25 to match Home) and the serif answer headlines on Night/Moon/Weather.
+- Every disclosure (Plan budget/gain/rig details and editor Details and From a photo; Night guide,
+  Moon details, Sun & twilight; Weather forecast details) is 18/600 with an end chevron, no ▶,
+  compact.
+- Plan: Add block / Build calibration frames equal width and height; Plan rows stay open (the
+  existing Hybrid border-free row decision is kept).
+- Weather/Night row actions (Reload example, View this night, Back to your plan's night) read as
+  full-width outlined buttons, as in Logbook. The partial-forecast headline is already qualified
+  ("in known dark hours", "5 of 7 … known").
+
+Studio checks: plan, night, quality, defaults, bridge, tabs browser/interactions, Hybrid
+feedback/refinement/continuity/plan clarity/import focus, seven conditions, focus labels and library
+refinement pass; check_hybrid_corrections passes 51/51 on a copy outside OneDrive (its fixed
+evidence path inside OneDrive fails to open here, Windows -4094).
+
+## Tonight: full QA, Geist and the night timeline (owner goal, 2026-10-22), accepted by the owner
+
+Research: notion.com (mono palette, spacing-led sections, filled primary + quiet secondary, arrow text
+links) and Notion Help "Navigate with the sidebar" (labelled sections that collapse from their
+name, fixed top/bottom anchors, toggles for depth, a "•••" menu for item actions); astro-planning
+references (PhotoPills' next-events widget and timeline, Dark Skies' "is tonight worth it" answer,
+Clear Outside's darkness periods beside hourly data with no decorative graphics). Culmina already
+follows the answer-first pattern; the gaps were the timeline's colour and controls.
+
+Owner decisions applied in the studio:
+- Main font Geist for Hybrid (`tokens.json` variant family Manrope → Geist; the serif night
+  headings stay). "Heist" read as Geist, the font already approved for the app. Type audit after the
+  switch: no size or line conflicts; same roles as before.
+- Night timeline: the night is black, twilight neutral greys (blend sky tokens, light and dark; the
+  lab's alternative Slate/Ink skies unchanged). The bracket under the dark interval is removed.
+  "Return to night start" is replaced by two 48 px icon buttons that jump to the start and end of
+  dark time (or the rail's ends when there is no dark time).
+- Logic fix: the rail spans noon to noon, so "night start" was 13:00 daylight. A Hybrid night now
+  opens at the start of dark time (or Now during the night), on Home and on Night & Moon.
+- Copy: Home weather caption reads "Example forecast for the dark hours · Stale snapshot". Sheet
+  actions stack full width (Welcome's two buttons no longer wrap); candidate rows use chevrons.
+
+Checks: night, quality, plan, defaults, tabs browser/interactions, Hybrid feedback/refinement/
+continuity/plan clarity/import focus, seven conditions and focus labels pass;
+check_hybrid_corrections passes 51/51 on a copy outside OneDrive. Two checks were updated to the
+owner's decisions: R3 in check_hybrid_refinement presses the new jump-to-start button (same intent:
+the opening position is restored, nothing stored); check_hybrid_corrections pins the new sky
+colours. check_inventory reports a stale source snapshot of Flutter files from the migration, not
+this change.

@@ -53,3 +53,61 @@ html[data-variant="blend"][data-text-scale="2"] .library-view :is(.library-metad
 @media(prefers-reduced-motion:reduce){
   :is(.variant-blend,html[data-variant="blend"] .android-device) :is(*,*::before,*::after){animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Owner goal 2026-10-22: Home, Plan, Night & Moon and Weather follow the accepted block-1 rules and the
+   project type scale (22/500 title · 18/600 section and disclosure · 16/500 row title · 15/600
+   sub-heading · 14/400 body · 13/400 hint, caption and note). Serif night headings stay (accepted
+   Hybrid direction). Dense data — hourly table, chart axes, Moon calendar — keeps 12 px. Notion
+   reference: open document sections divided by thin rules, labels aligned with values. */
+
+/* Home: document sections divided by one thin rule each; one heading role; rows with chevrons. */
+.concept.variant-blend .app-context button{font-size:calc(13px * var(--text-scale))}
+.concept.variant-blend :is(.condition-extra,.saved-label,.plan-measures dt,.timeline-hint,.rail-labels,.rail-legend,.rail-note,.welcome-label){font-size:calc(13px * var(--text-scale))}
+.concept.variant-blend :is(.rig-name,.plan-reason,.home-subtitle){font-size:calc(14px * var(--text-scale))}
+.concept.variant-blend .home-body>section{border-top:1px solid var(--border-subtle);padding-top:16px;margin-top:16px;margin-bottom:0}
+.concept.variant-blend .plan-section .home-section-title{font-size:calc(18px * var(--text-scale));font-weight:600;line-height:1.4}
+.concept.variant-blend .plan-heading-row{align-items:baseline}
+.concept.variant-blend .conditions>.condition-row{min-height:0;padding:12px 0}
+.concept.variant-blend .conditions>.condition-row~.condition-row{border-top:1px solid var(--border-subtle)}
+.concept.variant-blend .home-actions{display:flex;flex-direction:column}
+.concept.variant-blend .home-actions>:is(.due-result,.candidate-button){display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:12px 0;text-align:left;font-size:calc(16px * var(--text-scale));font-weight:500;color:var(--text-primary);border:0;background:transparent}
+.concept.variant-blend .home-actions>.due-result+.candidate-button{border-top:1px solid var(--border-subtle)}
+.concept.variant-blend .home-actions>:is(.due-result,.candidate-button)>svg:last-child{margin-left:auto;width:18px;height:18px;flex:none;color:var(--text-secondary)}
+.concept.variant-blend .home-actions .due-result strong{font-size:calc(16px * var(--text-scale));font-weight:500}
+.concept.variant-blend .home-actions .due-result span{font-size:calc(13px * var(--text-scale));font-weight:400;color:var(--text-secondary);line-height:1.5}
+
+/* Plan and conditions pages: text one step up, compact chevron disclosures, separated rows. */
+html[data-variant="blend"] :is(.plan-page,.conditions-page) :is(.plan-identity,.plan-row-label,.plan-row-caption,.capture-heading p,.block-source,.block-fit,.estimate-grid dt,.estimate-grid dd,.estimate-note,.night-row-label,.night-row-extra,.field-hint,.field-source,.field-error,.choice-text small,.search-count,.editor-help,.plan-savebar p,.arithmetic-note,.assumption-list,.gain-axis-title,.gain-panel-note,.gain-legend,.view-context>p,.date-browser span,.rail-labels,.rail-legend,.rail-note,.timeline-hint,.plot-caption,.weather-legend,.uncalculated-day){font-size:calc(13px * var(--text-scale))}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .estimate-grid dd.estimate-value{font-size:calc(20px * var(--text-scale))}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure{margin-top:8px}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure>summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:16px;align-items:center;min-height:48px;padding:6px 0;font-size:calc(18px * var(--text-scale));font-weight:600;line-height:1.4}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure>summary::-webkit-details-marker{display:none}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure>summary>span{grid-column:1;font-size:calc(13px * var(--text-scale));margin-top:2px}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure>summary::after{content:'';grid-column:2;grid-row:1 / span 2;width:18px;height:18px;background:var(--text-secondary);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9 5 7 7-7 7' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9 5 7 7-7 7' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;transform:rotate(90deg);transition:transform 120ms}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure[open]>summary::after{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){html[data-variant="blend"] .plan-disclosure>summary::after{transition:none}}
+html[data-variant="blend"] .plan-page .plan-night>h2{font-size:calc(25px * var(--text-scale))}
+html[data-variant="blend"] .plan-page .capture-actions{flex-wrap:nowrap;gap:8px;align-items:stretch}
+html[data-variant="blend"] .android-device .plan-page .capture-actions>.secondary-button,html[data-variant="blend"] .plan-page .android-device .capture-actions>.secondary-button{flex:1 1 0;width:auto;max-width:none;justify-content:center;text-align:center}
+/* Weather and Night: row actions read as buttons (outlined, full width), as in Logbook. */
+html[data-variant="blend"] .conditions-page .android-device :is([data-retry-weather],[data-view-night],[data-plan-night]){width:100%;max-width:none;align-self:stretch;justify-content:center;text-align:center;border:1px solid var(--border-control);border-radius:6px;color:var(--text-primary);margin-top:8px}
+/* Home QA pass: even 16 px around each section rule; next-action rows share one text edge. */
+.concept.variant-blend .app-context{padding-bottom:0;margin-bottom:0}
+.concept.variant-blend .home-body>section:first-child{margin-top:16px}
+.concept.variant-blend .home-body>.conditions{margin-bottom:0}
+.concept.variant-blend .conditions>.home-section-title{margin-top:0;margin-bottom:4px}
+.concept.variant-blend .home-actions>.due-result>svg:first-child{display:none}
+.concept.variant-blend .conditions>.condition-row:last-child{padding-bottom:0}
+/* QA pass 2: Home state messages (no site, loading, error) sized to content and divided like the other
+   sections; the block editor's From a photo disclosure uses the same chevron and spacing. */
+.concept.variant-blend .state-message{min-height:0;padding:16px 0 0}
+.concept.variant-blend .state-message h3{font-size:calc(18px * var(--text-scale));font-weight:600;margin:8px 0 4px}
+.concept.variant-blend .state-message p{line-height:1.5;margin-bottom:8px}
+.concept.variant-blend .state-message>.candidate-button{display:flex;align-items:center;width:100%;min-height:48px;font-size:calc(16px * var(--text-scale));font-weight:500}
+.concept.variant-blend .state-message+.plan-section{border-top:1px solid var(--border-subtle);padding-top:16px;margin-top:16px}
+html[data-variant="blend"] .photo-metadata{margin:8px 0;padding-top:0}
+html[data-variant="blend"] .photo-metadata>summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:16px;align-items:center;min-height:48px;padding:6px 0;font-size:calc(18px * var(--text-scale));font-weight:600;line-height:1.4}
+html[data-variant="blend"] .photo-metadata>summary::-webkit-details-marker{display:none}
+html[data-variant="blend"] .photo-metadata>summary::after{content:'';grid-column:2;grid-row:1 / span 2;width:18px;height:18px;background:var(--text-secondary);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9 5 7 7-7 7' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9 5 7 7-7 7' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;transform:rotate(90deg);transition:transform 120ms}
+html[data-variant="blend"] .photo-metadata[open]>summary::after{transform:rotate(-90deg)}
+.concept.variant-blend .home-actions .due-result strong{color:var(--text-primary)}
