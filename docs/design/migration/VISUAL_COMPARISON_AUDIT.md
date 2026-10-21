@@ -423,3 +423,32 @@ check) and the five studio checks pass. **Block 1 (Logbook and Library) is accep
 Open owner questions (not blocking): the Library root line "Progress by target lives in the
 Logbook."; list search autofocus; the Targets caption length. Next: fix the accepted reference
 (commit on the owner's instruction), then port block 1 to Flutter as a separate task.
+
+## Project type scale and Settings (owner goal, 2026-10-22), accepted by the owner
+
+Measured every studio screen's visible text (412 dp, light, 100 %) by size/weight. The accepted
+block-1 scale, now shared by Logbook, Library and Settings:
+22/500 screen title · 18/600 section heading and every disclosure · 16/500 row title (16/600
+primary button) · 15/600 sub-heading · 15/400 field label · 14/400 body (14/500 secondary buttons,
+values) · 13/400 hint, caption and note. 12 px no longer appears on these three tabs (status bar
+excepted); the Logbook entry's 20/500 status headline is its own role.
+
+Alignment fixes: Logbook row titles 15 → 16 and h3 14 → 15/600; Library disclosure titles were
+18/500 (an older selector won) → 18/600; Logbook notes and counts 12 → 13.
+
+Settings, all states reviewed (root, Appearance, Planning with both disclosures, the unsaved-changes
+dialog, Privacy, Backup & data, Restore result, About, load error; 375 and 412, dark spot check):
+notes, hints, range ends and the save state 12 → 13; field labels (sliders, switches, units,
+darkness limit, file input) 15/400; outputs 15; disclosures ("How these defaults apply", "Gates and
+optional times", "What leaves the device", "Application backup") 18/600 with an end chevron, no ▶;
+spacing cut (groups 28 → 12, fields 20 → 12, switch rows 10 px, About link rows keep 48 px targets
+without extra padding); no rule above Cancel / Save; space after an open disclosure and after the
+intro. Sliders keep their 48 px target (a 40 px trial failed the target checks and was reverted).
+
+Studio checks: bridge, defaults, tabs browser/interactions, Hybrid feedback/refinement/continuity
+and library refinement pass. check_hybrid_corrections cannot write its fixed evidence path inside
+OneDrive here (Windows error -4094); run on a copy of design/home-lab outside OneDrive it passes
+51/51 with no page or console errors.
+
+Outside block 1 (not changed, owner decision): Tonight, Plan, Night and Weather use 12 px widely
+(Weather 86 text runs, Plan 47) and their own heading sizes (25–29 px).

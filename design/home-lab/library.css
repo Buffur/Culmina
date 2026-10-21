@@ -151,3 +151,8 @@ html[data-variant="blend"] .android-device .library-view .library-detail>.librar
 .library-view .library-detail>.library-disclosure{margin-top:4px}
 .library-view .library-detail>.library-disclosure:not([open])>summary{margin-bottom:0}
 .library-view .library-delete>.workspace-actions{margin-top:0}
+/* Project type scale (owner, 2026-10-22): one role per size across Logbook, Library and Settings.
+   22/500 screen title · 18/600 section heading and disclosure · 16/500 row title · 15/600 sub-heading ·
+   15/400 field label · 14/400 body · 13/400 hint, caption and note. */
+.library-view .library-disclosure>summary,.library-view details>summary{font-weight:600}
+.library-view .library-section>h3{font-size:calc(15px * var(--text-scale));font-weight:600}
