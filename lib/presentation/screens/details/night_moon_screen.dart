@@ -209,6 +209,22 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                               'Moon-free dark',
                               style: text.headlineSmall?.copyWith(fontSize: 28),
                             ),
+                            // Hybrid's Moon answer: the primary number
+                            // (24 px), then its intervals as support.
+                            if (browser.view.moonFree.moonFree > Duration.zero)
+                              Text(
+                                QuantityText.duration(
+                                  browser.view.moonFree.moonFree,
+                                ),
+                                key: const Key('nightMoon.moonFreeTotal'),
+                                style: text.headlineSmall?.copyWith(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
+                                ),
+                              ),
                             Text(
                               MoonText.moonFree(
                                 browser.view.moonFree,

@@ -10,6 +10,7 @@
 import 'dart:convert';
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -173,6 +174,13 @@ void main() {
     expect(day.moonFree.moonFree, b.view.moonFree.moonFree);
     // The plan's own rows use the same answer (one predicate, N1/N4).
     expect(vm.conditions.moonFree!.moonFree, b.view.moonFree.moonFree);
+    // Hybrid's Moon answer leads with that total as its primary number.
+    if (b.view.moonFree.moonFree > Duration.zero) {
+      expect(
+        textOf(tester, 'nightMoon.moonFreeTotal'),
+        QuantityText.duration(b.view.moonFree.moonFree),
+      );
+    }
     expect(
       find.byKey(Key('nightMoon.day.${viewed.toIso8601String()}')),
       findsOneWidget,

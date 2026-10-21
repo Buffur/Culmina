@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/config/app_identity.dart';
 import '../../../domain/models/planning_preferences.dart';
@@ -207,6 +208,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   range: PlanningPreferences.perFrameRange,
                   divisions: 120,
                   label: '${p.perFrameOverheadSeconds.round()} s',
+                  format: (v) => '${v.round()} s',
                   onChanged: (v) =>
                       update(p.copyWith(perFrameOverheadSeconds: v)),
                 ),
@@ -220,6 +222,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   range: PlanningPreferences.marginRange,
                   divisions: 50,
                   label: QuantityText.percent(p.feasibilityMarginPercent),
+                  format: QuantityText.percent,
                   onChanged: (v) =>
                       update(p.copyWith(feasibilityMarginPercent: v)),
                 ),
@@ -244,6 +247,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   range: PlanningPreferences.minAltitudeRange,
                   divisions: 55,
                   label: QuantityText.degrees(p.minAltitudeDeg),
+                  format: QuantityText.degrees,
                   onChanged: (v) => update(p.copyWith(minAltitudeDeg: v)),
                 ),
                 ListTile(
@@ -505,6 +509,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   range: PlanningPreferences.npfKRange,
                   divisions: 4,
                   label: 'k = ${p.npfK.toStringAsFixed(1)}',
+                  format: (v) => v.toStringAsFixed(1),
                   onChanged: (v) => update(p.copyWith(npfK: v)),
                 ),
                 _SliderTile(
@@ -521,6 +526,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     p.dewMarginC,
                     unitsOf(context),
                   ),
+                  format: (v) =>
+                      QuantityText.temperatureDifference(v, unitsOf(context)),
                   onChanged: (v) => update(p.copyWith(dewMarginC: v)),
                 ),
               ],
@@ -789,6 +796,7 @@ class _SliderTile extends StatelessWidget {
     required this.range,
     required this.divisions,
     required this.label,
+    required this.format,
     required this.onChanged,
   });
 
@@ -798,28 +806,60 @@ class _SliderTile extends StatelessWidget {
   final (double, double) range;
   final int divisions;
   final String label;
+
+  /// Writes the range's ends under the slider, in the value's own form.
+  final String Function(double) format;
   final ValueChanged<double> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(title),
-          subtitle: Text(help),
-          trailing: Text(label),
-        ),
-        Slider(
-          value: value.clamp(range.$1, range.$2),
-          min: range.$1,
-          max: range.$2,
-          divisions: divisions,
-          label: label,
-          onChanged: onChanged,
-        ),
-      ],
+    final text = Theme.of(context).textTheme;
+    final secondary = AppPalette.of(context).textSecondary;
+    // Hybrid's settings row (settings.css): the name and its value on one
+    // line, the explanation below, the slider, then the range's ends.
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: AppSpacing.sm,
+            children: [
+              Text(title, style: text.titleSmall),
+              Text(
+                label,
+                style: text.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(help, style: text.bodySmall?.copyWith(color: secondary)),
+          Slider(
+            value: value.clamp(range.$1, range.$2),
+            min: range.$1,
+            max: range.$2,
+            divisions: divisions,
+            label: label,
+            onChanged: onChanged,
+          ),
+          ExcludeSemantics(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (final end in [range.$1, range.$2])
+                  Text(
+                    format(end),
+                    style: text.bodySmall?.copyWith(color: secondary),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

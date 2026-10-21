@@ -79,6 +79,9 @@ AppBar hybridAppBar(
     centerTitle: centerTitle,
     toolbarHeight: height,
     titleSpacing: spacing,
+    // Hybrid ends a root's bar on the 16 px page margin and a detail's on
+    // 8 px (styles.css .app-brand-row / plan.css top bar).
+    actionsPadding: EdgeInsets.only(right: hasLeading ? 8 : 16),
     backgroundColor: backgroundColor,
     foregroundColor: foregroundColor,
     elevation: elevation,

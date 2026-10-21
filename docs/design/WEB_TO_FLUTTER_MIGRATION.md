@@ -1,9 +1,10 @@
 # Web to Flutter migration — original Hybrid / Geist
 
-Status: **IN PROGRESS — NOT ACCEPTED**. Updated 2026-10-20 after the owner resumed
-work following a model change. This ledger records actual evidence; focused host
-checks, browser captures and native checks have different coverage.
-
+Status: **IMPLEMENTED AND VERIFIED WITHIN THE STATED COVERAGE — AWAITING OWNER
+ACCEPTANCE**. Updated 2026-10-21 after the resumed completion run (below).
+Evidence levels stay separate: host tests, browser/host image pairs, Android
+emulator and physical device are different claims; no physical-device or owner
+acceptance is claimed.
 ## Hand-over (2026-10-20)
 
 Codex stopped mid-way through step 2 of the completion sequence (the full gate
@@ -12,6 +13,45 @@ the committed tree and the next actions are in
 [CONTINUATION_PROMPT_2026_10_20.md](migration/CONTINUATION_PROMPT_2026_10_20.md);
 resume from there. The hand-over commit is a work-in-progress checkpoint, not
 acceptance.
+
+## Resumed completion run (2026-10-21)
+
+Resumed by Claude Code from the hand-over on another Windows machine (Flutter
+3.47.4 at `C:	oolslutter-3.47.4`), branch
+`claude/owner-brief-2026-10-20-d413ba` fast-forwarded to `develop` `c224cf6`.
+The seven-step sequence below now stands as follows.
+
+| Step | Result | Evidence |
+| --- | --- | --- |
+| 1. Calendar, Planning Settings, stored Undo | Done (hand-over) and covered by G2 and N1 | `UNDO_IMPLEMENTATION.md`, N1 report |
+| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final run `full-gate-2026-10-21-final.log` (G2) |
+| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/` (N1; failed attempts kept) |
+| 4. Matched browser ↔ host pairs | **Reviewed**: fixture unchanged, host recaptured, 48 pairs regenerated, per-pair review; repairs made for the inverted Moon phase glyph (pre-existing F15 defect), the missing Moon primary number, Planning slider rows, app-bar action margins and "1 rigs" | `VISUAL_COMPARISON_AUDIT.md` final section (V1), `migration/evidence/matched/gallery/` |
+| 5. Normal APK + hot reload on 5582 | **PASS** — `lib/main.dart` debug APK installed and started; a real source change hot-reloaded ("Reloaded 1 of 2788 libraries", code 0) and reverted | `migration/evidence/native/run-2026-10-21/hot-reload-main.log` (H1) |
+| 6. Matrices and JSON statuses | Done: every Matrix A row (84 + the accepted A-LIB-05 omission) and all 63 Matrix B rows cite G2/N1/V1/H1 and name what was not exercised; all 179 JSON leaves remain accounted (56 used, 2 transformed, 121 not applicable, 0 blocked) with `hybrid_tokens_test.dart` in G2 | Matrix A/B "Final evidence (2026-10-21)" |
+| 7. Independent Claude CLI review | See "Independent review" below | `migration/evidence/final-claude-original-report.txt` |
+
+### Deviations kept on purpose (native authority)
+
+- **D-01** Tonight's fit verdict and Night row keep native wording (the darkness
+  limit in "Dark (Sun below −18°)", the explicit zone rule) instead of the web's
+  illustrative "example window" note — time/zone rules, F17.
+- **D-02** Plan keeps active rig capability warnings (NPF / max sub when
+  tracking is unknown) visible above the capture list (TASK 8.6, PD-11); the
+  first capture block can start below the first screen.
+- **D-03** Night/Moon/Weather context shows the site and the full zone rule on
+  two lines, not "Ljubljana · Europe/Ljubljana".
+- **D-04** Dates use the app's existing `NightTimeFormatter` (device locale:
+  "Tue, Nov 10"), not the web's "10 Nov".
+- A-LIB-05 (standalone rig JSON) remains the owner's accepted omission.
+
+### Not exercised (limits)
+
+L-1 system file/photo pickers and real camera files; L-2 GPS permission, live
+fix and live map tiles on a device; L-3 physical phone; L-4 platform share sheet
+and external browser; L-5 process death/app restart and route recreation; L-6
+human screen-reader and hardware-keyboard acceptance, motion timing on device.
+A release build was not made: release signing is owner-managed.
 
 ## Objective and authority
 

@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-10-20T18:51:21.407087+00:00",
+  "generatedAtUtc": "2026-10-21T06:30:41.792226+00:00",
   "scope": "8 roots \u00d73 themes \u00d7100/200%; original browser vs Flutter host; not Android acceptance",
   "pairCount": 48,
   "supplementalPairCount": 24,
@@ -31,15 +31,15 @@
           412,
           915
         ],
-        "sha256": "ff1dd1600d36031dee8f808dc1d154d71b16b9eb2baa26be71cb58d654a47a88"
+        "sha256": "1d17cf4615102bd297adabed4ce6eff38e10ac00a3e968b963939ae863bcc358"
       },
       "diagnostics": {
         "overlay": "diagnostics/home-light100-overlay.png",
         "absoluteDifference": "diagnostics/home-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          29.334415618865723,
-          29.331457902275982,
-          29.896013051090243
+          18.891365589686455,
+          18.528120855217782,
+          18.478914000742744
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -70,15 +70,15 @@
           412,
           915
         ],
-        "sha256": "db9237ae476af99a03343c1832f09b885e8ed3875d3fc32cc48d3db400a0f6e7"
+        "sha256": "a312316832db89fa5267a6fa0ff649276bb26ba59a9c6b9adf454ed24f121cea"
       },
       "diagnostics": {
         "overlay": "diagnostics/home-light200-overlay.png",
         "absoluteDifference": "diagnostics/home-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.95772720038198,
-          21.120051461616,
-          21.761255239004722
+          19.175043768900206,
+          19.28009708737864,
+          19.835487293755637
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -109,15 +109,15 @@
           412,
           915
         ],
-        "sha256": "4191d33e60fb6a59fb845c201ead9d6d467e4ed7e0a3427d3840ac54c5d52fc0"
+        "sha256": "daafdd513e11a1ba6b479a07f492cab121e60b7fc43921dd022920b791de508d"
       },
       "diagnostics": {
         "overlay": "diagnostics/home-dark100-overlay.png",
         "absoluteDifference": "diagnostics/home-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          31.434298901798503,
-          31.61552336994005,
-          31.673444214547192
+          19.6547774417741,
+          20.072812881319965,
+          20.500939041858985
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -148,15 +148,15 @@
           412,
           915
         ],
-        "sha256": "62edbb9a9b2d5b5f5f94e3893240acec97ee2ace1f615a883684d0f7f38d0796"
+        "sha256": "e1e3ea9212c1eb63a7246daff47c94a35bce6a2172fc447337c66683186037cd"
       },
       "diagnostics": {
         "overlay": "diagnostics/home-dark200-overlay.png",
         "absoluteDifference": "diagnostics/home-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          22.399381930075865,
-          22.36770120430792,
-          22.203602313120058
+          20.24387765929227,
+          20.172449466815216,
+          19.98377367499602
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -187,13 +187,13 @@
           412,
           915
         ],
-        "sha256": "14736d83a1c163ba4ead102237301af2b4e24d23a57ece49e47601b60152573b"
+        "sha256": "450328c00bdb9d9849412888fb477d4442f3dccbd9007a29ab6dc54e6c3cd603"
       },
       "diagnostics": {
         "overlay": "diagnostics/home-field100-overlay.png",
         "absoluteDifference": "diagnostics/home-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          29.00276937768582,
+          19.414533927529313,
           0.0,
           0.0
         ],
@@ -226,13 +226,13 @@
           412,
           915
         ],
-        "sha256": "f8402d42b18d6db92517d960a16eda7cecf9ef58aa0844bd63bb452146078e7a"
+        "sha256": "db9094c2d3e7cae0d602b9b7e45a4d430484e55637c27251ce0a8a5bca312a1a"
       },
       "diagnostics": {
         "overlay": "diagnostics/home-field200-overlay.png",
         "absoluteDifference": "diagnostics/home-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          25.542392169345852,
+          23.37702265372168,
           0.0,
           0.0
         ],
@@ -265,15 +265,15 @@
           412,
           915
         ],
-        "sha256": "e33875a8b3f1dd94e0278db4a8a4639f3e02efc0028212067134ad3d9b2e0090"
+        "sha256": "365ff65de28ff2a20ce26700e41dee49a279b3bbb605fabf35e6ab7e9f9633c8"
       },
       "diagnostics": {
         "overlay": "diagnostics/plan-light100-overlay.png",
         "absoluteDifference": "diagnostics/plan-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          13.275632659557536,
-          13.394453286646506,
-          13.778473659080058
+          12.324043715846994,
+          12.396222611279113,
+          12.742299326224202
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -304,15 +304,15 @@
           412,
           915
         ],
-        "sha256": "622be89b760eec694149a7fc082e3d8ba1d5a10cf9f249631bbf4e86e10bd5d0"
+        "sha256": "392e42a52c0fd6851e4a07ee92767f8ce0a402fa4a24b40b383d89afd076922c"
       },
       "diagnostics": {
         "overlay": "diagnostics/plan-light200-overlay.png",
         "absoluteDifference": "diagnostics/plan-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.685596052841,
-          20.879725714892036,
-          21.494556740410633
+          19.48426441721046,
+          19.62643641572497,
+          20.249912462199585
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -343,15 +343,15 @@
           412,
           915
         ],
-        "sha256": "f657abe5073334613dcde349ebaef530361d8f7cb26cafdc8ea098e0b329f067"
+        "sha256": "510fc738e1d95f925ccffadd3f85658a97b551f529565e6b465b175c1f02dace"
       },
       "diagnostics": {
         "overlay": "diagnostics/plan-dark100-overlay.png",
         "absoluteDifference": "diagnostics/plan-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          15.550519921481246,
-          15.53204944559393,
-          15.413674465488885
+          14.351814419863123,
+          14.29501299803703,
+          14.184890445116451
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -382,15 +382,15 @@
           412,
           915
         ],
-        "sha256": "0594b5792da3ce5a766266be9703fbe28ddbc76fd0473ac9dbcc66cd4bd503af"
+        "sha256": "668f58e711e8a8a909bdc346b2233131441ab55e723bb43c6e573e6f15d7da7a"
       },
       "diagnostics": {
         "overlay": "diagnostics/plan-dark200-overlay.png",
         "absoluteDifference": "diagnostics/plan-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          21.664403947159002,
-          21.655427343625657,
-          21.528553238898617
+          20.02837020531593,
+          19.98614515358905,
+          19.912175712239375
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -421,13 +421,13 @@
           412,
           915
         ],
-        "sha256": "c3f7574180c50ee15256044a00b782e7b63827ed9a580fb63329e29342bee405"
+        "sha256": "d1673211b14600d73207499c3d3148d1fae081e9e0c2975fc61912310d6ba476"
       },
       "diagnostics": {
         "overlay": "diagnostics/plan-field100-overlay.png",
         "absoluteDifference": "diagnostics/plan-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          15.904687251313067,
+          14.691498222717385,
           0.0,
           0.0
         ],
@@ -460,13 +460,13 @@
           412,
           915
         ],
-        "sha256": "db396e03520823b2e72ebf1e52f63cc1540c822c92d5de4a97e93a7d7049a043"
+        "sha256": "24cee848ba97f5f6c8db080f6eea2a0d893bd2eee255bcbf3420b41da42dd86a"
       },
       "diagnostics": {
         "overlay": "diagnostics/plan-field200-overlay.png",
         "absoluteDifference": "diagnostics/plan-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          23.48252427184466,
+          21.586569579288025,
           0.0,
           0.0
         ],
@@ -499,15 +499,15 @@
           412,
           915
         ],
-        "sha256": "4b109852ced2c1e647f746bf7666b90f8cfaf93c3c3be3ef70db4a9889162286"
+        "sha256": "e28b689802aab6d80c0555c66ab94461150840338af9b6a30356c5289ba80ee7"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-light100-overlay.png",
         "absoluteDifference": "diagnostics/night-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          15.579667356358428,
-          15.32941535359966,
-          15.371990556528198
+          15.360923656427397,
+          15.009358586662422,
+          15.035245901639344
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -538,15 +538,15 @@
           412,
           915
         ],
-        "sha256": "c3b95099abf4a574e8018ffcdd836b63be4567846e847c542ff96f37c43f727b"
+        "sha256": "1ee95e9d41fb49b18f2192778a57a7383e103de1641196bfc22bb9cbd49e808f"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-light200-overlay.png",
         "absoluteDifference": "diagnostics/night-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          27.289840309830762,
-          27.1447663005995,
-          27.451899305002918
+          24.905066581781526,
+          24.616743593824605,
+          25.08216085733991
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -577,15 +577,15 @@
           412,
           915
         ],
-        "sha256": "975c8639cddaf86c008430260e8b25922b49c4f87f10a8c4f9ef6c454555355e"
+        "sha256": "a5ede88e00ac86f6a28f543dc902dc13410f7a91404d4cabf0c644c12ca51d4a"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-dark100-overlay.png",
         "absoluteDifference": "diagnostics/night-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          18.610318849806355,
-          19.02606239057775,
-          19.431508302827737
+          18.178391426600882,
+          18.550220170831345,
+          19.02204626240119
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -616,15 +616,15 @@
           412,
           915
         ],
-        "sha256": "35d6c4a70f87aad5303a0c04691f3102be262153ea46e58ea4f3939ea21b6a99"
+        "sha256": "0f3c61827f279b93adfc1bcd8859d5ed1d5f1000890bcf15c8f42142f1909fb1"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-dark200-overlay.png",
         "absoluteDifference": "diagnostics/night-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          29.576245424160433,
-          30.033272322139105,
-          30.40242983712664
+          27.183561462146532,
+          27.433991193166747,
+          27.91988434399703
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -655,13 +655,13 @@
           412,
           915
         ],
-        "sha256": "f2959d43f06f2db17a1b7892361acf0b2ef4fcd4a5e446c498bbf1d5fbb4ccc7"
+        "sha256": "651c4736d561711eec7db524bfcdd93ca614d6b46e5f8ec32430e656a828ab5b"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-field100-overlay.png",
         "absoluteDifference": "diagnostics/night-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          19.96203512122659,
+          19.50746723964136,
           0.0,
           0.0
         ],
@@ -694,13 +694,13 @@
           412,
           915
         ],
-        "sha256": "22a6b9140fb2181fd6e93a1c250b99dc82801e9cf1474b4252d3f7218f692963"
+        "sha256": "01c01a167887e9114399fc60e3fa0ca57632f3e70f01a82ddcd5cf71a5994173"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-field200-overlay.png",
         "absoluteDifference": "diagnostics/night-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          32.74140803225635,
+          30.00479070507719,
           0.0,
           0.0
         ],
@@ -733,15 +733,15 @@
           412,
           915
         ],
-        "sha256": "9e78d6c0360f737b4a7a99bb6db2d1d6f558e97b800fc83820ba12fdb2e9bdbf"
+        "sha256": "45eaf4e17c74f980e40e28285e40b9e7eccd8ea210e6d0ef15fbc51c5d00a48c"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-light100-overlay.png",
         "absoluteDifference": "diagnostics/moon-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          11.332476523953526,
-          11.123354024086158,
-          11.37507825348825
+          10.50964772666985,
+          10.537492705183299,
+          10.8834712716855
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -772,15 +772,15 @@
           412,
           915
         ],
-        "sha256": "eff5772b8b3ee868209e05b10e13ad220b397ecde9c1822ce94b604c80a61afc"
+        "sha256": "31ab2c7d9e7d6764f4b0ced90e837450ccc058b6f66574f72d64a49ab782cbc8"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-light200-overlay.png",
         "absoluteDifference": "diagnostics/moon-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          23.99559923603374,
-          24.23436256565335,
-          24.950230781473817
+          22.50130245636373,
+          22.540227598281074,
+          23.341060533715318
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -811,15 +811,15 @@
           412,
           915
         ],
-        "sha256": "a5ddab8d6013400ae74f531c95700f447a7189b159c3085968e1cc0238a6893c"
+        "sha256": "59501c6138b48f22205e6982e3496a5df6718a6476c2ffaeaf8dce5a1304be15"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-dark100-overlay.png",
         "absoluteDifference": "diagnostics/moon-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          13.04158310785718,
-          13.187776539869489,
-          13.30682264311104
+          12.937893256936707,
+          12.850249350098148,
+          12.827378110244576
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -850,15 +850,15 @@
           412,
           915
         ],
-        "sha256": "796343df8c541dbf593a7fb5a71145a00d0b4fcc3bfc0755381cc35da0d68f77"
+        "sha256": "7628ce2923bf5c810f0dadb9edd9bb695e94fa58e65eaeff6877ddebe81dc996"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-dark200-overlay.png",
         "absoluteDifference": "diagnostics/moon-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          27.43140750172423,
-          27.436399809008435,
-          27.301228181866414
+          25.792408085309564,
+          25.62291368242347,
+          25.64175818345801
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -889,13 +889,13 @@
           412,
           915
         ],
-        "sha256": "73726cc7d3a322dd7e49053d695560c516b85e9bc9d14e343da38f6d30214ed9"
+        "sha256": "7dc50ab48f6f96f34c0216d81c550f0d2b359a25b65318064aee0c2d52f2a761"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-field100-overlay.png",
         "absoluteDifference": "diagnostics/moon-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          14.61792933312112,
+          13.827213645286221,
           0.0,
           0.0
         ],
@@ -928,13 +928,13 @@
           412,
           915
         ],
-        "sha256": "b6b182c092bf8041b6e8516bf50271bc9d360e80511d039f87ae99a7584be596"
+        "sha256": "f5bf1bf63699a0840db5548d1a3f4762072bb08490ce383d8bdae127ed316842"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-field200-overlay.png",
         "absoluteDifference": "diagnostics/moon-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          30.46416255504271,
+          28.59967902806515,
           0.0,
           0.0
         ],
@@ -967,15 +967,15 @@
           412,
           915
         ],
-        "sha256": "e51c7245698d0ebc22250e74b205fe20f9402278bbe13a57b11d14113a8cc7c1"
+        "sha256": "ec0d90cd4e6aadb6904dee63832ef604d86f2d4f283b02bdadd626a8921cd999"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-light100-overlay.png",
         "absoluteDifference": "diagnostics/weather-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          13.280184625179055,
-          13.631593187967532,
-          14.47253435195501
+          13.003185845402939,
+          13.268749005252268,
+          14.099795745132369
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1006,15 +1006,15 @@
           412,
           915
         ],
-        "sha256": "a183366991de8b3f66e999dea873f14e8bea812dc86b22ef181fe448972156ce"
+        "sha256": "6c60fce1a8d07ea17b39f4bdc535adf94713ed819f16a083bff355ad1b478986"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-light200-overlay.png",
         "absoluteDifference": "diagnostics/weather-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          22.010321502466976,
-          22.238431747042284,
-          22.901636691601677
+          20.620682794843226,
+          20.74638177091623,
+          21.476943073903126
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1045,15 +1045,15 @@
           412,
           915
         ],
-        "sha256": "453711b101347d484c70153b2befc3ae6a2b2eb4da8afaf99cc1871ddfdc61db"
+        "sha256": "d05cf262c62f44181920ff51cd71977522da7ea2e8eeb37e734f55eeda5d66de"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-dark100-overlay.png",
         "absoluteDifference": "diagnostics/weather-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          17.25293914796541,
-          16.806167435938246,
-          16.232213910552282
+          16.937142553981644,
+          16.462669107114436,
+          15.955469786195554
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1084,15 +1084,15 @@
           412,
           915
         ],
-        "sha256": "2f94f3b7d592efaf82d0eeda27fd140f680d06344cbd40df454865e1bf388394"
+        "sha256": "078ead100af9f4ccd4b9e42a0bab265ad2bf5091dde256327d21899a70a673dc"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-dark200-overlay.png",
         "absoluteDifference": "diagnostics/weather-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          25.429330468459867,
-          25.411072205422037,
-          25.29166268767574
+          24.03040214334978,
+          23.92678126160539,
+          23.93750596848639
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1123,13 +1123,13 @@
           412,
           915
         ],
-        "sha256": "a6a5fd115c695bede1497ba27a2412870112f8c8d751513eaf27d7a8ad260c08"
+        "sha256": "19448546a72c98a0a9a132f9b3eada959d4f4a648fc445e6d9f14556898eaca7"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-field100-overlay.png",
         "absoluteDifference": "diagnostics/weather-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          18.18906308026951,
+          17.876775956284153,
           0.0,
           0.0
         ],
@@ -1162,13 +1162,13 @@
           412,
           915
         ],
-        "sha256": "6915a156bafdac6e271660254b87bc1bfe99c0244d8570d9f026098b2aa41b10"
+        "sha256": "a7c96feb1e72a52cebdaf7c3136777e16c27a958a683768223787a90ce9a382b"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-field200-overlay.png",
         "absoluteDifference": "diagnostics/weather-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          28.378975011936973,
+          26.730415406652874,
           0.0,
           0.0
         ],
@@ -1201,15 +1201,15 @@
           412,
           915
         ],
-        "sha256": "847824e233e7f5388078b906f259eab6cc050c2c3b94e433605b54e7dc9e90e3"
+        "sha256": "cb7fa6f920eb38453f0102512d1cfb3754ce8798290aa1c3dfdab5c2ae9b0f0f"
       },
       "diagnostics": {
         "overlay": "diagnostics/logbook-light100-overlay.png",
         "absoluteDifference": "diagnostics/logbook-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          10.59448511857393,
-          10.671300864767362,
-          10.987948962809698
+          10.813242081808054,
+          10.89109236564274,
+          11.221274338161175
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1240,15 +1240,15 @@
           412,
           915
         ],
-        "sha256": "9e21579177fe53b38cc5a2f8d29ebba066337bb1bcd709142ee11d65d7b71623"
+        "sha256": "47eca9145fdc179616d081f3ca12d01d21844855384ab7dd6d1c4ac6a7c6ed89"
       },
       "diagnostics": {
         "overlay": "diagnostics/logbook-light200-overlay.png",
         "absoluteDifference": "diagnostics/logbook-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.504429943233063,
-          20.681757652925885,
-          21.278749535784392
+          17.38880046686827,
+          17.455074539763384,
+          18.028065149344794
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1279,15 +1279,15 @@
           412,
           915
         ],
-        "sha256": "cecadd30f9d18d6e250f4ee7a1851b11af094f0171d0af7a48eea154c7a6a3b1"
+        "sha256": "1936d617f0492c3fb01f1de7d2e33bd908c8f6ede6dd5363d814388669e2c167"
       },
       "diagnostics": {
         "overlay": "diagnostics/logbook-dark100-overlay.png",
         "absoluteDifference": "diagnostics/logbook-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          12.052994853838399,
-          12.020611173006525,
-          11.95527083664916
+          13.514767361663749,
+          13.461661096079368,
+          13.394832617114966
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1318,15 +1318,15 @@
           412,
           915
         ],
-        "sha256": "7ea65c7179386d9350b3da48bb14727434b88c6b492b6f94c7eb9df9befb7f71"
+        "sha256": "ad67f9abc9aab8aa08e6a569e55f88be418737070706f006819db4a35f48c36e"
       },
       "diagnostics": {
         "overlay": "diagnostics/logbook-dark200-overlay.png",
         "absoluteDifference": "diagnostics/logbook-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          21.80828691177251,
-          21.797031672767787,
-          21.60054644808743
+          19.466329778768106,
+          19.350766618918776,
+          19.24988858825402
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1357,13 +1357,13 @@
           412,
           915
         ],
-        "sha256": "017666f65bff1f81a60409b563536814b95b749497512c0796b4be91b155e880"
+        "sha256": "ac621edb30d8d8ba41eb7ea94e253b2d80cf84a82a1eb2c13cd29142d4d2b688"
       },
       "diagnostics": {
         "overlay": "diagnostics/logbook-field100-overlay.png",
         "absoluteDifference": "diagnostics/logbook-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          13.314586980741684,
+          14.237702265372167,
           0.0,
           0.0
         ],
@@ -1396,13 +1396,13 @@
           412,
           915
         ],
-        "sha256": "0f2586667bae1d7d282f6f648599f0f7e6b3086adc3d2b3af22cf6195a6b8b4c"
+        "sha256": "35684c144b6e9459d599fac21d1f6db5b36ea243923f994d85f4c0d43dc1e655"
       },
       "diagnostics": {
         "overlay": "diagnostics/logbook-field200-overlay.png",
         "absoluteDifference": "diagnostics/logbook-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          25.17616053902064,
+          22.275277203034644,
           0.0,
           0.0
         ],
@@ -1435,15 +1435,15 @@
           412,
           915
         ],
-        "sha256": "119f2a9c00101e5a95400ff46e44000a7feaf26cc9381be5f59c4d052d448d1d"
+        "sha256": "1d215ad8c8b6450323103d362b840112e1cee5f859970ea8f89a0b58b7c6d35a"
       },
       "diagnostics": {
         "overlay": "diagnostics/library-light100-overlay.png",
         "absoluteDifference": "diagnostics/library-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          5.045896334023025,
-          5.065629476364794,
-          5.235410366597698
+          4.8533901002705715,
+          4.875940368189294,
+          5.051116770120431
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1474,15 +1474,15 @@
           412,
           915
         ],
-        "sha256": "65aeb9ad86ac20d91d13a097bc8d7e825bf7158ba64b06bd350ed421d4690491"
+        "sha256": "0d865f91831a1c750a1a7bb193ebbacca5b5b9a92b8fbf89483119d30cfc115c"
       },
       "diagnostics": {
         "overlay": "diagnostics/library-light200-overlay.png",
         "absoluteDifference": "diagnostics/library-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          16.91829274762587,
-          17.011406440659982,
-          17.463647938882698
+          15.215663960952837,
+          15.271027640723645,
+          15.79035492599077
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1513,15 +1513,15 @@
           412,
           915
         ],
-        "sha256": "4aec19b3815d4cac914584de3e375866f9fd434e4ff89581d1d3ed2f0a07593a"
+        "sha256": "55e50531f5334befdc1f8ae29c80dedec17c04df08f8e7f475df995e55fc0ab6"
       },
       "diagnostics": {
         "overlay": "diagnostics/library-dark100-overlay.png",
         "absoluteDifference": "diagnostics/library-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          5.573192211788424,
-          5.5473473393814,
-          5.515239535253859
+          5.828425911188923,
+          5.8027508090614885,
+          5.783956708578704
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1552,15 +1552,15 @@
           412,
           915
         ],
-        "sha256": "9ab4820b134d091bdcac84c5c9f39cb186aa813e6d04fe7b4456d0e4c461ca12"
+        "sha256": "83b3c5fba525b38e497d6045bad24228f522b1165efa169cab9cf13c494b5fc1"
       },
       "diagnostics": {
         "overlay": "diagnostics/library-dark200-overlay.png",
         "absoluteDifference": "diagnostics/library-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          17.613982174120643,
-          17.573656427396678,
-          17.355411427661945
+          17.049307655578545,
+          16.95205050665818,
+          16.857231152846303
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1591,13 +1591,13 @@
           412,
           915
         ],
-        "sha256": "ae4864b7cb5d915dd0cfd4b448a044986e6dc53b90fe56c077feaf01e224d0ea"
+        "sha256": "fcaaa8b39866bfa366a04c41e8a6e449ae98a0c9afa2431c4963f10cc5e42478"
       },
       "diagnostics": {
         "overlay": "diagnostics/library-field100-overlay.png",
         "absoluteDifference": "diagnostics/library-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          6.301729534723328,
+          6.377067748952199,
           0.0,
           0.0
         ],
@@ -1630,13 +1630,13 @@
           412,
           915
         ],
-        "sha256": "256dcf41575082ca51aaf9cca5db9944872da31e34509105b7a087bc546dcfa9"
+        "sha256": "4ec3274d75016c5487647d0a415c1736f23ee6c304e596489c9bc95457799adb"
       },
       "diagnostics": {
         "overlay": "diagnostics/library-field200-overlay.png",
         "absoluteDifference": "diagnostics/library-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.351806461881267,
+          19.27793516897448,
           0.0,
           0.0
         ],
@@ -1669,15 +1669,15 @@
           412,
           915
         ],
-        "sha256": "524e44dc6a05064561b2805b080f37cf965125276554adfa32366e596052e888"
+        "sha256": "3804ff014aaaf4f9122d3c94c87fa324196d8f867bea50f849a4e8e3eba3fe0e"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings-light100-overlay.png",
         "absoluteDifference": "diagnostics/settings-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          7.616740941163988,
-          7.655273489309778,
-          7.886248607353175
+          7.522656374343467,
+          7.560300281182026,
+          7.802936495304791
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1708,15 +1708,15 @@
           412,
           915
         ],
-        "sha256": "ebfb60f6b00d2921a046fc95c1bbb62d48a4de87d6e39ea06b8111474ff9b2cf"
+        "sha256": "3a538f113c204a3cc1449e6f05e6d310459e41ab4b6a36a799bc313f2c0e3c4f"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings-light200-overlay.png",
         "absoluteDifference": "diagnostics/settings-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          17.381062655843813,
-          17.533343943975808,
-          18.054395458645022
+          18.119873733354556,
+          18.189439758077352,
+          18.81279112950289
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1747,15 +1747,15 @@
           412,
           915
         ],
-        "sha256": "ae51e996aa0bd4c8b54abccad47e42c5abe7422895db2686ac4930188f6104e6"
+        "sha256": "ad791d8268df2ffbdb8ecf040b7da4eefad66d98b4cf003c6fbc137f119c8126"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings-dark100-overlay.png",
         "absoluteDifference": "diagnostics/settings-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          8.68332007003024,
-          8.65405591808584,
-          8.58618494349833
+          9.374749323571542,
+          9.339781951297152,
+          9.287296408297522
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1786,15 +1786,15 @@
           412,
           915
         ],
-        "sha256": "14c71542f257af096c6da64745b83c1bdd6736915b7a6bfd95b607d2637983fb"
+        "sha256": "593be77649d754587e0d5056d472985b0ae3eea1c2e3bd10a19316dc3de5ac49"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings-dark200-overlay.png",
         "absoluteDifference": "diagnostics/settings-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          18.636147806249667,
-          18.639919889649317,
-          18.46646771712027
+          20.915666613613453,
+          20.79965515411958,
+          20.704053265425223
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1825,13 +1825,13 @@
           412,
           915
         ],
-        "sha256": "c06f1a7ebaf1ec54eb28072f28d9a2d494f3bdde0979648d6ced01b256960396"
+        "sha256": "583da6316514aa4b6fe2a0ac952e64b99af8644e4c81fa6263da3fa7fd6202ff"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings-field100-overlay.png",
         "absoluteDifference": "diagnostics/settings-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          9.91453658018993,
+          10.317865669266274,
           0.0,
           0.0
         ],
@@ -1864,13 +1864,13 @@
           412,
           915
         ],
-        "sha256": "234471807e8fd90f0e1c129da38c017d2c07cce26a34f7b10dfb9e435d6285c1"
+        "sha256": "d688b810f930420560f3cbd073f4197199bed397d07b6fe50425d5eee16c749a"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings-field200-overlay.png",
         "absoluteDifference": "diagnostics/settings-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          22.14031513608149,
+          22.743752984243194,
           0.0,
           0.0
         ],
@@ -1903,15 +1903,15 @@
           412,
           915
         ],
-        "sha256": "88337d73b1a4a2c02d78539dcc89d864f5266c54bc8d253d14443b485fd4afc0"
+        "sha256": "655ba76807ccfd1735b9e5e69c69bac89c11fb3f8b3f4565228c64d6ae728560"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_appearance-light100-overlay.png",
         "absoluteDifference": "diagnostics/settings_appearance-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          12.613568359064141,
-          12.671176189718288,
-          13.179203140750172
+          12.900575627354236,
+          12.963517958512387,
+          13.448259854634198
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1942,15 +1942,15 @@
           412,
           915
         ],
-        "sha256": "ad3fefc3f6e5f198d42d851a7f7517fe0bd345a932662d83a90796f02ed49272"
+        "sha256": "8290dedc6d874541da5e38292f14749164e2509adcbe7526a4828301c742d922"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_appearance-light200-overlay.png",
         "absoluteDifference": "diagnostics/settings_appearance-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.821184147700144,
-          20.96361345429466,
-          21.643068597803598
+          20.551620775637964,
+          20.73091675950979,
+          21.447811554989656
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1981,15 +1981,15 @@
           412,
           915
         ],
-        "sha256": "1a58a61f01bb5d1d58c889dd7882f604bbc1696b5fed71fdebae08ebc50f6483"
+        "sha256": "e460a81b63e5367603391f11685771c6bc0c1fa1026dd4d5602b0a30ace51147"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_appearance-dark100-overlay.png",
         "absoluteDifference": "diagnostics/settings_appearance-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          14.147296938829646,
-          14.104005517534087,
-          13.815587033794896
+          14.474369993103082,
+          14.435789697066157,
+          14.104923338108122
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2020,15 +2020,15 @@
           412,
           915
         ],
-        "sha256": "100aba5137a61bdad146ffc79288692bd2f371a4f1ce2288d94410155691a473"
+        "sha256": "e4f6fe6a2d5df71333b749a269c35e48b0c76a10e09f90fc3630074368a902b6"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_appearance-dark200-overlay.png",
         "absoluteDifference": "diagnostics/settings_appearance-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          22.820295506392913,
-          22.776073001220222,
-          22.45280120961324
+          22.509897076768,
+          22.513565706403522,
+          22.22670698710807
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2059,13 +2059,13 @@
           412,
           915
         ],
-        "sha256": "c93f3e742afb3f39269f478c5b9964453a7d60dc0c47cc6cd3e36fd33ad10296"
+        "sha256": "c88ec8439c2a59462cdd27867ef32d738a71f54dd71aa0e7dd2a3b8acf364091"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_appearance-field100-overlay.png",
         "absoluteDifference": "diagnostics/settings_appearance-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          18.733938139954375,
+          19.10775107432755,
           0.0,
           0.0
         ],
@@ -2098,13 +2098,13 @@
           412,
           915
         ],
-        "sha256": "7c634c4352a0b9125b98c3997bb984a6677eeea39bf8f6be72a240be1ee46e9e"
+        "sha256": "f13c2a4db66e9fb9df3f8971ec68faf27fe884f061032569490135756030cee9"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_appearance-field200-overlay.png",
         "absoluteDifference": "diagnostics/settings_appearance-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          28.942686614674518,
+          28.5028807894318,
           0.0,
           0.0
         ],
@@ -2137,15 +2137,15 @@
           412,
           915
         ],
-        "sha256": "141b1abc7c7ba1cbc7e2542573677dc5911eb2752091c65eaa705d1251e88cd3"
+        "sha256": "c7b8004a8c3006488bb732482d1813599a2d31c4756aee641c39b7ed60edffeb"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_planning-light100-overlay.png",
         "absoluteDifference": "diagnostics/settings_planning-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          23.703766778078414,
-          23.889588307071993,
-          24.59876386015173
+          23.0967770173484,
+          23.29211098732028,
+          23.942447875218843
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2176,15 +2176,15 @@
           412,
           915
         ],
-        "sha256": "83ce1ac31c9828fb691689b1efbf4575559f74f3ca7391107c6088c7c0cfb3b1"
+        "sha256": "60c99fadc51f5546d44a3a2012ce6ce50a423ebfb4e9003e81ffc1cc733954c5"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_planning-light200-overlay.png",
         "absoluteDifference": "diagnostics/settings_planning-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          33.99433656957929,
-          34.334375828956446,
-          35.33261180964507
+          33.95794206589209,
+          34.346461350734785,
+          35.37697490583055
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2215,15 +2215,15 @@
           412,
           915
         ],
-        "sha256": "36a680bdf8883ff8b60aebc2b28100b9109d1d1b81c11c9343f33b99c4887d9c"
+        "sha256": "2c1c28a438b4f9e9ba9d2ce8265e315b2e40b6b7aa666e4156a25adec3ef3d77"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_planning-dark100-overlay.png",
         "absoluteDifference": "diagnostics/settings_planning-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          27.18051355509576,
-          27.12309936866677,
-          27.01688683749801
+          26.618229083771023,
+          26.564735529736325,
+          26.393641572497216
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2254,15 +2254,15 @@
           412,
           915
         ],
-        "sha256": "a232ca50306e3c83140abc20118907609b8d8dc50e8ca2e1b6a7a07637de59c6"
+        "sha256": "1eb1085fdf919f856c1e0cb6d699b9f6b0971fa27fa8512c4e131ad910dd643d"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_planning-dark200-overlay.png",
         "absoluteDifference": "diagnostics/settings_planning-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          37.606353122181545,
-          37.61439598917715,
-          37.465194440023346
+          37.53215024669744,
+          37.59283251100854,
+          37.46768528834421
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2293,13 +2293,13 @@
           412,
           915
         ],
-        "sha256": "d5b561a4616158e63e364b07c2289a5083c78b7bc14c25f81be9739c529c40c7"
+        "sha256": "1b78d5713988ff2890fa6dd8bfd9e8941dbbb60915e1ed3ca6c256be297dbb4f"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_planning-field100-overlay.png",
         "absoluteDifference": "diagnostics/settings_planning-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          29.07200912515253,
+          28.57660618600456,
           4.185203459069447,
           4.185203459069447
         ],
@@ -2332,13 +2332,13 @@
           412,
           915
         ],
-        "sha256": "8345e8a25813cc8cf71f642454a7317b5099a2a7563ecc71d45d8afc816fecee"
+        "sha256": "4c3389198c7c6053a46397906c26876f4427e0b00746abbf3ab0706e97b7bc27"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_planning-field200-overlay.png",
         "absoluteDifference": "diagnostics/settings_planning-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          39.42580242983713,
+          39.146479919359116,
           2.8995384370523634,
           2.8995384370523634
         ],
@@ -2371,15 +2371,15 @@
           412,
           915
         ],
-        "sha256": "1462c80c794a291f9e57c1d3017e139e3e78495d1ff9ed4cfd83b84f1766b9f7"
+        "sha256": "060c25261011323962cb5ccedc2ce9d85a4ab9529defe55b4da47eddb0b39d6f"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_privacy-light100-overlay.png",
         "absoluteDifference": "diagnostics/settings_privacy-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          4.892140166587087,
-          4.925192317894848,
-          5.080455196562152
+          5.0805055971139055,
+          5.122186853413974,
+          5.267645498434931
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2410,15 +2410,15 @@
           412,
           915
         ],
-        "sha256": "cbbc78144596f8827466773f213b14d1cacde2f778e1b713338faf91703322f8"
+        "sha256": "cfb5a18ade5ff3a355f91137c42b2a3a83e0f5eadb06ac3ae7c73c7cebd86753"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_privacy-light200-overlay.png",
         "absoluteDifference": "diagnostics/settings_privacy-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          18.178359594673456,
-          18.324892567244948,
-          18.860281712557697
+          17.807552124781157,
+          17.974367340442463,
+          18.526094222505172
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2449,15 +2449,15 @@
           412,
           915
         ],
-        "sha256": "edb84b1777677ec9658b499a71845315056f8af5563bdbbd834171affefc1f77"
+        "sha256": "09fbb74052998844b26af7d19d7d7f5584384c70fca9b8d7c3a57d04633da4e2"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_privacy-dark100-overlay.png",
         "absoluteDifference": "diagnostics/settings_privacy-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          5.464061753939201,
-          5.45020956018887,
-          5.4160804286699555
+          5.67503846357897,
+          5.659658337312324,
+          5.601729534723328
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2488,15 +2488,15 @@
           412,
           915
         ],
-        "sha256": "ac435881b63af084dcf14a3ba425e1c3025dee9370c5f40f8fc7c3f546ce8f6b"
+        "sha256": "825c04624fc8cbfb5dfaa0db8066535a530baac04b4aa76a266789406b057dcd"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_privacy-dark200-overlay.png",
         "absoluteDifference": "diagnostics/settings_privacy-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          19.12841264788583,
-          19.12059790970343,
-          18.91886041699825
+          18.699957557430103,
+          18.730521513077615,
+          18.550466868268874
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2527,13 +2527,13 @@
           412,
           915
         ],
-        "sha256": "97f501d5de6acf5b684d84ec40d053d19807476f4f4ba86c511d347e19e2e4c8"
+        "sha256": "6af9ce3951206232c1c0d013a08f0afda46ae45a062f4fb2a1f1acc07ce408bd"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_privacy-field100-overlay.png",
         "absoluteDifference": "diagnostics/settings_privacy-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          6.150153854315879,
+          6.388421136399809,
           0.0,
           0.0
         ],
@@ -2566,13 +2566,13 @@
           412,
           915
         ],
-        "sha256": "06bd52da455bd748261c26c79f3431f919cc8c46357572664feba34b7c9b37ec"
+        "sha256": "7dee08fa9f1093bfe64b9464f32af9cf8b56a8ae0ed1ea955356d4ed0a754196"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_privacy-field200-overlay.png",
         "absoluteDifference": "diagnostics/settings_privacy-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          22.431110403734944,
+          21.9373786407767,
           0.0,
           0.0
         ],
@@ -2605,15 +2605,15 @@
           412,
           915
         ],
-        "sha256": "fbdb9791eee32e5cf2b9f25f26f11e56b311a2892c7ff3018c5be4e6a2b91b1b"
+        "sha256": "d660059fc594d4d201ac388364dad07e54bc3696197752521b961341a6d32165"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_backup-light100-overlay.png",
         "absoluteDifference": "diagnostics/settings_backup-light100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          7.946201389994164,
-          7.994158841317842,
-          8.244774258581357
+          8.302039896015703,
+          8.365353599660459,
+          8.58485330786779
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2644,15 +2644,15 @@
           412,
           915
         ],
-        "sha256": "2ac643e74640a0a488c9ba9db0675482718a3d62a891231f8af0911e8dbe05f4"
+        "sha256": "3cf86b61d2eb4e638d8c08e81c518a38be0e01b176184fa95b172ec2aeea3bdd"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_backup-light200-overlay.png",
         "absoluteDifference": "diagnostics/settings_backup-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.852716324473448,
-          21.02531964560454,
-          21.630203193803386
+          20.70540081701947,
+          20.91370099209507,
+          21.54461509894424
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2683,15 +2683,15 @@
           412,
           915
         ],
-        "sha256": "14f926d219acc8e812b7e338ff4f5efac3fd06c9617bd192a7270a3685b4c39a"
+        "sha256": "0133c909b96b412ad66f327a5037242f27d51b0fe3889e968411579dcecf136c"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_backup-dark100-overlay.png",
         "absoluteDifference": "diagnostics/settings_backup-dark100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          9.568605761578864,
-          9.522560878561197,
-          9.504933948750597
+          9.987131943339168,
+          9.945702689797868,
+          9.861170353864926
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2722,15 +2722,15 @@
           412,
           915
         ],
-        "sha256": "55ccdb07838d0dbb1f897da3a13f2c7a7754a0240cd9213d005b517664f5f49b"
+        "sha256": "0ecfea0401c369da19b01cf147eb6012fd0159c2f3e64b4f1e7b8960be599c5f"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_backup-dark200-overlay.png",
         "absoluteDifference": "diagnostics/settings_backup-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          23.485076131359754,
-          23.437060321502468,
-          23.298838134649053
+          23.261915751498755,
+          23.264756751021274,
+          23.147639132049445
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -2761,13 +2761,13 @@
           412,
           915
         ],
-        "sha256": "73c76815c7c8fd454da32654dedfe8b1d3505a88b825466764360caff3192f68"
+        "sha256": "9efda91c5f2892e219baf20bc85b42667f5b1df9383f996d23cb35801d984c08"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_backup-field100-overlay.png",
         "absoluteDifference": "diagnostics/settings_backup-field100-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          11.49462040426548,
+          11.957987161122606,
           0.5997745238474189,
           0.6007480502944453
         ],
@@ -2800,13 +2800,13 @@
           412,
           915
         ],
-        "sha256": "dd16477fe5c1e078125f18157f9f707e97197e25d996c8c71ea44c1fc23dffa4"
+        "sha256": "bdcb89d8f19d280aa6d63ea8661785565ef52179a3ab45801e2adc5a15aa636d"
       },
       "diagnostics": {
         "overlay": "diagnostics/settings_backup-field200-overlay.png",
         "absoluteDifference": "diagnostics/settings_backup-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          27.968507613135976,
+          27.70398429624914,
           0.0,
           0.0
         ],
@@ -2816,14 +2816,14 @@
   ],
   "browser-capture-manifest.json": {
     "path": "../browser-capture-manifest.json",
-    "sha256": "03f7e5657fcae9ab6eaeb6d2cb75f89b925ee27b70b6016527135d49ce698e49"
+    "sha256": "dfb48b91367617af577b14435dec414f113ad9d2c4e6e7f518a94461453f57d0"
   },
   "browser-source-manifest.json": {
     "path": "../browser-source-manifest.json",
-    "sha256": "325774cfcbfd8bae7d92b37391f46f472ee7d45b7b2b6db379b49c91979b3ae3"
+    "sha256": "70c5d51fb402426c5569dd0b4edefa5b965d420e3695b0da52369fdb97842472"
   },
   "canonical-fixture.json": {
     "path": "../canonical-fixture.json",
-    "sha256": "39b1dfa55e396d3a82d04776439b125e26896e12d8578ea915c4d0a19cd1f849"
+    "sha256": "bfe1f39ff4b73f861178bd6403649f7b17e95784af6995440f1951deb6afb2ba"
   }
 }

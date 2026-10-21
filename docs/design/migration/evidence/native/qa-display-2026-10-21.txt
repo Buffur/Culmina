@@ -1,0 +1,7 @@
+Physical size: 1080x2340
+Override size: 824x1830
+Physical density: 440
+Override density: 320
+24
+16
+culmina_hybrid_native_qa

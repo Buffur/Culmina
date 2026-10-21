@@ -1,0 +1,38 @@
+{
+  "evidence": {
+    "type": "Android emulator integration test with controlled fixtures",
+    "fixture": "Ljubljana / 2026-11-10 18:00 UTC / M42 / example rig and blocks",
+    "savedRecordId": 2,
+    "fileEvidence": {
+      "fits": "Synthetic FITS through FileMetadataSource and production reader",
+      "backup": "Production archive, full candidate check, stage/apply and reopened SQLite",
+      "backupBytes": 25847,
+      "schemaVersion": 27
+    },
+    "checks": [
+      "Visible Save writes planned record with capture blocks",
+      "Full-screen block editor keyboard input and Cancel leave plan unchanged",
+      "Logbook detail reopens same plan ID and frame counts",
+      "Night browsing leaves active and stored plan date unchanged",
+      "Settings unit selection changes display state",
+      "Planning draft leaves globals/budget unchanged; Cancel discards; Save updates working budget without rewriting saved snapshot",
+      "Eight real routes in light/dark/field at 100%/200%",
+      "Night reading/Sun disclosures and Moon preview jump/details remain reachable",
+      "Cached forecast retains typed refresh failure; out-of-range is explicit",
+      "Per-plan buffer, Apply, defaults reset, Save and reopen preserve overrides without changing globals",
+      "Partial result saves reported count and notes, then appears in target progress",
+      "Stored result delete/Undo restores the exact portable manifest including IDs, blocks and events",
+      "Active site delete/Undo restores ID, coordinates and zone; inline feedback leaves Add site hit-testable",
+      "Synthetic FITS file parsed via Android file I/O with keyword provenance",
+      "Backup roundtrip preserves saved snapshot, result, blocks and event count"
+    ],
+    "exclusions": [
+      "physical device",
+      "live weather or GPS",
+      "native file providers, permissions or share sheet",
+      "real camera-file metadata",
+      "process restart persistence (database isolated in memory)",
+      "pixel parity with web fixture"
+    ]
+  }
+}

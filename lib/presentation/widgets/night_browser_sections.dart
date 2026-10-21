@@ -756,10 +756,9 @@ class _DayCell extends StatelessWidget {
                 width: 20,
                 height: 20,
                 child: CustomPaint(
-                  painter: MoonPhasePainter(
+                  painter: MoonPhasePainter.hybrid(
+                    theme,
                     phaseLongitudeDeg: day.phaseLongitudeDeg,
-                    lit: p.moon,
-                    dark: p.chartGrid,
                   ),
                 ),
               ),
@@ -919,10 +918,9 @@ class _WeekListState extends State<_WeekList> {
                       width: 20,
                       height: 20,
                       child: CustomPaint(
-                        painter: MoonPhasePainter(
+                        painter: MoonPhasePainter.hybrid(
+                          theme,
                           phaseLongitudeDeg: d.phaseLongitudeDeg,
-                          lit: p.moon,
-                          dark: p.chartGrid,
                         ),
                       ),
                     ),
@@ -947,33 +945,73 @@ class _WeekListState extends State<_WeekList> {
 
 /// A small Moon disc lit from the phase longitude (0 new, 180 full; waxing
 /// lit on the right). Unknown draws only the outline.
+///
+/// Hybrid's `moonGlyph` (conditions.js/css): the shadowed disc in the
+/// subtle surface, the lit part in the primary text colour, a 0.7 px
+/// control-border outline.
 class MoonPhasePainter extends CustomPainter {
   MoonPhasePainter({
     required this.phaseLongitudeDeg,
     required this.lit,
     required this.dark,
+    this.shadow,
+    this.outlineWidth = 1,
   });
+
+  /// The Hybrid roles of [theme].
+  factory MoonPhasePainter.hybrid(
+    ThemeData theme, {
+    required double? phaseLongitudeDeg,
+  }) {
+    final palette = theme.extension<AppPalette>()!;
+    final field = identical(
+      theme.extension<HybridTokens>(),
+      HybridTokens.field,
+    );
+    return MoonPhasePainter(
+      phaseLongitudeDeg: phaseLongitudeDeg,
+      lit: palette.textPrimary,
+      dark: palette.controlBorder,
+      shadow: field ? theme.cardColor : theme.colorScheme.surface,
+      outlineWidth: 0.7,
+    );
+  }
 
   final double? phaseLongitudeDeg;
   final Color lit;
+
+  /// The outline.
   final Color dark;
+
+  /// The unlit disc's fill; none when null.
+  final Color? shadow;
+  final double outlineWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
     final r = math.min(size.width, size.height) / 2 - 1;
     final c = size.center(Offset.zero);
+    final l = phaseLongitudeDeg;
+    if (l != null && shadow != null) {
+      canvas.drawCircle(c, r, Paint()..color = shadow!);
+    }
+    if (l != null) _paintLit(canvas, c, r, l);
     canvas.drawCircle(
       c,
       r,
       Paint()
         ..color = dark
-        ..style = PaintingStyle.stroke,
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = outlineWidth,
     );
-    final l = phaseLongitudeDeg;
-    if (l == null) return;
+  }
+
+  void _paintLit(Canvas canvas, Offset c, double r, double l) {
     final rad = (l % 360) * math.pi / 180;
     final waxing = (l % 360) < 180;
-    // The terminator's half-width: cos of the phase angle.
+    // The terminator's half-width: cos of the phase angle. It lies on the
+    // lit limb's side for a crescent (k > 0) and beyond the centre for a
+    // gibbous Moon (k < 0); the path returns along it from the bottom.
     final k = math.cos(rad) * r;
     final path = Path()
       ..moveTo(c.dx, c.dy - r)
@@ -985,7 +1023,7 @@ class MoonPhasePainter extends CustomPainter {
       ..arcToPoint(
         Offset(c.dx, c.dy - r),
         radius: Radius.elliptical(k.abs(), r),
-        clockwise: waxing ? k > 0 : k < 0,
+        clockwise: waxing ? k < 0 : k > 0,
       )
       ..close();
     canvas.drawPath(path, Paint()..color = lit);
@@ -995,5 +1033,7 @@ class MoonPhasePainter extends CustomPainter {
   bool shouldRepaint(MoonPhasePainter old) =>
       old.phaseLongitudeDeg != phaseLongitudeDeg ||
       old.lit != lit ||
-      old.dark != dark;
+      old.dark != dark ||
+      old.shadow != shadow ||
+      old.outlineWidth != outlineWidth;
 }

@@ -84,7 +84,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 subtitle: Text(
                   counts == null
                       ? 'Your cameras with their lenses or telescopes'
-                      : '${counts[0]} rigs · cameras with lenses or telescopes',
+                      : '${counts[0]} ${counts[0] == 1 ? 'rig' : 'rigs'} · '
+                            'cameras with lenses or telescopes',
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(AppRouter.libraryRigs),
@@ -101,7 +102,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 subtitle: Text(
                   counts == null
                       ? 'The catalog and the targets you added'
-                      : '${counts[1]} targets · catalog and your additions',
+                      : '${counts[1]} ${counts[1] == 1 ? 'target' : 'targets'}'
+                            ' · catalog and your additions',
                 ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(AppRouter.libraryTargets),

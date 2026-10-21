@@ -156,12 +156,15 @@ void main() {
     }
   });
 
+  // The count reads in the singular for one rig.
+  String rigCount(int n) => '$n ${n == 1 ? 'rig' : 'rigs'} ·';
+
   testWidgets('Library counts refresh after edits and a failed read offers '
       'retry without presenting stale counts', (tester) async {
     await pumpApp(tester);
     await tapTab(tester, 'Library');
     final rigs = (await tester.runAsync(gearRepository.getAllEquipment))!;
-    expect(find.textContaining('${rigs.length} rigs ·'), findsOneWidget);
+    expect(find.textContaining(rigCount(rigs.length)), findsOneWidget);
     final gear = Provider.of<GearViewModel>(
       tester.element(title('Library')),
       listen: false,
@@ -169,17 +172,17 @@ void main() {
     gearRepository.failReads = true;
     await tester.runAsync(() => gear.update(rigs.first));
     await settle(tester);
-    expect(find.textContaining('${rigs.length} rigs ·'), findsNothing);
+    expect(find.textContaining(rigCount(rigs.length)), findsNothing);
     expect(find.byKey(const Key('library.retryCounts')), findsOneWidget);
     expect(title('Library'), findsOneWidget);
     gearRepository.failReads = false;
     await tester.tap(find.byKey(const Key('library.retryCounts')));
     await settle(tester);
-    expect(find.textContaining('${rigs.length} rigs ·'), findsOneWidget);
+    expect(find.textContaining(rigCount(rigs.length)), findsOneWidget);
     expect(find.byKey(const Key('library.retryCounts')), findsNothing);
     await tester.runAsync(() => gear.delete(rigs.last.id));
     await settle(tester);
-    expect(find.textContaining('${rigs.length - 1} rigs ·'), findsOneWidget);
+    expect(find.textContaining(rigCount(rigs.length - 1)), findsOneWidget);
   });
 
   // Acceptance: every screen is reachable per the map.

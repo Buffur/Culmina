@@ -123,6 +123,10 @@ void main() {
       late DriftSessionRepository sessions;
       late PlannerHarness vm;
       await tester.runAsync(() async {
+        // Hermetic preferences before seeding: the seeder skips a catalog
+        // version it finds stored, and a previous run's real preferences
+        // would leave this in-memory database without its catalogue.
+        SharedPreferences.setMockInitialValues({'firstRunDone': true});
         db = AppDatabase(NativeDatabase.memory());
         final targets = DriftTargetRepository(db);
         final rigs = DriftEquipmentRepository(db);
@@ -234,6 +238,8 @@ void main() {
           );
         }
         await tester.ensureVisible(finder.first);
+        // Lay the scrolled list out before a tap or capture uses its position.
+        await tester.pump();
       }
 
       Future<void> tap(Finder finder) async {
