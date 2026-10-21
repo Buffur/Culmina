@@ -11,6 +11,8 @@
 // live only under culmina-logbook-preview-v1; this module never reads or writes
 // the plan preview, navigation checkpoints or any application database.
 
+import {planRelativeCurve} from './plan-model.js?v=20261020-hybrid7';
+
 const STORAGE_KEY = 'culmina-logbook-preview-v1';
 const CONTEXT_KEY = 'culmina-logbook-context-v1';
 const PAYLOAD_KIND = 'culmina-logbook-preview';
@@ -297,6 +299,43 @@ function progressByTarget(entries) {
   return [...targets.values()].sort((a, b) => b.lastNight.localeCompare(a.lastNight));
 }
 
+// Owner request 2026-10-21: the Plan's relative stacking-gain graph (planRelativeCurve,
+// StackingGainGraph) in the entry, per comparable light group of the saved plan (the
+// progressByTarget rule: filter, exposure, recorded sensitivity, binning; an unrecorded
+// sensitivity stays separate). The recorded frames are a second point on the same curve,
+// √(recorded / planned). Relative to the plan only, never signal-to-noise.
+function entryGainGroups(x) {
+  const counts = recordedCounts(x), groups = new Map();
+  for (const b of lightBlocks(x)) {
+    const kind = x.plan.rig.sensitivity, known = kind !== null && b.sensitivity !== null;
+    const key = known ? JSON.stringify([b.filter?.trim() || '', b.exposureS, kind, b.sensitivity, b.binning]) : `unknown:${b.id}`;
+    const g = groups.get(key) || { label: blockLabel(x, b), exposureS: b.exposureS, planned: 0, recorded: counts ? 0 : null };
+    g.planned += b.planned;
+    if (counts) g.recorded += counts[b.id];
+    groups.set(key, g);
+  }
+  return [...groups.values()].filter(g => g.planned > 0);
+}
+
+function entryGainPanel(g, i, esc) {
+  const c = planRelativeCurve(g.planned), W = 320, H = 150, L = 48, R = 16, T = 12, B = 30, w = W - L - R, h = H - T - B;
+  const top = c.points.at(-1).relative;
+  const x = n => L + (Math.min(n, c.maxFrames) - 1) / (c.maxFrames - 1) * w, y = r => T + h - Math.min(r, top) / top * h;
+  const line = c.points.map(p => `${x(p.frames).toFixed(1)},${y(p.relative).toFixed(1)}`).join(' ');
+  const rec = g.recorded, recRel = rec ? Math.sqrt(rec / g.planned) : null;
+  const at = n => `${duration(n * g.exposureS)} (${plural(n, 'frame')})`;
+  const recordedText = rec === null ? 'not recorded yet' : rec === 0 ? 'none' : `${at(rec)} · ${times(recRel)}`;
+  const label = `Relative improvement over integration time, group ${i + 1}, ${g.label}: planned ${at(g.planned)} is 1.00×; recorded ${recordedText}. Relative to the plan, not a signal-to-noise ratio.`;
+  const ticks = [[0, '0'], [1, '1.00×'], [top, times(top)]].map(([v, t]) => `<path class="gain-grid" d="M${L} ${y(v).toFixed(1)}H${L + w}"/><text x="${L - 6}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${t}</text>`).join('');
+  const xLabels = `<text x="${L}" y="${H - 10}">${esc(duration(g.exposureS))}</text><text x="${x(g.planned).toFixed(1)}" y="${H - 10}" text-anchor="middle">${esc(duration(g.planned * g.exposureS))}</text><text x="${L + w}" y="${H - 10}" text-anchor="end">${esc(duration(c.maxFrames * g.exposureS))}</text>`;
+  const recPoint = rec ? `<circle class="gain-point-recorded" cx="${x(rec).toFixed(1)}" cy="${y(recRel).toFixed(1)}" r="5"/>` : '';
+  return `<figure class="gain-panel"><figcaption>${i + 1} · ${esc(g.label)}</figcaption><p class="gain-axis-title">Relative to your planned time (1.00×)</p>
+    <div class="gain-plot-scroll"><svg class="gain-graph" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${ticks}<path class="gain-axis" d="M${L} ${T}V${T + h}H${L + w}"/><path class="gain-guide" d="M${x(g.planned).toFixed(1)} ${T + h}V${y(1).toFixed(1)}"/><polyline class="gain-curve" points="${line}"/><circle class="gain-point" cx="${x(g.planned).toFixed(1)}" cy="${y(1).toFixed(1)}" r="5.5"/>${recPoint}${xLabels}</svg></div>
+    <ul class="gain-legend"><li><span class="gain-key gain-key-plan" aria-hidden="true"></span>Planned: ${esc(at(g.planned))} · 1.00×</li><li><span class="gain-key gain-key-recorded" aria-hidden="true"></span>Recorded: ${esc(recordedText)}</li></ul></figure>`;
+}
+
+const times = n => `${n.toFixed(2)}×`;
+
 /* ---------- Wording and units ---------- */
 
 const dayFormat = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
@@ -383,6 +422,8 @@ function resultWhen(x) {
 const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 const MARKS = {
+  // Owner sketch 2026-10-21: every state has a mark on one vertical line; Saved is the empty circle.
+  saved: '<circle cx="12" cy="12" r="8.5"/>',
   completed: '<circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/>',
   partly: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/>',
   notDone: '<circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6m0-6-6 6"/>',
@@ -568,11 +609,16 @@ export function mountLogbook(root, api) {
       <select data-filter="${name}"><option value="">All</option>${values.map(v => `<option value="${esc(v)}"${v === current ? ' selected' : ''}>${esc(v)}</option>`).join('')}${current && !values.includes(current) ? `<option value="${esc(current)}" selected>${esc(current)}</option>` : ''}</select></label>`;
     return `${previewNote()}
       <div class="workspace-toolbar logbook-toolbar">
-        <label class="block-input logbook-search">Search
-          <input type="search" data-search value="${esc(ui.query)}" placeholder="Name, target, site or notes" autocomplete="off" enterkeyhint="search">
-        </label>
+        <div class="logbook-search-field">
+          <label class="block-input logbook-search"><span class="logbook-hidden">Search</span>
+            <input type="search" data-search value="${esc(ui.query)}" placeholder="Name, target, site or notes" autocomplete="off" enterkeyhint="search">
+          </label>
+          <!-- Owner sketch 2026-10-21: the filter icon in the field opens the filters; the magnifier only marks the field. -->
+          <button type="button" class="logbook-filter-toggle" data-toggle-filters aria-controls="logbook-filters" aria-expanded="${ui.filtersOpen}" aria-label="Filters">${api.icon('filter')}<span class="logbook-filter-count" data-filter-count hidden></span></button>
+          <span class="logbook-search-mark">${api.icon('search')}</span>
+        </div>
       </div>
-      <details class="logbook-filters" data-filters${ui.filtersOpen ? ' open' : ''}>
+      <details id="logbook-filters" class="logbook-filters" data-filters${ui.filtersOpen ? ' open' : ''}>
         <summary><span data-filter-summary></span></summary>
         <div class="workspace-form">
           <fieldset><legend>State</legend>
@@ -595,7 +641,7 @@ export function mountLogbook(root, api) {
         <span class="logbook-row-text"><span class="logbook-row-title">Progress by target</span>
         <span class="workspace-copy">Integration so far, from your results</span></span>${api.icon('next')}
       </button>
-      <p class="logbook-count" data-result-count aria-live="polite"></p>
+      <p class="logbook-hidden" data-result-count aria-live="polite"></p>
       <div data-results></div>`;
   }
 
@@ -607,10 +653,14 @@ export function mountLogbook(root, api) {
     const count = filterCount(), narrowed = count > 0 || !!ui.query.trim();
     const summary = view.querySelector('[data-filter-summary]');
     if (summary) summary.textContent = count ? `Filters · ${count} on` : 'Filters';
+    const toggle = view.querySelector('[data-toggle-filters]'), badge = view.querySelector('[data-filter-count]');
+    if (toggle) toggle.setAttribute('aria-label', count ? `Filters · ${count} on` : 'Filters');
+    if (badge) { badge.textContent = count ? String(count) : ''; badge.hidden = !count; }
     const rangeError = view.querySelector('[data-range-error]');
     if (rangeError) rangeError.textContent = rangeInverted() ? 'The first night is after the last, so the night filter is not applied.' : '';
     const counter = view.querySelector('[data-result-count]');
-    if (counter) counter.textContent = narrowed ? `${visible.length} of ${plural(S.entries.length, 'entry', 'entries')}` : plural(S.entries.length, 'entry', 'entries');
+    const countText = narrowed ? `${visible.length} of ${plural(S.entries.length, 'entry', 'entries')}` : plural(S.entries.length, 'entry', 'entries');
+    if (counter) counter.textContent = countText;
 
     let html = undoView();
     if (!S.entries.length) {
@@ -619,21 +669,18 @@ export function mountLogbook(root, api) {
       html += `<div class="workspace-empty"><p>Nothing matches the search or the filters.</p>
         <div class="workspace-actions"><button type="button" class="secondary-button" data-clear-all>Clear search and filters</button></div></div>`;
     }
-    const upcoming = visible.filter(isUpcoming).sort((a, b) => a.plan.night.evening.localeCompare(b.plan.night.evening));
-    const past = visible.filter(x => !isUpcoming(x)).sort((a, b) => b.plan.night.evening.localeCompare(a.plan.night.evening));
-    if (upcoming.length) {
-      html += `<section class="logbook-group" aria-labelledby="logbook-upcoming"><h2 id="logbook-upcoming">Upcoming</h2>
-        <ul class="logbook-list">${upcoming.map(rowView).join('')}</ul></section>`;
-    }
-    if (past.length) {
+    // Owner sketch 2026-10-21: one continuous list, newest night first, grouped only by month
+    // (no Upcoming/Past sections; an upcoming entry still says "Record from ...").
+    const ordered = [...visible].sort((a, b) => b.plan.night.evening.localeCompare(a.plan.night.evening));
+    if (ordered.length) {
       const months = new Map();
-      for (const x of past) {
+      for (const x of ordered) {
         const key = x.plan.night.evening.slice(0, 7);
         months.set(key, [...(months.get(key) || []), x]);
       }
-      html += `<section class="logbook-group" aria-labelledby="logbook-past"><h2 id="logbook-past">Past</h2>
-        ${[...months.values()].map(list => `<h3 class="logbook-month">${esc(monthLabel(list[0].plan.night.evening))}</h3>
-          <ul class="logbook-list">${list.map(rowView).join('')}</ul>`).join('')}</section>`;
+      // Owner sketch: the entry count sits on the first month's line, right (the live region above announces it).
+      html += [...months.values()].map((list, i) => `<section class="logbook-group"><div class="logbook-month-row"><h2 class="logbook-month">${esc(monthLabel(list[0].plan.night.evening))}</h2>${i === 0 ? `<span class="logbook-count" aria-hidden="true">${esc(countText)}</span>` : ''}</div>
+          <ul class="logbook-list">${list.map(rowView).join('')}</ul></section>`).join('');
     }
     box.innerHTML = html;
   }
@@ -651,18 +698,20 @@ export function mountLogbook(root, api) {
   function rowView(x) {
     const state = stateOf(x), action = resultAction(x), due = action === 'record' && !x.result;
     const id = esc(x.id);
+    // Owner sketches 2026-10-21: the state is the entry's right column, as far right as it goes, every
+    // mark on one vertical line (the hidden sizer makes the column as wide as the widest state); no
+    // row action buttons: the entry opens its detail, where Record/Edit result is the primary action.
     return `<li class="logbook-entry">
       <button type="button" class="workspace-row logbook-row" data-open-entry="${id}">
         <span class="logbook-row-text">
           <span class="logbook-row-title">${esc(titleOf(x))}</span>
-          <span class="logbook-state">${mark(state)}<span>${STATE_WORDS[state]}</span>${due ? `<span class="logbook-due">${mark('due')}Result not recorded</span>` : ''}</span>
+          <span class="logbook-state">${mark(state)}<span>${STATE_WORDS[state]}</span>${due ? `<span class="logbook-due">${mark('due')}<span>Not recorded</span></span>` : ''}<span class="logbook-state-sizer" aria-hidden="true">Not recorded</span></span>
           <span class="workspace-copy">${esc(x.plan.rig.name)} · ${esc(x.plan.site.name)}</span>
           <span class="logbook-integration">${esc(integrationLine(x))}</span>
           ${action === 'none' ? `<span class="logbook-caption">${esc(resultWhen(x))}</span>` : ''}
           ${x.example ? `<span class="logbook-caption">Example night${x.result?.local ? ' · result edited in this browser' : ''}</span>` : ''}
-        </span>${api.icon('next')}
+        </span>
       </button>
-      ${action === 'none' ? '' : `<button type="button" class="quiet-button logbook-row-action" data-result-entry="${id}">${action === 'record' ? 'Record result' : 'Edit result'}<span class="logbook-hidden"> for ${esc(titleOf(x))}</span></button>`}
     </li>`;
   }
 
@@ -684,7 +733,8 @@ export function mountLogbook(root, api) {
         const n = counts[b.id];
         return `${plural(n, 'frame')} · ${duration(n * b.exposureS)}${x.result.outcome === 'asPlanned' ? ' (reported as planned)' : ''}`;
       }
-      if (x.result?.outcome === 'notDone') return 'None: Not done';
+      // The header already says Not done (owner note: the state was repeated here).
+      if (x.result?.outcome === 'notDone') return 'None';
       return due ? 'None recorded yet' : 'Not yet: the night has not started';
     };
     const notes = [
@@ -692,13 +742,16 @@ export function mountLogbook(root, api) {
       ['Processing notes', x.result?.processingNotes],
     ].filter(([, v]) => v);
     return `<section class="logbook-result" aria-labelledby="logbook-result">
-        <h2 id="logbook-result" tabindex="-1" data-focus-start class="logbook-state logbook-state-large">${mark(state)}<span>${esc(resultPhrase(x))}</span></h2>
-        ${due ? `<p class="logbook-due">${mark('due')}Result not recorded</p>` : ''}
+        <div class="logbook-result-head"><h2 id="logbook-result" tabindex="-1" data-focus-start class="logbook-state logbook-state-large">${mark(state)}<span>${esc(resultPhrase(x))}</span></h2>
+        ${due ? `<p class="logbook-due">${mark('due')}Not recorded</p>` : ''}</div>
         <p class="logbook-figure">${esc(integrationLine(x))}</p>
-        ${action === 'none' ? `<p class="workspace-copy">${esc(resultWhen(x))}</p>` : ''}
+        ${action === 'none' ? `<p class="workspace-copy" id="logbook-record-when">${esc(resultWhen(x))}</p>` : ''}
         ${x.result?.local && x.result.recordedAtUtc ? `<p class="logbook-caption">Result saved in this browser preview, ${esc(instantLabel(x.result.recordedAtUtc, p.zone))}.</p>` : ''}
         ${x.example ? '<p class="logbook-caption">Example night: fixture values, not measurements.</p>' : ''}
-        ${action === 'none' ? '' : `<div class="workspace-actions"><button type="button" class="primary-button" data-result-entry="${esc(x.id)}">${action === 'record' ? 'Record result' : 'Edit result'}</button></div>`}
+        ${action === 'none'
+          // Every state shows the action; before the night starts it is disabled with its reason (F19 rule kept).
+          ? '<div class="workspace-actions"><button type="button" class="primary-button" disabled aria-describedby="logbook-record-when">Record result</button></div>'
+          : `<div class="workspace-actions"><button type="button" class="primary-button" data-result-entry="${esc(x.id)}">${action === 'record' ? 'Record result' : 'Edit result'}</button></div>`}
       </section>
       <section class="logbook-section" aria-labelledby="logbook-blocks">
         <h2 id="logbook-blocks">Planned and recorded</h2>
@@ -708,14 +761,19 @@ export function mountLogbook(root, api) {
           <dl class="logbook-pair">
             <div><dt>Planned</dt><dd>${b.planned} × ${esc(exposure(b.exposureS))}${b.type === 'Light' ? ` · ${duration(b.planned * b.exposureS)}` : ''}</dd></div>
             <div><dt>Recorded</dt><dd>${esc(recordedLine(b))}</dd></div>
-          </dl></li>`).join('')}</ul>
-        ${facts([
-          ['Planned integration', duration(plannedSeconds(x))],
-          ['Recorded integration', counts ? duration(recordedSeconds(x)) : 'none recorded'],
-        ])}
+          </dl></li>`).join('')}
+          <li class="logbook-blocks-total"><dl class="logbook-pair">
+            <div><dt>Planned integration</dt><dd>${esc(duration(plannedSeconds(x)))}</dd></div>
+            <div><dt>Recorded integration</dt><dd>${esc(counts ? duration(recordedSeconds(x)) : 'none recorded')}</dd></div>
+          </dl></li></ul>
+        ${(() => { const groups = entryGainGroups(x); return groups.length ? `<details class="logbook-gain">
+          <summary><span class="logbook-summary-text"><span>Stacking gain</span><span class="logbook-caption">Relative to the plan, per comparable group</span></span>${api.icon('next')}</summary>
+          ${groups.map((g, i) => entryGainPanel(g, i, esc)).join('')}
+          <p class="logbook-caption">Ideal √N within comparable light frames: twice the time gives 1.41×, not 2×. Not absolute signal-to-noise.</p>
+        </details>` : ''; })()}
       </section>
       <details class="logbook-section logbook-snapshot" aria-labelledby="logbook-snapshot">
-        <summary id="logbook-snapshot"><span>Plan as saved</span><span class="logbook-caption">Read-only night, site, target and rig snapshot</span></summary>
+        <summary id="logbook-snapshot"><span class="logbook-summary-text"><span>Plan as saved</span><span class="logbook-caption">Read-only night, site, target and rig snapshot</span></span>${api.icon('next')}</summary>
         <p class="workspace-copy">Taken ${esc(instantLabel(p.takenAtUtc, p.zone))}. Changes to Library records or this result never replace the saved snapshot.</p>
         <h3>Night</h3>
         ${facts([
@@ -753,15 +811,15 @@ export function mountLogbook(root, api) {
         ${progress ? targetProgressView(progress, 3) : '<p class="workspace-copy">No recorded results for this target yet.</p>'}
       </section>
       <details class="logbook-section logbook-export">
-        <summary>Export this entry</summary>
+        <summary><span class="logbook-summary-text"><span>Export this entry</span></span>${api.icon('next')}</summary>
         <p class="workspace-copy">Text summary leaves out notes and site coordinates. Full JSON includes both; review it before sharing.</p>
         <p class="logbook-caption">Browser preview export, not a native session or application backup. Nothing is sent to a service.</p>
-        <div class="workspace-actions">
-          <button type="button" class="secondary-button" data-export-entry="${esc(x.id)}" data-export-format="text">Download text summary</button>
-          <button type="button" class="secondary-button" data-export-entry="${esc(x.id)}" data-export-format="json">Download full JSON</button>
+        <div class="workspace-actions logbook-export-actions">
+          <button type="button" class="secondary-button" data-export-entry="${esc(x.id)}" data-export-format="text" aria-label="Download text summary">${api.icon('download')}<span>Text summary</span></button>
+          <button type="button" class="secondary-button" data-export-entry="${esc(x.id)}" data-export-format="json" aria-label="Download full JSON">${api.icon('download')}<span>Full JSON</span></button>
         </div>
       </details>
-      <section class="logbook-section">
+      <section class="logbook-section logbook-delete">
         <div class="workspace-actions"><button type="button" class="secondary-button logbook-destructive" data-delete-entry="${esc(x.id)}">${api.icon('trash')}<span>Delete entry</span></button></div>
         ${S.deleteError ? `<div class="workspace-error" role="alert"><p>${esc(S.deleteError)}</p>
           <div class="workspace-actions"><button type="button" class="secondary-button" data-retry-delete="${esc(x.id)}">Try again</button></div></div>` : ''}
@@ -1091,6 +1149,10 @@ export function mountLogbook(root, api) {
       exportEntry(data.exportEntry, data.exportFormat);
     } else if (data.resultEntry) {
       openEditor(data.resultEntry, S.view === 'detail' ? 'detail' : 'list');
+    } else if ('toggleFilters' in data) {
+      const panel = view.querySelector('[data-filters]');
+      if (panel) panel.open = !panel.open; // its toggle event stores ui.filtersOpen
+      el.setAttribute('aria-expanded', String(!!panel?.open));
     } else if ('openProgress' in data) {
       show('progress');
     } else if ('backList' in data) {
@@ -1104,7 +1166,7 @@ export function mountLogbook(root, api) {
     } else if ('clearFilters' in data || 'clearAll' in data) {
       ui.filter = emptyFilter();
       if ('clearAll' in data) ui.query = '';
-      render('clearAll' in data ? '[data-search]' : '[data-filters] summary');
+      render('clearAll' in data ? '[data-search]' : '[data-toggle-filters]');
       rememberContext();
       api.announce('Filters cleared.');
     } else if ('undo' in data) {
@@ -1203,6 +1265,7 @@ export function mountLogbook(root, api) {
   function onToggle(event) {
     if (event.target.matches?.('[data-filters]')) {
       ui.filtersOpen = event.target.open;
+      view.querySelector('[data-toggle-filters]')?.setAttribute('aria-expanded', String(event.target.open));
       rememberContext();
     }
   }

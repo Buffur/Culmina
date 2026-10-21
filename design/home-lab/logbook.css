@@ -33,7 +33,30 @@
 .logbook-view .logbook-list{list-style:none;margin:0;padding:0}
 .logbook-view .logbook-entry{border-bottom:1px solid var(--border-subtle);padding-bottom:4px}
 .logbook-view .logbook-entry>.logbook-row{padding-bottom:4px}
-.logbook-view .logbook-row-action{margin:0 0 4px -12px;text-align:left}
+/* Owner sketches 2026-10-21: the state is the entry's right column beside all its lines (no gap
+   under the title), as far right as it goes; its width is the widest state (the sizer), so every mark
+   sits on one vertical line. It sits beside the title and rig lines; the longer lines below use the
+   full width. No chevron and no row action buttons. */
+.logbook-view .logbook-entry .logbook-row-text{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:2px;align-items:start}
+.logbook-view .logbook-entry .logbook-row-text>*{grid-column:1}
+.logbook-view .logbook-entry .logbook-row-text>:nth-child(n+4){grid-column:1 / -1}
+.logbook-view .logbook-entry .logbook-row-text>.logbook-state{grid-column:2;grid-row:1 / span 2;display:grid;grid-template-columns:auto auto;justify-content:start;align-items:center;gap:2px 6px}
+.logbook-view .logbook-entry .logbook-state>span,.logbook-view .logbook-entry .logbook-due>span{white-space:nowrap}
+.logbook-view .logbook-entry .logbook-due{display:contents}
+.logbook-view .logbook-entry .logbook-state-sizer{grid-column:2;height:0;overflow:hidden;visibility:hidden;font-weight:400}
+/* Search field with the filter and search icons; the filters open from the icon (no Filters row). */
+.logbook-view .logbook-search-field{position:relative;flex:1 1 100%}
+.logbook-view .logbook-search-field input{padding-right:calc(84px + 8px * var(--text-scale))}
+.logbook-view .logbook-filter-toggle{position:absolute;right:36px;bottom:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;padding:0;border:0;border-radius:6px;background:transparent;color:var(--text-secondary);cursor:pointer}
+.logbook-view .logbook-filter-toggle[aria-expanded="true"]{color:var(--text-primary);background:var(--selection)}
+.logbook-view .logbook-filter-toggle svg,.logbook-view .logbook-search-mark svg{width:20px;height:20px}
+.logbook-view .logbook-search-mark{position:absolute;right:12px;bottom:0;height:48px;display:flex;align-items:center;color:var(--text-secondary);pointer-events:none}
+.logbook-view .logbook-filter-count{position:absolute;top:6px;right:6px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--text-primary);color:var(--surface-default);font-size:11px;line-height:16px;font-weight:600;text-align:center}
+.logbook-view .logbook-filters>summary{display:none}
+.logbook-view .logbook-filters:not([open]){border-bottom:0}
+.logbook-view .logbook-filters[open]>.workspace-form{padding-top:12px}
+.logbook-view .logbook-group{margin-top:12px}
+.logbook-view .logbook-entry>.logbook-row{padding-top:12px}
 .logbook-view .logbook-integration{font-size:calc(13px * var(--text-scale));color:var(--text-primary);font-variant-numeric:tabular-nums;line-height:1.5}
 
 /* State words carry the meaning; the marks only repeat them. */
@@ -103,3 +126,83 @@
 .logbook-view .logbook-progress-hybrid .logbook-filter-name{margin-top:16px}
 .logbook-view .logbook-progress-guide>summary{min-height:48px;font-size:calc(14px * var(--text-scale));font-weight:500}
 .logbook-view .logbook-progress-guide[open]>summary{margin-bottom:8px}
+
+/* Block 1, entry detail (owner-approved scope, 2026-10-21): one grid for planned/recorded including
+   the integration totals; no double rules; tighter sections; disclosures end in a chevron (no ▶). */
+.logbook-view .logbook-section{margin-top:20px;padding-top:16px}
+.logbook-view .logbook-blocks>li:first-child{border-top:0;padding-top:4px}
+.logbook-view .logbook-blocks>.logbook-blocks-total{padding-top:12px}
+.logbook-view .logbook-blocks-total .logbook-pair{margin:0}
+.logbook-view .logbook-blocks-total dd{font-weight:500}
+.logbook-view .logbook-snapshot>summary,.logbook-view .logbook-export>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer}
+.logbook-view .logbook-snapshot>summary::-webkit-details-marker,.logbook-view .logbook-export>summary::-webkit-details-marker{display:none}
+.logbook-view .logbook-summary-text{display:flex;flex-direction:column;min-width:0}
+.logbook-view .logbook-snapshot>summary>svg,.logbook-view .logbook-export>summary>svg{width:18px;height:18px;flex:none;color:var(--text-secondary);transform:rotate(90deg);transition:transform 120ms}
+.logbook-view .logbook-snapshot[open]>summary>svg,.logbook-view .logbook-export[open]>summary>svg{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.logbook-view details>summary>svg{transition:none}}
+
+/* Owner notes 2026-10-21 (entry detail, second pass). */
+.logbook-view .logbook-month-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border-subtle);margin:8px 0 0;padding-bottom:4px}
+.logbook-view .logbook-month-row>.logbook-month{margin:0;padding:0;border:0}
+.logbook-view .logbook-month-row>.logbook-count{margin:0}
+.logbook-view .logbook-result{padding-bottom:0}
+.logbook-view .logbook-result+.logbook-section{margin-top:16px}
+.logbook-view .logbook-pair{row-gap:8px}
+.logbook-view .logbook-snapshot .logbook-facts{gap:6px}
+.logbook-view .logbook-snapshot .logbook-facts>div{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:baseline}
+.logbook-view .logbook-snapshot .logbook-facts dd{margin:0;text-align:right;font-size:calc(13px * var(--text-scale))}
+:root[data-text-scale="2"] .logbook-view .logbook-snapshot .logbook-facts>div{grid-template-columns:1fr}
+:root[data-text-scale="2"] .logbook-view .logbook-snapshot .logbook-facts dd{text-align:left}
+.logbook-view .logbook-gain{margin-top:12px;border-top:1px solid var(--border-subtle);padding-top:4px}
+.logbook-view .logbook-gain>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px;cursor:pointer;font-size:calc(15px * var(--text-scale));font-weight:600}
+.logbook-view .logbook-gain>summary::-webkit-details-marker{display:none}
+.logbook-view .logbook-gain>summary .logbook-caption{font-weight:400;margin-top:4px}
+.logbook-view .logbook-gain>summary>svg{width:18px;height:18px;flex:none;color:var(--text-secondary);transform:rotate(90deg);transition:transform 120ms}
+.logbook-view .logbook-gain[open]>summary>svg{transform:rotate(-90deg)}
+.logbook-view .gain-panel{margin:12px 0}
+.logbook-view .gain-point-recorded{fill:var(--surface-default);stroke:var(--text-primary);stroke-width:2}
+.logbook-view .gain-key-recorded{border-radius:50%;border:2px solid var(--text-primary);background:var(--surface-default)}
+
+/* Owner notes 2026-10-21 (third pass): one rule between Progress and the month row; detail text one
+   step larger, spacing tighter; Not recorded on the status line, right; Export buttons side by side. */
+.logbook-view [data-open-progress]{border-bottom:0}
+.logbook-view .logbook-result-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px}
+.logbook-view .logbook-result-head>.logbook-due{margin:0}
+.logbook-view .logbook-result>p{margin-top:4px}
+.logbook-view .logbook-result+.logbook-section{margin-top:12px}
+.logbook-view .logbook-section{margin-top:12px;padding-top:12px}
+.logbook-view .logbook-section>h2{margin-bottom:4px}
+.logbook-view .logbook-section>h3{margin-top:12px}
+.logbook-view .logbook-blocks>li{padding:8px 0}
+.logbook-view .logbook-pair dt{font-size:calc(13px * var(--text-scale))}
+.logbook-view .logbook-pair dd{font-size:calc(15px * var(--text-scale))}
+.logbook-view .logbook-snapshot .logbook-facts{gap:4px;margin-top:4px}
+html[data-variant="blend"] .android-device .logbook-view .logbook-snapshot .logbook-facts dt{font-size:calc(14px * var(--text-scale))}
+.logbook-view .logbook-snapshot .logbook-facts dd{font-size:calc(14px * var(--text-scale))}
+.logbook-view .logbook-snapshot>summary .logbook-caption,.logbook-view .logbook-gain>summary .logbook-caption{margin-top:2px}
+.logbook-view .logbook-snapshot[open]>summary,.logbook-view .logbook-export[open]>summary,.logbook-view .logbook-gain[open]>summary{margin-bottom:4px}
+.logbook-view .logbook-gain{margin-top:8px;padding-top:0}
+.logbook-view .gain-panel{margin:8px 0}
+.logbook-view .logbook-export-actions{flex-wrap:nowrap;gap:8px}
+html[data-variant="blend"] .android-device .logbook-view .logbook-export-actions>.secondary-button{flex:1 1 0;width:auto;max-width:none;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.logbook-view .logbook-export-actions svg{width:18px;height:18px;flex:none}
+
+/* Owner notes 2026-10-21 (fourth pass): no rule under the last entry of a list; the search field a
+   little wider than the content column; tighter detail spacing (Estimate in Plan as the density
+   reference); no rule between the blocks and the integration totals. */
+.logbook-view .logbook-list>.logbook-entry:last-child{border-bottom:0}
+.logbook-view .logbook-search-field{margin-inline:-4px}
+.logbook-view .logbook-section{margin-top:8px;padding-top:8px}
+.logbook-view .logbook-result+.logbook-section{margin-top:8px}
+.logbook-view .logbook-blocks>.logbook-blocks-total{border-top:0;padding-top:0}
+.logbook-view .logbook-blocks>li{padding:6px 0}
+.logbook-view .logbook-gain{margin-top:4px}
+.logbook-view .logbook-section>.workspace-copy{margin-top:2px}
+.logbook-view .logbook-result{padding-bottom:8px}
+
+/* Owner notes 2026-10-21 (fifth pass): every section heading in the entry uses the section h2 role
+   (18/600), disclosures included; Delete follows without a rule and with a small gap. */
+.logbook-view .logbook-gain>summary,.logbook-view .logbook-snapshot>summary,.logbook-view .logbook-export>summary{font-size:calc(18px * var(--text-scale));font-weight:600;line-height:1.4}
+.logbook-view .logbook-gain>summary .logbook-caption,.logbook-view .logbook-snapshot>summary .logbook-caption{font-size:calc(13px * var(--text-scale))}
+.logbook-view .logbook-section.logbook-delete{border-top:0;margin-top:8px;padding-top:0}
+.logbook-view .logbook-export[open]>.workspace-actions{margin-bottom:4px}

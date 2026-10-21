@@ -123,3 +123,303 @@ references were unmatched at this checkpoint; the editor is now paired (`plan_ed
 `plan_editor_invalid`, final section) while the weather chart reference stays unmatched. Android
 keyboard screenshots have different available content height and are not identical
 frame comparisons. No native pass is claimed by this browser/host audit.
+
+## Phone refinement: Logbook and Library, 2026-10-21
+
+Owner scope: start with Logbook, Library and their contents, following the supplied
+`CULMINA_RELEASE_WORKFLOW_UK.md`. Baseline: `develop` at `fd63b951`; the existing
+untracked `evidence/baseline-2026-10-21/` folder was preserved. No commit or push.
+
+Physical-device observation: Xiaomi 2407FPN8EG, 1220 × 2712 px, density 520
+(approximately 375 dp wide), installed `io.github.buffur.culmina.dev` 1.0.0 (1),
+last update 2026-10-21 19:04:52. No package update, data clearing, record deletion,
+GPS request or external sharing was performed. Observed the Logbook list, expanded
+filters, saved-entry detail, existing-result form, empty target progress and export
+menu; Library root, rigs list/editor, targets list/editor and sites list/new-site
+form. This is initial coverage, not acceptance of every nested action or state.
+
+### First bounded task: rig form readability
+
+Problem reproduced on the phone: the first floating label was clipped and paired
+identity/optics fields were too narrow. The host reproduction measured the first
+label 5.5 dp above the scroll clip. Changed only the rig editor's local layout:
+16 dp dialog margins and aligned content, scaled padding above the first field,
+and single-column identity/optics pairs when space or text scaling requires it.
+The existing buttons, values, validators, save and discard behavior are retained.
+No new palette, shared component contract or domain change.
+
+Initial-cycle host comparison: [before](evidence/rig-editor-375-before.png) /
+[after](evidence/rig-editor-375-after.png), dark theme, bundled Geist, 375 × 812 dp,
+100% text, seeded example rig. These are host Flutter renders, not phone captures.
+[Android render](evidence/rig-editor-375-android.png): isolated API 30 emulator,
+375 × 834 dp including system UI, light theme; not a matched dark-theme pair.
+
+Initial-cycle verification (superseded by the additional cycle below): scoped
+analysis clean; format clean; encoding and
+`git diff --check` pass. Equipment-area tests: **56 passed, 1 failed**
+([log](evidence/rig-editor-375-tests.log)). The newly extended fit check fails at
+200% for model `TestMake TestPhone`: needs 304.8 dp, has 300.3 dp. Other tested
+100/130% identity cases and existing numeric-fit cases pass. No full suite run.
+Debug Android build, emulator launch and Dart MCP hot reload succeeded; no runtime
+errors reported. On the emulator, actual keyboard entry, Back, unsaved prompt,
+Cancel retaining the draft, Discard, and reopening the unchanged stored model
+were verified. The changed editor has not been installed or verified on the phone.
+
+Initial-cycle status: **PARTIAL, NOT READY FOR ACCEPTANCE**. Initial implementation and two local
+layout corrections are exhausted under workflow §4; no further code iteration
+was started. Next required decision: authorize another bounded cycle for long
+text-field readability at 200%, then complete that check. Before any phone update,
+workflow §6 additionally requires agreement on the existing target package and an
+accessible backup; neither has been established for this run. Owner acceptance
+has not been given. No performance improvement is claimed.
+
+### Additional cycle authorized by the owner, 2026-10-21
+
+The owner explicitly allowed one further correction cycle. Rig name, Manufacturer
+and Model now grow vertically and wrap their text. They retain the text keyboard
+and Next action; the display does not insert newline characters into stored data.
+Numeric inputs, calculation and persistence code are unchanged.
+
+The fit regression now checks the actual rendered glyph bounds, horizontally and
+vertically, for every word in identity and numeric-pair fields. Empty glyph results
+also fail. This supports wrapping without dropping the visibility requirement.
+The same check was run against a temporary copy of the pre-cycle single-line
+editor with the same dialog geometry: it fails for the previously hidden model
+and rig-name glyphs ([negative control](evidence/rig-editor-cycle2-regression.log)).
+No assertion was removed to obtain a passing result.
+
+Matched Flutter host comparison, phone metadata fixture, dark theme, bundled Geist,
+375 × 812 dp, 200% text: [before](evidence/rig-model-200-before.png) /
+[after](evidence/rig-model-200-after.png). The earlier 100% images above remain the
+initial-cycle record. [Current Android render](evidence/rig-model-200-android.png)
+is a separate API 30 emulator observation at 375 × 834 dp including system UI,
+light theme, 200% text, with a seeded rig whose model was edited to the same long
+string; it is not a matched host/device fixture comparison.
+
+Final verification: **57 equipment-area tests passed**
+([log](evidence/rig-editor-cycle2-tests.log)), including 100/130/200% identity and
+numeric visibility, save/cancel/discard and existing creation/import paths. Scoped
+analysis, format and encoding pass. Android debug build, emulator launch and Dart
+MCP hot reload succeeded. Actual keyboard entry at 100%, changing to 200% with the
+draft intact, Save and reopening the exact `TestMake TestPhone` value were verified
+on the emulator. The emulator's original model and font/size settings were restored.
+No Dart runtime errors were reported. No full suite or performance measurement.
+
+Current task status: **OWNER ACCEPTED**. The owner accepted the rig editor and
+explicitly authorized proceeding to Targets. The 200% long-text blocker is
+resolved. The personal phone package was not updated. Any such update still
+requires the target-package/accessible-backup agreement in workflow §6; no new
+package, signing, schema or dependency change was made.
+
+Owner priority correction, 2026-10-21: finish the design at **100% text first**;
+larger text-scale fixes come last. Do not make 200% refinement the next task while
+the ordinary-size Logbook/Library design remains unfinished. Targets was inspected
+and its layout correction described, but no Targets implementation had been made
+when the owner requested this status inventory.
+
+### Current completion inventory
+
+| Area | Work actually completed in this refinement | Remaining |
+| --- | --- | --- |
+| Rig editor | Wider local dialog, aligned padding, unclipped first label, responsive identity/optics pairs, wrapping long identity text; owner accepted; 57 targeted tests and emulator checks | Updated build has not been checked on the personal phone; this does not close the rigs list, Add rig or metadata-review flows |
+| Targets | Editor action layout repaired at 100%; 34 targeted tests and emulator keyboard/Cancel/Save/planning-guard checks passed | Ready for owner acceptance; personal-phone update and other Targets design work remain pending |
+| Logbook | Phone observation of list, filters, entry, result form, empty progress and export menu | No Logbook code fixes in this refinement; investigate duplicate status and empty comparison section, then remaining ordinary-size flows |
+| Library root, lists and Sites | Phone observation of root, rigs/targets/sites lists, target editor and new-site form | No code changes to these surfaces in this refinement; ordinary-size design and nested-flow work remain |
+| Performance | No optimization implemented or measured in this refinement | Treat only a reproduced slow scenario as a separate bounded task |
+
+Overall: **Logbook + Library design is not resolved**. The rig editor is accepted;
+the Targets editor action-layout task at 100% is ready for acceptance. This
+inventory does not claim acceptance of other screens.
+
+### Targets editor at 100%, 2026-10-21
+
+Owner authorized this next task after accepting the rig editor and explicitly
+prioritized normal text size. Reproduced the four-button vertical action stack at
+375 dp: Save and Cancel centres differed by 48 dp. Applied the accepted rig's local
+16 dp dialog/content alignment, separated catalog metadata from Name, and retained
+wrapping names. Delete/Cancel/Save now share the footer; the existing Plan this
+target callback is an outlined secondary action inside the scrollable content.
+No calculation, validation, repository, save or plan-leaving logic changed.
+
+Matched host comparison: [before](evidence/target-editor-100-before.png) /
+[after](evidence/target-editor-100-after.png), same M1 fixture, 375 × 812 dp,
+dark theme, Geist, **100% text**. Light appearance was also rendered and inspected.
+[Android](evidence/target-editor-100-android.png) and
+[actual keyboard](evidence/target-editor-100-keyboard.png) captures are separate
+API 30 emulator observations at 375 × 834 dp including system UI, light, 100%.
+
+Verification: **34 tests passed** ([log](evidence/target-editor-100-tests.log)):
+target editing/search plus Library manage-mode actions. New normal-size layout
+cases cover light/dark with 0/300 dp keyboard insets, reachable Plan this target,
+compact footer and exact stored coordinates/metadata on unchanged Save. Scoped
+analysis, formatting, encoding and diff whitespace checks pass. Android debug
+build/launch and Dart MCP hot reload succeeded; no Dart runtime errors reported.
+On the emulator, Cancel discarded a typed test suffix, Save reopened the original
+entry, and Plan this target reached the existing unsaved-plan guard; cancelling
+returned to Targets. Emulator size override was restored. Personal phone unchanged.
+
+Status: **READY FOR OWNER ACCEPTANCE** for this bounded 100% editor task. Larger
+text was deliberately not refined or claimed verified in this task. Root/list and
+remaining nested-flow design work are not closed; no full suite, performance
+measurement, commit or push. Unrelated local capture-block changes were preserved.
+
+### Remaining scoped queue (not implemented)
+
+- Targets editor: accept or correct the current 100% example before another
+  independent layout task. Remaining Targets flows stay in the broader queue.
+- Logbook detail: the observed Not done entry repeats that status; its Plan vs
+  actual section has a heading and separators without comparison rows. Inspect
+  the status/reconciliation conditions before changing either presentation.
+- Remaining coverage includes search/clear and all filter pickers, nonempty target
+  progress, other result outcomes, entry rename/copy/export previews, Add rig and
+  metadata review, target creation/type cases, and site zone/darkness/map/GPS flows.
+  Storage failures, delete/Undo, real import files and system sharing were not
+  exercised on the personal phone. Do not infer completion from root screenshots.
+
+
+### Targets correction and live phone debug, 2026-10-21
+
+Owner requested a smaller title-to-catalog gap, distinct catalog colour, all four
+buttons in one row, and a filled Cancel. This supersedes the previous scrollable
+Plan placement. Title/content gap is reduced locally; catalog metadata uses
+AppPalette.textTertiary. Plan returns to the footer as `Plan`, with the full
+`Plan this target` tooltip. Local horizontal button padding preserves 48 dp
+minimum touch height; Cancel uses the existing secondary-container colour pair.
+Save, validation, exact coordinates and planning callbacks are unchanged.
+
+Evidence: [phone at 100%](evidence/target-editor-100-cycle2-phone.png),
+[phone keyboard](evidence/target-editor-100-cycle2-keyboard.png), and
+[light host render](evidence/target-editor-100-cycle2-light.png). Actual phone:
+1220 x 2712 px, density 520, approximately 375 dp wide, font_scale 1.0.
+All four actions share a row above the keyboard; Cancel closes and the original
+M1 editor reopens. Visual assessment: tighter hierarchy, quieter metadata,
+readable button labels and a distinct primary Save. Larger-scale refinement
+remains deferred; this is not acceptance of the entire Library or Logbook.
+
+Verification: 34 targeted tests pass
+([log](evidence/target-editor-100-cycle2-tests.log)), including light/dark footer
+alignment with keyboard insets and exact unchanged saves. Light render passes;
+scoped analysis reports no issues; formatting and diff whitespace checks pass.
+
+Before updating the protected existing package, an app-created `.astroplan`
+backup was saved in phone Downloads through local archiving, copied outside the
+repository, and extracted. Both ZIP CRC checks pass, required JSON parses,
+SQLite integrity_check is `ok` and user_version is 27. No restore was performed.
+The installed APK was also retained outside the repository. Debug APK and the
+installed APK have the same package `io.github.buffur.culmina.dev`, certificate
+SHA-256, versionCode 1 and min/target SDK 24/36. A plain `adb install -r`
+succeeded. The repository's application ID was not edited: a local, ignored
+Gradle init script applies the existing device ID for this build only.
+`flutter attach` is active on the personal phone; a hot reload succeeded.
+The existing web reference server is running at http://127.0.0.1:4173/ (HTTP 200).
+It remains a separate prototype, not a mirror of this Flutter correction.
+
+Status: corrected 100% example awaits owner acceptance. Leave the phone debug
+session and requested web preview running for live review. Do not start the
+next independent Logbook task before this example is accepted.
+
+Owner response: further Targets correction required; example is NOT accepted.
+A focused clarification of the requested change is pending. Do not infer approval
+or proceed to the independent Logbook task. Phone debug remains connected.
+
+
+### Owner-requested full-width Targets footer, 2026-10-21
+
+Owner identified the remaining defect: the compact actions were grouped against
+the trailing edge. Replaced the content-width action group with one bounded row,
+with four equal expanded cells and existing 8 dp gaps. The footer now spans the
+same left/right edges as the form. Delete remains the established icon control;
+Plan, tonal Cancel and Save fill their cells. No callbacks or form data changed.
+
+[Physical-phone result at 100%](evidence/target-editor-100-full-width-phone.png).
+Actual phone bounds: form x=104..1116 px; footer x=104..1116 px, four cells
+approximately 233 px wide with 26 px gaps. All four actions remain in one row
+with the real keyboard open. Hot reload succeeded and no runtime errors were
+reported. The updated existing layout checks verify footer-to-form alignment
+and equal Cancel/Save widths in light/dark with and without keyboard insets.
+All 12 target-screen tests pass
+([log](evidence/target-editor-100-full-width-tests.log)); formatting passes.
+This correction awaits owner acceptance; the broader Logbook/Library work is
+still incomplete. Phone debug and the requested preview remain running.
+
+## Web studio stage: block 1 (Logbook and Library), 2026-10-21
+
+Owner workflow change: finish the design in `design/home-lab/` first (current Hybrid, 100 % text,
+375 dp primary, 412 dp layout control), accept it, then port it to Flutter separately. Flutter
+visual work is paused; no Flutter, phone or full-suite run in this stage.
+
+**Accepted by the owner (Logbook list, from the owner's sketches):**
+- Search field without a visible label (kept for screen readers), with a filter icon and a search
+  mark inside; the filter icon opens the filters and shows the active count. No Filters row.
+- One continuous list, newest night first, grouped by month only; no Upcoming/Past sections.
+- State as the entry's right column beside the title and rig lines, as far right as it goes; every
+  state has a mark (Saved = empty circle) on one vertical line; "Not recorded" under it. Lower lines
+  use the full width; no gap under the title.
+- No chevron and no Record/Edit result buttons in the list: the entry opens its detail, where
+  Record/Edit result stays the primary action. Tighter entry spacing.
+
+Files: `logbook.js`, `logbook.css`, `workspace.js` (a `filter` icon); two studio checks now press the
+filter icon and open the result from the detail. Studio checks: tabs browser/interactions, Hybrid
+feedback and refinement pass. Not yet ported to Flutter.
+
+**Accepted by the owner (Logbook entry detail and list count):**
+- The entry count sits right on the first month's line ("October 2026 · 6 entries"); a hidden live
+  region still announces it.
+- Status header matches the list ("○ Saved", "⏱ Not recorded"); Not done is not repeated in the
+  Recorded column ("None"). Planned/Recorded and the integration totals share one two-column grid.
+- Fewer rules and tighter sections; disclosures end in a chevron (no ▶). Plan as saved uses compact
+  label-left / value-right rows, values one step smaller (13); one column at 200 %. Empty Notes is
+  one row. Export buttons are full-width secondary, stacked.
+- Stacking gain disclosure: the Plan's relative √N curve (`planRelativeCurve`) per comparable light
+  group, plan point 1.00× and the recorded point √(recorded / planned); relative only, not SNR.
+- Every state shows Record/Edit result; before the night starts the button is disabled with its
+  reason. Owner decision 2026-10-21: the F19 / AM-01 rule stays (no result before the night starts).
+
+**Logbook accepted by the owner (2026-10-21), final rules added after the entry-detail record above:**
+- List: no rule under the last entry (also in Library lists); one rule between Progress and the month
+  row; search field 4 px wider than the content column on each side (also Library).
+- Entry detail: "Not recorded" on the status line, right; Notes as a heading with "None recorded."
+  below; tighter spacing (sections 8 + 8 px, block rows 6 px, no rule above the integration totals);
+  pair labels 13 / values 15; Plan as saved rows 14/14 with the value column taking the remaining
+  width; every section heading, disclosures included, uses the section h2 role (18/600); Export as
+  two side-by-side buttons "Text summary" / "Full JSON" with a download icon (full names for screen
+  readers); Delete follows Export without a rule.
+- Studio checks after the final pass: tabs browser/interactions, Hybrid feedback/refinement and
+  library refinement all pass. Not yet ported to Flutter.
+
+**Library: NOT accepted (owner, 2026-10-21; an earlier acceptance was withdrawn).** First pass of the
+Logbook rules applied to Library: search with a
+search mark and no visible label (4 px wider than the column); list rows without chevrons (root
+navigation rows keep theirs) and no rule under the last row; every disclosure ends in a chevron (no
+▶), editors included; section head = heading left, count right (wraps when it does not fit); record
+details in compact label/value rows with the value column taking the remaining width, values 13,
+one column at 200 %; Edit (primary) and Delete (outlined) full width, stacked.
+
+Owner follow-up: go through every interactive Library element with the Logbook rules (less spacing,
+larger text, aligned placement; e.g. the rig editor's focal ratio / aperture pair and the footer).
+Logbook is accepted; Library is in rework. Open owner questions, not blocking: the
+Library root line "Progress by target lives in the Logbook."; list search autofocus; the Targets
+caption "6 of 164 bundled objects · read-only" length. Next: finish Library, then fix the accepted
+reference and port block 1 to Flutter as a separate task.
+
+**Library rework (2026-10-22), accepted by the owner after one more pass.** Every Library screen and state was
+captured and reviewed at 375 (412 control, dark spot check): root, the three lists and no-match
+search, rig/target/site details with their disclosures, Add/Edit rig (with the photo walkthrough,
+JSON import and More open), the invalid-field state, Add target, Add/Edit site (device position and
+More open), the unsaved-changes and delete dialogs, Undo, and the empty and load-error scenarios.
+Logbook rules applied: hints/captions 13, field labels 15, detail rows 14/14; one heading role
+(18/600) for section headings, form legends and disclosures (nested disclosure 15/600); spacing cut
+(form rows 12, sections 12, disclosures 6 px summary padding, list rows 12); no rule above Cancel /
+Save; field pairs share label/input/hint rows (CSS subgrid), so paired inputs always line up;
+standalone secondary buttons full width, review buttons equal and side by side. Details follow the
+Logbook order: caption and note, Edit, the data, disclosures, Delete last; the record name repeated
+under the title bar is visually hidden (kept for screen readers and focus). Studio checks: library
+refinement, tabs browser/interactions, Hybrid feedback/refinement pass.
+
+Final pass (owner note 2026-10-22): the detail header's two explanation lines share one size (14,
+secondary); Edit has 12 px above and 8 below; Delete follows the last block 8 px apart (the shared
+20 px action margin is cleared). All Library states were captured again at 375 and 412 (dark spot
+check) and the five studio checks pass. **Block 1 (Logbook and Library) is accepted in the studio.**
+Open owner questions (not blocking): the Library root line "Progress by target lives in the
+Logbook."; list search autofocus; the Targets caption length. Next: fix the accepted reference
+(commit on the owner's instruction), then port block 1 to Flutter as a separate task.

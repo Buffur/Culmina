@@ -12,7 +12,7 @@ fs.mkdirSync(out,{recursive:true});
  try {
   for(const theme of ['light','dark','field'])for(const scale of ['1','2']){
    await page.goto(`http://localhost:4173/workspace.html?tab=logbook&variant=blend&theme=${theme}&scale=${scale}`);
-   await page.locator('[data-filters] summary').click();
+   await page.locator('[data-toggle-filters]').click();
    await page.locator('[data-clear-filters]').click();
    const note=page.locator('#workspace-announcement');
    await note.waitFor({state:'visible'});
@@ -54,7 +54,7 @@ fs.mkdirSync(out,{recursive:true});
   await page.locator('.android-device').screenshot({path:path.join(out,'feedback-download-200.png')});
   evidence.cases.push('Real download confirmation at200% wraps in own row without covering record/actions');
   await page.goto('http://localhost:4173/workspace.html?tab=logbook&variant=paper');
-  await page.locator('[data-filters] summary').click();await page.locator('[data-clear-filters]').click();
+  await page.locator('[data-toggle-filters]').click();await page.locator('[data-clear-filters]').click();
   assert.equal(await page.locator('#workspace-announcement').evaluate(e=>getComputedStyle(e).position),'absolute');
   evidence.cases.push('Non-Hybrid Paper retains original floating feedback');
   await ctx.close();

@@ -34,7 +34,7 @@ const report=(name,detail={})=>{evidence.cases.push({name,passed:true,...detail}
   await p.evaluate(()=>{localStorage.setItem('culmina-plan-preview-v1','PLAN_CHECKPOINT_UNTOUCHED');localStorage.setItem('culmina-plan-navigation-v1','DRAFT_CHECKPOINT_UNTOUCHED');});
   await p.locator('[data-search]').fill('M31');assert.equal(await p.locator('[data-open-entry]').count(),2);
   await p.locator('[data-search]').fill('no matching example');assert.equal(await p.locator('[data-open-entry]').count(),0);
-  await p.locator('[data-search]').fill('');await p.locator('[data-filters] summary').click();
+  await p.locator('[data-search]').fill('');await p.locator('[data-toggle-filters]').click();
   await p.locator('[data-filter=target]').selectOption({label:'M31'});assert.equal(await p.locator('[data-open-entry]').count(),2);
   await p.locator('[data-clear-filters]').click();report('Logbook stable search, no results and target filter');
   await p.locator('[data-open-entry="example-m31-2026-10-12"]').click();
@@ -117,8 +117,8 @@ const report=(name,detail={})=>{evidence.cases.push({name,passed:true,...detail}
    await p.evaluate(k=>localStorage.removeItem(k),key);
   }
   report('All three malformed stores are reported and preserved');
-  await open('logbook','storage-error');await p.locator('[data-result-entry="example-m33-2026-10-15"]').click();await p.locator('[name=logbook-outcome][value=asPlanned]').check();await p.getByRole('button',{name:'Save result',exact:true}).click();
-  assert.equal(await read('logbook'),null);assert.match(await p.locator('.workspace-error').innerText(),/storage failure/);await p.locator('[data-retry-save]').click();await title('Logbook');assert.ok(await read('logbook'));
+  await open('logbook','storage-error');await p.locator('[data-open-entry="example-m33-2026-10-15"]').click();await p.locator('[data-result-entry="example-m33-2026-10-15"]').click();await p.locator('[name=logbook-outcome][value=asPlanned]').check();await p.getByRole('button',{name:'Save result',exact:true}).click();
+  assert.equal(await read('logbook'),null);assert.match(await p.locator('.workspace-error').innerText(),/storage failure/);await p.locator('[data-retry-save]').click();await title('M33 · Thu 15 Oct');assert.ok(await read('logbook'));
   await open('library','storage-error');await p.locator('[data-open-list=targets]').click();await p.locator('[data-add=target]').click();for(const[f,v]of Object.entries({name:'Retry target',ra:'1',dec:'1'}))await p.locator(`[data-field=${f}]`).fill(v);
   await p.getByRole('button',{name:'Save target',exact:true}).click();assert.equal(await read('library'),null);assert.equal(await p.locator('[data-field=name]').inputValue(),'Retry target');await p.locator('[data-retry-save]').click();assert.equal((await read('library')).targets.length,1);
   await open('settings','storage-error');await p.locator('[data-open=planning]').click();await p.locator('[data-plan=minAltitudeDeg]').fill('30');await p.locator('[data-plan=minAltitudeDeg]').dispatchEvent('input');await p.locator('#settings-save-planning').click();assert.equal(await read('settings'),null);await p.locator('[data-retry-planning]').click();await title('Settings');assert.equal((await read('settings')).settings.planning.minAltitudeDeg,30);

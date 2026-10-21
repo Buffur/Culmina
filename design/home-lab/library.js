@@ -603,9 +603,12 @@ export function mountLibrary(root, api) {
     const storageWarning = hybrid && ['unreadable', 'unavailable'].includes(S.status);
     return `${hybrid ? storageWarning ? previewNote() : '' : previewNote() + extra}
       <div class="workspace-toolbar">
-        <label class="block-input library-search">Search ${list}
-          <input type="search" data-search="${list}" value="${esc(ui.query[list])}" placeholder="${placeholders[list]}" autocomplete="off" enterkeyhint="search">
-        </label>
+        <div class="library-search-field">
+          <label class="block-input library-search"><span class="library-hidden">Search ${list}</span>
+            <input type="search" data-search="${list}" value="${esc(ui.query[list])}" placeholder="${placeholders[list]}" autocomplete="off" enterkeyhint="search">
+          </label>
+          <span class="library-search-mark">${api.icon('search')}</span>
+        </div>
       </div>
       <div class="workspace-actions library-add"><button type="button" class="primary-button" data-add="${add[0]}">${api.icon('plus')}<span>${add[1]}</span></button></div>
       <p class="library-count" data-result-count aria-live="polite"></p>
@@ -624,7 +627,7 @@ export function mountLibrary(root, api) {
     const list = S.view, q = ui.query[list];
     let html = undoView(list), shown = 0, total = 0;
     const row = (open, title, caption, extra = '') => `<li><button type="button" class="workspace-row library-row" data-open="${esc(open)}">
-      <span class="library-row-text"><span class="library-row-title">${esc(title)}</span><span class="workspace-copy">${esc(caption)}</span>${extra}</span>${api.icon('next')}</button></li>`;
+      <span class="library-row-text"><span class="library-row-title">${esc(title)}</span><span class="workspace-copy">${esc(caption)}</span>${extra}</span></button></li>`;
     if (list === 'rigs') {
       const rigs = S.data.rigs.filter(r => matchesText(q, [r.name, r.manufacturer, r.cameraModel, CLASS_LABEL[r.cameraClass]]));
       total = S.data.rigs.length;
@@ -648,8 +651,8 @@ export function mountLibrary(root, api) {
         ${!own.length ? '<p class="workspace-copy">None added yet. Add a target with its J2000 coordinates.</p>'
           : ownFound.length ? `<ul class="library-list">${ownFound.map(t => row(`target:${t.key}`, targetLabel({ ...t, catalogId: t.id }), MOVING_TYPES.includes(t.type) ? `${t.type} · ${MOVING_WARNING}` : t.type)).join('')}</ul>`
           : '<p class="workspace-copy">None of your targets match.</p>'}</section>
-        <section class="library-group" aria-labelledby="library-catalogue"><h2 id="library-catalogue">Catalogue sample</h2>
-        <p class="library-caption">${CATALOGUE.length} of ${catalogObjectCount} bundled objects · read-only</p>
+        <section class="library-group" aria-labelledby="library-catalogue"><div class="library-group-head"><h2 id="library-catalogue">Catalogue sample</h2>
+        <p class="library-caption">${CATALOGUE.length} of ${catalogObjectCount} bundled objects · read-only</p></div>
         ${catFound.length ? `<ul class="library-list">${catFound.map(t => row(`catalogue:${t.key}`, t.name !== t.id ? `${t.name} (${t.id})` : t.id, t.type)).join('')}</ul>`
           : '<p class="workspace-copy">No sample object matches. The app searches all bundled objects.</p>'}</section>`;
     }
@@ -683,10 +686,15 @@ export function mountLibrary(root, api) {
 
   const SNAPSHOT_NOTE = 'Editing here never selects a record in the Plan or rewrites a saved plan or Logbook snapshot.';
 
+  // Logbook rule (owner, 2026-10-21): the main action right after the header; Delete last.
+  function editAction(kind, record, noun) {
+    return `<div class="workspace-actions library-record-actions library-edit-action">
+        <button type="button" class="primary-button" data-edit="${kind}:${esc(record.id)}">${api.icon('edit')}<span>Edit ${noun}</span></button></div>`;
+  }
+
   function actionsView(kind, record, noun) {
-    return `<section class="library-section">
-      <div class="workspace-actions">
-        <button type="button" class="primary-button" data-edit="${kind}:${esc(record.id)}">${api.icon('edit')}<span>Edit ${noun}</span></button>
+    return `<section class="library-section library-delete">
+      <div class="workspace-actions library-record-actions">
         <button type="button" class="secondary-button library-destructive" data-delete="${kind}:${esc(record.id)}">${api.icon('trash')}<span>Delete ${noun}</span></button>
       </div>
       ${S.deleteError ? `<div class="workspace-error" role="alert"><p>${esc(S.deleteError)}</p>
@@ -712,9 +720,10 @@ export function mountLibrary(root, api) {
         ['Tracking', TRACKING_LABEL[x.tracking]],
       ];
       return `<section class="library-detail" aria-labelledby="library-detail-title">
-          <h2 id="library-detail-title" tabindex="-1" data-focus-start>${esc(x.name)}</h2>
+          <h2 id="library-detail-title" class="library-hidden" tabindex="-1" data-focus-start>${esc(x.name)}</h2>
           <p class="library-caption">${x.example ? 'Example rig · not a measurement' : 'Your rig · editable'}</p>
           <p class="workspace-copy">${esc(SNAPSHOT_NOTE)}</p>
+          ${editAction('rig', x, 'rig')}
         </section>
         <section class="library-section" aria-labelledby="library-camera"><h2 id="library-camera">Camera</h2>
           ${facts(cameraRows)}
@@ -724,7 +733,6 @@ export function mountLibrary(root, api) {
           ${facts(opticsRows)}
           ${x.focalLengthMm === null && x.focalRatio === null && x.apertureMm === null ? '<p class="workspace-copy">Optics values are not recorded.</p>' : ''}
         </section>
-        ${actionsView('rig', x, 'rig')}
         <details class="library-disclosure library-full-record"><summary>Full rig record and sources<span class="library-caption">All values, including unknowns</span></summary>
         <section class="library-section"><h3>Camera</h3>
           ${facts([
@@ -755,7 +763,8 @@ export function mountLibrary(root, api) {
             ['Rotation', orNot(x.rotationDeg, '°')],
           ])}
           <p class="library-caption">Record: ${esc(x.provenance.record)}</p>
-        </section></details>`;
+        </section></details>
+        ${actionsView('rig', x, 'rig')}`;
     }
     if (kind === 'catalogue') {
       return `<section class="library-detail" aria-labelledby="library-detail-title">
@@ -779,6 +788,8 @@ export function mountLibrary(root, api) {
       return `<section class="library-detail" aria-labelledby="library-detail-title">
           <h2 id="library-detail-title" tabindex="-1" data-focus-start>Your target</h2>
           <p class="library-caption">Editable · J2000 coordinates</p>
+          <p class="workspace-copy">${esc(SNAPSHOT_NOTE)}</p>
+          ${editAction('target', x, 'target')}
           ${facts([
             ...(x.catalogId !== x.name ? [['Catalogue id', x.catalogId, 'Kept from when the target was added.']] : []),
             ['Object type', x.type, MOVING_TYPES.includes(x.type) ? MOVING_WARNING : ''],
@@ -787,14 +798,15 @@ export function mountLibrary(root, api) {
             ['Apparent size (arcmin)', orNot(x.sizeArcmin, '′')],
             ['Magnitude', orNot(x.magnitude)],
           ])}
-          <p class="workspace-copy">${esc(SNAPSHOT_NOTE)}</p>
         </section>
         ${actionsView('target', x, 'target')}`;
     }
     // site
     return `<section class="library-detail" aria-labelledby="library-detail-title">
-        <h2 id="library-detail-title" tabindex="-1" data-focus-start>${esc(x.name)}</h2>
+        <h2 id="library-detail-title" class="library-hidden" tabindex="-1" data-focus-start>${esc(x.name)}</h2>
         <p class="library-caption">${esc(x.example ? x.provenance : 'Added in this browser preview')}</p>
+        <p class="workspace-copy">${esc(SNAPSHOT_NOTE)}</p>
+        ${editAction('site', x, 'site')}
         ${facts([
           ['Latitude', `${signed(x.latDeg, 5)}°`, 'Decimal degrees, north positive'],
           ['Longitude', `${signed(x.lonDeg, 5)}°`, 'Decimal degrees, east positive'],
@@ -808,7 +820,6 @@ export function mountLibrary(root, api) {
           ['Notes', x.notes || 'None'],
         ])}
         <p class="workspace-copy">Bortle and SQM are never converted into each other.</p></details>
-        <p class="workspace-copy">${esc(SNAPSHOT_NOTE)}</p>
       </section>
       ${actionsView('site', x, 'site')}`;
   }
