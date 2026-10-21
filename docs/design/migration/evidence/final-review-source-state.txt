@@ -1,0 +1,5 @@
+Reviewed commit: 02f5cdb547a1ee12e8aa29ed10de7f1c474bd247 (branch claude/owner-brief-2026-10-20-d413ba)
+Hand-over commit: c224cf6; migration baseline: 8048cfa
+Working tree at review start: clean
+02f5cdb feat(migration): native, visual and hot-reload evidence; visual repairs
+ccd0227 fix(migration): close step 2 of the Hybrid migration; full gate passes

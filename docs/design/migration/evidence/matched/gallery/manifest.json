@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-10-21T06:30:41.792226+00:00",
+  "generatedAtUtc": "2026-10-21T07:02:13.906742+00:00",
   "scope": "8 roots \u00d73 themes \u00d7100/200%; original browser vs Flutter host; not Android acceptance",
   "pairCount": 48,
   "supplementalPairCount": 24,
@@ -12,8 +12,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-home-light100.png",
@@ -51,8 +51,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-home-light200.png",
@@ -90,8 +90,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-home-dark100.png",
@@ -129,8 +129,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-home-dark200.png",
@@ -168,8 +168,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-home-field100.png",
@@ -207,8 +207,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-home-field200.png",
@@ -246,8 +246,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-plan-light100.png",
@@ -285,8 +285,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-plan-light200.png",
@@ -324,8 +324,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-plan-dark100.png",
@@ -363,8 +363,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-plan-dark200.png",
@@ -402,8 +402,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-plan-field100.png",
@@ -441,8 +441,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-plan-field200.png",
@@ -480,8 +480,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-night-light100.png",
@@ -519,8 +519,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-night-light200.png",
@@ -538,15 +538,15 @@
           412,
           915
         ],
-        "sha256": "1ee95e9d41fb49b18f2192778a57a7383e103de1641196bfc22bb9cbd49e808f"
+        "sha256": "98bfd99284e4d31cca42739fac642dc69d7094ca3c62d7115d92fba8cb22ea8a"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-light200-overlay.png",
         "absoluteDifference": "diagnostics/night-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          24.905066581781526,
-          24.616743593824605,
-          25.08216085733991
+          25.111936972783703,
+          24.814247440182502,
+          25.25049339487506
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -558,8 +558,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-night-dark100.png",
@@ -597,8 +597,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-night-dark200.png",
@@ -616,15 +616,15 @@
           412,
           915
         ],
-        "sha256": "0f3c61827f279b93adfc1bcd8859d5ed1d5f1000890bcf15c8f42142f1909fb1"
+        "sha256": "5924b474206591489e69c02ad7b9d5e217a0ab843ab8c62edb7915f74881b2db"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-dark200-overlay.png",
         "absoluteDifference": "diagnostics/night-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          27.183561462146532,
-          27.433991193166747,
-          27.91988434399703
+          27.421369833943444,
+          27.65977770704016,
+          28.120804817231683
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -636,8 +636,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-night-field100.png",
@@ -675,8 +675,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-night-field200.png",
@@ -694,13 +694,13 @@
           412,
           915
         ],
-        "sha256": "01c01a167887e9114399fc60e3fa0ca57632f3e70f01a82ddcd5cf71a5994173"
+        "sha256": "19cbac932143fc88acc8652cbebac203eef91d2c7104b3e55300cc087297e6ee"
       },
       "diagnostics": {
         "overlay": "diagnostics/night-field200-overlay.png",
         "absoluteDifference": "diagnostics/night-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          30.00479070507719,
+          30.254729693882965,
           0.0,
           0.0
         ],
@@ -714,8 +714,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-moon-light100.png",
@@ -753,8 +753,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-moon-light200.png",
@@ -772,15 +772,15 @@
           412,
           915
         ],
-        "sha256": "31ab2c7d9e7d6764f4b0ced90e837450ccc058b6f66574f72d64a49ab782cbc8"
+        "sha256": "4dc8fc1ca047ba3a80506d5fa2b2f221be19f457f7c634064f85b7065c5cf18b"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-light200-overlay.png",
         "absoluteDifference": "diagnostics/moon-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          22.50130245636373,
-          22.540227598281074,
-          23.341060533715318
+          22.697660353334395,
+          22.725884662316304,
+          23.51650750702955
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -792,8 +792,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-moon-dark100.png",
@@ -831,8 +831,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-moon-dark200.png",
@@ -850,15 +850,15 @@
           412,
           915
         ],
-        "sha256": "7628ce2923bf5c810f0dadb9edd9bb695e94fa58e65eaeff6877ddebe81dc996"
+        "sha256": "d97d32782c57318e3cc27f40ed9d24b18aaf7247be4613db4fae7007954fea9e"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-dark200-overlay.png",
         "absoluteDifference": "diagnostics/moon-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          25.792408085309564,
-          25.62291368242347,
-          25.64175818345801
+          26.03923550320972,
+          25.853437848161708,
+          25.854392805984403
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -870,8 +870,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-moon-field100.png",
@@ -909,8 +909,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-moon-field200.png",
@@ -928,13 +928,13 @@
           412,
           915
         ],
-        "sha256": "f5bf1bf63699a0840db5548d1a3f4762072bb08490ce383d8bdae127ed316842"
+        "sha256": "7cdc4fae838945ffb40b9162ebc8f83a794eab9051c99e3d11c6ad71e0a28773"
       },
       "diagnostics": {
         "overlay": "diagnostics/moon-field200-overlay.png",
         "absoluteDifference": "diagnostics/moon-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          28.59967902806515,
+          28.84452225582259,
           0.0,
           0.0
         ],
@@ -948,8 +948,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-weather-light100.png",
@@ -987,8 +987,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-weather-light200.png",
@@ -1006,15 +1006,15 @@
           412,
           915
         ],
-        "sha256": "6c60fce1a8d07ea17b39f4bdc535adf94713ed819f16a083bff355ad1b478986"
+        "sha256": "42c8fa43e0efcfda272bd973a34e524dd6f7e51f24ed60c87d160cc7ec5700da"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-light200-overlay.png",
         "absoluteDifference": "diagnostics/weather-light200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          20.620682794843226,
-          20.74638177091623,
-          21.476943073903126
+          20.8120934797602,
+          20.93263833625126,
+          21.65310626558438
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1026,8 +1026,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-weather-dark100.png",
@@ -1065,8 +1065,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-weather-dark200.png",
@@ -1084,15 +1084,15 @@
           412,
           915
         ],
-        "sha256": "078ead100af9f4ccd4b9e42a0bab265ad2bf5091dde256327d21899a70a673dc"
+        "sha256": "34af9d25dfad2498d26d14c68f9d27034e1c1cbf2b552f587c0d4c22774212e3"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-dark200-overlay.png",
         "absoluteDifference": "diagnostics/weather-dark200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          24.03040214334978,
-          23.92678126160539,
-          23.93750596848639
+          24.286821582046795,
+          24.174473446867207,
+          24.170401612817656
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }
@@ -1104,8 +1104,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-weather-field100.png",
@@ -1143,8 +1143,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-weather-field200.png",
@@ -1162,13 +1162,13 @@
           412,
           915
         ],
-        "sha256": "a7c96feb1e72a52cebdaf7c3136777e16c27a958a683768223787a90ce9a382b"
+        "sha256": "5d8f1b666ab88f7298f6087c48dca4cb1124b0b9bfefbd4d1a28b6d904955b58"
       },
       "diagnostics": {
         "overlay": "diagnostics/weather-field200-overlay.png",
         "absoluteDifference": "diagnostics/weather-field200-absolute-difference.png",
         "meanAbsoluteRgbDifference": [
-          26.730415406652874,
+          26.97431959255133,
           0.0,
           0.0
         ],
@@ -1182,8 +1182,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-logbook-light100.png",
@@ -1221,8 +1221,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-logbook-light200.png",
@@ -1260,8 +1260,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-logbook-dark100.png",
@@ -1299,8 +1299,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-logbook-dark200.png",
@@ -1338,8 +1338,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-logbook-field100.png",
@@ -1377,8 +1377,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-logbook-field200.png",
@@ -1416,8 +1416,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-library-light100.png",
@@ -1455,8 +1455,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-library-light200.png",
@@ -1494,8 +1494,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-library-dark100.png",
@@ -1533,8 +1533,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-library-dark200.png",
@@ -1572,8 +1572,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-library-field100.png",
@@ -1611,8 +1611,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-library-field200.png",
@@ -1650,8 +1650,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-settings-light100.png",
@@ -1689,8 +1689,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings-light200.png",
@@ -1728,8 +1728,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings-dark100.png",
@@ -1767,8 +1767,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings-dark200.png",
@@ -1806,8 +1806,8 @@
       "textScale": 100,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings-field100.png",
@@ -1845,8 +1845,8 @@
       "textScale": 200,
       "kind": "root",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-settings-field200.png",
@@ -1884,8 +1884,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_appearance-light100.png",
@@ -1923,8 +1923,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_appearance-light200.png",
@@ -1962,8 +1962,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_appearance-dark100.png",
@@ -2001,8 +2001,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_appearance-dark200.png",
@@ -2040,8 +2040,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_appearance-field100.png",
@@ -2079,8 +2079,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_appearance-field200.png",
@@ -2118,8 +2118,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "Side by side with the browser reference; findings and repairs in VISUAL_COMPARISON_AUDIT.md, final section. Native captures of the same root: evidence/native/run-2026-10-21/."
       },
       "web": {
         "path": "browser-settings_planning-light100.png",
@@ -2157,8 +2157,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_planning-light200.png",
@@ -2196,8 +2196,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_planning-dark100.png",
@@ -2235,8 +2235,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_planning-dark200.png",
@@ -2274,8 +2274,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_planning-field100.png",
@@ -2313,8 +2313,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_planning-field200.png",
@@ -2352,8 +2352,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_privacy-light100.png",
@@ -2391,8 +2391,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_privacy-light200.png",
@@ -2430,8 +2430,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_privacy-dark100.png",
@@ -2469,8 +2469,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_privacy-dark200.png",
@@ -2508,8 +2508,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_privacy-field100.png",
@@ -2547,8 +2547,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_privacy-field200.png",
@@ -2586,8 +2586,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_backup-light100.png",
@@ -2625,8 +2625,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_backup-light200.png",
@@ -2664,8 +2664,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_backup-dark100.png",
@@ -2703,8 +2703,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_backup-dark200.png",
@@ -2742,8 +2742,8 @@
       "textScale": 100,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_backup-field100.png",
@@ -2781,8 +2781,8 @@
       "textScale": 200,
       "kind": "settings section",
       "review": {
-        "status": "awaiting visual inspection",
-        "notes": "Capture existence is not visual acceptance."
+        "status": "not individually reviewed",
+        "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
       },
       "web": {
         "path": "browser-settings_backup-field200.png",

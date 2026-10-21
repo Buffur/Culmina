@@ -132,7 +132,7 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
       'Time between frames (seconds)',
       'Setup outside the window (minutes)',
       'Fit margin (minutes)',
-      'Theoretical file size per frame (MB)',
+      'File size per frame (MB)',
     ];
     final hints = [
       'Global: ${preferences.perFrameOverheadSeconds} s',
@@ -140,7 +140,10 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
           ? 'Global: not included'
           : 'Global: ${preferences.setupMinutes!} min',
       'Global: ${QuantityText.percent(preferences.feasibilityMarginPercent)}',
-      'Use file / rig evidence',
+      // Hybrid's wording: a figure the user enters is never measured
+      // evidence (its storage basis is planEstimate).
+      'A planning figure, not measured from your files. Empty: your file or '
+          'rig evidence.',
     ];
     return PopScope(
       canPop: _allowPop || (!_dirty && !_saving),
@@ -180,38 +183,59 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                         for (var i = 0; i < 4; i++)
                           SizedBox(
                             width: width,
-                            child: TextFormField(
-                              key: Key('planOverride.$i'),
-                              controller: _controllers[i],
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
+                            // Hybrid's label above the field: it wraps at
+                            // large text, so its unit is never cut off. The
+                            // field keeps the label as its accessible name.
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ExcludeSemantics(
+                                  child: Text(
+                                    labels[i],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall,
                                   ),
-                              decoration: InputDecoration(
-                                labelText: labels[i],
-                                helperText: hints[i],
-                                helperMaxLines: 3,
-                                errorMaxLines: 3,
-                              ),
-                              validator: (text) {
-                                if (text == null || text.trim().isEmpty) {
-                                  return null;
-                                }
-                                final number = double.tryParse(text.trim());
-                                if (number == null ||
-                                    !number.isFinite ||
-                                    number < 0 ||
-                                    (i == 3 && number == 0)) {
-                                  return i == 3
-                                      ? 'Enter a positive number or leave empty.'
-                                      : 'Enter zero or more, or leave empty.';
-                                }
-                                const maxima = [3600, 720, 720, 10000];
-                                if (number > maxima[i]) {
-                                  return 'Enter ${maxima[i]} or less.';
-                                }
-                                return null;
-                              },
+                                ),
+                                const SizedBox(height: 8),
+                                Semantics(
+                                  label: labels[i],
+                                  child: TextFormField(
+                                    key: Key('planOverride.$i'),
+                                    controller: _controllers[i],
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                    decoration: InputDecoration(
+                                      helperText: hints[i],
+                                      helperMaxLines: 3,
+                                      errorMaxLines: 3,
+                                    ),
+                                    validator: (text) {
+                                      if (text == null || text.trim().isEmpty) {
+                                        return null;
+                                      }
+                                      final number = double.tryParse(
+                                        text.trim(),
+                                      );
+                                      if (number == null ||
+                                          !number.isFinite ||
+                                          number < 0 ||
+                                          (i == 3 && number == 0)) {
+                                        return i == 3
+                                            ? 'Enter a positive number or leave empty.'
+                                            : 'Enter zero or more, or leave empty.';
+                                      }
+                                      const maxima = [3600, 720, 720, 10000];
+                                      if (number > maxima[i]) {
+                                        return 'Enter ${maxima[i]} or less.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                       ],

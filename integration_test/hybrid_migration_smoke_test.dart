@@ -258,7 +258,29 @@ void main() {
       await tester.enterText(countField, '${originalCount + 1}');
       await _settle(tester);
       await shot('block-editor-keyboard-light_100');
+      // The platform's Back (the route-pop message Android sends) on the
+      // dirty editor asks first; Cancel keeps the editor and its edit.
+      await tester.binding.handlePopRoute();
+      await _settle(tester);
+      expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
+      await shot('block-editor-system-back-guard-light_100');
+      await tap(find.byKey(const Key('unsaved.cancel')));
+      expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
+      // Back again and Discard: the editor closes and the plan is unchanged.
+      await tester.binding.handlePopRoute();
+      await _settle(tester);
+      await tap(find.byKey(const Key('unsaved.discard')));
+      expect(vm.plan.captureBlocks.first.frameCount, originalCount);
+      expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
+      // The explicit Cancel on a dirty edit leaves the plan unchanged too.
+      await tap(find.byKey(const Key('capture.edit.0')));
+      await reveal(countField);
+      await tester.enterText(countField, '${originalCount + 2}');
+      await _settle(tester);
       await tap(find.byKey(const Key('blockDialog.cancel')));
+      if (find.byKey(const Key('unsaved.discard')).evaluate().isNotEmpty) {
+        await tap(find.byKey(const Key('unsaved.discard')));
+      }
       expect(vm.plan.captureBlocks.first.frameCount, originalCount);
       expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
       await tap(find.byKey(const Key('planner.save')));
@@ -718,6 +740,10 @@ void main() {
         'checks': [
           'Visible Save writes planned record with capture blocks',
           'Full-screen block editor keyboard input and Cancel leave plan unchanged',
+          'Platform Back (route-pop message) on a dirty block editor asks first; '
+              'Cancel keeps the editor, Discard leaves the plan unchanged',
+          'Text scale and light/dark are in-process test values, not the '
+              'Android system font or dark setting',
           'Logbook detail reopens same plan ID and frame counts',
           'Night browsing leaves active and stored plan date unchanged',
           'Settings unit selection changes display state',

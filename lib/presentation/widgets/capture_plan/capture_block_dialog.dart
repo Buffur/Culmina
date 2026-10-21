@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_block.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/services/block_proposal.dart';
 import '../../../domain/services/calibration_match.dart';
@@ -794,6 +795,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                // Hybrid forms keep a gap between fields, so a floating label
+                // never sits on the border of the field above it.
+                spacing: AppSpacing.md,
                 children: [
                   // F06 A7 (AM-02): what the button changes, and what it does
                   // not; no extra confirmation.

@@ -30,7 +30,7 @@ import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
 import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -506,5 +506,23 @@ void main() {
     expect(find.byKey(const Key('nightMoon.week')), findsOneWidget);
     expect(find.byKey(const Key('nightMoon.month')), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('large text: no tab label is clipped (migration review F1)', (
+    tester,
+  ) async {
+    await start(tester, textScale: 2);
+    for (final label in ['Night', 'Moon', 'Weather']) {
+      final paragraph = tester.renderObject<RenderParagraph>(
+        find.descendant(of: find.byType(TabBar), matching: find.text(label)),
+      );
+      expect(
+        paragraph.size.width,
+        greaterThanOrEqualTo(
+          paragraph.getMaxIntrinsicWidth(double.infinity) - 0.5,
+        ),
+        reason: '$label is laid out at its full width',
+      );
+    }
   });
 }

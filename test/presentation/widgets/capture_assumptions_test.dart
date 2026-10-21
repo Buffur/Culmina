@@ -18,6 +18,7 @@ import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -307,6 +308,33 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('200%: each override label wraps whole, with its unit, and '
+      'names its field (migration review F2)', (tester) async {
+    await start(tester, PlanningPreferences());
+    tester.view.physicalSize = const Size(412, 915);
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await tester.pump();
+    await tester.ensureVisible(find.byKey(const Key('planOverride.edit')));
+    await tester.tap(find.byKey(const Key('planOverride.edit')));
+    await tester.pumpAndSettle();
+    final handle = tester.ensureSemantics();
+    for (final label in [
+      'Time between frames (seconds)',
+      'Setup outside the window (minutes)',
+      'Fit margin (minutes)',
+      'File size per frame (MB)',
+    ]) {
+      final text = find.text(label);
+      await tester.ensureVisible(text);
+      final paragraph = tester.renderObject<RenderParagraph>(text);
+      expect(paragraph.didExceedMaxLines, isFalse, reason: label);
+      expect(find.bySemanticsLabel(label), findsWidgets, reason: label);
+    }
+    handle.dispose();
+    expect(tester.takeException(), isNull);
+  });
 
   test('A3: an AF or MF record (and white balance) changes no budget, group '
       'or fit', () {

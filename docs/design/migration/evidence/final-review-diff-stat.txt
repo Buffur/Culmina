@@ -1,0 +1,60 @@
+== Resumed run: c224cf6..HEAD (excluding image evidence) ==
+ docs/design/WEB_TO_FLUTTER_MIGRATION.md                                                    |   48 +-
+ docs/design/migration/FLUTTER_CAPABILITY_INVENTORY.md                                      |  137 +-
+ docs/design/migration/VISUAL_COMPARISON_AUDIT.md                                           |   30 +-
+ docs/design/migration/WEB_DESIGN_INVENTORY.md                                              |  179 +-
+ docs/design/migration/evidence/FINAL_CLAUDE_REVIEW_PROMPT.md                               |   14 +
+ docs/design/migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md                            |   71 +
+ docs/design/migration/evidence/full-gate-2026-10-21-final.log                              | 7474 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ docs/design/migration/evidence/full-gate-2026-10-21.log                                    | 7465 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ docs/design/migration/evidence/matched/flutter/render-run-2026-10-21-final.log             |    8 +
+ docs/design/migration/evidence/matched/flutter/render-run-2026-10-21.log                   |    8 +
+ docs/design/migration/evidence/matched/gallery/manifest.json                               |  488 ++--
+ docs/design/migration/evidence/native/qa-avd-create-2026-10-21.log                         |    3 +
+ docs/design/migration/evidence/native/qa-display-2026-10-21.txt                            |    7 +
+ docs/design/migration/evidence/native/qa-emulator-stderr-2026-10-21.log                    |   35 +
+ docs/design/migration/evidence/native/qa-emulator-stdout-2026-10-21.log                    |  186 ++
+ docs/design/migration/evidence/native/run-2026-10-21/drive-attempt1-kotlin-incremental.log |  231 ++
+ docs/design/migration/evidence/native/run-2026-10-21/drive-attempt2-env-property.log       |  265 +++
+ docs/design/migration/evidence/native/run-2026-10-21/drive-attempt3-harness-unhermetic.log |  114 +
+ docs/design/migration/evidence/native/run-2026-10-21/drive.log                             | 2400 +++++++++++++++++++
+ docs/design/migration/evidence/native/run-2026-10-21/hot-reload-main.log                   |   55 +
+ docs/design/migration/evidence/native/run-2026-10-21/integration-report.json               |   38 +
+ docs/refinement/PROGRESS.md                                                                |    1 +
+ integration_test/hybrid_migration_smoke_test.dart                                          |    6 +
+ integration_test/perf_scenarios_test.dart                                                  |   10 +-
+ lib/core/theme/hybrid_view_entrance.dart                                                   |    3 +-
+ lib/presentation/screens/details/night_moon_screen.dart                                    |   23 +-
+ lib/presentation/screens/library/library_screen.dart                                       |    6 +-
+ lib/presentation/screens/settings/settings_screen.dart                                     |   76 +-
+ lib/presentation/shared/hybrid_app_bar.dart                                                |   30 +-
+ lib/presentation/shared/hybrid_focus_highlight.dart                                        |   12 +-
+ lib/presentation/viewmodels/capture_analysis_viewmodel.dart                                |   21 +-
+ lib/presentation/viewmodels/fit_no_window_reason.dart                                      |   31 +
+ lib/presentation/viewmodels/night_conditions_viewmodel.dart                                |   27 +-
+ lib/presentation/viewmodels/night_forecast_loading.dart                                    |   13 +
+ lib/presentation/viewmodels/session_plan_block_undo.dart                                   |   13 +
+ lib/presentation/viewmodels/session_plan_viewmodel.dart                                    |    9 +-
+ lib/presentation/viewmodels/site_deletion_undo.dart                                        |   31 +
+ lib/presentation/viewmodels/site_viewmodel.dart                                            |   32 +-
+ lib/presentation/widgets/capture_plan/plan_overrides_editor.dart                           |    2 +-
+ lib/presentation/widgets/night_browser_sections.dart                                       |   66 +-
+ test/presentation/navigation/app_shell_navigation_test.dart                                |   11 +-
+ test/presentation/screens/details/night_moon_browse_test.dart                              |    8 +
+ test/presentation/screens/home/planner_disclosure_test.dart                                |    4 +
+ test/presentation/screens/home/planner_structure_test.dart                                 |    6 +-
+ test/presentation/screens/location/location_picker_tiles_failing_test.dart                 |    9 +-
+ test/presentation/screens/settings/settings_screen_test.dart                               |    9 +-
+ test/presentation/screens/tonight/tonight_home_screen_test.dart                            |    3 +-
+ test/presentation/stage11_host_fixes_test.dart                                             |    6 +
+ test/presentation/viewmodels/night_conditions_scoped_dispose_test.dart                     |   65 +
+ test/presentation/widgets/capture_outputs_test.dart                                        |    4 +-
+ test/presentation/widgets/moon_phase_painter_test.dart                                     |   62 +
+ 51 files changed, 19327 insertions(+), 528 deletions(-)
+
+== Whole migration: 8048cfa..HEAD, lib/ and test/ and integration_test/ ==
+ test/presentation/widgets/stacking_gain_graph_test.dart                    |    3 +
+ test/presentation/widgets/weather_forecast_widget_test.dart                |   43 +-
+ test/presentation/widgets/weather_hourly_charts_test.dart                  |  167 ++++++++
+ test/support/hybrid_comparison_fixture.dart                                |  515 +++++++++++++++++++++++
+ 156 files changed, 12965 insertions(+), 2367 deletions(-)

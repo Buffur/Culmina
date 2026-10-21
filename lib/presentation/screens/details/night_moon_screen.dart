@@ -89,6 +89,8 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
     final site = context.watch<SiteViewModel>();
     final browser = context.watch<NightBrowserViewModel>();
     final text = Theme.of(context).textTheme;
+    // Three equal tabs hold 14 px labels up to about 1.3x on a phone.
+    final largeTabs = MediaQuery.textScalerOf(context).scale(14) > 14 * 1.3;
     return DefaultTabController(
       length: 3,
       initialIndex: widget.initialPage,
@@ -99,6 +101,9 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
           title: Text(page == 2 ? 'Weather' : 'Night & Moon'),
           actions: const [FieldModeButton()],
           bottom: TabBar(
+            // Large text: the three labels scroll instead of being clipped.
+            isScrollable: largeTabs,
+            tabAlignment: largeTabs ? TabAlignment.start : null,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: UnderlineTabIndicator(
               borderSide: BorderSide(

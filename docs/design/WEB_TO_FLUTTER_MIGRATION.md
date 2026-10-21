@@ -24,12 +24,42 @@ The seven-step sequence below now stands as follows.
 | Step | Result | Evidence |
 | --- | --- | --- |
 | 1. Calendar, Planning Settings, stored Undo | Done (hand-over) and covered by G2 and N1 | `UNDO_IMPLEMENTATION.md`, N1 report |
-| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final run `full-gate-2026-10-21-final.log` (G2) |
-| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/` (N1; failed attempts kept) |
+| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final runs `full-gate-2026-10-21-final.log` and, after the review fixes, `full-gate-2026-10-21-after-review.log` (G2) |
+| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/` and, on the final code, `run-2026-10-21-r2/` (N1; failed attempts kept) |
 | 4. Matched browser ↔ host pairs | **Reviewed**: fixture unchanged, host recaptured, 48 pairs regenerated, per-pair review; repairs made for the inverted Moon phase glyph (pre-existing F15 defect), the missing Moon primary number, Planning slider rows, app-bar action margins and "1 rigs" | `VISUAL_COMPARISON_AUDIT.md` final section (V1), `migration/evidence/matched/gallery/` |
-| 5. Normal APK + hot reload on 5582 | **PASS** — `lib/main.dart` debug APK installed and started; a real source change hot-reloaded ("Reloaded 1 of 2788 libraries", code 0) and reverted | `migration/evidence/native/run-2026-10-21/hot-reload-main.log` (H1) |
+| 5. Normal APK + hot reload on 5582 | **PASS** — `lib/main.dart` debug APK installed and started; a real source change hot-reloaded ("Reloaded 1 of 2788 libraries", code 0) and reverted. On the final code, `flutter build apk --debug -t lib/main.dart` built `build/app/outputs/flutter-apk/app-debug.apk` (SHA-256 `d12575b6…44dd244`), installed and launched to the first-run screen on 5582 | `migration/evidence/native/run-2026-10-21/hot-reload-main.log` (H1); `run-2026-10-21-r2/build-apk-debug.log`, `main-apk-launch.png` |
 | 6. Matrices and JSON statuses | Done: every Matrix A row (84 + the accepted A-LIB-05 omission) and all 63 Matrix B rows cite G2/N1/V1/H1 and name what was not exercised; all 179 JSON leaves remain accounted (56 used, 2 transformed, 121 not applicable, 0 blocked) with `hybrid_tokens_test.dart` in G2 | Matrix A/B "Final evidence (2026-10-21)" |
-| 7. Independent Claude CLI review | See "Independent review" below | `migration/evidence/final-claude-original-report.txt` |
+| 7. Independent Claude CLI review | **Run** (read-only, exit 0); 12 findings, dispositions below; confirmed defects fixed and re-verified | `migration/evidence/final-claude-original-report.txt`, `final-claude-invocation.txt` |
+
+### Independent review (Claude CLI, 2026-10-21) and dispositions
+
+The CLI ran read-only on `02f5cdb` (Read/Grep/Glob only, exit 0, 06:36–06:47
+UTC); its report is kept verbatim. It saw the report file empty only because
+its own output was being written there. Its verdicts were: visual fidelity
+FAIL, functional preservation PASS (host scope), persistence/compatibility PASS,
+accessibility/native FAIL, evidence quality FAIL.
+
+| Finding | Disposition | Re-verification |
+| --- | --- | --- |
+| F1 "Weather" tab clipped at 200 % | **Fixed**: the tab bar scrolls when 14 px labels exceed ~1.3x | New test fails without the fix, passes with it; host 200 % renders; N1 r2 |
+| F2 override labels lose units at 200 % | **Fixed**: Hybrid label above each field, wrapping; the field keeps it as its accessible name | New 200 % test (whole label, semantics label) |
+| F3 block editor: no gap between fields; editor composition not adopted (segmented type, label-above, examples, live integration line, From a photo disclosure, rig line, full-width Apply) | Gap **fixed** (16 px column spacing). Composition **OPEN-01**: not adopted in this run; recommendation below | Editor tests in G2; N1 r2 editor screenshots |
+| F4 boilerplate "VERIFIED" in Matrix A | **Fixed**: default rows now say host-verified, root reviewed, interactions not driven on the device; only rows N1 really drove say so | Matrix A/B text |
+| F5 simulated text scale/theme, no system Back | Labels corrected (in-process test values). **Added** platform Back (route-pop message) on a dirty editor: asks; Cancel keeps; Discard leaves the plan unchanged | N1 r2 |
+| F6 skipped host suite printed as PASS | Recorded: `hybrid_migration_smoke_test` is skipped on the host by design; the gate prints PASS for a skipped file. Tooling unchanged | — |
+| F7 Settings sections keep the root navigation | **OWNER DECISION D-05** (below) | — |
+| F8 field-mode action black on #AA0000 (~2.7:1), contrast unchecked in field mode | **OWNER DECISION D-06**: the pairing comes from `tokens.json`; widen the documented field exception or change the action colour | — |
+| F9 Geist variable weights | **Verified**: `geist_weight_test.dart` shows w400 < w500 < w600 < w700 widths with the bundled font (real instances, not one outline) | G2 |
+| F10 "Theoretical" bytes label | **Fixed**: "File size per frame (MB)", hint "A planning figure, not measured from your files. Empty: your file or rig evidence." | G2 |
+| F11 DATA_MODEL still v25 | **Fixed**: DATA_MODEL v27 row and note; FEATURE_STATUS note | Docs |
+| F12 minor gaps (Weather clearest/cloudiest line, coverage only when incomplete, "10 h 55 min dark" on Tonight, "M42" in the plan summary, rig editor dialog style) | Recorded as **D-07** (below) | — |
+
+**OPEN-01 (recommended next step).** Adopt the web's block-editor composition
+(segmented frame type, labels above fields, exposure examples, the live
+"= N of integration" line, the From a photo disclosure, the rig context line,
+full-width Apply) on the existing editor state; no new logic is needed. It was
+not started in this run so the verified editor contract stays intact; it is
+the main remaining visual gap.
 
 ### Deviations kept on purpose (native authority)
 
@@ -44,6 +74,19 @@ The seven-step sequence below now stands as follows.
 - **D-04** Dates use the app's existing `NightTimeFormatter` (device locale:
   "Tue, Nov 10"), not the web's "10 Nov".
 - A-LIB-05 (standalone rig JSON) remains the owner's accepted omission.
+- **D-05 (owner decision)** Settings sections (Appearance, Planning, Privacy,
+  Backup) open inside the Settings tab and keep the root navigation; the web
+  hides it on detail screens. At 200 % the 2 × 2 navigation plus Save/Cancel
+  take about 30 % of the height. Recommendation: push the sections above the
+  shell like Plan and Night/Moon/Weather.
+- **D-06 (owner decision)** Field mode's primary action is black on `#AA0000`
+  (about 2.7:1) and the accessibility sweep does not check contrast in field
+  mode; the documented exception covers secondary text only.
+- **D-07** Minor content kept native: Weather omits the "clearest / cloudiest
+  around" line and shows coverage only when incomplete; Tonight's Night row
+  omits the dark total; the plan summary omits the catalogue ID; the rig editor
+  stays a dialog.
+
 
 ### Not exercised (limits)
 
@@ -115,7 +158,7 @@ large text, themes and platform workflows belong to these registers.
    Appearance and Privacy are immediate in both sources. Android system font
    scaling replaces the browser-only preview-size control.
 
-## Implementation checkpoint
+## Implementation checkpoint (2026-10-20, historical)
 
 - Geist assets, licence registration, exact three-theme Hybrid color roles,
   geometry, typography, control themes and 120/180 ms motion tokens are present.
@@ -144,7 +187,7 @@ large text, themes and platform workflows belong to these registers.
   does not cover records or fixed actions. Existing action/expiry outcomes are
   retained. Verification of this shared adaptation is pending.
 
-## Evidence ledger
+## Evidence ledger (2026-10-20, historical — superseded by the resumed run above)
 
 [Baseline report](migration/evidence/baseline/BASELINE.md): analyzer passed and
 94 selected existing tests passed before production edits. Initial host renders
@@ -181,7 +224,7 @@ One concurrent Flutter attempt failed because Windows held sqlite3.dll in
 another test process. Flutter test/build/render commands are now serialized;
 no files were deleted or permissions changed to bypass the lock.
 
-## Native evidence and current limits
+## Native evidence and current limits (2026-10-20, historical — superseded above)
 
 The first Android test-entry APK compiled and installed, then the harness failed
 before its first interaction because its lazy scroll finder was incorrect. That
@@ -204,7 +247,7 @@ must not be inferred from those checks.
 No final production APK, final native workflow pass, complete matched visual
 acceptance or final independent Claude review is claimed at this checkpoint.
 
-## Remaining completion sequence
+## Completion sequence as planned on 2026-10-20 (now executed; see the resumed run above)
 
 1. Finish and verify Calendar, Planning Settings and owner-approved stored Undo.
 2. Run full analyzer, appropriate repository/presentation tests and existing

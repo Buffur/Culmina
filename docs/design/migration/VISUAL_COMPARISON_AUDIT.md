@@ -83,7 +83,17 @@ field 100 % and light 200 % samples (Tonight, Plan, Moon, Settings/Planning):
 | Dates | Native writes "Tue, Nov 10" / "Night of Tue, Nov 10"; web writes "10 Nov". | Existing app-wide `NightTimeFormatter` (device locale) kept; deviation D-04. |
 | Host glyph tofu | `|δ|` in the NPF row renders as a box on the host only (no system fallback font in `flutter test`). | On Android the same string renders correctly (`native/run-2026-10-21/plan-light_100.png`): host-only, not a defect. |
 
-Deviations D-01 to D-04 are listed in the migration ledger with their reasons.
+After the independent review (ledger, "Independent review"): its F1 — the
+Weather tab clipped at 200 % — was missed in this review and is now fixed; its
+F2 (override labels at 200 %) and the block-editor field gap are fixed. The host
+was recaptured once more on the final code (`render-run-2026-10-21-final.log`;
+fixture again unchanged) and every root at 200 % was reviewed (light for six
+roots, Weather dark, Settings field): no clipped label remains. The gallery now
+records which pairs were reviewed by eye (20) and which were not individually
+reviewed (52) in `evidence/matched/visual-review.json`. The block editor's
+composition remains open (OPEN-01).
+
+Deviations D-01 to D-07 are listed in the migration ledger with their reasons.
 
 Browser-only illustrative/demo notices are intentionally absent from production.
 Native backup remains the full existing capability, while the prototype demonstrates
