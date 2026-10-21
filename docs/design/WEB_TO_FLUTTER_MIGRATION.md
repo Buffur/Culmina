@@ -43,7 +43,7 @@ accessibility/native FAIL, evidence quality FAIL.
 | --- | --- | --- |
 | F1 "Weather" tab clipped at 200 % | **Fixed**: the tab bar scrolls when 14 px labels exceed ~1.3x | New test fails without the fix, passes with it; host 200 % renders; N1 r2 |
 | F2 override labels lose units at 200 % | **Fixed**: Hybrid label above each field, wrapping; the field keeps it as its accessible name | New 200 % test (whole label, semantics label) |
-| F3 block editor: no gap between fields; editor composition not adopted (segmented type, label-above, examples, live integration line, From a photo disclosure, rig line, full-width Apply) | Gap **fixed** (16 px column spacing). Composition **OPEN-01**: not adopted in this run; recommendation below | Editor tests in G2; N1 r2 editor screenshots |
+| F3 block editor: no gap between fields; editor composition not adopted (segmented type, label-above, examples, live integration line, From a photo disclosure, rig line, full-width Apply) | Gap **fixed**; composition **done as OPEN-01** (below) | Editor suites; editor pairs; N1 r3 |
 | F4 boilerplate "VERIFIED" in Matrix A | **Fixed**: default rows now say host-verified, root reviewed, interactions not driven on the device; only rows N1 really drove say so | Matrix A/B text |
 | F5 simulated text scale/theme, no system Back | Labels corrected (in-process test values). **Added** platform Back (route-pop message) on a dirty editor: asks; Cancel keeps; Discard leaves the plan unchanged | N1 r2 |
 | F6 skipped host suite printed as PASS | Recorded: `hybrid_migration_smoke_test` is skipped on the host by design; the gate prints PASS for a skipped file. Tooling unchanged | — |
@@ -54,12 +54,19 @@ accessibility/native FAIL, evidence quality FAIL.
 | F11 DATA_MODEL still v25 | **Fixed**: DATA_MODEL v27 row and note; FEATURE_STATUS note | Docs |
 | F12 minor gaps (Weather clearest/cloudiest line, coverage only when incomplete, "10 h 55 min dark" on Tonight, "M42" in the plan summary, rig editor dialog style) | Recorded as **D-07** (below) | — |
 
-**OPEN-01 (recommended next step).** Adopt the web's block-editor composition
-(segmented frame type, labels above fields, exposure examples, the live
-"= N of integration" line, the From a photo disclosure, the rig context line,
-full-width Apply) on the existing editor state; no new logic is needed. It was
-not started in this run so the verified editor contract stays intact; it is
-the main remaining visual gap.
+**OPEN-01 — done (2026-10-21, owner's go-ahead).** The block editor now
+follows the web composition on its existing state (plan.js `blockView`): the
+rig named above the form, the frame type as a segmented choice, "From a photo"
+and Details (binning and planned timing, with their values in its summary) as
+disclosures, labels above the fields with their hints at the field's edge, the
+live "= … of integration" line (or a calibration block's planned time, "not
+integration"), focus as a segmented record, and a footer that says what the
+action does above a full-width Add block / Apply changes. Validation, origins,
+proposals, calibration matching, file reading and the unsaved-changes guard
+are unchanged. Evidence: `block_editor_hybrid_test.dart` and the editor suites
+(158 tests), matched editor pairs `plan_editor` / `plan_editor_invalid` in the
+gallery, native run `evidence/native/run-2026-10-21-r3-editor/` (all passed, 70 screenshots), full gate `evidence/full-gate-2026-10-21-open01.log` (2423 tests and host E2E pass; its one analyzer warning, an unused test import, was removed and re-checked in the same log). Kept native
+(D-08, below).
 
 ### Deviations kept on purpose (native authority)
 
@@ -82,6 +89,12 @@ the main remaining visual gap.
 - **D-06 (owner decision)** Field mode's primary action is black on `#AA0000`
   (about 2.7:1) and the accessibility sweep does not check contrast in field
   mode; the documented exception covers secondary text only.
+- **D-08** Block editor, kept native: a fifth frame type (Dark flat) makes the
+  segmented choice two rows; "From a photo" appears only where files can be
+  read (not on the host renders); validation messages sit under their field
+  instead of the web's "Check the highlighted fields" toast; the footer keeps
+  an explicit Cancel beside its explanation; the filter stays a list with
+  None and any custom filter, not free text.
 - **D-07** Minor content kept native: Weather omits the "clearest / cloudiest
   around" line and shows coverage only when incomplete; Tonight's Night row
   omits the dark total; the plan summary omits the catalogue ID; the rig editor

@@ -32,6 +32,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../support/fake_location_service.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
+import '../../support/block_editor_finders.dart';
 
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
@@ -175,10 +176,7 @@ void main() {
     await tester.tap(find.text('Ha · 300 s × 20 · 1 h 40 min'));
     await settle(tester);
     expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame count'),
-      '7',
-    );
+    await tester.enterText(blockField('Frames'), '7');
     await tester.tap(find.byKey(const Key('blockDialog.submit')));
     await settle(tester);
     expect(vm.captureBlocks[1].frameCount, 7);
@@ -280,14 +278,8 @@ void main() {
       expect(vm.plan.isExampleCapturePlan, isFalse);
       await tester.tap(find.byTooltip('Add capture block'));
       await tester.pumpAndSettle();
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-        '60',
-      );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Frame count'),
-        '7',
-      );
+      await tester.enterText(blockField('Exposure (seconds)'), '60');
+      await tester.enterText(blockField('Frames'), '7');
       await tester.tap(find.byKey(const Key('blockDialog.submit')));
       await settle(tester);
       expect(vm.captureBlocks.last.frameCount, 7);

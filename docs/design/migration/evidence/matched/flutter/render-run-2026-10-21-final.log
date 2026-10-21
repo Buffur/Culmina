@@ -1,8 +1,8 @@
 00:00 +0: loading D:/RollingGames/Astro-Planner/.claude/worktrees/admiring-archimedes-15f952/test/presentation/design_system/u_renders_test.dart
 00:00 +0: U renders: light_100
-00:10 +1: U renders: light_200
-00:19 +2: U renders: dark_100
-00:28 +3: U renders: dark_200
-00:36 +4: U renders: field_100
-00:45 +5: U renders: field_200
-00:53 +6: All tests passed!
+00:14 +1: U renders: light_200
+00:26 +2: U renders: dark_100
+00:38 +3: U renders: dark_200
+00:49 +4: U renders: field_100
+01:00 +5: U renders: field_200
+01:11 +6: All tests passed!

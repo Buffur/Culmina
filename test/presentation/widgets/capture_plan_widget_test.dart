@@ -33,6 +33,7 @@ import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
 
 import '../../support/fake_location_service.dart';
 import '../../support/no_snapshot_weather.dart';
+import '../../support/block_editor_finders.dart';
 
 class _MockWeather with NoSnapshotWeather implements WeatherRepository {}
 
@@ -119,14 +120,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
 
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-      '0',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame count'),
-      '10',
-    );
+    await tester.enterText(blockField('Exposure (seconds)'), '0');
+    await tester.enterText(blockField('Frames'), '10');
     await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
@@ -139,14 +134,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
 
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-      '120',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame count'),
-      '15',
-    );
+    await tester.enterText(blockField('Exposure (seconds)'), '120');
+    await tester.enterText(blockField('Frames'), '15');
     await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 
@@ -179,10 +168,7 @@ void main() {
       expect(find.text('60'), findsOneWidget);
       expect(find.text('30'), findsOneWidget);
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Frame count'),
-        '45',
-      );
+      await tester.enterText(blockField('Frames'), '45');
       await tester.tap(find.widgetWithText(FilledButton, 'Apply changes'));
       await tester.pumpAndSettle();
 
@@ -237,10 +223,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.byKey(const Key('blockDialog.gainValue')));
     await tester.pumpAndSettle();
-    expect(find.text('ISO (for your records)'), findsOneWidget);
+    expect(find.text('ISO (optional)'), findsOneWidget);
     expect(find.textContaining('ensitivity'), findsNothing);
     final helper = find.text(
-      'Optional; recorded only, it does not change the plan.',
+      'Recorded only; it does not change the plan. Leave blank to keep it '
+      'unrecorded.',
     );
     expect(
       tester.renderObject<RenderParagraph>(helper).didExceedMaxLines,
@@ -268,11 +255,12 @@ void main() {
     await tester.tap(find.byIcon(Icons.add_circle));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButtonFormField<FrameType>));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Dark').last);
-    await tester.pumpAndSettle();
+    await chooseSegment(tester, 'blockDialog.frameType', 'Dark');
 
+    // Hybrid: the planned timing is in Details.
+    await openBlockDisclosure(tester, 'blockDialog.details');
+    await tester.ensureVisible(find.byKey(const Key('blockDialog.policy')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('blockDialog.policy')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('During the window').last);
@@ -286,14 +274,8 @@ void main() {
       '800',
     );
 
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-      '60',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame count'),
-      '10',
-    );
+    await tester.enterText(blockField('Exposure (seconds)'), '60');
+    await tester.enterText(blockField('Frames'), '10');
     await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
     await tester.pumpAndSettle();
 

@@ -11,6 +11,8 @@ import 'package:astroplan/presentation/widgets/capture_plan/capture_block_dialog
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../support/block_editor_finders.dart';
+
 final _file = FieldOrigin(OriginKind.file, 'IMG_0845.dng');
 final _copied = FieldOrigin(OriginKind.copied, 'from Ha · 300 s × 20');
 
@@ -351,7 +353,7 @@ void main() {
       await type(tester, 'blockDialog.wbKelvin', '4500');
       await tapKey(tester, 'blockDialog.details');
       await type(tester, 'blockDialog.tint', '-3');
-      await choose(tester, 'blockDialog.focus', 'MF (manual)');
+      await chooseSegment(tester, 'blockDialog.focus', 'MF');
       await submit(tester);
       final b = result.single!;
       expect(b.gain, CaptureGain.iso(800));
@@ -394,7 +396,15 @@ void main() {
     testWidgets('an old block without them reads "Not recorded" and stays '
         'unrecorded', (tester) async {
       await open(tester, initial: _light());
-      expect(find.text('Not recorded'), findsNWidgets(2));
+      // White balance reads "Not recorded"; Hybrid's focus record is a
+      // segmented choice whose "Unrecorded" option is selected.
+      expect(find.text('Not recorded'), findsOneWidget);
+      final handle = tester.ensureSemantics();
+      expect(
+        tester.getSemantics(find.byKey(const Key('blockDialog.focus.none'))),
+        isSemantics(isChecked: true),
+      );
+      handle.dispose();
       await submit(tester);
       expect(
         (result.single!.whiteBalance, result.single!.focusMode),
@@ -415,7 +425,7 @@ void main() {
         find.textContaining('white balance Auto, focus AF'),
         findsOneWidget,
       );
-      expect(find.widgetWithText(TextFormField, 'Focus'), findsNothing);
+      expect(blockField('Focus'), findsNothing);
       await submit(tester);
       expect(result.single!.whiteBalance, WhiteBalance.auto());
       expect(result.single!.focusMode, FocusMode.af);
@@ -576,10 +586,10 @@ void main() {
     testWidgets('Add block for a new block, Apply changes for an edit, with '
         'the scope said', (tester) async {
       await open(tester);
-      expect(find.text('Add block'), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, 'Add block'), findsOneWidget);
       expect(find.text('Save'), findsNothing);
       expect(
-        find.textContaining('Adds the block to this plan'),
+        find.textContaining('Adds to this plan. Save plan records it.'),
         findsOneWidget,
       );
       await tapKey(tester, 'blockDialog.cancel');
@@ -588,7 +598,7 @@ void main() {
       expect(find.text('Apply changes'), findsOneWidget);
       expect(find.text('Save'), findsNothing);
       expect(
-        find.textContaining('Changes the block in this plan, with Undo'),
+        find.textContaining('Changes this plan, with Undo'),
         findsOneWidget,
       );
     });

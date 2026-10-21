@@ -309,7 +309,13 @@ void main() {
       expect(find.textContaining('example'), findsNothing);
       await tester.tap(find.byKey(const Key('capturePlan.addLights')));
       await settle(tester);
-      expect(find.text('Add capture block'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('Add block'),
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('an astro rig is offered a file too, since FITS is read '

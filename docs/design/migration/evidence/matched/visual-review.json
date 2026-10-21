@@ -126,5 +126,37 @@
   "settings_backup": {
     "status": "not individually reviewed",
     "notes": "Not inspected pair by pair; shares its components and theme roles with the reviewed variants of this surface. Capture existence is not visual acceptance."
+  },
+  "plan_editor-light100": {
+    "status": "reviewed by eye 2026-10-21",
+    "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+  },
+  "plan_editor-light200": {
+    "status": "reviewed by eye 2026-10-21",
+    "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+  },
+  "plan_editor-dark200": {
+    "status": "reviewed by eye 2026-10-21",
+    "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+  },
+  "plan_editor-field100": {
+    "status": "reviewed by eye 2026-10-21",
+    "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+  },
+  "plan_editor_invalid-light100": {
+    "status": "reviewed by eye 2026-10-21",
+    "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+  },
+  "plan_editor_invalid-dark100": {
+    "status": "reviewed by eye 2026-10-21",
+    "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+  },
+  "plan_editor": {
+    "status": "not individually reviewed",
+    "notes": "Shares its components with the reviewed variants of this editor."
+  },
+  "plan_editor_invalid": {
+    "status": "not individually reviewed",
+    "notes": "Shares its components with the reviewed variants of this editor."
   }
 }

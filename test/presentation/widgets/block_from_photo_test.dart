@@ -18,6 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../support/jpeg_fixture.dart';
 import '../../support/memory_metadata_source.dart';
 import '../../support/tiff_fixture.dart';
+import '../../support/block_editor_finders.dart';
 
 List<int> _jpeg({required int iso, required int exposureMicro}) {
   final exif = phoneStyleJpegExif();
@@ -98,6 +99,10 @@ void main() {
   }
 
   Future<void> tapKey(WidgetTester tester, String key) async {
+    // Hybrid: "Take from a photo" is inside the "From a photo" disclosure.
+    if (key == 'blockDialog.fromPhoto') {
+      await openBlockDisclosure(tester, 'blockDialog.photo');
+    }
     await tester.ensureVisible(find.byKey(Key(key)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(Key(key)));

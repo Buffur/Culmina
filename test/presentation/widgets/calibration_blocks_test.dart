@@ -34,6 +34,7 @@ import '../../support/fake_location_service.dart';
 import '../../support/fake_reverse_geocoder.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
+import '../../support/block_editor_finders.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -95,15 +96,11 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    Future<void> pickType(WidgetTester tester, String label) async {
-      await tester.tap(find.byType(DropdownButtonFormField<FrameType>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(label).last);
-      await tester.pumpAndSettle();
-    }
+    Future<void> pickType(WidgetTester tester, String label) =>
+        chooseSegment(tester, 'blockDialog.frameType', label);
 
     Future<void> enter(WidgetTester tester, String field, String text) async {
-      final f = find.widgetWithText(TextFormField, field);
+      final f = blockField(field);
       await tester.ensureVisible(f);
       await tester.enterText(f, text);
     }
@@ -139,7 +136,9 @@ void main() {
         await open(tester, result, blocks: [_ha]);
         await pickType(tester, item.$1);
         await enter(tester, 'Exposure (seconds)', item.$2);
-        await enter(tester, 'Frame count', '20');
+        await enter(tester, 'Frames', '20');
+        // Hybrid: the planned timing is in Details.
+        await openBlockDisclosure(tester, 'blockDialog.details');
         final policy = find.byKey(const Key('blockDialog.policy'));
         await tester.ensureVisible(policy);
         await tester.tap(policy);
@@ -167,8 +166,8 @@ void main() {
       await open(tester, result, blocks: [_ha, _oiii]);
       await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
-      await enter(tester, 'Gain (for your records)', '77');
+      await enter(tester, 'Frames', '20');
+      await enter(tester, 'Gain (optional)', '77');
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
       expect(result.single!.gain, CaptureGain.gain(77));
@@ -180,8 +179,8 @@ void main() {
       await open(tester, result, blocks: [_ha, _oiii]);
       await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
-      await enter(tester, 'Gain (for your records)', '');
+      await enter(tester, 'Frames', '20');
+      await enter(tester, 'Gain (optional)', '');
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
       expect(result.single!.gain, CaptureGain.none);
@@ -194,7 +193,7 @@ void main() {
       await open(tester, result, blocks: [_ha, _oiii]);
       await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
+      await enter(tester, 'Frames', '20');
       await chooseSource(tester, 'OIII · 180 s × 20');
       await submit(tester);
       expect(result.single!.gain, CaptureGain.gain(120));
@@ -205,8 +204,8 @@ void main() {
       await open(tester, result, blocks: [_ha]);
       await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
-      await enter(tester, 'Gain (for your records)', '77');
+      await enter(tester, 'Frames', '20');
+      await enter(tester, 'Gain (optional)', '77');
       await useOther(tester);
       await submit(tester);
       final f = result.single!;
@@ -227,7 +226,7 @@ void main() {
       );
       await pickType(tester, 'Flat');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
+      await enter(tester, 'Frames', '20');
       expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
       expect(find.byKey(const Key('blockDialog.gainValue')), findsNothing);
       await chooseSource(tester, 'OIII · 180 s × 20');
@@ -251,9 +250,9 @@ void main() {
       await open(tester, result, blocks: [_ha, flat]);
       await pickType(tester, 'Dark flat');
       await useOther(tester);
-      final exposure = find.widgetWithText(TextFormField, 'Exposure (seconds)');
+      final exposure = blockField('Exposure (seconds)');
       expect(tester.widget<TextFormField>(exposure).controller!.text, '2.5');
-      await enter(tester, 'Frame count', '20');
+      await enter(tester, 'Frames', '20');
       await submit(tester);
       final d = result.single!;
       expect(
@@ -273,14 +272,11 @@ void main() {
             .data,
         'From Ha · 300 s × 20: exposure 300 s, gain 100, 2 × 2 binning',
       );
-      expect(
-        find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-        findsNothing,
-      );
+      expect(blockField('Exposure (seconds)'), findsNothing);
       expect(find.byKey(const Key('blockDialog.gainValue')), findsNothing);
       expect(find.byKey(const Key('blockDialog.binning')), findsNothing);
       expect(tester.takeException(), isNull, reason: 'no overflow');
-      await enter(tester, 'Frame count', '30');
+      await enter(tester, 'Frames', '30');
       await submit(tester);
       final d = result.single!;
       expect(
@@ -306,7 +302,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('blockDialog.inherited')), findsNothing);
       await enter(tester, 'Exposure (seconds)', '200');
-      await enter(tester, 'Frame count', '10');
+      await enter(tester, 'Frames', '10');
       await submit(tester);
       final d = result.single!;
       expect(d.exposureTimeSeconds, 200);
@@ -323,7 +319,7 @@ void main() {
         findsOneWidget,
       );
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
+      await enter(tester, 'Frames', '20');
       await submit(tester);
       final f = result.single!;
       expect(
@@ -339,7 +335,7 @@ void main() {
       await pickType(tester, 'Bias');
       expect(find.text('The shortest your camera allows.'), findsOneWidget);
       await enter(tester, 'Exposure (seconds)', '0.001');
-      await enter(tester, 'Frame count', '50');
+      await enter(tester, 'Frames', '50');
       await submit(tester);
       final b = result.single!;
       expect(
@@ -362,7 +358,7 @@ void main() {
       await open(tester, result, blocks: [_ha, flat]);
       await pickType(tester, 'Dark flat');
       expect(find.textContaining('From Flat (Ha) · 2.5 s × 20'), findsOne);
-      await enter(tester, 'Frame count', '20');
+      await enter(tester, 'Frames', '20');
       await submit(tester);
       final d = result.single!;
       expect(
@@ -377,10 +373,7 @@ void main() {
       await open(tester, []);
       await pickType(tester, 'Dark');
       expect(find.byKey(const Key('blockDialog.source')), findsNothing);
-      expect(
-        find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-        findsOneWidget,
-      );
+      expect(blockField('Exposure (seconds)'), findsOneWidget);
     });
 
     testWidgets('tips: one line, more on demand, hideable; hiding them hides '
@@ -468,10 +461,7 @@ void main() {
           await tester.pumpAndSettle();
           // AM-04 (F06 A5): an astro camera's binning, in Details.
           if (c.offersLightBinning) {
-            final details = find.byKey(const Key('blockDialog.details'));
-            await tester.ensureVisible(details);
-            await tester.tap(details);
-            await tester.pumpAndSettle();
+            await openBlockDisclosure(tester, 'blockDialog.details');
           }
           expect(
             find.byKey(const Key('blockDialog.binning')),
@@ -500,9 +490,7 @@ void main() {
           }
           if (c != CameraClass.unknown) {
             expect(
-              find.text(
-                iso ? 'ISO (for your records)' : 'Gain (for your records)',
-              ),
+              find.text(iso ? 'ISO (optional)' : 'Gain (optional)'),
               findsOneWidget,
             );
           }
@@ -536,7 +524,7 @@ void main() {
       );
       expect(value.controller!.text, isEmpty, reason: 'not "gain 800"');
       await enter(tester, 'Exposure (seconds)', '2');
-      await enter(tester, 'Frame count', '20');
+      await enter(tester, 'Frames', '20');
       await submit(tester);
       expect(result.single!.gain, CaptureGain.none);
     });
@@ -552,10 +540,7 @@ void main() {
       );
       await open(tester, [], blocks: [_ha, dark], initial: dark);
       expect(find.byKey(const Key('blockDialog.source')), findsNothing);
-      expect(
-        find.widgetWithText(TextFormField, 'Exposure (seconds)'),
-        findsOneWidget,
-      );
+      expect(blockField('Exposure (seconds)'), findsOneWidget);
     });
   });
 

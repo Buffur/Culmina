@@ -29,6 +29,7 @@ import '../../support/fake_location_service.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
 import '../../support/tiff_fixture.dart';
+import '../../support/block_editor_finders.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -124,6 +125,7 @@ void main() {
     await tester.pumpAndSettle();
     final dng = (TiffFixture()..ifd0.addAll(phoneStyleDngIfd0())).build().bytes;
     files.file('DSC_0001.dng', dng, length: 24012345);
+    await openBlockDisclosure(tester, 'blockDialog.photo');
     await tester.ensureVisible(find.byKey(const Key('blockDialog.fromPhoto')));
     await tester.tap(find.byKey(const Key('blockDialog.fromPhoto')));
     await settle();

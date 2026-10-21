@@ -473,6 +473,34 @@ void main() {
             await _settle(tester);
           }
         }
+        if (wantedSurfaces == null || wantedSurfaces.contains('plan_editor')) {
+          // OPEN-01: the first block's editor, as the web's plan_editor
+          // reference, then with an invalid exposure submitted.
+          // The plan's list is lazy: a tall view builds the first block's
+          // Edit; the editor is then shot at phone size.
+          tester.view.physicalSize = const Size(412, 6000);
+          await at(AppRouter.session(), 'plan');
+          await tap(find.byKey(const Key('capture.edit.0')));
+          tester.view.physicalSize = const Size(412, 915);
+          await shot('plan_editor');
+          await tester.enterText(
+            find.byKey(const Key('blockDialog.exposure')),
+            'invalid',
+          );
+          await tap(find.byKey(const Key('blockDialog.submit')));
+          final scroll = find.byKey(const Key('blockEditor.scroll'));
+          tester
+              .state<ScrollableState>(
+                find
+                    .descendant(of: scroll, matching: find.byType(Scrollable))
+                    .first,
+              )
+              .position
+              .jumpTo(0);
+          await shot('plan_editor_invalid');
+          expect(tester.takeException(), isNull, reason: 'editor ${v.suffix}');
+          await tap(find.byKey(const Key('blockDialog.cancel')));
+        }
         return;
       }
 

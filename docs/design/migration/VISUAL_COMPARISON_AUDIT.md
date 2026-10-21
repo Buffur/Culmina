@@ -90,8 +90,11 @@ was recaptured once more on the final code (`render-run-2026-10-21-final.log`;
 fixture again unchanged) and every root at 200 % was reviewed (light for six
 roots, Weather dark, Settings field): no clipped label remains. The gallery now
 records which pairs were reviewed by eye (20) and which were not individually
-reviewed (52) in `evidence/matched/visual-review.json`. The block editor's
-composition remains open (OPEN-01).
+reviewed (52) in `evidence/matched/visual-review.json`. The block editor's composition (OPEN-01) was then adopted: the harness now
+also captures `plan_editor` and `plan_editor_invalid` in every theme and scale,
+paired with the browser references; light 100/200 %, dark 200 %, field 100 % and
+the invalid state in light and dark were reviewed side by side and match the
+web's order, hierarchy and controls, apart from the native differences D-08.
 
 Deviations D-01 to D-07 are listed in the migration ledger with their reasons.
 

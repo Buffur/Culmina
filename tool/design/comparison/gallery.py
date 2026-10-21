@@ -18,6 +18,8 @@ EVIDENCE = REPO / "docs/design/migration/evidence/matched"
 OUTPUT = EVIDENCE / "gallery"
 ROOTS = ("home", "plan", "night", "moon", "weather", "logbook", "library", "settings")
 SETTINGS = ("settings_appearance", "settings_planning", "settings_privacy", "settings_backup")
+# OPEN-01: the capture-block editor, plain and with an invalid exposure.
+EDITOR = ("plan_editor", "plan_editor_invalid")
 THEMES = ("light", "dark", "field")
 
 
@@ -32,7 +34,7 @@ def main():
     notes = json.loads(notes_path.read_text(encoding="utf-8")) if notes_path.exists() else {}
     records = []
     cards = []
-    for surface in ROOTS + SETTINGS:
+    for surface in ROOTS + SETTINGS + EDITOR:
         for theme in THEMES:
             for scale in (100, 200):
                 key = f"{surface}-{theme}{scale}"
@@ -40,7 +42,7 @@ def main():
                 native = EVIDENCE / "flutter" / f"{surface}_{theme}_{scale}.png"
                 record = {
                     "id": key, "surface": surface, "theme": theme, "textScale": scale,
-                    "kind": "root" if surface in ROOTS else "settings section",
+                    "kind": "root" if surface in ROOTS else "editor" if surface in EDITOR else "settings section",
                     "review": notes.get(key, notes.get(surface, {
                         "status": "awaiting visual inspection",
                         "notes": "Capture existence is not visual acceptance.",

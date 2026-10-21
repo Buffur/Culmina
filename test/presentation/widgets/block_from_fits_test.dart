@@ -17,6 +17,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fits_fixture.dart';
 import '../../support/memory_metadata_source.dart';
+import '../../support/block_editor_finders.dart';
 
 /// The N.I.N.A.-style light (300 s, GAIN 100, bin 2 × 2, 3124 × 2088
 /// written) with [filter] as its FILTER.
@@ -91,6 +92,10 @@ void main() {
   }
 
   Future<void> tapKey(WidgetTester tester, String key) async {
+    // Hybrid: "Take from a photo" is inside the "From a photo" disclosure.
+    if (key == 'blockDialog.fromPhoto') {
+      await openBlockDisclosure(tester, 'blockDialog.photo');
+    }
     await tester.ensureVisible(find.byKey(Key(key)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(Key(key)));
@@ -141,7 +146,14 @@ void main() {
     expect(text(tester, 'blockDialog.exposure'), '300');
     expect(text(tester, 'blockDialog.gainValue'), '100');
     expect(find.text('L-eXtreme'), findsOneWidget, reason: 'the filter field');
-    expect(find.text('Binning 2x2'), findsOneWidget, reason: 'closed Details');
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('blockDialog.details')),
+        matching: find.textContaining('Binning 2x2'),
+      ),
+      findsOneWidget,
+      reason: 'closed Details',
+    );
     await tester.enterText(find.byKey(const Key('blockDialog.count')), '20');
     await tapKey(tester, 'blockDialog.submit');
 
@@ -186,7 +198,13 @@ void main() {
       ),
     );
     await tapKey(tester, 'blockDialog.fromPhoto');
-    expect(find.text('Binning 2x2'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('blockDialog.details')),
+        matching: find.textContaining('Binning 2x2'),
+      ),
+      findsOneWidget,
+    );
     await tapKey(tester, 'blockDialog.submit');
     expect(result.single!.binning, 2);
     expect(result.single!.origins[CaptureField.binning]!.kind, OriginKind.file);
@@ -248,7 +266,14 @@ void main() {
         'L-eXtreme).',
       ),
     );
-    expect(find.text('Binning 2x2'), findsOneWidget, reason: 'untouched');
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('blockDialog.details')),
+        matching: find.textContaining('Binning 2x2'),
+      ),
+      findsOneWidget,
+      reason: 'untouched',
+    );
 
     // Another file: what was typed stays typed; the file's binning follows.
     await tapKey(tester, 'blockDialog.fromPhoto');

@@ -1,8 +1,8 @@
 {
-  "generatedAtUtc": "2026-10-21T07:02:13.906742+00:00",
+  "generatedAtUtc": "2026-10-21T07:51:41.664423+00:00",
   "scope": "8 roots \u00d73 themes \u00d7100/200%; original browser vs Flutter host; not Android acceptance",
   "pairCount": 48,
-  "supplementalPairCount": 24,
+  "supplementalPairCount": 36,
   "expectedPairCount": 48,
   "records": [
     {
@@ -263,19 +263,12 @@
         "exists": true,
         "size": [
           412,
-          915
+          6000
         ],
-        "sha256": "365ff65de28ff2a20ce26700e41dee49a279b3bbb605fabf35e6ab7e9f9633c8"
+        "sha256": "c5536d71aa5570c0ffb6f55d1a2b60457c56ba4a18d9aeac628f78ec0758fda3"
       },
       "diagnostics": {
-        "overlay": "diagnostics/plan-light100-overlay.png",
-        "absoluteDifference": "diagnostics/plan-light100-absolute-difference.png",
-        "meanAbsoluteRgbDifference": [
-          12.324043715846994,
-          12.396222611279113,
-          12.742299326224202
-        ],
-        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+        "reason": "Dimensions differ; no resizing performed."
       }
     },
     {
@@ -302,19 +295,12 @@
         "exists": true,
         "size": [
           412,
-          915
+          6000
         ],
-        "sha256": "392e42a52c0fd6851e4a07ee92767f8ce0a402fa4a24b40b383d89afd076922c"
+        "sha256": "6460fef29295db1c65ed45f4e48a875618ec72cc2c0660449b40902b550b2812"
       },
       "diagnostics": {
-        "overlay": "diagnostics/plan-light200-overlay.png",
-        "absoluteDifference": "diagnostics/plan-light200-absolute-difference.png",
-        "meanAbsoluteRgbDifference": [
-          19.48426441721046,
-          19.62643641572497,
-          20.249912462199585
-        ],
-        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+        "reason": "Dimensions differ; no resizing performed."
       }
     },
     {
@@ -341,19 +327,12 @@
         "exists": true,
         "size": [
           412,
-          915
+          6000
         ],
-        "sha256": "510fc738e1d95f925ccffadd3f85658a97b551f529565e6b465b175c1f02dace"
+        "sha256": "8cfd354ffa1903229b19881f7d32766685ad286a311b65ba0449b681cceb98d1"
       },
       "diagnostics": {
-        "overlay": "diagnostics/plan-dark100-overlay.png",
-        "absoluteDifference": "diagnostics/plan-dark100-absolute-difference.png",
-        "meanAbsoluteRgbDifference": [
-          14.351814419863123,
-          14.29501299803703,
-          14.184890445116451
-        ],
-        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+        "reason": "Dimensions differ; no resizing performed."
       }
     },
     {
@@ -380,19 +359,12 @@
         "exists": true,
         "size": [
           412,
-          915
+          6000
         ],
-        "sha256": "668f58e711e8a8a909bdc346b2233131441ab55e723bb43c6e573e6f15d7da7a"
+        "sha256": "62badc46aa6e58c4a6b3724ecebea0cd0ebdb8f2a8c1c42c62cd10dd95d52673"
       },
       "diagnostics": {
-        "overlay": "diagnostics/plan-dark200-overlay.png",
-        "absoluteDifference": "diagnostics/plan-dark200-absolute-difference.png",
-        "meanAbsoluteRgbDifference": [
-          20.02837020531593,
-          19.98614515358905,
-          19.912175712239375
-        ],
-        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+        "reason": "Dimensions differ; no resizing performed."
       }
     },
     {
@@ -419,19 +391,12 @@
         "exists": true,
         "size": [
           412,
-          915
+          6000
         ],
-        "sha256": "d1673211b14600d73207499c3d3148d1fae081e9e0c2975fc61912310d6ba476"
+        "sha256": "5c817a9b12807393ed46c4dbbb53f11ab992b1021af205591b72458d3e6052f3"
       },
       "diagnostics": {
-        "overlay": "diagnostics/plan-field100-overlay.png",
-        "absoluteDifference": "diagnostics/plan-field100-absolute-difference.png",
-        "meanAbsoluteRgbDifference": [
-          14.691498222717385,
-          0.0,
-          0.0
-        ],
-        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+        "reason": "Dimensions differ; no resizing performed."
       }
     },
     {
@@ -458,19 +423,12 @@
         "exists": true,
         "size": [
           412,
-          915
+          6000
         ],
-        "sha256": "24cee848ba97f5f6c8db080f6eea2a0d893bd2eee255bcbf3420b41da42dd86a"
+        "sha256": "b1b9a6c5ce227de5f4c32a5e4367631a919a490d023605df971e86565889121d"
       },
       "diagnostics": {
-        "overlay": "diagnostics/plan-field200-overlay.png",
-        "absoluteDifference": "diagnostics/plan-field200-absolute-difference.png",
-        "meanAbsoluteRgbDifference": [
-          21.586569579288025,
-          0.0,
-          0.0
-        ],
-        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+        "reason": "Dimensions differ; no resizing performed."
       }
     },
     {
@@ -2809,6 +2767,474 @@
           27.70398429624914,
           0.0,
           0.0
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor-light100",
+      "surface": "plan_editor",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "editor",
+      "review": {
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+      },
+      "web": {
+        "path": "browser-plan_editor-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ec55d9fd02120d1facc1dfd888969531894974729cc868ce2120936bd27a9719"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "9323a39fd194a4a6ab652939e07af4638db897a4fa25005bbc9d8a9b8a2eb12d"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor-light100-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          11.41886041699825,
+          11.456270889702372,
+          11.834277680513555
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor-light200",
+      "surface": "plan_editor",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "editor",
+      "review": {
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+      },
+      "web": {
+        "path": "browser-plan_editor-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "a5ddfe1d3f3814e305026120cf7aed07eb07461997e40000148306d362fc48cc"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d5a371131224c975fee6145da443d8e0dafc6e7e3d2a7a195d1c37a73725e8ff"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor-light200-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          19.503018727783967,
+          19.633805506923444,
+          20.278078412647886
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor-dark100",
+      "surface": "plan_editor",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "editor",
+      "review": {
+        "status": "not individually reviewed",
+        "notes": "Shares its components with the reviewed variants of this editor."
+      },
+      "web": {
+        "path": "browser-plan_editor-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "acc8e722df273ea6226d171100b4f857c4e45f8b2c6b4b853d5847a06075ea4f"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "41bb7a824511a1eb3b2a1989fdc06dbe2e33eb9fe8febdb06543c07185d3804e"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          11.969605814632075,
+          11.916892142819247,
+          11.834020372433551
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor-dark200",
+      "surface": "plan_editor",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "editor",
+      "review": {
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+      },
+      "web": {
+        "path": "browser-plan_editor-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "ec965d42beae3e98962fecd8cde0086ac74fe550699365d1c7912a4e338e5881"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "65f0d165db33ff5b428b71fdfb1c76a0e187d4c43d45c3be4030b8555f322683"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          20.415324420393656,
+          20.344816701151256,
+          20.2250994747732
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor-field100",
+      "surface": "plan_editor",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "editor",
+      "review": {
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+      },
+      "web": {
+        "path": "browser-plan_editor-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "050654bd611b4e468e765b9dd41074b3cb40ae041def71902945c775f83f0004"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "6895e9e5989bd878f8167324370eff303a814d920d7d3f053e09b601ded3e77a"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor-field100-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          13.23851397952146,
+          0.22998567563265956,
+          0.22998567563265956
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor-field200",
+      "surface": "plan_editor",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "editor",
+      "review": {
+        "status": "not individually reviewed",
+        "notes": "Shares its components with the reviewed variants of this editor."
+      },
+      "web": {
+        "path": "browser-plan_editor-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "e983f3795890b5d60df95f53a0b28adb9be723bd913a452138640b39e0b5b987"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "12c5a65e5dbaf9fbbecc396a4cd51223292e0353af414703075a85d8f598baf5"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor-field200-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          23.14927847631174,
+          0.23002811820255717,
+          0.23002811820255717
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor_invalid-light100",
+      "surface": "plan_editor_invalid",
+      "theme": "light",
+      "textScale": 100,
+      "kind": "editor",
+      "review": {
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+      },
+      "web": {
+        "path": "browser-plan_editor_invalid-light100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "164d025c3dfe7d5fa7594e81aff541b267012cb78d5a29c12b4a09151e4a232f"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_invalid_light_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "581051a53fff3e4cc49154bcbe6695c56381e563161d2c2037f4ed1d2a128c07"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor_invalid-light100-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor_invalid-light100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          23.65767945249085,
+          25.39520398960157,
+          25.754713777919253
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor_invalid-light200",
+      "surface": "plan_editor_invalid",
+      "theme": "light",
+      "textScale": 200,
+      "kind": "editor",
+      "review": {
+        "status": "not individually reviewed",
+        "notes": "Shares its components with the reviewed variants of this editor."
+      },
+      "web": {
+        "path": "browser-plan_editor_invalid-light200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "b8b3d6a797b409c0340f713052ac62d2e3756801454d841d496274c922e6269a"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_invalid_light_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "24e95909c534beabd821183bcea06b22afcd8aeea702dc54a0be114d81cee196"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor_invalid-light200-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor_invalid-light200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          30.088259324102076,
+          32.27060852034591,
+          32.65595787574938
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor_invalid-dark100",
+      "surface": "plan_editor_invalid",
+      "theme": "dark",
+      "textScale": 100,
+      "kind": "editor",
+      "review": {
+        "status": "reviewed by eye 2026-10-21",
+        "notes": "OPEN-01: the editor follows the web composition. Native differences: a fifth frame type (Dark flat), From a photo only where files can be read (absent on the host), the validation message beside the field instead of a toast; see VISUAL_COMPARISON_AUDIT.md."
+      },
+      "web": {
+        "path": "browser-plan_editor_invalid-dark100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "8e7239d6ba777892c59b40da138d4adc90beba8bed113728a8fbb77d9b29f1fa"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_invalid_dark_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "e2cdabe88d35ba62907693f549f8eb423d30681b482f38521429371356175e9e"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor_invalid-dark100-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor_invalid-dark100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          27.467260862645233,
+          26.462011247281023,
+          26.215191787362723
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor_invalid-dark200",
+      "surface": "plan_editor_invalid",
+      "theme": "dark",
+      "textScale": 200,
+      "kind": "editor",
+      "review": {
+        "status": "not individually reviewed",
+        "notes": "Shares its components with the reviewed variants of this editor."
+      },
+      "web": {
+        "path": "browser-plan_editor_invalid-dark200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "06efdd71844a3013b9cec22a05071a4d60847d8447eea7725537fc6ac6711228"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_invalid_dark_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "43cd6afa16aa1ee8a3f82cc487eaa964e60949114b8d678196cd20400cb636eb"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor_invalid-dark200-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor_invalid-dark200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          34.19373441561886,
+          32.931304047960104,
+          32.5736882593241
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor_invalid-field100",
+      "surface": "plan_editor_invalid",
+      "theme": "field",
+      "textScale": 100,
+      "kind": "editor",
+      "review": {
+        "status": "not individually reviewed",
+        "notes": "Shares its components with the reviewed variants of this editor."
+      },
+      "web": {
+        "path": "browser-plan_editor_invalid-field100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "61b3c22fdd815f002a2aed07b011871ae26a21f2b6a5cc705f2b75b9a31d8cb3"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_invalid_field_100.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "c8b4a9009f676c0b9df0342d6d7356d4ea3025e066a0d131fbe90cff9c210b74"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor_invalid-field100-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor_invalid-field100-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          25.692272799618017,
+          0.22998567563265956,
+          0.22998567563265956
+        ],
+        "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
+      }
+    },
+    {
+      "id": "plan_editor_invalid-field200",
+      "surface": "plan_editor_invalid",
+      "theme": "field",
+      "textScale": 200,
+      "kind": "editor",
+      "review": {
+        "status": "not individually reviewed",
+        "notes": "Shares its components with the reviewed variants of this editor."
+      },
+      "web": {
+        "path": "browser-plan_editor_invalid-field200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d38cfe240a515dbede58940c1fa27991c22dc613d0f8d83928eb9e3650b6c209"
+      },
+      "flutterHost": {
+        "path": "flutter/plan_editor_invalid_field_200.png",
+        "exists": true,
+        "size": [
+          412,
+          915
+        ],
+        "sha256": "d5cb93a9797b858bc4e3c7d8e241b2ec8d83afb62ce0cba704b2cbb887718847"
+      },
+      "diagnostics": {
+        "overlay": "diagnostics/plan_editor_invalid-field200-overlay.png",
+        "absoluteDifference": "diagnostics/plan_editor_invalid-field200-absolute-difference.png",
+        "meanAbsoluteRgbDifference": [
+          34.58083717969123,
+          0.23002811820255717,
+          0.23002811820255717
         ],
         "interpretation": "Diagnostic only; unaligned original pixels, no pass threshold."
       }

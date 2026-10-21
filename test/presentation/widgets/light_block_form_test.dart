@@ -8,9 +8,12 @@
 
 import 'package:astroplan/domain/models/camera_class.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
+import 'package:astroplan/presentation/widgets/capture_plan/block_editor_parts.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/capture_block_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../support/block_editor_finders.dart';
 
 CaptureBlock _light({
   double exposure = 120,
@@ -84,15 +87,15 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  /// The label above the ISO or gain field (Hybrid's label-above form).
   String? label(WidgetTester tester) => tester
-      .widget<TextField>(
-        find.descendant(
+      .widget<BlockField>(
+        find.ancestor(
           of: find.byKey(const Key('blockDialog.gainValue')),
-          matching: find.byType(TextField),
+          matching: find.byType(BlockField),
         ),
       )
-      .decoration
-      ?.labelText;
+      .label;
 
   Future<void> submit(WidgetTester tester) async {
     await tester.ensureVisible(find.byKey(const Key('blockDialog.submit')));
@@ -110,18 +113,10 @@ void main() {
         '${iso ? 'no' : 'with'} binning, at 200 % text', (tester) async {
       await open(tester, [], cameraClass: cls);
       expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
-      expect(
-        label(tester),
-        iso ? 'ISO (for your records)' : 'Gain (for your records)',
-      );
+      expect(label(tester), iso ? 'ISO (optional)' : 'Gain (optional)');
       // AM-04 (F06 A5): binning is an astro camera's, in Details.
       expect(find.byKey(const Key('blockDialog.binning')), findsNothing);
-      final details = find.byKey(const Key('blockDialog.details'));
-      if (!iso) {
-        await tester.ensureVisible(details);
-        await tester.tap(details);
-        await tester.pumpAndSettle();
-      }
+      if (!iso) await openBlockDisclosure(tester, 'blockDialog.details');
       expect(
         find.byKey(const Key('blockDialog.binning')),
         iso ? findsNothing : findsOneWidget,
@@ -221,19 +216,16 @@ void main() {
     String textOf(String labelText) => tester
         .widget<EditableText>(
           find.descendant(
-            of: find.widgetWithText(TextFormField, labelText),
+            of: blockField(labelText),
             matching: find.byType(EditableText),
           ),
         )
         .controller
         .text;
     expect(textOf('Exposure (seconds)'), '300');
-    expect(textOf('Frame count'), '');
-    expect(textOf('Gain (for your records)'), '100');
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Frame count'),
-      '20',
-    );
+    expect(textOf('Frames'), '');
+    expect(textOf('Gain (optional)'), '100');
+    await tester.enterText(blockField('Frames'), '20');
     await submit(tester);
     final b = result.single!;
     expect(
