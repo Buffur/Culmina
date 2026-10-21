@@ -127,6 +127,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   late final TextEditingController _gainValue;
   late final TextEditingController _kelvin;
   late final TextEditingController _tint;
+
+  /// The live total's inputs: typing rebuilds the total alone.
+  late final Listenable _typed = Listenable.merge([_exposure, _count]);
   WhiteBalanceMode? _wbMode;
   WhiteBalancePreset _wbPreset = WhiteBalancePreset.daylight;
   FocusMode? _focus;
@@ -978,32 +981,37 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                               setState(() => _photoOpen = !_photoOpen),
                           children: _photoReview(muted),
                         ),
+                      // A keystroke rebuilds only this field and the total,
+                      // not the whole form (PERF: ~480 elements before).
                       if (_typesExposure)
-                        BlockField(
-                          label: 'Exposure (seconds)',
-                          // Where the value came from (.field-source).
-                          note: _from(
-                            CaptureField.exposure,
-                            ExposureInput.parse(_exposure.text),
-                          ),
-                          noteKey: const Key('blockDialog.exposureSource'),
-                          hint: _type == FrameType.bias
-                              ? 'The shortest your camera allows.'
-                              : 'For example 60, 2.5 or 1/125.',
-                          child: TextFormField(
-                            key: const Key('blockDialog.exposure'),
-                            controller: _exposure,
-                            decoration: const InputDecoration(
-                              hintText: 'e.g. 60 or 1/14',
-                              errorMaxLines: 3,
+                        ListenableBuilder(
+                          listenable: _exposure,
+                          builder: (context, _) => BlockField(
+                            label: 'Exposure (seconds)',
+                            // Where the value came from (.field-source).
+                            note: _from(
+                              CaptureField.exposure,
+                              ExposureInput.parse(_exposure.text),
                             ),
-                            // Fractions need "/", which a number pad lacks (C14).
-                            keyboardType: TextInputType.text,
-                            autocorrect: false,
-                            onChanged: (_) =>
-                                setState(() => _exposureFromProposal = false),
-                            validator: (value) =>
-                                ExposureInput.problem(value ?? ''),
+                            noteKey: const Key('blockDialog.exposureSource'),
+                            hint: _type == FrameType.bias
+                                ? 'The shortest your camera allows.'
+                                : 'For example 60, 2.5 or 1/125.',
+                            child: TextFormField(
+                              key: const Key('blockDialog.exposure'),
+                              controller: _exposure,
+                              decoration: const InputDecoration(
+                                hintText: 'e.g. 60 or 1/14',
+                                errorMaxLines: 3,
+                              ),
+                              // Fractions need "/", which a number pad lacks (C14).
+                              keyboardType: TextInputType.text,
+                              autocorrect: false,
+                              // Not shown; read only by the frame-type switch.
+                              onChanged: (_) => _exposureFromProposal = false,
+                              validator: (value) =>
+                                  ExposureInput.problem(value ?? ''),
+                            ),
                           ),
                         ),
                       BlockField(
@@ -1016,7 +1024,6 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                             errorMaxLines: 3,
                           ),
                           keyboardType: TextInputType.number,
-                          onChanged: (_) => setState(() {}),
                           validator: (value) {
                             final count = int.tryParse((value ?? '').trim());
                             if (count == null || count < 1) {
@@ -1030,14 +1037,19 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                         ),
                       ),
                       // Hybrid's live total (.live-total), from the typed values.
-                      Semantics(
-                        liveRegion: true,
-                        child: Text(
-                          _total(),
-                          key: const Key('blockDialog.total'),
-                          style: text.bodyMedium?.copyWith(
-                            fontSize: 14,
-                            fontFeatures: const [FontFeature.tabularFigures()],
+                      ListenableBuilder(
+                        listenable: _typed,
+                        builder: (context, _) => Semantics(
+                          liveRegion: true,
+                          child: Text(
+                            _total(),
+                            key: const Key('blockDialog.total'),
+                            style: text.bodyMedium?.copyWith(
+                              fontSize: 14,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
