@@ -350,6 +350,10 @@ class AppTheme {
       ),
     );
 
+    // D-06 (owner decision, 2026-10-21): in red field mode the primary
+    // action is red text and a red outline on black (about 5.3:1), not the
+    // JSON's black on #AA0000 (about 2.7:1); red only, for night vision.
+    final field = identical(hybrid, HybridTokens.field);
     return t.copyWith(
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
@@ -363,16 +367,30 @@ class AppTheme {
           ),
           animationDuration: AppMotion.short,
           backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
+            (states) => field
+                ? t.scaffoldBackgroundColor
+                : states.contains(WidgetState.disabled)
                 ? hybrid.action.withValues(alpha: 0.12)
                 : hybrid.action,
           ),
           foregroundColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.disabled)
                 ? p.textDisabled
+                : field
+                ? p.textPrimary
                 : hybrid.onAction,
           ),
-          overlayColor: overlay(hybrid.onAction),
+          side: field
+              ? WidgetStateProperty.resolveWith(
+                  (states) => BorderSide(
+                    color: states.contains(WidgetState.disabled)
+                        ? p.border
+                        : p.textPrimary,
+                    width: 1.5,
+                  ),
+                )
+              : null,
+          overlayColor: overlay(field ? p.textPrimary : hybrid.onAction),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(style: secondary),

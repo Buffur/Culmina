@@ -1,7 +1,7 @@
 # Web to Flutter migration — original Hybrid / Geist
 
 Status: **IMPLEMENTED AND VERIFIED WITHIN THE STATED COVERAGE — AWAITING OWNER
-ACCEPTANCE**. Updated 2026-10-21 after the resumed completion run (below).
+ACCEPTANCE**; no open owner decision remains (D-06 decided 2026-10-21). Updated 2026-10-21 after the resumed completion run (below).
 Evidence levels stay separate: host tests, browser/host image pairs, Android
 emulator and physical device are different claims; no physical-device or owner
 acceptance is claimed.
@@ -24,11 +24,11 @@ The seven-step sequence below now stands as follows.
 | Step | Result | Evidence |
 | --- | --- | --- |
 | 1. Calendar, Planning Settings, stored Undo | Done (hand-over) and covered by G2 and N1 | `UNDO_IMPLEMENTATION.md`, N1 report |
-| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final runs `full-gate-2026-10-21-final.log`, `after-review`, `open01`, `r4` and the clean closing run `full-gate-2026-10-21-closing.log` (G2) |
-| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/`, `r2`, `r3-editor`, `r4` and, on the final code, `run-2026-10-21-r5/` (N1; failed attempts kept) |
+| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final runs `full-gate-2026-10-21-final.log`, `after-review`, `open01`, `r4` the clean closing run `full-gate-2026-10-21-closing.log` and, on the final code, `full-gate-2026-10-21-d06.log` (G2) |
+| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/`, `r2`, `r3-editor`, `r4`, `r5` and, on the final code, `run-2026-10-21-r6/` (N1; failed attempts kept) |
 | 4. Matched browser ↔ host pairs | **Reviewed**: fixture unchanged, host recaptured, 48 pairs regenerated, per-pair review; repairs made for the inverted Moon phase glyph (pre-existing F15 defect), the missing Moon primary number, Planning slider rows, app-bar action margins and "1 rigs" | `VISUAL_COMPARISON_AUDIT.md` final section (V1), `migration/evidence/matched/gallery/` |
-| 5. Normal APK + hot reload on 5582 | **PASS** — `lib/main.dart` debug APK installed and started; a real source change hot-reloaded ("Reloaded 1 of 2788 libraries", code 0) and reverted. On the final code, `flutter build apk --debug -t lib/main.dart` built `build/app/outputs/flutter-apk/app-debug.apk` (SHA-256 `d12575b6…44dd244`), installed and launched to the first-run screen on 5582 | `migration/evidence/native/run-2026-10-21/hot-reload-main.log` (H1); `run-2026-10-21-r2/build-apk-debug.log`, `main-apk-launch.png` |
-| 6. Matrices and JSON statuses | Done: every Matrix A row (84 + the accepted A-LIB-05 omission) and all 63 Matrix B rows cite G2/N1/V1/H1 and name what was not exercised; all 179 JSON leaves remain accounted (56 used, 2 transformed, 121 not applicable, 0 blocked) with `hybrid_tokens_test.dart` in G2 | Matrix A/B "Final evidence (2026-10-21)" |
+| 5. Normal APK + hot reload on 5582 | **PASS** — `lib/main.dart` debug APK installed and started; a real source change hot-reloaded ("Reloaded 1 of 2788 libraries", code 0) and reverted. On the final code, `flutter build apk --debug -t lib/main.dart` built `build/app/outputs/flutter-apk/app-debug.apk` (SHA-256 `d12575b6…44dd244`), installed and launched to the first-run screen on 5582. Final build on the final code: `run-2026-10-21-r6/build-apk-debug.log` (SHA-256 `d68767d1…15650d6`) | `migration/evidence/native/run-2026-10-21/hot-reload-main.log` (H1); `run-2026-10-21-r2/build-apk-debug.log`, `main-apk-launch.png` |
+| 6. Matrices and JSON statuses | Done: every Matrix A row (84 + the accepted A-LIB-05 omission) and all 63 Matrix B rows cite G2/N1/V1/H1 and name what was not exercised; all 179 JSON leaves remain accounted (54 used, 4 transformed — the two field action leaves by D-06 —, 121 not applicable, 0 blocked) with `hybrid_tokens_test.dart` in G2 | Matrix A/B "Final evidence (2026-10-21)" |
 | 7. Independent Claude CLI review | **Run** (read-only, exit 0); 12 findings, dispositions below; confirmed defects fixed and re-verified | `migration/evidence/final-claude-original-report.txt`, `final-claude-invocation.txt` |
 
 ### Independent review (Claude CLI, 2026-10-21) and dispositions
@@ -48,7 +48,7 @@ accessibility/native FAIL, evidence quality FAIL.
 | F5 simulated text scale/theme, no system Back | Labels corrected (in-process test values). **Added** platform Back (route-pop message) on a dirty editor: asks; Cancel keeps; Discard leaves the plan unchanged | N1 r2 |
 | F6 skipped host suite printed as PASS | Recorded: `hybrid_migration_smoke_test` is skipped on the host by design; the gate prints PASS for a skipped file. Tooling unchanged | — |
 | F7 Settings sections keep the root navigation | **Adopted** (D-05): groups and About open above the tabs | `app_shell_navigation_test` |
-| F8 field-mode action black on #AA0000 (~2.7:1), contrast unchecked in field mode | **OWNER DECISION D-06**: the pairing comes from `tokens.json`; widen the documented field exception or change the action colour | — |
+| F8 field-mode action black on #AA0000 (~2.7:1), contrast unchecked in field mode | **Owner decided (D-06): red outline**, implemented | `field_primary_action_contrast_test` |
 | F9 Geist variable weights | **Verified**: `geist_weight_test.dart` shows w400 < w500 < w600 < w700 widths with the bundled font (real instances, not one outline) | G2 |
 | F10 "Theoretical" bytes label | **Fixed**: "File size per frame (MB)", hint "A planning figure, not measured from your files. Empty: your file or rig evidence." | G2 |
 | F11 DATA_MODEL still v25 | **Fixed**: DATA_MODEL v27 row and note; FEATURE_STATUS note | Docs |
@@ -74,7 +74,7 @@ A second read-only CLI run on `275d520` checked only F1–F12, the touched
 criteria and the corrections' regressions (prompt `FINAL_CLAUDE_REREVIEW_PROMPT.md`,
 report kept verbatim in `final-claude-rereview-report.txt`, exit 0). Result:
 F1, F2, F3, F5, F7, F9, F10 (wording), F12 resolved; F4, F6, F11 partly; F8 =
-D-06 open. Two new items, both addressed:
+D-06 open at that time (decided since, below). Two new items, both addressed:
 
 | Item | Disposition | Re-verification |
 | --- | --- | --- |
@@ -86,6 +86,13 @@ D-06 open. Two new items, both addressed:
 | Risk: the fit-line mark does not scale | **Fixed**: it scales with the text | Tonight tests, host renders |
 | Risk: the gate-percentage slider kept tick marks | **Fixed**: every Settings slider uses the shared Hybrid slider | Settings tests |
 | F5 hardware Back key, real font on the eight screens; F9 weights on Impeller | Not exercised beyond the recorded runs (L-6; Geist weights proven with the bundled font on the host) | — |
+
+**Evidence correction (2026-10-21).** From `c23abeb` until this fix the render
+harness's editor step re-shot the Plan root at the tall 412 × 6000 build size, so
+the committed `flutter/plan_*` PNGs and their gallery pairs in `c23abeb`–`1bc48b5`
+were tall frames, not phone frames. The step now opens the plan without shooting
+it; all 84 host PNGs are 412 × 915 again (checked by size), and the Plan pairs
+were reviewed again (light 100 %, field 100 %).
 
 ### Deviations kept on purpose (native authority)
 
@@ -113,9 +120,13 @@ D-06 open. Two new items, both addressed:
   `evidence/full-gate-2026-10-21-r4.log` (2425 passed; the one guard failure, a raw
   slider inset, was replaced by a spacing token and re-checked in the same log;
   the native run predates that 2 px inset change).
-- **D-06 (owner decision, open)** Field mode's primary action is black on
-  `#AA0000` (about 2.7:1) and the accessibility sweep does not check contrast
-  in field mode; the documented exception covers secondary text only.
+- **D-06 — decided by the owner and implemented (2026-10-21).** Asked in chat,
+  the owner chose "red outline": field mode's primary action is red #FF0000 text
+  and a red outline on black (about 5.3:1, WCAG AA), red only for night vision,
+  instead of the JSON's black on #AA0000 (about 2.7:1). The tokens keep the JSON
+  values; light and dark are unchanged
+  (`test/core/theme/field_primary_action_contrast_test.dart`). Field-mode
+  secondary text keeps its documented exception.
 - **D-07 — adopted 2026-10-21 except the rig editor.** Weather adds the web's
   "Clearest around … · cloudiest around …" line, the dark span's length and
   an always-stated "Coverage: n/m hourly samples in dark time"; Tonight's rig

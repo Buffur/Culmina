@@ -58,14 +58,29 @@ void main() {
             reason: '${entry.key}.${role.key}',
           );
         }
-        expect(
-          theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
-          h.action,
-        );
-        expect(
-          theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
-          h.onAction,
-        );
+        // D-06 (owner decision, 2026-10-21): field mode's primary action is
+        // transformed to red text and outline on black (contrast; see
+        // field_primary_action_contrast_test.dart). The JSON's action and
+        // on-action stay the tokens' values and the light/dark buttons.
+        if (entry.key == 'field') {
+          expect(
+            theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
+            theme.scaffoldBackgroundColor,
+          );
+          expect(
+            theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
+            p.textPrimary,
+          );
+        } else {
+          expect(
+            theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
+            h.action,
+          );
+          expect(
+            theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
+            h.onAction,
+          );
+        }
         expect(theme.colorScheme.secondaryContainer, h.selection);
         expect(theme.textTheme.bodyMedium!.fontFamily, 'Geist');
         expect(theme.textTheme.bodyMedium!.fontSize, 16);

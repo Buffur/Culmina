@@ -479,7 +479,12 @@ void main() {
           // The plan's list is lazy: a tall view builds the first block's
           // Edit; the editor is then shot at phone size.
           tester.view.physicalSize = const Size(412, 6000);
-          await at(AppRouter.session(), 'plan');
+          // Open the plan without shooting it (its root capture stays the
+          // phone-size one taken above).
+          AppRouter.router.go(AppRouter.tonight);
+          await _settle(tester);
+          unawaited(AppRouter.router.push(AppRouter.session()));
+          await _settle(tester);
           await tap(find.byKey(const Key('capture.edit.0')));
           tester.view.physicalSize = const Size(412, 915);
           await shot('plan_editor');
