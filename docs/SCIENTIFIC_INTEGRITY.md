@@ -379,6 +379,10 @@ not laws (actions 1–2 for these values). Defaults are unchanged (20°, −18°
 
 ---
 
+**Addendum 2026-10-21 (Hybrid migration, owner decision 6; ADR-023):** a plan's optional fixed margin (minutes, schema v27) replaces the global percentage margin for that plan's Fits/Tight classification only. It never changes integration, the window load, block placement or the capture end, and no universal threshold is introduced: both margins are the user's assumptions, shown as such. Tests: `test/domain/services/plan_overrides_test.dart` and `capture_assumptions_test.dart`.
+
+---
+
 ## SI-007 — Bortle default vs unknown
 
 **Scientific Issue**
@@ -725,6 +729,8 @@ How the estimate is constrained:
 Reference vectors V1–V11: `test/domain/services/storage_estimate_test.dart`.
 
 **Status:** Resolved. **Work item:** TD-013.
+
+**Addendum 2026-10-21 (Hybrid migration, owner decision 6; ADR-023):** a plan may carry an explicit bytes-per-frame override (schema v27). It is the `planEstimate` storage basis, shown as "Plan estimate … (user entered)", never measured or theoretical evidence; while it is set it is used for every block of that plan instead of the evidence order above, and clearing it returns to that order. It is a planning figure only. Tests: `plan_overrides_persistence_test.dart`, `capture_assumptions_test.dart`.
 
 ---
 

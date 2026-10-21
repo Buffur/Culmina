@@ -841,31 +841,14 @@ class _SliderTile extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(help, style: text.bodySmall?.copyWith(color: secondary)),
-          // Hybrid's range control (settings.css): the full width of the
-          // column, a solid track, no division ticks; 48 px tall to touch.
-          SizedBox(
-            height: HybridTokens.minTarget,
-            child: SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                // The thumb's radius: it stays inside the column's edges.
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                trackHeight: 6,
-                activeTrackColor: AppPalette.of(context).textPrimary,
-                inactiveTrackColor: AppPalette.of(context).border,
-                thumbColor: AppPalette.of(context).textPrimary,
-                tickMarkShape: SliderTickMarkShape.noTickMark,
-                thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: AppSpacing.sm,
-                ),
-              ),
-              child: Slider(
-                value: value.clamp(range.$1, range.$2),
-                min: range.$1,
-                max: range.$2,
-                divisions: divisions,
-                label: label,
-                onChanged: onChanged,
-              ),
+          HybridSlider(
+            slider: Slider(
+              value: value.clamp(range.$1, range.$2),
+              min: range.$1,
+              max: range.$2,
+              divisions: divisions,
+              label: label,
+              onChanged: onChanged,
             ),
           ),
           ExcludeSemantics(
@@ -922,13 +905,15 @@ class _GateTile extends StatelessWidget {
           onChanged: onToggle,
         ),
         if (enabled)
-          Slider(
-            value: percent.clamp(0, 100),
-            min: PlanningPreferences.gatePctRange.$1,
-            max: PlanningPreferences.gatePctRange.$2,
-            divisions: 20,
-            label: label,
-            onChanged: onPercent,
+          HybridSlider(
+            slider: Slider(
+              value: percent.clamp(0, 100),
+              min: PlanningPreferences.gatePctRange.$1,
+              max: PlanningPreferences.gatePctRange.$2,
+              divisions: 20,
+              label: label,
+              onChanged: onPercent,
+            ),
           ),
       ],
     );
@@ -1052,6 +1037,37 @@ class _PlanningUnsaved extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Hybrid's range control (settings.css): the full width of the column, a
+/// solid track, no division ticks, 48 px tall to touch. The thumb's radius
+/// is the inset, so it stays inside the column's edges.
+class HybridSlider extends StatelessWidget {
+  const HybridSlider({super.key, required this.slider});
+
+  final Slider slider;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
+    return SizedBox(
+      height: HybridTokens.minTarget,
+      child: SliderTheme(
+        data: SliderTheme.of(context).copyWith(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          trackHeight: 6,
+          activeTrackColor: palette.textPrimary,
+          inactiveTrackColor: palette.border,
+          thumbColor: palette.textPrimary,
+          tickMarkShape: SliderTickMarkShape.noTickMark,
+          thumbShape: const RoundSliderThumbShape(
+            enabledThumbRadius: AppSpacing.sm,
+          ),
+        ),
+        child: slider,
       ),
     );
   }

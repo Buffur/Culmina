@@ -656,6 +656,17 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   }
 
   Future<void> _submit() async {
+    // A field inside the closed Details is not built, so the form cannot
+    // check it: open Details first when its tint is invalid, so the check
+    // runs and its message shows (never a silent drop or a dead button).
+    if (!_details &&
+        _showCameraRecords &&
+        _tintApplies &&
+        _validateTint(_tint.text) != null) {
+      setState(() => _details = true);
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted) return;
+    }
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final block = _build();
     _leaving = true;
@@ -794,6 +805,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     final detailsSummary = [
       if (_showBinning) 'Binning ${_binning}x$_binning',
       isLight ? 'Inside the imaging window' : 'Taken $policyShort',
+      // A recorded tint is said while Details is closed.
+      if (_showCameraRecords && _tintApplies && _tint.text.trim().isNotEmpty)
+        'Tint ${_tint.text.trim()}',
     ].join(' · ');
     return PopScope(
       canPop: _leaving,

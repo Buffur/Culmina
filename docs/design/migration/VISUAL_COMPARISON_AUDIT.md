@@ -44,7 +44,7 @@ each document; invalid editor experiments cannot change later root captures.
 The gallery currently pairs 48 roots and 24 Settings sections with the **intermediate**
 Flutter host run, archived in
 `evidence/matched/history/host-allroots-39b1dfa55e39-before-final-polish/`.
-Final host recapture and per-pair review remain pending bounded repairs. These
+(2026-10-20 checkpoint, superseded by the final section below.) These
 images identify defects; they are not acceptance of the latest production tree.
 
 | Inspected surface | Confirmed composition difference | Bounded response |
@@ -113,6 +113,7 @@ states and existing actions remain the native authority.
 
 Supplemental browser references include four Settings sections (24 matched host
 pairs), weather charts, first-block editing and invalid exposure. Editor/chart
-references are unmatched until a host/native capture uses the same state. Android
+references were unmatched at this checkpoint; the editor is now paired (`plan_editor`,
+`plan_editor_invalid`, final section) while the weather chart reference stays unmatched. Android
 keyboard screenshots have different available content height and are not identical
 frame comparisons. No native pass is claimed by this browser/host audit.

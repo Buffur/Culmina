@@ -146,7 +146,8 @@ class StatusBlock extends StatelessWidget {
                             : state == FitState.fits || state == FitState.tight
                             ? Icons.check
                             : Icons.close,
-                        size: 17,
+                        // 17 px at 100 %, growing with the text it marks.
+                        size: MediaQuery.textScalerOf(context).scale(17),
                         color: verdictStyle?.color,
                       ),
                     ),

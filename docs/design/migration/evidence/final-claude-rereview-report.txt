@@ -1,0 +1,98 @@
+# Independent re-review (V5 scope) of the Hybrid migration after corrections
+
+This is advisory, read-only QA. It confers no owner acceptance. I executed nothing.
+
+**Reviewed state:** commit `275d520`, following `06e4b65` and `c23abeb` (from `final-rereview-source-state.txt`). The original review was on `02f5cdb`.
+
+**Bottom line:** 5 of the 12 findings are fully resolved, 6 are partly resolved, and F8 is still an open owner decision (D-06). The corrections introduced one confirmed defect: a tint check in the block editor can be skipped. The final code has no clean full-gate run.
+
+## F1–F12
+
+| # | Status | Evidence read | Remaining gap |
+|---|---|---|---|
+| **F1** Weather tab clipped at 200 % | **RESOLVED** | `night_moon_screen.dart:92-106`: the tab bar scrolls above 1.3× text. Test `night_moon_browse_test.dart:511-527` checks each label gets its full width. Android `run-…-r4/moon-dark_200.png` shows "Weather" in full. | None at 200 %. The 1.3× cut-off is borderline on phones narrower than 360 dp (risk only). |
+| **F2** Override labels lose units at 200 % | **RESOLVED** | `plan_overrides_editor.dart:186-237` puts a wrapping label above each field. Test `capture_assumptions_test.dart:312-337`. Android `r4/plan-overrides-reopened-light_200.png` shows "(minutes)" in full. | The test's `bySemanticsLabel(...)` check does not prove the label sits on the text-field node itself (see Accessibility). |
+| **F3** Field gap and editor composition | **RESOLVED** (composition) | `capture_block_dialog.dart:832-1166` (20 px column gap, rig line, segmented frame type, live total, disclosures, full-width Apply). `block_editor_parts.dart`. Pairs `browser-plan_editor-light100/200` vs `flutter/plan_editor_light_100/200`; Android `r4/block-editor-*`. Differences recorded as D-08. | Introduced the regression **N1** below. |
+| **F4** Boilerplate VERIFIED rows | **PARTLY** | The Status column of Matrix A is now honest, e.g. "interactions … not driven on the device" (`WEB_DESIGN_INVENTORY.md:80-164`). `visual-review.json` separates 26 reviewed pairs from the rest. | 31 cells still read "final preservation run pending" or "final scenario rerun still required" (A-LOG-01…08, A-LIB-02…10, A-HOME-*), and A-LOG-06/A-LIB-11 still say "work in progress; … tests pending". `WEB_TO_FLUTTER_MIGRATION.md:181,213` still say "pending". `VISUAL_COMPARISON_AUDIT.md:114-117` still calls editor references "unmatched". See **N2** for stale G2/N1 definitions. |
+| **F5** Simulated scale/theme, no system Back | **RESOLVED** (labels and Back message) | `hybrid_migration_smoke_test.dart:261-274` uses `handlePopRoute()` on a dirty editor; screenshot `r4/block-editor-system-back-guard-light_100.png`. The report's check list says the in-process scale/theme are test values. A-SET-08 is relabelled. `r4-system/` holds a real system font 200 % and dark-mode capture. | Not the hardware Back key (no adb keyevent). The real system font and dark setting appear only on the first-run screen, not the eight main screens. |
+| **F6** Skipped suite printed as PASS | **PARTLY** (disclosed, not fixed) | The ledger records it. `full-gate-2026-10-21-r4.log:7788,7802` still shows "All tests skipped" next to "PASS". | Tooling unchanged; acceptable as a recorded limitation. |
+| **F7** Settings sections keep the root navigation | **RESOLVED** | `settings_screen.dart:687-696` opens sections on the root navigator; About goes there via `app_router.dart:184-189`. Test `app_shell_navigation_test.dart:159-186`. Host `settings_planning_light_200.png` has no bottom navigation. | The gate slider at `settings_screen.dart:925-932` (divisions: 20) sits outside the `_SliderTile` theme. It may still show tick marks, despite D-05's "without division ticks" (risk, not inspected visually). |
+| **F8** Field-mode contrast | **OWNER DECISION** (D-06 open) | Ledger D-06 | Unchanged. |
+| **F9** Geist weights | **RESOLVED (host)** | `test/core/theme/geist_weight_test.dart`: widths rise strictly from w400 to w700. A real w500 > w400 cannot come from synthetic bold. | Proven only on the host (flutter_tester), not on Impeller/Android. Android screenshots look consistent. |
+| **F10** "Theoretical" bytes label | **RESOLVED** (wording) | `plan_overrides_editor.dart:131-147` | The screen still does not name the per-block file evidence that the override sets aside. The basis line "Plan estimate … (user entered)" does say what is used. Advisory only. |
+| **F11** DATA_MODEL v25 | **PARTLY** | `DATA_MODEL.md:3-6` now says v27; FEATURE_STATUS has a note. | The fixed-margin classification rule and the `planEstimate` storage basis are still absent from `SCIENTIFIC_INTEGRITY.md` and `DECISIONS.md` (grep finds no match). The original finding asked for both. |
+| **F12** Minor web gaps | **RESOLVED** (adopted or recorded) | `night_text.dart:110-145`, `weather_forecast_widget.dart:220-262`, `tonight_home_screen.dart:320-331,501-503`. Android `r4/weather-light_100.png` shows the clearest/cloudiest line, the span length and "Coverage: 11/11". `r4/tonight-light_200.png` shows "M42 · …". The rig editor dialog is recorded under D-07. | — |
+
+## New findings
+
+### N1 · Confirmed defect: the tint check is skipped when Details is closed
+
+This is a regression from OPEN-01.
+
+- **Where:** `capture_block_dialog.dart:1081-1147`.
+  - The tint field (with its `_validateTint` check) now lives inside the Details disclosure.
+  - `BlockDisclosure` builds its children only when open (`block_editor_parts.dart:317`). A closed disclosure therefore removes the field from the `Form`.
+  - `_submit` (`:658-663`) checks only the fields still mounted, then builds the block via `_build` (line 488), which calls `_whiteBalance()` (`:500`).
+- **Trigger:** on a DSLR or phone rig, a light block with white balance set to Preset, Kelvin or Custom:
+  1. open Details;
+  2. type tint `2000` (or `abc`);
+  3. close Details;
+  4. tap Add block or Apply changes.
+- **Expected:** the error shows next to the tint field and the editor stays open, as `:365-373` intends.
+- **Actual:**
+  - For `2000`, `WhiteBalance.preset/kelvin/custom(tint: 2000)` throws an `ArgumentError` (`capture_evidence.dart:65-66`). The error is not caught in `_submit`, so the tap does nothing and no message appears.
+  - For `abc`, `double.tryParse` returns null and the typed tint is **silently dropped** from the saved block.
+- **Test gap:** the test named "an out-of-range Kelvin **or tint** fails by its field" (`block_settings_test.dart:383-394`) only covers Kelvin. No test enters an invalid tint.
+- **Brief impact:** this contradicts brief §8 "нові регресії усунені" (new regressions removed). It also undercuts A-PLAN-07's "Kelvin/tint bounds" citation.
+- **Fix (bounded):** either keep the disclosure's children mounted while closed (for example `Offstage`/`Visibility(maintainState: true)`, so the `FormField` stays registered), or run `_validateTint` in `_submit` and open Details when it fails. Add a test for an invalid tint with Details closed.
+
+### N2 · Evidence quality: the final code has no clean full gate, and the matrix definitions are stale
+
+This is not a code defect.
+
+- **Final-code gate:** `full-gate-2026-10-21-r4.log:7772-7806` ends "Quality gate FAILED" with `exit=1`: `secondary_consistency_test` failed, 2425 passed.
+  - The re-check (`:7807-7810`) records format, analyze and "+53: All tests passed", but **no command**, so it cannot be confirmed that it included `secondary_consistency_test`.
+  - `full-gate-2026-10-21-open01.log` likewise failed (`exit=1`) and was followed by an 11-test re-check.
+- **Stale definitions:** Matrix A's G2 definition (`WEB_DESIGN_INVENTORY.md:18`) still calls `after-review.log` the "final code", and N1 still cites r2. A-PLAN-06 cites "N1 r3", and nothing cites r4.
+- **Native timing:** the r4 native run predates the final 2 px slider change (the ledger says so).
+- Under AM-05, targeted re-checks can close a Task, so this is not a blocker. But "full quality gate on the final tree" is not literally supported.
+- **Fix:** record the re-check commands and update the G2/N1 definitions to `r4`. Leave the consolidated full gate for G1/F26.
+
+### Risks (unconfirmed)
+
+- **Screen-reader labels:** `BlockField` and the overrides editor put the label on a non-container `Semantics` wrapped around a `TextFormField`, and hide the visible label from screen readers. No test asserts that the label lands on the text-field node itself (`isTextField` + label), so TalkBack's reading is NOT VERIFIED (L-6).
+- **Tonight fit-line icon:** a fixed 17 px icon (`status_block.dart:142-151`) does not scale and looks undersized at 200 % (`r4/tonight-light_200.png`). Cosmetic.
+- **Darkness length computed in the UI:** Tonight's "dark" length is calculated in the presentation layer (`tonight_home_screen.dart:503`), falling back to the window edges when dusk or dawn is missing. It is consistent with Moon and Weather in the fixture. Minor layering concern.
+- **Hidden tint:** an existing block's tint is hidden while Details is closed, and the Details summary lists only binning and timing.
+
+## Verdicts (this scope only)
+
+| Area | Verdict | Reason |
+|---|---|---|
+| Visual fidelity | **PASS within the stated coverage** | F1, F3, F7 and F12 are corrected. The editor pairs match the web's order and hierarchy, and the D-08 differences are recorded. 26 pairs were reviewed by eye; the rest are honestly marked not individually reviewed. |
+| Accessibility / native behaviour | **FAIL** | N1 is a validation defect in the touched editor. Also: a hardware Back key and screen reader were not exercised, the real system font was shown on one screen only, and D-06 is still open. F1, F2 and platform Back otherwise pass. |
+| Evidence quality | **FAIL (minor, correctable)** | N2 (final gate exit 1 with unrecorded re-checks; stale G2/N1 definitions) and the leftover "pending" text in F4. The Status column itself is now honest. |
+
+## What I read and what I could not inspect
+
+**Read:**
+- the original report, the source-state and diff-stat files, the brief, and the ledger (lines 1–160);
+- Matrix A rows A-SHELL-01 to A-SET-08, the `VISUAL_COMPARISON_AUDIT.md` final sections, `visual-review.json`, and the r4 integration report;
+- the gate logs: after-review, open01 and r4 summaries; the r4 drive log result; the r4-system settings log.
+
+**Code:**
+- the full files `night_moon_screen.dart`, `plan_overrides_editor.dart`, `block_editor_parts.dart` and `status_block.dart`;
+- `capture_block_dialog.dart:120-420, 600-1421`;
+- the relevant parts of `settings_screen.dart`, `app_router.dart`, `night_text.dart`, `weather_forecast_widget.dart`, `tonight_home_screen.dart` and `storage_text.dart`.
+
+**Tests:** the F1, F2, D-05, Geist and block-settings white-balance tests, plus the semantics and 200 % parts of `block_editor_hybrid_test`.
+
+**Images (14):**
+- `r4`: moon-dark_200, plan-overrides-reopened-light_200, block-editor-keyboard, system-back-guard, tonight-light_200, weather-light_100;
+- `r4-system`: font200-dark first-run screen;
+- matched pairs: browser and Flutter `plan_editor` light 100/200, Flutter `plan_editor_invalid_field_200`, Flutter `settings_planning_light_200`.
+
+**Not inspected:**
+- the dark/field editor pairs, the r2/r3 images, the Settings sliders below the fold, and the overlay diffs;
+- Matrix B, the full Tonight/Weather test bodies, and DATA_MODEL beyond line 6;
+- any git history: I could not confirm whether tint was visible before OPEN-01. The `tapKey('blockDialog.details')` before typing tint in `block_settings_test.dart:354` suggests it was moved there.

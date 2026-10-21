@@ -100,6 +100,28 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('a screen reader hears each label on its text field', (
+    tester,
+  ) async {
+    await open(tester);
+    final handle = tester.ensureSemantics();
+    for (final label in ['Exposure (seconds)', 'Frames', 'Gain (optional)']) {
+      expect(
+        find.bySemanticsLabel(RegExp('^${RegExp.escape(label)}')),
+        findsOneWidget,
+        reason: label,
+      );
+      expect(
+        tester.getSemantics(
+          find.bySemanticsLabel(RegExp('^${RegExp.escape(label)}')),
+        ),
+        isSemantics(isTextField: true),
+        reason: '$label names the text field itself',
+      );
+    }
+    handle.dispose();
+  });
+
   testWidgets('labels sit above their fields, with the example hint', (
     tester,
   ) async {

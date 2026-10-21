@@ -24,8 +24,8 @@ The seven-step sequence below now stands as follows.
 | Step | Result | Evidence |
 | --- | --- | --- |
 | 1. Calendar, Planning Settings, stored Undo | Done (hand-over) and covered by G2 and N1 | `UNDO_IMPLEMENTATION.md`, N1 report |
-| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final runs `full-gate-2026-10-21-final.log` and, after the review fixes, `full-gate-2026-10-21-after-review.log` (G2) |
-| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/` and, on the final code, `run-2026-10-21-r2/` (N1; failed attempts kept) |
+| 2. Full gate, regressions | **PASS** after repairs: one real leak/use-after-dispose (scoped `NightConditionsViewModel` listener), guard-test fixes, tests moved to the Hybrid contract with values unchanged; one pre-existing Windows-only cleanup failure separated from regressions | `migration/evidence/STEP2_GATE_REPAIRS_2026_10_21.md`, `full-gate-2026-10-21.log`, final runs `full-gate-2026-10-21-final.log`, `after-review`, `open01`, `r4` and the clean closing run `full-gate-2026-10-21-closing.log` (G2) |
+| 3. Android scenarios on 5582 | **PASS** — `flutter drive` of the native harness, all checks, 69 screenshots, eight roots × three themes × 100/200 %. The harness itself needed two fixes (hermetic preferences before catalogue seeding; a pump after `ensureVisible`); it had never been green before. The Kotlin cross-drive build failure is the documented `kotlin.incremental=false` case (RELEASE.md) | `migration/evidence/native/run-2026-10-21/`, `r2`, `r3-editor`, `r4` and, on the final code, `run-2026-10-21-r5/` (N1; failed attempts kept) |
 | 4. Matched browser ↔ host pairs | **Reviewed**: fixture unchanged, host recaptured, 48 pairs regenerated, per-pair review; repairs made for the inverted Moon phase glyph (pre-existing F15 defect), the missing Moon primary number, Planning slider rows, app-bar action margins and "1 rigs" | `VISUAL_COMPARISON_AUDIT.md` final section (V1), `migration/evidence/matched/gallery/` |
 | 5. Normal APK + hot reload on 5582 | **PASS** — `lib/main.dart` debug APK installed and started; a real source change hot-reloaded ("Reloaded 1 of 2788 libraries", code 0) and reverted. On the final code, `flutter build apk --debug -t lib/main.dart` built `build/app/outputs/flutter-apk/app-debug.apk` (SHA-256 `d12575b6…44dd244`), installed and launched to the first-run screen on 5582 | `migration/evidence/native/run-2026-10-21/hot-reload-main.log` (H1); `run-2026-10-21-r2/build-apk-debug.log`, `main-apk-launch.png` |
 | 6. Matrices and JSON statuses | Done: every Matrix A row (84 + the accepted A-LIB-05 omission) and all 63 Matrix B rows cite G2/N1/V1/H1 and name what was not exercised; all 179 JSON leaves remain accounted (56 used, 2 transformed, 121 not applicable, 0 blocked) with `hybrid_tokens_test.dart` in G2 | Matrix A/B "Final evidence (2026-10-21)" |
@@ -67,6 +67,25 @@ are unchanged. Evidence: `block_editor_hybrid_test.dart` and the editor suites
 (158 tests), matched editor pairs `plan_editor` / `plan_editor_invalid` in the
 gallery, native run `evidence/native/run-2026-10-21-r3-editor/` (all passed, 70 screenshots), full gate `evidence/full-gate-2026-10-21-open01.log` (2423 tests and host E2E pass; its one analyzer warning, an unused test import, was removed and re-checked in the same log). Kept native
 (D-08, below).
+
+### Independent re-review (V5 scope, 2026-10-21) and dispositions
+
+A second read-only CLI run on `275d520` checked only F1–F12, the touched
+criteria and the corrections' regressions (prompt `FINAL_CLAUDE_REREVIEW_PROMPT.md`,
+report kept verbatim in `final-claude-rereview-report.txt`, exit 0). Result:
+F1, F2, F3, F5, F7, F9, F10 (wording), F12 resolved; F4, F6, F11 partly; F8 =
+D-06 open. Two new items, both addressed:
+
+| Item | Disposition | Re-verification |
+| --- | --- | --- |
+| N1 an invalid white-balance tint in a closed Details was not checked (dead Apply for 2000, silent drop for "abc"); present since before the migration, since the tint field was already inside Details | **Fixed**: Apply opens Details first when its tint is invalid, so the field's check runs and shows; a recorded tint is named in the closed Details summary | `block_settings_test` "an invalid tint (2000 / abc) in a closed Details" — fails without the fix, passes with it |
+| N2 no clean full gate on the final code; G2/N1 definitions stale | **Fixed**: `full-gate-2026-10-21-closing.log` passes uninterrupted on the final code (2429 tests, host E2E); Matrix A/B definitions name it and the final native run r5 | Matrix "Final evidence" |
+| F4 leftover "pending" text | **Fixed**: 38 stale phrases in Matrix A and the ledger/audit leftovers now point to their evidence | Docs |
+| F11 rules not in SCIENTIFIC_INTEGRITY / DECISIONS | **Fixed**: SI-006 and SI-013 addenda; ADR-023 records owner decisions 6–8 | Docs |
+| Risk: screen-reader labels on fields | **Verified**: each label above a field is the text field's own semantics label | `block_editor_hybrid_test` "a screen reader hears each label on its text field" |
+| Risk: the fit-line mark does not scale | **Fixed**: it scales with the text | Tonight tests, host renders |
+| Risk: the gate-percentage slider kept tick marks | **Fixed**: every Settings slider uses the shared Hybrid slider | Settings tests |
+| F5 hardware Back key, real font on the eight screens; F9 weights on Impeller | Not exercised beyond the recorded runs (L-6; Geist weights proven with the bundled font on the host) | — |
 
 ### Deviations kept on purpose (native authority)
 
@@ -178,7 +197,7 @@ large text, themes and platform workflows belong to these registers.
    metadata and full backup/restore; Matrix A-LIB-05 is an accepted scope omission.
 8. **Owner approved:** full Undo after deleting Logbook entries, rigs, targets or
    sites, including storage restoration and compatibility tests. This supersedes
-   the initial permanent-delete adaptation. Implemented with focused storage/UI/state/schema evidence; final native and independent QA remain pending.
+   the initial permanent-delete adaptation. Implemented with focused storage/UI/state/schema evidence; on 2026-10-21 covered by the full gate, the emulator drive (entry and site delete/Undo) and the independent review (rig and target Undo are host-verified only).
 9. Planning Settings needs local draft Save/Cancel, matching actual web scope.
    Appearance and Privacy are immediate in both sources. Android system font
    scaling replaces the browser-only preview-size control.
@@ -210,7 +229,7 @@ large text, themes and platform workflows belong to these registers.
   complete content immediately. Cupertino interactive Back is retained.
 - Feedback now uses a MaterialBanner layout row below the native app bar, so it
   does not cover records or fixed actions. Existing action/expiry outcomes are
-  retained. Verification of this shared adaptation is pending.
+  retained. (2026-10-20 text; verified since by the full gate and the emulator drive's Undo and failure screenshots.)
 
 ## Evidence ledger (2026-10-20, historical — superseded by the resumed run above)
 

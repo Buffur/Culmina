@@ -5291,6 +5291,31 @@ fields, §2 and §8 below). **Implementation:** Stage 7, S7.2a, S7.2b, S7.3a and
   - **Screens.** The Weather detail leads with the night's facts, an hourly strip with per-hour exact values, the seeing limitation and a Clear Outside link, with Details for the table and model. "Coming nights" cards are browse only. "Plan this night" (`plan_this_night.dart`) follows N11: a never-saved draft moves; a saved plan goes through Save · Discard · Cancel, then is copied, never retimed.
   - **Vectors.** `night_weather_summarizer_test.dart`, `forecast_overview_test.dart`.
 
+## ADR-023: Hybrid migration — per-plan overrides, rig JSON omission, stored Undo
+
+- **Status:** Accepted 2026-10-20 (owner decisions during the web-to-Flutter migration).
+- **Decided by:** the owner, recorded as "Accepted decisions" 6, 7 and 8 in
+  [`design/WEB_TO_FLUTTER_MIGRATION.md`](design/WEB_TO_FLUTTER_MIGRATION.md); this
+  entry records them in the decision register and adds no new decision.
+- **Decision 6 — per-plan overrides (schema v27):** four nullable fields on a plan:
+  time between frames (s), setup outside the imaging window (min), a fixed fit margin
+  (min) and bytes per frame. Null inherits the global default or the storage evidence;
+  an explicit zero is kept and differs from inheritance. The fixed margin replaces the
+  global percentage only for Fits/Tight (SI-006 addendum); bytes per frame is the
+  `planEstimate` basis, never measured evidence (SI-013 addendum). Old snapshots,
+  manifests and backups read as "no overrides" and keep their semantics.
+- **Decision 7 — no standalone rig JSON import/export.** The web's rig JSON controls are
+  an accepted omission (Matrix A A-LIB-05); photo metadata import and full backup and
+  restore remain the native capabilities.
+- **Decision 8 — full Undo after deleting a Logbook entry, rig, target or site.**
+  One in-memory receipt; the exact rows are restored in one transaction with their IDs,
+  or nothing is; no persistent trash, no cross-process Undo, no schema change
+  ([`design/migration/UNDO_IMPLEMENTATION.md`](design/migration/UNDO_IMPLEMENTATION.md)).
+- **Evidence:** `DATA_MODEL.md` history row 27; the migration ledger's evidence (full
+  gate, emulator drive, independent review).
+
+---
+
 # Appendix — Update log (moved from the file header on 2026-10-18)
 
 *The dated notes that opened this file until 2026-10-18, verbatim (newest first in each group). They are a

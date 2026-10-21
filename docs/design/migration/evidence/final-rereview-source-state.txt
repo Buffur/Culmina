@@ -1,0 +1,5 @@
+Reviewed commit: 275d5201400004eabe34c688d596344ac2ea5eb3 (branch claude/owner-brief-2026-10-20-d413ba)
+Earlier review ran on 02f5cdb
+275d520 feat(migration): adopt the remaining web details (D-01, D-03, D-05, D-07)
+c23abeb feat(migration): OPEN-01 - the block editor follows the Hybrid composition
+06e4b65 fix(migration): independent review findings; final native and gate evidence

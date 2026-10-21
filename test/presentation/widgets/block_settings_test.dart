@@ -393,6 +393,37 @@ void main() {
       expect(find.textContaining('A whole number of kelvins'), findsOneWidget);
     });
 
+    // Migration re-review N1: the tint sits in Details; a closed Details
+    // must not let an invalid tint pass unchecked (no dead button, no
+    // silent drop).
+    for (final tint in ['2000', 'abc']) {
+      testWidgets('an invalid tint ($tint) in a closed Details fails by its '
+          'field', (tester) async {
+        await open(tester, cameraClass: CameraClass.dslrMirrorless);
+        await type(tester, 'blockDialog.exposure', '30');
+        await type(tester, 'blockDialog.count', '20');
+        await choose(tester, 'blockDialog.wbMode', 'Custom');
+        await openBlockDisclosure(tester, 'blockDialog.details');
+        await type(tester, 'blockDialog.tint', tint);
+        // Close Details again.
+        final header = find.descendant(
+          of: find.byKey(const Key('blockDialog.details')),
+          matching: find.byType(InkWell),
+        );
+        await tester.ensureVisible(header.first);
+        await tester.pumpAndSettle();
+        await tester.tap(header.first);
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('blockDialog.tint')), findsNothing);
+        expect(find.textContaining('Tint $tint'), findsOneWidget);
+        await submit(tester);
+        expect(result, isEmpty, reason: 'still open');
+        expect(find.byKey(const Key('blockDialog.tint')), findsOneWidget);
+        expect(find.textContaining('as the camera shows it'), findsWidgets);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
     testWidgets('an old block without them reads "Not recorded" and stays '
         'unrecorded', (tester) async {
       await open(tester, initial: _light());
