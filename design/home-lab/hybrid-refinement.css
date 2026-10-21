@@ -111,3 +111,75 @@ html[data-variant="blend"] .photo-metadata>summary::-webkit-details-marker{displ
 html[data-variant="blend"] .photo-metadata>summary::after{content:'';grid-column:2;grid-row:1 / span 2;width:18px;height:18px;background:var(--text-secondary);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9 5 7 7-7 7' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m9 5 7 7-7 7' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;transform:rotate(90deg);transition:transform 120ms}
 html[data-variant="blend"] .photo-metadata[open]>summary::after{transform:rotate(-90deg)}
 .concept.variant-blend .home-actions .due-result strong{color:var(--text-primary)}
+
+/* Owner request 2026-10-22: one role-based type scale for the whole app, so a label never reads
+   smaller than the content it introduces.
+   22/500 screen title and screen answer · 20/600 section heading (disclosures included) ·
+   18/500 section subject · 16/600 item title / sub-heading · 15/400 primary value ·
+   14/400 body · 13/400 caption. Serif night headings and Home's title keep their roles. */
+
+/* Home: Your plan above its subject; Night/Moon/Weather rows read icon + title on one line, value,
+   caption; next-action rows grouped without a rule between them. */
+.concept.variant-blend .plan-section .home-section-title{font-size:calc(20px * var(--text-scale));font-weight:600}
+.concept.variant-blend .target-name{font-size:calc(18px * var(--text-scale));font-weight:500;letter-spacing:0;margin-top:4px}
+.concept.variant-blend .state-message h3{font-size:calc(20px * var(--text-scale))}
+.concept.variant-blend .conditions>.condition-row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:10px;row-gap:2px;align-items:center}
+.concept.variant-blend .conditions>.condition-row>svg:first-child{grid-column:1;grid-row:1;margin:0;width:20px;height:20px;color:var(--text-primary)}
+.concept.variant-blend .conditions>.condition-row>.condition-text{display:contents}
+.concept.variant-blend .conditions>.condition-row .condition-label{grid-column:2;grid-row:1;font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary);line-height:1.4}
+.concept.variant-blend .conditions>.condition-row .condition-value{grid-column:2;grid-row:2;font-size:calc(15px * var(--text-scale));font-weight:400;margin:0}
+.concept.variant-blend .conditions>.condition-row .condition-extra{grid-column:2;grid-row:3;font-size:calc(13px * var(--text-scale));color:var(--text-secondary)}
+.concept.variant-blend .conditions>.condition-row>.chevron{grid-column:3;grid-row:1 / span 3;margin:0;align-self:center}
+.concept.variant-blend .conditions>.condition-row>.condition-text>.night-slider,.concept.variant-blend .conditions>.condition-row~.night-slider{grid-column:1 / -1}
+.concept.variant-blend .home-actions>.due-result+.candidate-button{border-top:0}
+.concept.variant-blend .home-actions>:is(.due-result,.candidate-button){min-height:48px;padding:8px 0}
+
+/* Plan: row label is the item title, the value under it a step smaller; Capture plan clearly above
+   its block titles; Edit wider, the other block controls to the right. */
+html[data-variant="blend"] .plan-page :is(.capture-heading h2,.estimate-section h2){font-size:calc(20px * var(--text-scale));font-weight:600}
+html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure>summary{font-size:calc(20px * var(--text-scale))}
+html[data-variant="blend"] .plan-page .plan-row-label{font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary)}
+html[data-variant="blend"] .plan-page .plan-row-value{font-size:calc(15px * var(--text-scale));font-weight:400}
+html[data-variant="blend"] .plan-page .capture-block h3{font-size:calc(16px * var(--text-scale));font-weight:600}
+html[data-variant="blend"] .plan-page .block-math{font-size:calc(15px * var(--text-scale));font-weight:500}
+html[data-variant="blend"] .plan-page .block-actions{gap:8px}
+html[data-variant="blend"] .plan-page .block-actions>[data-edit-block]{min-width:120px;margin-right:auto;justify-content:center}
+
+/* Night & Moon and Weather: section headings take the section role; answers stay as they are. */
+html[data-variant="blend"] .conditions-page .android-device h2:not(#viewed-night):not(.night-answer>h2):not(.moon-answer>h2):not(.weather-answer>h2){font-size:calc(20px * var(--text-scale));font-weight:600}
+/* Moon-free dark and its duration share one line when they fit. */
+html[data-variant="blend"] .conditions-page .moon-answer{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:baseline}
+html[data-variant="blend"] .conditions-page .moon-answer>*{grid-column:1 / -1}
+html[data-variant="blend"] .conditions-page .moon-answer>h2{grid-column:1;margin:0}
+html[data-variant="blend"] .conditions-page .moon-answer>.moon-answer-value{display:contents}
+html[data-variant="blend"] .conditions-page .moon-answer>.moon-answer-value>*{grid-column:1 / -1}
+html[data-variant="blend"] .conditions-page .moon-answer>.moon-answer-value>.big-value{grid-column:2;grid-row:1;justify-self:end;white-space:nowrap}
+:root[data-text-scale="2"][data-variant="blend"] .conditions-page .moon-answer>.moon-answer-value>.big-value{grid-column:1 / -1;grid-row:auto;justify-self:start}
+
+/* Night timeline: lanes sit close under the sky now that the dark bracket is gone. */
+:is(:root[data-variant=blend],.variant-blend) .night-slider{--stack-h:calc(var(--sky-h) + 2 * var(--lane-h) + 12px)}
+:is(:root[data-variant=blend],.variant-blend) .lane-up{top:calc(var(--sky-h) + 4px)}
+:is(:root[data-variant=blend],.variant-blend) .lane-free{top:calc(var(--sky-h) + 8px + var(--lane-h))}
+
+/* Stacking-gain graphs: blue gradient line and soft area (red only in field mode); plan point and
+   bars follow; tighter spacing between the graph, its axis titles and the legend. */
+:root{--gain-from:#8DB6FF;--gain-to:#2563EB}
+:root[data-theme=dark]{--gain-from:#3B6FD8;--gain-to:#93BBFF}
+:root[data-theme=field]{--gain-from:#990000;--gain-to:#FF0000}
+html[data-variant="blend"] .gain-curve{stroke-width:2.5}
+html[data-variant="blend"] .gain-curve:not([style]){stroke:var(--gain-to)}
+html[data-variant="blend"] .gain-graph .gain-point{fill:var(--gain-to)}
+html[data-variant="blend"] .gain-point-half,html[data-variant="blend"] .gain-graph .gain-point-recorded{stroke:var(--gain-to)}
+html[data-variant="blend"] .gain-key-plan{background:var(--gain-to);border-color:var(--gain-to)}
+html[data-variant="blend"] .gain-bar-fill{background:linear-gradient(90deg,var(--gain-from),var(--gain-to))}
+html[data-variant="blend"] .gain-run{stroke:var(--gain-to)}html[data-variant="blend"] .gain-run.is-alt{stroke:var(--gain-from)}
+html[data-variant="blend"] .gain-panel{margin:12px 0}
+html[data-variant="blend"] .gain-axis-title{margin:4px 0}
+html[data-variant="blend"] .gain-plot-scroll .gain-graph,html[data-variant="blend"] .plan-page svg.gain-graph{margin:0}
+html[data-variant="blend"] .gain-legend{margin:8px 0}
+html[data-variant="blend"] .plan-page .night-row-label{font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary)}
+html[data-variant="blend"] .plan-page .night-row-value{font-size:calc(15px * var(--text-scale));font-weight:400}
+html[data-variant="blend"] .android-device .plan-page .capture-actions>.secondary-button,html[data-variant="blend"] .plan-page .android-device .capture-actions>.secondary-button{align-self:stretch}
+/* Night & Moon / Weather: fact values on the primary-value role, sub-headings on the item-title role. */
+html[data-variant="blend"] .conditions-page .android-device :is(dd,.range-value,.time-phrase):not(.big-value){font-size:calc(15px * var(--text-scale));font-weight:400}
+html[data-variant="blend"] .conditions-page .android-device :is(h3,.moon-facts dt){font-size:calc(16px * var(--text-scale));font-weight:600}

@@ -100,3 +100,5 @@ html[data-variant="blend"] .android-device .settings-view :is(.settings-note,.fi
 .settings-view .settings-sources .settings-link{margin-top:0}
 .settings-view :is(.settings-note,.settings-intro)+:is(.settings-group,.settings-section){margin-top:12px}
 .settings-view .block-input{font-size:calc(15px * var(--text-scale));color:var(--text-primary)}
+/* Owner request 2026-10-22, app-wide role scale: section 20/600, disclosures too. */
+.settings-view .settings-section>h2,.settings-view .settings-group>h2,.settings-view details>summary{font-size:calc(20px * var(--text-scale))}

@@ -211,3 +211,8 @@ html[data-variant="blend"] .android-device .logbook-view .logbook-export-actions
 .logbook-view .logbook-section>h3{font-size:calc(15px * var(--text-scale));font-weight:600}
 .logbook-view .logbook-note,.logbook-view .logbook-count,.logbook-view .gain-axis-title,.logbook-view .gain-legend{font-size:calc(13px * var(--text-scale))}
 html[data-variant="blend"] .android-device .logbook-view :is(.logbook-note,.logbook-count){font-size:calc(13px * var(--text-scale))}
+/* Owner request 2026-10-22, app-wide role scale: section 20/600 (disclosures too), answer 22/500,
+   item title 16/600. */
+.logbook-view .logbook-section>h2,.logbook-view :is(.logbook-gain,.logbook-snapshot,.logbook-export)>summary{font-size:calc(20px * var(--text-scale));font-weight:600}
+.logbook-view .logbook-state-large{font-size:calc(22px * var(--text-scale));font-weight:500}
+.logbook-view .logbook-section>h3,.logbook-view .logbook-block-label{font-size:calc(16px * var(--text-scale));font-weight:600}

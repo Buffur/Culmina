@@ -517,3 +517,40 @@ owner's decisions: R3 in check_hybrid_refinement presses the new jump-to-start b
 the opening position is restored, nothing stored); check_hybrid_corrections pins the new sky
 colours. check_inventory reports a stale source snapshot of Flutter files from the migration, not
 this change.
+
+## App-wide hierarchy and type scale (owner request, 2026-10-22), accepted by the owner
+
+Problem from the owner's screenshots: labels with a higher role read smaller than the content
+below them ("Your plan" 18 above a 21 px target; "Site and night", "Moon", "Weather" 13 px grey above
+15–16 px values; "Capture plan" barely above "Light · Broadband").
+
+Role-based scale, applied to every studio screen (Hybrid):
+22/500 screen title and screen answer (Plan "Fits", Logbook status) · 20/600 section heading,
+disclosures included (was 18) · 18/500 section subject (Home target, was 21) · 16/600 item title /
+sub-heading (row labels, Moon/Weather/Night titles, block titles, Logbook block labels, Library h3) ·
+15/400 primary value · 14/400 body · 13/400 caption. Serif night headings and Home's title keep their
+roles; dense data (tables, hourly strip, calendar, chart axes) keeps 12 px; 14/600 stays only for
+inline emphasis. Type audit after the change: these roles on all 14 audited screens.
+
+Layout:
+- Home: Night/Moon/Weather rows put icon and title on one line (20 px icon, vertically centred),
+  value and caption below aligned with the title, chevron centred; no rule between Record result
+  and What can I image, 8 px row padding.
+- Plan: row label 16/600 over value 15/400; Capture plan / Estimate 20/600 over block titles 16/600;
+  Edit 120 px wide with the move and Remove controls pushed right; Add block and Build calibration
+  frames equal height (60 px; the longer label wraps); Plan's night rows follow Home.
+- Moon: "Moon-free dark" and its duration share one line (stacked again at 200 %).
+- Night timeline: lanes sit 4 px under the sky (the space of the removed bracket closed).
+- Stacking-gain graphs (Plan and Logbook): blue gradient line and soft area, blue plan point and
+  bars (red in field mode); tighter axis-title/legend spacing. Variants for choice are in the lab's
+  "Gain graph → Compare all three" control: A time curve (default), B group bars, C block steps.
+
+Owner decision 2026-10-22: the night timeline keeps the black night (no blue twilight); the blue
+gradient applies to the stacking-gain graphs only. Earlier note: "replace grey with a blue gradient" was applied to the stacking-gain graphs.
+The night timeline keeps the accepted black night (owner, 2026-10-22); a blue twilight variant would
+reverse that decision, so it is not made without the owner's choice.
+
+Checks: plan, night, quality, defaults, bridge, tabs browser/interactions, Hybrid feedback/refinement/
+continuity/plan clarity/import focus, seven conditions, focus labels and library refinement pass
+(tabs browser and feedback after a pause: local server connections were exhausted by the long run);
+check_hybrid_corrections passes 51/51 on a copy outside OneDrive.

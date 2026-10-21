@@ -156,3 +156,7 @@ html[data-variant="blend"] .android-device .library-view .library-detail>.librar
    15/400 field label · 14/400 body · 13/400 hint, caption and note. */
 .library-view .library-disclosure>summary,.library-view details>summary{font-weight:600}
 .library-view .library-section>h3{font-size:calc(15px * var(--text-scale));font-weight:600}
+/* Owner request 2026-10-22, app-wide role scale: section 20/600 (legends and disclosures too),
+   nested disclosure and sub-heading 16/600. */
+.library-view .library-section>h2,.library-view .library-group>h2,.library-view .library-group-head>h2,.library-view legend,.library-view .library-legend,.library-view details>summary{font-size:calc(20px * var(--text-scale))}
+.library-view details details>summary,.library-view .library-section>h3{font-size:calc(16px * var(--text-scale));font-weight:600}
