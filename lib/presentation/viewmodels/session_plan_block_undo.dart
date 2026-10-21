@@ -20,6 +20,19 @@ extension _BlockUndo on SessionPlanViewModel {
     );
   }
 
+  Future<bool> _restoreCaptureBlock(
+    int index,
+    CaptureBlock block,
+    BlocksEdit deletion,
+  ) async {
+    if (!deletion.inPlan(_contents, activeSessionId)) return false;
+    final untouched = deletion.isCurrent(_blocks, _contents, activeSessionId);
+    _blocks.insert(index.clamp(0, _blocks.length), block);
+    _isExample = untouched && deletion.wasExample;
+    await _edited();
+    return true;
+  }
+
   /// Undo (TD-079): the blocks and badge as [edit] found them, autosaved (a saved snapshot is never
   /// touched); refused (false) if they changed since.
   Future<bool> _undoBlocksEdit(BlocksEdit edit) async {

@@ -134,6 +134,10 @@ void main() {
     await _settle(tester);
     final altitude = vm.conditions.currentAltitude!;
     expect(altitude, lessThan(0));
+    // The Hybrid Plan keeps the target's measurements in its remembered
+    // "Target details" disclosure.
+    await tester.tap(find.byTooltip('Target details'));
+    await _settle(tester);
     expect(find.text('Altitude now'), findsOneWidget);
     expect(find.text('−${altitude.abs().toStringAsFixed(1)}°'), findsOneWidget);
     expect(find.textContaining('-'), findsNothing, reason: 'no hyphen-minus');
@@ -187,6 +191,8 @@ void main() {
     await _settle(tester);
     final altitude = vm.conditions.currentAltitude!;
     final degrees = '−${altitude.abs().toStringAsFixed(1)}°';
+    await tester.tap(find.byTooltip('Target details'));
+    await _settle(tester);
     final summary = find.byKey(const Key('planner.target'));
     expect(
       find.descendant(of: summary, matching: find.text('Altitude now')),

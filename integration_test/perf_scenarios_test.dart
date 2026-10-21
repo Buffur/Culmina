@@ -426,9 +426,8 @@ void main() {
       await tap(tester, find.byKey(const Key('logbook.filter.completed')));
       await settle(tester);
     });
-    // Close the filter panel on its barrier.
-    await tester.tapAt(const Offset(20, 20));
-    await settle(tester);
+    // The Hybrid Logbook's filters are an inline panel: close it with Done.
+    await tap(tester, find.byKey(const Key('logbook.filters.done')));
     await watch('logbook.entry', () async {
       AppRouter.router.go(AppRouter.sessions);
       await settle(tester);
@@ -436,6 +435,11 @@ void main() {
         (w) =>
             w.key is ValueKey<String> &&
             (w.key! as ValueKey<String>).value.startsWith('logbook.title.'),
+      );
+      await tester.scrollUntilVisible(
+        entry.first,
+        300,
+        scrollable: find.byType(Scrollable).first,
       );
       await tap(tester, entry.first);
       await settle(tester, 12);

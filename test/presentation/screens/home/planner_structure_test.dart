@@ -142,7 +142,7 @@ void main() {
           find.descendant(
             of: find.byKey(Key('status.number.$label')),
             matching: find.text(
-              QuantityText.duration(Duration(milliseconds: milliseconds)),
+              QuantityText.budgetDuration(Duration(milliseconds: milliseconds)),
             ),
           ),
           label,
@@ -198,7 +198,7 @@ void main() {
           find.descendant(
             of: find.byKey(Key('status.number.$label')),
             matching: find.text(
-              QuantityText.duration(Duration(milliseconds: milliseconds)),
+              QuantityText.budgetDuration(Duration(milliseconds: milliseconds)),
             ),
           ),
           findsOneWidget,
@@ -412,7 +412,7 @@ void main() {
       find.descendant(
         of: find.byKey(Key('status.number.${AppWords.integration}')),
         matching: find.text(
-          QuantityText.duration(
+          QuantityText.budgetDuration(
             Duration(milliseconds: vm.captureBudget.integrationMs),
           ),
         ),

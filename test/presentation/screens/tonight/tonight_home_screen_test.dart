@@ -219,9 +219,10 @@ void main() {
     final fit = vm.fitAnalysis;
     expect(fit.state, FitState.doesNotFit);
     expect(find.text(StatusBlock.headline(fit.state)), findsOneWidget);
+    // The Hybrid status writes the needed time to the second.
     expect(
       find.text(
-        QuantityText.duration(Duration(milliseconds: fit.windowLoadMs)),
+        QuantityText.budgetDuration(Duration(milliseconds: fit.windowLoadMs)),
       ),
       findsOneWidget,
     );

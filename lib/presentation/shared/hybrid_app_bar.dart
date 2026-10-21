@@ -52,15 +52,24 @@ AppBar hybridAppBar(
   return AppBar(
     title: title == null
         ? null
-        : MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaler: scaler),
-            child: Builder(
-              builder: (context) => DefaultTextStyle(
-                style: DefaultTextStyle.of(context).style,
-                softWrap: true,
-                overflow: TextOverflow.visible,
-                child: title,
-              ),
+        : Builder(
+            builder: (context) => DefaultTextStyle(
+              style: DefaultTextStyle.of(context).style,
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              // An explicit scaler outranks AppBar's clamped MediaQuery
+              // without depending on every MediaQuery field (S10.3).
+              child: title is Text && title.data != null
+                  ? Text(
+                      title.data!,
+                      key: title.key,
+                      style: title.style,
+                      textAlign: title.textAlign,
+                      maxLines: title.maxLines,
+                      semanticsLabel: title.semanticsLabel,
+                      textScaler: title.textScaler ?? scaler,
+                    )
+                  : title,
             ),
           ),
     leading: leading,

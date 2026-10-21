@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 
 import '../../core/time/clock.dart';
 import '../../domain/models/capture_block.dart';
-import '../../domain/models/imaging_opportunity.dart';
 import '../../domain/models/session.dart';
 import '../../domain/models/session_snapshot.dart';
 import '../../domain/services/calibration_match.dart';
@@ -13,6 +12,7 @@ import '../../domain/services/optical_calculator.dart';
 import '../../domain/services/session_snapshot_builder.dart';
 import '../../domain/services/storage_estimate.dart';
 import '../../domain/services/visibility_calculator.dart';
+import 'fit_no_window_reason.dart';
 import 'night_conditions_viewmodel.dart';
 import 'plan_lifecycle_viewmodel.dart';
 import 'session_plan_viewmodel.dart';
@@ -146,23 +146,6 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
   FitResult _computeFit() {
     final budget = captureBudget;
     final prefs = _settings.planningPreferences;
-    final String noWindowReason;
-    if (_plan.sessionNight == null) {
-      noWindowReason = "Set a site to see tonight's windows.";
-    } else if (_plan.selectedTarget == null) {
-      noWindowReason = "Choose a target to see tonight's windows.";
-    } else if (_conditions.imagingOpportunity?.noWindowReason ==
-        NoWindowReason.excludedByOptionalGates) {
-      noWindowReason =
-          'No usable window: your Moon or cloud gate excludes all of '
-          "tonight's dark time with the target high enough.";
-    } else {
-      noWindowReason = FitAnalyzer.noWindowReason(
-        timeline: _conditions.nightTimeline!,
-        darknessLimitDeg: prefs.darknessLimit.degrees,
-        minAltitudeDeg: prefs.minAltitudeDeg,
-      );
-    }
     return FitAnalyzer.analyze(
       budget: budget,
       windows: _conditions.visibilityWindows,
@@ -171,7 +154,7 @@ class CaptureAnalysisViewModel extends ChangeNotifier {
       transitUtc: budget.countOf(BudgetEventKind.meridianFlip) > 0
           ? _transitUtc
           : null,
-      noWindowReason: noWindowReason,
+      noWindowReason: fitNoWindowReason(_plan, _conditions, prefs),
       inputMissing: _plan.sessionNight == null || _plan.selectedTarget == null,
     );
   }

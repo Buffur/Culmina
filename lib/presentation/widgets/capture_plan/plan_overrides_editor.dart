@@ -139,7 +139,7 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
       preferences.setupMinutes == null
           ? 'Global: not included'
           : 'Global: ${preferences.setupMinutes!} min',
-      'Global: ${preferences.feasibilityMarginPercent}%',
+      'Global: ${QuantityText.percent(preferences.feasibilityMarginPercent)}',
       'Use file / rig evidence',
     ];
     return PopScope(

@@ -18,6 +18,8 @@ import '../../domain/services/location_service.dart';
 import '../../domain/services/reverse_geocoder.dart';
 import '../../domain/services/session_night_resolver.dart';
 
+part 'site_deletion_undo.dart';
+
 /// Where the user is observing from (TASKs 7.1–7.4; split out of the planner ViewModel in TASK
 /// 12.3): saved sites, the active one, or a transient position (a map pick or GPS fix — never
 /// written into a saved site), its zone, place name and sky darkness.
@@ -197,31 +199,11 @@ class SiteViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<DeletionReceipt?> deleteWithUndo(int id) async {
-    final repository = _locationRepository;
-    if (repository is! UndoableDeletionRepository) {
-      await deleteSite(id);
-      return null;
-    }
-    final active = _activeSite?.id == id;
-    final receipt = await (repository as UndoableDeletionRepository)
-        .deleteWithUndo(id);
-    await _afterSiteDeleted(id);
-    final revision = _positionRevision;
-    return DeletionReceipt(
-      resource: receipt.resource,
-      id: id,
-      restore: () async {
-        await receipt.restore();
-        _sites = await _locationRepository.getLocations();
-        if (active && _activeSite == null && _positionRevision == revision) {
-          await selectSite(id);
-        } else {
-          notifyListeners();
-        }
-      },
-    );
-  }
+  /// Deletes the site with a stored-record Undo when the repository keeps
+  /// one; a plain delete (no receipt) otherwise.
+  Future<DeletionReceipt?> deleteWithUndo(int id) => _deleteWithUndo(id);
+
+  void _notify() => notifyListeners();
 
   /// Sets a **transient** position (TASK 7.1): remembered across restarts, never written into a
   /// saved site; deselects the active site.

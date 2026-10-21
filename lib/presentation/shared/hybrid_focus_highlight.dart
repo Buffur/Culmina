@@ -79,13 +79,15 @@ class _FocusRingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (FocusManager.instance.highlightMode != FocusHighlightMode.traditional)
+    if (FocusManager.instance.highlightMode != FocusHighlightMode.traditional) {
       return;
+    }
     final focused = FocusManager.instance.primaryFocus;
     final focusContext = focused?.context;
     final rootBox = root.currentContext?.findRenderObject();
-    if (focusContext == null || rootBox is! RenderBox || !rootBox.hasSize)
+    if (focusContext == null || rootBox is! RenderBox || !rootBox.hasSize) {
       return;
+    }
     RenderObject? target = focusContext.findRenderObject();
     // EditableText's Focus wraps only the text; highlight its whole field.
     focusContext.visitAncestorElements((element) {
@@ -101,8 +103,12 @@ class _FocusRingPainter extends CustomPainter {
       return true;
     });
     final box = target;
-    if (box is! RenderBox || !box.attached || !box.hasSize || box.size.isEmpty)
+    if (box is! RenderBox ||
+        !box.attached ||
+        !box.hasSize ||
+        box.size.isEmpty) {
       return;
+    }
     // A route can leave between focus notification and paint.
     RenderObject? ancestor = box;
     while (ancestor != null && !identical(ancestor, rootBox)) {

@@ -258,7 +258,7 @@ class _Legend extends StatelessWidget {
             ColoredBox(color: depth(SkyState.dark)),
             compact
                 ? 'Dark'
-                : 'Dark · Sun below ${view.limitDeg.toStringAsFixed(0)}°',
+                : 'Dark · Sun below ${QuantityText.degrees(view.limitDeg)}',
           )
         else
           Text('No dark time at the selected limit.', style: style),

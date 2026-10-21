@@ -38,8 +38,9 @@ class _HybridViewEntranceState extends State<HybridViewEntrance>
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false)
+    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
       return widget.child;
+    }
     return _entrance(controller, widget.child);
   }
 }

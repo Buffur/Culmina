@@ -167,9 +167,11 @@ void main() {
     expect(b.integrationMs, 10800 * _s);
     expect(b.windowLoadMs, 11920 * _s);
     expect(b.sessionBudgetMs, 11920 * _s);
+    // The approved Hybrid design writes capture budgets to the second
+    // (`QuantityText.budgetDuration`); 11 920 s is 3 h 18 min 40 s.
     expect(
       CaptureBudgetSummary.budgetSummary(b),
-      'Time needed 3 h 19 min · Total time 3 h 19 min',
+      'Time needed 3 h 18 min 40 s · Total time 3 h 18 min 40 s',
     );
     expect(find.text(CaptureBudgetSummary.budgetSummary(b)), findsOneWidget);
   });

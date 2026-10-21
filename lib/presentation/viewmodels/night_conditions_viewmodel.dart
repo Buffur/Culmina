@@ -39,10 +39,14 @@ class NightConditionsViewModel extends ChangeNotifier {
     this._viewedNightChanges,
   }) {
     for (final source in [_site, _plan, _settings]) {
-      source.addListener(_onInputsChanged);
+      source.addListener(_inputsListener);
     }
-    _viewedNightChanges?.addListener(_onInputsChanged);
+    _viewedNightChanges?.addListener(_inputsListener);
   }
+
+  /// One listener object: each tear-off of an extension method is a new
+  /// closure, which `removeListener` would never match.
+  late final VoidCallback _inputsListener = _onInputsChanged;
 
   final SiteViewModel _site;
   final SessionPlanViewModel _plan;
@@ -92,18 +96,9 @@ class NightConditionsViewModel extends ChangeNotifier {
   void begin() {
     _active = true;
     _weatherKey = _currentWeatherKey();
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      // Startup and a directly opened conditions route can begin in the same
-      // frame. Let the plan's identical request populate the shared cache
-      // before the scoped view asks for it; viewing needs no duplicate fetch.
-      final source = _forecastSource;
-      if (source != null &&
-          source._active &&
-          source._currentWeatherKey() == _currentWeatherKey()) {
-        await source.idle;
-      }
-      if (!_disposed) unawaited(_loadWeather());
-    });
+    SchedulerBinding.instance.addPostFrameCallback(
+      (_) => unawaited(_loadAfterSource()),
+    );
   }
 
   void _announceWeatherChange() => notifyListeners();
@@ -292,9 +287,9 @@ class NightConditionsViewModel extends ChangeNotifier {
     // Ignore a forecast completing after this scoped browser was removed.
     _disposed = true;
     _weatherRequest++;
-    _viewedNightChanges?.removeListener(_onInputsChanged);
+    _viewedNightChanges?.removeListener(_inputsListener);
     for (final source in [_site, _plan, _settings]) {
-      source.removeListener(_onInputsChanged);
+      source.removeListener(_inputsListener);
     }
     super.dispose();
   }

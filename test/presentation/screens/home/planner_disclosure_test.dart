@@ -137,6 +137,10 @@ void main() {
     tester,
   ) async {
     await start(tester);
+    // The Hybrid rig row keeps its specifications inside the remembered
+    // "Rig details" reference disclosure; open it to reach that section.
+    await tester.tap(find.byTooltip('Rig details'));
+    await settle(tester);
     for (final key in PlannerSections.all) {
       expect(vm.disclosure.isOpen(key), isFalse, reason: key);
       expect(find.byKey(Key('section.$key')), findsOneWidget, reason: key);

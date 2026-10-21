@@ -258,14 +258,7 @@ class SessionPlanViewModel extends ChangeNotifier {
     int index,
     CaptureBlock block, {
     required BlocksEdit deletion,
-  }) async {
-    if (!deletion.inPlan(_contents, activeSessionId)) return false;
-    final untouched = deletion.isCurrent(_blocks, _contents, activeSessionId);
-    _blocks.insert(index.clamp(0, _blocks.length), block);
-    _isExample = untouched && deletion.wasExample;
-    await _edited();
-    return true;
-  }
+  }) => _restoreCaptureBlock(index, block, deletion);
 
   /// [newIndex] is already adjusted for the removal (the `onReorderItem` contract, TD-010) — do
   /// not re-adjust it.

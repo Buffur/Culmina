@@ -105,7 +105,9 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                 width: 2,
                 color: AppPalette.of(context).textPrimary,
               ),
-              insets: const EdgeInsets.symmetric(horizontal: 12),
+              insets: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm + AppSpacing.xs,
+              ),
             ),
             labelStyle: text.bodySmall?.copyWith(
               fontSize: 14,
@@ -235,8 +237,9 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                                           ? Duration.zero
                                           : const Duration(milliseconds: 180),
                                     ).then((_) {
-                                      if (mounted)
+                                      if (mounted) {
                                         moonTimelineFocus.requestFocus();
+                                      }
                                     });
                                   }
                                 },

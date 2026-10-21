@@ -15,6 +15,19 @@ extension _ForecastLoading on NightConditionsViewModel {
     unawaited(_loadWeather());
   }
 
+  /// Startup and a directly opened conditions route can begin in the same
+  /// frame. A scoped browser lets the plan's identical request populate the
+  /// shared cache before it asks; viewing needs no duplicate fetch.
+  Future<void> _loadAfterSource() async {
+    final source = _forecastSource;
+    if (source != null &&
+        source._active &&
+        source._currentWeatherKey() == _currentWeatherKey()) {
+      await source.idle;
+    }
+    if (!_disposed) unawaited(_loadWeather());
+  }
+
   /// Loads the night's forecast (cache → fetch → typed states, TASK 9.3); a
   /// slow answer for a previous site or night is dropped.
   Future<void> _loadWeather({bool forceRefresh = false}) =>

@@ -1,6 +1,7 @@
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
+import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
@@ -46,7 +47,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  Future<void> build(WidgetTester tester) async {
+  Future<void> build(WidgetTester tester, {bool withLogbook = false}) async {
     await tester.runAsync(() async {
       database = AppDatabase(NativeDatabase.memory());
       vm = PlannerHarness(
@@ -55,6 +56,10 @@ void main() {
         _NoWeather(),
         DriftLocationRepository(database),
         locationService: FakeLocationService(),
+        // The Logbook root needs its sessions; the other tests do not.
+        sessionRepository: withLogbook
+            ? DriftSessionRepository(database)
+            : null,
       );
       await vm.ready;
     });
@@ -64,7 +69,7 @@ void main() {
   testWidgets(
     'all workspace roots expose the same persistent field-mode action',
     (tester) async {
-      await build(tester);
+      await build(tester, withLogbook: true);
       for (final screen in const [
         SettingsScreen(),
         LibraryScreen(),

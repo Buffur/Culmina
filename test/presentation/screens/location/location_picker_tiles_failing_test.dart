@@ -77,7 +77,14 @@ void main() {
     HttpOverrides.global = previous;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(pathProvider, null);
-    cache.deleteSync(recursive: true);
+    // Windows keeps flutter_map's process-wide tile cache file open until the
+    // test process exits, so the folder may not be deletable yet; it is in
+    // the system temp folder. Cleanup only: no assertion depends on it.
+    try {
+      cache.deleteSync(recursive: true);
+    } on FileSystemException {
+      // Left for the OS temp cleanup.
+    }
   });
 
   // The tile loads need real time (the cache folder, the requests) and frames
