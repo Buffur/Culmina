@@ -47,12 +47,12 @@ accessibility/native FAIL, evidence quality FAIL.
 | F4 boilerplate "VERIFIED" in Matrix A | **Fixed**: default rows now say host-verified, root reviewed, interactions not driven on the device; only rows N1 really drove say so | Matrix A/B text |
 | F5 simulated text scale/theme, no system Back | Labels corrected (in-process test values). **Added** platform Back (route-pop message) on a dirty editor: asks; Cancel keeps; Discard leaves the plan unchanged | N1 r2 |
 | F6 skipped host suite printed as PASS | Recorded: `hybrid_migration_smoke_test` is skipped on the host by design; the gate prints PASS for a skipped file. Tooling unchanged | — |
-| F7 Settings sections keep the root navigation | **OWNER DECISION D-05** (below) | — |
+| F7 Settings sections keep the root navigation | **Adopted** (D-05): groups and About open above the tabs | `app_shell_navigation_test` |
 | F8 field-mode action black on #AA0000 (~2.7:1), contrast unchecked in field mode | **OWNER DECISION D-06**: the pairing comes from `tokens.json`; widen the documented field exception or change the action colour | — |
 | F9 Geist variable weights | **Verified**: `geist_weight_test.dart` shows w400 < w500 < w600 < w700 widths with the bundled font (real instances, not one outline) | G2 |
 | F10 "Theoretical" bytes label | **Fixed**: "File size per frame (MB)", hint "A planning figure, not measured from your files. Empty: your file or rig evidence." | G2 |
 | F11 DATA_MODEL still v25 | **Fixed**: DATA_MODEL v27 row and note; FEATURE_STATUS note | Docs |
-| F12 minor gaps (Weather clearest/cloudiest line, coverage only when incomplete, "10 h 55 min dark" on Tonight, "M42" in the plan summary, rig editor dialog style) | Recorded as **D-07** (below) | — |
+| F12 minor gaps (Weather clearest/cloudiest line, coverage only when incomplete, "10 h 55 min dark" on Tonight, "M42" in the plan summary, rig editor dialog style) | **Adopted** (D-07), except the rig editor dialog | `weather_forecast_widget_test`, Tonight tests |
 
 **OPEN-01 — done (2026-10-21, owner's go-ahead).** The block editor now
 follows the web composition on its existing state (plan.js `blockView`): the
@@ -70,35 +70,44 @@ gallery, native run `evidence/native/run-2026-10-21-r3-editor/` (all passed, 70 
 
 ### Deviations kept on purpose (native authority)
 
-- **D-01** Tonight's fit verdict and Night row keep native wording (the darkness
-  limit in "Dark (Sun below −18°)", the explicit zone rule) instead of the web's
-  illustrative "example window" note — time/zone rules, F17.
+- **D-01 — adopted 2026-10-21.** Tonight now uses the web's fit line (a check
+  or info mark beside a 13 px verdict, the reason in 12 px below) and the
+  web's condition rows (13 px label, 15 px value, 12 px supporting lines,
+  including "10 h 55 min dark"). The Night value keeps the F17 wording
+  "Dark (Sun below −18°): …" and the zone rule stays as a supporting line, so
+  the darkness limit and zone are still named; the web's illustrative
+  "example window" note stays browser-only.
 - **D-02** Plan keeps active rig capability warnings (NPF / max sub when
   tracking is unknown) visible above the capture list (TASK 8.6, PD-11); the
   first capture block can start below the first screen.
-- **D-03** Night/Moon/Weather context shows the site and the full zone rule on
-  two lines, not "Ljubljana · Europe/Ljubljana".
+- **D-03 — adopted 2026-10-21.** Night/Moon/Weather show the web's one context
+  line: "Ljubljana · Europe/Ljubljana, CET, UTC+01:00" (the abbreviation and
+  offset kept; a device-zone caption keeps its words); a screen reader hears
+  the full zone rule.
 - **D-04** Dates use the app's existing `NightTimeFormatter` (device locale:
   "Tue, Nov 10"), not the web's "10 Nov".
-- A-LIB-05 (standalone rig JSON) remains the owner's accepted omission.
-- **D-05 (owner decision)** Settings sections (Appearance, Planning, Privacy,
-  Backup) open inside the Settings tab and keep the root navigation; the web
-  hides it on detail screens. At 200 % the 2 × 2 navigation plus Save/Cancel
-  take about 30 % of the height. Recommendation: push the sections above the
-  shell like Plan and Night/Moon/Weather.
-- **D-06 (owner decision)** Field mode's primary action is black on `#AA0000`
-  (about 2.7:1) and the accessibility sweep does not check contrast in field
-  mode; the documented exception covers secondary text only.
+- **D-05 — adopted 2026-10-21.** Settings groups and About open above the tabs
+  (root navigator), like Plan and Night/Moon/Weather; Back returns to the
+  Settings root (`app_shell_navigation_test`). Their sliders now use the
+  web's full-width solid track without division ticks. Evidence: native run
+  `evidence/native/run-2026-10-21-r4/` (all passed) and full gate
+  `evidence/full-gate-2026-10-21-r4.log` (2425 passed; the one guard failure, a raw
+  slider inset, was replaced by a spacing token and re-checked in the same log;
+  the native run predates that 2 px inset change).
+- **D-06 (owner decision, open)** Field mode's primary action is black on
+  `#AA0000` (about 2.7:1) and the accessibility sweep does not check contrast
+  in field mode; the documented exception covers secondary text only.
+- **D-07 — adopted 2026-10-21 except the rig editor.** Weather adds the web's
+  "Clearest around … · cloudiest around …" line, the dark span's length and
+  an always-stated "Coverage: n/m hourly samples in dark time"; Tonight's rig
+  line leads with the catalogue ID ("M42 · …"). The rig editor stays a
+  dialog (unchanged).
 - **D-08** Block editor, kept native: a fifth frame type (Dark flat) makes the
   segmented choice two rows; "From a photo" appears only where files can be
   read (not on the host renders); validation messages sit under their field
   instead of the web's "Check the highlighted fields" toast; the footer keeps
   an explicit Cancel beside its explanation; the filter stays a list with
   None and any custom filter, not free text.
-- **D-07** Minor content kept native: Weather omits the "clearest / cloudiest
-  around" line and shows coverage only when incomplete; Tonight's Night row
-  omits the dark total; the plan summary omits the catalogue ID; the rig editor
-  stays a dialog.
 
 
 ### Not exercised (limits)
@@ -107,6 +116,9 @@ L-1 system file/photo pickers and real camera files; L-2 GPS permission, live
 fix and live map tiles on a device; L-3 physical phone; L-4 platform share sheet
 and external browser; L-5 process death/app restart and route recreation; L-6
 human screen-reader and hardware-keyboard acceptance, motion timing on device.
+L-6 in part checked on 2026-10-21: the real `lib/main.dart` app on the emulator
+follows the Android system font scale 200 % and the system dark setting
+(`evidence/native/run-2026-10-21-r4-system/`), restored afterwards.
 A release build was not made: release signing is owner-managed.
 
 ## Objective and authority

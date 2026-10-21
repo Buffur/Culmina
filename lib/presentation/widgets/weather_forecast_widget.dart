@@ -218,10 +218,22 @@ class _AvailableBody extends StatelessWidget {
             const SizedBox(height: AppSpacing.sm),
           ],
           Text(
-            WeatherText.span(s, limitDeg, at),
+            // Hybrid adds the dark span's length (conditions.js).
+            s.span == NightWeatherSpan.noDark
+                ? WeatherText.span(s, limitDeg, at)
+                : '${WeatherText.span(s, limitDeg, at)} · '
+                      '${QuantityText.duration(s.toUtc.difference(s.fromUtc))}',
             key: const Key('weather.span'),
             style: theme.textTheme.bodyMedium,
           ),
+          if (WeatherText.trend(s, at) case final trend?) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              trend,
+              key: const Key('weather.trend'),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
           if (showZone)
             Text(
               'Times in ${NightTimeFormatter.zoneCaption(s.fromUtc, zoneId: zoneId)}',
@@ -231,6 +243,14 @@ class _AvailableBody extends StatelessWidget {
           if (s.span != NightWeatherSpan.noDark && s.coveredHours > 0) ...[
             const SizedBox(height: AppSpacing.md),
             _WeatherFacts(summary: s),
+          ],
+          if (WeatherText.coverageCount(s) case final count?) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              count,
+              key: const Key('weather.coverage'),
+              style: small?.copyWith(fontWeight: FontWeight.w600),
+            ),
           ],
           if (coverage != null)
             Text(

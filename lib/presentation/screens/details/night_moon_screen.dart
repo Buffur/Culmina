@@ -161,18 +161,27 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            SiteLabel.of(site) ?? 'Observing site',
-                            key: const Key('detail.context'),
-                            style: text.bodySmall,
-                          ),
-                          Text(
-                            ContextLine.zoneRule(
-                              browser.view.night.startUtc,
-                              zoneId: site.displayZoneId,
+                          // Hybrid's one context line (conditions.js
+                          // browseHeader: "Ljubljana · Europe/Ljubljana");
+                          // the zone keeps its abbreviation and offset, and
+                          // a screen reader hears the full zone rule.
+                          Semantics(
+                            label:
+                                '${SiteLabel.of(site) ?? 'Observing site'}. '
+                                '${ContextLine.zoneRule(browser.view.night.startUtc, zoneId: site.displayZoneId)}',
+                            child: ExcludeSemantics(
+                              child: Text(
+                                _contextLine(
+                                  SiteLabel.of(site) ?? 'Observing site',
+                                  NightTimeFormatter.zoneCaption(
+                                    browser.view.night.startUtc,
+                                    zoneId: site.displayZoneId,
+                                  ),
+                                ),
+                                key: const Key('detail.context'),
+                                style: text.bodySmall?.copyWith(fontSize: 12),
+                              ),
                             ),
-                            key: const Key('detail.zone'),
-                            style: text.bodySmall,
                           ),
                           const SizedBox(height: AppSpacing.md),
                           const _ViewedNightHeader(),
@@ -499,4 +508,14 @@ class NightSummary extends StatelessWidget {
       ],
     );
   }
+}
+
+/// "Ljubljana · Europe/Ljubljana, CET, UTC+01:00": the site and its zone on
+/// one line; a device-zone caption keeps its "times in device zone" words,
+/// so a zone that is not the site's is never mistaken for it.
+String _contextLine(String site, String zoneCaption) {
+  const prefix = 'site zone ';
+  return zoneCaption.startsWith(prefix)
+      ? '$site · ${zoneCaption.substring(prefix.length)}'
+      : '$site · times in $zoneCaption';
 }

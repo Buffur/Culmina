@@ -107,6 +107,43 @@ abstract final class WeatherText {
     };
   }
 
+  /// Hybrid's "why" line (conditions.js weatherBody): the clearest and the
+  /// cloudiest forecast hour inside the dark span, by its instantaneous
+  /// cloud cover; null when fewer than two values differ. Ties keep the
+  /// earlier hour.
+  static String? trend(NightWeatherSummary s, String Function(DateTime) at) {
+    NightWeatherSlot? clearest, cloudiest;
+    for (final slot in s.slots) {
+      final cloud = slot.instant ? slot.hour?.cloudCoverPct : null;
+      if (cloud == null) continue;
+      if (clearest == null || cloud < clearest.hour!.cloudCoverPct!) {
+        clearest = slot;
+      }
+      if (cloudiest == null || cloud > cloudiest.hour!.cloudCoverPct!) {
+        cloudiest = slot;
+      }
+    }
+    if (clearest == null ||
+        cloudiest == null ||
+        clearest.hour!.cloudCoverPct == cloudiest.hour!.cloudCoverPct) {
+      return null;
+    }
+    String point(NightWeatherSlot slot) =>
+        '${at(slot.timeUtc)} (${QuantityText.percent(slot.hour!.cloudCoverPct!)})';
+    return 'Clearest around ${point(clearest)} · cloudiest around '
+        '${point(cloudiest)}';
+  }
+
+  /// Hybrid's coverage line, always stated (conditions.js weatherBody):
+  /// the dark hours that have a forecast, and how many of them have cloud.
+  static String? coverageCount(NightWeatherSummary s) {
+    if (s.span == NightWeatherSpan.noDark || s.totalHours == 0) return null;
+    final cloudKnown = s.totalHours - s.cloudGapHours;
+    return 'Coverage: ${s.coveredHours}/${s.totalHours} hourly samples in '
+        'dark time'
+        '${cloudKnown < s.coveredHours ? ' · $cloudKnown cloud values known' : ''}';
+  }
+
   /// What of the dark span the forecast has (N7, W2): null when every
   /// instant has every value. Never a zero for a missing value.
   static String? coverage(NightWeatherSummary s) {

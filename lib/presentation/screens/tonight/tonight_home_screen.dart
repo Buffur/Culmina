@@ -319,7 +319,16 @@ class _PlanCard extends StatelessWidget {
                 ),
                 if (rig != null)
                   Text(
-                    ExampleText.rigName(rig), // RD-04 (S6.8)
+                    // Hybrid's rig line: the catalogue ID, then the rig
+                    // (RD-04, S6.8: an example rig says so).
+                    [
+                      if (target != null &&
+                          target.commonName != null &&
+                          target.commonName != target.catalogId)
+                        target.catalogId,
+                      ExampleText.rigName(rig),
+                    ].join(' · '),
+                    key: const Key('tonight.planRig'),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: palette.textTertiary,
                     ),
@@ -329,10 +338,7 @@ class _PlanCard extends StatelessWidget {
                   key: const Key('tonight.status'),
                   separateFigures: true,
                   figuresBeforeReason: false,
-                  headingStyle: theme.textTheme.titleMedium?.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  fitLine: true,
                   state: missing != null ? FitState.needsInput : fit.state,
                   missing: missing?.headline,
                   needed: measured
@@ -492,6 +498,9 @@ class _NightCard extends StatelessWidget {
                   ? 'Dark (Sun below ${QuantityText.degrees(d.thresholdDeg)}): '
                         'none $phrase'
                   : DarkText.span(d, at),
+            // Hybrid's extra line: how long it is dark (app.js conditions).
+            if (dark case final SunCrossing d)
+              '${QuantityText.duration((d.dawnUtc ?? timeline.night.endUtc).difference(d.duskUtc ?? timeline.night.startUtc))} dark',
             'Times in ${NightTimeFormatter.zoneCaption(timeline.night.startUtc, zoneId: zoneId)}',
           ],
           onTap: openNight,
@@ -625,28 +634,65 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final palette = AppPalette.of(context);
+    // Hybrid's condition row (styles.css .condition-row): a 13 px label,
+    // the answer as a 15 px value, then 12 px supporting lines.
     return InkWell(
       onTap: onTap,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
+        constraints: const BoxConstraints(minHeight: 74),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: AppPalette.of(context).moon),
+              Padding(
+                padding: const EdgeInsets.only(top: 3),
+                child: Icon(icon, size: 18, color: palette.textSecondary),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: theme.textTheme.labelLarge),
-                    for (final l in lines)
-                      Text(l, style: theme.textTheme.bodyMedium),
+                    Text(
+                      label,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 13,
+                        color: palette.textSecondary,
+                      ),
+                    ),
+                    for (final (i, l) in lines.indexed)
+                      Padding(
+                        padding: EdgeInsets.only(top: i == 0 ? 2 : 0),
+                        child: Text(
+                          l,
+                          style: i == 0
+                              ? theme.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  fontFeatures: const [
+                                    FontFeature.tabularFigures(),
+                                  ],
+                                )
+                              : theme.textTheme.bodySmall?.copyWith(
+                                  fontSize: 12,
+                                  height: 1.55,
+                                  color: palette.textTertiary,
+                                ),
+                        ),
+                      ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: palette.textSecondary,
+                ),
+              ),
             ],
           ),
         ),

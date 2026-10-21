@@ -26,7 +26,13 @@ class StatusBlock extends StatelessWidget {
     this.separateFigures = false,
     this.headingStyle,
     this.figuresBeforeReason,
+    this.fitLine = false,
   });
+
+  /// Tonight's Hybrid fit line (app.js `.fit-line`, `.plan-reason`): a
+  /// check (or an info mark for a missing input) beside a 13 px verdict, the
+  /// reason in 12 px secondary below it.
+  final bool fitLine;
 
   final FitState state;
 
@@ -95,25 +101,59 @@ class StatusBlock extends StatelessWidget {
     final figuresFirst = figuresBeforeReason ?? separateFigures;
     final explanation = Text(
       reason ?? '',
-      style: text.bodyMedium?.copyWith(color: p.textSecondary),
+      style: fitLine
+          ? text.bodySmall?.copyWith(
+              fontSize: 12,
+              height: 1.6,
+              color: p.textSecondary,
+            )
+          : text.bodyMedium?.copyWith(color: p.textSecondary),
+    );
+    final verdictStyle =
+        (fitLine
+                ? text.bodySmall?.copyWith(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5,
+                  )
+                : (headingStyle ?? text.titleMedium))
+            ?.copyWith(color: FitText.color(state, theme.colorScheme, p));
+    final verdict = Text(
+      headline(
+        state,
+        needed: separateFigures ? null : needed,
+        usable: separateFigures ? null : usable,
+        missing: missing,
+      ),
+      key: const Key('status.headline'),
+      style: verdictStyle,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(
           header: true,
-          child: Text(
-            headline(
-              state,
-              needed: separateFigures ? null : needed,
-              usable: separateFigures ? null : usable,
-              missing: missing,
-            ),
-            key: const Key('status.headline'),
-            style: (headingStyle ?? text.titleMedium)?.copyWith(
-              color: FitText.color(state, theme.colorScheme, p),
-            ),
-          ),
+          child: fitLine
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 1, right: 7),
+                      child: Icon(
+                        state == FitState.needsInput ||
+                                state == FitState.nothingToFit
+                            ? Icons.info_outline
+                            : state == FitState.fits || state == FitState.tight
+                            ? Icons.check
+                            : Icons.close,
+                        size: 17,
+                        color: verdictStyle?.color,
+                      ),
+                    ),
+                    Expanded(child: verdict),
+                  ],
+                )
+              : verdict,
         ),
         if (reason != null && !figuresFirst) ...[
           const SizedBox(height: AppSpacing.xs),

@@ -96,7 +96,14 @@ paired with the browser references; light 100/200 %, dark 200 %, field 100 % and
 the invalid state in light and dark were reviewed side by side and match the
 web's order, hierarchy and controls, apart from the native differences D-08.
 
-Deviations D-01 to D-07 are listed in the migration ledger with their reasons.
+Later the same day the remaining adoptable web details were adopted and the
+pairs regenerated (fixture again unchanged): Tonight's fit line and condition
+rows (D-01), the one-line Night/Moon/Weather context (D-03), Settings groups
+above the tabs with web-style sliders (D-05), Weather's clearest/cloudiest
+line, span length and coverage, and the catalogue ID on Tonight (D-07).
+Tonight, Weather and Planning light 100 % were reviewed again side by side.
+
+Deviations D-01 to D-08 are listed in the migration ledger; D-01, D-03, D-05 and D-07 are now adopted.
 
 Browser-only illustrative/demo notices are intentionally absent from production.
 Native backup remains the full existing capability, while the prototype demonstrates

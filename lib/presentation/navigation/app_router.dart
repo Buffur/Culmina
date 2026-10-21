@@ -183,6 +183,8 @@ class AppRouter {
                 routes: [
                   GoRoute(
                     path: 'about',
+                    // A detail above the tabs, as the Settings groups are.
+                    parentNavigatorKey: rootNavigatorKey,
                     builder: (context, state) => const AboutScreen(),
                   ),
                 ],

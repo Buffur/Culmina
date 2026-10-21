@@ -156,6 +156,35 @@ void main() {
     }
   });
 
+  // D-05 (Hybrid migration): a Settings group and About open as details
+  // above the tabs, with no root navigation underneath; Back returns to
+  // the Settings root with its tabs.
+  testWidgets('Settings groups and About open above the tabs', (tester) async {
+    await pumpApp(tester);
+    await tapTab(tester, 'Settings');
+    for (final (key, heading) in [
+      ('settings.open.planning', 'Planning'),
+      ('settings.open.appearance', 'Appearance'),
+    ]) {
+      await tester.tap(find.byKey(Key(key)));
+      await settle(tester);
+      expect(title(heading), findsOneWidget, reason: heading);
+      expect(find.byType(NavigationBar), findsNothing, reason: heading);
+      await back(tester);
+      expect(title('Settings'), findsOneWidget);
+      expect(find.byType(NavigationBar), findsOneWidget);
+    }
+    final about = find.byKey(const Key('settings.open.about'));
+    await tester.ensureVisible(about);
+    await tester.tap(about);
+    await settle(tester);
+    expect(title('About & data sources'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing, reason: 'About');
+    await back(tester);
+    expect(title('Settings'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
+  });
+
   // The count reads in the singular for one rig.
   String rigCount(int n) => '$n ${n == 1 ? 'rig' : 'rigs'} ·';
 

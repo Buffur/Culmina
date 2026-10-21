@@ -212,7 +212,12 @@ void main() {
     await open(tester, nightRow);
     expect(find.text('Night & Moon'), findsOneWidget);
     expect(find.textContaining('Night of '), findsWidgets);
-    expect(find.textContaining('Times in'), findsOneWidget);
+    // Hybrid's one context line names the zone once; a screen reader hears
+    // the full zone rule.
+    final handle = tester.ensureSemantics();
+    expect(find.bySemanticsLabel(RegExp(r'\. Times in ')), findsOneWidget);
+    handle.dispose();
+    expect(find.byKey(const Key('detail.context')), findsOneWidget);
     // Hybrid: darkness belongs to Night, Moon facts to the reachable Moon
     // tab. Each fact is presented once on its own surface.
     expect(find.byKey(const Key('nightSummary.dark')), findsOneWidget);

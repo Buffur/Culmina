@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -55,6 +56,9 @@ class _Weather implements WeatherRepository {
   double temperatureC = 10;
   double windSpeedKmh = 8;
 
+  /// Cloud cover per UTC hour; 20 % throughout unless set.
+  double Function(DateTime hourUtc)? cloudAt;
+
   @override
   Future<WeatherFetch> fetchSnapshot({
     required double latitude,
@@ -86,7 +90,7 @@ class _Weather implements WeatherRepository {
                 )
                   WeatherHour(
                     timeUtc: t,
-                    cloudCoverPct: 20,
+                    cloudCoverPct: cloudAt?.call(t) ?? 20,
                     windSpeedKmh: windSpeedKmh,
                     temperatureC: temperatureC,
                     dewPointC: 9,
@@ -200,6 +204,47 @@ void main() {
     final s = vm.nightWeatherSummary!;
     expect(s.coveredHours, s.totalHours);
     expect(s.totalHours, inInclusiveRange(8, 12));
+  });
+
+  // OPEN-01 follow-up (Hybrid's weather answer): why, then how far to trust
+  // it — the clearest and cloudiest dark hour, the dark span's length and
+  // the coverage, always stated.
+  testWidgets('the clearest and cloudiest dark hour, the span length and the '
+      'coverage', (tester) async {
+    weather.cloudAt = (t) => (t.hour * 7 % 100).toDouble();
+    await pump(tester);
+    final s = vm.nightWeatherSummary!;
+    final clouds = [
+      for (final slot in s.slots)
+        if (slot.instant && slot.hour?.cloudCoverPct != null)
+          slot.hour!.cloudCoverPct!,
+    ];
+    final min = clouds.reduce((a, b) => a < b ? a : b);
+    final max = clouds.reduce((a, b) => a > b ? a : b);
+    final trend = tester
+        .widget<Text>(find.byKey(const Key('weather.trend')))
+        .data!;
+    expect(trend, startsWith('Clearest around '));
+    expect(
+      trend,
+      contains('(${QuantityText.percent(min)}) · cloudiest around'),
+    );
+    expect(trend, endsWith('(${QuantityText.percent(max)})'));
+    expect(
+      tester.widget<Text>(find.byKey(const Key('weather.coverage'))).data,
+      'Coverage: ${s.coveredHours}/${s.totalHours} hourly samples in dark '
+      'time',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('weather.span'))).data,
+      endsWith(' · ${QuantityText.duration(s.toUtc.difference(s.fromUtc))}'),
+    );
+  });
+
+  testWidgets('one cloud value throughout: no trend line', (tester) async {
+    await pump(tester);
+    expect(find.byKey(const Key('weather.trend')), findsNothing);
+    expect(find.byKey(const Key('weather.coverage')), findsOneWidget);
   });
 
   testWidgets('offline with an old cache: stale, labelled, never current', (

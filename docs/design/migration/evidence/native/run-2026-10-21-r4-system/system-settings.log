@@ -1,0 +1,6 @@
+Failure [DELETE_FAILED_INTERNAL_ERROR]
+Success
+Night mode: yes
+font_scale=2.0 night=Night mode: yes
+Night mode: no
+restored font_scale=1.0 Night mode: no

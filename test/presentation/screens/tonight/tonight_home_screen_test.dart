@@ -359,6 +359,22 @@ void main() {
           .style!;
       expect(target.fontSize, theme.textTheme.titleLarge?.fontSize);
       expect(target.fontWeight, FontWeight.w400);
+      // Hybrid's rig line leads with the catalogue ID of a named target.
+      expect(
+        tester.widget<Text>(find.byKey(const Key('tonight.planRig'))).data,
+        startsWith('M42 · '),
+      );
+      // Hybrid's fit line: a mark beside a 13 px verdict.
+      final verdict = tester
+          .widget<Text>(
+            find.descendant(
+              of: find.byKey(const Key('tonight.status')),
+              matching: find.byKey(const Key('status.headline')),
+            ),
+          )
+          .style!;
+      expect(verdict.fontSize, 13);
+      expect(verdict.fontWeight, FontWeight.w500);
     });
 
     for (final chosen in [true, false]) {

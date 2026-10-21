@@ -144,6 +144,12 @@ void main() {
     expect(weather, contains('Updated just now'));
     final night = lines(tester, 'tonight.night');
     expect(night.any((l) => l.startsWith('Dark (Sun below −18°): ')), isTrue);
+    // Hybrid's supporting line: how long it is dark.
+    expect(
+      night.any((l) => RegExp(r'^\d+ h( \d+ min)? dark$').hasMatch(l)),
+      isTrue,
+      reason: night.join(' | '),
+    );
     final moon = lines(tester, 'tonight.moon');
     expect(moon.any((l) => l.contains('lit at midnight')), isTrue);
     expect(

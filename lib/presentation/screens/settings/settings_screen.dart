@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/config/app_identity.dart';
 import '../../../domain/models/planning_preferences.dart';
 import '../../viewmodels/settings_viewmodel.dart';
@@ -684,7 +685,9 @@ class _SettingsIndex extends StatelessWidget {
       ],
     );
     void open(SettingsSection section) {
-      Navigator.of(context).push(
+      // Hybrid opens a Settings group as a detail screen above the tabs,
+      // like Plan and Night/Moon/Weather (no root navigation underneath).
+      Navigator.of(context, rootNavigator: true).push(
         MaterialPageRoute<void>(
           settings: RouteSettings(name: '/settings/${section.name}'),
           builder: (_) => SettingsScreen(section: section),
@@ -838,13 +841,32 @@ class _SliderTile extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(help, style: text.bodySmall?.copyWith(color: secondary)),
-          Slider(
-            value: value.clamp(range.$1, range.$2),
-            min: range.$1,
-            max: range.$2,
-            divisions: divisions,
-            label: label,
-            onChanged: onChanged,
+          // Hybrid's range control (settings.css): the full width of the
+          // column, a solid track, no division ticks; 48 px tall to touch.
+          SizedBox(
+            height: HybridTokens.minTarget,
+            child: SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                // The thumb's radius: it stays inside the column's edges.
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                trackHeight: 6,
+                activeTrackColor: AppPalette.of(context).textPrimary,
+                inactiveTrackColor: AppPalette.of(context).border,
+                thumbColor: AppPalette.of(context).textPrimary,
+                tickMarkShape: SliderTickMarkShape.noTickMark,
+                thumbShape: const RoundSliderThumbShape(
+                  enabledThumbRadius: AppSpacing.sm,
+                ),
+              ),
+              child: Slider(
+                value: value.clamp(range.$1, range.$2),
+                min: range.$1,
+                max: range.$2,
+                divisions: divisions,
+                label: label,
+                onChanged: onChanged,
+              ),
+            ),
           ),
           ExcludeSemantics(
             child: Row(
