@@ -6,7 +6,7 @@ import '../../domain/models/calendar_date.dart';
 import 'app_words.dart';
 import 'night_time_formatter.dart';
 
-/// "Ljubljana ▾ · Fri, Nov 14 ▾" (S5.6; ADR-019 §5, §6; addendum §3.1–§3.2):
+/// "Ljubljana ▾  Fri, Nov 14 ▾" (S5.6; ADR-019 §5, §6; addendum §3.1–§3.2):
 /// the one control that says which site and night a screen describes, for
 /// Tonight and the planner. Each part is its own 48 dp target that reports
 /// a tap; what choosing does (the site picker, or changing the plan's
@@ -68,7 +68,10 @@ class ContextLine extends StatelessWidget {
     final line = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Hybrid's .app-context: two buttons 4 dp apart, no separator, so a
+        // long site name wraps the night to the next line cleanly.
         Wrap(
+          spacing: AppSpacing.xs,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             _Choice(
@@ -79,13 +82,7 @@ class ContextLine extends StatelessWidget {
               hint: 'Choose a site',
               onTap: onSite,
             ),
-            if (nightText != null) ...[
-              ExcludeSemantics(
-                child: Text(
-                  ' · ',
-                  style: text.titleSmall?.copyWith(color: p.textTertiary),
-                ),
-              ),
+            if (nightText != null)
               _Choice(
                 key: const Key('context.night'),
                 icon: Icons.event_outlined,
@@ -94,7 +91,6 @@ class ContextLine extends StatelessWidget {
                 hint: 'Choose a night',
                 onTap: onNight,
               ),
-            ],
           ],
         ),
         if (night != null && nightStartUtc != null)
