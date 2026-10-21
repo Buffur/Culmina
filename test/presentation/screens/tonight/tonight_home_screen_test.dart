@@ -341,14 +341,19 @@ void main() {
 
     testWidgets('TD-077: "Your plan" is the card\'s heading; the target and '
         'rig read below it', (tester) async {
+      tester.view.physicalSize = const Size(412, 3000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       await start(tester, lightFrames: 10);
       final handle = tester.ensureSemantics();
       final heading = find.byKey(const Key('tonight.planHeading'));
-      final theme = Theme.of(tester.element(heading));
       final style = tester.widget<Text>(heading).style!;
       expect(tester.widget<Text>(heading).data, AppWords.yourPlan);
-      expect(style.fontSize, theme.textTheme.titleMedium?.fontSize);
-      expect(style.fontWeight, theme.textTheme.titleMedium?.fontWeight);
+      // Approved Hybrid styles.css: .home-section-title and .target-name.
+      expect(style.fontSize, 14);
+      expect(style.fontWeight, FontWeight.w600);
+      expect(style.height, 1.5);
+      expect(style.letterSpacing, -0.15);
       expect(
         tester.getSemantics(heading),
         matchesSemantics(label: AppWords.yourPlan, isHeader: true),
@@ -357,8 +362,24 @@ void main() {
       final target = tester
           .widget<Text>(find.byKey(const Key('tonight.planTarget')))
           .style!;
-      expect(target.fontSize, theme.textTheme.titleLarge?.fontSize);
-      expect(target.fontWeight, FontWeight.w400);
+      expect(target.fontSize, 21);
+      expect(target.fontWeight, FontWeight.w500);
+      expect(target.height, closeTo(1.3, 0.001));
+      expect(target.letterSpacing, -0.5);
+      final rig = tester.widget<Text>(find.byKey(const Key('tonight.planRig')));
+      expect(rig.style?.fontSize, 14);
+      expect(rig.style?.height, 1.55);
+      final nightHeading = tester.widget<Text>(find.text('The night ahead'));
+      expect(nightHeading.style?.fontSize, 25);
+      expect(nightHeading.style?.fontWeight, FontWeight.w400);
+      expect(nightHeading.style?.letterSpacing, -0.5);
+      final title = tester.widget<Text>(find.byKey(const Key('tonight.title')));
+      expect(title.style?.height, closeTo(1.2, 0.001));
+      expect(tester.widget<Text>(find.text('culmina')).style?.fontSize, 13);
+      expect(
+        tester.widget<Text>(find.text('Welcome & setup')).style?.fontWeight,
+        FontWeight.w400,
+      );
       // Hybrid's rig line leads with the catalogue ID of a named target.
       expect(
         tester.widget<Text>(find.byKey(const Key('tonight.planRig'))).data,

@@ -22,6 +22,7 @@ import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -111,6 +112,37 @@ void main() {
     await tester.tap(f);
     await settle(tester);
   }
+
+  testWidgets('200% appearance choices fill the column with a rectangular '
+      'outline and whole labels', (tester) async {
+    await start(tester);
+    tester.view.physicalSize = const Size(412, 3000);
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await settle(tester);
+    final choices = find.byKey(const Key('settings.appearance'));
+    final bounds = tester.getRect(choices);
+    expect(bounds.width, 380);
+    final shape = Theme.of(tester.element(choices))
+        .segmentedButtonTheme
+        .style!
+        .shape!
+        .resolve({});
+    expect(shape, isA<RoundedRectangleBorder>());
+    expect(
+      (shape! as RoundedRectangleBorder).borderRadius,
+      BorderRadius.circular(6),
+    );
+    for (final label in ['System', 'Light', 'Dark']) {
+      final text = find.descendant(of: choices, matching: find.text(label));
+      final paragraph = tester.renderObject<RenderParagraph>(text);
+      expect(paragraph.didExceedMaxLines, isFalse, reason: label);
+      final rect = tester.getRect(text);
+      expect(rect.left, greaterThanOrEqualTo(bounds.left + 6));
+      expect(rect.right, lessThanOrEqualTo(bounds.right - 6));
+    }
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('A4: System by default on a new install; Dark and Light apply '
       'at once and survive a restart; field mode stays red', (tester) async {

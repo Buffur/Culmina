@@ -15,6 +15,35 @@ const _needed = Duration(hours: 2, minutes: 5);
 const _usable = Duration(hours: 4, minutes: 20);
 
 void main() {
+  testWidgets('Hybrid measures retain source typography, tabular figures and '
+      'label/value spacing', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: const Scaffold(
+          body: StatusBlock(
+            state: FitState.fits,
+            separateFigures: true,
+            fitLine: true,
+            needed: _needed,
+            usable: _usable,
+          ),
+        ),
+      ),
+    );
+    // styles.css .plan-measures: 12 px captions, 15 px/500 values,
+    // tabular numerals, 4 px label/value gap and 20 px between measures.
+    final caption = find.text('Needed in imaging window');
+    final value = find.text('2 h 5 min');
+    expect(tester.widget<Text>(caption).style?.fontSize, 12);
+    final style = tester.widget<Text>(value).style!;
+    expect(style.fontSize, 15);
+    expect(style.fontWeight, FontWeight.w500);
+    expect(style.fontFeatures, contains(const FontFeature.tabularFigures()));
+    expect(tester.getTopLeft(value).dy - tester.getBottomLeft(caption).dy, 4);
+    expect(tester.widget<Wrap>(find.byType(Wrap)).spacing, 20);
+  });
+
   group('the headline', () {
     test('a verdict names the time needed and the usable time', () {
       expect(

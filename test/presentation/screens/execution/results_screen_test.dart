@@ -24,6 +24,7 @@ import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -172,6 +173,55 @@ void main() {
       .controller!
       .text;
 
+  testWidgets(
+    'result actions stay above the IME, and outlined fields have space',
+    (tester) async {
+      await open(tester, _Kind.saved, at: _morning);
+      tester.view.physicalSize = const Size(412, 915);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      await settle(tester);
+      final save = tester.getRect(find.byKey(const Key('results.save')));
+      expect(save.bottom, lessThanOrEqualTo(615));
+      final notes = find.byKey(const Key('results.environment'));
+      await tester.scrollUntilVisible(
+        notes,
+        150,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await settle(tester);
+      final processing = find.byKey(const Key('results.processing'));
+      expect(
+        tester.getTopLeft(processing).dy - tester.getBottomLeft(notes).dy,
+        greaterThanOrEqualTo(20),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'Escape leaves pristine results immediately and guards typed notes',
+    (tester) async {
+      await open(tester, _Kind.saved, at: _morning, route: false);
+      await tap(tester, 'logbook.recordResult.$id');
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await settle(tester);
+      expect(find.text('Discard result changes?'), findsNothing);
+      expect(find.byKey(const Key('results.save')), findsNothing);
+      await tap(tester, 'logbook.recordResult.$id');
+      final notes = find.byKey(const Key('results.environment'));
+      await tester.enterText(notes, 'Keep these notes');
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await settle(tester);
+      expect(find.text('Discard result changes?'), findsOneWidget);
+      await tap(tester, 'confirm.cancel');
+      expect(
+        tester.widget<TextFormField>(notes).controller!.text,
+        'Keep these notes',
+      );
+      expect((await stored(tester)).record.environmentalNotes, isNull);
+    },
+  );
+
   group('a run from the live mode', () {
     testWidgets('the review, then Partly pre-filled from the confirmed '
         'counts; Save result completes it with notes and conditions', (
@@ -310,6 +360,12 @@ void main() {
       await tap(tester, 'logbook.recordResult.$id');
       await tap(tester, 'results.outcome.notDone');
       await tester.pageBack();
+      await settle(tester);
+      expect(find.text('Discard result changes?'), findsOneWidget);
+      await tap(tester, 'confirm.cancel');
+      expect(find.byKey(const Key('results.environment')), findsOneWidget);
+      await tap(tester, 'results.cancel');
+      await tap(tester, 'confirm.action');
       await settle(tester);
       expect((await stored(tester)).status, SessionStatus.planned);
       expect(await tester.runAsync(() => sessions.events(id)), isEmpty);

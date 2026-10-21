@@ -11,7 +11,8 @@ import 'hybrid_view_entrance.dart';
 
 /// The app's three themes (TASK 12.4): light, dark and red field mode.
 /// Colours come from [AppColors] and [AppPalette] tokens; text is never
-/// smaller than 12 sp. Since S5.1 the text roles drive the colour scheme
+/// smaller than 12 sp in the base scale (HybridTokens names the compact
+/// navigation/calendar exceptions). Since S5.1 text roles drive the colour scheme
 /// (`onSurface` is the primary text, `onSurfaceVariant` and `secondary`
 /// the secondary text), `surfaceContainerHigh` is the raised surface, and
 /// [AppTypography.scale] sets every style's size and weight.
@@ -421,6 +422,20 @@ class AppTheme {
         style: ButtonStyle(
           minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
           overlayColor: overlay(p.textPrimary),
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          shape: shape,
+          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+          textStyle: label,
+          side: WidgetStatePropertyAll(BorderSide(color: p.controlBorder)),
+          foregroundColor: onOff(p.textPrimary),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? hybrid.selection
+                : t.scaffoldBackgroundColor,
+          ),
         ),
       ),
       // A quiet underline (08 §6): the enabled line is the control border

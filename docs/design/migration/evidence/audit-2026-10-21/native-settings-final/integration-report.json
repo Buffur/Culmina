@@ -1,0 +1,10 @@
+{
+  "evidence": {
+    "type": "Scoped Android emulator Settings control verification",
+    "checks": [
+      "Appearance uses full column width in all three themes at 100 and 200 percent text",
+      "No widget exceptions during navigation"
+    ],
+    "limits": "Controlled theme/text values and fixtures; no real IME or physical-device claim"
+  }
+}

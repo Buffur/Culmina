@@ -106,8 +106,11 @@ by the startup mark; field mode's filter still turns them red.
 
 ## 3. Type scale (`AppTypography.scale`)
 
-Every theme uses one scale; sizes are sp (scaled by the user's text size). Letter spacing stays
-Material's.
+Every theme uses one scale with the bundled owner-selected Geist family; sizes are sp
+(scaled by the user's text size). Shared roles use zero letter spacing. The adopted
+Hybrid Home roles below carry the source's specific tracking. The 2026-10-20/21
+[native migration](design/WEB_TO_FLUTTER_MIGRATION.md) supersedes the earlier
+prototype-only guidance for original Hybrid / Geist.
 
 | Style | Size / line | Weight | Role |
 | --- | --- | --- | --- |
@@ -117,17 +120,25 @@ Material's.
 | `titleMedium` | 16/24 | **600** | Section and card headings; the answer |
 | `titleSmall` | 14/20 | **600** | Group headings |
 | `bodyLarge` | 16/24 | 400 | Prominent body text |
-| `bodyMedium` | 14/20 | 400 | Body text, values, labels |
-| `bodySmall` | 12/16 | 400 | Captions, metadata (usually `textTertiary`) |
+| `bodyMedium` | 16/24 | 400 | Body text, values, labels |
+| `bodySmall` | 13/20 | 400 | Captions, metadata (usually `textTertiary`) |
 | `labelLarge` | 14/20 | 500 | Buttons |
-| `labelMedium` / `labelSmall` | 12/16 | 500 | Chips, small labels (never under 12) |
+| `labelMedium` / `labelSmall` | 14/21 / 13/20 | 500 | Chips, small labels |
 
 - Titles are heavier than Material's defaults (500 or 400) so headings carry the hierarchy.
-- The app bar's title is 18/600 (`AppTheme`, TASK 12.4).
-- **A page title in the body** (S6.16): Tonight's title is its page's own header in `headlineSmall`
-  (24/32), a semantic header, with the app bar keeping only the actions, as the detail screens keep
-  their title in the page (S5.7). A title in the page wraps at large text; one in an app bar
-  cannot.
+- The app bar's title is 22/27.5, weight 500. `hybridAppBar` measures its
+  wrapping title and preserves the full text scaler.
+- Tonight uses its own wrapping semantic header (`homeHeading`, 29/34.8,
+  weight 500, tracking -0.87). Its plan heading is 14/21, weight 600,
+  tracking -0.15; target 21/27.3, weight 500, tracking -0.5; rig 14/21.7.
+  The editorial night heading is 25/32.5, weight 400, tracking -0.5.
+  The wordmark and welcome link are 13/17.55 (600 and 400 respectively).
+- Hybrid fit-line measures use 12 sp captions, a 4 dp caption/value gap,
+  15 sp/500 tabular values and 20 dp between groups. The other StatusBlock
+  layouts retain their existing title/body roles.
+- Hybrid Home fit explanations use 14 sp / 1.55, condition values 16 sp.
+  Compact navigation labels (11 sp) and calendar captions (10 sp) are explicit
+  source-derived `HybridTokens` exceptions, not a reduced base text scale.
 - Tested: every style in every theme has the scale's size, line height and weight, and none is
   under 12 sp.
 
@@ -187,8 +198,8 @@ still merges over them.
 - **Pressed:** a 16 % overlay of the foreground (`AppTheme.pressedOverlay`); Material's is 10 %.
   This answers 08 §8's weak "+" feedback. Focused 12 %, hovered 8 %.
 - **Motion (`AppMotion`):** `highlight` 1500 ms for the fading mark on what an edit changed (S6.9, a
-  capture block's row; none with reduced motion); `short` 150 ms for a state change in place, `medium` 250 ms for content
-  appearing or collapsing, one curve (`easeOutCubic`).
+  capture block's row; none with reduced motion); `short` 120 ms for a state change in place, `medium` 180 ms for content
+  appearing or collapsing, one curve (`Cubic(0.16, 1, 0.3, 1)`).
   `AppMotion.duration(context, …)` returns zero when the platform asks for less motion
   (`disableAnimations`). Every Stage 5 component animates through it. Subtle only
   (`.agents/rules/05-ui-design.md`).
@@ -198,9 +209,9 @@ still merges over them.
 
 ### 6.3 Text fields
 
-- **A quiet underline (08 §6):**
-  - the enabled line is 1 px in `controlBorder` (Material reads `colorScheme.outline`);
-  - focus draws it 2 px in `primary`; an error in `error`.
+- **Hybrid outlined fields:** the enabled outline is 1 px in `controlBorder`
+  with the small radius; focus draws it 2 px in `primary`, an error in `error`.
+  The earlier quiet underline (08 §6) was superseded by native Hybrid adoption.
 
   The field's geometry is unchanged, so no field's text room shrank (TD-069's fit test passes).
 - **Label** `textSecondary`; the floating label is `primary` when focused and `error` on an error.

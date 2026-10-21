@@ -1,0 +1,5 @@
+Analyzing Astro-Planner...                                      
+
+  error - Undefined name 'theme'. Try correcting the name to one that is defined, or defining the name - lib\presentation\screens\tonight\tonight_home_screen.dart:273:14 - undefined_identifier
+
+1 issue found. (ran in 84.1s)

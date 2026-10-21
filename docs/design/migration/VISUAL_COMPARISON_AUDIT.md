@@ -21,6 +21,12 @@ are historical findings, not an assessment of the latest sources.
 
 ## Artifacts
 
+Latest owner-requested local follow-up (2026-10-21, baseline `1aceb65`):
+[design parity QA](DESIGN_PARITY_QA_2026_10_21.md) and its
+[84-pair current gallery](evidence/audit-2026-10-21/index.html).
+It records additional source typography, navigation, editor/IME and 200%
+segmented-control repairs; the dated checkpoints below remain historical.
+
 - [Paired gallery](evidence/matched/gallery/index.html).
 - [Pair hashes, dimensions and review status](evidence/matched/gallery/manifest.json).
 - [Browser capture manifest](evidence/matched/browser-capture-manifest.json).

@@ -1,0 +1,89 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart
+00:00 +0: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: result actions stay above the IME, and outlined fields have space
+00:01 +1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: result actions stay above the IME, and outlined fields have space
+00:01 +2: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: site Save stays above the IME and coordinate fields are spaced
+00:01 +3: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: site Save stays above the IME and coordinate fields are spaced
+00:02 +4: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +5: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +6: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +7: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +8: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +9: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +10: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +11: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/block_editor_hybrid_test.dart: the live total follows the typed exposure and frames
+00:03 +12: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/block_editor_hybrid_test.dart: the live total follows the typed exposure and frames
+00:03 +13: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/block_editor_hybrid_test.dart: the live total follows the typed exposure and frames
+00:03 +14: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: a new site defaults to the device zone and becomes active
+00:03 +15: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode Not done abandons it with the chosen reason
+00:03 +16: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode Not done abandons it with the chosen reason
+00:03 +17: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode Not done abandons it with the chosen reason
+00:03 +18: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/block_editor_hybrid_test.dart: Details holds binning and timing and says them while closed
+00:03 +19: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: editing a site keeps what was not changed
+00:03 +20: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: editing a site keeps what was not changed
+00:03 +21: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/block_editor_hybrid_test.dart: the footer says what Apply does; the primary action spans the width
+00:03 +22: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan during its night a result finishes it early
+00:03 +23: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan during its night a result finishes it early
+00:04 +24: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: Bortle and SQM entered in the editor are stored as user
+00:04 +25: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan after it: nothing is chosen for the user; Completed as planned is one choice, reported as planned
+00:04 +26: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: an out-of-range SQM is rejected
+00:04 +27: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Partly takes a typed number (0 allowed)
+00:04 +28: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Partly takes a typed number (0 allowed)
+00:04 +29: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an edited site with an unknown elevation shows it empty and keeps it unknown
+00:04 +30: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Back writes nothing
+00:05 +31: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Back writes nothing
+00:05 +32: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Back writes nothing
+00:05 +33: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit a typed edit is kept, typing and Save stay available, and the fix is used only on request
+00:05 +34: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan a stale form writes nothing and says so
+00:05 +35: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit the edit is saved as typed when the offer is closed
+00:06 +36: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan: the form reviews what was saved; the planner keeps its edits on a copy, and nothing asks about them
+00:06 +37: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit a map pick is kept
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+00:06 +38: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: in °F the temperature is typed in °F and stored in °C
+00:06 +39: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: in °F the temperature is typed in °F and stored in °C
+00:07 +40: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position found: the name is proposed with its source, and saved
+00:07 +41: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night asks first; Cancel changes nothing
+00:07 +42: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night asks first; Cancel changes nothing
+00:07 +43: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position a saved site being edited keeps its name
+00:07 +44: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night Save makes the changes the saved plan, which is then reviewed and reported
+00:07 +45: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night Save makes the changes the saved plan, which is then reviewed and reported
+00:07 +46: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position Save while the lookup runs saves the typed name; the late answer never overwrites it
+00:07 +47: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night Discard, once confirmed, reviews the plan as saved
+00:07 +48: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night Discard, once confirmed, reviews the plan as saved
+00:08 +49: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position off: the opt-in is offered, nothing is sent, typing a name and Save still work
+00:08 +50: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: a due report reads Result not recorded; once recorded, Partly with its icon and integration
+00:08 +51: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: a due report reads Result not recorded; once recorded, Partly with its icon and integration
+00:08 +52: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position not found: says so, and a typed name saves
+00:08 +53: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: a night ahead offers no result; Not done has its own word and icon
+00:08 +54: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: a night ahead offers no result; Not done has its own word and icon
+00:08 +55: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a GPS failure says why and changes no field
+00:08 +56: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A5: a night ahead says when its result can be recorded, on its Upcoming card and on the entry
+00:09 +57: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A5: a night ahead says when its result can be recorded, on its Upcoming card and on the entry
+00:09 +58: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m)-only edit (existing site, app bar Back)
+00:09 +59: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: Completed as planned reads Completed with its own icon, on the card and on the entry
+00:09 +60: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: Completed as planned reads Completed with its own icon, on the card and on the entry
+00:09 +61: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook F19 A1: Completed as planned reads Completed with its own icon, on the card and on the entry
+00:09 +62: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m)-only edit (existing site, system Back)
+00:09 +63: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook an ended Saved plan offers Record result, on its row and on the entry, with Copy to another night and no Open
+00:09 +64: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook an ended Saved plan offers Record result, on its row and on the entry, with Copy to another night and no Open
+00:09 +65: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook an ended Saved plan offers Record result, on its row and on the entry, with Copy to another night and no Open
+00:10 +66: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m)-only edit (new site, app bar Back)
+00:10 +67: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook acceptance: a completed session shows planned vs actual; Edit result corrects it with a timestamped event
+00:10 +68: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: the Logbook acceptance: a completed session shows planned vs actual; Edit result corrects it with a timestamped event
+00:10 +69: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Name-only edit (new site, system Back)
+00:10 +70: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m)-only edit (new site, system Back)
+00:10 +71: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Notes-only edit (new site, system Back)
+00:10 +72: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an edit typed back to the original leaves without asking
+00:10 +73: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a new site with only the device zone filled in leaves without asking
+00:10 +74: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name-only edit: Cancel keeps it, Discard stores nothing, Save stores it
+00:11 +75: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back without changes leaves; with changes it asks: Cancel stays, Discard leaves without saving
+00:11 +76: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form Save in the prompt saves and leaves
+00:11 +77: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form sky darkness: collapsed, its summary states what is stored, remembered; the map link needs valid coordinates
+00:11 +78: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a new site: sky darkness Unknown; an out-of-range SQM in the closed section opens it and shows the message
+00:11 +79: All tests passed!

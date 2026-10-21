@@ -8,6 +8,7 @@ import '../../shared/app_words.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -391,6 +392,12 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   /// Back with changes (UX-21, S5.8's prompt): Cancel stays, Discard leaves,
   /// Save saves and leaves when it succeeds.
   Future<void> _onBack() async {
+    if (_leaving) return;
+    if (!_changed) {
+      setState(() => _leaving = true);
+      context.pop();
+      return;
+    }
     final label = _name.text.trim().isEmpty
         ? (_isNew ? AppWords.newSite : _original!.name)
         : _name.text.trim();
@@ -466,12 +473,19 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       decimal: true,
     );
     _builtChanged = _changed;
-    return PopScope(
-      canPop: _leaving || !_builtChanged,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _onBack();
-      },
-      child: _form(context, numberKeyboard),
+    return CallbackShortcuts(
+      bindings: {const SingleActivator(LogicalKeyboardKey.escape): _onBack},
+      child: Focus(
+        autofocus: true,
+        skipTraversal: true,
+        child: PopScope(
+          canPop: _leaving || !_builtChanged,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _onBack();
+          },
+          child: _form(context, numberKeyboard),
+        ),
+      ),
     );
   }
 
@@ -482,13 +496,18 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         title: Text(_isNew ? AppWords.newSite : AppWords.editSite),
       ),
       // S9.2: one primary Save, always in reach (DESIGN_SYSTEM §9).
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: FilledButton(
-            key: const Key('siteEditor.save'),
-            onPressed: _saving ? null : _save,
-            child: const Text(AppWords.saveSite),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: FilledButton(
+              key: const Key('siteEditor.save'),
+              onPressed: _saving ? null : _save,
+              child: const Text(AppWords.saveSite),
+            ),
           ),
         ),
       ),
@@ -510,6 +529,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
             ),
             if (_nameLookup == _NameLookup.offer)
               _PlaceNameOffer(onTurnOn: _turnOnPlaceNames),
+            const SizedBox(height: AppSpacing.md + AppSpacing.xs),
             TextFormField(
               controller: _latitude,
               decoration: const InputDecoration(
@@ -519,6 +539,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
               keyboardType: numberKeyboard,
               validator: CoordinateInput.validateLatitude,
             ),
+            const SizedBox(height: AppSpacing.md + AppSpacing.xs),
             TextFormField(
               controller: _longitude,
               decoration: const InputDecoration(
@@ -528,6 +549,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
               keyboardType: numberKeyboard,
               validator: CoordinateInput.validateLongitude,
             ),
+            const SizedBox(height: AppSpacing.md),
             Wrap(
               spacing: 8,
               children: [
@@ -560,6 +582,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
               onTap: _pickZone,
             ),
             // RG-08 = E2: optional, without prominence; empty is unknown.
+            const SizedBox(height: AppSpacing.md),
             TextFormField(
               controller: _elevation,
               decoration: InputDecoration(
@@ -571,7 +594,9 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
               keyboardType: numberKeyboard,
               validator: (t) => SiteFormInput.validateElevation(t, _units),
             ),
+            const SizedBox(height: AppSpacing.md + AppSpacing.xs),
             if (FeatureScope.lightPollutionContext) _skyDarknessSection(),
+            const SizedBox(height: AppSpacing.md),
             TextFormField(
               controller: _notes,
               decoration: const InputDecoration(labelText: 'Notes'),

@@ -1,0 +1,134 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart
+00:00 +0: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: result actions stay above the IME, and outlined fields have space
+00:01 +1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: result actions stay above the IME, and outlined fields have space
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart:185:20)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  result actions stay above the IME, and outlined fields have space
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +1 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: the app opens on Tonight with four tabs
+00:02 +1 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: result actions stay above the IME, and outlined fields have space [E]
+  Test failed. See exception logs above.
+  The test description was: result actions stay above the IME, and outlined fields have space
+  
+00:02 +2 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: the app opens on Tonight with four tabs
+00:02 +3 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: the app opens on Tonight with four tabs
+00:02 +4 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: the app opens on Tonight with four tabs
+00:02 +5 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +6 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +7 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +8 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +9 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +10 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +11 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:02 +12 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a run from the live mode the review, then Partly pre-filled from the confirmed counts; Save result completes it with notes and conditions
+00:03 +13 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +14 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +15 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +16 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +17 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +18 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +19 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +20 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +21 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:03 +22 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +23 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +24 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +25 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +26 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +27 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +28 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +29 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +30 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +31 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:04 +32 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +33 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +34 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +35 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +36 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +37 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +38 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +39 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +40 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +41 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +42 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Settings groups and About open above the tabs
+00:05 +43 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Back writes nothing
+00:06 +44 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved plan Back writes nothing
+00:06 +45 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:06 +46 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:06 +46 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit a map pick is kept
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+00:06 +47 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:06 +48 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:06 +49 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:06 +50 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +51 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +52 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +53 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +54 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +55 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +56 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Library counts refresh after edits and a failed read offers retry without presenting stale counts
+00:07 +57 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night Save makes the changes the saved plan, which is then reviewed and reported
+00:07 +58 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: a Saved · changed plan during its night Save makes the changes the saved plan, which is then reviewed and reported
+00:07 +59 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:07 +60 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +61 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +62 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +63 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +64 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +65 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +66 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +67 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +68 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +69 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:08 +70 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +71 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +72 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +73 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +74 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +75 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +76 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +77 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +78 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:09 +79 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +80 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +81 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +82 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +83 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +84 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +85 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +86 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:10 +87 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:11 +88 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:11 +89 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:11 +90 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: every route in the map opens its screen
+00:13 +91 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: back pops within a tab, then returns to Tonight
+00:15 +92 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: each tab keeps its place
+00:16 +93 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: the planner opens above the tabs and back returns to Tonight
+00:17 +94 -1: C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/navigation/app_shell_navigation_test.dart: Change in Settings opens over the plan; Back returns to the same plan and section
+00:19 +95 -1: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/execution/results_screen_test.dart: result actions stay above the IME, and outlined fields have space

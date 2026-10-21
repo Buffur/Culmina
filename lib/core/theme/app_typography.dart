@@ -5,7 +5,8 @@ import 'hybrid_tokens.dart';
 /// The type scale (S5.1): size, line height and weight for every style,
 /// shared by the three themes. Colours come from the theme (the text roles
 /// in [AppPalette]); the owner-selected Geist family uses neutral tracking. Nothing is under
-/// 12 sp. The roles each style serves are in `docs/DESIGN_SYSTEM.md`.
+/// 12 sp in this base scale. Compact web navigation/calendar exceptions live
+/// in HybridTokens. Roles are documented in `docs/DESIGN_SYSTEM.md`.
 abstract final class AppTypography {
   static TextStyle _style(double size, double lineHeight, FontWeight weight) =>
       TextStyle(
@@ -28,9 +29,30 @@ abstract final class AppTypography {
 
   static final TextStyle homeHeading = _style(
     29,
-    37.7,
+    34.8,
     FontWeight.w500,
   ).copyWith(letterSpacing: -0.87);
+
+  /// Hybrid Home roles from styles.css and hybrid-refinement.css.
+  static final TextStyle homePlanHeading = _style(
+    14,
+    21,
+    FontWeight.w600,
+  ).copyWith(letterSpacing: -0.15);
+
+  static final TextStyle homeTarget = _style(
+    21,
+    27.3,
+    FontWeight.w500,
+  ).copyWith(letterSpacing: -0.5);
+
+  static final TextStyle homeWordmark = _style(
+    13,
+    17.55,
+    FontWeight.w600,
+  ).copyWith(letterSpacing: -0.4);
+
+  static final TextStyle homeWelcome = _style(13, 17.55, FontWeight.w400);
 
   static final TextTheme scale = TextTheme(
     displayLarge: _style(57, 64, FontWeight.w400),

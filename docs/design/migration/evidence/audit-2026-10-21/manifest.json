@@ -1,0 +1,1941 @@
+{
+  "comparison": "original approved web and current production widget host",
+  "count": 84,
+  "imagesResizedForPairs": false,
+  "contactSheets": "50 percent overview only; full-size originals are linked",
+  "pairs": [
+    {
+      "id": "home-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-home-light100.png",
+        "sha256": "a750e94274825ca964607b1aa83d433077b025525bc8dfffdabdd510433fce35",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/home_light_100.png",
+        "sha256": "582c04161f2bf6b902dbe8e463d6009dbd11ba8e773978c64800f7e1813747cd",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan-light100.png",
+        "sha256": "2feef966a29bb1d69658f7e7929aa3f1da8092d677dd05b47ef8dbb90f24d14e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_light_100.png",
+        "sha256": "365ff65de28ff2a20ce26700e41dee49a279b3bbb605fabf35e6ab7e9f9633c8",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "night-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-night-light100.png",
+        "sha256": "8a9b3f8bb0e2771f2045f5c002e23c0d33468ceac71be7d6bb3cf659a7750a28",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/night_light_100.png",
+        "sha256": "8d56645bac09a83e5287b0c0bdce55f133adad6a1a189be0fff35e38eb628e7b",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "moon-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-moon-light100.png",
+        "sha256": "f5ade5c4406ae9568b965dd4cd56537926a15b0ecabd7b6438c5705b1912e872",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/moon_light_100.png",
+        "sha256": "6ff6f6cbda7b3637bb5342db5e384db09a874893b455662f44c47a0d84573bd9",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "weather-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-weather-light100.png",
+        "sha256": "4e843265aad7dec354b5b1541cb8675338dd2e2cf062f93343f4631dd5818f82",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/weather_light_100.png",
+        "sha256": "ae286dabd2e9e98703eb6a05d735d857226825fa669412585aadaabcfd10e0b1",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "logbook-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-logbook-light100.png",
+        "sha256": "c3fc3aea5a355a3f74c05a928a7aec050964fb4fa03ddabf9ccfccce6aecce92",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/logbook_light_100.png",
+        "sha256": "b4da67b7a41f45edde5ed41a415c4ea178d0a90cee42a35a68133ef44f77f722",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "library-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-library-light100.png",
+        "sha256": "362327c777e2a88fb38800d303693183a3941264f496487ca1af1b29780ffa71",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/library_light_100.png",
+        "sha256": "b67e558fa041a702ff3375f7d476304c26b15d0332c8dd72b8f6edfe26042495",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings-light100.png",
+        "sha256": "a56705fda904ffa6d525d42ab3e7e2edc1b9536df4172a1f01bdd4c46be2888c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_light_100.png",
+        "sha256": "0149518ff1de4ec1e1580b00f9111980884d9e8515a2471362cf0facc216e8bf",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings_appearance-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_appearance-light100.png",
+        "sha256": "1859ff97914241f991e3e202475cd0704ec2d0b0417fcec0ecd47d793eb41295",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_appearance_light_100.png",
+        "sha256": "324a829c9caa15deefae09789da5081b8e08bb0ebabdc828ad234d68442eef14",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_planning-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_planning-light100.png",
+        "sha256": "d4aa9c10d15f7e9774941a3445ec027e250f2d82f422791459841b013e9153ae",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_planning_light_100.png",
+        "sha256": "e168356a4ab3f8c83f569f6f0bfe3f1e497524af64d7af1128895ee886a370cd",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_privacy-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_privacy-light100.png",
+        "sha256": "58429b2bcc2e15dead617eefa14cd0c9c0152817c564c4d6ab5095a248045975",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_privacy_light_100.png",
+        "sha256": "a577c45dc0edb2d447601b36e562f9dd4e61dc334f577d3b92a9ff0fa4667571",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_backup-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_backup-light100.png",
+        "sha256": "e350928f337b081f34d2c25d9bff471302dff47890d62771ef7884e3b5e6a63a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_backup_light_100.png",
+        "sha256": "c8c1dbc91d288864a236f04b5438a78033262f811764a7d7d9637fd49784a8e8",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "plan_editor-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor-light100.png",
+        "sha256": "ec55d9fd02120d1facc1dfd888969531894974729cc868ce2120936bd27a9719",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_light_100.png",
+        "sha256": "b47626c60a3cda135a0030c2b5e350987140376004e9c109a7687345f13c39c0",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan_editor_invalid-light100",
+      "theme": "light",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor_invalid-light100.png",
+        "sha256": "164d025c3dfe7d5fa7594e81aff541b267012cb78d5a29c12b4a09151e4a232f",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_invalid_light_100.png",
+        "sha256": "3bd0acf0896cb09ef89fb6315926e1caf336f678adf008d70cd9ddcebfe39965",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "home-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-home-light200.png",
+        "sha256": "fd7b58322f4f9a911767f464ba95847819785b9e916f695bf199031fdc5e0163",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/home_light_200.png",
+        "sha256": "d7b8ec25fbcee058dc6288093957328b35953a0806d5192a3bbe22554fa1e113",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan-light200.png",
+        "sha256": "d1388aedd8e7e4f9615d90d0c10fb21b87a03b563fc6ae1cbe1c6aa4ed6c298c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_light_200.png",
+        "sha256": "392e42a52c0fd6851e4a07ee92767f8ce0a402fa4a24b40b383d89afd076922c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "night-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-night-light200.png",
+        "sha256": "08beea6d7e2b75dda0a70ccdc64ad9214032c2d71e5900a2054b6d78f666db9e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/night_light_200.png",
+        "sha256": "a930f1a253ed71218d0404a2a92a71315f562a11d8bd9e3718a912a39d555e0c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "moon-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-moon-light200.png",
+        "sha256": "d6f216b3b5dce013a452cc2d7d852b88a1431121aa682b698c0027e1063b17ee",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/moon_light_200.png",
+        "sha256": "090aa9b3066b4b8fae5117f6d8f0ffa377baa768a8ef9d722e4af78fb5c6d79e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "weather-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-weather-light200.png",
+        "sha256": "84fbee70403ddb5ba5940cb7408eacd81815cccde121f9caac571882818be62e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/weather_light_200.png",
+        "sha256": "11998d118178175725a23dc872309922fd51df039a2cab14c453834cbb33cc14",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "logbook-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-logbook-light200.png",
+        "sha256": "4196bc1a3dc54360adf996549e051922204d61880c2fa6b122805a76d3a9f0b5",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/logbook_light_200.png",
+        "sha256": "4736ff230e79b1cd166a284f2aaa09b23912795470e87f31506c24759365f725",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "library-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-library-light200.png",
+        "sha256": "a3774bdffaf0a341ec8a19075007d0b32be35b6442c68f406a282dfecb22f54a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/library_light_200.png",
+        "sha256": "7521fa9012baa624cab9a2a30fd6034d70d84d0b88d8237ca298911a03c1866c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings-light200.png",
+        "sha256": "bbfdab9c52e6269b7277d043247faff3a408e471c39922c5cb644004dcf9c2b2",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_light_200.png",
+        "sha256": "40e33f3a8307b2a644a9c483ac3d42a619b920dc89108428ffd4fa6cf367f782",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings_appearance-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_appearance-light200.png",
+        "sha256": "24aff42899f7846d6edf4ea9d0ea7d8fcc1c3d70270f11b58b0a1feb73744469",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_appearance_light_200.png",
+        "sha256": "13f48b55bc19a3980e196701c9ca8b450f6c7d919b51bd29b31c98df23c6d7c4",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_planning-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_planning-light200.png",
+        "sha256": "75cf46760a331a8eecf986128371a373f2105ff03928e1f280237e1585711cab",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_planning_light_200.png",
+        "sha256": "55cc94542bed449d5d92c841b6c17b331fd5c1ada6dbd5cd0344d3234d0e39a6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_privacy-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_privacy-light200.png",
+        "sha256": "8aa39205664dd43c3bfdceff664dc3f4c9c54d872b152920dd734cabfbb4e135",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_privacy_light_200.png",
+        "sha256": "14aeb8428081efa6ca495e738e38f3c01c41c611208b36f021f48f838eb95f52",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_backup-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_backup-light200.png",
+        "sha256": "d043dcd448b8acfcb1dd003de7e9e19f6b9b29ee8ca84487425b3f541bb695da",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_backup_light_200.png",
+        "sha256": "4d136cc3a39ee439aa4a1ba5a10442decef4772e5e6568dfcbea638833c66170",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "plan_editor-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor-light200.png",
+        "sha256": "a5ddfe1d3f3814e305026120cf7aed07eb07461997e40000148306d362fc48cc",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_light_200.png",
+        "sha256": "710a9be5896488482113cf1234a8777f1d32c0b79b71d668faacbcb486aa05f7",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan_editor_invalid-light200",
+      "theme": "light",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor_invalid-light200.png",
+        "sha256": "b8b3d6a797b409c0340f713052ac62d2e3756801454d841d496274c922e6269a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_invalid_light_200.png",
+        "sha256": "86c4efed5052bdb5f73e369c10147c2889d3341502542384e967723e0c5ecddf",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "home-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-home-dark100.png",
+        "sha256": "2ef855f3f5b61b42cca8d0753064ea2486d4a2167d2e90cb86ee2b4749268cc0",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/home_dark_100.png",
+        "sha256": "ddf34ecf6535d8412d29067aa0eb7380841b3622050f73371d0d0a2a9cbeee22",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan-dark100.png",
+        "sha256": "0d66a58922e459852f2388896f0495196629270653bd5ae2f4f741b5d8ba61e6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_dark_100.png",
+        "sha256": "510fc738e1d95f925ccffadd3f85658a97b551f529565e6b465b175c1f02dace",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "night-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-night-dark100.png",
+        "sha256": "b40a683d5e744f3d5e3eb8aa10391987ab488cbdedb2d00328d3f31c852da4e9",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/night_dark_100.png",
+        "sha256": "652851cbb8743294c91223bdf0bc5a2b72982e7390a40e5eb1939841a5f056b2",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "moon-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-moon-dark100.png",
+        "sha256": "03e649cffc1f8c56dfd59a68837c806ded8e06c964a75b853a27c5f97da478df",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/moon_dark_100.png",
+        "sha256": "623da5ee7a5505f79e347d00dc6b7990abe0ddeb55218251120ff20257fb8a38",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "weather-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-weather-dark100.png",
+        "sha256": "3d0e6d67334cc812bfbf1790b00a197e71880db117748dc17650302b8ccd28f4",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/weather_dark_100.png",
+        "sha256": "26bc509f328364caab8981f86930b6f8193c031a56d9e8b01587c173d1b4009a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "logbook-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-logbook-dark100.png",
+        "sha256": "d292a449fc467bec9b8a17ba33ffc042c94d97294098b63a4d5dc0d1a6db4209",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/logbook_dark_100.png",
+        "sha256": "bc0c211cf9264eb65e399acbccbe19c7c2f2869ef12475d1efd25815cdc1a2fc",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "library-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-library-dark100.png",
+        "sha256": "bcf0ffa10a2d830d7ef59ae821236bc89fca9d5944c9ae260c37b83db7d754d4",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/library_dark_100.png",
+        "sha256": "870824d8f48027f669c9479654802c6caa466585550ee27a56e389b79e5d2d09",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings-dark100.png",
+        "sha256": "3262b539a4cb398992a474efdcba7732c84de35f2b8c0cdb3d5987afac9dd4c6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_dark_100.png",
+        "sha256": "f13384ee60cc7454acfc6b02ac85d054b077dec32cf7ff64c487afa19581f9e7",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings_appearance-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_appearance-dark100.png",
+        "sha256": "09213581822b3ad86ebad58544c2ce94fc8a8a9a821da24ca72d75485f54d26e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_appearance_dark_100.png",
+        "sha256": "b72b6fa4266c955315f81a3adf76f1470a220863036dd4802e4e9c32d4706295",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_planning-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_planning-dark100.png",
+        "sha256": "bf1b762dfd87371ffa4f0de8e1713f1926928b5c65d38ad278ab7fbe4995760c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_planning_dark_100.png",
+        "sha256": "028854975025916794a55b4b05f2d45e179b0e9dc9eb8a67e0e4dc5303b7df1e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_privacy-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_privacy-dark100.png",
+        "sha256": "feec662741acc6567ee5fff03a5440048cacdf665b67729f87f6d54cbd13f8b9",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_privacy_dark_100.png",
+        "sha256": "88e56a8d5e771b5cc270f32a30f1caef3da719e67fcba8cc7d86aa7791a3a341",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_backup-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_backup-dark100.png",
+        "sha256": "51a9131204029e2762c3e272c373fb19a3b3df173729a2dc5f66cf7f27998dbe",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_backup_dark_100.png",
+        "sha256": "9a6f965b32b2eba4f3e6cfa8fd4a890cf3bbc12ed5b292070153a8b959e514d1",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "plan_editor-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor-dark100.png",
+        "sha256": "acc8e722df273ea6226d171100b4f857c4e45f8b2c6b4b853d5847a06075ea4f",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_dark_100.png",
+        "sha256": "7a67d5918b5ef4ba5155802bde7396d7962d70a85d8fb23af87b4853d037ca63",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan_editor_invalid-dark100",
+      "theme": "dark",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor_invalid-dark100.png",
+        "sha256": "8e7239d6ba777892c59b40da138d4adc90beba8bed113728a8fbb77d9b29f1fa",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_invalid_dark_100.png",
+        "sha256": "a5305cb7234e06f3abf994f82b5592d984d4226ff3abf3376850644bc7860bfc",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "home-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-home-dark200.png",
+        "sha256": "4d90f758a138dd881b9158bdfd4ca7cdc1b43307f5571b3bf8261f83c6fb9c5c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/home_dark_200.png",
+        "sha256": "9bf7dd15fa424f71a58ac16d37e07ff4d281af3741fbf80989342fa2a1c60603",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan-dark200.png",
+        "sha256": "b5421480e6efaffe8939c788856d58e1fc70ea9ecfb5c90a97266031010fb4f3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_dark_200.png",
+        "sha256": "668f58e711e8a8a909bdc346b2233131441ab55e723bb43c6e573e6f15d7da7a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "night-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-night-dark200.png",
+        "sha256": "842f4ca9c58c4ac7bb8d29b5063a6bd69346ab9cd674c4f42ecf2692c5d4d50e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/night_dark_200.png",
+        "sha256": "f5736e839ef79d80ad2158f391c2bac7565d1b5ddb296180393bb71438dffb2e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "moon-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-moon-dark200.png",
+        "sha256": "4b1e9425aba1990ec2c759a301c54e16869b2fa6e657f34983d35f7016120a46",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/moon_dark_200.png",
+        "sha256": "f033cf841435b74394d8918eeaf4b88350fe73fdff5343ae2c9779dfebabbd91",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "weather-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-weather-dark200.png",
+        "sha256": "20e4d1e5b4a1a55f92dd0c35e9a1476e4dc04ca436a6dbf4b6667586cefe3cdc",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/weather_dark_200.png",
+        "sha256": "dfe771c252c8ba7ace212ff45f07854d1e2e55d32ac424ab4d63d082a9394800",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "logbook-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-logbook-dark200.png",
+        "sha256": "5321632d9f8820dd278ebceb874f5524a28f5864a13f0492890675222e02cdb3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/logbook_dark_200.png",
+        "sha256": "b1be517f6ccb98735fb3f45282af25c35b043d891e49af7369cffc08930da09e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "library-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-library-dark200.png",
+        "sha256": "83c6ed139a69be63464362d50b2feb9d3ceba58c7301fce25ff07dee66ddd630",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/library_dark_200.png",
+        "sha256": "6d48b3302b1f1af42daee313c335ed78a963161272f531e7f821b9dd8d2b0128",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings-dark200.png",
+        "sha256": "c043db18817d91b110008210be4873d6dc11ee354ce851473aedd7ecbc47e9ab",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_dark_200.png",
+        "sha256": "60fa4597b491acc57787281d6f1c51b464eab2dbf2224b57ebe010e03b930bc3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings_appearance-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_appearance-dark200.png",
+        "sha256": "b099af283cb41092921b57b64860ad6fcca519bc31c2a69714abb6644f42a259",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_appearance_dark_200.png",
+        "sha256": "704bceca80b8e47c7155b93e6f59226b024108ec7694ec18b504c09b966ce749",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_planning-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_planning-dark200.png",
+        "sha256": "10af39d918aa2902688e7c2ec4bbb70965c08192d8c55b0b0498c08542be0f92",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_planning_dark_200.png",
+        "sha256": "e47e4cd440bb3d795d643014236b5bbe020ae2877acc80ef1913986726f06d8f",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_privacy-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_privacy-dark200.png",
+        "sha256": "872b77506c9299353e0b485de7736e72c5c53d6e11fc2cff0ab35ebd5bd9b9ab",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_privacy_dark_200.png",
+        "sha256": "72b757e7ed9f7c47a09643235510d05a1614f54ff824a88fa767768ff44aa0ac",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_backup-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_backup-dark200.png",
+        "sha256": "3868e686f869056916cb85158048a92dc0af8c57051f67e7f936fa833706cdd4",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_backup_dark_200.png",
+        "sha256": "9825f6e645defd9f74d594328c8a6584501c582aa81b19d1e7231d558e8c5387",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "plan_editor-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor-dark200.png",
+        "sha256": "ec965d42beae3e98962fecd8cde0086ac74fe550699365d1c7912a4e338e5881",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_dark_200.png",
+        "sha256": "caf126af13df1974e61b1b2bbbd4a1dfe51a1bb9119bd5ad5d69293a424c96a5",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan_editor_invalid-dark200",
+      "theme": "dark",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor_invalid-dark200.png",
+        "sha256": "06efdd71844a3013b9cec22a05071a4d60847d8447eea7725537fc6ac6711228",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_invalid_dark_200.png",
+        "sha256": "0595c906755f62a7b04615ce84839b47f65a67bcf411070e3e2c29f6d8f59a6e",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "home-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-home-field100.png",
+        "sha256": "6c1d94a2805cfc60a0200b435bf1d16439bb124803d87cc1034ccf37a416e371",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/home_field_100.png",
+        "sha256": "703908f243bd9abd57fa3c3521d2e2ae05e5c54eb635537aa4a8b5d170ff736a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan-field100.png",
+        "sha256": "1d5be690dee0baab63feb555211cc44b1a4daef40c5aabfc420ded3fa6c80cf3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_field_100.png",
+        "sha256": "d80dabbad974bdc3a4117e28dc74d28ebba0d88f86d7d02c59b48328d31adf44",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "night-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-night-field100.png",
+        "sha256": "13538a9c1beda0ac037d984c33437f9731dc20c41e2b7aa4ae1308e819cbc96f",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/night_field_100.png",
+        "sha256": "4f39aaf61fae44d921b8e44f5fa87726c8ce0f23d7385704054fe49981a2d504",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "moon-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-moon-field100.png",
+        "sha256": "b089c06785d75889a7c08f0eb3e7ffd79a2a1723b23a384232df32645531fac6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/moon_field_100.png",
+        "sha256": "385392b39f52cdd0cdb823ef3e5cf82c708cf01793c0cfd35800af557fd9f8ae",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "weather-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-weather-field100.png",
+        "sha256": "61f459e245d6db88f07b72db920093885c706fac6db8607b0aadeadfbca7ee4d",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/weather_field_100.png",
+        "sha256": "ed86173f01dd3acf412c2d2d9c7d44c3f639fde91e4bca4c7f9ec4b625487716",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "logbook-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-logbook-field100.png",
+        "sha256": "36ca6db2336e326f57dc7534dd7aa9a6c476823ced930eabf0d26df2e85fe043",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/logbook_field_100.png",
+        "sha256": "60a039f3f068ffee2b5ee0a241fb03acf4cca109815446fdc92e01d78093b5ff",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "library-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-library-field100.png",
+        "sha256": "c5e135a95797272dade1310fbba2475a300ed9602e8f5515e82ce2567f2cfcf6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/library_field_100.png",
+        "sha256": "99613224af8060e56a119ad2b98c7196d86bde8b9856e09a71972a348fe2c3ed",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings-field100.png",
+        "sha256": "88c8f78bfe4bcaeef7ad898ab5fdbc6a75e69dc999a1017c31d39d9e224d3390",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_field_100.png",
+        "sha256": "32808decf944a62ffa28e32bb8e8980eb06b5ba498d33471bcf9db3944421231",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings_appearance-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_appearance-field100.png",
+        "sha256": "34fe64f5899d623638d6131693b877a529de719a9ef8b6f5a662d0a26cdbf316",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_appearance_field_100.png",
+        "sha256": "082d5bce39c06004588a890176b89db1956afa5eadb42880d12b7aeda5921875",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_planning-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_planning-field100.png",
+        "sha256": "28253ba5c0db435ba3e1241c9d9ac89ae9079881b42f3f38d43495aa32f6c8c3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_planning_field_100.png",
+        "sha256": "3553bf89e6db4fe0772058d5e368f7b4ef44f455e70540738c580dfc935fa1bf",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_privacy-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_privacy-field100.png",
+        "sha256": "777ce8921da3ab08c2039e99593098871e1003976072eb28b545b8bcea8716b6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_privacy_field_100.png",
+        "sha256": "8f4838c70cb6b5bfac3ea348e99efac1a1b95dd9e14331d739b13cb2f6c94510",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_backup-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_backup-field100.png",
+        "sha256": "083aa36696aa3c05e4f15999d093bf5b01eb4b77330f6604d8670321b7497c00",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_backup_field_100.png",
+        "sha256": "1ef79e0b304177b89934434b366474c4d5b2b0c7288d6afa4fa8d937640d2f58",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "plan_editor-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor-field100.png",
+        "sha256": "050654bd611b4e468e765b9dd41074b3cb40ae041def71902945c775f83f0004",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_field_100.png",
+        "sha256": "f4e3505e939547e1bf705b295104c3098ee2f91ad34738c304e1d6593a4177eb",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan_editor_invalid-field100",
+      "theme": "field",
+      "scale": 100,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor_invalid-field100.png",
+        "sha256": "61b3c22fdd815f002a2aed07b011871ae26a21f2b6a5cc705f2b75b9a31d8cb3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_invalid_field_100.png",
+        "sha256": "8094f5bc108f1b67806661c2a8619d6e78c5ed8be5fcff6733957619ce7744fa",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "home-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-home-field200.png",
+        "sha256": "8df368653cf30264736f38a38688e3c1a827d25b793646b7b0724fbc86b2f301",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/home_field_200.png",
+        "sha256": "5f1dc03ef332ca43eed698d0510cef8f3ca2459ffbc4ae826d8fe73158378dc1",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan-field200.png",
+        "sha256": "373f01fac2beb5278cccbbb3a1d5a967872264b268cce9e002b3597a73cfa03a",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_field_200.png",
+        "sha256": "1809b5a4adaa0ec9354c003a447f7636d7145518777997b5d0d34e2688a09f37",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "night-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-night-field200.png",
+        "sha256": "f48386eb3932cde6d4d695318dd36b6ce7c9ccbd17b0ce5db326c29d984dda78",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/night_field_200.png",
+        "sha256": "0cea357d4af3710b0ed3f780a62995f6d9e6009cf7687b02f021142d03e5972c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "moon-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-moon-field200.png",
+        "sha256": "b9064068b4a416ea035c68a82821c4fd4c8ea574fd39e097a1c7d7eb883f1f68",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/moon_field_200.png",
+        "sha256": "5b72fbae9b732e174720ff1decb05654e66349aecdecab0689538e9f19b7fe2c",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "weather-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-weather-field200.png",
+        "sha256": "2c4308f3e3bc0379f04d4ac9ed55446426df647c974e75285fcfa33cc617a5e3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/weather_field_200.png",
+        "sha256": "0ea7b2e999d15238781b28cd1da650a14656082fa8414c6bde3f009faab1d0c6",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "logbook-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-logbook-field200.png",
+        "sha256": "7c5b659b974b52b85e2d73e8c17ffc2a07cc02be1e794339adeac4ebaf0b4866",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/logbook_field_200.png",
+        "sha256": "656d87994fda01582ef85ae9152aee17d349feb95911f78903b0b318881bd1bf",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "library-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-library-field200.png",
+        "sha256": "2cb949d6ab9d68de3737e40afa4bb96972e684b225378a0ac8281751b6c472b3",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/library_field_200.png",
+        "sha256": "a85d96ac545f0131cd5efedece18d3f3f5ba1b7077a79320602e5a8d3ab8f944",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings-field200.png",
+        "sha256": "0b8c08aae1e34cb8e5f087d1175ef102373060df85102057c5f34a10540e8ec4",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_field_200.png",
+        "sha256": "6daee7031c430d23a6fe437edf3c3ee29cb28c14730451e9e4210b776f4fcec5",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "settings_appearance-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_appearance-field200.png",
+        "sha256": "915cbad4b325be22624ea65fa4274896f3cfa2746f325ca0baf813c92f5d87be",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_appearance_field_200.png",
+        "sha256": "968ad439f2f43b9185adea0f7ee0e1f3b9e6ab6a49f1e04f4198fda3fdf01215",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_planning-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_planning-field200.png",
+        "sha256": "e065f2be2c1063e94f5c0f4e1a32294542af4d28f4652a516a465fe7fb964742",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_planning_field_200.png",
+        "sha256": "d71b2144ef62fdf57cd16f0f1d0cca5d2a4df020f0e005fcfe071fc670ca3670",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_privacy-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_privacy-field200.png",
+        "sha256": "926d29471e89178e79fc637461b4c0c8ba4b54412cae1d2a934f584f3b641832",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_privacy_field_200.png",
+        "sha256": "4eed439d41c81469bb476efa9e079dad77a4a9b4320612fcd4ae3f82bea40411",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "settings_backup-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-settings_backup-field200.png",
+        "sha256": "86282701f7243d6344198e1c09ffba041360ff6d5709322553a2210b84818c73",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/settings_backup_field_200.png",
+        "sha256": "a781bc4b709d4aff5ae19ef4d24c85ac17427be949133b48ea4364af74880538",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-settings-final.log"
+    },
+    {
+      "id": "plan_editor-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor-field200.png",
+        "sha256": "e983f3795890b5d60df95f53a0b28adb9be723bd913a452138640b39e0b5b987",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_field_200.png",
+        "sha256": "7a6c58b4a28db55c282793db97f68dcf6d37178ff3e1a4201b7842e4430b7035",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    },
+    {
+      "id": "plan_editor_invalid-field200",
+      "theme": "field",
+      "scale": 200,
+      "review": "composition reviewed in contact sheet; detailed samples listed in audit",
+      "web": {
+        "path": "matched/browser-plan_editor_invalid-field200.png",
+        "sha256": "d38cfe240a515dbede58940c1fa27991c22dc613d0f8d83928eb9e3650b6c209",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "host": {
+        "path": "audit-2026-10-21/host/plan_editor_invalid_field_200.png",
+        "sha256": "de50140381566c8dc7ba8dacb14996bf1347220e3188528025fa5502ed334e14",
+        "size": [
+          412,
+          915
+        ]
+      },
+      "captureRun": "host-render-closing.log"
+    }
+  ],
+  "provenance": "source-verification-final.json"
+}

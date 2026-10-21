@@ -1,0 +1,63 @@
+Running Gradle task 'assembleDebug'...                          
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/Users/zalub/.gradle/wrapper/dists/gradle-9.3.1-all/9ot9r568e8zfvvd4mn8rbu1j0/gradle-9.3.1/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin (KGP): flutter_timezone
+Future versions of Flutter will fail to build if your app uses plugins that apply KGP.
+
+Please check the changelogs of these plugins and upgrade to a version that supports Built-in Kotlin.
+If no such version exists, report the issue to the plugin. If necessary, here is a guide on filing
+an issue against a plugin: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-app-developers#report-incompatible-kotlin-gradle-plugin-usage-to-plugin-authors
+
+If you are a plugin author, please migrate your plugin to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors
+Running Gradle task 'assembleDebug'...                             35.0s
+√ Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...        2,312ms
+I/flutter ( 5533): The Dart VM service is listening on http://127.0.0.1:44119/_L3MQoq8i1E=/
+D/FlutterGeolocator( 5533): Attaching Geolocator to activity
+W/.buffur.culmin( 5533): Accessing hidden method Landroid/view/accessibility/AccessibilityNodeInfo;->getSourceNodeId()J (greylist,test-api, reflection, allowed)
+W/.buffur.culmin( 5533): Accessing hidden method Landroid/view/accessibility/AccessibilityRecord;->getSourceNodeId()J (greylist, reflection, allowed)
+W/.buffur.culmin( 5533): Accessing hidden field Landroid/view/accessibility/AccessibilityNodeInfo;->mChildNodeIds:Landroid/util/LongArray; (greylist, reflection, allowed)
+W/.buffur.culmin( 5533): Accessing hidden method Landroid/util/LongArray;->get(I)J (greylist, reflection, allowed)
+D/AccessibilityBridge( 5533): Setting not found: accessibility_display_inversion_enabled, using default: 0
+D/FlutterRenderer( 5533): Width is zero. 0,0
+I/Choreographer( 5533): Skipped 158 frames!  The application may be doing too much work on its main thread.
+D/FlutterRenderer( 5533): Width is zero. 0,0
+D/FlutterRenderer( 5533): Width is zero. 0,0
+D/HostConnection( 5533): HostConnection::get() New Host Connection established 0x7f4128c75290, tid 5555
+D/FlutterJNI( 5533): Sending viewport metrics to the engine.
+D/HostConnection( 5533): HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_1 
+W/OpenGLRenderer( 5533): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+D/EGL_emulation( 5533): eglCreateContext: 0x7f4118ce3bb0: maj 3 min 1 rcv 4
+I/Gralloc4( 5533): mapper 4.x is not supported
+D/EGL_emulation( 5533): eglMakeCurrent: 0x7f4118ce3bb0: ver 3 1 (tinfo 0x7f40b8ca8bc0) (first time)
+D/HostConnection( 5533): createUnique: call
+D/HostConnection( 5533): HostConnection::get() New Host Connection established 0x7f4128c82010, tid 5561
+D/HostConnection( 5533): HostComposition ext ANDROID_EMU_CHECKSUM_HELPER_v1 ANDROID_EMU_native_sync_v2 ANDROID_EMU_native_sync_v3 ANDROID_EMU_native_sync_v4 ANDROID_EMU_dma_v1 ANDROID_EMU_direct_mem ANDROID_EMU_host_composition_v1 ANDROID_EMU_host_composition_v2 ANDROID_EMU_vulkan ANDROID_EMU_deferred_vulkan_commands ANDROID_EMU_vulkan_null_optional_strings ANDROID_EMU_vulkan_create_resources_with_requirements ANDROID_EMU_YUV_Cache ANDROID_EMU_vulkan_ignored_handles ANDROID_EMU_has_shared_slots_host_memory_allocator ANDROID_EMU_vulkan_free_memory_sync ANDROID_EMU_vulkan_shader_float16_int8 ANDROID_EMU_vulkan_async_queue_submit ANDROID_EMU_sync_buffer_data ANDROID_EMU_vulkan_async_qsri ANDROID_EMU_read_color_buffer_dma ANDROID_EMU_hwc_color_transform GL_OES_EGL_image_external_essl3 GL_OES_vertex_array_object GL_KHR_texture_compression_astc_ldr ANDROID_EMU_host_side_tracing ANDROID_EMU_gles_max_version_3_1 
+D/FlutterGeolocator( 5533): Creating service.
+D/FlutterGeolocator( 5533): Binding to location service.
+I/Choreographer( 5533): Skipped 30 frames!  The application may be doing too much work on its main thread.
+D/FlutterGeolocator( 5533): Geolocator foreground service connected
+D/FlutterGeolocator( 5533): Initializing Geolocator services
+D/FlutterGeolocator( 5533): Flutter engine connected. Connected engine count 1
+W/.buffur.culmin( 5533): Accessing hidden method Landroid/app/ActivityThread;->currentActivityThread()Landroid/app/ActivityThread; (greylist, linking, allowed)
+W/.buffur.culmin( 5533): Accessing hidden method Landroid/app/ActivityThread;->getActivity(Landroid/os/IBinder;)Landroid/app/Activity; (greylist, linking, allowed)
+D/FlutterJNI( 5533): Sending viewport metrics to the engine.
+VMServiceFlutterDriver: Connecting to Flutter application at http://127.0.0.1:50519/_L3MQoq8i1E=/
+VMServiceFlutterDriver: Isolate found with number: 8678601338999987
+VMServiceFlutterDriver: Isolate 8678601338999987 is runnable.
+VMServiceFlutterDriver: Isolate is paused at start.
+VMServiceFlutterDriver: Attempting to resume isolate
+I/flutter ( 5533): 00:00 +0: Hybrid native roots, save/reopen, settings and night browsing
+VMServiceFlutterDriver: Connected to Flutter application.
+I/Choreographer( 5533): Skipped 35 frames!  The application may be doing too much work on its main thread.
+D/ProfileInstaller( 5533): Installing profile for io.github.buffur.culmina
+D/FlutterJNI( 5533): Sending viewport metrics to the engine.
+W/Gralloc4( 5533): allocator 3.x is not supported
+VMServiceFlutterDriver: request_data message is taking a long time to complete...
+D/FlutterJNI( 5533): Sending viewport metrics to the engine.
+I/flutter ( 5533): 00:48 +1: (tearDownAll)
+I/flutter ( 5533): 00:48 +2: All tests passed!
+All tests passed.

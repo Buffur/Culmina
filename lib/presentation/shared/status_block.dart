@@ -103,8 +103,8 @@ class StatusBlock extends StatelessWidget {
       reason ?? '',
       style: fitLine
           ? text.bodySmall?.copyWith(
-              fontSize: 12,
-              height: 1.6,
+              fontSize: 14,
+              height: 1.55,
               color: p.textSecondary,
             )
           : text.bodyMedium?.copyWith(color: p.textSecondary),
@@ -165,7 +165,7 @@ class StatusBlock extends StatelessWidget {
           // S6.16: each number as a label above its value, so the answer's
           // figures read as a set (the scale's caption and group roles).
           Wrap(
-            spacing: AppSpacing.lg,
+            spacing: fitLine ? AppSpacing.md + AppSpacing.xs : AppSpacing.lg,
             runSpacing: AppSpacing.sm,
             children: [
               for (final (label, value) in figures)
@@ -177,11 +177,24 @@ class StatusBlock extends StatelessWidget {
                     children: [
                       Text(
                         label,
-                        style: text.bodySmall?.copyWith(color: p.textTertiary),
+                        style: text.bodySmall?.copyWith(
+                          color: p.textTertiary,
+                          fontSize: fitLine ? 12 : null,
+                        ),
                       ),
+                      if (fitLine) const SizedBox(height: AppSpacing.xs),
                       Text(
                         value,
-                        style: text.titleSmall?.copyWith(color: p.textPrimary),
+                        style: fitLine
+                            ? text.bodyMedium?.copyWith(
+                                color: p.textPrimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                              )
+                            : text.titleSmall?.copyWith(color: p.textPrimary),
                       ),
                     ],
                   ),

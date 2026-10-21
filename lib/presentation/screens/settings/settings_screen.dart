@@ -227,11 +227,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onChanged: (v) =>
                       update(p.copyWith(feasibilityMarginPercent: v)),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
                   child: Text(
                     'Save applies these defaults. Saved plans keep their recorded '
                     'values until you save changes to the plan.',
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: AppPalette.of(context).textSecondary),
                   ),
                 ),
                 const _Section(

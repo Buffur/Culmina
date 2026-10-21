@@ -30,7 +30,7 @@ class DisplaySettingsSection extends StatelessWidget {
     ) => Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(title),
           const SizedBox(height: AppSpacing.xs),

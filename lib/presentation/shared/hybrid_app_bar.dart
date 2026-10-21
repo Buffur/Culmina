@@ -1,6 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'field_mode_button.dart';
+import '../viewmodels/theme_viewmodel.dart';
 
 import '../../core/theme/hybrid_tokens.dart';
 
@@ -23,6 +27,14 @@ AppBar hybridAppBar(
 }) {
   final scaler = MediaQuery.textScalerOf(context);
   final theme = Theme.of(context);
+  // Scoped screens retain the web's global appearance action. Standalone
+  // component hosts may omit the app's theme model.
+  final effectiveActions = <Widget>[
+    ...?actions,
+    if (!(actions?.any((action) => action is FieldModeButton) ?? false) &&
+        context.read<ThemeViewModel?>() != null)
+      const FieldModeButton(),
+  ];
   final hasLeading =
       leading != null ||
       (automaticallyImplyLeading &&
@@ -42,7 +54,7 @@ AppBar hybridAppBar(
             48,
             MediaQuery.sizeOf(context).width -
                 (hasLeading ? 56 : 0) -
-                48 * (actions?.length ?? 0) -
+                48 * effectiveActions.length -
                 spacing * 2,
           ),
         );
@@ -73,7 +85,7 @@ AppBar hybridAppBar(
             ),
           ),
     leading: leading,
-    actions: actions,
+    actions: effectiveActions,
     bottom: bottom,
     automaticallyImplyLeading: automaticallyImplyLeading,
     centerTitle: centerTitle,

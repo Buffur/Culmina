@@ -5,6 +5,13 @@ ACCEPTANCE**; no open owner decision remains (D-06 decided 2026-10-21). Updated 
 Evidence levels stay separate: host tests, browser/host image pairs, Android
 emulator and physical device are different claims; no physical-device or owner
 acceptance is claimed.
+## Local design parity follow-up (2026-10-21)
+
+Additional owner-requested parity audit on the latest local PC checkout,
+2026-10-21: [design parity QA](migration/DESIGN_PARITY_QA_2026_10_21.md).
+It records the remaining source/type/form/navigation gaps, repairs and new
+verification separately from the earlier completion evidence below.
+
 ## Hand-over (2026-10-20)
 
 Codex stopped mid-way through step 2 of the completion sequence (the full gate

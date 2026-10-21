@@ -1,5 +1,6 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,8 @@ import '../../viewmodels/results_viewmodel.dart';
 /// "How did it go?" (S8.2; ADR-019 §3.1, §4): review the saved plan, then
 /// Completed as planned · Partly (a number per light block, not ±1; UX-25)
 /// · Not done (an optional reason), with optional notes and conditions, and
-/// Save result. Back writes nothing. It never asks about the planner's plan.
+/// Save result. Leaving changed input asks before discarding it; Back writes
+/// nothing. It never asks about the planner's plan.
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({super.key, required this.sessionId});
 
@@ -47,6 +49,45 @@ class _ResultsScreenState extends State<ResultsScreen> {
   NotDoneReason? _reason;
   bool _filled = false;
   bool _fallback = false;
+  bool _leaving = false;
+  bool _asking = false;
+  bool _filling = false;
+  List<Object?> _initialInput = const [];
+
+  List<Object?> get _input => [
+    _outcome,
+    _reason,
+    _environment.text,
+    _processing.text,
+    _temperature.text,
+    _humidity.text,
+    _cloud.text,
+    for (final entry in _counts.entries) (entry.key, entry.value.text),
+  ];
+
+  bool get _dirty => _filled && !listEquals(_initialInput, _input);
+
+  Future<void> _leave() async {
+    if (_asking || _leaving) return;
+    if (_dirty) {
+      _asking = true;
+      final discard = await confirmDestructive(
+        context,
+        title: 'Discard result changes?',
+        message: 'Your changes to this result have not been saved.',
+        action: 'Discard',
+      );
+      _asking = false;
+      if (!mounted || !discard) return;
+    }
+    if (!mounted) return;
+    setState(() => _leaving = true);
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      context.go(AppRouter.sessions);
+    }
+  }
 
   /// F21: the temperature is typed in the chosen unit and stored in °C; an
   /// unchanged field keeps the stored value exactly.
@@ -82,6 +123,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
   void _fill(ResultsViewModel vm) {
     final s = vm.session;
     if (_filled || s == null) return;
+    _filling = true;
     _filled = true;
     final log = s.record;
     _outcome = vm.onlyNotDone ? ResultOutcome.notDone : vm.storedOutcome;
@@ -100,6 +142,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
     });
     _humidity.text = _text(log.humidity);
     _cloud.text = log.cloudCover?.toString() ?? '';
+    _initialInput = _input;
+    _filling = false;
   }
 
   static String _text(double? v) => v == null
@@ -196,134 +240,201 @@ class _ResultsScreenState extends State<ResultsScreen> {
     // resolved, never from the working edits.
     if (!vm.pendingChanges) _fill(vm);
     final theme = Theme.of(context);
-    final gap = const SizedBox(height: AppSpacing.md);
-    return Scaffold(
-      appBar: hybridAppBar(context, title: const Text('How did it go?')),
-      body: Form(
-        key: _form,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            _Review(vm: vm),
-            gap,
-            if (vm.pendingChanges)
-              _PendingChanges(
-                vm: vm,
-                onResolved: () => setState(() => _filled = false),
-              )
-            else if (!vm.canRecord)
-              _NotYet(vm: vm)
-            else ...[
-              if (vm.storedOutcome != null && vm.reconciliation != null)
-                _SoFar(reconciliation: vm.reconciliation!),
-              // F19 A2: finishing early is the user's explicit choice.
-              if (vm.nightUnderWay)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: Text(
-                    'This night is still under way. Saving a result now '
-                    'finishes it early; you can edit the result later.',
-                    key: const Key('results.early'),
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ),
-              Text('How did it go?', style: theme.textTheme.titleMedium),
-              _Outcomes(
-                selected: _outcome,
-                onlyNotDone: vm.onlyNotDone,
-                onSelected: (o) => setState(() => _outcome = o),
+    final gap = const SizedBox(height: AppSpacing.md + AppSpacing.xs);
+    return CallbackShortcuts(
+      bindings: {const SingleActivator(LogicalKeyboardKey.escape): _leave},
+      child: Focus(
+        autofocus: true,
+        skipTraversal: true,
+        child: PopScope(
+          canPop: !_dirty || _leaving,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _leave();
+          },
+          child: Scaffold(
+            appBar: hybridAppBar(
+              context,
+              title: const Text('How did it go?'),
+              leading: IconButton(
+                tooltip: 'Back',
+                onPressed: _leave,
+                icon: const Icon(Icons.arrow_back),
               ),
-              if (_outcome == ResultOutcome.asPlanned)
-                Text(
-                  'Records every light block as fully taken. This is your '
-                  'report, not a frame count.',
-                  key: const Key('results.asPlannedNote'),
-                  style: theme.textTheme.bodySmall,
-                ),
-              if (_outcome == ResultOutcome.partly)
-                for (final b in vm.lightBlocks)
-                  TextFormField(
-                    key: Key('results.count.${b.id}'),
-                    controller: _counts[b.id],
-                    decoration: InputDecoration(
-                      labelText: '${_label(b)} · light frames',
-                      helperText: '${b.frameCount} planned',
+            ),
+            bottomNavigationBar: !vm.pendingChanges && vm.canRecord
+                ? Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.viewInsetsOf(context).bottom,
                     ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: _frames,
-                  ),
-              if (_outcome == ResultOutcome.notDone)
-                _Reasons(
-                  selected: _reason,
-                  onSelected: (r) => setState(() => _reason = r),
-                ),
-              gap,
-              Text('Notes (optional)', style: theme.textTheme.titleMedium),
-              TextFormField(
-                key: const Key('results.environment'),
-                controller: _environment,
-                decoration: const InputDecoration(
-                  labelText: 'Conditions and events',
-                ),
-                maxLines: 3,
-                minLines: 1,
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                key: const Key('results.cancel'),
+                                onPressed: _leave,
+                                child: const Text('Cancel'),
+                              ),
+                            ),
+                            FilledButton(
+                              key: const Key('results.save'),
+                              onPressed: _outcome == null
+                                  ? null
+                                  : () => _save(vm),
+                              child: const Text('Save result'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : null,
+            body: Form(
+              key: _form,
+              onChanged: () {
+                if (!_filling) setState(() {});
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                children: [
+                  _Review(vm: vm),
+                  gap,
+                  if (vm.pendingChanges)
+                    _PendingChanges(
+                      vm: vm,
+                      onResolved: () => setState(() => _filled = false),
+                    )
+                  else if (!vm.canRecord)
+                    _NotYet(vm: vm)
+                  else ...[
+                    if (vm.storedOutcome != null && vm.reconciliation != null)
+                      _SoFar(reconciliation: vm.reconciliation!),
+                    // F19 A2: finishing early is the user's explicit choice.
+                    if (vm.nightUnderWay)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: Text(
+                          'This night is still under way. Saving a result now '
+                          'finishes it early; you can edit the result later.',
+                          key: const Key('results.early'),
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    Text('How did it go?', style: theme.textTheme.titleMedium),
+                    _Outcomes(
+                      selected: _outcome,
+                      onlyNotDone: vm.onlyNotDone,
+                      onSelected: (o) => setState(() => _outcome = o),
+                    ),
+                    if (_outcome == ResultOutcome.asPlanned)
+                      Text(
+                        'Records every light block as fully taken. This is your '
+                        'report, not a frame count.',
+                        key: const Key('results.asPlannedNote'),
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    if (_outcome == ResultOutcome.partly)
+                      for (final b in vm.lightBlocks) ...[
+                        gap,
+                        TextFormField(
+                          key: Key('results.count.${b.id}'),
+                          controller: _counts[b.id],
+                          decoration: InputDecoration(
+                            labelText: '${_label(b)} · light frames',
+                            helperText: '${b.frameCount} planned',
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          validator: _frames,
+                        ),
+                      ],
+                    if (_outcome == ResultOutcome.notDone)
+                      _Reasons(
+                        selected: _reason,
+                        onSelected: (r) => setState(() => _reason = r),
+                      ),
+                    gap,
+                    Text(
+                      'Notes (optional)',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    gap,
+                    TextFormField(
+                      key: const Key('results.environment'),
+                      controller: _environment,
+                      decoration: const InputDecoration(
+                        labelText: 'Conditions and events',
+                      ),
+                      maxLines: 3,
+                      minLines: 1,
+                    ),
+                    gap,
+                    TextFormField(
+                      key: const Key('results.processing'),
+                      controller: _processing,
+                      decoration: const InputDecoration(
+                        labelText: 'Processing notes',
+                      ),
+                      maxLines: 3,
+                      minLines: 1,
+                    ),
+                    gap,
+                    Text(
+                      'Conditions (optional)',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    gap,
+                    TextFormField(
+                      key: const Key('results.temperature'),
+                      controller: _temperature,
+                      decoration: InputDecoration(
+                        labelText: 'Temperature (${_units.temperature.symbol})',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        signed: true,
+                        decimal: true,
+                      ),
+                      // −60…60 °C, in the unit typed.
+                      validator:
+                          _units.temperature == TemperatureUnit.fahrenheit
+                          ? _range(-76, 140, TemperatureUnit.fahrenheit.symbol)
+                          : _range(-60, 60, TemperatureUnit.celsius.symbol),
+                    ),
+                    gap,
+                    TextFormField(
+                      key: const Key('results.humidity'),
+                      controller: _humidity,
+                      decoration: const InputDecoration(
+                        labelText: 'Relative humidity (%)',
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      validator: _range(0, 100, '%'),
+                    ),
+                    gap,
+                    TextFormField(
+                      key: const Key('results.cloud'),
+                      controller: _cloud,
+                      decoration: const InputDecoration(
+                        labelText: 'Cloud cover (%)',
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: _range(0, 100, '%'),
+                    ),
+                  ],
+                ],
               ),
-              TextFormField(
-                key: const Key('results.processing'),
-                controller: _processing,
-                decoration: const InputDecoration(
-                  labelText: 'Processing notes',
-                ),
-                maxLines: 3,
-                minLines: 1,
-              ),
-              gap,
-              Text('Conditions (optional)', style: theme.textTheme.titleMedium),
-              TextFormField(
-                key: const Key('results.temperature'),
-                controller: _temperature,
-                decoration: InputDecoration(
-                  labelText: 'Temperature (${_units.temperature.symbol})',
-                ),
-                keyboardType: const TextInputType.numberWithOptions(
-                  signed: true,
-                  decimal: true,
-                ),
-                // −60…60 °C, in the unit typed.
-                validator: _units.temperature == TemperatureUnit.fahrenheit
-                    ? _range(-76, 140, TemperatureUnit.fahrenheit.symbol)
-                    : _range(-60, 60, TemperatureUnit.celsius.symbol),
-              ),
-              TextFormField(
-                key: const Key('results.humidity'),
-                controller: _humidity,
-                decoration: const InputDecoration(
-                  labelText: 'Relative humidity (%)',
-                ),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                validator: _range(0, 100, '%'),
-              ),
-              TextFormField(
-                key: const Key('results.cloud'),
-                controller: _cloud,
-                decoration: const InputDecoration(labelText: 'Cloud cover (%)'),
-                keyboardType: TextInputType.number,
-                validator: _range(0, 100, '%'),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              FilledButton(
-                key: const Key('results.save'),
-                onPressed: _outcome == null ? null : () => _save(vm),
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(56),
-                ),
-                child: const Text('Save result'),
-              ),
-            ],
-          ],
+            ),
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/models/plan_overrides.dart';
@@ -145,145 +146,161 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
       'A planning figure, not measured from your files. Empty: your file or '
           'rig evidence.',
     ];
-    return PopScope(
-      canPop: _allowPop || (!_dirty && !_saving),
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _leave();
-      },
-      child: Scaffold(
-        appBar: hybridAppBar(context, title: const Text('Plan assumptions')),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _form,
-            onChanged: () {
-              if (mounted) setState(() => _inherit = false);
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'This plan only',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Optional overrides. Leave a field empty to use its default. '
-                  'A fixed margin replaces the global percentage; setup stays '
-                  'outside the imaging window. File size is an estimate.',
-                ),
-                const SizedBox(height: 12),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final width = constraints.maxWidth;
-                    return Wrap(
-                      spacing: 16,
-                      runSpacing: 20,
-                      children: [
-                        for (var i = 0; i < 4; i++)
-                          SizedBox(
-                            width: width,
-                            // Hybrid's label above the field: it wraps at
-                            // large text, so its unit is never cut off. The
-                            // field keeps the label as its accessible name.
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ExcludeSemantics(
-                                  child: Text(
-                                    labels[i],
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Semantics(
-                                  label: labels[i],
-                                  child: TextFormField(
-                                    key: Key('planOverride.$i'),
-                                    controller: _controllers[i],
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                          decimal: true,
-                                        ),
-                                    decoration: InputDecoration(
-                                      helperText: hints[i],
-                                      helperMaxLines: 3,
-                                      errorMaxLines: 3,
-                                    ),
-                                    validator: (text) {
-                                      if (text == null || text.trim().isEmpty) {
-                                        return null;
-                                      }
-                                      final number = double.tryParse(
-                                        text.trim(),
-                                      );
-                                      if (number == null ||
-                                          !number.isFinite ||
-                                          number < 0 ||
-                                          (i == 3 && number == 0)) {
-                                        return i == 3
-                                            ? 'Enter a positive number or leave empty.'
-                                            : 'Enter zero or more, or leave empty.';
-                                      }
-                                      const maxima = [3600, 720, 720, 10000];
-                                      if (number > maxima[i]) {
-                                        return 'Enter ${maxima[i]} or less.';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  key: const Key('planOverride.reset'),
-                  onPressed: _saving
-                      ? null
-                      : () {
-                          _form.currentState?.reset();
-                          for (final controller in _controllers) {
-                            controller.clear();
-                          }
-                          setState(() => _inherit = true);
-                        },
-                  child: const Text('Use defaults'),
-                ),
-                const SizedBox(height: 16),
-              ],
+    return CallbackShortcuts(
+      bindings: {const SingleActivator(LogicalKeyboardKey.escape): _leave},
+      child: Focus(
+        autofocus: true,
+        skipTraversal: true,
+        child: PopScope(
+          canPop: _allowPop || (!_dirty && !_saving),
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _leave();
+          },
+          child: Scaffold(
+            appBar: hybridAppBar(
+              context,
+              title: const Text('Plan assumptions'),
             ),
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          child: SafeArea(
-            top: false,
-            child: Padding(
+            body: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
-              child: Wrap(
-                alignment: WrapAlignment.end,
-                spacing: 12,
-                runSpacing: 8,
-                children: [
-                  TextButton(
-                    onPressed: _saving ? null : _leave,
-                    child: const Text('Cancel'),
+              child: Form(
+                key: _form,
+                onChanged: () {
+                  if (mounted) setState(() => _inherit = false);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'This plan only',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Optional overrides. Leave a field empty to use its default. '
+                      'A fixed margin replaces the global percentage; setup stays '
+                      'outside the imaging window. File size is an estimate.',
+                    ),
+                    const SizedBox(height: 12),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final width = constraints.maxWidth;
+                        return Wrap(
+                          spacing: 16,
+                          runSpacing: 20,
+                          children: [
+                            for (var i = 0; i < 4; i++)
+                              SizedBox(
+                                width: width,
+                                // Hybrid's label above the field: it wraps at
+                                // large text, so its unit is never cut off. The
+                                // field keeps the label as its accessible name.
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ExcludeSemantics(
+                                      child: Text(
+                                        labels[i],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Semantics(
+                                      label: labels[i],
+                                      child: TextFormField(
+                                        key: Key('planOverride.$i'),
+                                        controller: _controllers[i],
+                                        keyboardType:
+                                            const TextInputType.numberWithOptions(
+                                              decimal: true,
+                                            ),
+                                        decoration: InputDecoration(
+                                          helperText: hints[i],
+                                          helperMaxLines: 3,
+                                          errorMaxLines: 3,
+                                        ),
+                                        validator: (text) {
+                                          if (text == null ||
+                                              text.trim().isEmpty) {
+                                            return null;
+                                          }
+                                          final number = double.tryParse(
+                                            text.trim(),
+                                          );
+                                          if (number == null ||
+                                              !number.isFinite ||
+                                              number < 0 ||
+                                              (i == 3 && number == 0)) {
+                                            return i == 3
+                                                ? 'Enter a positive number or leave empty.'
+                                                : 'Enter zero or more, or leave empty.';
+                                          }
+                                          const maxima = [
+                                            3600,
+                                            720,
+                                            720,
+                                            10000,
+                                          ];
+                                          if (number > maxima[i]) {
+                                            return 'Enter ${maxima[i]} or less.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      key: const Key('planOverride.reset'),
+                      onPressed: _saving
+                          ? null
+                          : () {
+                              _form.currentState?.reset();
+                              for (final controller in _controllers) {
+                                controller.clear();
+                              }
+                              setState(() => _inherit = true);
+                            },
+                      child: const Text('Use defaults'),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: 12,
+                    runSpacing: 8,
+                    children: [
+                      TextButton(
+                        onPressed: _saving ? null : _leave,
+                        child: const Text('Cancel'),
+                      ),
+                      FilledButton(
+                        key: const Key('planOverride.apply'),
+                        onPressed: _saving ? null : _apply,
+                        child: const Text('Apply to this plan'),
+                      ),
+                    ],
                   ),
-                  FilledButton(
-                    key: const Key('planOverride.apply'),
-                    onPressed: _saving ? null : _apply,
-                    child: const Text('Apply to this plan'),
-                  ),
-                ],
+                ),
               ),
             ),
           ),

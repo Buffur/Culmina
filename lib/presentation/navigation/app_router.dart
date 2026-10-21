@@ -109,7 +109,15 @@ class AppRouter {
         state.uri.path == '/' || state.uri.path.isEmpty ? tonight : null,
     routes: [
       StatefulShellRoute.indexedStack(
-        builder: (context, state, shell) => AppShell(navigationShell: shell),
+        builder: (context, state, shell) => AppShell(
+          navigationShell: shell,
+          showNavigation: {
+            tonight,
+            sessions,
+            library,
+            settings,
+          }.contains(state.uri.path),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [

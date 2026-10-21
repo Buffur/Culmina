@@ -21,6 +21,7 @@ import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/repositories/storage_failure.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/navigation/app_shell.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
 
@@ -148,10 +149,46 @@ void main() {
     expect(title('Tonight'), findsOneWidget);
     final bar = find.byType(NavigationBar);
     expect(bar, findsOneWidget);
+    final navigation = tester.widget<NavigationBar>(bar);
+    final theme = Theme.of(tester.element(bar));
+    expect(
+      navigation.labelTextStyle?.resolve({WidgetState.selected})?.fontWeight,
+      FontWeight.w600,
+    );
+    expect(navigation.labelTextStyle?.resolve({})?.fontWeight, FontWeight.w400);
+    expect(
+      navigation.labelTextStyle?.resolve({WidgetState.selected})?.color,
+      theme.colorScheme.onSurface,
+    );
+    expect(
+      navigation.labelTextStyle?.resolve({})?.color,
+      theme.colorScheme.onSurfaceVariant,
+    );
+    expect(navigation.indicatorColor, theme.colorScheme.surface);
     for (final tab in ['Tonight', 'Logbook', 'Library', 'Settings']) {
       expect(
         find.descendant(of: bar, matching: find.text(tab)),
         findsOneWidget,
+      );
+    }
+  });
+
+  testWidgets('scoped workspace pages retain one global field switch and no '
+      'root navigation', (tester) async {
+    await pumpApp(tester);
+    for (final route in [
+      AppRouter.librarySites,
+      AppRouter.libraryRigs,
+      AppRouter.libraryTargets,
+      AppRouter.logbookProgress,
+    ]) {
+      AppRouter.router.go(route);
+      await settle(tester);
+      expect(find.byType(NavigationBar), findsNothing, reason: route);
+      expect(
+        find.byKey(const Key('fieldMode.toggle')),
+        findsOneWidget,
+        reason: route,
       );
     }
   });
@@ -265,10 +302,12 @@ void main() {
     await tester.tap(find.text('Rigs'));
     await settle(tester);
     expect(title('Rigs'), findsOneWidget); // S9.1: the Library manages
+    expect(find.byType(NavigationBar), findsNothing);
 
     await back(tester);
     expect(title('Rigs'), findsNothing);
     expect(title('Library'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
     await back(tester);
     expect(title('Tonight'), findsOneWidget);
   });
@@ -278,10 +317,15 @@ void main() {
     await tapTab(tester, 'Library');
     await tester.tap(find.text('Sites'));
     await settle(tester);
-    await tapTab(tester, 'Settings');
+    expect(find.byType(NavigationBar), findsNothing);
+    // Hiding root chrome must not replace the branch navigators or their
+    // retained stacks. Exercise a branch change through the shell itself.
+    tester.widget<AppShell>(find.byType(AppShell)).navigationShell.goBranch(3);
+    await settle(tester);
     expect(title('Settings'), findsOneWidget);
     await tapTab(tester, 'Library');
     expect(title('Sites'), findsOneWidget, reason: 'the pushed page is kept');
+    expect(find.byType(NavigationBar), findsNothing);
   });
 
   testWidgets('the planner opens above the tabs and back returns to Tonight', (

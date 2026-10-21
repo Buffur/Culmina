@@ -10,11 +10,15 @@ import 'package:astroplan/domain/models/camera_class.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/presentation/shared/block_text.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/capture_block_dialog.dart';
+import 'package:astroplan/presentation/viewmodels/theme_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import '../../support/block_editor_finders.dart';
+import '../../support/in_memory_display_preferences.dart';
 
 void main() {
   Future<void> open(
@@ -25,6 +29,7 @@ void main() {
     bool fromPhoto = false,
     bool pickOnOpen = false,
     double textScale = 1,
+    ThemeViewModel? themeModel,
   }) async {
     tester.view.physicalSize = const Size(412, 915);
     tester.view.devicePixelRatio = 1;
@@ -32,20 +37,23 @@ void main() {
     addTearDown(tester.view.reset);
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: Scaffold(
-          body: Builder(
-            builder: (context) => TextButton(
-              onPressed: () => showCaptureBlockDialog(
-                context,
-                rigName: rigName,
-                cameraClass: cameraClass,
-                blocks: blocks,
-                pickOnOpen: pickOnOpen,
-                fromPhoto: fromPhoto ? (_) async => null : null,
+      ChangeNotifierProvider<ThemeViewModel?>.value(
+        value: themeModel,
+        child: MaterialApp(
+          theme: AppTheme.light,
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => showCaptureBlockDialog(
+                  context,
+                  rigName: rigName,
+                  cameraClass: cameraClass,
+                  blocks: blocks,
+                  pickOnOpen: pickOnOpen,
+                  fromPhoto: fromPhoto ? (_) async => null : null,
+                ),
+                child: const Text('open'),
               ),
-              child: const Text('open'),
             ),
           ),
         ),
@@ -57,6 +65,60 @@ void main() {
 
   String total(WidgetTester tester) =>
       tester.widget<Text>(find.byKey(const Key('blockDialog.total'))).data!;
+
+  testWidgets('Escape closes an untouched editor before any field is focused', (
+    tester,
+  ) async {
+    await open(tester);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
+    expect(find.byKey(const Key('unsaved.discard')), findsNothing);
+  });
+
+  testWidgets('Escape uses the same dirty-draft guard as Back', (tester) async {
+    await open(tester);
+    await tester.enterText(
+      find.byKey(const Key('blockDialog.exposure')),
+      '125',
+    );
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('unsaved.cancel')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
+    expect(
+      tester
+          .widget<TextFormField>(find.byKey(const Key('blockDialog.exposure')))
+          .controller
+          ?.text,
+      '125',
+    );
+  });
+
+  testWidgets(
+    'field mode can be toggled in the editor without losing a draft',
+    (tester) async {
+      final preferences = InMemoryDisplayPreferences();
+      final model = ThemeViewModel(preferences);
+      addTearDown(model.dispose);
+      await open(tester, themeModel: model);
+      final exposure = find.byKey(const Key('blockDialog.exposure'));
+      await tester.enterText(exposure, '125');
+      await tester.tap(find.byKey(const Key('fieldMode.toggle')));
+      await tester.pumpAndSettle();
+      expect(model.isFieldMode, isTrue);
+      expect(preferences.fieldMode, isTrue);
+      expect(tester.widget<TextFormField>(exposure).controller?.text, '125');
+      expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('fieldMode.toggle')));
+      await tester.pumpAndSettle();
+      expect(model.isFieldMode, isFalse);
+      expect(preferences.fieldMode, isFalse);
+      expect(tester.widget<TextFormField>(exposure).controller?.text, '125');
+    },
+  );
 
   testWidgets('the rig is named above the form, or said to be missing', (
     tester,

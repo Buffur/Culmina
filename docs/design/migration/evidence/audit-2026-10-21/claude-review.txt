@@ -1,0 +1,56 @@
+I found five reproducible defects that none of the accepted deviations cover, plus four lower-priority items. No files were edited and no commands, tests or network were run. HEAD is `1aceb65`. I did not read the untracked `docs/design/migration/evidence/audit-2026-10-21/` folder, to keep this pass independent.
+
+**Screenshots I actually viewed** (the image reader works):
+- **Matched browser/host pairs:** Tonight light 100 % and 200 %; Logbook light 200 %; block editor light 200 %; invalid block editor light 100 %; Planning settings light 100 %.
+- **Android emulator (run r6):** `result-editor-keyboard-light_100.png` (no keyboard is visible in it) and `recorded-progress-light_100.png`.
+- **Not viewed:** any dark or field-mode pair, or the other roots. My field-mode statements come from source only.
+
+## Findings, strongest first
+
+### 1. "How did it go?" result form: no Cancel and no discard prompt, so Back loses typed input
+- **Web:** Back on the result editor calls `cancelEdit` (`logbook.js:512`). If anything changed it asks "Discard your changes? / Keep editing" (`logbook.js:835-841`). The form has a sticky footer with Cancel and Save result (`logbook.js:878-881`, `logbook.css:88`) and 20 px gaps between fields (`workspace.css:15`).
+- **Flutter:** `lib/presentation/screens/execution/results_screen.dart:200-329` has no `PopScope` and no Cancel. Back or system Back silently throws away the chosen outcome, per-block counts, notes and conditions; the docstring at `:28` even says "Back writes nothing". The only Cancel in the file (`:499-502`) belongs to the pending-plan-changes panel. Fields at `:245-315` sit with no gap between them, and Save is at the end of the scrolling form.
+- **Emulator evidence:** in `result-editor-keyboard-light_100.png` the outlined fields (notes; temperature, humidity, cloud) touch each other, and the "Not done" chip touches the next field.
+- **Records:** Matrix A-LOG-05 (`WEB_DESIGN_INVENTORY.md:142`) requires "validation and Save/Cancel" and is marked VERIFIED. Its implementation list does not even name `results_screen.dart`.
+- **Impact:** data loss in a field workflow; the represented web interaction is not adopted.
+
+### 2. Logbook and Library detail screens keep the bottom navigation
+- **Web:** every view with a Back action hides the nav (`workspace.js:40`, `$('#workspace-nav').hidden=!!back`). That covers the entry detail, Progress by target and the result editor (`logbook.js:506/509/512`), and the Rigs/Targets/Sites lists, item details and editors (`library.js:542/549/554`). A-SHELL-01 says "detail screens hide root nav".
+- **Flutter:** `/sessions/progress`, `/sessions/:id` and `/library/rigs|targets|sites` are routes inside a tab (`app_router.dart:129-176`, no `parentNavigatorKey`), so `AppShell` keeps drawing the nav. The test at `app_shell_navigation_test.dart:276-285` relies on the nav being visible on Library › Sites.
+- **Emulator evidence:** `recorded-progress-light_100.png` shows Progress by target with a Back arrow and the full nav bar.
+- **Impact:** D-05 fixed this only for Settings, so it is now inconsistent across tabs. At 200 % the 2×2 nav takes about 130 px of every detail screen. Fixing it changes how each tab remembers its place, so if the native behaviour is preferred it should be recorded as a deviation rather than left as a gap.
+
+### 3. The field-mode (moon) toggle is missing on every secondary screen
+- **Web:** the moon button lives in the single persistent app bar of the Plan page (`plan.html:33`), the conditions screens (`conditions.html:32`) and the workspace (`workspace.html:36`, `workspace.js:63`). Settings calls it "The same switch as the moon button in the app bar" (`settings.js:421`). The editor pairs show it in the block editor's app bar.
+- **Flutter:** `FieldModeButton` appears in only seven places: the Tonight, Logbook and Library roots, Plan, Night/Moon/Weather, the Settings root and Settings groups. It is missing from:
+  - the block editor (`capture_block_dialog.dart:819-835`) and the per-plan overrides editor;
+  - the result form, entry detail and Progress by target;
+  - the Library lists, the site editor, and the target/rig/site pickers.
+- **Impact:** at the telescope (recording a result, editing a block) you can't switch to or from red mode without leaving the screen, and a dirty editor asks first.
+
+### 4. Site editor: Save is hidden by the keyboard, and fields have no spacing
+- **Flutter:** Save is in `bottomNavigationBar` with no keyboard-inset padding (`site_editor_screen.dart:485-494`). A Scaffold keeps that slot at the screen bottom, under the keyboard. The block editor and overrides editor do pad it (`capture_block_dialog.dart:1187-1190`, `plan_overrides_editor.dart:264-266`). The comment at `:484` claims Save is "always in reach", which is false while typing.
+- **Spacing:** Name, Latitude, Longitude, Elevation, Sky darkness and Notes are stacked with no gaps (`:500-579`). This is the same class of defect F3 fixed only in the block editor.
+- **Web:** Library forms use `fieldset{display:grid;gap:20px}` and a sticky Cancel/Save footer (`library.css:21`, `:28`).
+- **Impact:** the IME hides the only primary action; the form is dense compared with the Hybrid composition. I found no screenshot of this screen, so this rests on source reading.
+
+### 5. Navigation and wordmark lose their weight and colour hierarchy (every root, both scales)
+- **Web nav:** unselected labels are text-secondary at weight 400. The selected one is text-primary at 600 on surface-subtle (`styles.css:4`, `workspace.css:4-5`), and the bar has a 1 px top border (`styles.css:31`).
+- **Flutter nav:** both modes use one style with no state (`app_shell.dart:94-111` for large text, `:124-127` otherwise), so the selected tab is never bold. The indicator uses `selection` #E9E9E7 instead of surface-subtle #F7F7F5 (`:132-134`), and there is no top border.
+- **Wordmark:** the web is "culmina" at 13 px weight 600 with −0.4 px tracking, over "Welcome & setup" at 13 px text-secondary (`styles.css:4`, `hybrid-refinement.css:11`). Flutter renders both lines in the same TextButton style, primary colour (`tonight_home_screen.dart:124-131`).
+- **Visible in:** the home pairs at 100 % and 200 %, the Logbook 200 % pair, and the emulator Progress screenshot.
+
+## Lower priority (reproducible, smaller impact)
+- **Escape does nothing in full-screen editors.** The web closes them through the unsaved-changes guard (`plan.js:863-869`). In Flutter there are no `Shortcuts` or `DismissIntent` bindings anywhere in `lib/`, and Escape doesn't close full-screen editor routes such as `capture_block_dialog.dart:65-66`. It applies to Windows builds and hardware keyboards; not checked on a device (L-6).
+- **Planning settings paragraph is the loudest text on the screen.** "Save applies these defaults…" (`settings_screen.dart:230-236`) has no style, so it renders at 16 px in the primary colour, more prominent than its section headings. The web uses a 13 px "How these defaults apply" disclosure.
+- **The exposure field gives three different examples:** the hint says 1/125 (`capture_block_dialog.dart:981`), the placeholder 1/14 (`:986`), and the error "60, 0.5 or 1/14".
+- **"Doesn't fit" and "No window" are drawn in the error colour** (`app_palette.dart:135-136/173-174`, via `status_block.dart:120`). `tokens.json:16` says error is "not a poor astronomical fit", and the web verdict is text-primary (`plan.css:32`). `JSON_FIELD_ACCOUNTING.md:38` claims that meaning is retained, but an earlier decision (UX-16) chose these colours, so this is a decision for you rather than a plain defect.
+- **Text-size floor contradiction.** `app_theme.dart:13` and `app_typography.dart:7` say no text is under 12 sp, and the typography skill also keeps 12 as the minimum. Nav labels are 11 and calendar captions 10, both taken exactly from the web. Either the comments/skill or the tokens need reconciling.
+
+## Intentional adaptations (not counted as defects)
+- **D-02:** Plan's capability warnings stay above the capture list.
+- **D-04:** "Tue, Nov 10" date format.
+- **D-06:** the field-mode red outline. `app_theme.dart:353-394` matches that decision; light and dark are unchanged.
+- **D-08:** two-row frame-type choice, "From a photo" absent on host renders, errors under each field instead of a toast, Cancel in the editor footer. Confirmed in the editor pairs.
+- **Field-mode secondary text contrast:** the documented exception.
+- Native wording such as "Fits" (D-01), and Material filled icons instead of the web's stroke icons.

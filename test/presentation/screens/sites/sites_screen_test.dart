@@ -26,6 +26,7 @@ import '../../../support/planner_harness.dart';
 
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -163,6 +164,39 @@ void main() {
     final tile = tester.widget<ListTile>(find.byKey(ValueKey('site-$id')));
     return (tile.leading as Icon).icon;
   }
+
+  testWidgets(
+    'site Save stays above the IME and coordinate fields are spaced',
+    (tester) async {
+      await build(tester);
+      await pump(tester, at: AppRouter.siteEdit);
+      tester.view.physicalSize = const Size(412, 915);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+      await tester.pumpAndSettle();
+      final save = tester.getRect(find.byKey(const Key('siteEditor.save')));
+      expect(save.bottom, lessThanOrEqualTo(615));
+      final latitude = find.widgetWithText(TextFormField, 'Latitude (°)');
+      final longitude = find.widgetWithText(TextFormField, 'Longitude (°)');
+      await tester.ensureVisible(latitude);
+      await tester.pumpAndSettle();
+      expect(
+        tester.getTopLeft(longitude).dy - tester.getBottomLeft(latitude).dy,
+        greaterThanOrEqualTo(20),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('Escape leaves a pristine site without a false discard prompt', (
+    tester,
+  ) async {
+    await build(tester);
+    await pump(tester, at: AppRouter.siteEdit);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byType(SiteEditorScreen), findsNothing);
+    expect(find.byKey(const Key('unsaved.discard')), findsNothing);
+  });
 
   testWidgets('the active site is marked, and tapping another selects it', (
     tester,

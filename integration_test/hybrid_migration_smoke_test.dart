@@ -248,6 +248,53 @@ void main() {
         await _settle(tester);
       }
 
+      Future<void> captureAppearance(String suffix) async {
+        await at(AppRouter.settings);
+        await tap(find.byKey(const Key('settings.open.appearance')));
+        await shot('settings-appearance-$suffix');
+        final choice = find.byKey(const Key('settings.appearance'));
+        expect(
+          tester.getSize(choice).width,
+          closeTo(MediaQuery.sizeOf(tester.element(choice)).width - 32, 1),
+        );
+        await tester.pageBack();
+        await _settle(tester);
+      }
+
+      // Bounded re-verification after a Settings-only control correction.
+      // The full flow below remains the default native acceptance run.
+      if (const bool.fromEnvironment('CULMINA_SETTINGS_ONLY')) {
+        for (final (appearance, field) in [
+          (Appearance.light, false),
+          (Appearance.dark, false),
+          (Appearance.dark, true),
+        ]) {
+          await tester.runAsync(() async {
+            if (vm.theme.isFieldMode != field) await vm.theme.toggleFieldMode();
+            await vm.vms.displaySettings.setAppearance(appearance);
+          });
+          for (final scale in [1.0, 2.0]) {
+            tester.platformDispatcher.textScaleFactorTestValue = scale;
+            await captureAppearance(
+              '${field ? 'field' : appearance.name}_${(scale * 100).round()}',
+            );
+          }
+        }
+        binding.reportData ??= <String, dynamic>{};
+        binding.reportData!['evidence'] = {
+          'type': 'Scoped Android emulator Settings control verification',
+          'checks': [
+            'Appearance uses full column width in all three themes at '
+                '100 and 200 percent text',
+            'No widget exceptions during navigation',
+          ],
+          'limits':
+              'Controlled theme/text values and fixtures; no real IME or '
+              'physical-device claim',
+        };
+        return;
+      }
+
       // Exercise the visible Save action, then read the actual repository.
       await at(AppRouter.session());
       final originalCount = vm.plan.captureBlocks.first.frameCount;
@@ -257,6 +304,15 @@ void main() {
       await reveal(countField);
       await tester.enterText(countField, '${originalCount + 1}');
       await _settle(tester);
+      await tap(find.byKey(const Key('fieldMode.toggle')));
+      expect(vm.theme.isFieldMode, isTrue);
+      expect(
+        tester.widget<TextFormField>(countField).controller!.text,
+        '${originalCount + 1}',
+      );
+      await shot('block-editor-field-draft');
+      await tap(find.byKey(const Key('fieldMode.toggle')));
+      expect(vm.theme.isFieldMode, isFalse);
       await shot('block-editor-keyboard-light_100');
       // The platform's Back (the route-pop message Android sends) on the
       // dirty editor asks first; Cancel keeps the editor and its edit.
@@ -406,6 +462,7 @@ void main() {
               await at(route);
               await shot('$name-$suffix');
             }
+            await captureAppearance(suffix);
           }
         }
       }
@@ -544,6 +601,19 @@ void main() {
       await tester.enterText(notes, 'Native migration test result');
       await _settle(tester);
       await shot('result-editor-keyboard-light_100');
+      await tester.binding.handlePopRoute();
+      await _settle(tester);
+      expect(find.text('Discard result changes?'), findsOneWidget);
+      await shot('result-discard-guard-light_100');
+      await tap(find.byKey(const Key('confirm.cancel')));
+      expect(
+        tester.widget<TextFormField>(notes).controller!.text,
+        'Native migration test result',
+      );
+      expect(
+        tester.widget<TextFormField>(resultCount).controller!.text,
+        '$reportedCount',
+      );
       await tap(find.byKey(const Key('results.save')));
       final recorded = await tester.runAsync(() => sessions.get(savedId));
       expect(recorded!.status, SessionStatus.completed);
@@ -560,6 +630,8 @@ void main() {
       await at(AppRouter.sessionDetail(savedId));
       await shot('recorded-result-light_100');
       await at(AppRouter.logbookProgress);
+      expect(find.byType(NavigationBar), findsNothing);
+      expect(find.byKey(const Key('fieldMode.toggle')), findsOneWidget);
       expect(find.byKey(Key('progress.${saved.targetId}')), findsOneWidget);
       await shot('recorded-progress-light_100');
 

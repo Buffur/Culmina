@@ -125,9 +125,17 @@ class _Title extends StatelessWidget {
                     key: const Key('tonight.welcome'),
                     onPressed: () => context.push(AppRouter.welcome),
                     icon: const Icon(Icons.nights_stay_outlined, size: 20),
-                    label: const Column(
+                    label: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text('culmina'), Text('Welcome & setup')],
+                      children: [
+                        Text('culmina', style: AppTypography.homeWordmark),
+                        Text(
+                          'Welcome & setup',
+                          style: AppTypography.homeWelcome.copyWith(
+                            color: AppPalette.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -292,7 +300,7 @@ class _PlanCard extends StatelessWidget {
                       child: Text(
                         AppWords.yourPlan,
                         key: const Key('tonight.planHeading'),
-                        style: theme.textTheme.titleMedium?.copyWith(
+                        style: AppTypography.homePlanHeading.copyWith(
                           color: palette.textPrimary,
                         ),
                       ),
@@ -304,20 +312,20 @@ class _PlanCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
                 Text(
                   target == null
                       ? 'No target chosen'
                       : target.commonName ?? target.catalogId,
                   key: const Key('tonight.planTarget'),
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w400,
+                  style: AppTypography.homeTarget.copyWith(
                     color: target == null
                         ? palette.textSecondary
                         : palette.textPrimary,
                   ),
                 ),
-                if (rig != null)
+                if (rig != null) ...[
+                  const SizedBox(height: AppSpacing.xs),
                   Text(
                     // Hybrid's rig line: the catalogue ID, then the rig
                     // (RD-04, S6.8: an example rig says so).
@@ -329,10 +337,12 @@ class _PlanCard extends StatelessWidget {
                       ExampleText.rigName(rig),
                     ].join(' · '),
                     key: const Key('tonight.planRig'),
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    style: AppTypography.support.copyWith(
+                      height: 1.55,
                       color: palette.textTertiary,
                     ),
                   ),
+                ],
                 const SizedBox(height: AppSpacing.md),
                 StatusBlock(
                   key: const Key('tonight.status'),
@@ -561,7 +571,9 @@ class _NightCard extends StatelessWidget {
             header: true,
             child: Text(
               'The night ahead',
-              style: theme.textTheme.headlineSmall,
+              style: AppTypography.nightHeading.copyWith(
+                color: AppPalette.of(context).textPrimary,
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -669,7 +681,7 @@ class _Row extends StatelessWidget {
                           l,
                           style: i == 0
                               ? theme.textTheme.bodyMedium?.copyWith(
-                                  fontSize: 15,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   fontFeatures: const [
                                     FontFeature.tabularFigures(),
