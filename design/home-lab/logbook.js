@@ -698,6 +698,7 @@ export function mountLogbook(root, api) {
   function rowView(x) {
     const state = stateOf(x), action = resultAction(x), due = action === 'record' && !x.result;
     const id = esc(x.id);
+    const statusMarkup=hybrid?`<span class="logbook-status-badge" data-status="${state}">${mark(state)}<span>${STATE_WORDS[state]}</span></span>${due?`<span class="logbook-due logbook-status-badge" data-status="due">${mark('due')}<span>Not recorded</span></span>`:''}`:`${mark(state)}<span>${STATE_WORDS[state]}</span>${due?`<span class="logbook-due">${mark('due')}<span>Not recorded</span></span>`:''}`;
     // Owner sketches 2026-10-21: the state is the entry's right column, as far right as it goes, every
     // mark on one vertical line (the hidden sizer makes the column as wide as the widest state); no
     // row action buttons: the entry opens its detail, where Record/Edit result is the primary action.
@@ -705,7 +706,7 @@ export function mountLogbook(root, api) {
       <button type="button" class="workspace-row logbook-row" data-open-entry="${id}">
         <span class="logbook-row-text">
           <span class="logbook-row-title">${esc(titleOf(x))}</span>
-          <span class="logbook-state">${mark(state)}<span>${STATE_WORDS[state]}</span>${due ? `<span class="logbook-due">${mark('due')}<span>Not recorded</span></span>` : ''}<span class="logbook-state-sizer" aria-hidden="true">Not recorded</span></span>
+          <span class="logbook-state" data-record-state="${state}">${statusMarkup}<span class="logbook-state-sizer" aria-hidden="true">Not recorded</span></span>
           <span class="workspace-copy">${esc(x.plan.rig.name)} · ${esc(x.plan.site.name)}</span>
           <span class="logbook-integration">${esc(integrationLine(x))}</span>
           ${action === 'none' ? `<span class="logbook-caption">${esc(resultWhen(x))}</span>` : ''}
@@ -742,8 +743,8 @@ export function mountLogbook(root, api) {
       ['Processing notes', x.result?.processingNotes],
     ].filter(([, v]) => v);
     return `<section class="logbook-result" aria-labelledby="logbook-result">
-        <div class="logbook-result-head"><h2 id="logbook-result" tabindex="-1" data-focus-start class="logbook-state logbook-state-large">${mark(state)}<span>${esc(resultPhrase(x))}</span></h2>
-        ${due ? `<p class="logbook-due">${mark('due')}Not recorded</p>` : ''}</div>
+        <div class="logbook-result-head"><h2 id="logbook-result" tabindex="-1" data-focus-start class="logbook-state logbook-state-large" data-record-state="${state}">${hybrid?`<span class="logbook-status-badge" data-status="${state}">${mark(state)}<span>${esc(resultPhrase(x))}</span></span>`:`${mark(state)}<span>${esc(resultPhrase(x))}</span>`}</h2>
+        ${due ? `<p class="logbook-due${hybrid?' logbook-status-badge':''}" ${hybrid?'data-status="due"':''}>${mark('due')}<span>Not recorded</span></p>` : ''}</div>
         <p class="logbook-figure">${esc(integrationLine(x))}</p>
         ${action === 'none' ? `<p class="workspace-copy" id="logbook-record-when">${esc(resultWhen(x))}</p>` : ''}
         ${x.result?.local && x.result.recordedAtUtc ? `<p class="logbook-caption">Result saved in this browser preview, ${esc(instantLabel(x.result.recordedAtUtc, p.zone))}.</p>` : ''}

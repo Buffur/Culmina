@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "path": "night-ui.js",
+      "sha256": "ceb78785a2349b38031abd9adaff07355b62c46dae021e31ea4543bbb3cce3ea"
+    },
+    {
+      "path": "night.css",
+      "sha256": "a6f36cc4b9a69edeeaea954cce87198a6620e381f00b106e1dfc36aea6d0418d"
+    },
+    {
+      "path": "hybrid-refinement.css",
+      "sha256": "6f1d0c9b58af64650f8af48d94192125602075e366ce0506448165cc86a3a32b"
+    }
+  ]
+}

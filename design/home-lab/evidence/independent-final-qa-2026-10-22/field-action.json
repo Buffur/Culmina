@@ -1,0 +1,20 @@
+{
+  "text": "Apply changes",
+  "fg": "rgb(0, 0, 0)",
+  "bg": "rgb(170, 0, 0)",
+  "opacity": "1",
+  "font": "16px",
+  "weight": "600",
+  "hover": false,
+  "disabled": false,
+  "rect": {
+    "x": 433.5,
+    "y": 981.671875,
+    "width": 333,
+    "height": 48,
+    "top": 981.671875,
+    "right": 766.5,
+    "bottom": 1029.671875,
+    "left": 433.5
+  }
+}

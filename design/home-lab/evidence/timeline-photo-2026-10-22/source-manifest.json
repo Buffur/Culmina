@@ -1,0 +1,133 @@
+{
+  "status": "Current photo follow-up candidate; supersedes the earlier neutral timeline default.",
+  "files": [
+    {
+      "path": "app.js",
+      "sha256": "22c30fa48aaec7e6f347136bd40f0f05769d2600e7d9ffd6c02b573003eeab66"
+    },
+    {
+      "path": "catalog.css",
+      "sha256": "2d5ca041c8905b507b721e3a2e7f2316b5b48cf47593ed6918b9d8f851b4189c"
+    },
+    {
+      "path": "catalog.js",
+      "sha256": "4f1b67416b77c139d44849f8e29b35befcef2e8478ac8c3aebcfbcfd10e98528"
+    },
+    {
+      "path": "conditions.css",
+      "sha256": "625188a4c335826a2b68857bffb13a7bd04ad936d08ea543c8a6bfb528c49ba3"
+    },
+    {
+      "path": "conditions.html",
+      "sha256": "dcd22e97739ed725d180cc998a3167e1dc5a8f45dec1a78d24d5a68d3f46d726"
+    },
+    {
+      "path": "conditions.js",
+      "sha256": "ac83f665e77423e93b8ca55edb807b77e39d720882e3ce34400eab8a966e7113"
+    },
+    {
+      "path": "hybrid-refinement.css",
+      "sha256": "7bbcd7f3f5bc4a429997d244d6a60a11d391a473a2feedf4c8a0e70cbfbcb222"
+    },
+    {
+      "path": "hybrid-ui.js",
+      "sha256": "64f027c0fc713cf2fb3e0a1e853060af865fb6bb54ec8add1a53bac2542bf99b"
+    },
+    {
+      "path": "index.html",
+      "sha256": "698e3d6502eb5229a914dcb415cdc3ff29571bba11103dd6c7f2e5575ff23676"
+    },
+    {
+      "path": "inventory.json",
+      "sha256": "2f2f476e71fc7a26602a75d9e86f4c7fc8d19d993631b62c8f868ee88b8ddf29"
+    },
+    {
+      "path": "library.css",
+      "sha256": "bbd9d57faae598195dac9b68322d62cb836ffa34cf9bda73638af1554abe453e"
+    },
+    {
+      "path": "library.js",
+      "sha256": "468f09fbcd903e86a6a8dadf6a87db6fe05b473b9aa24d49ce173f2731ccf690"
+    },
+    {
+      "path": "logbook.css",
+      "sha256": "b56214ce7658e945df513d108aef30dae31a2056c0eea5b90347b90688de1792"
+    },
+    {
+      "path": "logbook.js",
+      "sha256": "6a1e4f182a11652c6dd4187a1de4ee364445c61443f1c86d1dab8c8c45ade730"
+    },
+    {
+      "path": "night-model.js",
+      "sha256": "2eecf92b0f9d1171a2e0e98a6c64b2a8a3d626d1708a7cdeaacd5f0dc54ed4ab"
+    },
+    {
+      "path": "night-ui.js",
+      "sha256": "23d82d529291b82c8a61a8a20ac365078d215e914ec449cc1d5a2cfed9a7d008"
+    },
+    {
+      "path": "night.css",
+      "sha256": "c9b693e831f544303d035b83b867c0fb122f5c9e343aa66602c34202af6ecc2b"
+    },
+    {
+      "path": "plan-model.js",
+      "sha256": "8d67aa43a7650fd84d19b663badc70bc4d92f53ffcd6b725e03c7f33e8bc5833"
+    },
+    {
+      "path": "plan.css",
+      "sha256": "f386f154f45cc77ea48ec577e1eeb17b06e635e415ca580647c6e3dbcbf57fa9"
+    },
+    {
+      "path": "plan.html",
+      "sha256": "ddcc18d101ec1f346541d6fa13810a9e1c9f0d87bdcf8f5577b1e8fa2d99e3e5"
+    },
+    {
+      "path": "plan.js",
+      "sha256": "5eeb80176fb9b53c3070d4f70c33a7627d89126fb916aea723f3c0c93350911f"
+    },
+    {
+      "path": "preview-backup.css",
+      "sha256": "eb8e8c65814e26678c9693c301373cb5bb88363b4d20412245bf0fd6c4b38d3c"
+    },
+    {
+      "path": "preview-backup.js",
+      "sha256": "5909a3dd2238a7858986f945e1cbedf7050c16ac761cdaf4f039ff1b42b9a3b2"
+    },
+    {
+      "path": "preview-bridge.js",
+      "sha256": "22ea3085144aa0dc4495ea1a6053082b30771f7649362f9a9b188da06c60f3e8"
+    },
+    {
+      "path": "references.json",
+      "sha256": "9e3b2894e42b6dcf381cc6ed67a7523e3b613f5941e41c24fd4bcebbdba3d055"
+    },
+    {
+      "path": "settings.css",
+      "sha256": "4359f7054e382fd553b160bfa7c20b4f26cfdabd39afdaca0691c47d859726cf"
+    },
+    {
+      "path": "settings.js",
+      "sha256": "286ab96c16b8a829f1b552cff9bdecc8bba242784e433292401a69b77ddf02ae"
+    },
+    {
+      "path": "styles.css",
+      "sha256": "343ab8cacbf4ca71e98de24d797d49de39240ea312134a883c7781edf59200c7"
+    },
+    {
+      "path": "tokens.json",
+      "sha256": "2ac5636550a361759b5413a2f235d73bc29caef33665eddd90b91e203cb87376"
+    },
+    {
+      "path": "workspace.css",
+      "sha256": "fd83bf0ae30e9ed4bd08518a45cca7a745a883a823a89893affd0ee6b55645f3"
+    },
+    {
+      "path": "workspace.html",
+      "sha256": "a090fdd51df1832c9bf81fdc26415423156b763869c6448d92b3126b1a5836dc"
+    },
+    {
+      "path": "workspace.js",
+      "sha256": "ec37e4389030fdadd87a0057c65684f7c7e86e7b0e2986569934b84a8cedba05"
+    }
+  ]
+}

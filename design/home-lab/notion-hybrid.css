@@ -1,0 +1,61 @@
+/* Owner-selected Notion accent treatment for the main Hybrid web reference.
+   Existing light/dark surfaces, ordinary text/actions and all scientific data stay intact. */
+:is(html[data-variant="blend"] .android-device,.concept.variant-blend){
+  --notion-accent:#0075de;--notion-hour-bg:#e6f3fe;--notion-hour-text:#005bab;
+  --notion-success:#27633d;--notion-success-wash:#e4eee7;
+  --notion-caution:#754600;--notion-caution-wash:#f4ecdf;
+  --notion-error:#b00020;--notion-error-wash:#f7e7e9;
+  --data-temperature:var(--notion-accent);--data-moisture:var(--notion-accent);--data-wind:var(--notion-accent);
+  --data-cloud:var(--text-secondary);--data-moon:var(--text-primary);
+  --data-success:var(--notion-success);--data-caution:var(--notion-caution);--data-error:var(--notion-error);
+  --data-unknown:var(--text-secondary);--data-no-data:var(--text-secondary);--data-stale:var(--notion-caution);
+  --data-plan-gain-start:var(--notion-accent);--data-plan-gain-end:#005bab;
+  --sky-day:#e6f3fe;--sky-civil:#a6d2f3;--sky-nautical:#599fd5;--sky-astro:#285b90;--sky-dark:#000000;
+}
+html[data-theme="dark"][data-variant="blend"] .android-device,html[data-theme="dark"] .concept.variant-blend{
+  --data-temperature:var(--notion-accent);--data-moisture:var(--notion-accent);--data-wind:var(--notion-accent);
+  --data-cloud:var(--text-secondary);--data-moon:var(--text-primary);
+  --data-success:var(--notion-success);--data-caution:var(--notion-caution);--data-error:var(--notion-error);
+  --data-unknown:var(--text-secondary);--data-no-data:var(--text-secondary);--data-stale:var(--notion-caution);
+  --notion-accent:#62aff3;--notion-hour-bg:#152d40;--notion-hour-text:#a6d2f3;
+  --notion-success:#99c5a6;--notion-success-wash:#2b352e;
+  --notion-caution:#ffca70;--notion-caution-wash:#3b3222;
+  --notion-error:#ff9592;--notion-error-wash:#3c2929;
+  --data-plan-gain-end:#a6d2f3;
+  --sky-day:#a6d2f3;--sky-civil:#78b5e5;--sky-nautical:#4388bd;--sky-astro:#244f7a;
+}
+:is(html[data-variant="blend"] .android-device,.concept.variant-blend) :is(.saved-label,.plan-state)[data-persistence]{
+  display:inline-flex;align-items:center;gap:4px;max-width:100%;padding:3px 6px;border-radius:4px;
+  color:var(--notion-success);background:var(--notion-success-wash);
+}
+:is(html[data-variant="blend"] .android-device,.concept.variant-blend) :is(.saved-label,.plan-state)[data-persistence="pending"]{
+  color:var(--notion-caution);background:var(--notion-caution-wash);
+}
+html[data-variant="blend"] .android-device :is(.field-error,.save-error){color:var(--notion-error)}
+html[data-variant="blend"] .settings-view .settings-group:last-child>.workspace-row:last-child{border-bottom:0}
+html[data-variant="blend"] .android-device .logbook-entry .logbook-state{grid-template-columns:auto;justify-items:start;gap:4px;color:var(--text-primary);background:transparent}
+html[data-variant="blend"] .android-device .logbook-status-badge{display:inline-flex;align-items:center;justify-self:start;gap:4px;width:max-content;max-width:100%;padding:3px 6px;border-radius:4px;background:var(--selection);color:var(--text-primary);line-height:1.4}
+html[data-variant="blend"] .android-device .logbook-status-badge:is([data-status="saved"],[data-status="completed"]){color:var(--notion-success);background:var(--notion-success-wash)}
+html[data-variant="blend"] .android-device .logbook-status-badge:is([data-status="partly"],[data-status="due"]){color:var(--notion-caution);background:var(--notion-caution-wash)}
+html[data-variant="blend"] .android-device .logbook-entry .logbook-state-sizer{grid-column:1;width:max-content;padding-inline:6px;line-height:0}
+html[data-variant="blend"] .android-device .logbook-entry .logbook-state-sizer::before{content:'';display:inline-block;width:20px}
+html[data-variant="blend"] .android-device .wx-time-axis button[aria-pressed="true"]{
+  color:var(--notion-hour-text);background:var(--notion-hour-bg);border-bottom-color:var(--notion-accent);
+}
+html[data-variant="blend"] .android-device .wx-secondary-line{stroke:var(--text-secondary)}
+html[data-variant="blend"] .android-device circle.wx-secondary-line{fill:var(--surface-default)}
+html[data-variant="blend"] .android-device .wx-hour-slider input{accent-color:var(--notion-accent)}
+.concept.variant-blend .condition-row[data-action="weather"]>.culmina-data-icon{color:var(--notion-accent)}
+html[data-variant="blend"] .android-device .night-row[href*="view=weather"] .culmina-data-icon{color:var(--notion-accent)}
+/* Explicitly preserve Field's red/black contract, including selected-hour fills. */
+html[data-theme="field"][data-variant="blend"] .android-device,html[data-theme="field"] .concept.variant-blend{
+  --data-temperature:var(--text-primary);--data-moisture:var(--text-primary);--data-wind:var(--text-primary);
+  --data-cloud:var(--text-secondary);--data-moon:var(--text-primary);
+  --data-success:var(--text-primary);--data-caution:var(--text-primary);--data-error:var(--text-primary);
+  --notion-accent:var(--text-primary);--notion-hour-bg:var(--selection);--notion-hour-text:var(--text-primary);
+  --notion-success:var(--text-primary);--notion-success-wash:#110000;
+  --notion-caution:var(--text-primary);--notion-caution-wash:#1a0000;
+  --notion-error:var(--text-primary);--notion-error-wash:#1a0000;
+  --data-plan-gain-start:#990000;--data-plan-gain-end:#ff0000;
+  --sky-day:#800000;--sky-civil:#650000;--sky-nautical:#4d0000;--sky-astro:#340000;--sky-dark:#000000;
+}

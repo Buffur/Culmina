@@ -1,0 +1,37 @@
+{
+  "title": "QA · Українська Її Єє Ґґ · 135 mm × 60 s −18°",
+  "computed": {
+    "family": "Geist, sans-serif",
+    "size": "22px",
+    "weight": "500",
+    "line": "27.5px"
+  },
+  "rendered": {
+    "fonts": [
+      {
+        "familyName": "Geist",
+        "postScriptName": "Geist-Medium",
+        "isCustomFont": true,
+        "glyphCount": 43
+      }
+    ]
+  },
+  "loaded": [
+    {
+      "family": "Inter",
+      "weight": "400 700"
+    },
+    {
+      "family": "Roboto",
+      "weight": "400 700"
+    },
+    {
+      "family": "Geist",
+      "weight": "400 700"
+    },
+    {
+      "family": "Geist",
+      "weight": "400 700"
+    }
+  ]
+}

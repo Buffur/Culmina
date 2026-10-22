@@ -3,7 +3,19 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {searchTargets,targetSample,catalogObjectCount,newBlock,defaultPlan,whiteBalanceEditErrors,whiteBalanceText,planRelativeCurve,blockSteps,relativeGroups} from '../plan-model.js';
 import {fixtureNight,weatherForNight,weatherSlots,localInstant} from '../night-model.js';
-import {weatherDigest,weatherFreshnessLabel,weatherWidgetSummary,dayTag,skyGradient,moonFreeSummary} from '../night-ui.js';
+import {weatherDigest,weatherFreshnessLabel,weatherWidgetSummary,dayTag,skyGradient,moonFreeSummary,timeline,jumpCursor} from '../night-ui.js';
+
+test('named night shortcuts distinguish an absent dark interval from a clipped window',()=>{
+  const empty=fixtureNight('2026-10-19','no-dark');
+  const emptyHtml=timeline(empty,empty.start,'test',true,true);
+  assert.match(emptyHtml,/Timeline start/);assert.match(emptyHtml,/Timeline end/);
+  assert.doesNotMatch(emptyHtml,/Dark starts|Dark ends/);
+  const polar=fixtureNight('2026-10-19','polar-dark');
+  const polarHtml=timeline(polar,polar.start,'test',true,true);
+  assert.match(polarHtml,/Window start/);assert.match(polarHtml,/Window end/);
+  assert.match(polarHtml,/13:00 \(\+1\)/);assert.match(polarHtml,/available five-minute grid/);
+  assert.equal(jumpCursor(polar,'end').instant,polar.end-300000);
+});
 
 test('search normalizes actual catalogue aliases and retains exact-match priority',()=>{
   for(const q of ['M031','Messier 31','NGC-00224','andromeda'])assert.equal(searchTargets(q)[0]?.id,'M31');

@@ -95,6 +95,10 @@ html[data-variant="blend"] .conditions-page .android-device :is([data-retry-weat
 .concept.variant-blend .app-context{padding-bottom:0;margin-bottom:0}
 .concept.variant-blend .home-body>section:first-child{margin-top:16px}
 .concept.variant-blend .home-body>.conditions{margin-bottom:0}
+/* Major Home groups must remain separate even in the studio's desktop-wide mode.
+   Its old grid rule reset the section margin to zero despite the phone layout. */
+.concept.variant-blend .home-body[data-order]>.plan-section+.conditions,
+.concept.variant-blend .home-body[data-order]>.conditions+.plan-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--border-control)}
 .concept.variant-blend .conditions>.home-section-title{margin-top:0;margin-bottom:4px}
 .concept.variant-blend .home-actions>.due-result>svg:first-child{display:none}
 .concept.variant-blend .conditions>.condition-row:last-child{padding-bottom:0}
@@ -127,9 +131,10 @@ html[data-variant="blend"] .photo-metadata[open]>summary::after{transform:rotate
 .concept.variant-blend .conditions>.condition-row>svg:first-child{grid-column:1;grid-row:1;margin:0;width:20px;height:20px;color:var(--text-primary)}
 .concept.variant-blend .conditions>.condition-row>.condition-text{display:contents}
 .concept.variant-blend .conditions>.condition-row .condition-label{grid-column:2;grid-row:1;font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary);line-height:1.4}
-.concept.variant-blend .conditions>.condition-row .condition-value{grid-column:2;grid-row:2;font-size:calc(15px * var(--text-scale));font-weight:400;margin:0}
-.concept.variant-blend .conditions>.condition-row .condition-extra{grid-column:2;grid-row:3;font-size:calc(13px * var(--text-scale));color:var(--text-secondary)}
+.concept.variant-blend .conditions>.condition-row .condition-value{grid-column:1 / 3;grid-row:2;font-size:calc(15px * var(--text-scale));font-weight:400;margin:0}
+.concept.variant-blend .conditions>.condition-row .condition-extra{grid-column:1 / 3;grid-row:3;font-size:calc(13px * var(--text-scale));color:var(--text-secondary)}
 .concept.variant-blend .conditions>.condition-row>.chevron{grid-column:3;grid-row:1 / span 3;margin:0;align-self:center}
+.concept.variant-blend :is(.conditions>.condition-row>.chevron,.home-actions>button>svg:last-child,.home-setup>svg){width:18px;height:18px;flex:none;stroke-width:1.7}
 .concept.variant-blend .conditions>.condition-row>.condition-text>.night-slider,.concept.variant-blend .conditions>.condition-row~.night-slider{grid-column:1 / -1}
 .concept.variant-blend .home-actions>.due-result+.candidate-button{border-top:0}
 .concept.variant-blend .home-actions>:is(.due-result,.candidate-button){min-height:48px;padding:8px 0}
@@ -138,8 +143,8 @@ html[data-variant="blend"] .photo-metadata[open]>summary::after{transform:rotate
    its block titles; Edit wider, the other block controls to the right. */
 html[data-variant="blend"] .plan-page :is(.capture-heading h2,.estimate-section h2){font-size:calc(20px * var(--text-scale));font-weight:600}
 html[data-variant="blend"] :is(.plan-page,.conditions-page) .plan-disclosure>summary{font-size:calc(20px * var(--text-scale))}
-html[data-variant="blend"] .plan-page .plan-row-label{font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary)}
-html[data-variant="blend"] .plan-page .plan-row-value{font-size:calc(15px * var(--text-scale));font-weight:400}
+html[data-variant="blend"] .plan-page .android-device .plan-row-label{font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary)}
+html[data-variant="blend"] .plan-page .android-device .plan-row-value{font-size:calc(15px * var(--text-scale));font-weight:400}
 html[data-variant="blend"] .plan-page .capture-block h3{font-size:calc(16px * var(--text-scale));font-weight:600}
 html[data-variant="blend"] .plan-page .block-math{font-size:calc(15px * var(--text-scale));font-weight:500}
 html[data-variant="blend"] .plan-page .block-actions{gap:8px}
@@ -177,9 +182,44 @@ html[data-variant="blend"] .gain-panel{margin:12px 0}
 html[data-variant="blend"] .gain-axis-title{margin:4px 0}
 html[data-variant="blend"] .gain-plot-scroll .gain-graph,html[data-variant="blend"] .plan-page svg.gain-graph{margin:0}
 html[data-variant="blend"] .gain-legend{margin:8px 0}
-html[data-variant="blend"] .plan-page .night-row-label{font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary)}
-html[data-variant="blend"] .plan-page .night-row-value{font-size:calc(15px * var(--text-scale));font-weight:400}
+html[data-variant="blend"] .plan-page .android-device .night-row-label{font-size:calc(16px * var(--text-scale));font-weight:600;color:var(--text-primary)}
+html[data-variant="blend"] .plan-page .android-device .night-row-value{font-size:calc(15px * var(--text-scale));font-weight:400}
 html[data-variant="blend"] .android-device .plan-page .capture-actions>.secondary-button,html[data-variant="blend"] .plan-page .android-device .capture-actions>.secondary-button{align-self:stretch}
 /* Night & Moon / Weather: fact values on the primary-value role, sub-headings on the item-title role. */
 html[data-variant="blend"] .conditions-page .android-device :is(dd,.range-value,.time-phrase):not(.big-value){font-size:calc(15px * var(--text-scale));font-weight:400}
 html[data-variant="blend"] .conditions-page .android-device :is(h3,.moon-facts dt){font-size:calc(16px * var(--text-scale));font-weight:600}
+
+/* Wrap the answer when its actual content no longer fits, including 125% text and No dark time. */
+html[data-variant="blend"] .conditions-page .moon-answer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:0 12px}
+html[data-variant="blend"] .conditions-page .moon-answer>h2{flex:0 1 auto;max-width:100%;min-width:0}
+html[data-variant="blend"] .conditions-page .moon-answer>:not(h2):not(.moon-answer-value),
+html[data-variant="blend"] .conditions-page .moon-answer>.moon-answer-value>:not(.big-value){flex:0 0 100%;min-width:0}
+html[data-variant="blend"] .conditions-page .moon-answer>.moon-answer-value>.big-value{flex:0 0 auto;max-width:100%;margin:0}
+
+/* Large-text focus choices retain complete words and equal, full-width tap areas. */
+:root[data-text-scale="2"][data-variant="blend"] .plan-page .segmented:has(input[name="focus"]) .choice{flex-basis:100%;justify-content:flex-start}
+:root[data-text-scale="2"][data-variant="blend"] .plan-page .segmented:has(input[name="focus"]) .choice-text{overflow-wrap:normal;word-break:normal}
+html[data-variant="blend"] .conditions-page .calendar-hours{font-size:calc(12px * var(--text-scale))}
+
+/* Owner photo: the selected night is Home's heading; setup stays reachable below next actions. */
+.concept.variant-blend .home-status{margin:0 0 16px;font:500 12px/1 Roboto,sans-serif;color:var(--text-primary)}
+.concept.variant-blend .home-title-row{display:flex;align-items:center;gap:12px;min-width:0}
+.concept.variant-blend .home-title-row .home-title{flex:1;min-width:0;margin:0;overflow-wrap:normal}
+.concept.variant-blend .home-title-row .icon-button{flex:0 0 48px;min-height:48px}
+
+/* Seven weekdays still fit at 375px, with a 48px minimum target and no reduced type. */
+html[data-variant="blend"] .conditions-page .calendar-grid{column-gap:0;grid-template-columns:repeat(7,minmax(48px,1fr));overflow-x:auto}
+html[data-variant="blend"] .conditions-page .calendar-grid button{justify-content:flex-start}
+
+/* Native inputs keep their semantics and keyboard behavior; field glyphs use red/black only. */
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input:is([type="radio"],[type="checkbox"]){appearance:none;color:var(--text-primary);background:var(--surface-default);border:2px solid currentColor;box-shadow:none;padding:0;display:inline-grid;place-content:center;flex:none;vertical-align:middle}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="radio"]{border-radius:50%}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="radio"]:checked{background:radial-gradient(circle,currentColor 0 42%,var(--surface-default) 47%)}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]{border-radius:3px}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]:checked:before{content:"";width:10px;height:10px;background:currentColor;clip-path:polygon(14% 42%,0 56%,40% 96%,100% 20%,84% 6%,38% 67%)}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]:indeterminate:before{content:"";width:10px;height:2px;background:currentColor}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input:is([type="radio"],[type="checkbox"]):focus-visible{outline:2px solid currentColor;outline-offset:3px}
+@media(forced-colors:active){
+  html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input:is([type="radio"],[type="checkbox"]):is(:checked,:not(:checked)){appearance:auto;background:revert;border:revert}
+  html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]:is(:checked,:indeterminate):before{content:none}
+}

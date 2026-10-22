@@ -1,4 +1,5 @@
 import {weatherFreshnessLabel,nightDateLabels} from './night-ui.js?v=20261020-hybrid7';
+import {dataIcon} from './icons.js';
 import {browserStorage,readLibraryChoices,readPlanningPreferences,planningBudget,selectLibraryRecord,libraryKey,settingsKey} from './preview-bridge.js?v=20261020-hybrid7';
 document.documentElement.dataset.sky=['dusk','slate','ink'].includes(new URLSearchParams(location.search).get('sky'))?new URLSearchParams(location.search).get('sky'):'dusk';
 import {targets as bundledTargets,rigs as bundledRigs,rigFor,targetName,defaultPlan,defaultBlock,newBlock,parseExposure,blockProblems,estimate,duration,assumptionsFor,readSavedPlan,savePlanRecord,saveProblem,readNavigationDraft,writeNavigationDraft,planStorageKey,navigationDraftKey,
@@ -468,17 +469,17 @@ function missingItems(){
 
 function identityStrip(){
   const reason=settingsBudgetReason(),date=nightDateLabels(plan.night);
-  return `<div class="plan-identity"><span>${variant==='blend'?`${date.night} · ${date.ends}`:`Night of ${nightName(plan.night)}`}</span><span class="plan-state" aria-live="polite" ${reason?'aria-describedby="plan-budget-change"':''}>${stateWord()}</span></div>${reason?`<p id="plan-budget-change" class="plan-budget-change">${esc(reason)}</p>`:''}`;
+  return `<div class="plan-identity"><span>${variant==='blend'?`${date.night} · ${date.ends}`:`Night of ${nightName(plan.night)}`}</span><span class="plan-state" data-persistence="${hasSaved&&!dirty()?'saved':'pending'}" aria-live="polite" ${reason?'aria-describedby="plan-budget-change"':''}>${stateWord()}</span></div>${reason?`<p id="plan-budget-change" class="plan-budget-change">${esc(reason)}</p>`:''}`;
 }
 function answerSection(e){
   const missing=missingItems();
   if(missing.length){
     const blocking=missing.some(m=>m.key!=='light');
-    return `<section class="plan-answer" aria-labelledby="answer-title"><h2 id="answer-title">${blocking?'Plan incomplete':'Add light frames to estimate'}</h2><p>${missing.length===1?'One step':`${missing.length} steps`} before a fit answer.${saveProblem(plan)?'':' You can already save this plan.'}</p><ul class="plan-checklist" aria-label="To finish this plan">${missing.map(m=>`<li><button class="checklist-item" data-open="${m.key}"><span class="check-mark" aria-hidden="true"></span><span>${m.label}</span>${icons.chevron}</button></li>`).join('')}</ul></section>`;
+    return `<section class="plan-answer" data-fit="${esc(e.verdict)}" aria-labelledby="answer-title"><h2 id="answer-title">${blocking?'Plan incomplete':'Add light frames to estimate'}</h2><p>${missing.length===1?'One step':`${missing.length} steps`} before a fit answer.${saveProblem(plan)?'':' You can already save this plan.'}</p><ul class="plan-checklist" aria-label="To finish this plan">${missing.map(m=>`<li><button class="checklist-item" data-open="${m.key}"><span class="check-mark" aria-hidden="true"></span><span>${m.label}</span>${icons.chevron}</button></li>`).join('')}</ul></section>`;
   }
   const a=e.assumptions;
-  if(e.verdict==='Needs window')return `<section class="plan-answer" aria-labelledby="answer-title"><h2 id="answer-title">Imaging window unknown</h2><p>${duration(e.needed)} needed in the imaging window. Your Library selection is copied into this plan; this browser example cannot calculate a window for custom coordinates.</p></section>`;
-  if(e.verdict==='No window')return `<section class="plan-answer" aria-labelledby="answer-title"><h2 id="answer-title">No imaging window</h2><p>The example night has no imaging window for this target. Try another night with More › Copy to another night.</p></section>`;
+  if(e.verdict==='Needs window')return `<section class="plan-answer" data-fit="${esc(e.verdict)}" aria-labelledby="answer-title"><h2 id="answer-title">Imaging window unknown</h2><p>${duration(e.needed)} needed in the imaging window. Your Library selection is copied into this plan; this browser example cannot calculate a window for custom coordinates.</p></section>`;
+  if(e.verdict==='No window')return `<section class="plan-answer" data-fit="${esc(e.verdict)}" aria-labelledby="answer-title"><h2 id="answer-title">No imaging window</h2><p>The example night has no imaging window for this target. Try another night with More › Copy to another night.</p></section>`;
   const spare=e.usable-e.needed;
   const reason=e.verdict==='Fits'?`Leaves ${duration(spare)} spare in the window.`:e.verdict==='Tight'?`Leaves ${duration(spare)}, less than the ${duration(a.fitMargin)} fit margin.`:`${duration(-spare)} more than the window. Remove frames or shorten exposures.`;
   let end='';
@@ -487,7 +488,7 @@ function answerSection(e){
     const endLabel=new Intl.DateTimeFormat('en-GB',{timeZone:zone,day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'shortOffset'}).format(finish);
     end=`<p class="answer-end">Example capture end: ${endLabel}${finish>e.windowEnd?' · beyond the window':''}.</p>`;
   }
-  return `<section class="plan-answer" aria-labelledby="answer-title"><h2 id="answer-title">${esc(e.verdict)}</h2><p class="answer-figures">Needed in imaging window: ${duration(e.needed)}<br><span class="answer-usable">${duration(e.usable)} usable</span></p><p>${reason}</p>${end}</section>`;
+  return `<section class="plan-answer" data-fit="${esc(e.verdict)}" aria-labelledby="answer-title"><h2 id="answer-title">${esc(e.verdict)}</h2><p class="answer-figures">Needed in imaging window: ${duration(e.needed)}<br><span class="answer-usable">${duration(e.usable)} usable</span></p><p>${reason}</p>${end}</section>`;
 }
 function contextRows(){
   const rig=rigs[plan.rig],target=plan.targetSnapshot||allTargets().find(t=>t.id===plan.target);
@@ -633,7 +634,7 @@ function conditionsSection(){
   const moonValue=`${night.moonFree.length?`Moon-free ${night.moonFree.map(x=>`${timeLabel(x.start)}–${timeLabel(x.end)}`).join(', ')}`:night.classification} · ${night.phase}, ${night.illumination}%`;
   const cloud=weather.cloudMin!==null?`Cloud ${weather.cloudMin}–${weather.cloudMax}% in the dark`:weather.darkMs?'Cloud unknown':'No dark hours to forecast';
   const weatherExtra=`${weather.status}${weatherFreshnessLabel(weather)&&weatherFreshnessLabel(weather)!==weather.status?' · '+weatherFreshnessLabel(weather):''}${weather.unavailable&&weather.darkMs?' · unknown is not 0%':''} · updated ${hoursLabel(Date.now()-weather.retrievedAt)} ago`;
-  const row=(view,label,value,extra)=>`<a class="night-row" href="${esc(conditionsURL(view))}" data-conditions="${view}"><span class="night-row-text"><span class="night-row-label">${label}</span><span class="night-row-value">${value}</span><span class="night-row-extra">${extra}</span></span>${icons.chevron}</a>`;
+  const row=(view,label,value,extra)=>`<a class="night-row" href="${esc(conditionsURL(view))}" data-conditions="${view}"><span class="night-row-text"><span class="night-row-label">${variant==='blend'?dataIcon(view==='night'?'moon':'cloud'):''}${label}</span><span class="night-row-value">${value}</span><span class="night-row-extra">${extra}</span></span>${icons.chevron}</a>`;
   return `<section class="plan-night" aria-labelledby="plan-night-title"><h2 id="plan-night-title">The night ahead</h2>${row('night','Night & Moon',darkValue,moonValue)}${row('weather','Weather',cloud,weatherExtra)}</section>`;
 }
 function mainView(){

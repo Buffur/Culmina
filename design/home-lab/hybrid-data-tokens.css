@@ -1,0 +1,94 @@
+/* Culmina palette inspired by Notion's restrained use of colour, not official Notion HEX.
+   Browser proposal: Weather, Moon/Night and Plan only. Existing neutral/action tokens stay intact.
+   Values in colour-bearing text/lines are opaque; optional chart area wash is base colour / 10%.
+   Sky categories, event stops and Field red/black ramps remain owned by night.css. */
+:is(html[data-variant="blend"] .android-device,.variant-blend){
+  --data-surface:var(--surface-default);
+  --data-surface-subtle:var(--surface-subtle);
+  --data-text:var(--text-primary);
+  --data-text-support:var(--text-secondary);
+  --data-divider:var(--border-subtle);
+  --data-control-edge:var(--border-control);
+  --data-action:var(--action);
+  --data-on-action:var(--on-action);
+  --data-selected:var(--selection);
+  --data-temperature:#8C4B2E;
+  --data-moisture:#316C88;
+  --data-cloud:#61615D;
+  --data-wind:#316C88;
+  --data-moon:#7561A4;
+  --data-success:#386A4B;
+  --data-caution:#9A5B00;
+  --data-error:var(--error);
+  --data-unknown:#61615D;
+  --data-no-data:var(--data-unknown);
+  --data-stale:var(--data-caution);
+  --data-disabled:#A3A29F;
+  --data-fit-fits:var(--text-primary);
+  --data-fit-tight:var(--data-caution);
+  --data-fit-does-not-fit:var(--data-caution);
+  --data-fit-no-window:var(--data-caution);
+  --data-fit-needs-input:var(--text-secondary);
+  --data-plan-gain-start:var(--data-moisture);
+  --data-plan-gain-end:#2465AD;
+  --data-series-wash:10%;
+}
+html[data-theme="dark"][data-variant="blend"] .android-device,html[data-theme="dark"] .variant-blend{
+  --data-temperature:#DFA388;
+  --data-moisture:#86B9CF;
+  --data-cloud:#B6B6AF;
+  --data-wind:#86B9CF;
+  --data-moon:#BEACDE;
+  --data-success:#99C5A6;
+  --data-caution:#FFB74D;
+  --data-unknown:#B6B6AF;
+  --data-disabled:#6B6B69;
+  --data-plan-gain-end:#7DD3FC;
+}
+/* Preserve the existing dark-adaptation exception. No blue/cyan/purple/green in Field. */
+html[data-theme="field"][data-variant="blend"] .android-device,html[data-theme="field"] .variant-blend{
+  --data-temperature:var(--text-primary);
+  --data-moisture:var(--text-primary);
+  --data-cloud:var(--text-secondary);
+  --data-wind:var(--text-primary);
+  --data-moon:var(--text-primary);
+  --data-success:var(--text-primary);
+  --data-caution:var(--wx-caution,var(--text-primary));
+  --data-unknown:var(--text-secondary);
+  --data-disabled:#660000;
+  --data-plan-gain-start:#990000;
+  --data-plan-gain-end:#FF0000;
+}
+
+:is(html[data-variant="blend"] .android-device,.variant-blend) .culmina-data-icon{
+  display:inline-block;width:20px;height:20px;flex:none;vertical-align:-.2em;
+  fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+/* Do not let an existing generic SVG size/paint override the selected local data family. */
+:is(html[data-variant="blend"] .android-device,.variant-blend) .culmina-data-icon>*{vector-effect:non-scaling-stroke}
+
+/* Existing real-screen adopters; temperature and Moon colours identify the quantity, not quality. */
+html[data-variant="blend"] .conditions-page .android-device :is(.temp-line,.solid-key){stroke:var(--data-temperature);border-color:var(--data-temperature)}
+html[data-variant="blend"] .conditions-page .android-device :is(.dew-line,.dashed-key){stroke:var(--data-moisture);border-color:var(--data-moisture)}
+html[data-variant="blend"] .conditions-page .android-device .cloud-column i:not(.gap-mark):not(.outside-mark){background:var(--data-cloud)}
+html[data-variant="blend"] .conditions-page .android-device :is(.moon-answer-value>.big-value,.moon-facts dd){color:var(--data-moon)}
+html[data-variant="blend"] .plan-page .android-device .night-row-label:has(>.culmina-data-icon){display:inline-flex;align-items:center;gap:10px}
+html[data-variant="blend"] .plan-page .android-device .night-row[href*="view=night"] .night-row-label>.culmina-data-icon{color:var(--data-moon)}
+html[data-variant="blend"] .plan-page .android-device .night-row[href*="view=weather"] .night-row-label>.culmina-data-icon{color:var(--data-cloud)}
+html[data-variant="blend"] .plan-page .android-device{--gain-from:var(--data-plan-gain-start);--gain-to:var(--data-plan-gain-end)}
+
+/* Verdicts reuse existing fit meanings; success does not become an astronomical score. */
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-fit="Fits"] #answer-title{color:var(--data-fit-fits)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-fit="Tight"] #answer-title{color:var(--data-fit-tight)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) :is([data-fit="Doesn’t fit"],[data-fit="Doesn't fit"]) #answer-title{color:var(--data-fit-does-not-fit)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-fit="No window"] #answer-title{color:var(--data-fit-no-window)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-fit="Needs window"] #answer-title{color:var(--data-fit-needs-input)}
+
+/* Explicit study/component hooks; words remain mandatory in every state example. */
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="success"]{color:var(--data-success)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="warning"]{color:var(--data-caution)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="error"]{color:var(--data-error)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="unknown"]{color:var(--data-unknown)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="no-data"]{color:var(--data-no-data)}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="stale"]{color:var(--data-stale);text-decoration-line:underline;text-decoration-style:dashed;text-underline-offset:4px}
+:is(html[data-variant="blend"] .android-device,.variant-blend) [data-semantic="disabled"]{color:var(--data-disabled)}

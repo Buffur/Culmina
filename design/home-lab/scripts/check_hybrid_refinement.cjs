@@ -52,6 +52,19 @@ async function main(){
   const matrix=await matrixContext.newPage();matrix.setDefaultTimeout(7000);observe(matrix);
   const roots=['home','plan','night','moon','weather','logbook','library','settings'];
   try{
+    await check('Plan row hierarchy 100% at 375/412 in every theme',async()=>{
+      const rows=[];
+      for(const width of [375,412])for(const theme of ['light','dark','field']){
+        await matrix.setViewportSize({width,height:915});await go(matrix,'plan',{theme,scale:'1'});
+        const labels=await matrix.locator('.plan-row-label,.night-row-label').evaluateAll(es=>es.map(e=>({text:e.textContent.trim(),size:getComputedStyle(e).fontSize,weight:getComputedStyle(e).fontWeight})));
+        assert.deepEqual(labels.map(x=>x.text),['Site and night','Target','Rig','Night & Moon','Weather']);
+        for(const label of labels){assert.equal(label.size,'16px',label.text);assert.equal(label.weight,'600',label.text);}
+        const values=await matrix.locator('.plan-row-value,.night-row-value').evaluateAll(es=>es.map(e=>getComputedStyle(e).fontSize));
+        assert.ok(values.length>=5);for(const size of values)assert.equal(size,'15px');
+        rows.push({width,theme,labels});
+      }
+      return rows;
+    });
     for(const width of [412,360])for(const theme of width===412?['light','dark','field']:['light'])for(const scale of width===412?['1','2']:['2'])for(const root of roots){
       const spec={root,width,theme,scale,scenario:'ready'};
       await check('matrix '+JSON.stringify(spec),async()=>{await matrix.setViewportSize({width,height:915});await go(matrix,root,spec);const r=await snapshot(matrix,`${root}-${width}-${theme}-${scale}`,spec);report.matrix.push({...spec,...r});assert.equal(r.pageOverflow,false,'document horizontal overflow');assert.equal(r.phoneOverflow,false,'phone horizontal overflow');assert.deepEqual(r.contentOverflow,[],'main/phone scroller horizontal overflow');assert.ok(r.phone.width<=Math.min(width,412)+1);if(scale==='2')await snapshot(matrix,`${root}-${width}-${theme}-${scale}`,{...spec,bottom:true});return {smallTargets:r.smallTargets,intentionalScrolls:r.intentionalScrolls};});

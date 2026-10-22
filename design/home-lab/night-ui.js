@@ -19,6 +19,28 @@ export const dayTag=(night,t)=>{const d=dateFormat.format(t);return d>night.date
 export const clockRange=(night,x)=>`${timeLabel(x.start)}${dayTag(night,x.start)} → ${timeLabel(x.end)}${dayTag(night,x.end)}`;
 
 const skyClass={Daylight:'day','Civil twilight':'civil','Nautical twilight':'nautical','Astronomical twilight':'astro',Dark:'dark'};
+// Three presentations of the same fixture and five-minute cursor; no separate screen/model copies.
+export const timelineVariants=Object.freeze([
+ Object.freeze({id:'minimal',label:'Minimal',description:'Neutral band, exact dark interval and Moon lanes.'}),
+ Object.freeze({id:'gradient',label:'Gradient',description:'Blue/cyan sky-state blend, exact dark interval and Moon lanes.'}),
+ Object.freeze({id:'detailed',label:'Detailed',description:'The same sky band with known Sun events and target-window lane.'})
+]);
+const timelineVariant=value=>timelineVariants.some(x=>x.id===value)?value:'gradient';
+// Only presentation coverage is inspected here. Missing/unrecognised sky spans are masked,
+// never given the interpolated colour of their neighbours or the model's daylight fallback.
+function skyGaps(night){
+ const known=night.skySegments.filter(x=>skyClass[x.sky]).map(x=>intersect(x,night)).filter(Boolean).sort((a,b)=>a.start-b.start);
+ const gaps=[];let end=night.start;
+ for(const x of known){if(x.start>end)gaps.push({start:end,end:x.start});end=Math.max(end,x.end);}
+ if(end<night.end)gaps.push({start:end,end:night.end});
+ return gaps;
+}
+function timelineFacts(night,instant){
+ const f=cursorFacts(night,instant);
+ if(night.skySegments.some(x=>skyClass[x.sky]&&x.start<=f.instant&&f.instant<x.end))return f;
+ const missing='Sky state unknown at this time.';
+ return {...f,state:`Sky state unknown · ${f.moon}`,detail:`${missing} ${f.detail}`,compactDetail:`${missing} ${f.compactDetail}`};
+}
 // Colours interpolate across the twilight span, rather than making each class a stripe.
 // Knots are presentation only. The dark bracket and cursor still use exact model intervals.
 export function skyGradient(night){
@@ -46,11 +68,11 @@ export function skyGradient(night){
 }
 const present=(night,name)=>night.skySegments.some(x=>x.sky===name&&Math.min(x.end,night.end)>Math.max(x.start,night.start));
 const key=(cls,label)=>`<span><i class="key key-${cls}"></i>${label}</span>`;
-function legend(night,compact){
+function legend(night,compact,showNote=true){
  const sky=compact?[present(night,'Daylight')&&key('day','Daylight'),['Civil twilight','Nautical twilight','Astronomical twilight'].some(n=>present(night,n))&&key('twilight','Twilight')]:[['Daylight','day'],['Civil twilight','civil'],['Nautical twilight','nautical'],['Astronomical twilight','astro']].map(([n,c])=>present(night,n)&&key(c,n));
  const times=night.dark.map(x=>`${timeLabel(x.start)}–${timeLabel(x.end)}`).join(', ');
  const dark=night.dark.length?key('dark',compact?`Dark ${times}`:`Dark · Sun below −18° · ${times}`):`<span>No dark time: the Sun stays above −18°</span>`;
- return `<div class="rail-legend"><div class="legend-group">${[...sky,dark].filter(Boolean).join('')}</div><div class="legend-group">${key('up','Moon above horizon')}${key('free','Moon-free dark')}</div>${compact?'':'<p class="rail-note">Sky colour blends between known Sun-event times. It is not measured sky brightness.</p>'}</div>`;
+ return `<div class="rail-legend"><div class="legend-group">${[...sky,dark].filter(Boolean).join('')}</div><div class="legend-group">${key('up','Moon above horizon')}${key('free','Moon-free dark')}</div>${compact||!showNote?'':'<p class="rail-note">Sky colour blends between known Sun-event times. It is not measured sky brightness.</p>'}</div>`;
 }
 // The full reading key is shared with compact condition browsers without duplicating the rail.
 export const timelineReadingGuide=night=>legend(night,false);
@@ -64,16 +86,42 @@ export function jumpCursor(night,to){
  const what=dark?(to==='end'?'end of dark time':'start of dark time'):(to==='end'?'end of the timeline':'start of the timeline');
  return {instant,label:`Go to ${what}, ${timeLabel(instant)}`};
 }
-const jumpIcon=to=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${to==='end'?'M18 5v14M7 6l6 6-6 6':'M6 5v14M17 6l-6 6 6 6'}"/></svg>`;
-export function timeline(night,instant,id='night',compact=false,hybrid=false){
+function jumpControl(night,to,hintId){
+ const j=jumpCursor(night,to);
+ const dark=night.dark.length>0,boundary=dark?(to==='end'?night.dark.at(-1).end:night.dark[0].start):j.instant;
+ const clipped=dark&&(to==='end'?boundary>=night.end:boundary<=night.start);
+ const label=clipped?(to==='end'?'Window end':'Window start'):dark?(to==='end'?'Dark ends':'Dark starts'):(to==='end'?'Timeline end':'Timeline start');
+ const description=boundary===j.instant?j.label:`${j.label}. Interval boundary: ${instantLabel(boundary)}; preview uses the available five-minute grid.`;
+ return `<button type="button" class="timeline-jump" data-action="cursor-${to}" aria-label="${escapeHTML(description)}" title="${escapeHTML(description)}" aria-describedby="${escapeHTML(hintId)}"><span class="timeline-jump-label">${label}</span><span class="timeline-jump-time">${timeLabel(boundary)}${dayTag(night,boundary)}</span></button>`;
+}
+function timelineExactDetails(night){
+ const intervals=(label,rows,empty)=>`<div class="timeline-exact-group"><h4>${label}</h4>${rows.length?rows.map(x=>`<p><span>${escapeHTML(x.sky||label)}</span><span>${escapeHTML(instantLabel(x.start))}<br>to ${escapeHTML(instantLabel(x.end))}</span></p>`).join(''):`<p>${empty}</p>`}</div>`;
+ const events=(night.twilight||[]).map(x=>`<p><span>${escapeHTML(x.label)}</span><span>${Number.isFinite(x.at)?escapeHTML(instantLabel(x.at)):'No event in this night'}</span></p>`).join('');
+ const gaps=skyGaps(night);
+ return `<details class="timeline-exact"><summary>Exact times &amp; reading key</summary><p class="rail-note">Example night · ${escapeHTML(night.zone||zone)}. Interval ends are boundaries; preview steps remain five minutes. The target window is the existing example opportunity, not a sky-quality rating.</p>${intervals('Sky state',night.skySegments.filter(x=>skyClass[x.sky]).map(x=>({...intersect(x,night),sky:x.sky})).filter(x=>Number.isFinite(x.start)),'Sky state unknown.')}${gaps.length?intervals('Unknown sky state',gaps,''):''}<div class="timeline-exact-group"><h4>Sun events</h4>${events||'<p>Sun-event data unavailable.</p>'}</div>${intervals('Dark time',night.dark,'No dark time in this night.')}${intervals('Moon above horizon',night.moonUp,'Moon below the horizon throughout this night.')}${intervals('Moon-free dark',night.moonFree,'No moon-free dark interval.')}${intervals('Target window',night.targetWindows||[],'No target window in this example.')}</details>`;
+}
+function timelinePresentation(night,variant,hybrid){
+ const gaps=skyGaps(night),unknown=bars(night,gaps,'sky-unknown');
+ const track=variant==='minimal'?`<span class="sky-track sky-track-neutral">${bars(night,night.dark,'minimal-dark')}${unknown}</span>`:`<span class="sky-track" style="background:${skyGradient(night)}">${unknown}</span>`;
+ const markers=variant==='detailed'?(night.twilight||[]).filter(x=>Number.isFinite(x.at)&&x.at>=night.start&&x.at<=night.end).map(x=>`<span class="sun-event-marker" style="left:${f3((x.at-night.start)/(night.end-night.start)*100)}%" title="${escapeHTML(x.label+': '+instantLabel(x.at))}"></span>`).join(''):'';
+ const target=variant==='detailed'?`<span class="target-lane">${bars(night,night.targetWindows||[],'target-window-bar')}</span>`:'';
+ return `${track}${hybrid?'':`<span class="dark-lane">${bars(night,night.dark,'dark-bracket')}</span>`}<span class="moon-lane lane-up">${bars(night,night.moonUp,'moon-bar')}</span><span class="moon-lane lane-free">${bars(night,night.moonFree,'moon-bar')}</span>${markers}${target}`;
+}
+function variantGuide(night,variant,compact){
+ const note=variant==='minimal'?'Neutral band; solid block marks the exact dark interval. Sky states and event times are in Exact times.':'Sky colour blends between known Sun-event times; black marks dark time (Sun below −18°). It is not measured sky brightness or a quality score.';
+ const extras=variant==='detailed'?`<div class="legend-group">${key('event','Sun-event ticks')}${key('target','Target window')}</div>`:'';
+ return `${legend(night,compact,false)}${extras}<p class="rail-note timeline-encoding">${note}${skyGaps(night).length?' Hatched spans mean sky state unknown; no colour is inferred there.':''}</p>${timelineExactDetails(night)}`;
+}
+export function timeline(night,instant,id='night',compact=false,hybrid=false,variant='gradient'){
+ variant=timelineVariant(variant);
  const grid=night.start+Math.floor((Math.min(night.end-300000,Math.max(night.start,instant))-night.start)/300000)*300000;
- const f=cursorFacts(night,grid),max=Math.round((night.end-night.start)/60000)-5,value=Math.round((f.instant-night.start)/60000);
+ const f=timelineFacts(night,grid),max=Math.round((night.end-night.start)/60000)-5,value=Math.round((f.instant-night.start)/60000);
  const reset=resetCursor(night),label=`${night.classification}; ${hoursLabel(totalTime(night.dark))} dark, ${hoursLabel(totalTime(night.moonFree))} moon-free dark`;
  const resetLabel=hybrid?(reset.label==='Now'?'Return to now':'Return to night start'):reset.label;
  const hintId=`cursor-hint-${id}`;
- return `<section class="night-slider ${compact?'compact':''}" data-timeline="${escapeHTML(id)}" data-night="${night.date}" aria-label="Darkness and Moon time browser"><div class="slider-caption"><label for="cursor-${escapeHTML(id)}">${hybrid?'Preview time':compact?'Time':'Preview time'}</label><time data-cursor-time>${instantLabel(f.instant)}</time>${hybrid?`<span class="timeline-jumps">${['start','end'].map(to=>{const j=jumpCursor(night,to);return `<button type="button" class="timeline-jump" data-action="cursor-${to}" aria-label="${escapeHTML(j.label)}" title="${escapeHTML(j.label)}" aria-describedby="${escapeHTML(hintId)}">${jumpIcon(to)}</button>`;}).join('')}</span>`:compact?`<button type="button" class="timeline-reset" data-action="reset-cursor" aria-label="Reset preview to ${reset.label}">${resetLabel}</button>`:''}</div><div class="rail-stack"><div class="rail-visual" role="img" aria-label="${escapeHTML(label)}"><span class="sky-track" style="background:${skyGradient(night)}"></span>${hybrid?'':`<span class="dark-lane">${bars(night,night.dark,'dark-bracket')}</span>`}<span class="moon-lane lane-up">${bars(night,night.moonUp,'moon-bar')}</span><span class="moon-lane lane-free">${bars(night,night.moonFree,'moon-bar')}</span></div><input id="cursor-${escapeHTML(id)}" data-night-cursor ${hybrid?`aria-describedby="${escapeHTML(hintId)}"`:""} style="--range-fraction:${max/((night.end-night.start)/60000)}" type="range" min="0" max="${max}" step="5" value="${value}" aria-label="Preview time in ${escapeHTML(nightLabel(night.date))}" aria-valuetext="${escapeHTML(instantLabel(f.instant)+'. '+f.state+'. '+f.detail)}"></div><div class="rail-labels"><span>${timeLabel(night.start,true)}</span><span>${timeLabel(night.end,true)}</span></div>${hybrid?`<p class="timeline-hint" id="${escapeHTML(hintId)}">Drag to preview · arrow keys step 5 min.</p>`:""}${legend(night,compact)}<output for="cursor-${escapeHTML(id)}" class="cursor-output" aria-live="polite"><strong data-cursor-state>${f.state}</strong><span data-cursor-detail>${escapeHTML(compact?f.compactDetail:f.detail)}</span></output></section>`;
+ return `<section class="night-slider ${compact?'compact':''}" data-timeline="${escapeHTML(id)}" data-timeline-variant="${variant}" data-night="${night.date}" aria-label="Darkness and Moon time browser"><div class="slider-caption"><label for="cursor-${escapeHTML(id)}">${hybrid?'Preview time':compact?'Time':'Preview time'}</label><time data-cursor-time>${instantLabel(f.instant)}</time>${hybrid?`<span class="timeline-jumps">${['start','end'].map(to=>jumpControl(night,to,hintId)).join('')}</span>`:compact?`<button type="button" class="timeline-reset" data-action="reset-cursor" aria-label="Reset preview to ${reset.label}">${resetLabel}</button>`:''}</div><div class="rail-stack"><div class="rail-visual" role="img" aria-label="${escapeHTML(label)}">${timelinePresentation(night,variant,hybrid)}</div><input id="cursor-${escapeHTML(id)}" data-night-cursor ${hybrid?`aria-describedby="${escapeHTML(hintId)}"`:""} style="--range-fraction:${max/((night.end-night.start)/60000)}" type="range" min="0" max="${max}" step="5" value="${value}" aria-label="Preview time in ${escapeHTML(nightLabel(night.date))}" aria-valuetext="${escapeHTML(instantLabel(f.instant)+'. '+f.state+'. '+f.detail)}"></div><div class="rail-labels"><span>${timeLabel(night.start,true)}</span><span>${timeLabel(night.end,true)}</span></div>${hybrid?`<p class="timeline-hint" id="${escapeHTML(hintId)}">Drag to preview · arrow keys step 5 min.</p>`:""}${variantGuide(night,variant,compact)}<output for="cursor-${escapeHTML(id)}" class="cursor-output" aria-live="polite"><strong data-cursor-state>${f.state}</strong><span data-cursor-detail>${escapeHTML(compact?f.compactDetail:f.detail)}</span></output></section>`;
 }
-export function updateTimeline(element,night,minutes){const f=cursorFacts(night,night.start+Number(minutes)*60000);element.querySelector('[data-cursor-time]').textContent=instantLabel(f.instant);element.querySelector('[data-cursor-state]').textContent=f.state;element.querySelector('[data-cursor-detail]').textContent=element.classList.contains('compact')?f.compactDetail:f.detail;element.querySelector('[data-night-cursor]').setAttribute('aria-valuetext',instantLabel(f.instant)+'. '+f.state+'. '+f.detail);return f;}
+export function updateTimeline(element,night,minutes){const f=timelineFacts(night,night.start+Number(minutes)*60000);element.querySelector('[data-cursor-time]').textContent=instantLabel(f.instant);element.querySelector('[data-cursor-state]').textContent=f.state;element.querySelector('[data-cursor-detail]').textContent=element.classList.contains('compact')?f.compactDetail:f.detail;element.querySelector('[data-night-cursor]').setAttribute('aria-valuetext',instantLabel(f.instant)+'. '+f.state+'. '+f.detail);return f;}
 export function intervalRows(intervals,empty='None in the dark interval'){return intervals.length?intervals.map(x=>`<p class="interval-row"><span>${timeLabel(x.start)}–${timeLabel(x.end)}</span><span>${hoursLabel(x.end-x.start)}</span></p>`).join(''):`<p class="quiet-copy">${empty}</p>`;}
 
 // Moon facts. A Moon interval is shown as labelled From / Until lines rather than one arrow string:

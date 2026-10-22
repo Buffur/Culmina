@@ -14,6 +14,10 @@ export const initialPlanningPreferences=Object.freeze({
 const clone=x=>structuredClone(x);
 export function browserStorage(){try{return window.localStorage;}catch{return {getItem(){throw Error('Browser storage unavailable');},setItem(){throw Error('Browser storage unavailable');},removeItem(){throw Error('Browser storage unavailable');}};}}
 function payload(storage,key,kind){try{const p=JSON.parse(storage.getItem(key));return p?.kind===kind&&p.version===1?p:null;}catch{return null;}}
+export function readWeatherPresentation(storage,{fallback='rows'}={}){
+  const display=payload(storage,settingsKey,'culmina-settings-preview')?.settings?.display;
+  return display?(display.weatherPresentation==='charts'?'charts':'rows'):fallback==='charts'?'charts':'rows';
+}
 export function readPlanningPreferences(storage,{initialDefaults=false,plan=null}={}){
   const p=payload(storage,settingsKey,'culmina-settings-preview')?.settings?.planning;
   if(p&&Number.isFinite(p.perFrameOverheadSeconds)&&p.perFrameOverheadSeconds>=0&&p.perFrameOverheadSeconds<=120&&Number.isFinite(p.feasibilityMarginPercent)&&p.feasibilityMarginPercent>=0&&p.feasibilityMarginPercent<=50&&(p.setupMinutes===null||Number.isFinite(p.setupMinutes)&&p.setupMinutes>=0&&p.setupMinutes<=240))return p;

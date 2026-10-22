@@ -1,0 +1,170 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "theme": "light",
+      "view": "night",
+      "blue": "#0075de",
+      "overflow": false,
+      "background": "rgb(255, 255, 255)"
+    },
+    {
+      "theme": "light",
+      "view": "weather",
+      "blue": "#0075de",
+      "overflow": false,
+      "background": "rgb(255, 255, 255)",
+      "colours": {
+        "text": "rgb(0, 91, 171)",
+        "background": "rgb(230, 243, 254)"
+      },
+      "contrast": {
+        "text": [
+          {
+            "label": "22:00",
+            "ratio": 6.035355215310034
+          }
+        ],
+        "lines": [
+          4.565911001901523,
+          7.012016986955144,
+          4.565911001901523,
+          7.012016986955144,
+          4.565911001901523,
+          7.012016986955144,
+          4.565911001901523
+        ]
+      }
+    },
+    {
+      "theme": "light",
+      "view": "weather",
+      "blue": "#0075de",
+      "overflow": false,
+      "background": "rgb(255, 255, 255)"
+    },
+    {
+      "theme": "light",
+      "view": "home",
+      "sky": "rgb(0, 0, 0)",
+      "variant": "gradient",
+      "status": "pending",
+      "temperature": "#0075de"
+    },
+    {
+      "theme": "light",
+      "view": "home-status",
+      "contrast": {
+        "text": [
+          {
+            "label": "Saved · changed",
+            "ratio": 6.803690978079696
+          }
+        ],
+        "lines": []
+      }
+    },
+    {
+      "theme": "dark",
+      "view": "night",
+      "blue": "#62aff3",
+      "overflow": false,
+      "background": "rgb(25, 25, 25)"
+    },
+    {
+      "theme": "dark",
+      "view": "weather",
+      "blue": "#62aff3",
+      "overflow": false,
+      "background": "rgb(25, 25, 25)",
+      "colours": {
+        "text": "rgb(166, 210, 243)",
+        "background": "rgb(21, 45, 64)"
+      },
+      "contrast": {
+        "text": [
+          {
+            "label": "22:00",
+            "ratio": 8.866863024310941
+          }
+        ],
+        "lines": [
+          7.489411862948275,
+          7.125431366064868,
+          7.489411862948275,
+          7.125431366064868,
+          7.489411862948275,
+          7.125431366064868,
+          7.489411862948275
+        ]
+      }
+    },
+    {
+      "theme": "dark",
+      "view": "weather",
+      "blue": "#62aff3",
+      "overflow": false,
+      "background": "rgb(25, 25, 25)"
+    },
+    {
+      "theme": "dark",
+      "view": "home",
+      "sky": "rgb(0, 0, 0)",
+      "variant": "gradient",
+      "status": "pending",
+      "temperature": "#62aff3"
+    },
+    {
+      "theme": "dark",
+      "view": "home-status",
+      "contrast": {
+        "text": [
+          {
+            "label": "Saved · changed",
+            "ratio": 8.367366368959964
+          }
+        ],
+        "lines": []
+      }
+    },
+    {
+      "theme": "field",
+      "view": "night",
+      "blue": "#FF0000",
+      "overflow": false,
+      "background": "rgb(0, 0, 0)"
+    },
+    {
+      "theme": "field",
+      "view": "weather",
+      "blue": "#FF0000",
+      "overflow": false,
+      "background": "rgb(0, 0, 0)"
+    },
+    {
+      "theme": "field",
+      "view": "home",
+      "sky": "rgb(0, 0, 0)",
+      "variant": "gradient",
+      "status": "pending",
+      "temperature": "#FF0000"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "A default",
+    "Settings stores B",
+    "Tonight stays compact",
+    "navigation and reload respect B",
+    "cross-tab A switch",
+    "stored preference overrides stale URL",
+    "legacy v1 read/validation without rewriting",
+    "actual JSON export and confirmed restore of legacy/new weather preference",
+    "invalid weather enum rejected",
+    "planning/privacy/plan/draft preserved",
+    "gradient and black night on main Home/Night",
+    "Notion roles in light/dark/field",
+    "main Plan/Logbook/Library/Settings smoke",
+    "375/412 Settings controls"
+  ]
+}

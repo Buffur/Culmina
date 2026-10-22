@@ -1,0 +1,60 @@
+{
+  "scope": "A–E browser proposal, owner acceptance pending",
+  "findings": [
+    {
+      "name": "exact recorded gradient matches current function/fixture",
+      "pass": true
+    },
+    {
+      "name": "three exact timeline choices",
+      "pass": true
+    },
+    {
+      "name": "seven raw SVGs match embedded geometry",
+      "pass": true
+    },
+    {
+      "name": "ISC and complete Feather MIT notices retained",
+      "pass": true
+    },
+    {
+      "name": "five originals available",
+      "pass": true
+    },
+    {
+      "name": "actual HTML imports applied palette",
+      "pass": true
+    },
+    {
+      "name": "report local evidence links resolve",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "single initial failed assertion has identified singular-label recheck",
+      "pass": true
+    },
+    {
+      "name": "both targeted correction rounds passed",
+      "pass": true
+    },
+    {
+      "name": "pointer and keyboard horizontal interactions passed",
+      "pass": true
+    },
+    {
+      "name": "initial runtime requests/errors clean",
+      "pass": true
+    },
+    {
+      "name": "Light and Dark semantic text/graphic pairs pass",
+      "pass": true
+    },
+    {
+      "name": "exactly two Weather choices in study",
+      "pass": true
+    }
+  ],
+  "passed": 13,
+  "failed": []
+}

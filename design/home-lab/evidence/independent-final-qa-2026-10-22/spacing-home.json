@@ -1,0 +1,11 @@
+{
+  "buttonBottom": 1556.203125,
+  "headingTop": 1605.203125,
+  "gap": 49,
+  "conditions": {
+    "marginTop": "24px",
+    "paddingTop": "24px",
+    "borderTop": "1px"
+  },
+  "gutter": "20px"
+}

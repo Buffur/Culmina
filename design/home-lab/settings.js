@@ -37,7 +37,8 @@ const APP = {
   privacy: 'https://buffur.github.io/Culmina/privacy/',
 };
 
-/* ---------- Model (mirrors PlanningPreferences and DisplayUnits) ---------- */
+/* ---------- Model (PlanningPreferences/DisplayUnits, plus the owner-selected
+   browser Weather presentation preference; no native setting is implied) ---------- */
 
 // PlanningPreferences: defaults are documented assumptions; ranges inclusive.
 // An optional overhead that is null is off ("Not included"), never a zero.
@@ -75,7 +76,7 @@ const SCALES = [['1', '100%'], ['1.25', '125%'], ['2', '200%']];
 
 function defaultSettings() {
   return {
-    display: { appearance: 'system', units: { temperature: 'celsius', wind: 'kmh', elevation: 'metres' } },
+    display: { appearance: 'system', weatherPresentation:'rows', units: { temperature: 'celsius', wind: 'kmh', elevation: 'metres' } },
     planning: {...initialPlanningPreferences},
     // TASK 16.3 (owner decision): place-name lookup is opt-in, off by default.
     privacy: { placeNameLookup: false },
@@ -95,7 +96,8 @@ function validField(spec, v) {
 function validSettings(s) {
   if (!exactKeys(s, ['display', 'planning', 'privacy'])) return false;
   const d = s.display;
-  if (!exactKeys(d, ['appearance', 'units']) || !APPEARANCES.some(([v]) => v === d.appearance)) return false;
+  if (!(exactKeys(d, ['appearance', 'units']) || exactKeys(d, ['appearance', 'units', 'weatherPresentation'])) || !APPEARANCES.some(([v]) => v === d.appearance)) return false;
+  if (Object.hasOwn(d,'weatherPresentation') && !['rows','charts'].includes(d.weatherPresentation)) return false;
   if (!exactKeys(d.units, Object.keys(UNITS)) || !Object.entries(UNITS).every(([k, list]) => list.some(([v]) => v === d.units[k]))) return false;
   const p = s.planning;
   if (!exactKeys(p, Object.keys(PLANNING_FIELDS)) || !Object.entries(PLANNING_FIELDS).every(([k, spec]) => validField(spec, p[k]))) return false;
@@ -103,6 +105,9 @@ function validSettings(s) {
 }
 
 const clone = value => JSON.parse(JSON.stringify(value));
+// Old v1 stores/backups omitted this display-only preference; reading adds its
+// former rows default in memory, without writing or replacing the source file.
+const withDisplayDefaults=s=>({...s,display:{weatherPresentation:'rows',...s.display}});
 // Compare actual validated values, not rounded review labels or JSON key order.
 const sameSettings = (a, b) => a === b || (isObject(a) && isObject(b) &&
   Object.keys(a).length === Object.keys(b).length &&
@@ -131,7 +136,7 @@ function readStore(storage) {
   try {
     const value = JSON.parse(raw);
     if (value?.kind === PAYLOAD_KIND && value.version === PAYLOAD_VERSION && validSettings(value.settings)) {
-      return { status: 'stored', settings: value.settings };
+      return { status: 'stored', settings: withDisplayDefaults(value.settings) };
     }
   } catch { /* malformed JSON: reported, never overwritten */ }
   return { status: 'unreadable', settings: defaultSettings() };
@@ -165,7 +170,7 @@ function checkBackup(text) {
   if (typeof value.createdAtUtc !== 'string' || !Number.isFinite(Date.parse(value.createdAtUtc)) || !validSettings(value.settings)) {
     return { problem: 'the settings in it are damaged, incomplete or outside the allowed ranges' };
   }
-  return { backup: { createdAtUtc: value.createdAtUtc, settings: value.settings } };
+  return { backup: { createdAtUtc: value.createdAtUtc, settings: withDisplayDefaults(value.settings) } };
 }
 
 /* ---------- Wording and units ---------- */
@@ -207,6 +212,7 @@ const OVERHEAD_SUMMARY = {
 // Rows of the restore comparison; stored units (°C) are named explicitly.
 const COMPARISON = [
   ['Theme', s => APPEARANCES.find(([v]) => v === s.display.appearance)[1]],
+  ['Weather view', s => s.display.weatherPresentation==='charts'?'B · Hourly charts':'A · Compact rows'],
   ...Object.keys(UNITS).map(k => [UNIT_TITLES[k], s => UNITS[k].find(([v]) => v === s.display.units[k])[1]]),
   ['Minimum target altitude', s => deg(s.planning.minAltitudeDeg)],
   ['Darkness limit (Sun altitude)', s => deg(s.planning.darknessLimitDeg)],
@@ -433,8 +439,9 @@ export function mountSettings(root, api) {
         ${Object.entries(UNITS).map(([k, list]) => `<fieldset class="segmented settings-units"><legend>${UNIT_TITLES[k]}</legend>
           ${list.map(([v, label]) => radio(`settings-unit-${k}`, `settings-unit-${k}-${v}`, v, label, d.units[k] === v)).join('')}</fieldset>`).join('')}
       </section>
+      ${hybrid?`<section class="settings-section" aria-labelledby="settings-weather-title"><h2 id="settings-weather-title">Weather view</h2><fieldset class="segmented settings-weather" aria-describedby="settings-weather-hint"><legend class="settings-hidden">Weather view</legend>${[['rows','A · Compact rows'],['charts','B · Hourly charts']].map(([v,label])=>radio('settings-weather',`settings-weather-${v}`,v,label,(d.weatherPresentation||'rows')===v)).join('')}</fieldset><p class="field-hint" id="settings-weather-hint">Choose the Weather detail view. Both use the same forecast. Tonight keeps its compact weather summary; the night timeline keeps its gradient.</p></section>`:''}
       ${unsavedNotice('display')}
-      <p class="settings-note">Theme and units are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do.</p>`;
+      <p class="settings-note">Theme, units and Weather view are kept in preview storage; field mode and text size stay in this page's address, as the lab controls do.</p>`;
   }
 
   /* ----- Planning (explicit Save) ----- */
@@ -930,6 +937,8 @@ export function mountSettings(root, api) {
       const appearance = el.value;
       if (api.display.theme !== 'field') api.applyDisplay({ theme: resolve(appearance) });
       saveSection('display', { ...S.settings.display, appearance }, `Theme: ${APPEARANCES.find(([v]) => v === appearance)[1]}`);
+    } else if (el.name === 'settings-weather' && ['rows','charts'].includes(el.value)) {
+      saveSection('display', { ...S.settings.display, weatherPresentation:el.value }, `Weather view: ${el.value==='charts'?'Hourly charts':'Compact rows'}`);
     } else if (el.name === 'settings-scale') {
       api.applyDisplay({ scale: el.value });
       rerender();

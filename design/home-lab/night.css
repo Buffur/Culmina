@@ -69,14 +69,15 @@
 
 /* Hybrid proposal only. Sky states keep their ordered luminance; Moon lanes also differ by geometry.
    The legacy palettes remain intact for every other concept. */
-/* Owner 2026-10-22: the night is black, not blue; twilight steps are neutral greys (Notion's mono palette). */
-:root[data-variant=blend],.variant-blend{--sky-day:#E9ECEE;--sky-civil:#CFD3D8;--sky-nautical:#A3A9B1;--sky-astro:#5F656D;--sky-dark:#121314;--moon-up:#607D8B;--moon-free:#37352F}
-:root[data-theme=dark][data-variant=blend],:root[data-theme=dark] .variant-blend{--sky-day:#8C979C;--sky-civil:#737B84;--sky-nautical:#555C66;--sky-astro:#30353C;--sky-dark:#000000;--moon-up:#B0BEC5;--moon-free:#EBEBEA}
-:root[data-sky=slate][data-variant=blend],:root[data-sky=slate] .variant-blend{--sky-day:#E0EBE9;--sky-civil:#C8DCDD;--sky-nautical:#A0BBC6;--sky-astro:#7797AA;--sky-dark:#46667D}
-:root[data-theme=dark][data-sky=slate][data-variant=blend],:root[data-theme=dark][data-sky=slate] .variant-blend{--sky-day:#9EB9BA;--sky-civil:#86ABB6;--sky-nautical:#678FA5;--sky-astro:#456E8B;--sky-dark:#244D68}
-:root[data-sky=ink][data-variant=blend],:root[data-sky=ink] .variant-blend{--sky-day:#E3EAF2;--sky-civil:#CDD9ED;--sky-nautical:#A6BCDD;--sky-astro:#7D99C3;--sky-dark:#4E6A98}
-:root[data-theme=dark][data-sky=ink][data-variant=blend],:root[data-theme=dark][data-sky=ink] .variant-blend{--sky-day:#A6B7D0;--sky-civil:#91ACD2;--sky-nautical:#6C8FBD;--sky-astro:#4D71A1;--sky-dark:#2E507C}
-:root[data-theme=field][data-variant=blend],:root[data-theme=field] .variant-blend{--sky-day:#800000;--sky-civil:#650000;--sky-nautical:#4D0000;--sky-astro:#340000;--sky-dark:#180000;--moon-up:#B00000;--moon-free:#FF0000}
+/* Owner's latest photo follow-up: blue/cyan sky ramp replaces the earlier neutral default.
+   Night is pure black in every Hybrid sky; exact Sun-event stops and separate Moon lanes are unchanged. */
+:root[data-variant=blend],.variant-blend{--sky-day:#C8EDFA;--sky-civil:#83CDEA;--sky-nautical:#439ED6;--sky-astro:#2465AD;--sky-dark:#000000;--moon-up:#607D8B;--moon-free:#37352F}
+:root[data-theme=dark][data-variant=blend],:root[data-theme=dark] .variant-blend{--sky-day:#7DD3FC;--sky-civil:#46B6E8;--sky-nautical:#278CCB;--sky-astro:#1D5EA8;--sky-dark:#000000;--moon-up:#B0BEC5;--moon-free:#EBEBEA}
+:root[data-sky=slate][data-variant=blend],:root[data-sky=slate] .variant-blend{--sky-day:#E0EBE9;--sky-civil:#C8DCDD;--sky-nautical:#A0BBC6;--sky-astro:#7797AA;--sky-dark:#000000}
+:root[data-theme=dark][data-sky=slate][data-variant=blend],:root[data-theme=dark][data-sky=slate] .variant-blend{--sky-day:#9EB9BA;--sky-civil:#86ABB6;--sky-nautical:#678FA5;--sky-astro:#456E8B;--sky-dark:#000000}
+:root[data-sky=ink][data-variant=blend],:root[data-sky=ink] .variant-blend{--sky-day:#E3EAF2;--sky-civil:#CDD9ED;--sky-nautical:#A6BCDD;--sky-astro:#7D99C3;--sky-dark:#000000}
+:root[data-theme=dark][data-sky=ink][data-variant=blend],:root[data-theme=dark][data-sky=ink] .variant-blend{--sky-day:#A6B7D0;--sky-civil:#91ACD2;--sky-nautical:#6C8FBD;--sky-astro:#4D71A1;--sky-dark:#000000}
+:root[data-theme=field][data-variant=blend],:root[data-theme=field] .variant-blend{--sky-day:#800000;--sky-civil:#650000;--sky-nautical:#4D0000;--sky-astro:#340000;--sky-dark:#000000;--moon-up:#B00000;--moon-free:#FF0000}
 
 /* The unwanted underline was the legend's illustrative bracket (.key-dark::after), never focus.
    Keep the actual exact-time dark bracket on the rail and the separate input focus outline. */
@@ -84,8 +85,8 @@
 :is(:root[data-variant=blend],.variant-blend) .key-dark::after{content:none}
 :is(:root[data-variant=blend],.variant-blend) .compact .rail-labels{display:flex}
 :is(:root[data-variant=blend],.variant-blend) .slider-caption{gap:8px 12px;align-items:center}
-:is(:root[data-variant=blend],.variant-blend) .slider-caption label{flex:1 1 100%;margin:0}
-:is(:root[data-variant=blend],.variant-blend) .slider-caption time{flex:1 1 140px;line-height:1.5}
+:is(:root[data-variant=blend],.variant-blend) .slider-caption label{flex:1 1 auto;margin:0}
+:is(:root[data-variant=blend],.variant-blend) .slider-caption time{flex:0 1 auto;max-width:100%;line-height:1.5}
 :is(:root[data-variant=blend],.variant-blend) .timeline-reset{flex:0 1 auto;min-height:48px;max-width:100%;padding:8px 12px;border:1px solid var(--border-control);border-radius:var(--radius-small,6px);background:var(--surface-default);text-align:center;font-size:calc(13px * var(--text-scale));font-weight:500;cursor:pointer}
 :is(:root[data-variant=blend],.variant-blend) .timeline-reset:hover{background:var(--selection)}
 :is(:root[data-variant=blend],.variant-blend) .timeline-reset:focus-visible{outline:2px solid var(--text-primary);outline-offset:3px}
@@ -93,13 +94,47 @@
 :is(:root[data-variant=blend],.variant-blend) .rail-legend{gap:8px}
 :is(:root[data-variant=blend],.variant-blend) .cursor-output strong{display:inline-block;font-weight:600;text-decoration:none}
 :is(:root[data-variant=blend],.variant-blend) .rail-labels span{white-space:nowrap}
+:is(:root[data-variant=blend],.variant-blend) .rail-labels{flex-wrap:wrap;gap:8px 16px}
 @media(prefers-reduced-motion:no-preference){
  :is(:root[data-variant=blend],.variant-blend) .timeline-reset{transition:background-color 120ms ease-out,border-color 120ms ease-out}
 }
 
-/* Owner 2026-10-22: two icon buttons jump to the start or end of dark time (replaces Return to night start). */
-:is(:root[data-variant=blend],.variant-blend) .timeline-jumps{display:inline-flex;gap:8px;flex:0 0 auto}
-:is(:root[data-variant=blend],.variant-blend) .timeline-jump{width:48px;height:48px;display:grid;place-items:center;padding:0;border:1px solid var(--border-control);border-radius:var(--radius-small,6px);background:transparent;color:var(--text-primary);cursor:pointer}
-:is(:root[data-variant=blend],.variant-blend) .timeline-jump svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+/* Named event shortcuts: exact times make the two destinations explicit without media icons. */
+:is(:root[data-variant=blend],.variant-blend) .timeline-jumps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:1 0 100%;width:100%}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump{min-width:0;min-height:64px;display:grid;grid-template-rows:1fr auto;align-items:start;justify-items:start;gap:2px;padding:8px 12px;text-align:left;border:1px solid var(--border-control);border-radius:var(--radius-small,6px);background:transparent;color:var(--text-primary);cursor:pointer}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump-label{font-size:calc(13px * var(--text-scale));font-weight:400;line-height:1.4;color:var(--text-secondary)}
+:is(:root[data-variant=blend],.variant-blend) .timeline-jump-time{font-size:calc(15px * var(--text-scale));font-weight:500;line-height:1.4;font-variant-numeric:tabular-nums;overflow-wrap:normal}
 :is(:root[data-variant=blend],.variant-blend) .timeline-jump:hover{background:var(--selection)}
 :is(:root[data-variant=blend],.variant-blend) .timeline-jump:focus-visible{outline:2px solid var(--text-primary);outline-offset:3px}
+:root[data-text-scale="2"] :is(.variant-blend,.android-device) .timeline-jumps{grid-template-columns:1fr}
+:root[data-text-scale="2"] :is(.variant-blend,.android-device) .timeline-jump{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto;align-items:center;column-gap:12px}
+
+/* Exactly three study presentations share the same range/cursor and Moon lanes.
+   Neutral means no sky-state colour encoding; exact state/event times stay reachable. */
+.night-slider[data-timeline-variant=minimal] .sky-track-neutral{background:var(--surface-sunken)}
+.minimal-dark{position:absolute;inset-block:0;background:var(--sky-dark);box-sizing:border-box;border-inline:1px solid var(--text-primary)}
+.night-slider[data-timeline-variant=minimal] :is(.key-day,.key-civil,.key-nautical,.key-astro,.key-twilight){background:var(--surface-sunken)}
+.night-slider[data-timeline-variant=minimal] .key-dark{background:var(--sky-dark)}
+.sky-track{overflow:hidden}
+.sky-unknown{position:absolute;inset-block:0;background:repeating-linear-gradient(135deg,var(--surface-default) 0 4px,var(--text-secondary) 4px 5px);outline:1px dashed var(--text-primary)}
+.night-slider[data-timeline-variant=detailed]{--stack-h:78px}
+.night-slider.compact[data-timeline-variant=detailed]{--stack-h:70px}
+.sun-event-marker{position:absolute;top:0;height:var(--sky-h);width:1px;background:var(--text-primary);box-shadow:0 0 0 1px var(--surface-default);transform:translateX(-50%)}
+.target-lane{position:absolute;inset-inline:0;top:calc(var(--sky-h) + 26px + 2 * var(--lane-h));height:8px;background:var(--surface-sunken);outline:1px solid var(--border-subtle);border-radius:2px}
+.target-window-bar{position:absolute;inset-block:0;border:2px dashed var(--text-primary);border-radius:2px;box-sizing:border-box}
+/* Hybrid packs Moon lanes more tightly. Reserve a separate row for the detailed target lane;
+   this specificity also survives the shared Hybrid stack-height rule loaded afterwards. */
+:is(:root[data-variant=blend],.variant-blend) .night-slider[data-timeline-variant=detailed]{--stack-h:calc(var(--sky-h) + 2 * var(--lane-h) + 24px)}
+:is(:root[data-variant=blend],.variant-blend) .night-slider[data-timeline-variant=detailed] .target-lane{top:calc(var(--sky-h) + 2 * var(--lane-h) + 12px)}
+.night-slider>.legend-group{margin-top:8px;font-size:calc(12px * var(--text-scale));color:var(--text-secondary)}
+.key-event{width:20px;background:linear-gradient(90deg,transparent 9px,var(--text-primary) 9px 11px,transparent 11px)}
+.key-target{border:2px dashed var(--text-primary);box-sizing:border-box}
+.timeline-encoding{margin:8px 0;color:var(--text-secondary)}
+.timeline-exact{margin:8px 0;font-size:calc(12px * var(--text-scale));line-height:1.5;color:var(--text-secondary)}
+.timeline-exact>summary{display:list-item;min-height:48px;align-content:center;padding:8px 0;box-sizing:border-box;color:var(--text-primary);cursor:pointer;font-weight:500}
+.timeline-exact>summary:focus-visible{outline:2px solid var(--text-primary);outline-offset:2px;border-radius:var(--radius-small,6px)}
+.timeline-exact .rail-note{color:var(--text-secondary);margin:0 0 12px}
+.timeline-exact-group{padding:8px 0;border-top:1px solid var(--border-subtle)}
+.timeline-exact-group h4{margin:0 0 4px;font-size:inherit;font-weight:600;color:var(--text-primary)}
+.timeline-exact-group p{display:flex;justify-content:space-between;gap:8px;margin:0;padding:4px 0;font-variant-numeric:tabular-nums}
+.timeline-exact-group p>span:last-child{text-align:right;color:var(--text-primary)}

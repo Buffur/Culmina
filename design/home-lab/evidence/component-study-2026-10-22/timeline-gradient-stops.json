@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-19",
+  "zone": "Europe/Kyiv",
+  "range": {
+    "start": 1792404000000,
+    "end": 1792490400000
+  },
+  "gradient": "linear-gradient(90deg,var(--sky-day) 0%,var(--sky-day) 10.417%,color-mix(in oklab,var(--sky-day) 95.703%,var(--sky-civil) 4.297%) 11.871%,color-mix(in oklab,var(--sky-day) 84.375%,var(--sky-civil) 15.625%) 13.325%,color-mix(in oklab,var(--sky-day) 68.35900000000001%,var(--sky-civil) 31.641%) 14.779%,color-mix(in oklab,var(--sky-day) 50%,var(--sky-civil) 50%) 16.233%,color-mix(in oklab,var(--sky-day) 31.641000000000005%,var(--sky-civil) 68.359%) 17.687%,color-mix(in oklab,var(--sky-day) 15.625%,var(--sky-civil) 84.375%) 19.141%,color-mix(in oklab,var(--sky-day) 4.296999999999997%,var(--sky-civil) 95.703%) 20.595%,var(--sky-civil) 22.049%,color-mix(in oklab,var(--sky-civil) 95.703%,var(--sky-nautical) 4.297%) 22.418%,color-mix(in oklab,var(--sky-civil) 84.375%,var(--sky-nautical) 15.625%) 22.786%,color-mix(in oklab,var(--sky-civil) 68.35900000000001%,var(--sky-nautical) 31.641%) 23.155%,color-mix(in oklab,var(--sky-civil) 50%,var(--sky-nautical) 50%) 23.524%,color-mix(in oklab,var(--sky-civil) 31.641000000000005%,var(--sky-nautical) 68.359%) 23.893%,color-mix(in oklab,var(--sky-civil) 15.625%,var(--sky-nautical) 84.375%) 24.262%,color-mix(in oklab,var(--sky-civil) 4.296999999999997%,var(--sky-nautical) 95.703%) 24.631%,var(--sky-nautical) 25%,color-mix(in oklab,var(--sky-nautical) 95.703%,var(--sky-astro) 4.297%) 25.694%,color-mix(in oklab,var(--sky-nautical) 84.375%,var(--sky-astro) 15.625%) 26.389%,color-mix(in oklab,var(--sky-nautical) 68.35900000000001%,var(--sky-astro) 31.641%) 27.083%,color-mix(in oklab,var(--sky-nautical) 50%,var(--sky-astro) 50%) 27.778%,color-mix(in oklab,var(--sky-nautical) 31.641000000000005%,var(--sky-astro) 68.359%) 28.472%,color-mix(in oklab,var(--sky-nautical) 15.625%,var(--sky-astro) 84.375%) 29.167%,color-mix(in oklab,var(--sky-nautical) 4.296999999999997%,var(--sky-astro) 95.703%) 29.861%,var(--sky-astro) 30.556%,color-mix(in oklab,var(--sky-astro) 95.703%,var(--sky-dark) 4.297%) 31.033%,color-mix(in oklab,var(--sky-astro) 84.375%,var(--sky-dark) 15.625%) 31.51%,color-mix(in oklab,var(--sky-astro) 68.35900000000001%,var(--sky-dark) 31.641%) 31.988%,color-mix(in oklab,var(--sky-astro) 50%,var(--sky-dark) 50%) 32.465%,color-mix(in oklab,var(--sky-astro) 31.641000000000005%,var(--sky-dark) 68.359%) 32.943%,color-mix(in oklab,var(--sky-astro) 15.625%,var(--sky-dark) 84.375%) 33.42%,color-mix(in oklab,var(--sky-astro) 4.296999999999997%,var(--sky-dark) 95.703%) 33.898%,var(--sky-dark) 34.375%,var(--sky-dark) 65.625%,color-mix(in oklab,var(--sky-dark) 95.703%,var(--sky-astro) 4.297%) 65.842%,color-mix(in oklab,var(--sky-dark) 84.375%,var(--sky-astro) 15.625%) 66.059%,color-mix(in oklab,var(--sky-dark) 68.35900000000001%,var(--sky-astro) 31.641%) 66.276%,color-mix(in oklab,var(--sky-dark) 50%,var(--sky-astro) 50%) 66.493%,color-mix(in oklab,var(--sky-dark) 31.641000000000005%,var(--sky-astro) 68.359%) 66.71%,color-mix(in oklab,var(--sky-dark) 15.625%,var(--sky-astro) 84.375%) 66.927%,color-mix(in oklab,var(--sky-dark) 4.296999999999997%,var(--sky-astro) 95.703%) 67.144%,var(--sky-astro) 67.361%,color-mix(in oklab,var(--sky-astro) 95.703%,var(--sky-nautical) 4.297%) 67.795%,color-mix(in oklab,var(--sky-astro) 84.375%,var(--sky-nautical) 15.625%) 68.229%,color-mix(in oklab,var(--sky-astro) 68.35900000000001%,var(--sky-nautical) 31.641%) 68.663%,color-mix(in oklab,var(--sky-astro) 50%,var(--sky-nautical) 50%) 69.097%,color-mix(in oklab,var(--sky-astro) 31.641000000000005%,var(--sky-nautical) 68.359%) 69.531%,color-mix(in oklab,var(--sky-astro) 15.625%,var(--sky-nautical) 84.375%) 69.965%,color-mix(in oklab,var(--sky-astro) 4.296999999999997%,var(--sky-nautical) 95.703%) 70.399%,var(--sky-nautical) 70.833%,color-mix(in oklab,var(--sky-nautical) 95.703%,var(--sky-civil) 4.297%) 71.202%,color-mix(in oklab,var(--sky-nautical) 84.375%,var(--sky-civil) 15.625%) 71.571%,color-mix(in oklab,var(--sky-nautical) 68.35900000000001%,var(--sky-civil) 31.641%) 71.94%,color-mix(in oklab,var(--sky-nautical) 50%,var(--sky-civil) 50%) 72.309%,color-mix(in oklab,var(--sky-nautical) 31.641000000000005%,var(--sky-civil) 68.359%) 72.678%,color-mix(in oklab,var(--sky-nautical) 15.625%,var(--sky-civil) 84.375%) 73.047%,color-mix(in oklab,var(--sky-nautical) 4.296999999999997%,var(--sky-civil) 95.703%) 73.416%,var(--sky-civil) 73.785%,color-mix(in oklab,var(--sky-civil) 95.703%,var(--sky-day) 4.297%) 75.499%,color-mix(in oklab,var(--sky-civil) 84.375%,var(--sky-day) 15.625%) 77.214%,color-mix(in oklab,var(--sky-civil) 68.35900000000001%,var(--sky-day) 31.641%) 78.928%,color-mix(in oklab,var(--sky-civil) 50%,var(--sky-day) 50%) 80.642%,color-mix(in oklab,var(--sky-civil) 31.641000000000005%,var(--sky-day) 68.359%) 82.357%,color-mix(in oklab,var(--sky-civil) 15.625%,var(--sky-day) 84.375%) 84.071%,color-mix(in oklab,var(--sky-civil) 4.296999999999997%,var(--sky-day) 95.703%) 85.786%,var(--sky-day) 87.5%,var(--sky-day) 100%)",
+  "skySegments": [
+    {
+      "start": 1792404000000,
+      "end": 1792422000000,
+      "sky": "Daylight"
+    },
+    {
+      "start": 1792422000000,
+      "end": 1792424100000,
+      "sky": "Civil twilight"
+    },
+    {
+      "start": 1792424100000,
+      "end": 1792427100000,
+      "sky": "Nautical twilight"
+    },
+    {
+      "start": 1792427100000,
+      "end": 1792433700000,
+      "sky": "Astronomical twilight"
+    },
+    {
+      "start": 1792433700000,
+      "end": 1792460700000,
+      "sky": "Dark"
+    },
+    {
+      "start": 1792460700000,
+      "end": 1792463700000,
+      "sky": "Astronomical twilight"
+    },
+    {
+      "start": 1792463700000,
+      "end": 1792466700000,
+      "sky": "Nautical twilight"
+    },
+    {
+      "start": 1792466700000,
+      "end": 1792468800000,
+      "sky": "Civil twilight"
+    },
+    {
+      "start": 1792468800000,
+      "end": 1792490400000,
+      "sky": "Daylight"
+    }
+  ]
+}

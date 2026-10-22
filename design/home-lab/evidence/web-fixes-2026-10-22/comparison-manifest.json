@@ -1,0 +1,61 @@
+{
+  "rows": [
+    {
+      "name": "home-375",
+      "stage": "before",
+      "theme": "dark",
+      "width": 375,
+      "file": "home-375-before.png"
+    },
+    {
+      "name": "home-375",
+      "stage": "after",
+      "theme": "dark",
+      "width": 375,
+      "file": "home-375-after.png"
+    },
+    {
+      "name": "home-412",
+      "stage": "before",
+      "theme": "light",
+      "width": 412,
+      "file": "home-412-before.png"
+    },
+    {
+      "name": "home-412",
+      "stage": "after",
+      "theme": "light",
+      "width": 412,
+      "file": "home-412-after.png"
+    },
+    {
+      "name": "rig-375",
+      "stage": "before",
+      "theme": "field",
+      "width": 375,
+      "file": "rig-375-before.png"
+    },
+    {
+      "name": "rig-375",
+      "stage": "after",
+      "theme": "field",
+      "width": 375,
+      "file": "rig-375-after.png"
+    },
+    {
+      "name": "calendar-375",
+      "stage": "before",
+      "theme": "dark",
+      "width": 375,
+      "file": "calendar-375-before.png"
+    },
+    {
+      "name": "calendar-375",
+      "stage": "after",
+      "theme": "dark",
+      "width": 375,
+      "file": "calendar-375-after.png"
+    }
+  ],
+  "baseline": "Before uses HEAD app.js and the preserved CSS prefix before this package. Same current source model, fixtures, browser viewport and820px frame height. No source checkout or owner browser used."
+}

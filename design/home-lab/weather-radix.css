@@ -1,0 +1,38 @@
+@import url('./colors/radix/scales.css');
+/* Weather-only palette trial: unchanged Radix sRGB values, no new runtime library.
+   Gray neutrals, Blue action/data accents; Amber11 warnings and Red11 failures.
+   Field and other screens retain their existing palettes. */
+html[data-variant="blend"][data-theme="light"] .weather-radix,
+html[data-variant="blend"][data-theme="dark"] .weather-radix{
+  --surface-default:var(--radix-gray1);
+  --surface-subtle:var(--radix-gray2);
+  --surface-raised:var(--radix-gray3);
+  --surface-sunken:var(--radix-gray3);
+  --text-primary:var(--radix-gray12);
+  --text-secondary:var(--radix-gray11);
+  --text-tertiary:var(--radix-gray11);
+  --border-subtle:var(--radix-gray6);
+  --border-control:var(--radix-gray9);
+  --selection:var(--radix-blue3);
+  --action:var(--radix-blue11);
+  --on-action:var(--radix-gray1);
+  --error:var(--radix-red11);
+  --wx-caution:var(--data-caution);
+  --data-temperature:var(--radix-blue11);
+  --data-moisture:var(--radix-blue11);
+  --data-cloud:var(--radix-gray11);
+  --data-wind:var(--radix-blue11);
+  --data-caution:var(--radix-amber11);
+  --data-error:var(--radix-red11);
+  --data-unknown:var(--radix-gray11);
+  --data-disabled:var(--radix-gray9);
+  color:var(--text-primary);
+  background:var(--surface-default);
+}
+/* Amber11 is 4.494:1 on Gray1 in Light; keep the scale intact and use its next text role. */
+html[data-variant="blend"][data-theme="light"] .weather-radix{--data-caution:var(--radix-amber12)}
+html[data-variant="blend"]:is([data-theme="light"],[data-theme="dark"]) .weather-radix .wx-secondary-line{stroke:var(--radix-gray11)}
+html[data-variant="blend"]:is([data-theme="light"],[data-theme="dark"]) .weather-radix .wx-time-axis button[aria-pressed="true"]{background:var(--radix-blue5);color:var(--radix-blue12);border-bottom-color:var(--radix-blue11)}
+html[data-variant="blend"]:is([data-theme="light"],[data-theme="dark"]) .weather-radix .condition-tabs button[aria-current="page"]{color:var(--radix-blue11);border-bottom-color:var(--radix-blue11)}
+html[data-variant="blend"]:is([data-theme="light"],[data-theme="dark"]) .weather-radix a{color:var(--radix-blue11)}
+html[data-variant="blend"]:is([data-theme="light"],[data-theme="dark"]) .weather-radix :focus-visible{outline-color:var(--radix-blue11)}
