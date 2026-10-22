@@ -1,6 +1,6 @@
 import {weatherFreshnessLabel,nightDateLabels} from './night-ui.js?v=20261020-hybrid7';
 import {dataIcon} from './icons.js';
-import {browserStorage,readLibraryChoices,readPlanningPreferences,planningBudget,selectLibraryRecord,libraryKey,settingsKey} from './preview-bridge.js?v=20261020-hybrid7';
+import {browserStorage,readLibraryChoices,readPlanningPreferences,planningBudget,selectLibraryRecord,libraryKey,settingsKey,initialPlanningPreferences} from './preview-bridge.js?v=20261020-hybrid7';
 document.documentElement.dataset.sky=['dusk','slate','ink'].includes(new URLSearchParams(location.search).get('sky'))?new URLSearchParams(location.search).get('sky'):'dusk';
 import {targets as bundledTargets,rigs as bundledRigs,rigFor,targetName,defaultPlan,defaultBlock,newBlock,parseExposure,blockProblems,estimate,duration,assumptionsFor,readSavedPlan,savePlanRecord,saveProblem,readNavigationDraft,writeNavigationDraft,planStorageKey,navigationDraftKey,
   targetSample,catalogObjectCount,searchTargets,cameraClassLabels,trackingLabels,whiteBalancePresets,whiteBalanceLimits,tintApplies,whiteBalanceText,whiteBalanceEditErrors,planRelativeCurve,blockSteps} from './plan-model.js?v=20261020-hybrid7';
@@ -28,8 +28,13 @@ const allTargets=()=>libraryChoices.targets;
 const findTargets=q=>searchTargets(q,allTargets());
 const SITES=['Kyiv outskirts','Rural site',...libraryChoices.sites.map(s=>s.key)];
 const preferencesForPlan=()=>readPlanningPreferences(localStore,{initialDefaults:variant==='blend',plan});
-const currentBudget=()=>planningBudget(plan,preferencesForPlan(),plan?.siteSnapshot||plan?.targetSnapshot?null:totalTime(fixtureNight(plan.night).targetWindows)/1000);
+const usableOf=p=>p?.siteSnapshot||p?.targetSnapshot?null:totalTime(fixtureNight(p.night).targetWindows)/1000;
+const currentBudget=()=>planningBudget(plan,preferencesForPlan(),usableOf(plan));
 const currentAssumptions=()=>assumptionsFor(plan,currentBudget());
+// A plan saved without a budgetSnapshot (the initial example, a legacy record) showed the
+// budget of "no Settings record": initial Planning defaults in Hybrid, else the example
+// budget. Compare with that, so storing an unrelated preference (Weather view) is no change.
+const unsnapshottedBudget=p=>assumptionsFor(p,planningBudget(p,variant==='blend'?{...initialPlanningPreferences}:null,usableOf(p)));
 const currentEstimate=()=>estimate(plan,currentBudget());
 const FRAME_TYPES=['Light','Dark','Flat','Bias'];
 const WHITE_BALANCE=['Unrecorded','Auto',...whiteBalancePresets,'Kelvin','Custom'];
@@ -114,7 +119,7 @@ function persist(){
   catch{checkpointError=true;return false;}
 }
 function includeSnapshotChoices(){if(plan.rigSnapshot)rigs[plan.rig]=plan.rigSnapshot;if(plan.targetSnapshot)targets[plan.target]=plan.targetSnapshot.name;if(plan.siteSnapshot&&!SITES.includes(plan.site))SITES.push(plan.site);}
-const budgetChanged=()=>!!readPlanningPreferences(localStore)&&JSON.stringify(currentAssumptions())!==JSON.stringify(plan.budgetSnapshot||{});
+const budgetChanged=()=>!!readPlanningPreferences(localStore)&&JSON.stringify(currentAssumptions())!==JSON.stringify(plan.budgetSnapshot||unsnapshottedBudget(plan));
 const dirty=()=>JSON.stringify(plan)!==savedSnapshot||budgetChanged();
 const changed=screen=>JSON.stringify(screen.draft)!==screen.original;
 const stateWord=()=>dirty()?(hasSaved?'Saved · changed':'Not saved'):(hasSaved?'Saved':'Not saved');
@@ -128,8 +133,7 @@ function settingsBudgetReason(){
   let saved;
   try{saved=JSON.parse(savedSnapshot);}catch{return '';}
   if(!saved)return '';
-  const usable=saved.siteSnapshot||saved.targetSnapshot?null:totalTime(fixtureNight(saved.night).targetWindows)/1000;
-  const updated=planningBudget(saved,preferences,usable),baseline=assumptionsFor(saved);
+  const updated=planningBudget(saved,preferences,usableOf(saved)),baseline=saved.budgetSnapshot?assumptionsFor(saved):unsnapshottedBudget(saved);
   const differs=Object.keys(updated||{}).some(key=>
     !Number.isFinite(saved.assumptions?.[key])&&!Number.isFinite(plan.assumptions?.[key])&&updated[key]!==baseline[key]);
   return differs?'Settings defaults differ from the saved budget.':'';

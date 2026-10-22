@@ -219,7 +219,22 @@ html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.an
 html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]:checked:before{content:"";width:10px;height:10px;background:currentColor;clip-path:polygon(14% 42%,0 56%,40% 96%,100% 20%,84% 6%,38% 67%)}
 html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]:indeterminate:before{content:"";width:10px;height:2px;background:currentColor}
 html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input:is([type="radio"],[type="checkbox"]):focus-visible{outline:2px solid currentColor;outline-offset:3px}
+/* WQA-01: Field's primary action pair takes the bright red role, so its black label is 5.25:1, not
+   2.71:1 on #AA0000. Light/Dark actions, other concepts and the documented secondary/tertiary
+   tradeoff are unchanged. Hover underlines instead of darkening; pressed keeps the selection fill. */
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail,.planner-page dialog){--action:var(--text-primary)}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail,.planner-page dialog) .primary-button:hover{filter:none;text-decoration:underline;text-underline-offset:4px}
+/* WQA-03: accent-color alone leaves a light native range track, so Field ranges draw track, thumb and
+   focus in red/black roles. Native semantics, keys, step and pointer input are unchanged. */
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]{-webkit-appearance:none;appearance:none;background:transparent;color:var(--text-primary);min-height:48px}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--border-control)}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;margin-top:-10px;border:0;border-radius:50%;background:currentColor}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]::-moz-range-track{height:4px;border-radius:2px;background:var(--border-control)}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]::-moz-range-progress{height:4px;border-radius:2px;background:currentColor}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]::-moz-range-thumb{width:24px;height:24px;border:0;border-radius:50%;background:currentColor}
+html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 @media(forced-colors:active){
   html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input:is([type="radio"],[type="checkbox"]):is(:checked,:not(:checked)){appearance:auto;background:revert;border:revert}
   html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend,#detail.phone-detail) input[type="checkbox"]:is(:checked,:indeterminate):before{content:none}
+  html[data-theme="field"]:is([data-variant="blend"],:has(.variant-blend)) :is(.android-device,.variant-blend) input[type="range"]{-webkit-appearance:auto;appearance:auto}
 }

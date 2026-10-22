@@ -1,6 +1,6 @@
-import {browserStorage,readLibraryChoices,readPlanningPreferences,planningBudget,selectLibraryRecord,libraryKey,settingsKey} from './preview-bridge.js?v=20261020-hybrid7';
+import {browserStorage,readLibraryChoices,readPlanningPreferences,planningBudget,selectLibraryRecord,libraryKey,settingsKey,initialPlanningPreferences} from './preview-bridge.js?v=20261020-hybrid7';
 import { mountCatalog } from './catalog.js?v=20261020-hybrid7';
-import {rigFor,targetName,readSavedPlan,planStorageKey,targets,rigs,estimate,duration,defaultPlan,readNavigationDraft,writeNavigationDraft,navigationDraftKey} from './plan-model.js?v=20261020-hybrid7';
+import {rigFor,targetName,readSavedPlan,planStorageKey,targets,rigs,estimate,assumptionsFor,duration,defaultPlan,readNavigationDraft,writeNavigationDraft,navigationDraftKey} from './plan-model.js?v=20261020-hybrid7';
 import {fixtureDates,fixtureNight,nightLabel as fixtureNightLabel,timeLabel,hoursLabel,totalTime,resetCursor,weatherForNight,currentFixtureNight} from './night-model.js?v=20261020-hybrid7';
 import {timeline,updateTimeline,weatherWidgetSummary,dayTag,nightDateLabels,jumpCursor} from './night-ui.js?v=20261020-hybrid7';
 
@@ -121,7 +121,9 @@ function plan(key=state.variant) {
   const noBlock=previewPlan&&!previewPlan.blocks.some(block=>block.type==='Light');
   const missing = empty || needsSite || needsRig || noBlock;
   const previewEstimate=previewPlan?estimate(previewPlan,planningBudget(previewPlan,readPlanningPreferences(localStore,{initialDefaults:key==='blend',plan:previewPlan}),totalTime(fixtureNight(previewPlan.night).targetWindows)/1000)):null;
-  const preferenceChanged=readPlanningPreferences(localStore)&&JSON.stringify(previewEstimate?.assumptions)!==JSON.stringify(previewPlan?.budgetSnapshot||{});
+  // A plan saved without a budgetSnapshot showed the "no Settings record" budget (Hybrid: initial defaults).
+  const savedAssumptions=previewPlan&&(previewPlan.budgetSnapshot||assumptionsFor(previewPlan,planningBudget(previewPlan,key==='blend'?{...initialPlanningPreferences}:null,totalTime(fixtureNight(previewPlan.night).targetWindows)/1000)));
+  const preferenceChanged=readPlanningPreferences(localStore)&&JSON.stringify(previewEstimate?.assumptions)!==JSON.stringify(savedAssumptions||{});
   return `<section class="plan-section" aria-label="Your plan"><div class="plan-heading-row"><h4 class="home-section-title">Your plan</h4><span class="saved-label" data-persistence="${empty||!activePlanState?.hasSaved||(JSON.stringify(previewPlan)!==activePlanState.savedSnapshot||preferenceChanged)?'pending':'saved'}">${icon(empty||!activePlanState?.hasSaved||(JSON.stringify(previewPlan)!==activePlanState.savedSnapshot||preferenceChanged)?'edit':'check')}${empty||!activePlanState?.hasSaved?'Not saved':(JSON.stringify(previewPlan)!==activePlanState.savedSnapshot||preferenceChanged)?'Saved · changed':'Saved'}</span></div>
     <p class="target-name">${empty ? 'No target chosen' : escapeHtml(fixture.target)}</p><p class="rig-name">${empty ? 'Choose an object to see whether it fits.' : `${escapeHtml(previewPlan?.targetSnapshot?.catalogId|| (previewPlan?.targetSnapshot?'Your target':fixture.catalog))} · ${escapeHtml(previewPlan?(rigFor(previewPlan)?.name||'No rig selected'):'DSLR · 135 mm lens')}`}</p>
     <p class="fit-line">${icon(missing ? 'info' : 'check')}${needsSite ? 'Needs a site' : empty ? 'Needs a target' : needsRig?'Needs a rig':noBlock?'Needs a block':previewEstimate?.verdict==='Needs window'?'Imaging window unknown':previewEstimate?`${previewEstimate.verdict} in example window`:`Fits ${isTonight() ? 'tonight' : 'this night'}`}</p>
