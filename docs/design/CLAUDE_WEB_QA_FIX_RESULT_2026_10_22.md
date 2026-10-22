@@ -62,3 +62,7 @@ Preview: `python design/home-lab/scripts/serve_preview.py --port 4197` (loopback
 - Нові докази: `design/home-lab/evidence/qa-fixes-2026-10-22/` — `before-qa-fixes.json`, `after-qa-fixes.json` (усі виміри та повідомлення перевірок) і 53 PNG (26 `before-*`, 27 `after-*`; додатковий after — Field-діалог `Discard edit`) для кожної WQA.
 - Вихідні QA-докази: `design/home-lab/evidence/independent-final-qa-2026-10-22/` (без змін).
 - Один локальний коміт на `develop` містить лише scope-файли: 8 web-файлів, новий скрипт, нові докази й цей звіт. Його SHA наведено у фінальній відповіді сесії (не вписується сюди, щоб не вигадувати майбутній хеш). Push не виконувався.
+
+## Owner-приймання, 22.10.2026
+
+Власник прийняв вебеталон Hybrid у версії коміту `86873ce` (`design/home-lab/` на `develop`). Приймання стосується вебеталона як reference для подальшого перенесення у Flutter; воно не означає готовності Flutter/Android-реалізації і не закриває перевірки при 125/200% чи у Firefox, наведені в «Обмеження та невирішене».
