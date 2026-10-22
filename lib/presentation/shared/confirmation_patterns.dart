@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_button_styles.dart';
-
 /// What the user chose when unsaved changes would be left behind.
 enum UnsavedChoice { save, discard, cancel }
 
@@ -13,33 +11,66 @@ enum UnsavedChoice { save, discard, cancel }
 Future<UnsavedChoice> askUnsavedChanges(
   BuildContext context, {
   required String plan,
+  String message = '',
+  String saveLabel = 'Save and leave',
 }) async {
+  // plan.html `#leave-plan`: Cancel and Discard outlined, the save filled.
   final choice = await showDialog<UnsavedChoice>(
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Unsaved changes'),
-      content: Text('"$plan" has changes that are not saved.'),
+      content: Text(
+        message.isEmpty ? '"$plan" has changes that are not saved.' : message,
+      ),
       actions: [
-        TextButton(
+        OutlinedButton(
           key: const Key('unsaved.cancel'),
           onPressed: () => Navigator.pop(context, UnsavedChoice.cancel),
           child: const Text('Cancel'),
         ),
-        TextButton(
+        OutlinedButton(
           key: const Key('unsaved.discard'),
-          style: AppButtonStyles.destructiveText(Theme.of(context).colorScheme),
           onPressed: () => Navigator.pop(context, UnsavedChoice.discard),
           child: const Text('Discard'),
         ),
-        TextButton(
+        FilledButton(
           key: const Key('unsaved.save'),
           onPressed: () => Navigator.pop(context, UnsavedChoice.save),
-          child: const Text('Save'),
+          child: Text(saveLabel),
         ),
       ],
     ),
   );
   return choice ?? UnsavedChoice.cancel;
+}
+
+/// "Discard this edit?" (plan.html `#discard-edit`): an editor's unapplied
+/// fields; the draft keeps what was already applied. True only for
+/// Discard edit; Keep editing, Back and a tap outside keep the editor.
+Future<bool> askDiscardEdit(BuildContext context) async {
+  final discard = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Discard this edit?'),
+      content: const Text(
+        'Unapplied fields in this editor will be discarded. Changes you '
+        'already applied to the draft remain.',
+      ),
+      actions: [
+        OutlinedButton(
+          key: const Key('discardEdit.keep'),
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Keep editing'),
+        ),
+        FilledButton(
+          key: const Key('discardEdit.discard'),
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Discard edit'),
+        ),
+      ],
+    ),
+  );
+  return discard ?? false;
 }
 
 /// The one confirmation for a destructive action on something stored
@@ -62,14 +93,13 @@ Future<bool> confirmDestructive(
       title: Text(title),
       content: Text(message),
       actions: [
-        TextButton(
+        OutlinedButton(
           key: const Key('confirm.cancel'),
           onPressed: () => Navigator.pop(context, false),
           child: const Text('Cancel'),
         ),
-        TextButton(
+        FilledButton(
           key: const Key('confirm.action'),
-          style: AppButtonStyles.destructiveText(Theme.of(context).colorScheme),
           onPressed: () => Navigator.pop(context, true),
           child: Text(action),
         ),

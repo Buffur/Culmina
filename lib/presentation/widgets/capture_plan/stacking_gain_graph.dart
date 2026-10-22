@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/services/capture_budget_calculator.dart';
 import '../../../domain/services/stacking_gain_curve.dart';
@@ -24,7 +25,15 @@ class StackingGainGraph extends StatelessWidget {
     super.key,
     required this.curve,
     required this.groupLabel,
+    this.caption,
+    this.recorded,
   });
+
+  /// The panel's caption ("1 · L · 60 s · gain 100"), when shown.
+  final String? caption;
+
+  /// A recorded result's comparable frame count (Logbook), as a ring.
+  final int? recorded;
 
   final StackingGainCurve curve;
 
@@ -42,7 +51,7 @@ class StackingGainGraph extends StatelessWidget {
   ].join(' · ');
 
   static String _x(double? relative) =>
-      relative == null ? 'Unknown' : '${relative.toStringAsFixed(2)}x';
+      relative == null ? 'Unknown' : '${relative.toStringAsFixed(2)}×';
 
   static String _time(StackingGainCurve c, int frames) {
     final n = '$frames frame${frames == 1 ? '' : 's'}';
@@ -59,7 +68,13 @@ class StackingGainGraph extends StatelessWidget {
 
   /// The curve's end, named as a comparison (TD-076).
   static String comparisonLabel(StackingGainCurve c) =>
-      'For comparison: ${_time(c, c.maxFrames)} · ${_x(c.relativeAt(c.points.last))}';
+      'Comparison: ${_time(c, c.maxFrames)} · ${_x(c.relativeAt(c.points.last))}';
+
+  /// A recorded result on the plan's curve (logbook.js): "Recorded: 1 h 50
+  /// min (110 frames) · 0.96×", √(recorded / planned).
+  static String recordedLabel(StackingGainCurve c, int frames) =>
+      'Recorded: ${_time(c, frames)} · '
+      '${_x(StackingGainCurve.relativeToPlan(frames, c.frames))}';
 
   /// The text alternative: the plan's point, half its time (R-O2-1) and
   /// where the curve ends, for comparison; relative to the plan only.
@@ -80,52 +95,89 @@ class StackingGainGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
-    final text = Theme.of(context).textTheme;
-    final small = text.bodySmall?.copyWith(color: palette.textTertiary);
+    final hybrid =
+        Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
+    final note = AppTypography.caption.copyWith(
+      height: 1.6,
+      color: palette.textSecondary,
+    );
+    // plan.js `curvePanel` (Hybrid): caption, y title, the 320 × 150 plot,
+    // x title and the legend; 12 above and below the panel.
     return Semantics(
       label: describe(curve, groupLabel),
       excludeSemantics: true,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 48,
-              child: CustomPaint(painter: StackingGainPainter(curve, palette)),
-            ),
-            // The axis' ends, as text so it scales and wraps (200 %).
-            Row(
-              children: [
-                Expanded(child: Text(_time(curve, 1), style: small)),
-                Flexible(
-                  child: Text(
-                    comparisonLabel(curve),
-                    key: const Key('gainGraph.comparison'),
-                    style: small,
-                    textAlign: TextAlign.end,
-                  ),
+            if (caption != null) ...[
+              Text(
+                caption!,
+                style: AppTypography.body.copyWith(
+                  fontWeight: FontWeight.w600,
+                  height: 1.5,
+                  color: palette.textPrimary,
                 ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            // The plan's point, keyed to the dot by the same drawing.
-            Row(
-              children: [
-                SizedBox(
-                  width: 12,
-                  height: 12,
-                  child: CustomPaint(painter: PlanPointSwatch(palette)),
+              ),
+              const SizedBox(height: 10),
+            ],
+            Text('Relative to your planned time (1.00×)', style: note),
+            const SizedBox(height: 4),
+            AspectRatio(
+              aspectRatio:
+                  StackingGainPainter.width / StackingGainPainter.height,
+              child: CustomPaint(
+                painter: StackingGainPainter(
+                  curve,
+                  palette,
+                  hybrid: hybrid,
+                  surface: Theme.of(context).scaffoldBackgroundColor,
+                  recorded: recorded,
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(
-                    planLabel(curve),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Integration time for this group',
+              style: note,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            // `.gain-legend`: 18 in, 6 between items.
+            Padding(
+              padding: const EdgeInsets.only(left: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _LegendItem(
                     key: const Key('gainGraph.plan'),
-                    style: text.bodySmall?.copyWith(color: palette.textPrimary),
+                    swatch: PlanPointSwatch(palette, hybrid: hybrid),
+                    text: planLabel(curve),
+                    style: note,
                   ),
-                ),
-              ],
+                  if (recorded case final r?) ...[
+                    const SizedBox(height: 6),
+                    _LegendItem(
+                      key: const Key('gainGraph.recorded'),
+                      swatch: RecordedPointSwatch(
+                        palette,
+                        hybrid: hybrid,
+                        surface: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      text: recordedLabel(curve, r),
+                      style: note,
+                    ),
+                  ],
+                  const SizedBox(height: 6),
+                  _LegendItem(
+                    key: const Key('gainGraph.comparison'),
+                    swatch: _SquareSwatch(palette),
+                    text: comparisonLabel(curve),
+                    style: note,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -134,82 +186,309 @@ class StackingGainGraph extends StatelessWidget {
   }
 }
 
-/// The plan's point as the graph draws it (S6.16, TD-076), for its label.
-class PlanPointSwatch extends CustomPainter {
-  PlanPointSwatch(this.palette);
+class _LegendItem extends StatelessWidget {
+  const _LegendItem({
+    super.key,
+    required this.swatch,
+    required this.text,
+    required this.style,
+  });
 
-  final AppPalette palette;
+  final CustomPainter swatch;
+  final String text;
+  final TextStyle style;
 
   @override
-  void paint(Canvas canvas, Size size) =>
-      StackingGainPainter.paintPoint(canvas, size.center(Offset.zero), palette);
-
-  @override
-  bool shouldRepaint(PlanPointSwatch old) => old.palette != palette;
+  Widget build(BuildContext context) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 4.4),
+        child: SizedBox(
+          width: 12,
+          height: 12,
+          child: CustomPaint(painter: swatch),
+        ),
+      ),
+      const SizedBox(width: 6),
+      Expanded(child: Text(text, style: style)),
+    ],
+  );
 }
 
-/// Paints [curve]: integration time along x (from one frame to its end;
-/// one exposure, so in proportion to the frame count), √(T / T_plan) along y
-/// (from 0); the plan as a guide line and a dot. Public for tests, which
-/// check that it draws exactly the domain's points.
-class StackingGainPainter extends CustomPainter {
-  StackingGainPainter(this.curve, this.palette);
+/// The comparison key: a 12 px square in a 1 px secondary border.
+class _SquareSwatch extends CustomPainter {
+  _SquareSwatch(this.palette);
 
-  final StackingGainCurve curve;
   final AppPalette palette;
+
+  @override
+  void paint(Canvas canvas, Size size) => canvas.drawRect(
+    (Offset.zero & size).deflate(0.5),
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1
+      ..color = palette.textSecondary,
+  );
+
+  @override
+  bool shouldRepaint(_SquareSwatch old) => old.palette != palette;
+}
+
+/// The plan's key (`.gain-key-plan`): a 12 px disc in the gradient's end.
+class PlanPointSwatch extends CustomPainter {
+  PlanPointSwatch(this.palette, {this.hybrid});
+
+  final AppPalette palette;
+  final HybridTokens? hybrid;
+
+  @override
+  void paint(Canvas canvas, Size size) => canvas.drawCircle(
+    size.center(Offset.zero),
+    size.shortestSide / 2,
+    Paint()..color = (hybrid ?? HybridTokens.light).gainEnd,
+  );
+
+  @override
+  bool shouldRepaint(PlanPointSwatch old) =>
+      old.palette != palette || old.hybrid != hybrid;
+}
+
+/// The recorded result's key (logbook.js): a ring in the gradient's end.
+class RecordedPointSwatch extends CustomPainter {
+  RecordedPointSwatch(this.palette, {this.hybrid, required this.surface});
+
+  final AppPalette palette;
+  final HybridTokens? hybrid;
+  final Color surface;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final c = size.center(Offset.zero);
+    canvas.drawCircle(c, size.shortestSide / 2 - 1, Paint()..color = surface);
+    canvas.drawCircle(
+      c,
+      size.shortestSide / 2 - 1,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = (hybrid ?? HybridTokens.light).gainEnd,
+    );
+  }
+
+  @override
+  bool shouldRepaint(RecordedPointSwatch old) =>
+      old.palette != palette || old.hybrid != hybrid || old.surface != surface;
+}
+
+/// Paints [curve] in the reference's 320 × 150 box (plan.js `curvePanel`):
+/// time along x (one frame to the curve's end), √(T / T_plan) along y from
+/// 0; grid lines and labels at 0, 1.00× and the top; the axis; the soft area
+/// and the gradient line; a dashed guide and the plan's point. Draws exactly
+/// the domain's points (tests check). Public for tests.
+class StackingGainPainter extends CustomPainter {
+  StackingGainPainter(
+    this.curve,
+    this.palette, {
+    this.hybrid,
+    this.surface,
+    this.recorded,
+  });
+
+  final StackingGainCurve curve;
+  final AppPalette palette;
+  final HybridTokens? hybrid;
+  final Color? surface;
+
+  /// A recorded result's frame count, drawn as a ring on the curve.
+  final int? recorded;
+
+  static const width = 320.0, height = 150.0;
+  static const _l = 48.0, _r = 16.0, _t = 12.0, _b = 30.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final h = hybrid ?? HybridTokens.light;
+    canvas.save();
+    canvas.scale(size.width / width, size.height / height);
+    const w = width - _l - _r, ph = height - _t - _b;
     final span = (curve.maxFrames - 1).toDouble();
     final top = curve.relativeAt(curve.points.last) ?? 0;
-    Offset at(GainPoint p) => Offset(
-      span <= 0 ? 0 : (p.frames - 1) / span * size.width,
-      size.height -
-          (top <= 0 ? 0 : (curve.relativeAt(p) ?? 0) / top) * (size.height - 4),
-    );
+    double x(int frames) => _l + (span <= 0 ? 0 : (frames - 1) / span * w);
+    double y(double r) => _t + ph - (top <= 0 ? 0 : r / top * ph);
+    Offset at(GainPoint p) => Offset(x(p.frames), y(curve.relativeAt(p) ?? 0));
+    void label(String text, Offset anchor, TextAlign align) {
+      final tp = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 11,
+            color: palette.textSecondary,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      final dx = switch (align) {
+        TextAlign.end => anchor.dx - tp.width,
+        TextAlign.center => anchor.dx - tp.width / 2,
+        _ => anchor.dx,
+      };
+      // SVG text sits on its baseline.
+      tp.paint(
+        canvas,
+        Offset(
+          dx,
+          anchor.dy -
+              tp.computeDistanceToActualBaseline(TextBaseline.alphabetic),
+        ),
+      );
+    }
 
-    canvas.drawLine(
-      Offset(0, size.height),
-      Offset(size.width, size.height),
-      Paint()
-        ..color = palette.chartGrid
-        ..strokeWidth = 1,
-    );
-    final path = Path();
-    for (final (i, p) in curve.points.indexed) {
-      final o = at(p);
-      i == 0 ? path.moveTo(o.dx, o.dy) : path.lineTo(o.dx, o.dy);
+    final grid = Paint()
+      ..color = palette.border
+      ..strokeWidth = 1;
+    for (final (v, t) in [
+      (0.0, '0'),
+      (1.0, '1.00×'),
+      (top, '${top.toStringAsFixed(2)}×'),
+    ]) {
+      canvas.drawLine(Offset(_l, y(v)), Offset(_l + w, y(v)), grid);
+      label(t, Offset(_l - 6, y(v) + 4), TextAlign.end);
     }
     canvas.drawPath(
-      path,
+      Path()
+        ..moveTo(_l, _t)
+        ..lineTo(_l, _t + ph)
+        ..lineTo(_l + w, _t + ph),
       Paint()
-        ..color = palette.chartTarget
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
+        ..strokeWidth = 1
+        ..color = palette.controlBorder,
+    );
+    final line = Path();
+    for (final (i, p) in curve.points.indexed) {
+      final o = at(p);
+      i == 0 ? line.moveTo(o.dx, o.dy) : line.lineTo(o.dx, o.dy);
+    }
+    final area = Path.from(line)
+      ..lineTo(x(curve.maxFrames), _t + ph)
+      ..lineTo(x(1), _t + ph)
+      ..close();
+    final areaBox = area.getBounds();
+    canvas.drawPath(
+      area,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            h.gainEnd.withValues(alpha: 0.28),
+            h.gainEnd.withValues(alpha: 0),
+          ],
+        ).createShader(areaBox),
     );
     if (curve.frames >= 1) {
       final mark = at(GainPoint(curve.frames, curve.markedGain));
-      canvas.drawLine(
-        Offset(mark.dx, size.height),
-        mark,
-        Paint()
-          ..color = palette.chartGrid
-          ..strokeWidth = 1,
-      );
-      paintPoint(canvas, mark, palette);
+      // `.gain-guide`: dashed 3 3 in the control border.
+      final guide = Paint()
+        ..strokeWidth = 1
+        ..color = palette.controlBorder;
+      for (var yy = _t + ph; yy > mark.dy; yy -= 6) {
+        canvas.drawLine(
+          Offset(mark.dx, yy),
+          Offset(mark.dx, (yy - 3).clamp(mark.dy, _t + ph)),
+          guide,
+        );
+      }
     }
+    final lineBox = line.getBounds();
+    canvas.drawPath(
+      line,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round
+        ..shader = LinearGradient(colors: [h.gainStart, h.gainEnd])
+            .createShader(lineBox.width < 1 ? lineBox.inflate(1) : lineBox),
+    );
+    if (recorded case final r? when r >= 1 && r <= curve.maxFrames) {
+      final o = Offset(
+        x(r),
+        y(
+          curve.relativeAt(GainPoint(r, curve.markedGain)) ??
+              StackingGainCurve.relativeToPlan(r, curve.frames) ??
+              0,
+        ),
+      );
+      canvas.drawCircle(o, 5.5, Paint()..color = surface ?? h.onAction);
+      canvas.drawCircle(
+        o,
+        5.5,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = h.gainEnd,
+      );
+    }
+    if (curve.frames >= 1) {
+      final mark = at(GainPoint(curve.frames, curve.markedGain));
+      paintPoint(canvas, mark, palette, hybrid: h, surface: surface);
+    }
+    final exposure = Duration(milliseconds: curve.exposureMs);
+    if (curve.exposureMs > 0) {
+      if (curve.frames > 4) {
+        label(
+          QuantityText.duration(exposure),
+          const Offset(_l, height - 10),
+          TextAlign.start,
+        );
+      }
+      label(
+        QuantityText.duration(
+          Duration(milliseconds: curve.integrationAt(curve.frames)),
+        ),
+        Offset(x(curve.frames), height - 10),
+        TextAlign.center,
+      );
+      label(
+        QuantityText.duration(
+          Duration(milliseconds: curve.integrationAt(curve.maxFrames)),
+        ),
+        const Offset(_l + w, height - 10),
+        TextAlign.end,
+      );
+    }
+    canvas.restore();
   }
 
-  /// The plan's point: the altitude chart's "now" dot (S6.11); its label's
-  /// swatch draws the same (S6.16).
-  static void paintPoint(Canvas canvas, Offset at, AppPalette palette) {
-    canvas.drawCircle(at, 5, Paint()..color = palette.chartNow);
-    canvas.drawCircle(at, 2, Paint()..color = palette.chartNowCentre);
+  /// The plan's point (`.gain-point`): r 5.5 in the gradient's end with a
+  /// 1.5 surface stroke.
+  static void paintPoint(
+    Canvas canvas,
+    Offset at,
+    AppPalette palette, {
+    HybridTokens? hybrid,
+    Color? surface,
+  }) {
+    final h = hybrid ?? HybridTokens.light;
+    canvas.drawCircle(at, 5.5, Paint()..color = h.gainEnd);
+    canvas.drawCircle(
+      at,
+      5.5,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..color = surface ?? h.onAction,
+    );
   }
 
   @override
   bool shouldRepaint(StackingGainPainter old) =>
       old.curve.frames != curve.frames ||
       old.curve.exposureMs != curve.exposureMs ||
-      old.palette != palette;
+      old.palette != palette ||
+      old.hybrid != hybrid ||
+      old.recorded != recorded;
 }

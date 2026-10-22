@@ -341,7 +341,16 @@ class AppTheme {
       textStyle: label,
       foregroundColor: onOff(p.textPrimary),
       iconColor: onOff(p.textPrimary),
-      overlayColor: overlay(p.textPrimary),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (states) =>
+            states.contains(WidgetState.pressed) ? hybrid.selection : null,
+      ),
+      // The selection fill is the pressed feedback; no extra overlay.
+      overlayColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.pressed)
+            ? HybridTokens.transparent
+            : overlay(p.textPrimary).resolve(states),
+      ),
       side: WidgetStateProperty.resolveWith(
         (states) => BorderSide(
           color: states.contains(WidgetState.disabled)
@@ -351,47 +360,57 @@ class AppTheme {
       ),
     );
 
-    // D-06 (owner decision, 2026-10-21): in red field mode the primary
-    // action is red text and a red outline on black (about 5.3:1), not the
-    // JSON's black on #AA0000 (about 2.7:1); red only, for night vision.
+    // Primary action (styles.css, hybrid-refinement.css): the action fill
+    // with its on-action text in every theme. WQA-01 (owner-accepted web
+    // reference 86873ce): field mode's action is the bright red role with
+    // black text (5.25:1), replacing the D-06 red outline; hover underlines
+    // instead of darkening. Pressed: every Hybrid button takes the selection
+    // fill with primary text (`button:active`). Disabled: opacity .55.
     final field = identical(hybrid, HybridTokens.field);
+    Color disabled(Color c) => c.withValues(alpha: c.a * 0.55);
     return t.copyWith(
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           minimumSize: tall,
           shape: shape,
-          textStyle: WidgetStatePropertyAll(
-            text.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+          textStyle: WidgetStateProperty.resolveWith(
+            (states) => text.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+              decoration: field && states.contains(WidgetState.hovered)
+                  ? TextDecoration.underline
+                  : TextDecoration.none,
+            ),
           ),
           padding: const WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
           animationDuration: AppMotion.short,
-          backgroundColor: WidgetStateProperty.resolveWith(
-            (states) => field
-                ? t.scaffoldBackgroundColor
-                : states.contains(WidgetState.disabled)
-                ? hybrid.action.withValues(alpha: 0.12)
-                : hybrid.action,
-          ),
-          foregroundColor: WidgetStateProperty.resolveWith(
-            (states) => states.contains(WidgetState.disabled)
-                ? p.textDisabled
-                : field
-                ? p.textPrimary
-                : hybrid.onAction,
-          ),
-          side: field
-              ? WidgetStateProperty.resolveWith(
-                  (states) => BorderSide(
-                    color: states.contains(WidgetState.disabled)
-                        ? p.border
-                        : p.textPrimary,
-                    width: 1.5,
-                  ),
-                )
-              : null,
-          overlayColor: overlay(field ? p.textPrimary : hybrid.onAction),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabled(hybrid.action);
+            }
+            if (states.contains(WidgetState.pressed)) return hybrid.selection;
+            if (!field && states.contains(WidgetState.hovered)) {
+              return Color.lerp(hybrid.action, const Color(0xFF000000), 0.13);
+            }
+            return hybrid.action;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabled(hybrid.onAction);
+            }
+            if (states.contains(WidgetState.pressed)) return p.textPrimary;
+            return hybrid.onAction;
+          }),
+          iconColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabled(hybrid.onAction);
+            }
+            if (states.contains(WidgetState.pressed)) return p.textPrimary;
+            return hybrid.onAction;
+          }),
+          overlayColor: const WidgetStatePropertyAll(HybridTokens.transparent),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(style: secondary),
@@ -480,14 +499,32 @@ class AppTheme {
         suffixIconColor: p.textSecondary,
         fillColor: s.surface,
       ),
+      // plan.css `.planner-page dialog` (WQA-04): 20 from the app's edges
+      // (so 335 wide at 375 and 372 at 412), radius 12, a control-border
+      // outline, no shadow, 24 padding; the title 22/500, the message
+      // 14 secondary 16 below it, the actions 24 below, 8 apart, at the end.
       dialogTheme: DialogThemeData(
         backgroundColor: p.surfaceRaised,
+        surfaceTintColor: HybridTokens.transparent,
+        elevation: 0,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        barrierColor: const Color(0x55000000),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.large),
-          side: BorderSide(color: p.border),
+          side: BorderSide(color: p.controlBorder),
         ),
-        titleTextStyle: text.titleLarge?.copyWith(color: p.textPrimary),
-        contentTextStyle: text.bodyMedium?.copyWith(color: p.textSecondary),
+        titleTextStyle: text.titleLarge?.copyWith(
+          fontSize: 22,
+          height: 1.25,
+          fontWeight: FontWeight.w500,
+          color: p.textPrimary,
+        ),
+        contentTextStyle: text.bodyMedium?.copyWith(
+          fontSize: 14,
+          height: 1.5,
+          color: p.textSecondary,
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: p.surfaceRaised,

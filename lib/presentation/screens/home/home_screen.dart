@@ -12,9 +12,7 @@ import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/plan_lifecycle_viewmodel.dart';
 import '../../viewmodels/night_conditions_viewmodel.dart';
 import '../../viewmodels/capture_analysis_viewmodel.dart';
-import '../../widgets/planner_summary_card.dart';
 import '../../widgets/planner_sections.dart';
-import '../../shared/info_row.dart';
 import '../../shared/example_text.dart';
 import '../../../domain/models/equipment_profile.dart';
 import '../../shared/collapsible_section.dart';
@@ -28,7 +26,6 @@ import '../../widgets/capture_plan_widget.dart';
 import '../../widgets/plan_tracking.dart';
 import '../../widgets/sky_darkness_widget.dart';
 import '../../shared/night_text.dart';
-import '../details/night_moon_screen.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -38,6 +35,17 @@ import '../../shared/plan_state.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/unsaved_plan_prompt.dart';
 import '../../shared/plan_night_phrase.dart';
+import '../../shared/hybrid_icon.dart';
+import '../../shared/hybrid_parts.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../domain/models/moon_conditions.dart';
+import '../../../domain/models/night_timeline.dart';
+import '../../../domain/models/night_weather.dart';
+import '../../../domain/models/night_weather_summary.dart';
+import '../../../domain/models/session_night.dart';
+import '../../../domain/models/tracking_type.dart';
+import '../../../domain/models/camera_class.dart';
+import 'plan_context_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -92,237 +100,162 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       const _PlanIdentity(),
                       const PlanStatus(showFillAction: false),
-                      KeyedSubtree(
+                      const SizedBox(height: 24),
+                      // plan.js `rowButton` (Hybrid): the plan's context,
+                      // target and rig, each opening its scoped chooser.
+                      HybridPlanRow(
                         key: const Key('planner.context'),
-                        child: ContextLine(
-                          framed: false,
-                          siteName: SiteLabel.of(siteVm),
-                          night: planVm.eveningDate,
-                          zoneId: siteVm.displayZoneId,
-                          nightStartUtc: planVm.sessionNight?.startUtc,
-                          onSite: () => context.push(AppRouter.selectSite),
-                          onNight: () async {
-                            final picked = await pickNight(
-                              context,
-                              initial: planVm.eveningDate,
-                            );
-                            if (picked != null && context.mounted) {
-                              await runWithFeedback(
-                                context,
-                                'change the night',
-                                () => planVm.setEveningDate(picked),
-                              );
-                            }
-                          },
+                        label: 'Site and night',
+                        value: SiteLabel.of(siteVm) ?? ContextLine.noSite,
+                        caption: planVm.sessionNight == null
+                            ? 'No night without a site'
+                            : siteVm.displayZoneId == null
+                            ? 'Times in the device zone'
+                            : 'Site zone: ${siteVm.displayZoneId}',
+                        onTap: () => openPlanContext(context),
+                      ),
+                      HybridPlanRow(
+                        key: Key(
+                          target == null
+                              ? 'planner.noTarget'
+                              : 'planner.target',
+                        ),
+                        label: 'Target',
+                        value: target == null
+                            ? 'Not chosen'
+                            : (target.commonName != null &&
+                                  target.commonName != target.catalogId)
+                            ? '${target.catalogId} · ${target.commonName}'
+                            : target.commonName ?? target.catalogId,
+                        caption: target == null
+                            ? 'Choose a target'
+                            : [
+                                target.type,
+                                // ADR-010 §3: existing moving-type targets
+                                // stay usable, with a visible warning.
+                                if (TargetTypes.isMoving(target.type))
+                                  TargetTypes.movingWarning,
+                                // TASK 10.3: inside the night's windows,
+                                // not at culmination (possibly daylight).
+                                if (conditionsVm.imagingOpportunity
+                                    case final o?)
+                                  o.maxAltitudeInWindowsDeg == null
+                                      ? words('no window tonight')
+                                      : 'max ${QuantityText.degrees(o.maxAltitudeInWindowsDeg!, digits: 1)} in windows',
+                                // F18 A1: the altitude at this moment, said
+                                // so when the plan's night is another one.
+                                if (conditionsVm.currentAltitude case final a?)
+                                  otherNight
+                                      ? "now ${QuantityText.degrees(a, digits: 1)} (not the plan's night)"
+                                      : 'now ${QuantityText.degrees(a, digits: 1)}',
+                              ].join(' · '),
+                        onTap: () => context.push(AppRouter.selectTarget),
+                      ),
+                      HybridPlanRow(
+                        key: Key(
+                          equipment == null ? 'planner.noRig' : 'planner.rig',
+                        ),
+                        label: AppWords.rig,
+                        value: equipment == null
+                            ? 'Not chosen'
+                            : equipment.name,
+                        caption: equipment == null
+                            ? AppWords.chooseRig
+                            : [
+                                // RD-04 (S6.8): the example says it is one.
+                                if (equipment.isExample) ExampleText.rig,
+                                equipment.cameraClass.label,
+                                '${_trimNumber(equipment.focalLengthMm)} mm '
+                                    '${_focalRatio(equipment)}',
+                                'tracking ${_trackingWords(planVm.effectiveTracking)}',
+                              ].join(' · '),
+                        // D8 A: a rig created there becomes this plan's.
+                        onTap: () => context.push(
+                          equipment == null
+                              ? AppRouter.selectRigForPlan
+                              : AppRouter.selectRig,
                         ),
                       ),
-                      if (target != null) ...[
-                        PlannerSummaryCard(
-                          key: const Key('planner.target'),
-                          label: 'Target',
-                          caption: target.type,
-                          title:
-                              (target.commonName != null &&
-                                  target.commonName != target.catalogId)
-                              ? '${target.catalogId} · ${target.commonName}'
-                              : target.commonName ?? target.catalogId,
-                          data: {
-                            'Type': target.type,
-                            // ADR-010 §3: existing moving-type targets
-                            // stay usable, with a visible warning.
-                            if (TargetTypes.isMoving(target.type))
-                              'Note': TargetTypes.movingWarning,
-                            // F18 A1: "Altitude now" leads only when the
-                            // plan's night is tonight; otherwise it is in the
-                            // current-sky detail below.
-                            if (conditionsVm.currentAltitude != null &&
-                                !otherNight)
-                              'Altitude now': QuantityText.degrees(
-                                conditionsVm.currentAltitude!,
-                                digits: 1,
-                              ),
-                            // TASK 10.3: inside the night's windows, not at
-                            // culmination (possibly in daylight).
-                            if (conditionsVm.imagingOpportunity case final o?)
-                              'Max altitude in windows':
-                                  o.maxAltitudeInWindowsDeg == null
-                                  ? words('no window tonight')
-                                  : QuantityText.degrees(
-                                      o.maxAltitudeInWindowsDeg!,
-                                      digits: 1,
-                                    ),
-                          },
-                          below:
-                              conditionsVm.currentAltitude != null && otherNight
-                              ? CollapsibleSection(
-                                  sectionKey: PlannerSections.currentSky,
-                                  title: 'Current sky (not the plan\'s night)',
-                                  summary:
-                                      'Altitude now: ${QuantityText.degrees(conditionsVm.currentAltitude!, digits: 1)}',
-                                  child: Text(
-                                    'The altitude at this moment, not at any '
-                                    'time on the plan\'s night; the windows '
-                                    'above are for that night.',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall,
-                                  ),
-                                )
-                              : null,
-                          onTap: () => context.push(AppRouter.selectTarget),
-                        ),
-                      ] else
-                        _ChooseCard(
-                          key: const Key('planner.noTarget'),
-                          text: 'No target chosen.',
-                          action: 'Choose a target',
-                          onTap: () => context.push(AppRouter.selectTarget),
-                        ),
-                      if (equipment != null) ...[
-                        PlannerSummaryCard(
-                          key: const Key('planner.rig'),
-                          label: AppWords.rig,
-                          caption:
-                              '${equipment.isExample ? '${ExampleText.rig} · ' : ''}'
-                              '${_trimNumber(equipment.focalLengthMm)} mm · '
-                              '${_focalRatio(equipment)}',
-                          title: equipment.name,
-                          data: {
-                            // RD-04 (S6.8): the example says it is one.
-                            if (equipment.isExample)
-                              'Note': ExampleText.rigNote,
-                            // S6.6: the values this plan uses first,
-                            // then any active capability warning
-                            // (TASK 8.6, guidance). S6.7: the reference
-                            // rows are one tap away, below.
-                            if (analysisVm.rigCapability case final cap?)
-                              'Field of view': CapabilityText.fov(cap),
-                            'Pixel scale': analysisVm.pixelScale != null
-                                ? '${analysisVm.pixelScale!.toStringAsFixed(2)} arcsec/px'
-                                : 'Unknown',
-                            if (analysisVm.rigCapability case final cap?
-                                when cap.frameFillFraction != null)
-                              'Target size': CapabilityText.frameFill(cap)!,
-                            if (analysisVm.rigCapability case final cap?
-                                when cap.npf != null)
-                              'NPF (untracked)': CapabilityText.npf(cap)!,
-                            if (analysisVm.rigCapability case final cap?
-                                when cap.recommendedMaxSubS != null)
-                              'Max sub (guide)':
-                                  CapabilityText.recommendedMaxSub(cap)!,
-                          },
-                          below: CollapsibleSection(
-                            sectionKey: PlannerSections.rigDetails,
-                            title: 'Specifications',
-                            // A fact, and the review flag stays in view.
-                            summary:
-                                '${_trimNumber(equipment.focalLengthMm)} mm · '
-                                '${_focalRatio(equipment)} · '
-                                '${AppWords.tracking}: ${equipment.trackingType.label}',
-                            child: Column(
-                              children: [
-                                for (final (label, value) in [
-                                  (
-                                    'Focal length',
-                                    '${_trimNumber(equipment.focalLengthMm)} mm',
-                                  ),
-                                  ('Focal ratio', _focalRatio(equipment)),
-                                  (
-                                    'Sensor',
-                                    '${_trimNumber(equipment.sensorWidthMm)} × ${_trimNumber(equipment.sensorHeightMm)} mm (${_trimNumber(equipment.pixelPitchUm)} µm pixels)',
-                                  ),
-                                  (
-                                    AppWords.tracking,
-                                    equipment.trackingType.label,
-                                  ),
-                                ])
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: InfoRow(label: label, value: value),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          onTap: () => context.push(AppRouter.selectRig),
-                        ),
-                        // S7.1 (RD-08 = T3): the plan's own tracking.
-                        const PlanTrackingRow(),
-                      ] else
-                        _ChooseCard(
-                          key: const Key('planner.noRig'),
-                          text: 'No rig chosen.',
-                          action: AppWords.chooseRig,
-                          // D8 A: a rig created there becomes this plan's.
-                          onTap: () => context.push(AppRouter.selectRigForPlan),
-                        ),
-                      _SectionHeader(AppWords.capturePlan),
+                      const SizedBox(height: 24),
+                      HybridSectionTitle(
+                        AppWords.capturePlan,
+                        trailing: _blockCount(planVm),
+                      ),
+                      const SizedBox(height: 6),
                       CapturePlanWidget(
                         blockActions: PlanStatus.missingInput(planVm) == null
                             ? FillWindowAction(fit: analysisVm.fitAnalysis)
                             : null,
                       ),
-                      // AM-01 (F18 A1): "Tonight for this target", its chart,
-                      // window list and placeholder are out of the plan for
-                      // this release; the status keeps the availability and
-                      // the fit's reason, and Night & Moon and Weather stay
-                      // one tap away below.
-                      _SectionHeader('The night ahead'),
-                      // S6.5 (UX-06, UX-10): the night and its
-                      // forecast in full are on their detail screens;
-                      // here one factual row each. Without a site the
-                      // location card is shown (ADR-012).
-                      if (planVm.sessionNight case final night?) ...[
-                        _DetailRow(
-                          key: const Key('planner.night'),
-                          title: 'Night & Moon',
-                          onTap: () => context.push(AppRouter.nightMoon),
-                          child: NightSummary(
-                            night: night,
-                            dark: conditionsVm.nightTimeline?.darkAtLimit,
-                            moon: conditionsVm.moonConditions,
-                            zoneId: siteVm.displayZoneId,
-                            words: words,
-                          ),
-                        ),
-                        _DetailRow(
-                          key: const Key('planner.weather'),
-                          title: 'Weather',
-                          onTap: () => context.push(AppRouter.weather),
-                          child: Text(
-                            WeatherText.summary(
-                              conditionsVm.nightWeather,
-                              conditionsVm.nightWeatherSummary,
-                            ),
-                          ),
-                        ),
-                        // S6.7: the zone rule, once for the section's
-                        // times (trap 2).
+                      if (equipment != null)
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: Text(
-                            ContextLine.zoneRule(
-                              night.startUtc,
-                              zoneId: siteVm.displayZoneId,
-                            ),
-                            key: const Key('planner.conditionsZone'),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: AppPalette.of(context).textTertiary,
-                                ),
+                          padding: const EdgeInsets.only(top: 8),
+                          child: CollapsibleSection(
+                            key: const Key('planner.rigDetails'),
+                            sectionKey: PlannerSections.rigDetails,
+                            title: 'Rig details',
+                            summary: equipment.name,
+                            child: _RigDetails(rig: equipment),
                           ),
+                        ),
+                      // AM-01 (F18 A1): the night and its forecast in full
+                      // are on their detail screens; here one factual row
+                      // each (plan.js night rows). Without a site the
+                      // location row is shown (ADR-012).
+                      const SizedBox(height: 32),
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          'The night ahead',
+                          style: AppTypography.nightHeading.copyWith(
+                            letterSpacing: -0.25,
+                            color: AppPalette.of(context).textPrimary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      if (planVm.sessionNight case final night?) ...[
+                        HybridNightRow(
+                          key: const Key('planner.night'),
+                          icon: HybridIcons.lucideMoon,
+                          label: 'Night & Moon',
+                          value: _nightValue(
+                            context,
+                            night,
+                            conditionsVm,
+                            siteVm.displayZoneId,
+                            words,
+                          ),
+                          extra: _moonExtra(
+                            context,
+                            night,
+                            conditionsVm,
+                            siteVm.displayZoneId,
+                          ),
+                          onTap: () => context.push(AppRouter.nightMoon),
+                        ),
+                        HybridNightRow(
+                          key: const Key('planner.weather'),
+                          icon: HybridIcons.lucideCloud,
+                          iconColor: Theme.of(context)
+                              .extension<HybridTokens>()
+                              ?.accent,
+                          label: 'Weather',
+                          value: _weatherValue(conditionsVm),
+                          extra: _weatherExtra(conditionsVm),
+                          onTap: () => context.push(AppRouter.weather),
                         ),
                       ] else
-                        PlannerSummaryCard(
+                        HybridPlanRow(
                           // Only while the default position is in use.
-                          title:
-                              '${AppWords.site}: '
-                              '${siteVm.locationName ?? 'not set (default position)'}',
-                          data: {
-                            'Latitude': siteVm.latitude.toStringAsFixed(4),
-                            'Longitude': siteVm.longitude.toStringAsFixed(4),
-                            if (siteVm.locationNameAttribution != null)
-                              'Place name': siteVm.locationNameAttribution!,
-                          },
+                          label: AppWords.site,
+                          value:
+                              siteVm.locationName ??
+                              'Not set (default position)',
+                          caption:
+                              '${siteVm.latitude.toStringAsFixed(4)}, '
+                              '${siteVm.longitude.toStringAsFixed(4)}'
+                              '${siteVm.locationNameAttribution == null ? '' : ' · ${siteVm.locationNameAttribution}'}',
                           onTap: () => context.push(AppRouter.selectSite),
                         ),
                       const SkyDarknessWidget(),
@@ -339,15 +272,16 @@ class HomeScreen extends StatelessWidget {
           ? null
           // TASK 15.3: not a BottomAppBar — its fixed 80 px height squeezed
           // the buttons below the 48 px tap target (and clips large text).
+          // plan.css `.plan-savebar`: a subtle rule above, padding 12 20 8.
           : Material(
               color: Theme.of(context).scaffoldBackgroundColor,
               elevation: 0,
+              shape: Border(
+                top: BorderSide(color: AppPalette.of(context).border),
+              ),
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 12.0,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
                   child: _SaveBar(words: words),
                 ),
               ),
@@ -370,7 +304,17 @@ class _SaveBar extends StatelessWidget {
     final analysis = context.read<CaptureAnalysisViewModel>();
     final missing = PlanStatus.missingInput(plan);
     final blocked = missing != null;
-    final save = FilledButton.icon(
+    final session = plan.activeSession;
+    final state = session == null ? null : PlanState.of(session);
+    // plan.js `mainBar`: the plan's persistence in words above Save plan.
+    final reason = missing != null
+        ? 'To save: ${words(missing.reason)}'
+        : state == PlanState.saved || state == PlanState.tracking
+        ? 'Saved on this device.'
+        : state == PlanState.savedChanged
+        ? 'Changes are not saved yet.'
+        : 'This plan is not saved yet.';
+    final save = FilledButton(
       key: const Key('planner.save'),
       onPressed: blocked
           ? null
@@ -384,67 +328,48 @@ class _SaveBar extends StatelessWidget {
               );
               if (saved && context.mounted) showDone(context, 'Plan saved');
             },
-      icon: const Icon(Icons.save_outlined),
-      label: const Text(AppWords.savePlan),
+      style: FilledButton.styleFrom(
+        minimumSize: const Size.fromHeight(48),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        textStyle: AppTypography.itemTitle.copyWith(height: 1.5),
+      ),
+      child: const Text(AppWords.savePlan),
     );
-    if (missing == null) return save;
-    final route = missing.route ?? AppRouter.selectSite;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          liveRegion: true,
-          child: Text(
-            'To save: ${words(missing.reason)}',
-            key: const Key('planner.saveReason'),
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        // Wraps at large text rather than overflowing (trap 17).
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.xs,
-          crossAxisAlignment: WrapCrossAlignment.center,
+        Row(
           children: [
-            save,
-            OutlinedButton(
-              key: const Key('planner.saveFix'),
-              onPressed: () => context.push(route),
-              child: Text(missing.action ?? 'Set a site'),
+            Expanded(
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  reason,
+                  key: Key(
+                    missing == null
+                        ? 'planner.saveState'
+                        : 'planner.saveReason',
+                  ),
+                  style: AppTypography.caption.copyWith(
+                    height: 1.55,
+                    color: AppPalette.of(context).textSecondary,
+                  ),
+                ),
+              ),
             ),
+            if (missing != null)
+              TextButton(
+                key: const Key('planner.saveFix'),
+                onPressed: () =>
+                    context.push(missing.route ?? AppRouter.selectSite),
+                child: Text(missing.action ?? 'Set a site'),
+              ),
           ],
         ),
+        const SizedBox(height: AppSpacing.sm),
+        save,
       ],
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-
-  const _SectionHeader(this.title);
-
-  /// S6.16: the section-heading role of the type scale (DESIGN_SYSTEM §3),
-  /// a semantic header, so the sections no longer outrank the answer.
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 24.0,
-        bottom: 12.0,
-        left: 0.0,
-        right: 0.0,
-      ),
-      child: Semantics(
-        header: true,
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium
-              ?.copyWith(color: AppPalette.of(context).textPrimary),
-        ),
-      ),
     );
   }
 }
@@ -481,40 +406,6 @@ class _BootstrapErrorView extends StatelessWidget {
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// A missing target or rig in its section (S6.6): says so and offers the
-/// picker; the planner's structure stays around it.
-class _ChooseCard extends StatelessWidget {
-  const _ChooseCard({
-    super.key,
-    required this.text,
-    required this.action,
-    required this.onTap,
-  });
-
-  final String text;
-  final String action;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: HybridTokens.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Wrap(
-          spacing: 12,
-          runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(text),
-            OutlinedButton(onPressed: onTap, child: Text(action)),
           ],
         ),
       ),
@@ -563,49 +454,6 @@ class _DefaultLocationBanner extends StatelessWidget {
   }
 }
 
-/// A factual summary row that opens a detail screen (S6.5; ADR-019 §6): a
-/// title, the summary below it (wrapping at large text), and a chevron.
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({
-    super.key,
-    required this.title,
-    required this.child,
-    required this.onTap,
-  });
-
-  final String title;
-  final Widget child;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: HybridTokens.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(title, style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.xs),
-                    child,
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// A plan edit could not be saved (TASK 15.1): the change is still on
 /// screen, and the next edit tries again.
 class _AutosaveFailureBanner extends StatelessWidget {
@@ -636,7 +484,11 @@ class _PlanMenu extends StatelessWidget {
     return PopupMenuButton<_PlanAction>(
       key: const Key('planner.menu'),
       tooltip: 'Plan actions',
-      icon: const Icon(Icons.more_vert),
+      icon: HybridIcon(
+        HybridIcons.planMore,
+        size: MediaQuery.textScalerOf(context).scale(24),
+        strokeWidth: 1.8,
+      ),
       onSelected: (action) => switch (action) {
         _PlanAction.newPlan => _newPlan(context),
         _PlanAction.copy => _copy(context),
@@ -703,38 +555,203 @@ class _PlanIdentity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final plan = context.watch<SessionPlanViewModel>();
-    // F18 A1: the target appears once, in its card; the strip keeps the
-    // night and the plan's state.
+    // F18 A1: the target appears once, in its row; the strip keeps the
+    // night and the plan's state (plan.js `plan-identity`, Hybrid).
     final evening = plan.eveningDate;
     final session = plan.activeSession;
-    final text = Theme.of(context).textTheme;
     return Semantics(
       key: const Key('planner.identity'),
       container: true,
-      child: Material(
-        color: HybridTokens.transparent,
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-            child: Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.xs,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text(
-                  evening == null
-                      ? 'No night without a site'
-                      : '${AppWords.nightOf} '
-                            '${NightTimeFormatter.eveningDate(evening)}',
-                  style: text.bodySmall,
-                ),
-                if (session != null) PlanStateLabel(PlanState.of(session)),
-              ],
+      child: Wrap(
+        spacing: 12,
+        runSpacing: AppSpacing.xs,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            evening == null
+                ? 'No night without a site'
+                : '${AppWords.nightOf} ${NightTimeFormatter.eveningDate(evening)}'
+                      ' · Ends ${NightTimeFormatter.eveningDate(evening.addDays(1))}',
+            style: AppTypography.caption.copyWith(
+              color: AppPalette.of(context).textSecondary,
             ),
           ),
-        ),
+          if (session != null) PlanStateLabel(PlanState.of(session)),
+        ],
       ),
     );
   }
 }
+
+/// "1 block · 120 frames" (plan.js capture heading), with the example
+/// plan's flag first (RD-04).
+String? _blockCount(SessionPlanViewModel plan) {
+  final blocks = plan.captureBlocks;
+  if (blocks.isEmpty) return null;
+  final frames = blocks.fold<int>(0, (sum, b) => sum + b.frameCount);
+  return [
+    if (plan.isExampleCapturePlan) ExampleText.plan,
+    '${blocks.length} block${blocks.length == 1 ? '' : 's'}',
+    '$frames frame${frames == 1 ? '' : 's'}',
+  ].join(' · ');
+}
+
+/// The rig row's tracking words (plan.js: "tracking not recorded").
+String _trackingWords(TrackingType t) => switch (t) {
+  TrackingType.unknown => 'not recorded',
+  TrackingType.untracked => 'untracked',
+  TrackingType.tracked => 'tracked',
+  TrackingType.guided => 'guided',
+};
+
+/// Plan's Night & Moon row value: "7 h 30 min dark · 21:15–04:45", or why
+/// there is none (plan.js night rows; clock times without the day tag).
+String _nightValue(
+  BuildContext context,
+  SessionNight night,
+  NightConditionsViewModel c,
+  String? zoneId,
+  String Function(String) words,
+) {
+  String clock(DateTime utc) =>
+      NightTimeFormatter.clockTime(context, utc, zoneId: zoneId);
+  return switch (c.nightTimeline?.darkAtLimit) {
+    SunCrossing(:final duskUtc, :final dawnUtc) => () {
+      final from = duskUtc ?? night.startUtc, to = dawnUtc ?? night.endUtc;
+      return '${QuantityText.duration(to.difference(from))} dark · '
+          '${clock(from)}–${clock(to)}';
+    }(),
+    SunAlwaysBelow() =>
+      '${QuantityText.duration(night.endUtc.difference(night.startUtc))} dark · all night',
+    SunNeverBelow() => words('No dark time tonight'),
+    null => 'Calculating…',
+  };
+}
+
+/// "Moon-free 00:30–04:45 · Waxing gibbous, 62%".
+String? _moonExtra(
+  BuildContext context,
+  SessionNight night,
+  NightConditionsViewModel c,
+  String? zoneId,
+) {
+  final moon = c.moonConditions;
+  if (moon == null) return null;
+  String clock(DateTime utc) =>
+      NightTimeFormatter.clockTime(context, utc, zoneId: zoneId);
+  final free = c.moonFree;
+  final phase = [
+    if (moon.phaseName case final p?) MoonText.phaseName(p),
+    QuantityText.percent(moon.illuminationAtMidnight * 100),
+  ].join(', ');
+  final freeText = free == null
+      ? null
+      : switch (free.kind) {
+          MoonFreeKind.noDark => 'No moon-free dark',
+          MoonFreeKind.none => 'Moon up through dark time',
+          _ =>
+            'Moon-free ${free.intervals.map((i) => '${clock(i.$1)}–${clock(i.$2)}').join(', ')}',
+        };
+  return [?freeText, phase].join(' · ');
+}
+
+/// "Cloud 19–42% in the dark", or the forecast's state.
+String _weatherValue(NightConditionsViewModel c) => switch (c.nightWeather) {
+  NightWeatherIdle() || NightWeatherLoading() => 'Loading forecast',
+  NightWeatherOutOfRange() => 'No forecast yet',
+  NightWeatherUnavailable() => 'Forecast unavailable',
+  NightWeatherAvailable() => switch (c.nightWeatherSummary) {
+    final s? when s.span == NightWeatherSpan.noDark => 'No dark-time forecast',
+    final s? when s.cloudCover != null =>
+      'Cloud ${QuantityText.percentRange(s.cloudCover!.min, s.cloudCover!.max)} in the dark',
+    _ => 'Cloud cover unknown',
+  },
+};
+
+/// "Full dark-time coverage · Stale snapshot · updated 3 h ago".
+String? _weatherExtra(NightConditionsViewModel c) => switch (c.nightWeather) {
+  NightWeatherOutOfRange() => 'Beyond the 16-day forecast',
+  NightWeatherUnavailable(:final failure) => WeatherText.failure(failure),
+  final NightWeatherAvailable a => [
+    if (c.nightWeatherSummary case final s?
+        when s.span != NightWeatherSpan.noDark)
+      s.complete ? 'Full dark-time coverage' : 'Partial dark-time coverage',
+    switch (a.age) {
+      WeatherAge.current => null,
+      WeatherAge.aging => 'Aging snapshot',
+      WeatherAge.stale => 'Stale snapshot',
+    },
+    'updated ${WeatherText.ago(a.ageDuration)}',
+  ].whereType<String>().join(' · '),
+  _ => null,
+};
+
+/// Rig details (plan.js `rigDetails`): the rig's recorded specifications,
+/// what this plan derives from them, and the plan's own tracking (S7.1).
+class _RigDetails extends StatelessWidget {
+  const _RigDetails({required this.rig});
+
+  final EquipmentProfile rig;
+
+  @override
+  Widget build(BuildContext context) {
+    final analysis = context.watch<CaptureAnalysisViewModel>();
+    final cap = analysis.rigCapability;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 12),
+        HybridFacts([
+          ('Camera type', rig.cameraClass.label),
+          ('Camera', rig.cameraModel ?? 'Not recorded'),
+          (
+            'Sensor',
+            '${_trimNumber(rig.sensorWidthMm)} × ${_trimNumber(rig.sensorHeightMm)} mm',
+          ),
+          (
+            'Resolution',
+            '${rig.resolutionWidthPx} × ${rig.resolutionHeightPx} px',
+          ),
+          ('Pixel pitch', '${_trimNumber(rig.pixelPitchUm)} µm'),
+          ('Focal length', '${_trimNumber(rig.focalLengthMm)} mm'),
+          ('Focal ratio', _focalRatio(rig)),
+          (AppWords.tracking, rig.trackingType.label),
+          if (cap != null) ('Field of view', CapabilityText.fov(cap)),
+          (
+            'Pixel scale',
+            analysis.pixelScale != null
+                ? '${analysis.pixelScale!.toStringAsFixed(2)} arcsec/px'
+                : 'Unknown',
+          ),
+          if (cap?.frameFillFraction != null)
+            ('Target size', CapabilityText.frameFill(cap!)!),
+          if (cap?.npf != null) ('NPF (untracked)', CapabilityText.npf(cap!)!),
+          if (cap?.recommendedMaxSubS != null)
+            ('Max sub (guide)', CapabilityText.recommendedMaxSub(cap!)!),
+          (
+            'Recorded in blocks',
+            switch (rig.cameraClass.lightSensitivity) {
+              LightSensitivity.iso => 'ISO on every light block',
+              LightSensitivity.gain => 'Gain on every light block',
+              LightSensitivity.either =>
+                'ISO or gain: set the camera type to record it',
+            },
+          ),
+        ]),
+        // S7.1 (RD-08 = T3): the plan's own tracking.
+        const SizedBox(height: 8),
+        const PlanTrackingRow(),
+        if (rig.isExample) ...[
+          const SizedBox(height: 8),
+          HybridNote(ExampleText.rigNote),
+        ],
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+}
+
+/// Opens Site and night (plan.js `context` screen): the observing site and
+/// the night, applied to the working plan together.
+Future<void> openPlanContext(BuildContext context) => Navigator.of(context)
+    .push<void>(MaterialPageRoute(builder: (_) => const PlanContextScreen()));

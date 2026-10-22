@@ -126,8 +126,9 @@ class AppPalette extends ThemeExtension<AppPalette> {
   static AppPalette of(BuildContext context) =>
       Theme.of(context).extension<AppPalette>() ?? light;
 
-  static const _lightCaution = Color(0xFF9A5B00); // dark amber: 5.0:1+
-  static const _darkCaution = Color(0xFFFFB74D); // orange.shade300
+  // The accepted web cascade's caution role (notion-hybrid.css, 86873ce).
+  static const _lightCaution = Color(0xFF754600); // 8.0:1 on white
+  static const _darkCaution = Color(0xFFFFCA70); // 11.7:1 on #191919
 
   static const light = AppPalette(
     statusFits: AppColors.lightTextPrimary,

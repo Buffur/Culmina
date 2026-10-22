@@ -9,12 +9,11 @@ import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/planning_preferences.dart';
 import '../../../domain/services/capture_budget_calculator.dart';
 import '../../shared/app_words.dart';
-import '../../shared/collapsible_section.dart';
+import '../../shared/hybrid_parts.dart';
 import '../../viewmodels/capture_analysis_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 import '../../navigation/app_router.dart';
-import '../planner_sections.dart';
 
 /// Every assumption behind the capture budget and the fit (ADR-009 §4;
 /// TASK 5.6). An overhead that is off reads "Not included" — never a hidden
@@ -143,24 +142,15 @@ class CaptureAssumptionsPanel extends StatelessWidget {
     final plan = context.watch<SessionPlanViewModel>();
     final rig = plan.selectedEquipment;
     final overrides = plan.planOverrides;
-    final small = Theme.of(context).textTheme.bodySmall;
-    return CollapsibleSection(
-      key: const Key('capturePlan.assumptions'),
-      sectionKey: PlannerSections.assumptions,
-      title: 'Assumptions',
-      summary: summary(p, overrides),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          OutlinedButton(
-            key: const Key('planOverride.edit'),
-            onPressed: () => Navigator.of(context).push<void>(
-              MaterialPageRoute(builder: (_) => const PlanOverridesEditor()),
-            ),
-            child: const Text('Edit plan assumptions'),
-          ),
-          Text('Preferences, not laws — measure your rig.', style: small),
-          for (final (label, value) in rows(
+    // Inside Plan's "Budget and assumptions" (plan.js `budgetDisclosure`):
+    // the values the calculation uses, the reminders, then Edit
+    // assumptions (this plan) and Change in Settings (global).
+    return Column(
+      key: const Key('capturePlan.assumptionsBody'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        HybridFacts(
+          rows(
             p,
             budget,
             overrides: overrides,
@@ -170,47 +160,41 @@ class CaptureAssumptionsPanel extends StatelessWidget {
                       ? "a dark as long as each light (the rig's setting)"
                       : 'Not included'
                 : null,
-          ))
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(child: Text(label)),
-                  const SizedBox(width: 8),
-                  Flexible(child: Text(value, textAlign: TextAlign.end)),
-                ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        const HybridNote(
+          'Preferences, not laws — measure your rig. Frames are placed one '
+          'after another and never span a gap between windows. Calibration '
+          'taken outside the window or from your library does not use '
+          'window time.',
+        ),
+        const SizedBox(height: 8),
+        HybridNote(focusReminder, key: const Key('capturePlan.focusReminder')),
+        const SizedBox(height: 8),
+        HybridNote(scope, key: const Key('capturePlan.assumptionsScope')),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            OutlinedButton(
+              key: const Key('planOverride.edit'),
+              onPressed: () => Navigator.of(context).push<void>(
+                MaterialPageRoute(builder: (_) => const PlanOverridesEditor()),
               ),
+              child: const Text('Edit assumptions'),
             ),
-          Text(
-            'Frames are placed one after another and never span a gap '
-            'between windows. Calibration taken outside the window or from '
-            'your library does not use window time.',
-            style: small,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            focusReminder,
-            key: const Key('capturePlan.focusReminder'),
-            style: small,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            scope,
-            key: const Key('capturePlan.assumptionsScope'),
-            style: small,
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
+            TextButton(
               key: const Key('capturePlan.changeSettings'),
               // UX-S R3: over the plan; Back returns to this section.
               onPressed: () => context.push(AppRouter.planSettings),
               child: const Text('Change in Settings'),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

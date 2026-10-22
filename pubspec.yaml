@@ -80,11 +80,17 @@ flutter:
     - assets/catalog/catalog_v2.json
     - assets/catalog/OPENNGC_NOTICE.txt
     - assets/fonts/OFL-Geist.txt
+    - assets/fonts/OFL-SourceSerif4.txt
+    - assets/fonts/LICENSE-Lucide.txt
 
   fonts:
     - family: Geist
       fonts:
         - asset: assets/fonts/Geist.ttf
+    # Hybrid editorial night headings (font=native); opsz 14 is applied in code.
+    - family: Source Serif 4
+      fonts:
+        - asset: assets/fonts/SourceSerif4.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

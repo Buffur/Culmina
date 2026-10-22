@@ -20,12 +20,67 @@ abstract final class AppTypography {
   /// Supporting copy, distinct from the 16 sp data/body role.
   static final TextStyle support = _style(14, 22, FontWeight.w400);
 
-  /// Editorial night section, using the owner's Geist override.
-  static final TextStyle nightHeading = _style(
-    25,
-    32.5,
-    FontWeight.w400,
-  ).copyWith(letterSpacing: -0.5);
+  /// Source Serif 4 as the browser loads it (Google Fonts wght-only file =
+  /// the variable font at opsz 14; measured, see SourceSerif4.source.json).
+  static const serifFamily = 'Source Serif 4';
+  static const serifVariations = [FontVariation('opsz', 14)];
+
+  static TextStyle serif(double size, double lineHeight, double tracking) =>
+      TextStyle(
+        fontFamily: serifFamily,
+        fontVariations: serifVariations,
+        fontSize: size,
+        height: lineHeight / size,
+        fontWeight: FontWeight.w400,
+        letterSpacing: tracking,
+      );
+
+  /// Editorial night section ("The night ahead"): serif 25/32.5, -0.5.
+  static final TextStyle nightHeading = serif(25, 32.5, -0.5);
+
+  /// Night, Moon and Weather answers: serif 28/36.4, -0.02 em.
+  static final TextStyle answerHeading = serif(28, 36.4, -0.56);
+
+  // The Hybrid role scale (owner-accepted 2026-10-22, a594837/93e0eb6):
+  // a label never reads smaller than the content it introduces.
+  /// Screen title and screen answer: 22/500.
+  static final TextStyle screenTitle = _style(22, 27.5, FontWeight.w500);
+
+  /// Section heading, disclosures included: 20/600.
+  static final TextStyle sectionHeading = _style(
+    20,
+    28,
+    FontWeight.w600,
+  ).copyWith(letterSpacing: -0.3);
+
+  /// Section subject (Home target): 18/500.
+  static final TextStyle sectionSubject = _style(18, 23.4, FontWeight.w500);
+
+  /// Item title and sub-heading: 16/600.
+  static final TextStyle itemTitle = _style(16, 22.4, FontWeight.w600);
+
+  /// List-row title (Settings, Library, Logbook rows): 16/500.
+  static final TextStyle rowTitle = _style(16, 24, FontWeight.w500);
+
+  /// Primary value: 15/400.
+  static final TextStyle value = _style(15, 21.75, FontWeight.w400);
+
+  /// Body: 14/400.
+  static final TextStyle body = _style(14, 21.7, FontWeight.w400);
+
+  /// Caption, hint and note: 13/400.
+  static final TextStyle caption = _style(13, 19.5, FontWeight.w400);
+
+  /// Dense data only (tables, hourly strip, calendar, chart axes): 12/400.
+  static final TextStyle dense = _style(12, 18, FontWeight.w400);
+
+  /// Root navigation labels: the platform face (Roboto), 11.
+  static const TextStyle navigationLabel = TextStyle(
+    fontFamily: 'Roboto',
+    fontSize: 11,
+    height: 1.5,
+    letterSpacing: 0,
+  );
 
   static final TextStyle homeHeading = _style(
     29,
@@ -35,16 +90,12 @@ abstract final class AppTypography {
 
   /// Hybrid Home roles from styles.css and hybrid-refinement.css.
   static final TextStyle homePlanHeading = _style(
-    14,
-    21,
+    20,
+    28,
     FontWeight.w600,
   ).copyWith(letterSpacing: -0.15);
 
-  static final TextStyle homeTarget = _style(
-    21,
-    27.3,
-    FontWeight.w500,
-  ).copyWith(letterSpacing: -0.5);
+  static final TextStyle homeTarget = _style(18, 23.4, FontWeight.w500);
 
   static final TextStyle homeWordmark = _style(
     13,

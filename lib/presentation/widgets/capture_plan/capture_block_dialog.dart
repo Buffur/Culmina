@@ -678,28 +678,18 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   }
 
   /// Back or the close affordance: an unchanged editor closes; a changed
-  /// one asks with the shared prompt, whose dismissal keeps the editor.
+  /// one asks "Discard this edit?" (plan.html `#discard-edit`), whose Keep
+  /// editing or dismissal keeps the editor and its input.
   Future<void> _leave() async {
     if (!_changed) {
       _leaving = true;
       Navigator.pop(context);
       return;
     }
-    final i = widget.initial;
-    final choice = await askUnsavedChanges(
-      context,
-      plan: i == null ? 'New block' : BlockText.identity(i),
-    );
-    if (!mounted) return;
-    switch (choice) {
-      case UnsavedChoice.cancel:
-        return;
-      case UnsavedChoice.discard:
-        _leaving = true;
-        Navigator.pop(context);
-      case UnsavedChoice.save:
-        await _submit();
-    }
+    final discard = await askDiscardEdit(context);
+    if (!mounted || !discard) return;
+    _leaving = true;
+    Navigator.pop(context);
   }
 
   void _setTipsShown(bool shown) {

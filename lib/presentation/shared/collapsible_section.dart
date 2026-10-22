@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
+import 'hybrid_icon.dart';
 import '../viewmodels/disclosure_viewmodel.dart';
 
 /// Detail one tap away (S5.5; ADR-019 §7, RD-06, RG-06): a header with the
@@ -24,7 +26,16 @@ class CollapsibleSection extends StatelessWidget {
     this.initiallyOpen = false,
     this.open,
     this.onToggle,
+    this.topRule = true,
+    this.titleStyle,
   });
+
+  /// The Hybrid disclosure's thin rule above it (`.plan-disclosure`).
+  final bool topRule;
+
+  /// A nested disclosure's smaller title (Library 15/600); defaults to the
+  /// section heading role 20/600.
+  final TextStyle? titleStyle;
 
   /// Stable and unique, e.g. `planner.budgetDetails`; it names the stored
   /// preference, so never rename one without a reason.
@@ -49,7 +60,6 @@ class CollapsibleSection extends StatelessWidget {
     final open =
         this.open ?? vm!.isOpen(sectionKey, initiallyOpen: initiallyOpen);
     final p = AppPalette.of(context);
-    final text = Theme.of(context).textTheme;
     void toggle() => controlled ? onToggle!() : vm!.setOpen(sectionKey, !open);
     final resize = AppMotion.duration(context, AppMotion.medium);
     final Widget body = open
@@ -59,59 +69,85 @@ class CollapsibleSection extends StatelessWidget {
           )
         : const SizedBox(width: double.infinity);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Semantics(
-          key: Key('section.$sectionKey'),
-          button: true,
-          enabled: true,
-          expanded: open,
-          onTap: toggle,
-          hint: open ? 'Collapse' : 'Expand',
-          excludeSemantics: true,
-          label: [title, ?summary].join(', '),
-          child: InkWell(
-            onTap: toggle,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 48),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: text.titleSmall?.copyWith(
-                              color: p.textPrimary,
+    // The Hybrid disclosure (hybrid-refinement.css `.plan-disclosure`):
+    // grid title | chevron, gap 16, min 48, padding 6 0; title 20/600 at
+    // 1.4; caption 13 at 1.4, 2 below; an 18 px chevron (m9 5 7 7-7 7,
+    // stroke 1.7) turned down when closed and up when open (120 ms).
+    final header = Semantics(
+      key: Key('section.$sectionKey'),
+      button: true,
+      enabled: true,
+      expanded: open,
+      onTap: toggle,
+      hint: open ? 'Collapse' : 'Expand',
+      excludeSemantics: true,
+      label: [title, ?summary].join(', '),
+      child: InkWell(
+        onTap: toggle,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style:
+                            (titleStyle ??
+                                    AppTypography.sectionHeading.copyWith(
+                                      height: 1.4,
+                                      letterSpacing: 0,
+                                    ))
+                                .copyWith(color: p.textPrimary),
+                      ),
+                      if (summary != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            summary!,
+                            style: AppTypography.caption.copyWith(
+                              height: 1.4,
+                              color: p.textSecondary,
                             ),
                           ),
-                          if (summary != null)
-                            Text(
-                              summary!,
-                              style: text.bodyMedium?.copyWith(
-                                color: p.textSecondary,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    AnimatedRotation(
-                      turns: open ? 0.5 : 0,
-                      duration: AppMotion.duration(context, AppMotion.short),
-                      curve: AppMotion.curve,
-                      child: Icon(Icons.expand_more, color: p.textSecondary),
-                    ),
-                  ],
+                        ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: AppSpacing.md),
+                AnimatedRotation(
+                  turns: open ? -0.25 : 0.25,
+                  duration: AppMotion.duration(context, AppMotion.short),
+                  curve: AppMotion.curve,
+                  child: HybridIcon(
+                    HybridIcons.chevron,
+                    size: 18,
+                    color: p.textSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (topRule)
+          DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: p.border)),
+            ),
+            child: header,
+          )
+        else
+          header,
         // Reduced motion: no AnimatedSize at all (with a zero duration it
         // throws a layout assertion).
         if (resize == Duration.zero)

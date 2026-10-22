@@ -6,6 +6,8 @@ import '../../core/theme/app_palette.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import '../../core/theme/hybrid_view_entrance.dart';
 import '../shared/app_words.dart';
+import '../shared/hybrid_icon.dart';
+import '../../core/theme/app_typography.dart';
 
 /// The bottom-navigation shell of ADR-015 (TASK 12.2): Tonight · Logbook ·
 /// Library · Settings, one navigator per tab.
@@ -22,28 +24,19 @@ class AppShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
   final bool showNavigation;
 
-  static List<NavigationDestination> get destinations => [
-    const NavigationDestination(
-      icon: Icon(Icons.nights_stay_outlined),
-      selectedIcon: Icon(Icons.nights_stay),
-      label: 'Tonight',
-    ),
+  /// The four roots with the reference's line icons (workspace.js `paths`).
+  static List<({HybridIconData icon, String label})> get items => [
+    (icon: HybridIcons.moon, label: 'Tonight'),
     if (FeatureScope.logbook)
-      const NavigationDestination(
-        icon: Icon(Icons.book_outlined),
-        selectedIcon: Icon(Icons.book),
-        label: AppWords.logbook, // S8.5 (RD-14)
-      ),
-    const NavigationDestination(
-      icon: Icon(Icons.inventory_2_outlined),
-      selectedIcon: Icon(Icons.inventory_2),
-      label: 'Library',
-    ),
-    const NavigationDestination(
-      icon: Icon(Icons.tune_outlined),
-      selectedIcon: Icon(Icons.tune),
-      label: 'Settings',
-    ),
+      (icon: HybridIcons.book, label: AppWords.logbook), // S8.5 (RD-14)
+    (icon: HybridIcons.library, label: 'Library'),
+    (icon: HybridIcons.settings, label: 'Settings'),
+  ];
+
+  /// Kept for callers that list the destinations' labels.
+  static List<NavigationDestination> get destinations => [
+    for (final i in items)
+      NavigationDestination(icon: HybridIcon(i.icon), label: i.label),
   ];
 
   @override
@@ -56,10 +49,64 @@ class AppShell extends StatelessWidget {
     final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
     final theme = Theme.of(context);
     final palette = AppPalette.of(context);
-    final selectedSurface =
-        identical(theme.extension<HybridTokens>(), HybridTokens.field)
-        ? theme.cardColor
-        : theme.colorScheme.surface;
+    final hybrid = theme.extension<HybridTokens>() ?? HybridTokens.light;
+    // workspace.css `.app-nav` (Hybrid): a subtle top rule, padding 8 4,
+    // four equal 56 px buttons 2 apart; the selected one on the subtle
+    // surface (radius 6) in 600 primary, the others 400 secondary; a 19 px
+    // icon 5 above the 11 px Roboto label. At large text, two per row.
+    Widget button(int i) {
+      final selected = i == navigationShell.currentIndex;
+      final color = selected ? palette.textPrimary : palette.textSecondary;
+      final item = items[i];
+      return Semantics(
+        selected: selected,
+        button: true,
+        label: item.label,
+        excludeSemantics: true,
+        child: Material(
+          color: selected ? hybrid.surfaceSubtle : HybridTokens.transparent,
+          borderRadius: BorderRadius.circular(6),
+          child: InkWell(
+            key: Key('nav.${item.label.toLowerCase()}'),
+            borderRadius: BorderRadius.circular(6),
+            onTap: () => select(i),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 56),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Center(
+                  child: Wrap(
+                    direction: largeText ? Axis.horizontal : Axis.vertical,
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: largeText ? 8 : 5,
+                    children: [
+                      HybridIcon(
+                        item.icon,
+                        size: MediaQuery.textScalerOf(context).scale(19),
+                        color: color,
+                      ),
+                      Text(
+                        item.label,
+                        textAlign: TextAlign.center,
+                        style: AppTypography.navigationLabel.copyWith(
+                          color: color,
+                          fontWeight: selected
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final perRow = largeText ? 2 : items.length;
     return PopScope(
       canPop: onTonight,
       onPopInvokedWithResult: (didPop, _) {
@@ -74,115 +121,36 @@ class AppShell extends StatelessWidget {
             ? null
             : DecoratedBox(
                 decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
                   border: Border(top: BorderSide(color: palette.border)),
                 ),
-                child: largeText
-                    ? SafeArea(
-                        top: false,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (
-                                var row = 0;
-                                row < destinations.length;
-                                row += 2
-                              )
-                                Row(
-                                  children: [
-                                    for (
-                                      var i = row;
-                                      i < row + 2 && i < destinations.length;
-                                      i++
-                                    )
-                                      Expanded(
-                                        child: Semantics(
-                                          selected:
-                                              i == navigationShell.currentIndex,
-                                          child: TextButton(
-                                            onPressed: () => select(i),
-                                            style: TextButton.styleFrom(
-                                              minimumSize: const Size(48, 56),
-                                              backgroundColor:
-                                                  i ==
-                                                      navigationShell
-                                                          .currentIndex
-                                                  ? selectedSurface
-                                                  : null,
-                                              foregroundColor:
-                                                  i ==
-                                                      navigationShell
-                                                          .currentIndex
-                                                  ? palette.textPrimary
-                                                  : palette.textSecondary,
-                                            ),
-                                            child: Wrap(
-                                              alignment: WrapAlignment.center,
-                                              crossAxisAlignment:
-                                                  WrapCrossAlignment.center,
-                                              spacing: 8,
-                                              children: [
-                                                destinations[i].icon,
-                                                Text(
-                                                  destinations[i].label,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall
-                                                      ?.copyWith(
-                                                        fontSize: HybridTokens
-                                                            .navigationLabelSize,
-                                                        color:
-                                                            i ==
-                                                                navigationShell
-                                                                    .currentIndex
-                                                            ? palette
-                                                                  .textPrimary
-                                                            : palette
-                                                                  .textSecondary,
-                                                        fontWeight:
-                                                            i ==
-                                                                navigationShell
-                                                                    .currentIndex
-                                                            ? FontWeight.w600
-                                                            : FontWeight.w400,
-                                                      ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                            ],
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var row = 0; row < items.length; row += perRow)
+                          Padding(
+                            padding: EdgeInsets.only(top: row == 0 ? 0 : 2),
+                            child: Row(
+                              children: [
+                                for (
+                                  var i = row;
+                                  i < row + perRow && i < items.length;
+                                  i++
+                                ) ...[
+                                  if (i > row) const SizedBox(width: 2),
+                                  Expanded(child: button(i)),
+                                ],
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    : NavigationBar(
-                        height: 64,
-                        labelTextStyle: WidgetStateProperty.resolveWith(
-                          (states) => theme.textTheme.bodySmall?.copyWith(
-                            fontSize: HybridTokens.navigationLabelSize,
-                            fontWeight: states.contains(WidgetState.selected)
-                                ? FontWeight.w600
-                                : FontWeight.w400,
-                            color: states.contains(WidgetState.selected)
-                                ? palette.textPrimary
-                                : palette.textSecondary,
-                          ),
-                        ),
-                        backgroundColor: Theme.of(context)
-                            .scaffoldBackgroundColor,
-                        indicatorShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        indicatorColor: selectedSurface,
-                        selectedIndex: navigationShell.currentIndex,
-                        destinations: destinations,
-                        // Tapping the current tab again returns to its root.
-                        onDestinationSelected: select,
-                      ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
       ),
     );

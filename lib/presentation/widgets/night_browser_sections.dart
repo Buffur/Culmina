@@ -5,25 +5,42 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/models/calendar_date.dart';
 import '../../domain/models/moon_conditions.dart';
+import '../../domain/models/night_timeline.dart';
+import '../../domain/models/visibility_window.dart';
 import '../../domain/services/moon_calendar.dart';
 import '../../domain/services/night_view.dart';
 import '../shared/night_text.dart';
 import '../shared/sky_color_interpolation.dart';
 import '../shared/night_time_formatter.dart';
 import '../viewmodels/night_browser_viewmodel.dart';
+import '../viewmodels/night_conditions_viewmodel.dart';
 import '../viewmodels/site_viewmodel.dart';
 
 /// The viewed night's daylight, twilight, darkness and Moon on one bar,
 /// with the time slider (F15 A1/A5; AM-01 SP07): the primary explanation
 /// of the night. The bar's segments come from [NightView.segments]; the
-/// Moon-up and Moon-free lanes have distinct positions and thicknesses. Moving the slider changes viewing state only.
+/// Moon-up and Moon-free lanes have distinct positions and thicknesses.
+/// Moving the slider changes viewing state only.
+///
+/// Hybrid composition (night-ui.js `timeline`, night.css, accepted web
+/// reference 86873ce): "Preview time" and the previewed instant; two jumps
+/// to the start and end of dark time; the 14 px sky band with its two 8 px
+/// Moon lanes 4 px below; the rail's end labels, the hint, the key, the
+/// encoding note, "Exact times & reading key" and the cursor's state.
 class NightBarSection extends StatelessWidget {
-  const NightBarSection({super.key, this.compact = false});
+  const NightBarSection({super.key, this.compact = true, this.home = false});
+
+  /// Kept for callers; the Hybrid browser is the compact one everywhere.
   final bool compact;
+
+  /// Tonight's rail end labels use the page's normal leading (17 px at
+  /// 13 px, `.concept` cascade); Night & Moon's use 1.5.
+  final bool home;
 
   @override
   Widget build(BuildContext context) {
@@ -31,146 +48,207 @@ class NightBarSection extends StatelessWidget {
     final zoneId = context.watch<SiteViewModel>().displayZoneId;
     final view = browser.view;
     final night = view.night;
-    final text = Theme.of(context).textTheme;
+    final p = AppPalette.of(context);
+    final caption = AppTypography.caption.copyWith(color: p.textSecondary);
+    const tabular = [FontFeature.tabularFigures()];
     String at(DateTime utc) => NightTimeFormatter.instant(
       context,
       utc,
       windowStartUtc: night.startUtc,
       zoneId: zoneId,
     );
+    String dated(DateTime utc) =>
+        NightTimeFormatter.datedClock(context, utc, zoneId: zoneId);
     final n = view.sun.altitudesDeg.length;
     final cursor = browser.cursor;
     final index = view.indexOf(cursor.instantUtc);
-    final wall = NightTimeFormatter.wallClock(
-      cursor.instantUtc,
-      zoneId: zoneId,
-    );
-    final date = NightTimeFormatter.eveningDate(
-      CalendarDate.fromDateTimeFields(wall),
-    );
-    final zone = NightTimeFormatter.zoneCaption(
-      cursor.instantUtc,
-      zoneId: zoneId,
-    );
+    final dark = view.darkInterval;
     return Column(
       key: const Key('nightMoon.bar'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          header: true,
-          child: Text('Preview time', style: text.bodySmall),
-        ),
-        const SizedBox(height: AppSpacing.xs),
         Wrap(
           alignment: WrapAlignment.spaceBetween,
           crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: AppSpacing.sm,
+          spacing: 12,
+          runSpacing: 8,
           children: [
-            Text('${at(cursor.instantUtc)}, $date', style: text.bodySmall),
-            OutlinedButton(
-              key: Key(browser.nowInView ? 'nightMoon.now' : 'nightMoon.start'),
-              onPressed: browser.resetCursor,
-              child: Text(
-                browser.nowInView ? 'Return to now' : 'Return to night start',
+            Semantics(
+              header: true,
+              child: Text('Preview time', style: caption),
+            ),
+            Text(
+              NightTimeFormatter.previewInstant(
+                context,
+                cursor.instantUtc,
+                zoneId: zoneId,
+              ),
+              key: const Key('nightMoon.previewTime'),
+              style: AppTypography.caption.copyWith(
+                color: p.textPrimary,
+                fontFeatures: tabular,
               ),
             ),
           ],
         ),
-        SizedBox(
-          height: 56,
-          child: Stack(
+        const SizedBox(height: 8),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Positioned.fill(
-                child: Semantics(
-                  label:
-                      'Night bar: ${NightBrowseText.bar(view.segments, view.limitDeg, at)}',
-                  excludeSemantics: true,
-                  child: CustomPaint(
-                    painter: NightBarPainter(
-                      view: view,
-                      cursorIndex: index,
-                      palette: AppPalette.of(context),
-                      hybrid: Theme.of(context).extension<HybridTokens>(),
+              for (final end in [false, true]) ...[
+                if (end) const SizedBox(width: 8),
+                Expanded(
+                  child: _JumpButton(
+                    view: view,
+                    dark: dark,
+                    end: end,
+                    at: at,
+                    onPressed: () => browser.jumpCursor(end: end),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          child: SizedBox(
+            height: 42,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned.fill(
+                  child: Semantics(
+                    label:
+                        'Night bar: ${NightBrowseText.bar(view.segments, view.limitDeg, at)}',
+                    excludeSemantics: true,
+                    child: CustomPaint(
+                      painter: NightBarPainter(
+                        view: view,
+                        cursorIndex: index,
+                        palette: p,
+                        hybrid: Theme.of(context).extension<HybridTokens>(),
+                        surface: Theme.of(context).scaffoldBackgroundColor,
+                      ),
                     ),
                   ),
                 ),
+                Positioned.fill(
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      trackHeight: 0,
+                      thumbColor: HybridTokens.transparent,
+                      activeTrackColor: HybridTokens.transparent,
+                      inactiveTrackColor: HybridTokens.transparent,
+                      overlayColor: HybridTokens.transparent,
+                      showValueIndicator: ShowValueIndicator.never,
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 3,
+                        elevation: 0,
+                        pressedElevation: 0,
+                      ),
+                      overlayShape: SliderComponentShape.noOverlay,
+                    ),
+                    child: Slider(
+                      key: const Key('nightMoon.slider'),
+                      padding: EdgeInsets.zero,
+                      value: index.toDouble(),
+                      min: 0,
+                      max: (n - 1).toDouble(),
+                      divisions: n - 1,
+                      label: at(cursor.instantUtc),
+                      semanticFormatterCallback: (v) {
+                        final instant = night.startUtc.add(
+                          Duration(minutes: v.round() * 5),
+                        );
+                        return '${at(instant)}: ${NightBrowseText.cursor(view.at(instant), view.limitDeg, at)}';
+                      },
+                      onChanged: (v) => browser.setCursor(
+                        night.startUtc.add(Duration(minutes: v.round() * 5)),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: 16,
+            runSpacing: 8,
+            children: [
+              Text(
+                dated(night.startUtc),
+                style: caption.copyWith(
+                  fontFeatures: tabular,
+                  height: home ? 17 / 13 : null,
+                ),
               ),
-              Positioned.fill(
-                child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 0,
-                    thumbColor: AppPalette.of(context).textPrimary,
-                    activeTrackColor: HybridTokens.transparent,
-                    inactiveTrackColor: HybridTokens.transparent,
-                    thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 4,
-                    ),
-                    overlayShape: const RoundSliderOverlayShape(
-                      overlayRadius: 12,
-                    ),
-                  ),
-                  child: Slider(
-                    key: const Key('nightMoon.slider'),
-                    padding: EdgeInsets.zero,
-                    value: index.toDouble(),
-                    min: 0,
-                    max: (n - 1).toDouble(),
-                    divisions: n - 1,
-                    label: at(cursor.instantUtc),
-                    semanticFormatterCallback: (v) {
-                      final instant = night.startUtc.add(
-                        Duration(minutes: v.round() * 5),
-                      );
-                      return '${at(instant)}: ${NightBrowseText.cursor(view.at(instant), view.limitDeg, at)}';
-                    },
-                    onChanged: (v) => browser.setCursor(
-                      night.startUtc.add(Duration(minutes: v.round() * 5)),
-                    ),
-                  ),
+              Text(
+                dated(night.endUtc),
+                style: caption.copyWith(
+                  fontFeatures: tabular,
+                  height: home ? 17 / 13 : null,
                 ),
               ),
             ],
           ),
         ),
-        Row(
-          children: [
-            Expanded(child: Text(at(night.startUtc), style: text.bodySmall)),
-            Text(at(night.endUtc), style: text.bodySmall),
-          ],
+        const SizedBox(height: 10),
+        Text('Drag to preview · arrow keys step 5 min.', style: caption),
+        const SizedBox(height: 12),
+        _Legend(
+          view: view,
+          compact: true,
+          // night-ui.js legend: clock times without the next-day tag.
+          at: (utc) =>
+              NightTimeFormatter.clockTime(context, utc, zoneId: zoneId),
         ),
-        const SizedBox(height: AppSpacing.xs),
-        Text('Drag to preview · arrow keys step 5 min.', style: text.bodySmall),
-        _Legend(view: view, compact: compact),
-        if (compact) ...[
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            cursor.dark
-                ? cursor.moonUp
-                      ? 'Dark · Moon above horizon'
-                      : 'Moon-free dark'
-                : '${NightBrowseText.sky(cursor.sky, view.limitDeg)} · '
-                      'Moon ${cursor.moonUp ? 'above' : 'below'} horizon',
-            key: const Key('nightMoon.cursorState'),
-            style: text.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+        const SizedBox(height: 8),
+        Text(
+          dark == null
+              ? 'Sky colour blends between known Sun-event times. There is no '
+                    'dark time (Sun below '
+                    '${QuantityText.degrees(view.limitDeg)}) this night. It '
+                    'is not measured sky brightness or a quality score.'
+              : 'Sky colour blends between known Sun-event times; black marks '
+                    'dark time (Sun below '
+                    '${QuantityText.degrees(view.limitDeg)}). It is not '
+                    'measured sky brightness or a quality score.',
+          key: const Key('nightMoon.encoding'),
+          style: caption,
+        ),
+        const SizedBox(height: 8),
+        _ExactTimes(view: view, zoneId: zoneId),
+        const SizedBox(height: 10),
+        Text(
+          cursor.dark
+              ? cursor.moonUp
+                    ? 'Dark · Moon above horizon'
+                    : 'Moon-free dark'
+              : '${NightBrowseText.sky(cursor.sky, view.limitDeg)} · '
+                    'Moon ${cursor.moonUp ? 'above' : 'below'} horizon',
+          key: const Key('nightMoon.cursorState'),
+          style: AppTypography.body.copyWith(
+            fontWeight: FontWeight.w600,
+            color: p.textPrimary,
           ),
-          Semantics(
-            liveRegion: true,
-            child: Text(
-              _compactCursor(view, cursor, at),
-              key: const Key('nightMoon.cursorSummary'),
-              style: text.bodySmall,
-            ),
+        ),
+        const SizedBox(height: 3),
+        Semantics(
+          liveRegion: true,
+          child: Text(
+            _compactCursor(view, cursor, at),
+            key: const Key('nightMoon.cursorSummary'),
+            style: caption.copyWith(height: 1.55),
           ),
-        ] else
-          Semantics(
-            liveRegion: true,
-            child: Text(
-              '${at(cursor.instantUtc)}, $date ($zone): '
-              '${NightBrowseText.cursor(cursor, view.limitDeg, at)}',
-              key: const Key('nightMoon.cursor'),
-              style: text.bodyMedium,
-            ),
-          ),
+        ),
       ],
     );
   }
@@ -203,78 +281,464 @@ class NightBarSection extends StatelessWidget {
   }
 }
 
-class _Legend extends StatelessWidget {
-  const _Legend({required this.view, required this.compact});
+/// "Dark starts 21:15" / "Dark ends 04:45 (+1)" (night.css `.timeline-jump`):
+/// a 64 px outlined button whose time is the exact interval boundary; the
+/// cursor moves to that boundary's five-minute grid point. Without dark time
+/// the rail's ends ("Timeline start/end"); a boundary at the rail's edge is
+/// "Window start/end".
+class _JumpButton extends StatelessWidget {
+  const _JumpButton({
+    required this.view,
+    required this.dark,
+    required this.end,
+    required this.at,
+    required this.onPressed,
+  });
 
   final NightView view;
-  final bool compact;
+  final (DateTime, DateTime)? dark;
+  final bool end;
+  final String Function(DateTime) at;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final style = Theme.of(context).textTheme.bodySmall;
+    final night = view.night;
+    final d = dark;
+    final boundary = d == null
+        ? (end
+              ? view.gridAt(night.endUtc.subtract(const Duration(minutes: 5)))
+              : night.startUtc)
+        : (end ? d.$2 : d.$1);
+    final clipped =
+        d != null &&
+        (end
+            ? !boundary.isBefore(night.endUtc)
+            : !boundary.isAfter(night.startUtc));
+    final label = clipped
+        ? (end ? 'Window end' : 'Window start')
+        : d != null
+        ? (end ? 'Dark ends' : 'Dark starts')
+        : (end ? 'Timeline end' : 'Timeline start');
+    final what = d != null
+        ? (end ? 'end of dark time' : 'start of dark time')
+        : (end ? 'end of the timeline' : 'start of the timeline');
+    final target = view.gridAt(boundary);
+    return Semantics(
+      button: true,
+      label: 'Go to $what, ${at(target)}',
+      excludeSemantics: true,
+      child: OutlinedButton(
+        key: Key(end ? 'nightMoon.jumpEnd' : 'nightMoon.jumpStart'),
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(0, 64),
+          // CSS padding 8 × 12 inside a 1 px border.
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+          alignment: Alignment.topLeft,
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: AppTypography.caption.copyWith(
+                  height: 1.4,
+                  color: p.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                at(boundary),
+                style: AppTypography.value.copyWith(
+                  fontWeight: FontWeight.w500,
+                  height: 1.4,
+                  color: p.textPrimary,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Exact times & reading key" (night-ui.js `timelineExactDetails`): a 12 px
+/// native disclosure with the sky states, Sun events, dark time and Moon
+/// intervals as exact instants with their date and zone.
+class _ExactTimes extends StatefulWidget {
+  const _ExactTimes({required this.view, required this.zoneId});
+
+  final NightView view;
+  final String? zoneId;
+
+  @override
+  State<_ExactTimes> createState() => _ExactTimesState();
+}
+
+class _ExactTimesState extends State<_ExactTimes> {
+  bool _open = false;
+
+  void _toggle() => setState(() => _open = !_open);
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final view = widget.view;
+    final small = AppTypography.dense.copyWith(color: p.textSecondary);
+    String instant(DateTime utc) =>
+        NightTimeFormatter.previewInstant(context, utc, zoneId: widget.zoneId);
+    String span((DateTime, DateTime) x) =>
+        '${instant(x.$1)}\nto ${instant(x.$2)}';
+    Widget group(String heading, List<(String, String)> rows, String empty) =>
+        DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: p.border)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    heading,
+                    style: small.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: p.textPrimary,
+                    ),
+                  ),
+                ),
+                if (rows.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(empty, style: small),
+                  ),
+                for (final (label, value) in rows)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: Text(label, style: small)),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            value,
+                            textAlign: TextAlign.right,
+                            style: small.copyWith(
+                              color: p.textPrimary,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+    final sky = <(String, String)>[];
+    SkyState? last;
+    var from = view.night.startUtc;
+    for (final s in view.segments) {
+      if (s.sky == last) continue;
+      if (last != null) {
+        sky.add((
+          NightBrowseText.sky(last, view.limitDeg),
+          span((from, s.startUtc)),
+        ));
+      }
+      last = s.sky;
+      from = s.startUtc;
+    }
+    if (last != null) {
+      sky.add((
+        NightBrowseText.sky(last, view.limitDeg),
+        span((from, view.night.endUtc)),
+      ));
+    }
+    final t = view.timeline;
+    final events = <(String, String)>[];
+    void event(String label, SunThresholdResult r, {required bool dawn}) {
+      final at = r is SunCrossing ? (dawn ? r.dawnUtc : r.duskUtc) : null;
+      events.add((label, at == null ? 'No event in this night' : instant(at)));
+    }
+
+    event('Sunset', t.sunriseSunset, dawn: false);
+    event('Civil dusk', t.civilTwilight, dawn: false);
+    event('Nautical dusk', t.nauticalTwilight, dawn: false);
+    event('Astronomical dusk', t.astronomicalTwilight, dawn: false);
+    event('Astronomical dawn', t.astronomicalTwilight, dawn: true);
+    event('Nautical dawn', t.nauticalTwilight, dawn: true);
+    event('Civil dawn', t.civilTwilight, dawn: true);
+    event('Sunrise', t.sunriseSunset, dawn: true);
+    final dark = view.darkInterval;
+    final ups = <(DateTime, DateTime)>[];
+    for (final s in view.segments.where((s) => s.moonUp)) {
+      if (ups.isNotEmpty && ups.last.$2 == s.startUtc) {
+        ups[ups.length - 1] = (ups.last.$1, s.endUtc);
+      } else {
+        ups.add((s.startUtc, s.endUtc));
+      }
+    }
+    // The plan's imaging windows, only on the plan's own night (they are
+    // the existing opportunity, not a sky-quality rating).
+    final target = context.read<NightBrowserViewModel>().viewingPlanNight
+        ? [
+            for (final w
+                in context
+                        .read<NightConditionsViewModel?>()
+                        ?.visibilityWindows ??
+                    const <VisibilityWindow>[])
+              (w.start, w.end),
+          ]
+        : const <(DateTime, DateTime)>[];
+    return Column(
+      key: const Key('nightMoon.exactTimes'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          button: true,
+          expanded: _open,
+          excludeSemantics: true,
+          label: 'Exact times & reading key',
+          onTap: _toggle,
+          child: InkWell(
+            onTap: _toggle,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    // The browser's details marker: a small filled triangle.
+                    CustomPaint(
+                      size: const Size(12, 12),
+                      painter: _MarkerPainter(
+                        open: _open,
+                        color: p.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'Exact times & reading key',
+                        style: AppTypography.dense.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: p.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        if (_open) ...[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              'Times in ${NightTimeFormatter.zoneCaption(view.night.startUtc, zoneId: widget.zoneId)}. '
+              'Interval ends are boundaries; preview steps remain five minutes.',
+              style: small,
+            ),
+          ),
+          group('Sky state', sky, 'Sky state unknown.'),
+          group('Sun events', events, 'Sun-event data unavailable.'),
+          group('Dark time', [
+            if (dark != null) ('Dark time', span(dark)),
+          ], 'No dark time in this night.'),
+          group('Moon above horizon', [
+            for (final u in ups) ('Moon above horizon', span(u)),
+          ], 'The Moon stays below the horizon.'),
+          if (target.isNotEmpty)
+            group('Target window', [
+              for (final w in target) ('Target window', span(w)),
+            ], ''),
+          group('Moon-free dark', [
+            for (final f in view.moonFree.intervals)
+              ('Moon-free dark', span(f)),
+          ], 'No moon-free dark time.'),
+        ],
+      ],
+    );
+  }
+}
+
+/// The browser's `details` marker: a right-pointing (closed) or
+/// down-pointing (open) filled triangle in the summary's colour.
+class _MarkerPainter extends CustomPainter {
+  const _MarkerPainter({required this.open, required this.color});
+
+  final bool open;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width, h = size.height;
+    final path = open
+        ? (Path()
+            ..moveTo(w * .1, h * .25)
+            ..lineTo(w * .9, h * .25)
+            ..lineTo(w * .5, h * .75)
+            ..close())
+        : (Path()
+            ..moveTo(w * .25, h * .1)
+            ..lineTo(w * .75, h * .5)
+            ..lineTo(w * .25, h * .9)
+            ..close());
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_MarkerPainter old) =>
+      old.open != open || old.color != color;
+}
+
+class _Legend extends StatelessWidget {
+  const _Legend({required this.view, required this.compact, this.at});
+
+  final NightView view;
+  final bool compact;
+  final String Function(DateTime)? at;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final style = AppTypography.caption.copyWith(
+      height: 1.45,
+      color: p.textSecondary,
+    );
+    final hybrid =
+        Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
+    // night.css `.key`: 20 × 10, radius 2; sky keys outlined in the control
+    // border, the Moon-up key a 4 px bar on the sunken lane.
+    Widget key(Decoration fill) => Container(
+      width: 20,
+      height: 10,
+      decoration: fill,
+      foregroundDecoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(2),
+        border: Border.all(color: p.controlBorder),
+      ),
+    );
+    BoxDecoration solid(Color c) =>
+        BoxDecoration(color: c, borderRadius: BorderRadius.circular(2));
     Widget chip(Widget swatch, String label) => Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(width: 16, height: 12, child: swatch),
-        const SizedBox(width: AppSpacing.xs),
+        swatch,
+        const SizedBox(width: 6),
         // Wraps at large text rather than overflowing (trap 17).
         Flexible(child: Text(label, style: style)),
       ],
     );
-    final hybrid = Theme.of(context).extension<HybridTokens>();
-    Color depth(SkyState s) => switch (s) {
-      SkyState.daylight => hybrid?.skyDay ?? p.chartDay,
-      SkyState.civil => hybrid?.skyCivil ?? p.chartTwilight,
-      SkyState.nautical => hybrid?.skyNautical ?? p.chartTwilight,
-      SkyState.astronomical => hybrid?.skyAstronomical ?? p.chartTwilight,
-      SkyState.dark => hybrid?.skyDark ?? p.chartDark,
-    };
     bool present(SkyState state) => view.segments.any((s) => s.sky == state);
-    return Wrap(
+    final dark = view.darkInterval;
+    final label = at;
+    final darkLabel = dark == null
+        ? null
+        : label == null
+        ? 'Dark'
+        : 'Dark ${label(dark.$1)}–${label(dark.$2)}';
+    return Column(
       key: Key(compact ? 'nightMoon.legend' : 'nightMoon.readingLegend'),
-      spacing: AppSpacing.md,
-      runSpacing: AppSpacing.xs,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (present(SkyState.daylight))
-          chip(ColoredBox(color: depth(SkyState.daylight)), 'Daylight'),
-        if (compact) ...[
-          if ([
-            SkyState.civil,
-            SkyState.nautical,
-            SkyState.astronomical,
-          ].any(present))
-            chip(ColoredBox(color: depth(SkyState.nautical)), 'Twilight'),
-        ] else ...[
-          for (final (state, label) in [
-            (SkyState.civil, 'Civil twilight'),
-            (SkyState.nautical, 'Nautical twilight'),
-            (SkyState.astronomical, 'Astronomical twilight'),
-          ])
-            if (present(state)) chip(ColoredBox(color: depth(state)), label),
-        ],
-        if (present(SkyState.dark))
-          chip(
-            ColoredBox(color: depth(SkyState.dark)),
-            compact
-                ? 'Dark'
-                : 'Dark · Sun below ${QuantityText.degrees(view.limitDeg)}',
-          )
-        else
-          Text('No dark time at the selected limit.', style: style),
-        chip(
-          ColoredBox(color: hybrid?.moonUp ?? p.chartMoon),
-          'Moon above horizon',
+        Wrap(
+          spacing: 16,
+          runSpacing: 6,
+          children: [
+            if (present(SkyState.daylight))
+              chip(key(solid(hybrid.skyDay)), 'Daylight'),
+            if (compact) ...[
+              if ([
+                SkyState.civil,
+                SkyState.nautical,
+                SkyState.astronomical,
+              ].any(present))
+                chip(
+                  key(
+                    BoxDecoration(
+                      borderRadius: BorderRadius.circular(2),
+                      gradient: LinearGradient(
+                        colors: [
+                          hybrid.skyCivil,
+                          hybrid.skyNautical,
+                          hybrid.skyAstronomical,
+                        ],
+                      ),
+                    ),
+                  ),
+                  'Twilight',
+                ),
+            ] else
+              for (final (state, name, color) in [
+                (SkyState.civil, 'Civil twilight', hybrid.skyCivil),
+                (SkyState.nautical, 'Nautical twilight', hybrid.skyNautical),
+                (
+                  SkyState.astronomical,
+                  'Astronomical twilight',
+                  hybrid.skyAstronomical,
+                ),
+              ])
+                if (present(state)) chip(key(solid(color)), name),
+            if (darkLabel != null)
+              chip(
+                key(solid(hybrid.skyDark)),
+                compact
+                    ? darkLabel
+                    : 'Dark · Sun below ${QuantityText.degrees(view.limitDeg)}',
+              )
+            else
+              Text(
+                'No dark time: the Sun stays above '
+                '${QuantityText.degrees(view.limitDeg)}',
+                style: style,
+              ),
+          ],
         ),
-        chip(
-          ColoredBox(color: hybrid?.moonFree ?? p.textPrimary),
-          'Moon-free dark',
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 16,
+          runSpacing: 6,
+          children: [
+            chip(
+              Container(
+                width: 20,
+                height: 10,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: hybrid.surfaceSunken,
+                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(color: p.border),
+                ),
+                child: Container(height: 4, color: hybrid.moonUp),
+              ),
+              'Moon above horizon',
+            ),
+            chip(
+              Container(
+                width: 20,
+                height: 10,
+                decoration: solid(hybrid.moonFree),
+              ),
+              'Moon-free dark',
+            ),
+          ],
         ),
-        if (!compact)
-          Text(
-            'Sky colour blends between calculated Sun states. It is not measured sky brightness.',
-            style: style,
-          ),
       ],
     );
   }
@@ -322,20 +786,32 @@ class NightReadingGuide extends StatelessWidget {
   }
 }
 
-/// Paints [view]: a sky gradient, separate Moon-up and Moon-free lanes,
-/// and the slider's instant as a line. Public for tests.
+/// Paints [view] on the 42 px rail (night.css, compact Hybrid): the 14 px
+/// sky band (radius 4, 1 px control-border outline), the Moon-up lane at
+/// 18–26 (a 4 px bar on the sunken lane) and the Moon-free lane at 30–38,
+/// both outlined in the subtle border; then the cursor, a 6 × 46 bar with a
+/// 2 px surface border, from 2 above the band. Public for tests.
 class NightBarPainter extends CustomPainter {
   NightBarPainter({
     required this.view,
     required this.cursorIndex,
     required this.palette,
     this.hybrid,
+    this.surface,
   });
 
   final NightView view;
   final int cursorIndex;
   final AppPalette palette;
   final HybridTokens? hybrid;
+
+  /// The page surface: the cursor's border (night.css thumb).
+  final Color? surface;
+
+  static const skyHeight = 14.0;
+  static const laneHeight = 8.0;
+  static const upTop = skyHeight + 4;
+  static const freeTop = skyHeight + 8 + laneHeight;
 
   static Color skyColor(SkyState s, AppPalette p) => switch (s) {
     SkyState.daylight => p.chartDay,
@@ -368,6 +844,9 @@ class NightBarPainter extends CustomPainter {
       SkyState.astronomical => tokens.skyAstronomical,
       SkyState.dark => tokens.skyDark,
     };
+    // night-ui.js skyGradient: a knot at the first segment's start, at each
+    // dark run's start and end, at the middle of every other run and at the
+    // last end; eight smoothstep stops mixed in Oklab between unlike knots.
     final groups = <(DateTime, DateTime, SkyState)>[];
     for (final segment in view.segments) {
       if (groups.isNotEmpty &&
@@ -413,59 +892,97 @@ class NightBarPainter extends CustomPainter {
         }
       }
     }
-    final skyRect = Rect.fromLTWH(0, 0, size.width, 16);
+    final sky = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, skyHeight),
+      const Radius.circular(4),
+    );
     final skyPaint = Paint()..color = tokens.skyDay;
     if (colors.length >= 2) {
       skyPaint.shader = LinearGradient(
         colors: colors,
         stops: stops,
-      ).createShader(skyRect);
+      ).createShader(sky.outerRect);
     }
+    canvas.drawRRect(sky, skyPaint);
+    // CSS outline: 1 px outside the box.
     canvas.drawRRect(
-      RRect.fromRectAndRadius(skyRect, const Radius.circular(3)),
-      skyPaint,
+      sky.inflate(0.5),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = palette.controlBorder,
     );
-    final bracket = Paint()
-      ..color = tokens.moonFree
-      ..strokeWidth = 2;
-    for (final g in groups.where((g) => g.$3 == SkyState.dark)) {
-      final left = x(g.$1), right = x(g.$2);
-      canvas.drawLine(Offset(left, 20), Offset(left, 26), bracket);
-      canvas.drawLine(Offset(left, 26), Offset(right, 26), bracket);
-      canvas.drawLine(Offset(right, 26), Offset(right, 20), bracket);
-    }
-    for (final y in [32.0, 45.0]) {
+    for (final top in [upTop, freeTop]) {
+      final lane = RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, top, size.width, laneHeight),
+        const Radius.circular(3),
+      );
+      canvas.drawRRect(lane, Paint()..color = tokens.surfaceSunken);
       canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, y, size.width, 10),
-          const Radius.circular(3),
-        ),
-        Paint()..color = palette.border,
+        lane.inflate(0.5),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1
+          ..color = palette.border,
       );
     }
-    for (final g in view.segments.where((g) => g.moonUp)) {
-      canvas.drawRect(
-        Rect.fromLTRB(x(g.startUtc), 35, x(g.endUtc), 39),
+    final ups = <(DateTime, DateTime)>[];
+    for (final s in view.segments.where((s) => s.moonUp)) {
+      if (ups.isNotEmpty && ups.last.$2 == s.startUtc) {
+        ups[ups.length - 1] = (ups.last.$1, s.endUtc);
+      } else {
+        ups.add((s.startUtc, s.endUtc));
+      }
+    }
+    for (final u in ups) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTRB(x(u.$1), upTop + 2, x(u.$2), upTop + 6),
+          const Radius.circular(3),
+        ),
         Paint()..color = tokens.moonUp,
       );
     }
     for (final span in view.moonFree.intervals) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTRB(x(span.$1), 46, x(span.$2), 54),
-          const Radius.circular(2),
+          Rect.fromLTRB(x(span.$1), freeTop, x(span.$2), freeTop + laneHeight),
+          const Radius.circular(3),
         ),
         Paint()..color = tokens.moonFree,
       );
     }
     final cx = x(night.startUtc.add(Duration(minutes: cursorIndex * 5)))
         .clamp(0.0, size.width);
-    canvas.drawLine(
-      Offset(cx, 0),
-      Offset(cx, size.height),
+    if (identical(tokens, HybridTokens.field)) {
+      // WQA-03's Field range (hybrid-refinement.css) also styles this
+      // input: a 4 px control-border track centred in its 48 px box and a
+      // 24 px red thumb, instead of the light/dark bar cursor.
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(-3, 22, size.width + 6, 4),
+          const Radius.circular(2),
+        ),
+        Paint()..color = palette.controlBorder,
+      );
+      canvas.drawCircle(
+        Offset(cx, 24),
+        12,
+        Paint()..color = palette.textPrimary,
+      );
+      return;
+    }
+    final thumb = RRect.fromRectAndRadius(
+      Rect.fromLTWH(cx - 3, -2, 6, size.height + 4),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(thumb, Paint()..color = palette.textPrimary);
+    canvas.drawRRect(
+      thumb.deflate(1),
       Paint()
-        ..color = palette.textPrimary
-        ..strokeWidth = 2,
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = surface ?? tokens.onAction,
     );
   }
 
@@ -474,7 +991,8 @@ class NightBarPainter extends CustomPainter {
       old.view != view ||
       old.cursorIndex != cursorIndex ||
       old.palette != palette ||
-      old.hybrid != hybrid;
+      old.hybrid != hybrid ||
+      old.surface != surface;
 }
 
 /// The month of Moon nights (F15 A1; ADR-022 N4/N5/N10): per night its

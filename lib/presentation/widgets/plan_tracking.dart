@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../shared/hybrid_parts.dart';
+
 import '../../domain/models/tracking_type.dart';
 import '../shared/failure_feedback.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
@@ -75,14 +77,11 @@ class PlanTrackingRow extends StatelessWidget {
     final plan = context.watch<SessionPlanViewModel>();
     final rigDefault =
         plan.selectedEquipment?.trackingType ?? TrackingType.unknown;
-    return ListTile(
+    return HybridPlanRow(
       key: const Key('planner.tracking'),
-      contentPadding: EdgeInsets.zero,
-      title: const Text(PlanTrackingText.title),
-      subtitle: Text(
-        PlanTrackingText.summary(plan.trackingOverride, rigDefault),
-      ),
-      trailing: const Icon(Icons.edit_outlined),
+      label: PlanTrackingText.title,
+      value: PlanTrackingText.summary(plan.trackingOverride, rigDefault),
+      semanticsHint: 'Change',
       onTap: () => pickPlanTracking(context),
     );
   }

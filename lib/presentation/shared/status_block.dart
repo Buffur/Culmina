@@ -31,7 +31,7 @@ class StatusBlock extends StatelessWidget {
 
   /// Tonight's Hybrid fit line (app.js `.fit-line`, `.plan-reason`): a
   /// check (or an info mark for a missing input) beside a 13 px verdict, the
-  /// reason in 12 px secondary below it.
+  /// reason in 14 px secondary below it.
   final bool fitLine;
 
   final FitState state;
@@ -157,7 +157,8 @@ class StatusBlock extends StatelessWidget {
               : verdict,
         ),
         if (reason != null && !figuresFirst) ...[
-          const SizedBox(height: AppSpacing.xs),
+          // Hybrid fit line: the reason 6 below the verdict.
+          SizedBox(height: fitLine ? 6 : AppSpacing.xs),
           explanation,
         ],
         if (figures.isNotEmpty) ...[
@@ -165,7 +166,7 @@ class StatusBlock extends StatelessWidget {
           // S6.16: each number as a label above its value, so the answer's
           // figures read as a set (the scale's caption and group roles).
           Wrap(
-            spacing: fitLine ? AppSpacing.md + AppSpacing.xs : AppSpacing.lg,
+            spacing: AppSpacing.lg,
             runSpacing: AppSpacing.sm,
             children: [
               for (final (label, value) in figures)
@@ -177,9 +178,11 @@ class StatusBlock extends StatelessWidget {
                     children: [
                       Text(
                         label,
+                        // Hybrid `.plan-measures dt`: 13 at normal leading.
                         style: text.bodySmall?.copyWith(
                           color: p.textTertiary,
-                          fontSize: fitLine ? 12 : null,
+                          fontSize: fitLine ? 13 : null,
+                          height: fitLine ? 17 / 13 : null,
                         ),
                       ),
                       if (fitLine) const SizedBox(height: AppSpacing.xs),
@@ -189,6 +192,7 @@ class StatusBlock extends StatelessWidget {
                             ? text.bodyMedium?.copyWith(
                                 color: p.textPrimary,
                                 fontSize: 15,
+                                height: 19 / 15,
                                 fontWeight: FontWeight.w500,
                                 fontFeatures: const [
                                   FontFeature.tabularFigures(),

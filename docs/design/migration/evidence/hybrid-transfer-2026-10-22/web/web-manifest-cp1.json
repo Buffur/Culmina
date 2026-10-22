@@ -1,0 +1,47 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-home-light-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&night=2026-11-10",
+   "steps": [],
+   "phone": [
+    375,
+    812
+   ],
+   "appArea": [
+    373,
+    812
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-settings-light-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [],
+   "phone": [
+    375,
+    812
+   ],
+   "appArea": [
+    373,
+    758
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  }
+ ]
+}

@@ -72,13 +72,13 @@ abstract final class QuantityText {
     return '${value < 0 && !zero ? '−' : ''}$text';
   }
 
-  /// A percentage with a space before the sign: "3 %".
-  static String percent(num value) => '${value.round()} %';
+  /// A percentage, written as the Hybrid reference writes it: "3%".
+  static String percent(num value) => '${value.round()}%';
 
-  /// A range of percentages, rounded: "10–40 %", or "20 %" when both ends
+  /// A range of percentages, rounded: "10–40%", or "20%" when both ends
   /// round alike.
   static String percentRange(num lo, num hi) =>
-      lo.round() == hi.round() ? percent(lo) : '${lo.round()}–${hi.round()} %';
+      lo.round() == hi.round() ? percent(lo) : '${lo.round()}–${hi.round()}%';
 
   /// [value] without a trailing ".0": "60", "2.5", "0.25".
   static String number(double value) =>

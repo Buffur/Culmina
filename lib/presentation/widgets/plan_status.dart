@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
+import '../../domain/models/calendar_date.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/services/fit_analyzer.dart';
 import '../navigation/app_router.dart';
@@ -10,6 +13,7 @@ import '../shared/plan_night_phrase.dart';
 import '../shared/app_words.dart';
 import '../shared/change_mark.dart';
 import '../shared/failure_feedback.dart';
+import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../shared/status_block.dart';
 import '../viewmodels/capture_analysis_viewmodel.dart';
@@ -100,81 +104,102 @@ class PlanStatus extends StatelessWidget {
             fit.state == FitState.doesNotFit);
     final end = fit.endUtc;
     final action = missing?.action;
-    return Card(
+    final palette = AppPalette.of(context);
+    final body = AppTypography.body.copyWith(height: 1.6);
+    final verdict = StatusBlock.headline(state, missing: missing?.headline);
+    final zoneId = site.displayZoneId;
+    String captureEnd(DateTime utc) {
+      final wall = NightTimeFormatter.wallClock(utc, zoneId: zoneId);
+      return '${NightTimeFormatter.recordedDate(CalendarDate.fromDateTimeFields(wall))}, '
+          '${NightTimeFormatter.clockTime(context, utc, zoneId: zoneId)} '
+          '${NightTimeFormatter.shortZone(utc, zoneId: zoneId)}';
+    }
+
+    // plan.js `answer` (Hybrid): the verdict 22/500 in its status colour,
+    // "Needed in imaging window: …" with "… usable" below it, the reason and
+    // the capture end, 6 apart; the missing input's action below.
+    return Padding(
       key: const Key('planner.status'),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(),
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 16),
-      clipBehavior: Clip.antiAlias,
-      // S6.16 (the primary surface's finish): the answer's card is marked at
-      // its edge in the verdict's status token (red in field mode); the
-      // words still carry the meaning.
-      child: DecoratedBox(
+      padding: const EdgeInsets.only(top: 12),
+      // S6.10 (P6.9's cause and effect): an edit that changes the verdict or
+      // its numbers marks the status briefly.
+      child: ChangeMark(
         key: const Key('planner.statusMark'),
-        decoration: const BoxDecoration(),
-        // S6.10 (P6.9's cause and effect): an edit that changes the verdict,
-        // its numbers or the integration marks the status briefly.
-        child: ChangeMark(
-          value: (
-            state,
-            missing?.headline,
-            fit.windowLoadMs,
-            fit.availableMs,
-            analysis.captureBudget.integrationMs,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: StatusBlock(
-              separateFigures: true,
-              headingStyle: Theme.of(context).textTheme.titleLarge
-                  ?.copyWith(fontSize: 22, fontWeight: FontWeight.w500),
-              state: state,
-              missing: missing?.headline,
-              needed: measured
-                  ? Duration(milliseconds: fit.windowLoadMs)
-                  : null,
-              usable: measured && fit.availableMs > 0
-                  ? Duration(milliseconds: fit.availableMs)
-                  : null,
-              // TD-075: a missing input's own reason, else the fit's.
-              reason: words(missing?.reason ?? fit.reason),
-              keyNumbers: [
-                // Always (S6.7): the budget's lines are folded into Budget
-                // details, and integration needs no site, target or rig.
-                (
-                  AppWords.integration,
-                  QuantityText.budgetDuration(
-                    Duration(
-                      milliseconds: analysis.captureBudget.integrationMs,
-                    ),
+        value: (
+          state,
+          missing?.headline,
+          fit.windowLoadMs,
+          fit.availableMs,
+          analysis.captureBudget.integrationMs,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(
+              header: true,
+              child: Text(
+                verdict,
+                key: const Key('status.headline'),
+                style: AppTypography.screenTitle.copyWith(
+                  height: 1.4,
+                  letterSpacing: -0.33,
+                  color: FitText.color(
+                    state,
+                    Theme.of(context).colorScheme,
+                    palette,
                   ),
                 ),
-                if (missing == null &&
-                    end != null &&
-                    night != null &&
-                    (fit.state == FitState.fits || fit.state == FitState.tight))
-                  (
-                    'Capture ends',
-                    NightTimeFormatter.instant(
-                      context,
-                      end,
-                      windowStartUtc: night.startUtc,
-                      zoneId: site.displayZoneId,
-                    ),
-                  ),
-              ],
-              action: action != null
-                  ? OutlinedButton(
-                      key: const Key('status.choose'),
-                      onPressed: () => context.push(missing!.route!),
-                      child: Text(action),
-                    )
-                  : measured && showFillAction
-                  ? FillWindowAction(fit: fit)
-                  : null,
+              ),
             ),
-          ),
+            if (measured) ...[
+              const SizedBox(height: 2),
+              Text(
+                'Needed in imaging window: '
+                '${QuantityText.budgetDuration(Duration(milliseconds: fit.windowLoadMs))}',
+                key: const Key('status.number.Needed in imaging window'),
+                style: body.copyWith(color: palette.textPrimary),
+              ),
+              if (fit.availableMs > 0)
+                Text(
+                  '${QuantityText.budgetDuration(Duration(milliseconds: fit.availableMs))} usable',
+                  key: const Key('status.number.Usable'),
+                  style: body.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: palette.textSecondary,
+                  ),
+                ),
+            ],
+            const SizedBox(height: 6),
+            // TD-075: a missing input's own reason, else the fit's.
+            Text(
+              words(missing?.reason ?? fit.reason),
+              key: const Key('status.reason'),
+              style: body.copyWith(color: palette.textSecondary),
+            ),
+            if (missing == null &&
+                end != null &&
+                night != null &&
+                (fit.state == FitState.fits ||
+                    fit.state == FitState.tight)) ...[
+              const SizedBox(height: 6),
+              Text(
+                'Capture end: ${captureEnd(end)}.',
+                key: const Key('status.number.Capture ends'),
+                style: body.copyWith(color: palette.textSecondary),
+              ),
+            ],
+            if (action != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              OutlinedButton(
+                key: const Key('status.choose'),
+                onPressed: () => context.push(missing!.route!),
+                child: Text(action),
+              ),
+            ] else if (measured && showFillAction) ...[
+              const SizedBox(height: AppSpacing.md),
+              FillWindowAction(fit: fit),
+            ],
+          ],
         ),
       ),
     );

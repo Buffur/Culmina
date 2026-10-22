@@ -127,6 +127,31 @@ class NightView {
     return out;
   }();
 
+  /// The dark interval at the darkness limit, clipped to the night (none
+  /// when the Sun never goes below it). Exact model instants, not the grid.
+  (DateTime, DateTime)? get darkInterval => switch (timeline.darkAtLimit) {
+    SunCrossing(:final duskUtc, :final dawnUtc) => (
+      duskUtc ?? night.startUtc,
+      dawnUtc ?? night.endUtc,
+    ),
+    SunAlwaysBelow() => (night.startUtc, night.endUtc),
+    _ => null,
+  };
+
+  /// [utc] floored to the five-minute grid, inside the night (the last grid
+  /// point is the night's end less one step).
+  DateTime gridAt(DateTime utc) {
+    final step = VisibilityCalculator.sampleStep;
+    final last = night.endUtc.subtract(step);
+    final t = utc.isBefore(night.startUtc)
+        ? night.startUtc
+        : utc.isAfter(last)
+        ? last
+        : utc;
+    final steps = t.difference(night.startUtc).inMinutes ~/ step.inMinutes;
+    return night.startUtc.add(step * steps);
+  }
+
   /// The grid index at or before [utc], clamped to the night.
   int indexOf(DateTime utc) {
     final i =

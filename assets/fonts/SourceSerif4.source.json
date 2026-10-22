@@ -1,0 +1,30 @@
+{
+  "file": "assets/fonts/SourceSerif4.ttf",
+  "sha256": "97b2d4da6e3cb494b5a1e66ae176914d852ccabef49e0c02c0df25f3e39aca0b",
+  "bytes": 1209508,
+  "unicodeCoverageCount": 919,
+  "specimen": "ІіЇїЄєҐґ°×−0O1Il0123456789–·",
+  "missingCodepoints": [],
+  "variableAxes": [
+    {
+      "tag": "wght",
+      "min": 200.0,
+      "default": 400.0,
+      "max": 900.0
+    },
+    {
+      "tag": "opsz",
+      "min": 8.0,
+      "default": 20.0,
+      "max": 60.0
+    }
+  ],
+  "appliedInstance": "opsz 14 (FontVariation), wght from fontWeight: the browser's Google Fonts wght-only file measures as opsz 14 (28 px 'The night ahead Andromeda': 378.375 px web, 378.364 px Flutter host)",
+  "evidence": "SFNT cmap/fvar inspection; host width measurement against Chromium 2026-10-22",
+  "retrievedDate": "2026-10-22",
+  "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/SourceSerif4%5Bopsz,wght%5D.ttf",
+  "license": "OFL-SourceSerif4.txt",
+  "licenseSource": "https://raw.githubusercontent.com/google/fonts/main/ofl/sourceserif4/OFL.txt",
+  "licenseSha256": "5f94c3fd3a23131a417ab5a0c8452de57e70c3cfb9f604d88241f7065ebf9fd9",
+  "browserReference": "design/home-lab/fonts/sources.json (Source Serif 4, six WOFF2 subsets, wght 400..700); same official Google Fonts family; binary identity is not asserted across formats"
+}

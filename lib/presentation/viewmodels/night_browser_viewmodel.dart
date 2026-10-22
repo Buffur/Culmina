@@ -104,9 +104,27 @@ class NightBrowserViewModel extends ChangeNotifier {
   bool get nowInView => view.contains(_nowUtc());
 
   /// The browsed instant: the one chosen, else now when it lies in the
-  /// viewed night, else the night's start.
+  /// viewed night, else the start of its dark time (the rail spans noon to
+  /// noon, so its own start is daylight; owner 2026-10-22, web
+  /// `startCursor`), else the night's start.
   DateTime get cursorUtc =>
-      _cursorUtc ?? (nowInView ? _nowUtc() : view.night.startUtc);
+      _cursorUtc ?? (nowInView ? _nowUtc() : jumpTarget(end: false));
+
+  /// Where "Dark starts" / "Dark ends" move the cursor: the dark interval's
+  /// start or end on the five-minute grid; without dark time, the rail's
+  /// ends (web `jumpCursor`).
+  DateTime jumpTarget({required bool end}) {
+    final v = view;
+    final dark = v.darkInterval;
+    final step = const Duration(minutes: 5);
+    if (dark == null) {
+      return end ? v.gridAt(v.night.endUtc.subtract(step)) : v.night.startUtc;
+    }
+    return v.gridAt(end ? dark.$2 : dark.$1);
+  }
+
+  /// Moves the cursor to the start or end of dark time (browsing only).
+  void jumpCursor({required bool end}) => setCursor(jumpTarget(end: end));
 
   NightInstant get cursor => view.at(cursorUtc);
 

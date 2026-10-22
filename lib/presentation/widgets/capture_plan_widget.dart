@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/theme/app_typography.dart';
+import '../../core/utils/quantity_text.dart';
+import '../shared/hybrid_icon.dart';
 import '../../domain/models/camera_class.dart';
 import '../../domain/models/capture_block.dart';
 import '../../core/config/feature_scope.dart';
@@ -18,15 +21,12 @@ import '../shared/plan_night_phrase.dart';
 import '../shared/calibration_text.dart';
 import '../shared/capability_text.dart';
 import '../shared/capture_settings_text.dart';
-import '../shared/delete_patterns.dart';
-import '../shared/example_text.dart';
 import '../shared/failure_feedback.dart';
 import '../viewmodels/capture_analysis_viewmodel.dart';
 import '../viewmodels/disclosure_viewmodel.dart';
 import '../viewmodels/metadata_import_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import 'capture_plan/blocks_undo.dart';
-import 'capture_plan/capture_assumptions_panel.dart';
 import 'capture_plan/calibration_preview_dialog.dart';
 import 'capture_plan/capture_block_dialog.dart';
 import 'capture_plan/capture_budget_summary.dart';
@@ -43,16 +43,14 @@ class CapturePlanWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: EdgeInsets.zero,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _BlockList(),
           ?blockActions,
           const SizedBox(height: 28),
           const CaptureBudgetSummary(),
-          const SizedBox(height: 8),
-          const CaptureAssumptionsPanel(),
         ],
       ),
     );
@@ -217,7 +215,6 @@ class _BlockListState extends State<_BlockList> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final palette = AppPalette.of(context);
     final viewModel = context.watch<SessionPlanViewModel>();
     final analysis = context.watch<CaptureAnalysisViewModel>();
@@ -239,49 +236,12 @@ class _BlockListState extends State<_BlockList> {
     final flatsMissing = analysis.lightsWithoutFlats;
     final fresh = _built;
     _built = true;
+    final cameraClass = viewModel.selectedEquipment?.cameraClass;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 8,
-          children: [
-            // TASK 15.3: the badge wraps rather than push the add button off
-            // a narrow screen.
-            Wrap(
-              children: [
-                if (viewModel.isExampleCapturePlan)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: scheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      ExampleText.plan,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: scheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            if (blocks.isNotEmpty)
-              Text(
-                '${blocks.length} blocks · '
-                '${blocks.fold<int>(0, (sum, block) => sum + block.frameCount)} frames',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-          ],
-        ),
         // RD-04 (S6.8): a plan starts empty. F09 A6 (UXA-C5): the next step
-        // in words, with labelled actions; the example shortcut is gone
-        // (it stays a test fixture).
+        // in words, with labelled actions (plan.js `empty-blocks`).
         if (blocks.isEmpty)
           Padding(
             key: const Key('capturePlan.empty'),
@@ -289,28 +249,31 @@ class _BlockListState extends State<_BlockList> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'No blocks yet. Start with your light frames; the '
-                  'calibration frames can be built from them afterwards.',
+                Text(
+                  'No frames planned yet. You can still save this plan and '
+                  'add frames later; the calibration frames can be built '
+                  'from your lights afterwards.',
+                  style: AppTypography.body.copyWith(
+                    height: 1.6,
+                    color: palette.textSecondary,
+                  ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Wrap(
-                  spacing: 12,
+                  spacing: 8,
                   runSpacing: 8,
                   children: [
-                    FilledButton.tonalIcon(
+                    OutlinedButton(
                       key: const Key('capturePlan.addLights'),
                       onPressed: _add,
-                      icon: const Icon(Icons.add_circle),
-                      label: const Text('Add light frames'),
+                      child: const Text('Add light frames'),
                     ),
                     // F10: FITS is read, so every class has a file to take.
                     if (_fromPhoto != null)
-                      OutlinedButton.icon(
+                      OutlinedButton(
                         key: const Key('capturePlan.addFromPhoto'),
                         onPressed: () => _add(pickPhoto: true),
-                        icon: const Icon(Icons.add_photo_alternate_outlined),
-                        label: const Text('Take from a photo'),
+                        child: const Text('Take from a photo'),
                       ),
                   ],
                 ),
@@ -321,6 +284,7 @@ class _BlockListState extends State<_BlockList> {
           ReorderableListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            buildDefaultDragHandles: false,
             itemCount: blocks.length,
             onReorderItem: (oldIndex, newIndex) {
               viewModel.reorderCaptureBlocks(oldIndex, newIndex);
@@ -329,24 +293,31 @@ class _BlockListState extends State<_BlockList> {
               final block = blocks[index];
               final budget = index < budgets.length ? budgets[index] : null;
               final placement = BlockText.placement(block, budget);
-              final fitsText = measured
-                  ? BlockText.whatFits(
-                      block,
-                      unplaced: fit.unplacedFramesByBlock[index] ?? 0,
-                      upTo: analysis.framesThatFit(index),
-                      spare: analysis.spareFrames(index),
-                      others: shared,
-                    )
-                  : null;
-              // F18 A6: the plan's night in the words, never its values.
-              final fits = fitsText == null
+              final unplaced = fit.unplacedFramesByBlock[index] ?? 0;
+              final upTo = measured ? analysis.framesThatFit(index) : null;
+              // plan.js `fitLine`: what this block's frames leave room for,
+              // from the fit's own outputs; calibration outside the window
+              // says so instead.
+              final fits = placement == 'Outside the imaging window'
+                  ? 'Outside the imaging window · adds to total time'
+                  : !measured
                   ? null
+                  : block.frameType != FrameType.light
+                  ? placement
+                  : upTo == null
+                  ? 'Window capacity unknown for this plan'
+                  : unplaced == 0
+                  ? PlanNightPhrase.apply(
+                      'Fits: room for up to $upTo frames like this in '
+                      "tonight's window${shared ? ' (other blocks as planned)' : ''}",
+                      viewModel.eveningDate ?? viewModel.tonightKey,
+                      viewModel.tonightKey,
+                    )
                   : PlanNightPhrase.apply(
-                      fitsText,
+                      "Only $upTo of ${block.frameCount} frames fit tonight's window",
                       viewModel.eveningDate ?? viewModel.tonightKey,
                       viewModel.tonightKey,
                     );
-              final unplaced = (fit.unplacedFramesByBlock[index] ?? 0) > 0;
               final mismatch = index < mismatches.length
                   ? mismatches[index]
                   : const <CalibrationMismatch>[];
@@ -355,172 +326,250 @@ class _BlockListState extends State<_BlockList> {
                   block.frameType == FrameType.light &&
                   capability != null &&
                   capability.exceedsRecommendation(block.exposureTimeSeconds);
+              final source = _source(block);
+              TextStyle small(Color c) =>
+                  AppTypography.caption.copyWith(height: 1.55, color: c);
               return _ChangeMark(
                 // TD-010/TD-012: ObjectKey tracks this block instance
                 // regardless of position, and stays stable across a drag.
                 key: ObjectKey(block),
                 fresh: fresh,
-                builder: (tint) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Divider(height: 1),
-                    ListTile(
-                      tileColor: tint,
-                      contentPadding: EdgeInsets.zero,
-                      onTap: () => _edit(index, block),
-                      title: Text(BlockText.row(block, budget)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                // plan.js `.capture-block`: a subtle rule above, 14 above
+                // and 10 below the content.
+                builder: (tint) => ColoredBox(
+                  color: tint,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: palette.border)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 14, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            _records(block),
-                            key: Key('capture.records.$index'),
-                            style: Theme.of(context).textTheme.bodySmall,
+                          Semantics(
+                            header: true,
+                            child: Text(
+                              BlockText.title(block),
+                              key: Key('capture.title.$index'),
+                              style: AppTypography.itemTitle.copyWith(
+                                color: palette.textPrimary,
+                              ),
+                            ),
                           ),
-                          if (placement != null) Text(placement),
-                          if (fits != null)
+                          const SizedBox(height: 4),
+                          Text(
+                            BlockText.math(block),
+                            style: AppTypography.value.copyWith(
+                              fontWeight: FontWeight.w500,
+                              height: 1.55,
+                              color: palette.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            _records(block, cameraClass),
+                            key: Key('capture.records.$index'),
+                            style: small(palette.textSecondary),
+                          ),
+                          if (source != null) ...[
+                            const SizedBox(height: 2),
+                            Text(source, style: small(palette.textTertiary)),
+                          ],
+                          if (fits != null) ...[
+                            const SizedBox(height: 2),
                             Text(
                               fits,
                               key: Key('capture.whatFits.$index'),
-                              style: TextStyle(
-                                color: unplaced
+                              style: small(
+                                unplaced > 0
                                     ? palette.statusDoesNotFit
-                                    : palette.textSecondary,
+                                    : palette.textTertiary,
                               ),
                             ),
+                          ],
                           // S6.9 (UX-15 (1); RD-08): a known tracking's
                           // exceedance is a warning, in words and the
                           // status colour; unknown tracking is a missing
                           // input, neutral, with the way to set it.
                           if (exceeds &&
-                              !capability.recommendationIsConditional)
+                              !capability.recommendationIsConditional) ...[
+                            const SizedBox(height: 2),
                             Text(
                               CapabilityText.subWarningFor(
                                 capability,
                                 viewModel.effectiveTracking,
                               ),
                               key: const Key('capture.subWarning'),
-                              style: TextStyle(color: palette.statusDoesNotFit),
+                              style: small(palette.statusDoesNotFit),
                             ),
+                          ],
                           if (exceeds &&
                               capability.recommendationIsConditional) ...[
+                            const SizedBox(height: 2),
                             Text(
                               CapabilityText.unknownTracking(capability),
                               key: const Key('capture.trackingUnknown'),
-                              style: TextStyle(color: palette.statusNeutral),
+                              style: small(palette.statusNeutral),
                             ),
-                            // S7.1: the plan's own tracking (RD-08 = T3).
-                            TextButton(
-                              key: const Key('capture.setTracking'),
-                              onPressed: () => pickPlanTracking(context),
-                              child: const Text(
-                                'Set the tracking for this plan',
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                key: const Key('capture.setTracking'),
+                                onPressed: () => pickPlanTracking(context),
+                                child: const Text(
+                                  'Set the tracking for this plan',
+                                ),
                               ),
                             ),
                           ],
-                          for (final m in mismatch)
+                          for (final m in mismatch) ...[
+                            const SizedBox(height: 2),
                             Text(
                               CalibrationText.mismatch(m, block.frameType),
                               key: Key('capture.mismatch.$index.${m.name}'),
-                              style: TextStyle(color: palette.statusTight),
+                              style: small(palette.statusTight),
                             ),
+                          ],
                           if (mismatch.any((m) => m.fixable) &&
                               CalibrationMatch.defaultSource(block, blocks) !=
                                   null)
-                            TextButton(
-                              key: Key('capture.match.$index'),
-                              onPressed: () => _match(index, block),
-                              child: Text(
-                                CalibrationText.match(block.frameType),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                key: Key('capture.match.$index'),
+                                onPressed: () => _match(index, block),
+                                child: Text(
+                                  CalibrationText.match(block.frameType),
+                                ),
                               ),
                             ),
+                          const SizedBox(height: 8),
+                          // plan.js `.block-actions`: Edit (120), then the
+                          // moves and Remove pushed to the end, 8 apart.
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 120,
+                                child: OutlinedButton(
+                                  key: Key('capture.edit.$index'),
+                                  onPressed: () => _edit(index, block),
+                                  child: Semantics(
+                                    label:
+                                        'Edit block ${index + 1}, ${BlockText.type(block.frameType)}',
+                                    excludeSemantics: true,
+                                    child: const Text('Edit'),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              _MoveButton(
+                                key: Key('capture.moveUp.$index'),
+                                icon: HybridIcons.up,
+                                tooltip: 'Move block ${index + 1} up',
+                                onPressed: index == 0
+                                    ? null
+                                    : () => viewModel.reorderCaptureBlocks(
+                                        index,
+                                        index - 1,
+                                      ),
+                              ),
+                              const SizedBox(width: 8),
+                              _MoveButton(
+                                key: Key('capture.moveDown.$index'),
+                                icon: HybridIcons.downArrow,
+                                tooltip: 'Move block ${index + 1} down',
+                                onPressed: index == blocks.length - 1
+                                    ? null
+                                    : () => viewModel.reorderCaptureBlocks(
+                                        index,
+                                        index + 1,
+                                      ),
+                              ),
+                              const SizedBox(width: 8),
+                              TextButton(
+                                key: Key('capture.delete.$index'),
+                                onPressed: () => _delete(index, block),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: palette.textSecondary,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  minimumSize: const Size(48, 48),
+                                ),
+                                child: Semantics(
+                                  label:
+                                      'Remove block ${index + 1}, ${BlockText.type(block.frameType)}',
+                                  excludeSemantics: true,
+                                  child: const Text('Remove'),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      // Explicit controls remain usable without a drag gesture.
-                      // The whole row also retains its original editor action.
                     ),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 4,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        OutlinedButton(
-                          key: Key('capture.edit.$index'),
-                          onPressed: () => _edit(index, block),
-                          child: const Text('Edit'),
-                        ),
-                        IconButton(
-                          key: Key('capture.moveUp.$index'),
-                          tooltip: 'Move block ${index + 1} up',
-                          onPressed: index == 0
-                              ? null
-                              : () => viewModel.reorderCaptureBlocks(
-                                  index,
-                                  index - 1,
-                                ),
-                          icon: const Icon(Icons.arrow_upward),
-                        ),
-                        IconButton(
-                          key: Key('capture.moveDown.$index'),
-                          tooltip: 'Move block ${index + 1} down',
-                          onPressed: index == blocks.length - 1
-                              ? null
-                              : () => viewModel.reorderCaptureBlocks(
-                                  index,
-                                  index + 1,
-                                ),
-                          icon: const Icon(Icons.arrow_downward),
-                        ),
-                        DeleteButton(
-                          tooltip: 'Delete block',
-                          onPressed: () => _delete(index, block),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                  ],
+                  ),
                 ),
               );
             },
           ),
+        // plan.js `.capture-actions`: a subtle rule, 12 above two equal
+        // buttons 8 apart (the longer label wraps; both keep its height).
         if (blocks.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Tooltip(
-              message: 'Add capture block',
-              child: OutlinedButton.icon(
-                key: const Key('capturePlan.addBlock'),
-                onPressed: _add,
-                icon: const Icon(Icons.add_circle),
-                label: const Text('Add block'),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: palette.border)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        key: const Key('capturePlan.addBlock'),
+                        onPressed: _add,
+                        child: const Text(
+                          'Add block',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    // CAL-1 (F09 A2): the labelled entry, also the
+                    // missing-flat warning's shortcut.
+                    if (blocks.any((b) => b.isLight)) ...[
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton(
+                          key: const Key('capturePlan.buildCalibration'),
+                          onPressed: _buildCalibration,
+                          child: Text(
+                            flatsMissing.isEmpty ? 'Build calibration frames' : 'Build calibration frames, with the missing flats',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ),
         if (flatsMissing.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.only(top: 8),
             child: Text(
               CalibrationText.flatsMissing(
                 flatsMissing,
                 withBinning: _cameraClass.offersLightBinning,
               ),
               key: const Key('capture.flatsMissing'),
-              style: TextStyle(color: palette.statusTight),
-            ),
-          ),
-        // CAL-1 (F09 A2): the labelled entry, also the missing-flat
-        // warning's shortcut.
-        if (blocks.any((b) => b.isLight))
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              key: const Key('capturePlan.buildCalibration'),
-              onPressed: _buildCalibration,
-              icon: const Icon(Icons.auto_awesome_motion_outlined),
-              label: Text(
-                flatsMissing.isEmpty
-                    ? 'Build calibration frames'
-                    : 'Build calibration frames, with the missing flats',
+              style: AppTypography.caption.copyWith(
+                height: 1.55,
+                color: palette.statusTight,
               ),
             ),
           ),
@@ -529,21 +578,72 @@ class _BlockListState extends State<_BlockList> {
   }
 }
 
-String _records(CaptureBlock block) {
+/// A block move (plan.js `.block-actions .android-icon-button`): a 48 px
+/// round target with a 20 px arrow at stroke 1.8; disabled at .3 opacity.
+class _MoveButton extends StatelessWidget {
+  const _MoveButton({
+    super.key,
+    required this.icon,
+    required this.tooltip,
+    required this.onPressed,
+  });
+
+  final HybridIconData icon;
+  final String tooltip;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return IconButton(
+      tooltip: tooltip,
+      onPressed: onPressed,
+      icon: Opacity(
+        opacity: onPressed == null ? 0.3 : 1,
+        child: HybridIcon(
+          icon,
+          size: MediaQuery.textScalerOf(context).scale(20),
+          strokeWidth: 1.8,
+          color: p.textPrimary,
+        ),
+      ),
+    );
+  }
+}
+
+/// plan.js `sourceLine`: where the block's exposure came from, when the
+/// block records it (ADR-021 C4).
+String? _source(CaptureBlock block) =>
+    switch (block.origins[CaptureField.exposure]) {
+      null => null,
+      final o when o.kind == OriginKind.entered => 'Exposure entered by you',
+      final o => 'Exposure: ${CaptureSettingsText.origin(o)}',
+    };
+
+/// plan.js `recordsLine`: the rig's sensitivity (ISO for phones and
+/// cameras, gain and binning for astro cameras), then white balance and
+/// focus for lights; a recorded value of another type is kept and named.
+String _records(CaptureBlock block, CameraClass? cameraClass) {
   final gain = block.gain;
-  final sensitivity = switch (gain.kind) {
-    GainKind.iso => 'ISO ${gain.value!.toInt()}',
-    GainKind.gain => 'Gain ${gain.value}',
-    GainKind.unknown =>
+  final light = block.frameType == FrameType.light;
+  final kept = block.whiteBalance != null || block.focusMode != null;
+  final camera = light || kept
+      ? ' · WB ${block.whiteBalance == null ? 'unrecorded' : CaptureSettingsText.whiteBalance(block.whiteBalance!)}'
+            ' · Focus ${block.focusMode == null ? 'unrecorded' : CaptureSettingsText.focus(block.focusMode!)}'
+      : '';
+  if (cameraClass == null) return 'Choose a rig to record ISO or gain';
+  return switch (cameraClass.lightSensitivity) {
+    LightSensitivity.iso =>
+      'ISO ${gain.kind == GainKind.iso ? gain.value!.toInt() : 'unrecorded'}$camera',
+    LightSensitivity.gain =>
+      'Gain ${gain.kind == GainKind.gain ? QuantityText.number(gain.value!) : 'unrecorded'}'
+          ' · Binning ${block.binning}×${block.binning}'
+          '${kept ? '$camera (kept record)' : ''}',
+    LightSensitivity.either =>
       gain.value == null
-          ? 'ISO or gain unrecorded'
-          : 'ISO or gain ${gain.value} (type unknown)',
+          ? 'Camera type not recorded · no ISO or gain record$camera'
+          : 'Camera type not recorded · ISO or gain ${QuantityText.number(gain.value!)} (type unknown)$camera',
   };
-  return [
-    sensitivity,
-    'Binning ${block.binning}×${block.binning}',
-    ?CaptureSettingsText.of(block),
-  ].join(' · ');
 }
 
 /// Briefly marks a row an edit just changed (S6.9; P6.9's notes): a tint

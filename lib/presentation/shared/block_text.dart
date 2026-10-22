@@ -28,6 +28,31 @@ abstract final class BlockText {
     FrameType.darkFlat => 'Dark flat',
   };
 
+  /// Hybrid block title (plan.js `blockRow`): "Light · L", "Light · no
+  /// filter", "Dark", "Flat · no filter".
+  static String title(CaptureBlock b) {
+    final name = b.filterName?.trim();
+    final filter = name == null || name.isEmpty
+        ? (b.frameType == FrameType.light || b.frameType == FrameType.flat
+              ? 'no filter'
+              : null)
+        : name;
+    return filter == null
+        ? type(b.frameType)
+        : '${type(b.frameType)} · $filter';
+  }
+
+  /// "120 × 60 s = 2 h integration"; calibration says it is not
+  /// integration (plan.js `block-math`).
+  static String math(CaptureBlock b) {
+    final total = Duration(
+      milliseconds: (b.exposureTimeSeconds * 1000 * b.frameCount).round(),
+    );
+    return '${b.frameCount} × ${QuantityText.exposure(b.exposureTimeSeconds)} = '
+        '${QuantityText.duration(total)} '
+        '${b.frameType == FrameType.light ? 'integration' : 'planned calibration, not integration'}';
+  }
+
   /// The row: identity · exposure × count · the block's exposure time, or
   /// "from your library" for library calibration (no time, ADR-009 §3).
   static String row(CaptureBlock b, BlockBudget? budget) => [

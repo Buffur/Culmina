@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 import '../../domain/models/calendar_date.dart';
 import 'app_words.dart';
+import 'hybrid_icon.dart';
 import 'night_time_formatter.dart';
 
 /// "Ljubljana ▾  Fri, Nov 14 ▾" (S5.6; ADR-019 §5, §6; addendum §3.1–§3.2):
@@ -64,7 +66,7 @@ class ContextLine extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final nightText = night == null
         ? null
-        : NightTimeFormatter.eveningDate(night!);
+        : 'Night of ${NightTimeFormatter.eveningDate(night!)}';
     final line = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,7 +78,7 @@ class ContextLine extends StatelessWidget {
           children: [
             _Choice(
               key: const Key('context.site'),
-              icon: Icons.place_outlined,
+              icon: HybridIcons.homePin,
               text: siteName ?? noSite,
               semanticsLabel: '${AppWords.site}: ${siteName ?? noSite}',
               hint: 'Choose a site',
@@ -85,9 +87,9 @@ class ContextLine extends StatelessWidget {
             if (nightText != null)
               _Choice(
                 key: const Key('context.night'),
-                icon: Icons.event_outlined,
+                icon: HybridIcons.planner,
                 text: nightText,
-                semanticsLabel: '${AppWords.night}: $nightText',
+                semanticsLabel: nightText,
                 hint: 'Choose a night',
                 onTap: onNight,
               ),
@@ -132,7 +134,7 @@ class _Choice extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final HybridIconData icon;
   final String text;
   final String semanticsLabel;
   final String hint;
@@ -154,19 +156,21 @@ class _Choice extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            // styles.css `.app-context button`: a 13 px mark, 5 apart, the
+            // 13 px value and a 13 px down chevron, all in the text colour.
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, size: 18, color: p.textSecondary),
-                const SizedBox(width: AppSpacing.xs),
+                HybridIcon(icon, size: 13, color: p.textPrimary),
+                const SizedBox(width: 5),
                 Flexible(
                   child: Text(
                     text,
-                    style: Theme.of(context).textTheme.bodySmall
-                        ?.copyWith(color: p.textPrimary),
+                    style: AppTypography.caption.copyWith(color: p.textPrimary),
                   ),
                 ),
-                Icon(Icons.arrow_drop_down, size: 18, color: p.textSecondary),
+                const SizedBox(width: 5),
+                HybridIcon(HybridIcons.down, size: 13, color: p.textPrimary),
               ],
             ),
           ),

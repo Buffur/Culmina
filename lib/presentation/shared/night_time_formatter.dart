@@ -13,10 +13,11 @@ import '../../domain/models/iana_time_context.dart';
 class NightTimeFormatter {
   const NightTimeFormatter._();
 
-  /// A recorded date with its year, for example "Sep 25, 2026" (S9.7: a
-  /// sky-darkness reading's date; never an ISO string on screen).
+  /// A recorded date with its year, for example "25 Sep 2026" (S9.7: a
+  /// sky-darkness reading's date; never an ISO string on screen). Day before
+  /// month, as the accepted Hybrid reference writes dates.
   static String recordedDate(CalendarDate date) =>
-      '${_months[date.month - 1]} ${date.day}, ${date.year}';
+      '${date.day} ${_months[date.month - 1]} ${date.year}';
 
   static const _months = [
     'Jan',
@@ -33,26 +34,58 @@ class NightTimeFormatter {
     'Dec',
   ];
 
-  /// A civil evening date, for example "Fri, Sep 25".
-  static String eveningDate(CalendarDate date) {
+  /// A civil evening date, for example "25 Sep" (the Hybrid reference's
+  /// "Night of 19 Oct").
+  static String eveningDate(CalendarDate date) =>
+      '${date.day} ${_months[date.month - 1]}';
+
+  /// An evening date with its weekday, for example "Fri 25 Sep" (the
+  /// Logbook's entries).
+  static String eveningDateWithWeekday(CalendarDate date) {
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
     final weekday =
         weekdays[DateTime.utc(date.year, date.month, date.day).weekday - 1];
-    return '$weekday, ${months[date.month - 1]} ${date.day}';
+    return '$weekday ${eveningDate(date)}';
+  }
+
+  /// "GMT+3", "GMT−7", "GMT+5:30" or "GMT": the short zone name the
+  /// reference shows beside a previewed instant, from the site zone's offset
+  /// at [utcInstant] (else the device's).
+  static String shortZone(DateTime utcInstant, {String? zoneId}) {
+    final ctx = IanaTimeContext.tryCreate(zoneId);
+    final offset = ctx == null
+        ? utcInstant.toLocal().timeZoneOffset
+        : ctx.offsetAt(utcInstant.toUtc());
+    if (offset == Duration.zero) return 'GMT';
+    final sign = offset.isNegative ? '−' : '+';
+    final abs = offset.abs();
+    final minutes = abs.inMinutes % 60;
+    return 'GMT$sign${abs.inHours}'
+        '${minutes == 0 ? '' : ':${minutes.toString().padLeft(2, '0')}'}';
+  }
+
+  /// "19 Oct, 21:15 GMT+3": a previewed instant with its date and short
+  /// zone (the reference's timeline caption).
+  static String previewInstant(
+    BuildContext context,
+    DateTime utcInstant, {
+    String? zoneId,
+  }) {
+    final w = wallClock(utcInstant, zoneId: zoneId);
+    return '${eveningDate(CalendarDate.fromDateTimeFields(w))}, '
+        '${clockTime(context, utcInstant, zoneId: zoneId)} '
+        '${shortZone(utcInstant, zoneId: zoneId)}';
+  }
+
+  /// "19 Oct, 13:00": a timeline end with its date, no zone.
+  static String datedClock(
+    BuildContext context,
+    DateTime utcInstant, {
+    String? zoneId,
+  }) {
+    final w = wallClock(utcInstant, zoneId: zoneId);
+    return '${eveningDate(CalendarDate.fromDateTimeFields(w))}, '
+        '${clockTime(context, utcInstant, zoneId: zoneId)}';
   }
 
   /// [utcInstant]'s wall-clock fields in the site's IANA zone [zoneId]
