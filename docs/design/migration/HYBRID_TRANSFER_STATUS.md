@@ -244,5 +244,9 @@ Result of this run: **COMPLETE** (§9), re-checked against the final state (2026
 5. `flutter analyze` clean, format and encoding clean; no known regression.
 6. The regular release APK `2792fbe2…` was built from the committed source and that exact file passed the smoke.
 
-Limits (§9 last paragraph): host and emulator evidence only — no phone, performance, 125/200 % text or store
-acceptance. Committed locally on `develop` (`1577cdd`, `501d98c`, `548d7d6` and this record); not pushed.
+Outside this pass by the contract, so not mandatory registry items: phone QA (§7 forbids touching the owner's
+phone; §4 makes the disposable emulator the native confirmation), performance (§6: only a profile run on a
+separately permitted physical device), 125/200 % text (§2, §4: a separate, deferred pass) and owner or store
+acceptance (§9 last paragraph). `covered-by` and `native adaptation` are the contract's own statuses for
+justified reuse and native-only surfaces (§3, §9.2–9.3); only deviations from the reference needed the owner, and
+HT-DEV-01, -02 and -16 were decided. Committed locally on `develop` (`1577cdd`, `501d98c`, `548d7d6` and this record); not pushed.
