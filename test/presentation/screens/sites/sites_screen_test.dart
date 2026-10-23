@@ -468,6 +468,33 @@ void main() {
 
     // F23 A6 (CRUX-03): a fix fills the coordinates only if neither changed
     // while it was found; otherwise the edit is kept and the fix offered.
+    // TD-112: the list's request says it is running, and one that never
+    // gets a fix ends with an explained failure (the service's time limit
+    // throws), the button usable again.
+    testWidgets('the list says a position request is running; a timeout is '
+        'explained', (tester) async {
+      final fix = Completer<LocationResult>();
+      await build(
+        tester,
+        locationService: FakeLocationService(answer: () => fix.future),
+      );
+      await pump(tester);
+      final button = find.byKey(const Key('sites.useCurrentPosition'));
+      await tester.tap(button);
+      await tester.pump();
+      expect(find.text('Getting position…'), findsOneWidget);
+      expect(tester.widget<OutlinedButton>(button).onPressed, isNull);
+      fix.completeError(TimeoutException('no fix'));
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await tester.pumpAndSettle();
+      expect(
+        find.text("Couldn't get your position. Please try again."),
+        findsOneWidget,
+      );
+      expect(find.text('Use current position'), findsOneWidget);
+      expect(tester.widget<OutlinedButton>(button).onPressed, isNotNull);
+    });
+
     group('a fix that arrives after an edit', () {
       late Completer<LocationResult> fix;
       const found = LocationFound(

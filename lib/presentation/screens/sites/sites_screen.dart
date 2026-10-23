@@ -40,6 +40,18 @@ class _SitesScreenState extends State<SitesScreen> {
   final _search = TextEditingController();
   String _query = '';
 
+  /// A position request is running (TD-112): the button says so.
+  bool _locating = false;
+
+  Future<void> _useCurrentPosition(SiteViewModel siteVm) async {
+    setState(() => _locating = true);
+    try {
+      await useCurrentPositionWithFeedback(context, siteVm);
+    } finally {
+      if (mounted) setState(() => _locating = false);
+    }
+  }
+
   @override
   void dispose() {
     _search.dispose();
@@ -119,8 +131,11 @@ class _SitesScreenState extends State<SitesScreen> {
               ),
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
-              onPressed: () => useCurrentPositionWithFeedback(context, siteVm),
-              child: const Text('Use current position'),
+              key: const Key('sites.useCurrentPosition'),
+              onPressed: _locating ? null : () => _useCurrentPosition(siteVm),
+              child: Text(
+                _locating ? 'Getting position…' : 'Use current position',
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
