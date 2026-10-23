@@ -251,11 +251,7 @@ acceptance (§9 last paragraph). `covered-by` and `native adaptation` are the co
 justified reuse and native-only surfaces (§3, §9.2–9.3); only deviations from the reference needed the owner, and
 HT-DEV-01, -02 and -16 were decided. Committed locally on `develop` (`1577cdd`, `501d98c`, `548d7d6` and this record); not pushed.
 
-**BLOCKED — waiting for the owner's permission/decision** · NEEDS ATTENTION / Варто звернути увагу (2026-10-23, CLAUDE.md V7): the run's automatic completion check kept
-judging §9 unmet on interpretation, not on new evidence — it does not accept the contract's `covered-by` and
-`native adaptation` statuses, host-plus-emulator evidence, or the items the contract places outside this pass
-(phone, performance, 125/200 % text, store acceptance) as meeting "zero unverified mandatory items". Automatic
-re-validation stops here. Owner question: **does this record, with those statuses and exclusions as the contract
-defines them, meet §9 — or do you want any excluded check (for example a phone scenario you approve) done before
-the transfer is called COMPLETE?** Until answered, the engineering result above stands as recorded and the
-transfer stops here as **BLOCKED** (the goal's stop condition: a blocker that needs the owner's permission).
+Owner confirmation (2026-10-23, in the run's chat: «давай», accepting the recommendation): this record meets §9
+with the contract's `covered-by` and `native adaptation` statuses and its exclusions (phone, performance,
+125/200 % text, store acceptance), which stay separate future work. The earlier NEEDS ATTENTION / BLOCKED hold
+(CLAUDE.md V7) is resolved; the transfer is **COMPLETE**.
