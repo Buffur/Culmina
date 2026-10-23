@@ -259,4 +259,3 @@ re-validation stops here. Owner question: **does this record, with those statuse
 defines them, meet §9 — or do you want any excluded check (for example a phone scenario you approve) done before
 the transfer is called COMPLETE?** Until answered, the engineering result above stands as recorded and the
 transfer is held at this checkpoint.
-
