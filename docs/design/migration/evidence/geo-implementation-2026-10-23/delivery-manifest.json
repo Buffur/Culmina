@@ -1,0 +1,22 @@
+{
+  "base": "2a43c89981c0f9e0f4d4eddc4a62484c470be928",
+  "apkSha256": "471541bfd73f93b7b1c77b7db0904b721a2c7c513f6244d3933bebe9e03496af",
+  "sourceSha256": {
+    "lib/presentation/screens/sites/sites_screen.dart": "39c631b560f031e1cacead44322cbfebfd489e3210dd60822e2a945b4e8d708c",
+    "lib/presentation/screens/sites/site_editor_screen.dart": "8b8767fd3f690fcdb67ea23bf3579646286999356555cb47149acc27ddfb066d",
+    "lib/presentation/screens/location/location_picker_screen.dart": "c2ecd782bee94359930f427d191966f69d57d3c98d5411778fc2889ffb779dbb",
+    "lib/presentation/screens/library/library_parts.dart": "52dd78301c5e8fb0c26a18d14b680d24c25e8e07717eabadfe90c1d619ae3b5a",
+    "lib/presentation/shared/geo_controls.dart": "d6289ac7a4409687229a4a39f37a00e99a2ac997790f14828eb5e33604ce7361",
+    "lib/presentation/shared/hybrid_icon.dart": "bde21d71d51f3a79f6ccfa151d05ec202d95a4f22cf9ea7b782eecd86f818e65",
+    "lib/presentation/screens/tonight/home_context_sheets.dart": "38c17f67f22251e05c3075a962e0eda29743cf18e83cbb13e4b6215ed5da5dad",
+    "lib/presentation/screens/tonight/tonight_home_screen.dart": "4e2e86d61635f9872681f6fd55266663b4647e2e2b4585259b98234aa32571d9",
+    "lib/presentation/shared/context_line.dart": "2c61b762e86d90f6856e70ae04031de411ac149dec0fab2a257c004ec510c320"
+  },
+  "physicalUpdate": "adb install -r: Success; launch Status ok, COLD 589ms",
+  "physicalEvidenceExternal": "C:\\Users\\zalub\\CulminaQA\\2026-10-23\\geo-implementation\\phone",
+  "notes": [
+    "Uncommitted task build, not a Git delivery",
+    "Owner phone raw screenshots intentionally excluded",
+    "Integration screenshots may crop toolbar; ordinary runtime captures retained separately"
+  ]
+}

@@ -1,0 +1,206 @@
+<title>Culmina R3 Iteration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a reading column for decisions; comparison plates use the full width. Tokens follow the shipped Hybrid palette (lib/core/theme). */
+:root{
+  --bg:#FFFFFF; --paper:#F7F7F5; --sunk:#F0F0ED; --rule:#E9E9E7;
+  --ink:#37352F; --ink2:#5A5955; --ink3:#6E6D69;
+  --accent:#0075DE; --ok:#27633D; --okw:#E4EEE7; --warn:#754600; --warnw:#F4ECDF;
+  --plate:#ECECEA;
+  --display:Geist, "Segoe UI", system-ui, sans-serif;
+  --mono:ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#191919; --paper:#202020; --sunk:#141414; --rule:#2F2F2F;
+  --ink:#EBEBEA; --ink2:#A5A5A3; --ink3:#8F8F8D;
+  --accent:#62AFF3; --ok:#99C5A6; --okw:#2B352E; --warn:#FFCA70; --warnw:#3B3222;
+  --plate:#252525; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#191919; --paper:#202020; --sunk:#141414; --rule:#2F2F2F;
+  --ink:#EBEBEA; --ink2:#A5A5A3; --ink3:#8F8F8D;
+  --accent:#62AFF3; --ok:#99C5A6; --okw:#2B352E; --warn:#FFCA70; --warnw:#3B3222;
+  --plate:#252525; color-scheme:dark}
+@font-face{font-family:Geist;src:url({{FONT}}) format("truetype");font-weight:100 900;font-display:swap}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--display);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+main{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:56px}
+section{min-width:0}
+.col{max-width:760px}
+h1{font:600 clamp(28px,4vw,40px)/1.15 var(--display);letter-spacing:-.015em;margin:0;text-wrap:balance}
+h2{font:600 24px/1.25 var(--display);letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
+h3{font:600 17px/1.35 var(--display);margin:0 0 12px}
+h4{font:600 13px/1.3 var(--display);margin:0 0 10px;color:var(--ink2)}
+p,li{max-width:68ch}
+.lede{font-size:17px;color:var(--ink2)}
+.eyebrow{font:600 11px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+code{font:13px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.decide{border:1px solid var(--rule);background:var(--paper);border-radius:8px;padding:16px 20px}
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--rule)}
+th{font-weight:600;color:var(--ink2)}
+td.chg{color:var(--accent);font-weight:600}
+.plate{background:var(--plate);border-radius:10px;padding:20px}
+.ic,.mk{display:inline-block;overflow:hidden;vertical-align:middle;flex:none}
+.ic svg,.mk svg{width:100%;height:100%;display:block}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:24px}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px}
+.tcol{display:grid;gap:12px;align-content:start;justify-items:start}
+.sizes{display:flex;gap:12px;align-items:center}
+.nums{display:grid;grid-template-columns:auto auto;gap:2px 14px;margin:0;font-size:13px}
+.nums dt{color:var(--ink2)}.nums dd{margin:0;font-variant-numeric:tabular-nums}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:24px}
+.final{display:grid;gap:16px;align-content:start}
+.fgrid+.final{margin-top:28px;max-width:560px}
+.frow{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.fstack{display:grid;gap:16px}
+figure{margin:0;display:grid;gap:6px;justify-items:start}
+figcaption{font-size:12.5px;color:var(--ink2)}
+.locks{display:grid}
+.lock{display:flex;align-items:center;gap:14px;padding:16px 18px}
+.locks .lock:first-child{border-radius:8px 8px 0 0}.locks .lock:last-child{border-radius:0 0 8px 8px}
+.lm{width:52px;height:52px;flex:none}.lm svg{width:100%;height:100%;display:block}
+.lw{font:500 clamp(28px,6vw,38px)/1 Geist,var(--display);letter-spacing:.005em}
+.hgrid{display:grid;gap:24px}
+.homes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),320px));gap:12px}
+.phone{border-radius:22px;padding:22px 12px 120px;min-width:0}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 4px}
+.app{display:grid;justify-items:center;gap:4px;font-size:10.5px;min-width:0}
+.app span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.note{font-size:13px;color:var(--ink3)}
+.verdict td:first-child{font-weight:600}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px}
+.cols2>div{min-width:0}
+</style>
+
+<main>
+
+<header class="col">
+  <div class="eyebrow">Culmina · айдентика · ітерації 2–3 · 23.10.2026</div>
+  <h1>R3: від акуратного ескізу до іконки</h1>
+  <p class="lede">Розвиваю чинний R3-final замість заміни. Напрями B і C зупинено. Ітерація 2 порівнювала тон на незміненій геометрії, потім геометрію на одному тоні. Ітерація 3 (крок 3) лише заокруглює кінці зірки в обраній темній версії.</p>
+</header>
+
+<section class="col decide" aria-labelledby="pick">
+  <h2 id="pick">Обрано власником: C · Оновлена темна</h2>
+  <p>Геометрія R3 лишається без змін. Єдина правка — заокруглені кінці променів зірки (крок 3 нижче). Розділи після кроку 3 — історія ітерації 2, на якій ґрунтувався вибір.</p>
+</section>
+
+<section aria-labelledby="s3">
+  <div class="col">
+    <div class="eyebrow">Крок 3 · Кути зірки</div>
+    <h2 id="s3">Заокруглені кінці променів на темній іконці</h2>
+    <p>Боки зірки — ті самі криві R3. Кожен бік підрізано біля кінця, а кінець замкнено кривою з контрольною точкою в колишньому гострому вістрі. Щоб зірка не зменшилась, промені подовжено рівно настільки, щоб розмах лишився 19,2 од. Внизу кожного стовпця — та сама зірка вчетверо ближче.</p>
+  </div>
+  <div class="plate">{{STAR}}</div>
+  <div class="col" style="margin-top:16px">
+    <p><b>Беру середнє заокруглення.</b> Голкові вістря зникають уже на 48 px, а боки й тіло зірки не змінюються. Кінці тепер відповідають заокругленим закінченням обох траєкторій: у знаку не лишається жодного гострого кута.</p>
+    <p><b>Легке</b> помітне лише зблизька — на іконці воно нічого не дає. <b>Сильне</b> програє: кінці стають краплеподібними, а промені доводиться подовжувати на 2 од., тож форма зірки вже змінюється. Тут межа.</p>
+  </div>
+  <h3 style="margin-top:24px">Обраний варіант</h3>
+  <div class="plate">{{CHOSEN}}</div>
+  <p class="col note" style="margin-top:12px">Сусідні іконки на домашніх екранах умовні. Файли: <code>r3/svg/chosen-*.svg</code>, <code>r3/svg/star-tips-*.svg</code>, <code>r3/svg/lockup-chosen-*.svg</code> і відповідні PNG у <code>r3/png/</code>.</p>
+</section>
+
+<section class="col decide" aria-labelledby="sum">
+  <h2 id="sum">Рекомендація ітерації 2 (до вибору)</h2>
+  <p><b>R3·2 на світлій основі.</b> Світла основа дає знаку найчіткіший силует і відрізняє іконку від темних астрономічних застосунків. R3·2 закріплює ієрархію: зовнішня траєкторія основна, внутрішня рівно вдвічі тонша, а зірка вписана в той самий квадрат, що й орбіта. Делікатне R3·1 на великому розмірі програє і R3·2, і оригіналу; виграш у нього є лише на 24 px.</p>
+  <p><b>Компроміс:</b> на світлій основі зірка стає синьою міткою на світлому полі, а не світлом у темряві. Цей зміст тримає темна версія, і я лишаю її повноцінною альтернативою.</p>
+</section>
+
+<section aria-labelledby="refs">
+  <div class="col">
+    <div class="eyebrow">Референси</div>
+    <h2 id="refs">Що видно в чужих іконках</h2>
+    <p>Переглянуто на офіційних сторінках 23.10.2026: App Store (Stellarium Mobile, Stargazing Hub, Halide Mark III, Headspace, Notion), <code>siril.org</code> і <code>stellarium.org</code>. Зображення не копіюю — лише описую властивості.</p>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Що</th><th>Носій</th><th>Головна форма і точка уваги</th><th>Світле / темне</th><th>Масштаб у контейнері</th><th>Колір, порожнеча, деталь</th></tr>
+    <tr><td>Stellarium Mobile</td><td>Mobile app icon</td><td>Сцена: небо, сузір'я, силует обсерваторії й горизонту. Окремої точки уваги немає</td><td>Темне переважає, світлі лише дрібні зорі та смуга заходу</td><td>Ілюстрація на всю площу, без полів</td><td>Градієнт неба, багато дрібниць, які на 24 px зливаються в текстуру</td></tr>
+    <tr><td>Stellarium</td><td>Desktop-іконка</td><td>Серп Місяця над лісом і горизонтом</td><td>Темно-фіолетове поле, світлий серп</td><td>Сцена на всю площу</td><td>Пейзаж і градієнт; серп — єдина велика світла пляма</td></tr>
+    <tr><td>Siril</td><td>Логотип (desktop-проєкт)</td><td>Кругла емблема: зорі-«іскри», спіраль, око в кільці, хмари</td><td>Небо від бірюзового до фіолетового, білі хмари внизу</td><td>Коло на всю площу</td><td>Кілька символів одночасно; четвірчасті іскри — той самий гліф, що в R3</td></tr>
+    <tr><td>Stargazing Hub</td><td>Mobile app icon</td><td>Буквальний телескоп і хмара</td><td>Синє поле, яскраво-салатовий предмет</td><td>Предмет займає ≈ ¾ ширини</td><td>Контраст через додатковий колір; піктограма предмета, а не знак</td></tr>
+    <tr><td>Halide Mark III</td><td>Mobile app icon</td><td>Одна лінійна форма-діафрагма</td><td>Світло-сіре металеве поле, темна лінія</td><td>≈ 80 % ширини</td><td>Одна товщина лінії, фактура поля, жодного акценту кольором</td></tr>
+    <tr><td>Headspace</td><td>Mobile app icon</td><td>Одне помаранчеве коло з мінімальним «обличчям»</td><td>Біле поле, насичена кольорова пляма</td><td>≈ 70 %</td><td>Колір — головний носій; багато порожнього поля</td></tr>
+    <tr><td>Notion</td><td>Mobile app icon</td><td>Куб із літерою N</td><td>Біле поле, чорна обвідка</td><td>≈ 75 %</td><td>Монохром; упізнаваність тримає форма, а не колір</td></tr>
+  </table></div>
+  <div class="col" style="margin-top:16px">
+    <p><b>Що з цього для Culmina.</b> Усі чотири астрономічні приклади темні та сценічні, тож світла основа — шлях відрізнитися в своїй категорії. Але це гіпотеза: Siril і Stellarium ніхто не впізнає за світлом поля. Неастрономічні приклади тримаються однієї форми, що займає 70–80 % контейнера, і щонайбільше одного кольорового акценту. R3 вже має масштаб ≈ 70 %, тож міняти розмір знака не потрібно. Ще одне: четвірчаста іскра є і в Siril, тож зірці R3 потрібен власний характер.</p>
+  </div>
+</section>
+
+<section aria-labelledby="t">
+  <div class="col">
+    <div class="eyebrow">Крок 1 · Тональність</div>
+    <h2 id="t">Незмінений R3 у трьох тонах і контроль</h2>
+    <p>Геометрія однакова скрізь — це точна копія <code>ic_launcher_foreground.xml</code>. Під кожною іконкою наведено контраст елементів до поля (WCAG, поле взято на 40 % висоти градієнта) і частку світлих площ (пікселі з відносною яскравістю понад 0,5).</p>
+  </div>
+  <div class="plate">{{TONE}}</div>
+  <div class="scroll" style="margin-top:20px"><table class="verdict">
+    <tr><th></th><th>Що стало краще</th><th>Що погіршилось</th></tr>
+    <tr><td>A · Світла основа</td><td>Найчіткіший силует: темна орбіта займає основну масу, і на 24 px контур не губиться. Внутрішня дуга (3,5:1) і зірка (3,6:1) тримаються як графіка. Вирізняється серед темних астрономічних іконок.</td><td>Зірка вже не «світло»: синя мітка на молочному полі. На світлих шпалерах край контейнера зникає, лишається сам знак (як у Notion).</td></tr>
+    <tr><td>B · Блакитне поле</td><td>Помітний колір на домашньому екрані.</td><td><b>Програє.</b> Орбіта лише 4,0:1, внутрішня дуга 2,6:1 — нижче за 3:1 для графіки. Білі зірка й орбіта зливаються в один тон, тож акцент зникає. Поле нагадує загальну «синю іконку застосунку».</td></tr>
+    <tr><td>C · Оновлена темна</td><td>Внутрішня дуга світліша (7,4:1 проти 5,7:1), тож дві траєкторії читаються як пара. Градієнт від #1B2A63 додає глибини без нових елементів. Зберігає «світло в темряві».</td><td>На 32–24 px майже не відрізняється від контролю. Залишається в тій самій темній групі, що й Stellarium і Siril.</td></tr>
+  </table></div>
+  <p class="col note" style="margin-top:12px">Для кроку 2 беру світлу основу A як основного кандидата. Темна C лишається альтернативою у фінальних кандидатах.</p>
+</section>
+
+<section aria-labelledby="g">
+  <div class="col">
+    <div class="eyebrow">Крок 2 · Геометрія</div>
+    <h2 id="g">Той самий образ, три виконання</h2>
+    <p>Усі три варіанти — на світлій основі. Під іконкою — 48, 32, 24 px, нижче — знак у монохромі великим розміром, щоб видно було форму без кольору.</p>
+  </div>
+  <div class="plate">{{GEOM}}</div>
+  <h3 style="margin-top:24px">Що саме змінено</h3>
+  <div class="cols2">
+    <div>{{PARAMS}}</div>
+    <div>
+      <p><b>R3·1 · делікатне.</b> Внутрішня дуга 2,4 → 3,0, її розрив звужено з 108° до 92°, кінці підходять ближче під зірку. Зірка: повніше тіло (1,53 → 2,15), вертикальний промінь довший за бічний (10,4 : 8,8). <b>Результат:</b> на 24 px внутрішня дуга видніша. На великому розмірі внутрішнє кільце майже замикається, тож відкритість композиції — головна риса R3 — слабшає. <b>Цей варіант програє оригіналу на великому розмірі.</b></p>
+      <p><b>R3·2 · виразніше.</b>
+      <br>• Ієрархія: зовнішня дуга 6,4, внутрішня 3,2 — рівно половина.
+      <br>• Один модуль відступу 3,6 між траєкторіями.
+      <br>• Внутрішній розрив розширено до 120°, тож внутрішня дуга коротша й підпорядкована.
+      <br>• Зірка — відблиск: довгий вертикальний промінь 11,06 упирається у верхню дотичну орбіти, бічний 8,35 — у праву. Тепер знак вписується в один квадрат (габарит 50,3 × 50,3 од.). У R3 бічний промінь виступає за орбіту на 1,45, а верхній не доходить на 1,26.
+      <br><b>Результат:</b> знак щільніший і читкий на 24 px, зірка належить конструкції, а не прикладена збоку. Центроїд майже не змінився: (53,0; 54,7) проти (53,2; 54,6).</p>
+      <p class="note">Відкинуто по дорозі: промені зірки вздовж дотичної до орбіти — вони впиралися в кінці розриву, і зірка злипалася з ними в пляму; нахил 14° — зірка читалася як полум'я.</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="f">
+  <div class="col">
+    <div class="eyebrow">Фінальні кандидати</div>
+    <h2 id="f">Іконка, розміри, знак, назва</h2>
+    <p>Напис — Geist 500, той самий шрифт, що в застосунку. Кольоровий знак без контейнера бере кольори свого тону.</p>
+  </div>
+  <div class="plate">{{FINALS}}</div>
+  <h3 style="margin-top:28px">Серед інших застосунків</h3>
+  <p class="col note">Сусідні іконки умовні: прості фігури на кольорових полях, а не справжні застосунки. Розмір іконки 56 px, шпалери світла й темна.</p>
+  <div class="plate">{{HOMES}}</div>
+  <div class="col" style="margin-top:16px">
+    <p>На світлих шпалерах світла іконка втрачає край контейнера, але знак читається завдяки темній орбіті. На темних вона найпомітніша з трьох. Темна R3·2 добре стоїть на світлих шпалерах, а на темних помітна менше, ніж світла, — так само, як контроль.</p>
+  </div>
+</section>
+
+<section aria-labelledby="m" class="col">
+  <div class="eyebrow">Рух · лише напрям</div>
+  <h2 id="m">Як цей знак може рухатися</h2>
+  <p>Обидві траєкторії статичні з першого кадру, тож знак упізнаваний одразу й не обертається як спінер. Єдиний жест — зірка: вона з'являється в розриві й «загоряється»: вертикальний промінь видовжується до верхньої дотичної, тіло набирає повноти. Альтернатива — зірка проходить останні ≈ 30° зовнішньої орбіти й зупиняється в розриві. Тривалість — у межах ≈ 400–600 мс, з обривом, щойно застосунок готовий. Реалізація — після погодження статичного знака.</p>
+</section>
+
+<section aria-labelledby="files" class="col">
+  <div class="eyebrow">Матеріали</div>
+  <h2 id="files">Файли</h2>
+  <ul>
+    <li>Геометрія: <code>design/identity-lab/r3.py</code>. <code>R3_ORIGINAL</code> точно повторює чинний вектор, варіанти змінюють лише названі параметри.</li>
+    <li>Редаговані вектори: <code>design/identity-lab/r3/svg/</code> — іконки кожного варіанта в кожному тоні, монохромні знаки, композиції з назвою.</li>
+    <li>Окремі зображення: <code>design/identity-lab/r3/png/</code>, 1024 px (композиції з назвою — 1600 × 400).</li>
+    <li>Збірка: <code>python design/identity-lab/build_r3.py --png &lt;chrome&gt;</code>.</li>
+  </ul>
+  <p class="note">Production-ресурси, тема застосунку, запуск і залежності не змінювались. Рендери — браузерні при щільності 1×. На лончері телефона варіанти не встановлювались.</p>
+</section>
+
+</main>

@@ -5,11 +5,11 @@ import '../../../domain/models/calendar_date.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/hybrid_parts.dart';
 import '../library/library_parts.dart';
 import '../settings/settings_parts.dart';
 import '../../shared/app_words.dart';
+import '../../shared/geo_controls.dart';
 
 import 'dart:async';
 
@@ -124,13 +124,66 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   bool _saving = false;
   bool _locating = false;
 
-  /// "Use device position" stays open for this visit (library.js).
-  bool _locationOpen = false;
+  Timer? _nameDebounce;
+  bool _initialized = false;
+  bool _applyingCoordinates = false;
+  bool _settingAutomaticName = false;
+  String? _automaticName;
+  late String _positionSource;
+
+  bool get _mayNameAutomatically =>
+      _isNew && (_name.text.trim().isEmpty || _name.text == _automaticName);
+
+  (double, double)? get _validPosition {
+    if (CoordinateInput.validateLatitude(_latitude.text) != null ||
+        CoordinateInput.validateLongitude(_longitude.text) != null) {
+      return null;
+    }
+    return (
+      CoordinateInput.parse(_latitude.text)!,
+      CoordinateInput.parse(_longitude.text)!,
+    );
+  }
+
+  String _coordinateName(double latitude, double longitude) =>
+      'Site - ${_coordinate(latitude)}, ${_coordinate(longitude)}';
+
+  void _setAutomaticName(String value) {
+    final pristine = _initialized && !_changed;
+    _automaticName = value;
+    _settingAutomaticName = true;
+    _name.text = value;
+    _settingAutomaticName = false;
+    if (pristine) _opened = _values();
+  }
+
+  void _coordinatesEdited() {
+    if (_applyingCoordinates) return;
+    _nameDebounce?.cancel();
+    _lookupGeneration++;
+    _nameLookup = _NameLookup.none;
+    _offeredAt = null;
+    _proposedAttribution = null;
+    _positionSource = 'Entered manually · not saved';
+    if (_mayNameAutomatically) {
+      final point = _validPosition;
+      _setAutomaticName(
+        point == null ? '' : _coordinateName(point.$1, point.$2),
+      );
+    }
+    _refresh();
+    if (_mayNameAutomatically && _validPosition != null) {
+      _nameDebounce = Timer(const Duration(milliseconds: 700), () {
+        if (!mounted || _saving || _leaving || !_mayNameAutomatically) return;
+        final point = _validPosition;
+        if (point != null) unawaited(_proposeName(point.$1, point.$2));
+      });
+    }
+  }
 
   /// F23 A5: the place-name proposal for a position from "Use current
   /// position" — for an empty name only, through the opt-in lookup.
   _NameLookup _nameLookup = _NameLookup.none;
-  String? _proposedName;
   String? _proposedAttribution;
 
   /// The position the opt-in offer is for.
@@ -143,7 +196,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   bool _leaving = false;
 
   /// The form as it opened, to tell whether anything was changed (UX-21).
-  late final Object _opened = _values();
+  late Object _opened = _values();
 
   Object _values() => (
     _name.text,
@@ -173,10 +226,39 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   @override
   void initState() {
     super.initState();
-    _opened; // the state before any edit
-    if (_isNew) _prefillDeviceZone();
+    _positionSource = _original != null
+        ? 'From saved site'
+        : _validPosition != null
+        ? 'From selected position — verify or replace'
+        : 'Choose a position to name this site automatically.';
+    if (_isNew) {
+      _automaticName = widget.args.name;
+      final point = _validPosition;
+      if (_name.text.trim().isEmpty && point != null) {
+        _setAutomaticName(_coordinateName(point.$1, point.$2));
+      }
+    }
+    _opened; // include locally generated initial labels in the pristine state
+    _initialized = true;
+    if (_isNew) {
+      _prefillDeviceZone();
+      // Inherited coordinates need the same automatic enrichment as a map/GPS
+      // result. Never look up an existing saved record or a known carried name.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted ||
+            !_mayNameAutomatically ||
+            (widget.args.name?.trim().isNotEmpty ?? false)) {
+          return;
+        }
+        final point = _validPosition;
+        if (point != null) unawaited(_proposeName(point.$1, point.$2));
+      });
+    }
     // The sky-darkness summary and the map link follow the typing.
-    for (final c in [_latitude, _longitude, _sqm, _elevation]) {
+    for (final c in [_latitude, _longitude]) {
+      c.addListener(_coordinatesEdited);
+    }
+    for (final c in [_sqm, _elevation]) {
       c.addListener(_refresh);
     }
     // The back guard follows every field (S7.V2); only a flip rebuilds.
@@ -189,12 +271,11 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   /// A typed name is the user's: the proposal, its source line and any
   /// pending answer give way to it.
   void _nameEdited() {
-    if (_nameLookup == _NameLookup.none) return;
-    if (_nameLookup == _NameLookup.found && _name.text == _proposedName) {
-      return;
-    }
-    if (_name.text.trim().isEmpty && _nameLookup != _NameLookup.found) return;
+    if (_settingAutomaticName) return;
+    _nameDebounce?.cancel();
     _lookupGeneration++;
+    _automaticName = null;
+    _proposedAttribution = null;
     setState(() => _nameLookup = _NameLookup.none);
   }
 
@@ -220,6 +301,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
 
   @override
   void dispose() {
+    _nameDebounce?.cancel();
     for (final c in [_name, _latitude, _longitude, _elevation, _sqm, _notes]) {
       c.dispose();
     }
@@ -244,10 +326,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         : null;
     final point = await context.push<LatLng>(AppRouter.sitePick, extra: start);
     if (point == null || !mounted) return;
-    setState(() {
-      _latitude.text = _coordinate(point.latitude);
-      _longitude.text = _coordinate(point.longitude);
-    });
+    _applyFix(point.latitude, point.longitude, source: 'From map · not saved');
   }
 
   /// "Use current position" (S7.5): the device position fills the
@@ -284,26 +363,40 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   }
 
   /// Fills the coordinates from a fix, then proposes a name for them.
-  void _applyFix(double latitude, double longitude) {
+  void _applyFix(
+    double latitude,
+    double longitude, {
+    String source = 'From device GPS · not saved',
+  }) {
+    _nameDebounce?.cancel();
+    _applyingCoordinates = true;
     _latitude.text = _coordinate(latitude);
     _longitude.text = _coordinate(longitude);
+    _applyingCoordinates = false;
+    _lookupGeneration++;
+    setState(() {
+      _positionSource = source;
+      _nameLookup = _NameLookup.none;
+      _proposedAttribution = null;
+      if (_mayNameAutomatically) {
+        _setAutomaticName(_coordinateName(latitude, longitude));
+      }
+    });
     unawaited(_proposeName(latitude, longitude));
   }
 
-  /// F23 A5: a new site's name from the consented place-name lookup. Never
-  /// over a name already there or typed meanwhile, never for coordinates
-  /// changed meanwhile; with place names off, the opt-in is offered and
-  /// nothing is sent. Not finding a name never blocks typing or Save.
+  /// Enrich only this new draft's generated label. A late result cannot
+  /// replace a user label, a newer position, or a site being saved.
   Future<void> _proposeName(double latitude, double longitude) async {
-    if (_name.text.trim().isNotEmpty) return;
+    if (!_mayNameAutomatically) return;
+    _nameDebounce?.cancel();
+    final generation = ++_lookupGeneration;
+    final requestedFields = (_latitude.text, _longitude.text);
+    _offeredAt = (latitude, longitude);
     if (!context.read<SettingsViewModel>().placeNameLookup) {
-      setState(() {
-        _nameLookup = _NameLookup.offer;
-        _offeredAt = (latitude, longitude);
-      });
+      setState(() => _nameLookup = _NameLookup.offer);
       return;
     }
-    final generation = ++_lookupGeneration;
     setState(() => _nameLookup = _NameLookup.looking);
     ReverseGeocodeResult result;
     try {
@@ -314,21 +407,19 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     } catch (e) {
       result = ReverseGeocodeFailed('$e');
     }
-    if (!mounted || generation != _lookupGeneration) return;
-    final stillThere =
-        (_latitude.text, _longitude.text) ==
-        (_coordinate(latitude), _coordinate(longitude));
-    if (!stillThere || _name.text.trim().isNotEmpty) {
-      setState(() => _nameLookup = _NameLookup.none);
+    if (!mounted || _saving || _leaving || generation != _lookupGeneration) {
+      return;
+    }
+    if ((_latitude.text, _longitude.text) != requestedFields ||
+        !_mayNameAutomatically) {
       return;
     }
     setState(() {
       switch (result) {
         case PlaceNameFound(:final name, :final attribution):
-          _proposedName = name;
           _proposedAttribution = attribution;
           _nameLookup = _NameLookup.found;
-          _name.text = name;
+          _setAutomaticName(name);
         case PlaceNameNotFound():
           _nameLookup = _NameLookup.notFound;
         case ReverseGeocodeFailed(:final reason):
@@ -342,12 +433,20 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   /// Settings, then the lookup for the offered position.
   Future<void> _turnOnPlaceNames() async {
     final at = _offeredAt;
+    final generation = _lookupGeneration;
     final on = await runWithFeedback(
       context,
       'save the place-name setting',
       () => context.read<SettingsViewModel>().setPlaceNameLookup(true),
     );
-    if (!on || !mounted || at == null) return;
+    if (!on ||
+        !mounted ||
+        at == null ||
+        generation != _lookupGeneration ||
+        _offeredAt != at ||
+        !_mayNameAutomatically) {
+      return;
+    }
     setState(() => _nameLookup = _NameLookup.none);
     await _proposeName(at.$1, at.$2);
   }
@@ -355,14 +454,51 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   String? get _nameHelper => switch (_nameLookup) {
     _NameLookup.looking => 'Looking up a place name…',
     _NameLookup.found =>
-      'Suggested by ${_proposedAttribution ?? 'a lookup'}; '
-          'change it freely.',
+      'Filled automatically · ${_proposedAttribution ?? 'place-name lookup'}',
     _NameLookup.notFound =>
-      'No place name found for this position; '
-          'enter a name.',
-    _NameLookup.failed => 'No place name: the lookup failed. Enter a name.',
-    _NameLookup.none || _NameLookup.offer => null,
+      'No place name found. The coordinate name can be saved.',
+    _NameLookup.failed =>
+      'Name lookup failed. The coordinate name can be saved.',
+    _NameLookup.offer => 'Place names are off.',
+    _NameLookup.none =>
+      _validPosition == null && _isNew
+          ? 'Choose a position to fill the name.'
+          : null,
   };
+
+  Future<void> _nameAction() async {
+    final point = _validPosition;
+    if (point == null || !_mayNameAutomatically) return;
+    if (!context.read<SettingsViewModel>().placeNameLookup) {
+      _offeredAt = point;
+      final on = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          key: const Key('siteEditor.placeNameOffer'),
+          title: const Text('Use place names automatically?'),
+          content: const Text(
+            'Turning this on sends selected coordinates to OpenStreetMap '
+            'Nominatim to find a place name. The setting also applies to '
+            'future positions and can be changed in Settings.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Turn on place names'),
+            ),
+          ],
+        ),
+      );
+      if (on != true || !mounted) return;
+      await _turnOnPlaceNames();
+    } else {
+      await _proposeName(point.$1, point.$2);
+    }
+  }
 
   /// The coordinates were edited while the fix was found: they stay, and
   /// the fix is the user's choice, until they use it or close the message.
@@ -434,7 +570,12 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       );
       await WidgetsBinding.instance.endOfFrame;
     }
-    if (!mounted || !_formKey.currentState!.validate()) return;
+    if (!mounted) return;
+    if (_isNew && _name.text.trim().isEmpty) {
+      final point = _validPosition;
+      if (point != null) _setAutomaticName(_coordinateName(point.$1, point.$2));
+    }
+    if (!_formKey.currentState!.validate()) return;
     final siteVm = context.read<SiteViewModel>();
     final LocationProfile site;
     try {
@@ -459,6 +600,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       showFailure(context, SiteFormInput.refused(e));
       return;
     }
+    _lookupGeneration++;
     setState(() => _saving = true);
     final saved = await runWithFeedback(
       context,
@@ -509,7 +651,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     final stacked = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
     final latitude = LibraryField(
       label: 'Latitude (°)',
-      hint: 'North + · −90 to 90',
+      top: 0,
       child: TextFormField(
         key: const Key('siteEditor.latitude'),
         controller: _latitude,
@@ -520,7 +662,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     );
     final longitude = LibraryField(
       label: 'Longitude (°)',
-      hint: 'East + · −180 to 180',
+      top: 0,
       child: TextFormField(
         key: const Key('siteEditor.longitude'),
         controller: _longitude,
@@ -552,84 +694,19 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SettingsCopy(
-                  'Save a place; choose it separately in the Plan.',
+                const GeoHeading('Position'),
+                const SizedBox(height: AppSpacing.sm),
+                GeoPositionActions(
+                  locating: _locating,
+                  onLocate: _useCurrentPosition,
+                  onMap: _pickOnMap,
                 ),
-                LibraryField(
-                  label: 'Name',
-                  hint: _nameHelper,
-                  child: TextFormField(
-                    key: const Key('siteEditor.name'),
-                    controller: _name,
-                    style: style,
-                    textCapitalization: TextCapitalization.words,
-                    validator: SiteFormInput.validateName,
-                  ),
-                ),
-                if (_nameLookup == _NameLookup.offer)
-                  _PlaceNameOffer(onTurnOn: _turnOnPlaceNames),
-                // library.js `locationView`: the device position, asked for
-                // only on a tap; or a point on the map.
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.itemGap),
-                  child: CollapsibleSection(
-                    key: const Key('siteEditor.location'),
-                    sectionKey: 'siteEditor.location',
-                    title: 'Use device position',
-                    summary:
-                        'Permission required · manual entry always available',
-                    open: _locationOpen,
-                    onToggle: () =>
-                        setState(() => _locationOpen = !_locationOpen),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: AppSpacing.sm,
-                      children: [
-                        const SettingsCopy(
-                          'Only use this when the device is at your observing '
-                          'site. The position fills the coordinates below; '
-                          'nothing is saved until Save site.',
-                        ),
-                        OutlinedButton(
-                          key: const Key('siteEditor.useCurrentPosition'),
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(
-                              HybridTokens.minTarget,
-                            ),
-                          ),
-                          onPressed: _locating ? null : _useCurrentPosition,
-                          child: Text(
-                            _locating
-                                ? 'Getting position…'
-                                : 'Use current position',
-                          ),
-                        ),
-                        OutlinedButton(
-                          key: const Key('siteEditor.pickOnMap'),
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(
-                              HybridTokens.minTarget,
-                            ),
-                          ),
-                          onPressed: _pickOnMap,
-                          child: const Text('Pick on map'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.gutter),
-                  child: Semantics(
-                    header: true,
-                    child: Text(
-                      'Coordinates and time zone',
-                      style: AppTypography.sectionHeading.copyWith(
-                        color: p.textPrimary,
-                      ),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: AppSpacing.itemGap),
+                if (_positionSource.startsWith('From device GPS') ||
+                    _positionSource.startsWith('From map')) ...[
+                  SettingsCopy(_positionSource),
+                  const SizedBox(height: AppSpacing.sm),
+                ],
                 if (stacked) ...[
                   latitude,
                   longitude,
@@ -643,11 +720,39 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                     ],
                   ),
                 LibraryField(
+                  label: 'Name',
+                  top: 20,
+                  hint: _nameHelper,
+                  child: TextFormField(
+                    key: const Key('siteEditor.name'),
+                    controller: _name,
+                    maxLines: 1,
+                    style: style,
+                    decoration: InputDecoration(
+                      suffixIcon:
+                          _mayNameAutomatically && _validPosition != null
+                          ? IconButton(
+                              key: const Key('siteEditor.lookupName'),
+                              tooltip: _nameLookup == _NameLookup.offer
+                                  ? 'Turn on place names'
+                                  : 'Look up place name',
+                              onPressed: _nameLookup == _NameLookup.looking
+                                  ? null
+                                  : _nameAction,
+                              icon: const Icon(Icons.place_outlined, size: 18),
+                            )
+                          : null,
+                    ),
+                    textCapitalization: TextCapitalization.words,
+                    validator: SiteFormInput.validateName,
+                  ),
+                ),
+                LibraryField(
                   label: 'Time zone',
-                  hint:
-                      '${_zoneFromDevice ? 'Device zone pre-filled: verify it '
-                                'for this site. ' : ''}'
-                      'Used for local dates, times and daylight-saving changes.',
+                  top: 20,
+                  hint: _zoneFromDevice
+                      ? 'From device — check for this site.'
+                      : 'Used for local dates and daylight-saving changes.',
                   // A select that opens the searchable zone list.
                   child: Semantics(
                     button: true,
@@ -675,13 +780,17 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.gutter),
+                const SizedBox(height: AppSpacing.lg),
                 // RG-08 = E2, RG-09 = S3: optional, without prominence; empty
                 // is unknown. One remembered section (library.js More).
                 CollapsibleSection(
                   key: const Key('siteEditor.more'),
                   sectionKey: SiteEditorScreen.skyDarknessSection,
                   title: 'More (optional)',
+                  titleStyle: AppTypography.body.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: p.textPrimary,
+                  ),
                   summary: _moreSummary(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -724,6 +833,14 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(height: AppSpacing.itemGap),
+                SettingsCopy(
+                  !_isNew
+                      ? 'Changes are saved to this site.'
+                      : widget.args.activate
+                      ? 'Saving here also uses this site for planning.'
+                      : 'Saved to Library; the planning site stays unchanged.',
                 ),
               ],
             ),
@@ -806,34 +923,3 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
 
 /// Where the site editor's name proposal stands (F23 A5).
 enum _NameLookup { none, offer, looking, found, notFound, failed }
-
-/// Place names are off: what a name suggestion would send, and the opt-in.
-/// Nothing is sent until the user turns it on.
-class _PlaceNameOffer extends StatelessWidget {
-  const _PlaceNameOffer({required this.onTurnOn});
-
-  final VoidCallback onTurnOn;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      key: const Key('siteEditor.placeNameOffer'),
-      padding: const EdgeInsets.only(top: AppSpacing.xs),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'A name can be suggested for this position. Place names are '
-            'off: turning them on sends the chosen position to '
-            'OpenStreetMap Nominatim, as in Settings.',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          TextButton(
-            onPressed: onTurnOn,
-            child: const Text('Turn on place names'),
-          ),
-        ],
-      ),
-    );
-  }
-}

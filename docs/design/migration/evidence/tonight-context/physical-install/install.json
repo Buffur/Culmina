@@ -1,0 +1,12 @@
+{
+  "device": "Xiaomi 14T Pro",
+  "serial": "PRRGPZ8PZ5E6OJ7T",
+  "package": "io.github.buffur.culmina",
+  "version": "1.0.0+1",
+  "build": "release, Android debug certificate",
+  "apkSha256": "faa96548f9631863642150a88b053d6b843187a5d6f5578d79cf2cf945a34434",
+  "certificateSha256": "56d00b35cb297aceabc42aef7033d41a7b5c7a1939e7d14cf7329672f8902dbe",
+  "install": "adb install -r: Success",
+  "launch": "am start -W: Status ok; COLD;861ms",
+  "scope": "Install, launch, screenshot; no date/site mutation, GPS request or data clearing"
+}

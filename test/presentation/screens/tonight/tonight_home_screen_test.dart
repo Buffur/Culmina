@@ -12,6 +12,7 @@ import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/astro_target.dart';
+import 'package:astroplan/domain/models/location_profile.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
@@ -30,6 +31,8 @@ import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:astroplan/presentation/navigation/app_shell.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -523,22 +526,147 @@ void main() {
       expect(find.textContaining('no light frames'), findsNothing);
     });
 
+    testWidgets('Tonight context opens site management directly', (
+      tester,
+    ) async {
+      await start(tester, lightFrames: 10);
+      await tester.tap(find.byKey(const Key('context.site')));
+      await settle(tester);
+      expect(find.text('Manage sites'), findsOneWidget);
+      expect(find.byKey(const Key('sites.search')), findsNothing);
+      expect(find.text('Sites'), findsOneWidget);
+      expect(find.byKey(const Key('sites.add')), findsOneWidget);
+      expect(find.text('Observing site'), findsNothing);
+      expect(find.byKey(const Key('homeSite.apply')), findsNothing);
+    });
+
+    for (final scale in [1.0, 2.0]) {
+      testWidgets('Tonight keeps a long site and night on one line at $scale', (
+        tester,
+      ) async {
+        await start(tester, lightFrames: 10);
+        const name =
+            '\u0414\u0443\u0436\u0435 \u0434\u043e\u0432\u0433\u0430 \u043d\u0430\u0437\u0432\u0430 \u043c\u0456\u0441\u0446\u044f \u0434\u043b\u044f \u0430\u0441\u0442\u0440\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u0438\u0445 \u0441\u043f\u043e\u0441\u0442\u0435\u0440\u0435\u0436\u0435\u043d\u044c \u0431\u0456\u043b\u044f \u043c\u0456\u0441\u0442\u0430';
+        await tester.runAsync(
+          () => vm.site.saveSite(
+            LocationProfile(
+              id: 0,
+              name: name,
+              latitude: 46.05,
+              longitude: 14.51,
+            ),
+          ),
+        );
+        tester.view.physicalSize = const Size(375, 760);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearAllTestValues);
+        await settle(tester);
+        final site = tester.getRect(find.byKey(const Key('context.site')));
+        final night = tester.getRect(find.byKey(const Key('context.night')));
+        expect(site.top, night.top);
+        expect(site.height, 48);
+        expect(night.height, 48);
+        expect(site.right, lessThanOrEqualTo(night.left));
+        final title = tester.widget<Text>(find.text(name));
+        expect(title.maxLines, 1);
+        expect(title.overflow, TextOverflow.ellipsis);
+        final handle = tester.ensureSemantics();
+        expect(
+          tester.getSemantics(find.byKey(const Key('context.site'))).label,
+          contains(name),
+        );
+        handle.dispose();
+        expect(tester.takeException(), isNull);
+      });
+    }
+
+    testWidgets(
+      'Tonight shows a compact position label without coordinate text',
+      (tester) async {
+        await start(tester, lightFrames: 10);
+        final context = find.byKey(const Key('tonight.context'));
+        expect(
+          find.descendant(of: context, matching: find.text('Position')),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: context,
+            matching: find.textContaining('46.0500'),
+          ),
+          findsNothing,
+        );
+        final site = tester.getRect(find.byKey(const Key('context.site')));
+        final night = tester.getRect(find.byKey(const Key('context.night')));
+        expect(site.top, night.top);
+      },
+    );
+
+    testWidgets('Tonight context stays compact with 48 dp touch targets', (
+      tester,
+    ) async {
+      await start(tester, lightFrames: 10);
+      final subtitle = tester.getRect(
+        find.text('A clear plan for the night ahead.'),
+      );
+      final row = tester.getRect(find.byKey(const Key('tonight.context')));
+      expect(row.top - subtitle.bottom, 0);
+      expect(
+        tester.getSize(find.byKey(const Key('context.site'))).height,
+        greaterThanOrEqualTo(48),
+      );
+      expect(
+        tester.getSize(find.byKey(const Key('context.night'))).height,
+        greaterThanOrEqualTo(48),
+      );
+      final section = tester.getRect(find.byKey(const Key('tonight.plan')));
+      expect(section.top - row.bottom, 0);
+    });
+
+    testWidgets(
+      'Tonight calendar keeps two-digit days on one line at 200 percent',
+      (tester) async {
+        await (FontLoader(
+          'Geist',
+        )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+        tester.view.physicalSize = const Size(375, 760);
+        tester.view.devicePixelRatio = 1;
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearAllTestValues);
+        await start(tester, lightFrames: 10);
+        await tester.tap(find.byKey(const Key('context.night')));
+        await settle(tester);
+        final day = find.descendant(
+          of: find.byType(DatePickerDialog),
+          matching: find.text('20'),
+        );
+        final paragraph = tester.renderObject<RenderParagraph>(day);
+        expect(
+          paragraph.getBoxesForSelection(
+            const TextSelection(baseOffset: 0, extentOffset: 2),
+          ),
+          hasLength(1),
+        );
+        expect(MediaQuery.textScalerOf(tester.element(day)).scale(14), 28);
+        await tester.tap(find.text('Cancel'));
+        await settle(tester);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
     testWidgets("the night picker changes the plan's night, and the plan "
         'autosaves', (tester) async {
       await start(tester, lightFrames: 10);
       expect(vm.plan.eveningDate, CalendarDate(2026, 12, 15));
-      // app.js `date` detail: the sheet, its date field, Apply night.
       await tester.tap(find.byKey(const Key('context.night')));
       await settle(tester);
-      expect(find.byKey(const Key('homeNight.apply')), findsOneWidget);
-      await tester.tap(find.byKey(const Key('homeNight.date')));
-      await settle(tester);
+      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byKey(const Key('homeNight.apply')), findsNothing);
       await tester.tap(find.text('20'));
       await tester.tap(find.text('OK'));
-      await settle(tester);
-      expect(find.text('Ends 21 Dec'), findsOneWidget);
-      expect(vm.plan.eveningDate, CalendarDate(2026, 12, 15), reason: 'draft');
-      await tester.tap(find.byKey(const Key('homeNight.apply')));
       await settle(tester);
       await tester.runAsync(() => vm.plan.idle);
       expect(vm.plan.eveningDate, CalendarDate(2026, 12, 20));
@@ -599,12 +727,9 @@ void main() {
 
       await tester.tap(find.byKey(const Key('context.night')));
       await settle(tester);
-      await tester.tap(find.byKey(const Key('homeNight.date')));
-      await settle(tester);
-      await tester.tap(find.text('20')); // chosen, then cancelled
-      await tester.tap(find.text('OK'));
-      await settle(tester);
-      await tester.tap(find.byKey(const Key('homeSheet.cancel')));
+      expect(find.byType(DatePickerDialog), findsOneWidget);
+      await tester.tap(find.text('20')); // highlighted, then cancelled
+      await tester.tap(find.text('Cancel'));
       await settle(tester);
       await tester.runAsync(() => vm.plan.idle);
       expect(find.byKey(const Key('homeNight.apply')), findsNothing);

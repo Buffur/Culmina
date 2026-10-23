@@ -5,6 +5,9 @@
 import 'dart:io';
 
 import 'package:astroplan/core/config/app_identity.dart';
+import 'package:astroplan/data/services/launch_channel.dart';
+import 'package:astroplan/data/services/splash_theme_channel.dart';
+import 'package:astroplan/presentation/shared/culmina_mark_geometry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _res = 'android/app/src/main/res';
@@ -50,78 +53,136 @@ void main() {
 
   test('the adaptive icon, legacy icons and splash are wired', () {
     final adaptive = _read('$_res/mipmap-anydpi-v26/ic_launcher.xml');
+    // Owner, 2026-10-23: the refreshed dark field is a gradient drawable.
+    expect(adaptive, contains('@drawable/ic_launcher_background'));
     expect(adaptive, contains('@drawable/ic_launcher_foreground'));
-    expect(adaptive, contains('@color/ic_launcher_background'));
-    expect(adaptive, contains('<monochrome'));
     // S13.3: the themed icon is its own one-colour layer.
+    expect(adaptive, contains('<monochrome'));
     expect(adaptive, contains('@drawable/ic_launcher_monochrome'));
-    expect(
-      File('$_res/drawable/ic_launcher_monochrome.xml').existsSync(),
-      isTrue,
-    );
-    expect(
-      File('$_res/drawable/ic_launcher_foreground.xml').existsSync(),
-      isTrue,
-    );
-    expect(_read('$_res/values/colors.xml'), contains('splash_background'));
+    for (final f in [
+      'ic_launcher_background',
+      'ic_launcher_foreground',
+      'ic_launcher_monochrome',
+      'launch_background',
+      for (final s in ['light', 'dark', 'field']) ...[
+        'splash_mark_$s',
+        'launch_mark_$s',
+        'launch_background_$s',
+      ],
+    ]) {
+      expect(File('$_res/drawable/$f.xml').existsSync(), isTrue, reason: f);
+    }
+    for (final gone in [
+      'drawable/splash_icon_animated.xml',
+      'drawable/launch_mark.xml',
+      'drawable-v21/launch_background.xml',
+    ]) {
+      expect(File('$_res/$gone').existsSync(), isFalse, reason: gone);
+    }
+    // The splash shows the mark on the first screen's own background.
+    expect(_read('$_res/values/colors.xml'), contains('#FFFFFF'));
+    expect(_read('$_res/values-night/colors.xml'), contains('#191919'));
     for (final d in ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi']) {
       expect(File('$_res/mipmap-$d/ic_launcher.png').existsSync(), isTrue);
     }
-    for (final d in ['values-v31', 'values-night-v31']) {
+    for (final (d, mark) in [
+      ('values-v31', 'splash_mark_light'),
+      ('values-night-v31', 'splash_mark_dark'),
+    ]) {
       final styles = _read('$_res/$d/styles.xml');
-      expect(styles, contains('windowSplashScreenBackground'));
-      // S13.3 (ID-6 = S2): the animated mark, at most 1,000 ms, no delay.
-      expect(styles, contains('@drawable/splash_icon_animated'));
-      expect(styles, contains('windowSplashScreenAnimationDuration">1000<'));
-    }
-    for (final d in ['drawable', 'drawable-v21']) {
-      final launch = _read('$_res/$d/launch_background.xml');
-      expect(launch, contains('@color/splash_background'));
-      // F02 (S13V-01, TD-109): on API 26-30 @mipmap/ic_launcher is the
-      // adaptive-icon XML, which a <bitmap> cannot draw; the mark is the
-      // vector foreground instead, centred.
       expect(
-        File('$_res/mipmap-anydpi-v26/ic_launcher.xml').existsSync(),
-        isTrue,
+        styles,
+        contains('windowSplashScreenBackground">@color/splash_background<'),
       );
+      expect(styles, contains('@drawable/$mark'));
+      // The splash shows the still mark; Flutter plays the gesture.
+      expect(styles, isNot(contains('windowSplashScreenAnimationDuration')));
+      // The mark itself, not an enlarged icon tile.
+      expect(styles, isNot(contains('windowSplashScreenIconBackgroundColor')));
+    }
+    // The window behind Flutter carries the launch mark (no frame without
+    // it between the splash and Flutter's first frame).
+    for (final d in [
+      'values',
+      'values-night',
+      'values-v31',
+      'values-night-v31',
+    ]) {
+      expect(
+        _read('$_res/$d/styles.xml'),
+        contains('windowBackground">@drawable/launch_background<'),
+        reason: d,
+      );
+    }
+    // Android 13+: the stored splash themes for the app's own appearance.
+    final v31 = _read('$_res/values-v31/styles.xml');
+    for (final t in ['Light', 'Dark', 'Field']) {
+      expect(v31, contains('name="CulminaSplash.$t"'));
+    }
+    for (final (d, s) in [('drawable', 'light'), ('drawable-night', 'dark')]) {
+      final launch = _read('$_res/$d/launch_background.xml');
+      // F02 (S13V-01, TD-109): no <bitmap> of the adaptive mipmap, which
+      // cannot be drawn on API 26-30; the mark vector, centred.
       expect(launch, isNot(contains('<bitmap')));
       expect(launch, isNot(contains('@mipmap/')));
       expect(
         RegExp(
-          r'<item\s+android:drawable="@drawable/ic_launcher_foreground"'
+          '<item\\s+android:drawable="@drawable/launch_mark_$s"'
           r'\s+android:gravity="center"\s*/>',
         ).hasMatch(launch),
         isTrue,
-        reason: '$d: the centred mark over the navy colour',
+        reason: '$d: the centred mark on the first-screen background',
       );
     }
     expect(File('assets/branding/icon_512.png').lengthSync(), greaterThan(0));
   });
-  // S13.3: the splash animation stays under 1,000 ms with no start delay
-  // above 166 ms (Android splash-screen guidance), and its paths are the
-  // launcher icon's.
-  test('the animated splash is short and draws the icon', () {
-    final avd = _read('$_res/drawable/splash_icon_animated.xml');
+
+  // Owner, 2026-10-23 (second brief): every copy of the mark has the
+  // generated geometry; the native splash shows it still, at the launch
+  // size Flutter uses, and the gesture is Flutter's (LaunchGate).
+  test('one mark everywhere; the native launch is still', () {
     final icon = _read('$_res/drawable/ic_launcher_foreground.xml');
-    var end = 0;
-    for (final m in RegExp(
-      r'android:duration="(\d+)"(?:[^>]*?android:startOffset="(\d+)")?',
-    ).allMatches(avd)) {
-      final total = int.parse(m[1]!) + int.parse(m[2] ?? '0');
-      if (total > end) end = total;
+    final iconPaths = [
+      for (final m in RegExp(r'android:pathData="([^"]+)"').allMatches(icon))
+        m[1]!,
+    ];
+    expect(iconPaths, hasLength(3));
+    for (final s in ['light', 'dark', 'field']) {
+      for (final f in ['splash_mark_$s', 'launch_mark_$s']) {
+        final vector = _read('$_res/drawable/$f.xml');
+        for (final p in iconPaths) {
+          expect(vector, contains(p), reason: '$f draws the icon mark');
+        }
+        expect(vector, isNot(contains('<animated-vector')), reason: f);
+        expect(vector, isNot(contains('objectAnimator')), reason: f);
+      }
+      expect(
+        _read('$_res/drawable/launch_mark_$s.xml'),
+        contains('android:width="${CulminaLaunchTimeline.canvas.toInt()}dp"'),
+        reason: 'the launch window draws the mark at the Flutter size',
+      );
     }
-    expect(end, 1000); // the star settles last (500 + 500 ms)
-    expect(end, lessThanOrEqualTo(1000));
-    // Owner, 2026-10-17: the splash is held until the animation has played,
-    // and not held when animations are off.
+    // Flutter's launch mark draws the same star as the vectors.
+    expect(iconPaths.last, CulminaMarkGeometry.starPathData);
     final activity = _read(
       'android/app/src/main/kotlin/io/github/buffur/culmina/MainActivity.kt',
     );
+    // The splash leaves at Flutter's first frame and says so; nothing in
+    // Android holds it or plays a gesture of its own.
     expect(activity, contains('setOnExitAnimationListener'));
-    expect(activity, contains('ValueAnimator.areAnimatorsEnabled()'));
-    for (final m in RegExp(r'android:pathData="([^"]+)"').allMatches(icon)) {
-      expect(avd, contains(m[1]!));
-    }
+    expect(activity, contains('"splashGone"'));
+    expect(activity, contains('"${LaunchChannel.name}"'));
+    expect(activity, isNot(contains('iconAnimationDuration')));
+    expect(activity, isNot(contains('postDelayed')));
+  });
+
+  test('the splash theme channel has one name on both sides', () {
+    expect(
+      _read(
+        'android/app/src/main/kotlin/io/github/buffur/culmina/MainActivity.kt',
+      ),
+      contains('"${SplashThemeChannel.name}"'),
+    );
   });
 
   // S13.2 (RA_D_IDENTITY_TRANSITION.md §3, criterion 2): no trace of the

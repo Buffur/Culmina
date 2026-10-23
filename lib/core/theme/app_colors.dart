@@ -8,12 +8,8 @@ import 'package:flutter/material.dart';
 /// is at least 1.3 times the next one's contrast. Control borders (S5.2)
 /// are at least 3:1 (WCAG 1.4.11); the error colour is AA as text.
 class AppColors {
-  // The Culmina mark (S13.3; the launcher icon's colours, the same in every
-  // theme, as the icon and the splash are). Used only by `StartupMark`.
-  static const Color markNavy = Color(0xFF0B1230);
-  static const Color markOrbit = Color(0xFFE6EBF7);
-  static const Color markInnerOrbit = Color(0xFF7F8DC0);
-  static const Color markStar = Color(0xFF8CCBFF);
+  // The Culmina mark's colours are generated with its geometry
+  // (lib/presentation/shared/culmina_mark_geometry.dart, tool/culmina_mark.py).
 
   // Light Theme
   static const Color lightBackground = Color(0xFFFFFFFF);

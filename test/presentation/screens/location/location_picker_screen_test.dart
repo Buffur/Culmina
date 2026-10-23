@@ -63,11 +63,30 @@ void main() {
   }
 
   Future<void> tapCurrentLocation(WidgetTester tester) async {
-    await tester.tap(find.text('Use current position'));
+    await tester.tap(find.byKey(const Key('location.useCurrentPosition')));
     await tester.pump();
     // Let the snack bar finish sliding in.
     await tester.pump(const Duration(seconds: 1));
   }
+
+  testWidgets('selected point uses a small dot without a large icon backing', (
+    tester,
+  ) async {
+    await pumpPicker(tester);
+    final marker = tester
+        .widget<MarkerLayer>(find.byType(MarkerLayer))
+        .markers
+        .single;
+    expect(marker.width, 12);
+    expect(marker.height, 12);
+    expect(find.byKey(const Key('location.marker')), findsOneWidget);
+    expect(
+      find.byKey(const Key('location.useCurrentPosition')),
+      findsOneWidget,
+    );
+    expect(find.textContaining('OpenStreetMap'), findsOneWidget);
+    expect(service.calls, 0, reason: 'opening the map never requests GPS');
+  });
 
   testWidgets(
     'a permanently denied permission explains and opens app settings',
@@ -177,7 +196,7 @@ void main() {
   ) async {
     await pumpPicker(tester);
 
-    await tester.tap(find.byTooltip('Enter coordinates'));
+    await tester.tap(find.byKey(const Key('location.coordinates')));
     await tester.pumpAndSettle();
     final fields = find.byType(TextFormField);
     await tester.enterText(fields.at(0), '95');

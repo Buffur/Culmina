@@ -13,6 +13,10 @@
 
          This Theme is only used starting with V2 of Flutter's Android embedding. -->
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <item name="android:windowBackground">?android:colorBackground</item>
+        <!-- The launch window: the first screen's background with the still
+             mark where the splash and Flutter's launch screen draw it, so
+             no frame between them lacks the mark. MainActivity matches it to
+             the app's own appearance and plain colour once the app is shown. -->
+        <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 </resources>

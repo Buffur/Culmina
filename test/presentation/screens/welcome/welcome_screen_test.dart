@@ -152,7 +152,7 @@ void main() {
 
     // Choose or add a site → Add site → typed by hand.
     await tapKey(tester, 'welcome.chooseSite');
-    expect(find.text('Choose a site'), findsOneWidget);
+    expect(find.text('Manage sites'), findsOneWidget);
     await tester.tap(find.text('Add site'));
     await settle(tester);
     await tester.enterText(find.byKey(const Key('siteEditor.name')), 'Garden');

@@ -1,0 +1,5 @@
+00:00 +0: loading C:/Users/zalub/AppData/Local/Temp/culqa/integration_test/core_loop_test.dart
+00:00 +0: the core loop: site to export, with a restart after the night
+00:42 +1: time zones: a site in another zone than the device, and a result recorded across a DST change
+01:06 +2: (tearDownAll)
+01:06 +2: All tests passed!

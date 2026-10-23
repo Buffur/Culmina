@@ -182,7 +182,7 @@ void main() {
 
     AppRouter.router.go(AppRouter.selectSite);
     await settle(tester);
-    expect(find.text('Choose a site'), findsOneWidget);
+    expect(find.text('Manage sites'), findsOneWidget);
     await tester.tap(find.text('Dark site'));
     await settle(tester);
     expect(vm.site.activeSite!.name, 'Dark site');
@@ -505,6 +505,27 @@ void main() {
     await settle(tester);
     expect(find.text('Use current position'), findsOneWidget);
   });
+
+  testWidgets(
+    'saving a temporary position from Library does not select the saved record',
+    (tester) async {
+      await start(tester, AppRouter.librarySites);
+      await tester.runAsync(() => vm.site.setLocation(44.5, 13.5));
+      await settle(tester);
+      await tester.tap(find.byKey(const Key('sites.saveTransient')));
+      await settle(tester);
+      await tester.enterText(fieldLabeled('Name'), 'Library temporary site');
+      await tester.tap(find.byKey(const Key('siteEditor.save')));
+      await settle(tester);
+      expect(vm.site.activeSite, isNull);
+      expect(vm.site.latitude, 44.5);
+      expect(vm.site.longitude, 13.5);
+      expect(
+        vm.site.sites.map((s) => s.name),
+        contains('Library temporary site'),
+      );
+    },
+  );
 
   testWidgets('deleting a site confirms through the shared dialog', (
     tester,

@@ -1,0 +1,30 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.64.1 (pinned)",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "reference-home-dark",
+   "url": "http://127.0.0.1:4173/index.html?variant=blend&font=native&theme=dark&scale=1&view=wide",
+   "steps": [],
+   "phone": [
+    375,
+    808
+   ],
+   "appArea": [
+    373,
+    808
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  }
+ ]
+}

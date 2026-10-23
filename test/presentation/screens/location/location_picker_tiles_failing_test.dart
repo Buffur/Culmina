@@ -153,24 +153,27 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.byType(TileLayer), findsOneWidget);
     expect(find.text('OpenStreetMap contributors'), findsOneWidget);
-    for (final action in ['Enter coordinates', 'Use this point']) {
-      final button = tester.widget<IconButton>(
-        find.ancestor(
-          of: find.byTooltip(action),
-          matching: find.byType(IconButton),
-        ),
-      );
-      expect(button.onPressed, isNotNull, reason: action);
-    }
     expect(
       tester
-          .widget<FloatingActionButton>(find.byType(FloatingActionButton))
+          .widget<TextButton>(find.byKey(const Key('location.coordinates')))
           .onPressed,
       isNotNull,
-      reason: 'Use current position',
     );
-
-    await tester.tap(find.byTooltip('Enter coordinates'));
+    expect(
+      tester
+          .widget<FilledButton>(find.byKey(const Key('location.usePoint')))
+          .onPressed,
+      isNotNull,
+    );
+    expect(
+      tester
+          .widget<IconButton>(
+            find.byKey(const Key('location.useCurrentPosition')),
+          )
+          .onPressed,
+      isNotNull,
+    );
+    await tester.tap(find.byKey(const Key('location.coordinates')));
     await tester.pumpAndSettle();
     final fields = find.byType(TextFormField);
     await tester.enterText(fields.at(0), '46.05');
@@ -185,7 +188,7 @@ void main() {
     expect(marker.markers.single.point.longitude, 14.51);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byTooltip('Use this point'));
+    await tester.tap(find.byKey(const Key('location.usePoint')));
     await tester.runAsync(() => vm.plan.idle);
     await tester.pumpAndSettle();
     expect((vm.latitude, vm.longitude), (46.05, 14.51));

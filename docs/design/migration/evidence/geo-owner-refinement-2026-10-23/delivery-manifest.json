@@ -1,0 +1,14 @@
+{
+  "base": "2a43c89981c0f9e0f4d4eddc4a62484c470be928",
+  "sourceSha256": {
+    "lib/presentation/screens/sites/sites_screen.dart": "4b03660b3f46f795cfd28aacf35057df01132e5a6710bc8fee264e47a0f3dd06",
+    "lib/presentation/screens/sites/site_editor_screen.dart": "ec7af42d47236edaca7e15e74b60c02de3fba77617e8df691bdccea515fc1d3f",
+    "lib/presentation/screens/location/location_picker_screen.dart": "ec00f6216328854f350f557fee72c1cba4c544b8aca2ca85971122f170b81632",
+    "lib/presentation/shared/context_line.dart": "91d057d80260832a4a3c2caa380323ba57ef8349eb6c8f115036a096d5831e0c",
+    "lib/presentation/shared/site_label.dart": "e5420dbd0a066c8b29762e0e21fcd0775a95af14877ca66c225b0908e4660bd4",
+    "lib/presentation/screens/tonight/tonight_home_screen.dart": "80d17733780acac33348cc059531e4ac40b16145b27a5b6ec283737f19dc2ecc"
+  },
+  "apkSha256": "82aeacc839af960ef560edc6216861013d10a5fa977788fd67356991ee4e6359",
+  "install": "adb install -r Success; launch Status ok COLD845ms",
+  "phoneEvidenceExternal": "C:\\Users\\zalub\\CulminaQA\\2026-10-23\\geo-owner-refinement\\phone"
+}

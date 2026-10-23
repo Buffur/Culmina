@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Culmina Launch Motion</title>
+<!-- {{GENERATED}} An auxiliary demo: the reference is the Flutter
+     LaunchGate (lib/presentation/shared/launch_gate.dart) and its widget
+     previews; this page follows the same timeline. Slow motion and the
+     simulated "app ready" moment exist only here. -->
+<style>
+:root{--bg:#FFFFFF;--paper:#F7F7F5;--rule:#E9E9E7;--ink:#37352F;--ink2:#5A5955;--ink3:#6E6D69;--accent:#0075DE;
+  --display:"Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#191919;--paper:#202020;--rule:#2F2F2F;--ink:#EBEBEA;--ink2:#A5A5A3;--ink3:#8F8F8D;--accent:#62AFF3;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#191919;--paper:#202020;--rule:#2F2F2F;--ink:#EBEBEA;--ink2:#A5A5A3;--ink3:#8F8F8D;--accent:#62AFF3;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--display);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+main{max-width:1040px;margin:0 auto;display:grid;gap:28px;grid-template-columns:minmax(0,1fr)}
+h1{font-size:28px;line-height:1.2;margin:0}
+h2{font-size:17px;margin:0 0 10px}
+p{max-width:68ch;margin:0}
+.lede{color:var(--ink2)}
+.stand{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.phone{width:240px;height:440px;border-radius:28px;position:relative;overflow:hidden;border:1px solid var(--rule);flex:none}
+.phone .app{position:absolute;inset:0;padding:28px 18px;font-size:12px;display:grid;align-content:start;gap:8px}
+.phone .app i{display:block;height:10px;border-radius:5px;opacity:.18;background:currentColor}
+.phone .splash{position:absolute;inset:0;display:grid;place-items:center}
+.phone .splash svg{width:180px;height:180px;display:block}
+.controls{display:grid;gap:12px;min-width:0;flex:1 1 300px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font:500 13px var(--display);color:var(--ink);background:var(--bg);border:1px solid var(--ink3);border-radius:6px;padding:6px 12px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+label{font-size:13px;color:var(--ink2)}
+input[type=range]{width:100%}
+.readout{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink2)}
+.frames{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px}
+.frames figure{margin:0;display:grid;gap:4px;justify-items:center;font-size:12px;color:var(--ink3)}
+.frames .tile{width:96px;height:96px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--rule)}
+.frames svg{width:84px;height:84px}
+table{border-collapse:collapse;font-size:13.5px;width:100%}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Рух запуску Culmina</h1>
+    <p class="lede">Допоміжний стенд. Еталон — Flutter-компонент LaunchGate і його preview; ця сторінка повторює той самий таймлайн. Сповільнення й імітація готовності є лише тут.</p>
+  </header>
+
+  <section class="stand">
+    <div class="phone" id="phone">
+      <div class="app" id="app"><b>Tonight</b><i></i><i style="width:70%"></i><i style="width:85%"></i></div>
+      <div class="splash" id="splash"></div>
+    </div>
+    <div class="controls">
+      <div class="row" role="group" aria-label="Поверхня">
+        <button type="button" data-surface="light" aria-pressed="false">Світла</button>
+        <button type="button" data-surface="dark" aria-pressed="true">Темна</button>
+        <button type="button" data-surface="field" aria-pressed="false">Польовий режим</button>
+      </div>
+      <div class="row">
+        <button type="button" id="play">Відтворити</button>
+        <button type="button" id="slow" aria-pressed="false">Сповільнити ×4</button>
+        <button type="button" id="rm" aria-pressed="false">Зменшений рух</button>
+      </div>
+      <div>
+        <label for="ready">Застосунок готовий на <span id="readyv">—</span></label>
+        <input type="range" id="ready" min="0" max="3000" step="50" value="80">
+        <p class="readout">Інтерфейс відкривається лише після повного жесту й готовності: знак згасає на фоні запуску, потім фон відкриває застосунок. Якщо готовність пізніша, нерухомий знак чекає.</p>
+      </div>
+      <div>
+        <label for="scrub">Кадр</label>
+        <input type="range" id="scrub" min="0" max="1400" step="10" value="1400">
+        <p class="readout" id="t">1400 мс</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ключові кадри</h2>
+    <div class="frames" id="frames"></div>
+  </section>
+
+  <section>
+    <h2>Таймлайн</h2>
+    <div class="scroll"><table>
+      <tr><th>мс</th><th>Що відбувається</th></tr>
+      <tr><td>0–150</td><td>Повний нерухомий знак — той самий, що на нативному сплеші</td></tr>
+      <tr><td>150–750</td><td>Світло проходить уздовж внутрішньої дуги, в її ширині й кінцях</td></tr>
+      <tr><td>650–1100</td><td>Зірка підхоплює акцент: світлішає й на 6 % більшає, потім повертається</td></tr>
+      <tr><td>1100–1400</td><td>Нерухомий затверджений знак</td></tr>
+      <tr><td>+150, +150</td><td>Знак згасає на фоні запуску, потім фон відкриває застосунок</td></tr>
+    </table></div>
+  </section>
+</main>
+{{MARKS}}
+<script>
+const DATA = {{DATA}};
+const M = DATA.motion;
+let surface = 'dark', slow = false, reduce = false, raf = 0;
+const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+const splash = document.getElementById('splash'), app = document.getElementById('app'), phone = document.getElementById('phone');
+
+function cubic(x1, y1, x2, y2) {
+  return x => { let lo = 0, hi = 1;
+    for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; const bx = 3*(1-m)**2*m*x1 + 3*(1-m)*m*m*x2 + m**3; if (bx < x) lo = m; else hi = m; }
+    const m = (lo + hi) / 2; return 3*(1-m)**2*m*y1 + 3*(1-m)*m*m*y2 + m**3; };
+}
+const ease = { linear: x => x, cubic: x => x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2,
+  outCubic: x => 1 - (1 - x) ** 3 };
+const prog = (t, [a, b], fn) => fn(Math.min(1, Math.max(0, (t - a) / (b - a))));
+function mixHex(a, b, k) {
+  const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const A = p(a), B = p(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, '0')).join('');
+}
+function state(t, s) {
+  const c = DATA.surfaces[s];
+  const head = prog(t, M.glint_head, ease.cubic), tail = prog(t, M.glint_tail, ease.cubic);
+  const alpha = t < M.glint_out[0] ? prog(t, M.glint_in, ease.linear) : 1 - prog(t, M.glint_out, ease.linear);
+  const acc = t < M.star_down[0] ? prog(t, M.star_up, ease.outCubic) : 1 - prog(t, M.star_down, ease.cubic);
+  return { head, tail, alpha, star: mixHex(c.star, c.star_peak, acc), scale: 1 + (M.star_scale - 1) * acc };
+}
+function paint(root, t, s) {
+  const st = state(t, s), g = root.querySelector('.glint'), star = root.querySelector('.star');
+  g.setAttribute('stroke-dasharray', `${Math.max(0, st.head - st.tail)} 2`);
+  g.setAttribute('stroke-dashoffset', `${-st.tail}`);
+  g.setAttribute('opacity', st.head > st.tail ? st.alpha : 0);
+  star.setAttribute('fill', st.star);
+  const x = DATA.star.x, y = DATA.star.y;
+  star.setAttribute('transform', `translate(${x} ${y}) scale(${st.scale}) translate(${-x} ${-y})`);
+}
+function mount(el, s) { el.innerHTML = document.getElementById('mark-' + s).innerHTML; }
+function setSurface(s) {
+  surface = s; const c = DATA.surfaces[s];
+  phone.style.background = c.background; app.style.color = s === 'light' ? '#37352F' : (s === 'field' ? '#AA0000' : '#EBEBEA');
+  mount(splash, s); paint(splash, M.total, s); splash.style.opacity = 1; splash.style.background = c.background;
+  document.querySelectorAll('[data-surface]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.surface === s)));
+  frames();
+}
+function frames() {
+  const box = document.getElementById('frames'); box.innerHTML = '';
+  for (const t of [0, 150, 300, 450, 600, 750, 880, 1000, 1100, 1400]) {
+    const f = document.createElement('figure'); const tile = document.createElement('div'); tile.className = 'tile';
+    tile.style.background = DATA.surfaces[surface].background; mount(tile, surface); paint(tile, t, surface);
+    f.append(tile); const cap = document.createElement('figcaption'); cap.textContent = t + ' мс'; f.append(cap); box.append(f);
+  }
+}
+function play() {
+  cancelAnimationFrame(raf);
+  const readyAt = +document.getElementById('ready').value, k = slow ? 4 : 1, t0 = performance.now();
+  const still = reduce || mq.matches, T = M.total, out = M.mark_out + M.field_out;
+  const exitAt = still ? readyAt : Math.max(readyAt, T);   // the gesture done and the app ready
+  const svg = () => splash.querySelector('svg');
+  splash.style.opacity = 1; svg().style.opacity = 1;
+  (function step(now) {
+    const el = (now - t0) / k;
+    paint(splash, still ? T : Math.min(T, el), surface);
+    document.getElementById('t').textContent = Math.round(Math.min(T, el)) + ' мс';
+    const x = el - exitAt;
+    if (x >= 0) {
+      svg().style.opacity = Math.max(0, 1 - x / M.mark_out);
+      splash.style.opacity = Math.max(0, 1 - Math.max(0, x - M.mark_out) / M.field_out);
+      if (x >= out) return;
+    }
+    raf = requestAnimationFrame(step);
+  })(t0);
+}
+document.querySelectorAll('[data-surface]').forEach(b => b.addEventListener('click', () => setSurface(b.dataset.surface)));
+document.getElementById('play').addEventListener('click', play);
+document.getElementById('slow').addEventListener('click', e => { slow = !slow; e.currentTarget.setAttribute('aria-pressed', String(slow)); });
+document.getElementById('rm').addEventListener('click', e => { reduce = !reduce; e.currentTarget.setAttribute('aria-pressed', String(reduce)); });
+document.getElementById('ready').addEventListener('input', e => { document.getElementById('readyv').textContent = e.target.value + ' мс'; });
+document.getElementById('scrub').addEventListener('input', e => { cancelAnimationFrame(raf); splash.style.opacity = 1; splash.querySelector('svg').style.opacity = 1; paint(splash, +e.target.value, surface); document.getElementById('t').textContent = e.target.value + ' мс'; });
+document.getElementById('readyv').textContent = '80 мс';
+setSurface('dark');
+</script>
+</body>
+</html>

@@ -19,6 +19,7 @@ import '../test/support/hybrid_transfer_shots.dart';
 
 const _shots = String.fromEnvironment('HYBRID_SHOTS', defaultValue: 'home');
 const _themes = String.fromEnvironment('HYBRID_THEMES', defaultValue: 'light');
+const _scale = String.fromEnvironment('HYBRID_SCALE', defaultValue: '1');
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ void main() {
       tester.platformDispatcher.platformBrightnessTestValue = theme == 'light'
           ? Brightness.light
           : Brightness.dark;
+      tester.platformDispatcher.textScaleFactorTestValue = double.parse(_scale);
       addTearDown(tester.platformDispatcher.clearAllTestValues);
       AppRouter.router.go(AppRouter.tonight);
       late HybridTransferFixture fixture;

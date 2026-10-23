@@ -32,6 +32,8 @@ class ContextLine extends StatelessWidget {
     this.zoneId,
     this.nightStartUtc,
     this.framed = false,
+    this.compact = false,
+    this.siteDescription,
   });
 
   /// Null when no site is set.
@@ -56,6 +58,10 @@ class ContextLine extends StatelessWidget {
   /// On a card (S6.16).
   final bool framed;
 
+  /// Tonight keeps place and date on one line; full values remain accessible.
+  final bool compact;
+  final String? siteDescription;
+
   /// Shown instead of a site name when none is set.
   static const noSite = 'No site set';
 
@@ -77,31 +83,61 @@ class ContextLine extends StatelessWidget {
     final line = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Hybrid's .app-context: two buttons 4 dp apart, no separator, so a
-        // long site name wraps the night to the next line cleanly.
-        Wrap(
-          spacing: AppSpacing.xs,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            _Choice(
-              key: const Key('context.site'),
-              icon: HybridIcons.homePin,
-              text: siteName ?? noSiteLabel,
-              semanticsLabel: '${AppWords.site}: ${siteName ?? noSite}',
-              hint: 'Choose a site',
-              onTap: onSite,
-            ),
-            if (nightText != null)
-              _Choice(
-                key: const Key('context.night'),
-                icon: HybridIcons.planner,
-                text: nightText,
-                semanticsLabel: nightText,
-                hint: 'Choose a night',
-                onTap: onNight,
+        if (compact)
+          Row(
+            children: [
+              Expanded(
+                child: _Choice(
+                  key: const Key('context.site'),
+                  icon: HybridIcons.homePin,
+                  text: siteName ?? noSiteLabel,
+                  semanticsLabel:
+                      '${AppWords.site}: ${siteDescription ?? siteName ?? noSite}',
+                  hint: 'Choose a site',
+                  singleLine: true,
+                  onTap: onSite,
+                ),
               ),
-          ],
-        ),
+              if (night != null) ...[
+                const SizedBox(width: AppSpacing.sm),
+                Flexible(
+                  child: _Choice(
+                    key: const Key('context.night'),
+                    icon: HybridIcons.planner,
+                    text: NightTimeFormatter.eveningDate(night!),
+                    semanticsLabel: nightText!,
+                    hint: 'Choose a night',
+                    singleLine: true,
+                    onTap: onNight,
+                  ),
+                ),
+              ],
+            ],
+          )
+        else
+          Wrap(
+            spacing: AppSpacing.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              _Choice(
+                key: const Key('context.site'),
+                icon: HybridIcons.homePin,
+                text: siteName ?? noSiteLabel,
+                semanticsLabel: '${AppWords.site}: ${siteName ?? noSite}',
+                hint: 'Choose a site',
+                onTap: onSite,
+              ),
+              if (nightText != null)
+                _Choice(
+                  key: const Key('context.night'),
+                  icon: HybridIcons.planner,
+                  text: nightText,
+                  semanticsLabel: nightText,
+                  hint: 'Choose a night',
+                  onTap: onNight,
+                ),
+            ],
+          ),
         if (night != null && nightStartUtc != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
@@ -139,8 +175,10 @@ class _Choice extends StatelessWidget {
     required this.semanticsLabel,
     required this.hint,
     required this.onTap,
+    this.singleLine = false,
   });
 
+  final bool singleLine;
   final HybridIconData icon;
   final String text;
   final String semanticsLabel;
@@ -157,28 +195,36 @@ class _Choice extends StatelessWidget {
       label: semanticsLabel,
       hint: hint,
       excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            // styles.css `.app-context button`: a 13 px mark, 5 apart, the
-            // 13 px value and a 13 px down chevron, all in the text colour.
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                HybridIcon(icon, size: 13, color: p.textPrimary),
-                const SizedBox(width: 5),
-                Flexible(
-                  child: Text(
-                    text,
-                    style: AppTypography.caption.copyWith(color: p.textPrimary),
+      child: Tooltip(
+        message: semanticsLabel,
+        excludeFromSemantics: true,
+        child: InkWell(
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+              // styles.css `.app-context button`: a 13 px mark, 5 apart, the
+              // 13 px value and a 13 px down chevron, all in the text colour.
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  HybridIcon(icon, size: 13, color: p.textPrimary),
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: Text(
+                      text,
+                      maxLines: singleLine ? 1 : null,
+                      overflow: singleLine ? TextOverflow.ellipsis : null,
+                      style: AppTypography.caption.copyWith(
+                        color: p.textPrimary,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 5),
-                HybridIcon(HybridIcons.down, size: 13, color: p.textPrimary),
-              ],
+                  const SizedBox(width: 5),
+                  HybridIcon(HybridIcons.down, size: 13, color: p.textPrimary),
+                ],
+              ),
             ),
           ),
         ),
@@ -195,6 +241,7 @@ Future<CalendarDate?> pickNight(
   BuildContext context, {
   CalendarDate? initial,
   DateTime? today,
+  TransitionBuilder? builder,
 }) async {
   final now = today ?? DateTime.now();
   final picked = await showDatePicker(
@@ -205,6 +252,7 @@ Future<CalendarDate?> pickNight(
     firstDate: DateTime(now.year - 1, now.month, now.day),
     lastDate: DateTime(now.year + 5, now.month, now.day),
     helpText: 'Choose a night',
+    builder: builder,
   );
   return picked == null ? null : CalendarDate.fromDateTimeFields(picked);
 }

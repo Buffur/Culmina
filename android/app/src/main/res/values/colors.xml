@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Culmina night navy (TASK 16.1): icon background and splash. -->
-    <color name="ic_launcher_background">#0B1230</color>
-    <color name="splash_background">#0B1230</color>
+    <!-- The splash shows the mark itself on the first screen's own
+         background (AppColors.lightBackground / darkBackground), so the
+         splash hands over to the app without a change of colour (owner,
+         2026-10-23). The launcher icon's field is a drawable. -->
+    <color name="splash_background">#FFFFFF</color>
+    <!-- Field mode (AppColors.fieldBackground), set by MainActivity on
+         Android 13+ while field mode is on. -->
+    <color name="splash_background_field">#000000</color>
 </resources>

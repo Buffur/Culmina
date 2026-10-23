@@ -24,7 +24,6 @@ import '../../shared/night_time_formatter.dart';
 import '../../shared/plan_night_phrase.dart';
 import '../../../domain/models/night_weather_summary.dart';
 import '../../shared/plan_state.dart';
-import '../../shared/startup_mark.dart';
 import '../../shared/status_block.dart';
 import '../../viewmodels/capture_analysis_viewmodel.dart';
 import '../../viewmodels/library_viewmodels.dart';
@@ -102,8 +101,9 @@ class TonightHomeScreen extends StatelessWidget {
         ],
       );
     } else if (startupVm.isLoading) {
-      // S13.3: the mark continues the splash while startup really loads.
-      body = const Center(child: StartupMark());
+      // The app root's StartupCover shows the splash's mark meanwhile
+      // (owner, 2026-10-23), above the navigation shell.
+      body = const SizedBox.shrink();
     } else {
       // app.js `body`: without a site, where to observe comes first, then
       // the plan; no night is computed for the default location (ADR-007
@@ -115,7 +115,6 @@ class TonightHomeScreen extends StatelessWidget {
         children: [
           const _Title(),
           const _Context(),
-          const SizedBox(height: AppSpacing.md),
           if (noSite) ...const [
             _NoSite(),
             SizedBox(height: AppSpacing.md),
@@ -174,7 +173,7 @@ class _Title extends StatelessWidget {
 
 /// Site ▾ · night ▾ (ADR-019 §5; UX-11; styles.css `.app-context`): the
 /// same control as the planner's; the night picker changes the current
-/// plan's night. 10 below the supporting line.
+/// plan's night. Its 48 dp targets provide the surrounding space.
 class _Context extends StatelessWidget {
   const _Context();
 
@@ -182,19 +181,18 @@ class _Context extends StatelessWidget {
   Widget build(BuildContext context) {
     final siteVm = context.watch<SiteViewModel>();
     final planVm = context.watch<SessionPlanViewModel>();
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: KeyedSubtree(
-        key: const Key('tonight.context'),
-        child: ContextLine(
-          siteName: SiteLabel.of(siteVm),
-          noSiteLabel: ContextLine.setSite,
-          night: planVm.eveningDate,
-          zoneId: siteVm.displayZoneId,
-          // app.js `site` / `date` details (WQA-06): the phone sheets.
-          onSite: () => showHomeSiteSheet(context),
-          onNight: () => showHomeNightSheet(context),
-        ),
+    return KeyedSubtree(
+      key: const Key('tonight.context'),
+      child: ContextLine(
+        siteName: siteVm.isDefaultLocation ? null : SiteLabel.compact(siteVm),
+        siteDescription: SiteLabel.of(siteVm),
+        compact: true,
+        noSiteLabel: ContextLine.setSite,
+        night: planVm.eveningDate,
+        zoneId: siteVm.displayZoneId,
+        // Owner refinement: direct calendar and combined site management.
+        onSite: () => showHomeSiteSheet(context),
+        onNight: () => showHomeNightSheet(context),
       ),
     );
   }

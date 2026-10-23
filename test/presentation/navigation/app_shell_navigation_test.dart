@@ -264,11 +264,25 @@ void main() {
       AppRouter.session(): 'Plan',
       AppRouter.selectTarget: 'Choose a target',
       AppRouter.selectRig: 'Choose a rig',
-      AppRouter.selectSite: 'Choose a site',
+      AppRouter.selectSite: 'Manage sites',
     };
     for (final entry in expected.entries) {
       AppRouter.router.go(entry.key);
       await settle(tester);
+      // Candidate computation runs in a real isolate. Wait for its actual
+      // result under full-suite CPU contention, keeping the title assertion.
+      if (entry.key == AppRouter.candidates) {
+        for (
+          var attempt = 0;
+          attempt < 100 && find.text(entry.value).evaluate().isEmpty;
+          attempt++
+        ) {
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 50)),
+          );
+          await tester.pump();
+        }
+      }
       expect(
         find.text(entry.value),
         findsWidgets,

@@ -371,30 +371,33 @@ class LibrarySaveBar extends StatelessWidget {
           AppSpacing.gutter,
           AppSpacing.xs,
         ),
-        child: Row(
-          spacing: AppSpacing.itemGap,
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                key: cancelKey,
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(HybridTokens.minTarget),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: AppSpacing.itemGap,
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  key: cancelKey,
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(HybridTokens.minTarget),
+                  ),
+                  onPressed: onCancel,
+                  child: const Text('Cancel'),
                 ),
-                onPressed: onCancel,
-                child: const Text('Cancel'),
               ),
-            ),
-            Expanded(
-              child: FilledButton(
-                key: saveKey,
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(HybridTokens.minTarget),
+              Expanded(
+                child: FilledButton(
+                  key: saveKey,
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(HybridTokens.minTarget),
+                  ),
+                  onPressed: onSave,
+                  child: Text(saveLabel, textAlign: TextAlign.center),
                 ),
-                onPressed: onSave,
-                child: Text(saveLabel, textAlign: TextAlign.center),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),

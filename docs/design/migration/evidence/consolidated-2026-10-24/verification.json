@@ -1,0 +1,22 @@
+{
+  "unitWidget": {
+    "passed": 2509,
+    "skipped": 6,
+    "logExternal": "final-quality-gate.log"
+  },
+  "hostE2E": {
+    "coreLoop": "PASS, 2 tests",
+    "perfScenarios": "PASS, 1 test",
+    "androidOnlySmokeCapture": "SKIPPED on host by existing platform guard"
+  },
+  "launchRegressions": "PASS, 16 tests after semantic API correction",
+  "analyze": "PASS, no issues",
+  "format": "PASS, 645 files, 0 changes",
+  "encoding": "PASS",
+  "nativeCapture": "PASS, 7 dark fixture frames, API30 emulator; integration report alongside",
+  "hotReload": "Succeeded, ordinary emulator main.dart; no runtime errors",
+  "generator": "Regenerated and formatted, all 377 production input hashes identical to installed release",
+  "physical": "Install -r Success, identical installed APK SHA256; launch video and read-only Tonight/calendar/sites/Add/edit/About/Privacy checks; visible plan values retained",
+  "review": "Independent code-only /root/review_geo: no remaining blocker; no tests/device actions by reviewer",
+  "rawExternalEvidence": "C:\\Users\\zalub\\CulminaQA\\2026-10-24\\consolidation"
+}

@@ -20,6 +20,17 @@ class SiteLabel {
         : unsaved;
   }
 
+  /// Short display only: full names and precise coordinates stay in details.
+  static String compact(SiteViewModel site) {
+    final name = site.activeSite?.name ?? site.locationName;
+    return name == null ? 'Position' : displayName(name);
+  }
+
+  static String displayName(String name) {
+    if (RegExp(r'^Site - [-+\d., ]+$').hasMatch(name)) return 'Position';
+    return name.replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
+
   /// "46.0500, 14.5100": decimal degrees, north and east positive, as the
   /// site editor takes them.
   static String coordinates(double latitude, double longitude) =>

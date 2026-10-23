@@ -5,8 +5,10 @@ import 'dart:async';
 
 import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
+import 'package:astroplan/domain/models/location_profile.dart';
 import 'package:astroplan/domain/models/weather_snapshot.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -98,6 +100,62 @@ class HybridRenderContext {
 }
 
 final Map<String, HybridStep> hybridShots = {
+  'geo_sites': (c) async {
+    await c.tester.runAsync(
+      () => c.fixture.vm.site.saveSite(
+        LocationProfile(
+          id: 0,
+          name: 'Rural field',
+          latitude: 50.35,
+          longitude: 30.45,
+          timeZoneId: 'Europe/Kyiv',
+        ),
+        activate: false,
+      ),
+    );
+    await c.push(AppRouter.selectSite);
+  },
+  'geo_transient': (c) async {
+    await c.tester.runAsync(() => c.fixture.vm.site.setLocation(50.55, 30.3));
+    await c.push(AppRouter.selectSite);
+  },
+  'home_long': (c) async {
+    await c.tester.runAsync(
+      () => c.fixture.vm.site.saveSite(
+        LocationProfile(
+          id: 0,
+          name: '\u0414\u043e\u0432\u0433\u0430 \u043d\u0430\u0437\u0432\u0430 \u043c\u0456\u0441\u0446\u044f \u0434\u043b\u044f \u0430\u0441\u0442\u0440\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u0438\u0445 \u0441\u043f\u043e\u0441\u0442\u0435\u0440\u0435\u0436\u0435\u043d\u044c \u0431\u0456\u043b\u044f \u043c\u0456\u0441\u0442\u0430',
+          latitude: 50.4,
+          longitude: 30.6,
+          timeZoneId: 'Europe/Kyiv',
+        ),
+      ),
+    );
+    await c.go(AppRouter.tonight);
+  },
+  'geo_add': (c) async {
+    await c.go(AppRouter.tonight);
+    unawaited(
+      AppRouter.router.push(
+        AppRouter.siteEdit,
+        extra: const SiteEditorArgs(latitude: 50.4, longitude: 30.6),
+      ),
+    );
+    await c.settle();
+  },
+  'geo_more': (c) async {
+    await c.go(AppRouter.tonight);
+    unawaited(
+      AppRouter.router.push(
+        AppRouter.siteEdit,
+        extra: const SiteEditorArgs(latitude: 50.4, longitude: 30.6),
+      ),
+    );
+    await c.settle();
+    await c.tapKey('section.sites.skyDarkness');
+    await c.scrollBy(450, key: 'siteEditor.scroll');
+  },
+  'geo_map': (c) => c.push(AppRouter.position),
   'home': (c) => c.go(AppRouter.tonight),
   'plan': (c) => c.push(AppRouter.session()),
   'night': (c) => c.push(AppRouter.nightMoon),

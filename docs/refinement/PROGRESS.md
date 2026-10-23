@@ -24,6 +24,9 @@
 
 | Item | State |
 | --- | --- |
+| Consolidation delivery, 2026-10-24 | Owner authorizes combining current design/geo with the latest rounded mark/full launch animation, preserving data, installing on the phone, cleaning obsolete local branches/checkouts after recovery backup, and pushing develop. Combined source preserves completed Hybrid/TD-120/TD-121, rounded identity and full Flutter gesture on verified origin/develop `2a43c899`; older identity base `744fe57` is superseded and archived. 2509 unit/widget tests, host core/performance E2E, final analyzer/format/encoding, seven-frame Android drive, hot reload and read-only phone verification passed. Canonical release update installed preserving visible plan state. [Consolidation report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md). Owner visual acceptance pending; older rows below are dated history. |
+| Current bounded owner package, 2026-10-23 | TD-121 screenshot follow-up implemented in isolated `culqa`:129 scoped tests,32 dependency tests,16 accessibility checks, focused all-theme100/200 renders and Android capture passed. Release update installed on phone; owner acceptance pending. [Latest report](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md). TD-120 preserved. No commit/push; logo checkout untouched. |
+| Build/design investigation, 2026-10-24 | Old About/Privacy traced to separate `io.github.buffur.culmina.s2check` identity-test app, not a geo source rollback. Current geo APK/source hashes intact; correct `io.github.buffur.culmina` opened and inspected on phone. Fresh9-frame host capture passed. [Report](../design/migration/DESIGN_BUILD_SELECTION_2026_10_24.md). No production changes, reinstall, merge or Git delivery. |
 | Design parity follow-up (owner, 2026-10-21) | Completed on `develop`, audit baseline `1aceb65`; 12 documented gap groups repaired. Five Culmina skills and native Impeccable review, 84 matched pairs, independent Claude CLI review/re-review, passing full gate plus correction regressions, Android full flow (72 captures), final Settings verification (6 captures), normal debug APK/hot reload and actual site IME/Back check. [Report](../design/migration/DESIGN_PARITY_QA_2026_10_21.md). Owner authorized delivery to `origin/develop` on 2026-10-21; this entry accompanies the delivery commit. No physical-device, owner acceptance or roadmap-gate closure is claimed. |
 | Phase | Final completion. P8 approved base P6-2026-10-18-02 (historical content SHA-256 `a68b6b898f670430a80acaac6240049cc05e584101bf75519f95c001e1cff954`). The owner explicitly authorized bounded AM-01/AM-02/AM-03/AM-04/AM-05; current active roadmap is **P6-2026-10-18-08** (DECISIONS E.1 AM-01–AM-05 and AM03-T; FINALIZATION_REVIEW §31/§33/§35/§36/§37/§40). Stage12 and earlier closure remain; old S-IDs remain aliases. No F implementation starts from this documentation instruction |
 | AM-01 | Simple Capture Plan, visual night/weather, Plan block removal, grouped Settings, consented GPS/name and early manual results. Historical -03 had118 criteria; AM-02 then brought it to 122 and AM-03 to the current 127 |
@@ -116,6 +119,8 @@ fixed. Full gate on the final inputs: PASS (`+2336 ~5`, E2E `+2`/`+1`; G1 eviden
 device, Android and network rows listed above.
 
 ## Next allowed action
+
+**Current bounded chat scope:** publish the verified combined delivery to develop, align the owner checkout and remove the archived task checkout, then stop for owner acceptance. Preserve TD-120/TD-121 and the completed Hybrid transfer; do not resume the broader roadmap.
 
 The full final-plan run is in progress (launched 2026-10-18; see "Run ledger"). Continue the next
 dependency-ready task of F01–F26/G1–G4 in the roadmap's order; record genuinely impossible-now

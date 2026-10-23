@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +39,8 @@ import 'data/repositories/shared_prefs_weather_snapshot_store.dart';
 import 'data/services/flutter_timezone_device_time_zone.dart';
 import 'data/services/geolocator_location_service.dart';
 import 'data/services/nominatim_reverse_geocoder.dart';
+import 'data/services/launch_channel.dart';
+import 'data/services/splash_theme_channel.dart';
 import 'data/export/share_session_exporter.dart';
 import 'data/backup/backup_staging.dart';
 import 'data/backup/file_backup_service.dart';
@@ -46,7 +50,10 @@ import 'package:path_provider/path_provider.dart';
 
 import 'domain/services/night_weather_service.dart';
 import 'presentation/viewmodels/display_settings_viewmodel.dart';
+import 'presentation/viewmodels/startup_viewmodel.dart';
 import 'presentation/viewmodels/theme_viewmodel.dart';
+import 'presentation/shared/launch_gate.dart';
+import 'presentation/shared/startup_mark.dart';
 import 'presentation/screens/settings/backup_section.dart';
 import 'presentation/screens/startup/unsupported_database_screen.dart';
 import 'presentation/widgets/night_clock.dart';
@@ -61,13 +68,54 @@ void main() async {
       'OpenNGC (target catalog)',
     ], await rootBundle.loadString('assets/catalog/OPENNGC_NOTICE.txt'));
   });
+  _launch = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+      ? LaunchChannel()
+      : null;
   await _start();
 }
 
-/// Opens the database and starts the app; run again after the recovery
-/// screen resets a refused database (S1.5), and after a confirmed restore
+/// The hand-over with the Android splash (owner, 2026-10-23).
+LaunchChannel? _launch;
+
+/// Shows the launch screen at once and starts the app behind it
+/// ([LaunchGate]: the full launch gesture, then the app when it is ready);
+/// run again, without the gesture, after the recovery screen resets a
+/// refused database (S1.5) and after a confirmed restore
 /// ([_restartForRestore]).
-Future<void> _start() async {
+Future<void> _start({bool animate = true}) async {
+  runApp(
+    LaunchGate(
+      // A database reset starts a new app even when the previous root was
+      // another LaunchGate displaying the recovery screen.
+      key: UniqueKey(),
+      look: await _launchLook(),
+      animate: animate,
+      splashGone: animate ? _launch?.splashGone : null,
+      onShown: () => unawaited(_launch?.appShown()),
+      initialize: _initialize,
+    ),
+  );
+}
+
+/// The stored field mode and appearance, so the launch screen's first frame
+/// matches the splash.
+Future<LaunchLook> _launchLook() async {
+  try {
+    return LaunchLook(
+      fieldMode: await SharedPrefsDisplayPreferencesRepository()
+          .loadFieldMode(),
+      appearance:
+          (await SharedPrefsDisplaySettingsRepository().load()).appearance,
+    );
+  } catch (e) {
+    AppLog.warning('launch', 'Launch look not read', error: e);
+    return const LaunchLook();
+  }
+}
+
+/// Opens the database and prepares the app; completes with its root widget
+/// (the app, or the recovery screen for a database this build refuses).
+Future<Widget> _initialize() async {
   // F01 (TASK 14.4, D7 A): a confirmed restore is staged and the app
   // restarts at once; the staged database is checked again and replaces the
   // live one before it opens, and an interrupted restore is completed. The
@@ -100,17 +148,14 @@ Future<void> _start() async {
   }
   if (refused case final refused?) {
     AppLog.error('startup', 'Database refused', error: refused);
-    runApp(
-      UnsupportedDatabaseApp(
-        newerThanApp: refused.isNewerThanApp,
-        foundVersion: refused.foundVersion,
-        onReset: () async {
-          await confirmDatabaseReset(database, await databaseFile(), refused);
-          await _start();
-        },
-      ),
+    return UnsupportedDatabaseApp(
+      newerThanApp: refused.isNewerThanApp,
+      foundVersion: refused.foundVersion,
+      onReset: () async {
+        await confirmDatabaseReset(database, await databaseFile(), refused);
+        await _start(animate: false);
+      },
     );
-    return;
   }
 
   final targetRepo = DriftTargetRepository(database);
@@ -186,6 +231,22 @@ Future<void> _start() async {
         await plannerState.getTransientPosition() != null,
   );
   AppRouter.router.go(AppRouter.firstLocation(vms.tonight));
+  // Owner, 2026-10-23: the next launch's splash follows the app's own
+  // appearance and field mode (Android 13+), kept in step from here on.
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    final splash = SplashThemeChannel();
+    void syncSplash() => unawaited(
+      splash.apply(
+        SplashTheme.of(
+          fieldMode: vms.theme.isFieldMode,
+          appearance: vms.displaySettings.appearance,
+        ),
+      ),
+    );
+    vms.theme.addListener(syncSplash);
+    vms.displaySettings.addListener(syncSplash);
+    syncSplash();
+  }
   try {
     await vms.backup?.load();
   } catch (e, s) {
@@ -193,20 +254,21 @@ Future<void> _start() async {
     // with a retry instead of a blank screen.
     AppLog.error('startup', 'Could not restore state', error: e, stackTrace: s);
   }
+  // The site, settings and plan are loaded before the app is shown, so its
+  // first visible frame is complete (a failure is the bootstrap's Retry).
+  await vms.startup.ready;
 
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<AppDatabase>.value(value: database),
-        Provider<TargetRepository>.value(value: targetRepo),
-        Provider<EquipmentRepository>.value(value: equipmentRepo),
-        Provider<WeatherRepository>.value(value: weatherRepo),
-        Provider<SessionRepository>.value(value: sessionRepo),
-        Provider<LocationRepository>.value(value: locationRepo),
-        ...vms.providers,
-      ],
-      child: const AstroPlanApp(),
-    ),
+  return MultiProvider(
+    providers: [
+      Provider<AppDatabase>.value(value: database),
+      Provider<TargetRepository>.value(value: targetRepo),
+      Provider<EquipmentRepository>.value(value: equipmentRepo),
+      Provider<WeatherRepository>.value(value: weatherRepo),
+      Provider<SessionRepository>.value(value: sessionRepo),
+      Provider<LocationRepository>.value(value: locationRepo),
+      ...vms.providers,
+    ],
+    child: const AstroPlanApp(),
   );
 }
 
@@ -222,7 +284,7 @@ Future<void> _restartForRestore(AppDatabase database) async {
   } catch (e) {
     AppLog.warning('backup', 'Database not closed before restore', error: e);
   }
-  await _start();
+  await _start(animate: false);
 }
 
 class AstroPlanApp extends StatelessWidget {
@@ -252,11 +314,20 @@ class AstroPlanApp extends StatelessWidget {
       // Field mode: every pixel below the app root, dialogs and snackbars
       // included, goes through the red filter (owner decision, TASK 12.4).
       builder: (context, child) {
-        final content = KeyedSubtree(
-          key: _content,
-          child: HybridFocusHighlight(
-            child: RestoreOutcomeNotice(child: NightClock(child: child!)),
-          ),
+        // A retried startup (the bootstrap's Retry) shows the still launch
+        // mark until it has loaded.
+        final loading = context.watch<StartupViewModel?>()?.isLoading;
+        final content = Stack(
+          fit: StackFit.expand,
+          children: [
+            KeyedSubtree(
+              key: _content,
+              child: HybridFocusHighlight(
+                child: RestoreOutcomeNotice(child: NightClock(child: child!)),
+              ),
+            ),
+            StartupCover(loading: loading ?? false),
+          ],
         );
         return themeVM.isFieldMode
             ? ColorFiltered(colorFilter: AppTheme.fieldFilter, child: content)

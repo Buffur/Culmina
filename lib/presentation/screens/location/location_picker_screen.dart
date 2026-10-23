@@ -11,9 +11,13 @@ import '../../../core/config/app_identity.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../domain/services/location_service.dart';
 import '../../shared/coordinate_input.dart';
+import '../../shared/hybrid_icon.dart';
+import '../../../core/theme/app_palette.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/utils/quantity_text.dart';
+import '../../shared/failure_feedback.dart';
 import '../../shared/location_feedback.dart';
 import '../../viewmodels/site_viewmodel.dart';
-import '../../shared/failure_feedback.dart';
 import '../../shared/app_messages.dart';
 
 class LocationPickerScreen extends StatefulWidget {
@@ -80,38 +84,78 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     if (point != null && mounted) _moveTo(point);
   }
 
-  void _saveLocation() {
+  Future<void> _saveLocation() async {
     if (_selectedLocation != null && widget.pickOnly) {
       context.pop(_selectedLocation);
       return;
     }
     if (_selectedLocation != null) {
-      context.read<SiteViewModel>().setLocation(
-        _selectedLocation!.latitude,
-        _selectedLocation!.longitude,
+      final vm = context.read<SiteViewModel>();
+      final point = _selectedLocation!;
+      final ok = await runWithFeedback(
+        context,
+        'use the position',
+        () => vm.setLocation(point.latitude, point.longitude),
       );
-      context.pop();
+      if (ok && mounted) context.pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final point = _selectedLocation;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: hybridAppBar(
         context,
         title: Text(widget.pickOnly ? 'Pick on map' : 'Choose a position'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_location_alt),
-            tooltip: 'Enter coordinates',
-            onPressed: _enterCoordinates,
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: p.border)),
           ),
-          IconButton(
-            icon: const Icon(Icons.check),
-            tooltip: 'Use this point',
-            onPressed: _selectedLocation != null ? _saveLocation : null,
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 12,
+                children: [
+                  Text(
+                    'Selected point',
+                    style: AppTypography.body.copyWith(color: p.textSecondary),
+                  ),
+                  TextButton(
+                    key: const Key('location.coordinates'),
+                    onPressed: _enterCoordinates,
+                    child: const Text('Edit coordinates'),
+                  ),
+                ],
+              ),
+              if (point != null)
+                Text(
+                  '${QuantityText.degrees(point.latitude, digits: 5)}, ${QuantityText.degrees(point.longitude, digits: 5)}',
+                  key: const Key('location.selectedPoint'),
+                  style: AppTypography.rowTitle.copyWith(color: p.textPrimary),
+                ),
+              const SizedBox(height: 12),
+              FilledButton(
+                key: const Key('location.usePoint'),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                onPressed: point == null ? null : _saveLocation,
+                child: const Text('Use this point'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       body: Stack(
         children: [
@@ -121,6 +165,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
+                backgroundColor: p.surfaceRaised,
                 initialCenter: _selectedLocation ?? const LatLng(51.5, -0.1),
                 initialZoom: 5.0,
                 onTap: (tapPosition, point) {
@@ -144,12 +189,18 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     markers: [
                       Marker(
                         point: _selectedLocation!,
-                        width: 40,
-                        height: 40,
-                        child: Icon(
-                          Icons.location_pin,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 40,
+                        width: 12,
+                        height: 12,
+                        child: DecoratedBox(
+                          key: const Key('location.marker'),
+                          decoration: BoxDecoration(
+                            color: p.textPrimary,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: p.surfaceRaised,
+                              width: 2,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -158,8 +209,31 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 // to the copyright page. Bottom-left, clear of the FAB. F25 A1:
                 // the app's own line, which wraps at large text (flutter_map's
                 // one-line widget overflowed at 200 %).
-                const _OsmAttribution(),
+                const Padding(
+                  padding: EdgeInsets.only(right: 80),
+                  child: _OsmAttribution(),
+                ),
               ],
+            ),
+          ),
+          Positioned(
+            right: 20,
+            bottom: 12,
+            child: Material(
+              color: p.surfaceRaised,
+              shape: const CircleBorder(),
+              child: IconButton(
+                key: const Key('location.useCurrentPosition'),
+                tooltip: _isLoadingLocation
+                    ? 'Getting position…'
+                    : 'Use current position',
+                onPressed: _isLoadingLocation ? null : _getCurrentLocation,
+                icon: HybridIcon(
+                  HybridIcons.locate,
+                  size: 20,
+                  color: p.textPrimary,
+                ),
+              ),
             ),
           ),
           if (_isLoadingLocation)
@@ -172,11 +246,6 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               ),
             ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _isLoadingLocation ? null : _getCurrentLocation,
-        icon: const Icon(Icons.my_location),
-        label: const Text('Use current position'),
       ),
     );
   }

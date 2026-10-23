@@ -271,7 +271,7 @@ void main() {
     expect(find.byKey(const Key('nightMoon.bar')), findsNothing);
     await tester.tap(find.byKey(const Key('conditions.chooseSite')));
     await settle(tester);
-    expect(find.widgetWithText(AppBar, 'Choose a site'), findsOneWidget);
+    expect(find.widgetWithText(AppBar, 'Manage sites'), findsOneWidget);
     expect(vm.site.isDefaultLocation, isTrue);
   });
 

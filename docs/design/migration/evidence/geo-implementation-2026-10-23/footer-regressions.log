@@ -1,0 +1,91 @@
+00:00 +0: loading C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart
+00:00 +0: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: site Save stays above the IME and coordinate fields are spaced
+00:04 +1: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a rig in the Library opens it; the plan keeps its rig
+00:05 +2: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a rig in the Library opens it; the plan keeps its rig
+00:06 +3: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a rig in the Library opens it; the plan keeps its rig
+00:06 +4: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: Manage site opens details without selecting another site
+00:06 +5: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a target in the Library opens it; the plan keeps its target; Plan this target asks first, then plans it
+00:07 +6: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a target in the Library opens it; the plan keeps its target; Plan this target asks first, then plans it
+00:08 +7: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a target in the Library opens it; the plan keeps its target; Plan this target asks first, then plans it
+00:09 +8: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a target in the Library opens it; the plan keeps its target; Plan this target asks first, then plans it
+00:11 +9: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a target in the Library opens it; the plan keeps its target; Plan this target asks first, then plans it
+00:11 +10: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: searching only the current site offers a clear-search recovery
+00:12 +11: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a site in the Library opens it and never changes the active site; from /select/site it does
+00:12 +12: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a tap on a site in the Library opens it and never changes the active site; from /select/site it does
+00:13 +13: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: manual position names locally then explicit lookup enriches it
+00:14 +14: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: from /select/target a choice applies with Apply changes
+00:17 +14: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: map point automatically names the draft without using it yet
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+00:17 +15: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: map point automatically names the draft without using it yet
+00:18 +16: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: deleting a rig: a cancelled swipe keeps it; the editor's Delete confirms, deletes and says so
+00:19 +17: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: GPS precision and newest name response are preserved
+00:19 +18: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: F19 A4: deleting the plan's rig and target: Cancel and a dismissal keep them; Delete persists and clears the selection
+00:19 +19: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: F19 A4: deleting the plan's rig and target: Cancel and a dismissal keep them; Delete persists and clears the selection
+00:19 +20: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: F19 A4: deleting the plan's rig and target: Cancel and a dismissal keep them; Delete persists and clears the selection
+00:20 +21: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: F19 A4: deleting the plan's rig and target: Cancel and a dismissal keep them; Delete persists and clears the selection
+00:20 +22: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: "Save as site" starts from the current position
+00:21 +23: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: F19 A4: system Back and a tap outside dismiss a rig's and a target's delete confirmation; nothing is deleted
+00:22 +24: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: F19 A4: system Back and a tap outside dismiss a rig's and a target's delete confirmation; nothing is deleted
+00:23 +25: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: Bortle and SQM entered in the editor are stored as user
+00:24 +26: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: saving a rig, a target and a site says so
+00:26 +27: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: saving a rig, a target and a site says so
+00:27 +28: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an empty elevation is saved as unknown, never 0; a stored one is kept
+00:28 +29: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an empty elevation is saved as unknown, never 0; a stored one is kept
+00:28 +30: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: a cancelled swipe on a site keeps it
+00:28 +31: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an edited site with an unknown elevation shows it empty and keeps it unknown
+00:29 +32: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an edited site with an unknown elevation shows it empty and keeps it unknown
+00:29 +33: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: saving a temporary position from Library does not select the saved record
+00:30 +34: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form "Use current position" asks only on the tap, fills the coordinates, and stores nothing until Save
+00:30 +35: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/library/library_manage_mode_test.dart: deleting a site confirms through the shared dialog
+00:30 +36: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form the list says a position request is running; a timeout is explained
+00:30 +37: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit unchanged coordinates are filled
+00:31 +38: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit a typed edit is kept, typing and Save stay available, and the fix is used only on request
+00:32 +39: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit the edit is saved as typed when the offer is closed
+00:34 +40: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit a map pick is kept
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+00:37 +41: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a fix that arrives after an edit a fix after leaving the editor writes nothing
+00:38 +42: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position found: the name is proposed with its source, and saved
+00:39 +43: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position a name already there is kept and nothing is sent
+00:40 +44: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position a saved site being edited keeps its name
+00:41 +45: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position a name typed while the lookup runs wins
+00:43 +46: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position Save while the lookup runs saves the typed name; the late answer never overwrites it
+00:43 +47: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position an answer for coordinates changed meanwhile is ignored
+00:45 +48: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position off: the opt-in is offered, nothing is sent, typing a name and Save still work
+00:47 +49: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position off, then turned on from the offer: the setting is on and the name is proposed
+00:49 +50: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position not found: says so, and the automatic name saves
+00:50 +51: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name for the position a failure: says so, and the automatic name saves
+00:51 +52: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a GPS failure says why and changes no field
+00:53 +53: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Name-only edit (existing site, app bar Back)
+00:54 +54: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m, optional)-only edit (existing site, app bar Back)
+00:56 +55: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Notes (optional)-only edit (existing site, app bar Back)
+00:59 +56: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Name-only edit (existing site, system Back)
+01:01 +57: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m, optional)-only edit (existing site, system Back)
+01:03 +58: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Notes (optional)-only edit (existing site, system Back)
+01:05 +59: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Name-only edit (new site, app bar Back)
+01:07 +60: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m, optional)-only edit (new site, app bar Back)
+01:08 +61: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Notes (optional)-only edit (new site, app bar Back)
+01:09 +62: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Name-only edit (new site, system Back)
+01:10 +63: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Elevation (m, optional)-only edit (new site, system Back)
+01:11 +64: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back guards a Notes (optional)-only edit (new site, system Back)
+01:13 +65: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form an edit typed back to the original leaves without asking
+01:15 +66: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a new site with only the device zone filled in leaves without asking
+01:16 +67: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a name-only edit: Cancel keeps it, Discard stores nothing, Save stores it
+01:22 +68: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form back without changes leaves; with changes it asks: Cancel stays, Discard leaves without saving
+01:26 +69: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form Save in the prompt saves and leaves
+01:28 +70: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form sky darkness: collapsed, its summary states what is stored, remembered; the map link needs valid coordinates
+01:30 +71: C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/sites/sites_screen_test.dart: S7.5: the site form a new site: sky darkness Unknown; an out-of-range SQM in the closed section opens it and shows the message
+01:33 +72: All tests passed!

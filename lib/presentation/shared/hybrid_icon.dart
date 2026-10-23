@@ -41,6 +41,13 @@ abstract final class HybridIcons {
   static const target = HybridIconData(
     '<path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-4 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0M12 9v6m-3-3h6"/>',
   );
+  // Geo commands: one outline family, no filled GPS target.
+  static const locate = HybridIconData(
+    '<circle cx="12" cy="12" r="6"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>',
+  );
+  static const map = HybridIconData(
+    '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15"/>',
+  );
   static const edit = HybridIconData(
     '<path d="m4 16 12-12 4 4L8 20H4v-4ZM14 6l4 4"/>',
   );

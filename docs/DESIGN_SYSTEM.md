@@ -80,9 +80,10 @@ route sweep caught it on Settings' segmented control). Dark keeps Material's der
 `AppPalette` also holds the night-event, Moon, chart and Bortle colours (TASK 12.4) and `caution`
 (S1.9).
 
-The Culmina mark's colours (S13.3) are `AppColors.markNavy`, `markOrbit`, `markInnerOrbit` and
-`markStar`: brand colours, the same in every theme (as the launcher icon and the splash), used only
-by the startup mark; field mode's filter still turns them red.
+The Culmina mark's colours (owner, 2026-10-23) are generated with its geometry by
+`tool/culmina_mark.py` into `lib/presentation/shared/culmina_mark_geometry.dart`
+(`CulminaMarkColors.light`, `.dark`, `.field`): the surface decides them, as in the splash and the
+lockup with the name. The launcher icon keeps its own refreshed dark field in every theme.
 
 ### 2.5 Status and state tokens (S5.4)
 
@@ -447,12 +448,22 @@ caption.** The gallery sweeps a sample Night & Moon page (not a route) in the th
 100 % and 200 % text. Stage 6 adds the real detail routes (`AppRouter` constants) to the route
 sweep (trap 17).
 
-### The startup mark (S13.3; `lib/presentation/shared/startup_mark.dart`)
+### Launch (owner, 2026-10-23; `lib/presentation/shared/launch_gate.dart`)
 
-Shown by Tonight only while startup really loads, in place of a bare progress indicator: the
-Culmina mark on a navy disc (112 dp), continuing the Android 12+ splash. The star breathes (opacity
-1 → 0.6 → 1, 1.6 s) while the mark is on screen and is still when the platform asks for less motion
-(`AppMotion.duration`); no progress value is implied. Announced as "Loading".
+The full launch gesture is shown before the app opens. The Android splash (12+) and the launch
+window show the still mark on the first screen's background (288 dp canvas, centred); Flutter's
+first frame is the same mark in the same place, and `LaunchGate` plays the gesture from
+`CulminaLaunchTimeline` (generated): the still mark (0–150 ms), a light along the inner arc in its
+own width (150–750 ms), the star's accent — lighter and 6 % larger, then back (650–1,100 ms) — and
+the static mark (1,100–1,400 ms). The app opens when the gesture has ended and the app is ready:
+the mark fades on the opaque launch background (150 ms), then the background fades to the app
+(150 ms). Until then the app takes no taps and is not in the semantics tree. Waiting longer shows
+a thin indeterminate line under the still mark (no progress value, no replay). Reduced motion: the
+still mark, the app as soon as it is ready. A failed start: "Culmina couldn't start." with Try
+again. Previews: `launch_gate_preview.dart` (the same component; slow motion only there).
+
+`StartupMark` / `StartupCover` show the same still mark above the app only while a startup retried
+from the bootstrap error reloads.
 
 ### Confirmation, feedback and deleting (S5.8; RD-09 = M + S1, DECISIONS E.1)
 

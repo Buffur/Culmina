@@ -167,7 +167,14 @@ void main() {
         .join();
 
     await settle();
-    expect(siteText(), contains(unsaved), reason: 'Home');
+    expect(siteText(), 'Position', reason: 'Home stays compact');
+    final semantics = tester.ensureSemantics();
+    expect(
+      tester.getSemantics(find.byKey(const Key('context.site'))).label,
+      contains(unsaved),
+      reason: 'the full position remains accessible',
+    );
+    semantics.dispose();
     expect(find.textContaining('Current position'), findsNothing);
 
     unawaited(AppRouter.router.push(AppRouter.session()));
@@ -193,9 +200,9 @@ void main() {
 
     AppRouter.router.go(AppRouter.librarySites);
     await settle();
-    expect(find.text(SiteLabel.unsaved), findsOneWidget, reason: 'Sites');
+    expect(find.text('Position'), findsOneWidget, reason: 'Sites');
     // library.js sites list: "46.05000°, 14.51000° · not saved".
-    expect(find.text('46.05000°, 14.51000° · not saved'), findsOneWidget);
+    expect(find.text('46.05000°, 14.51000° · Not saved'), findsOneWidget);
     expect(find.textContaining('Current position'), findsNothing);
   });
 }

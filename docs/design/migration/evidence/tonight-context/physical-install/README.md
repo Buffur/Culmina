@@ -1,0 +1,1 @@
+The original phone-before.png and phone-after.png contain owner data and are preserved outside the public repository at C:/Users/zalub/CulminaQA/2026-10-24/consolidation/private-evidence/. Installation metadata and the build log remain here.

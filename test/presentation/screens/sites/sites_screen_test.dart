@@ -6,6 +6,7 @@
 // remembered section with the map link; back with changes asks.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart';
@@ -20,7 +21,7 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/location/location_picker_screen.dart';
 import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
 import 'package:astroplan/presentation/screens/sites/sites_screen.dart';
-import 'package:astroplan/presentation/shared/site_label.dart';
+import 'package:astroplan/presentation/shared/geo_controls.dart';
 
 import '../../../support/planner_harness.dart';
 
@@ -42,12 +43,36 @@ import '../../../support/library_finders.dart';
 
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
+class _DelayedPrivacy extends InMemoryPrivacyPreferences {
+  final write = Completer<void>();
+  @override
+  Future<void> savePlaceNameLookup(bool on) async {
+    await write.future;
+    await super.savePlaceNameLookup(on);
+  }
+}
+
 void main() {
   late AppDatabase database;
   late DriftLocationRepository locations;
   late PlannerHarness vm;
 
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (call) async => Directory.systemTemp.path,
+        );
+  });
+  tearDown(
+    () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          null,
+        ),
+  );
 
   late FakeLocationService gps;
   late FakeReverseGeocoder names;
@@ -58,6 +83,7 @@ void main() {
     FakeLocationService? locationService,
     FakeReverseGeocoder? geocoder,
     bool placeNames = true,
+    InMemoryPrivacyPreferences? privacy,
   }) async {
     gps = locationService ?? FakeLocationService();
     names = geocoder ?? FakeReverseGeocoder();
@@ -74,9 +100,8 @@ void main() {
         locations,
         locationService: gps,
         reverseGeocoder: names,
-        privacyPreferences: InMemoryPrivacyPreferences(
-          placeNameLookup: placeNames,
-        ),
+        privacyPreferences:
+            privacy ?? InMemoryPrivacyPreferences(placeNameLookup: placeNames),
         deviceTimeZone: FakeDeviceTimeZone('Europe/Ljubljana'),
         clock: FixedClock(DateTime.utc(2026, 9, 23, 12)),
       );
@@ -175,7 +200,9 @@ void main() {
   bool marked(WidgetTester tester, int id) => find
       .descendant(
         of: find.byKey(ValueKey('site-$id')),
-        matching: find.text('Used for planning'),
+        matching: find.byWidgetPredicate(
+          (w) => w is Semantics && w.properties.selected == true,
+        ),
       )
       .evaluate()
       .isNotEmpty;
@@ -238,6 +265,386 @@ void main() {
     expect(marked(tester, 2), isTrue);
   });
 
+  testWidgets('Manage site opens details without selecting another site', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      sites: [site('Home', 46.05, 14.51), site('Dark site', 46.2, 14.1)],
+    );
+    await tester.runAsync(() => vm.selectSite(1));
+    await pump(tester);
+    await tester.tap(find.byKey(const ValueKey('site-manage-2')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('siteDetail.edit')), findsOneWidget);
+    expect(vm.activeSite?.id, 1);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('sites.search')), findsOneWidget);
+    expect(marked(tester, 1), isTrue);
+  });
+
+  testWidgets('selected site appears once in the ordinary saved list', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      sites: [site('Home', 46.05, 14.51), site('Dark site', 46.2, 14.1)],
+    );
+    await tester.runAsync(() => vm.selectSite(2));
+    await pump(tester);
+    expect(find.text('Used for planning'), findsNothing);
+    expect(find.text('Dark site'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('site-1'))).dy,
+      lessThan(tester.getTopLeft(find.byKey(const ValueKey('site-2'))).dy),
+    );
+    expect(marked(tester, 2), isTrue);
+  });
+
+  testWidgets('temporary position is a compact list row with explicit save', (
+    tester,
+  ) async {
+    await build(tester, sites: [site('Home', 46.05, 14.51)]);
+    await tester.runAsync(() => vm.site.setLocation(44.5, 13.5));
+    await pump(tester);
+    expect(find.byKey(const Key('sites.transient')), findsOneWidget);
+    expect(find.textContaining('Not saved'), findsOneWidget);
+    expect(find.text('Save as site'), findsNothing);
+    expect(find.byTooltip('Save as site'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.byKey(const Key('sites.search'))).dy,
+      lessThan(tester.getTopLeft(find.byKey(const Key('sites.transient'))).dy),
+    );
+    expect(vm.sites.length, 1, reason: 'the row does not silently save a site');
+  });
+
+  testWidgets(
+    'inherited coordinates look up a name automatically and stay pristine',
+    (tester) async {
+      await build(
+        tester,
+        geocoder: FakeReverseGeocoder(
+          result: const PlaceNameFound('Kyiv', attribution: 'test source'),
+        ),
+      );
+      await pump(
+        tester,
+        at: AppRouter.siteEdit,
+        extra: const SiteEditorArgs(latitude: 50.4, longitude: 30.6),
+      );
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await tester.pumpAndSettle();
+      expect(names.lookups, [(50.4, 30.6)]);
+      expect(
+        tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+        'Kyiv',
+      );
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(find.text('Unsaved changes'), findsNothing);
+      expect(find.byKey(const Key('siteEditor.name')), findsNothing);
+      expect(vm.sites, isEmpty);
+    },
+  );
+
+  testWidgets(
+    'automatic naming off never sends inherited coordinates; consent can cancel',
+    (tester) async {
+      await build(tester, placeNames: false);
+      await pump(
+        tester,
+        at: AppRouter.siteEdit,
+        extra: const SiteEditorArgs(latitude: 50.4, longitude: 30.6),
+      );
+      expect(names.lookups, isEmpty);
+      expect(find.text('Place names are off.'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('siteEditor.lookupName')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const Key('siteEditor.placeNameOffer')),
+        findsOneWidget,
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.text('Cancel'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(vm.settings.placeNameLookup, isFalse);
+      expect(names.lookups, isEmpty);
+    },
+  );
+
+  testWidgets('Cancel and Save site share height at 200 percent text', (
+    tester,
+  ) async {
+    await build(tester);
+    await pump(tester, at: AppRouter.siteEdit);
+    tester.view.physicalSize = const Size(375, 760);
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.platformDispatcher.clearAllTestValues);
+    await tester.pumpAndSettle();
+    final save = tester.getRect(find.byKey(const Key('siteEditor.save')));
+    final cancel = tester.getRect(find.byKey(const Key('siteEditor.cancel')));
+    expect(save.height, cancel.height);
+    expect(save.top, cancel.top);
+    expect(save.height, greaterThanOrEqualTo(48));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Add site keeps an already resolved temporary place name', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      geocoder: FakeReverseGeocoder(
+        result: const PlaceNameFound(
+          'Known settlement',
+          attribution: 'test source',
+        ),
+      ),
+    );
+    await tester.runAsync(() => vm.site.setLocation(44.5, 13.5));
+    await pump(tester);
+    await tester.pumpAndSettle();
+    expect(vm.site.locationName, 'Known settlement');
+    await tester.tap(find.byKey(const Key('sites.add')));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+      'Known settlement',
+    );
+    expect(names.lookups, [(44.5, 13.5)]);
+    expect(find.textContaining('Automatically assigned'), findsNothing);
+  });
+
+  for (final scale in [1.0, 2.0]) {
+    testWidgets('geo rows center icon-only management at $scale text', (
+      tester,
+    ) async {
+      await build(
+        tester,
+        sites: [
+          site('Long observing site name with wrapping metadata', 46.05, 14.51),
+        ],
+      );
+      await tester.runAsync(() => vm.selectSite(1));
+      await pump(tester);
+      tester.view.physicalSize = const Size(375, 760);
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearAllTestValues);
+      await tester.pumpAndSettle();
+      final row = tester.getRect(find.byKey(const ValueKey('site-1')));
+      final action = tester.getRect(
+        find.byKey(const ValueKey('site-manage-1')),
+      );
+      expect(action.width, greaterThanOrEqualTo(48));
+      expect(action.height, greaterThanOrEqualTo(48));
+      expect(action.center.dy, closeTo(row.center.dy, .1));
+      expect(
+        find.text('Long observing site name with wrapping metadata'),
+        findsOneWidget,
+      );
+      expect(find.byType(OutlinedButton), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets(
+    'a position changed during opt-in persistence never looks up the old point',
+    (tester) async {
+      final privacy = _DelayedPrivacy();
+      await build(
+        tester,
+        privacy: privacy,
+        placeNames: false,
+        locationService: FakeLocationService(
+          location: const DeviceLocation(latitude: 45.8123, longitude: 15.9771),
+        ),
+      );
+      await pump(tester, at: AppRouter.siteEdit);
+      await useCurrentPosition(tester);
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const Key('siteEditor.lookupName')),
+      );
+      await tester.tap(find.byKey(const Key('siteEditor.lookupName')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Turn on place names'));
+      await tester.pump();
+      await tester.enterText(fieldLabeled('Latitude (°)'), '44.5');
+      privacy.write.complete();
+      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+      await tester.pumpAndSettle();
+      expect(names.lookups, isEmpty);
+      expect(
+        tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+        'Site - 44.50000, 15.97710',
+      );
+      expect(vm.settings.placeNameLookup, isTrue);
+    },
+  );
+
+  testWidgets('the selected saved site remains searchable in the same list', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      sites: [site('Home', 46.05, 14.51), site('Dark site', 46.2, 14.1)],
+    );
+    await tester.runAsync(() => vm.selectSite(1));
+    await pump(tester);
+    await tester.enterText(find.byType(TextField).first, 'Home');
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Nothing matches'), findsNothing);
+    expect(find.byKey(const ValueKey('site-1')), findsOneWidget);
+    expect(find.byKey(const ValueKey('site-2')), findsNothing);
+    expect(marked(tester, 1), isTrue);
+    await tester.enterText(find.byType(TextField).first, 'missing');
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Nothing matches'), findsOneWidget);
+    await tester.tap(find.text('Clear search'));
+    await tester.pumpAndSettle();
+    expect(find.text('Dark site'), findsOneWidget);
+  });
+
+  testWidgets('GPS with lookup off saves an automatic label without typing', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      placeNames: false,
+      locationService: FakeLocationService(
+        location: const DeviceLocation(latitude: 45.8123, longitude: 15.9771),
+      ),
+    );
+    await pump(tester, at: AppRouter.siteEdit);
+    await useCurrentPosition(tester);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    expect(names.lookups, isEmpty);
+    await save(tester);
+    expect(vm.sites.single.name, 'Site - 45.81230, 15.97710');
+    expect(vm.settings.placeNameLookup, isFalse);
+  });
+
+  testWidgets('manual position automatically enriches after typing stops', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      geocoder: FakeReverseGeocoder(
+        result: const PlaceNameFound('Ljubljana', attribution: 'test source'),
+      ),
+    );
+    await pump(tester, at: AppRouter.siteEdit);
+    await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
+    await tester.enterText(fieldLabeled('Longitude (°)'), '14.51');
+    await tester.pumpAndSettle();
+    expect(names.lookups, isEmpty, reason: 'no lookup per keystroke');
+    expect(
+      tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+      'Site - 46.05000, 14.51000',
+    );
+    await tester.pump(const Duration(milliseconds: 750));
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    expect(names.lookups, [(46.05, 14.51)]);
+    expect(
+      tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+      'Ljubljana',
+    );
+    await save(tester);
+    expect(vm.sites.single.name, 'Ljubljana');
+  });
+
+  testWidgets('map point automatically names the draft without using it yet', (
+    tester,
+  ) async {
+    await build(
+      tester,
+      geocoder: FakeReverseGeocoder(
+        result: const PlaceNameFound(
+          'Map settlement',
+          attribution: 'test source',
+        ),
+      ),
+    );
+    await pump(tester, at: AppRouter.siteEdit);
+    final before = (vm.latitude, vm.longitude);
+    await tester.tap(find.byKey(const Key('siteEditor.pickOnMap')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('location.coordinates')));
+    await tester.pumpAndSettle();
+    final fields = find.descendant(
+      of: find.byType(AlertDialog),
+      matching: find.byType(TextFormField),
+    );
+    await tester.enterText(fields.at(0), '44.5');
+    await tester.enterText(fields.at(1), '13.5');
+    await tester.tap(find.text('Use'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('location.usePoint')));
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+      'Map settlement',
+    );
+    expect((vm.latitude, vm.longitude), before);
+    expect(vm.sites, isEmpty);
+    expect(find.text('From map · not saved'), findsOneWidget);
+    await save(tester);
+    expect(vm.sites.single.latitude, 44.5);
+  });
+
+  testWidgets('GPS precision and newest name response are preserved', (
+    tester,
+  ) async {
+    final first = Completer<ReverseGeocodeResult>(),
+        second = Completer<ReverseGeocodeResult>();
+    var request = 0, fix = 0;
+    await build(
+      tester,
+      locationService: FakeLocationService(
+        answer: () async => LocationFound(
+          DeviceLocation(
+            latitude: ++fix == 1 ? 45.8123456 : 46.0512345,
+            longitude: 14.5123456,
+          ),
+        ),
+      ),
+      geocoder: FakeReverseGeocoder(
+        answer: () => ++request == 1 ? first.future : second.future,
+      ),
+    );
+    await pump(tester, at: AppRouter.siteEdit);
+    await useCurrentPosition(tester);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    await useCurrentPosition(tester);
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    second.complete(const PlaceNameFound('Newest', attribution: 'test source'));
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    first.complete(
+      const PlaceNameFound('Obsolete', attribution: 'test source'),
+    );
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+      'Newest',
+    );
+    await save(tester);
+    expect(vm.sites.single.name, 'Newest');
+    expect(vm.sites.single.latitude, 46.05123);
+  });
+
   testWidgets('deleting the active site keeps its position as unsaved', (
     tester,
   ) async {
@@ -256,12 +663,12 @@ void main() {
     expect(vm.sites, isEmpty);
     expect(vm.activeSite, isNull);
     // F23 A7: an unnamed unsaved position reads as one, with coordinates.
-    expect(find.text(SiteLabel.unsaved), findsOneWidget);
-    expect(find.text('46.05000°, 14.51000° · not saved'), findsOneWidget);
-    expect(find.text('Save as site'), findsOneWidget);
+    expect(find.text('Position'), findsOneWidget);
+    expect(find.text('46.05000°, 14.51000° · Not saved'), findsOneWidget);
+    expect(find.byTooltip('Save as site'), findsOneWidget);
     expect(
       find.text('No saved sites yet. Add one with “Add site”.'),
-      findsOneWidget,
+      findsNothing,
     );
   });
 
@@ -292,7 +699,10 @@ void main() {
     await pump(tester, at: AppRouter.siteEdit);
 
     expect(find.text('Europe/Ljubljana'), findsOneWidget);
-    expect(find.textContaining('Device zone pre-filled'), findsOneWidget);
+    expect(
+      find.textContaining('From device — check for this site.'),
+      findsOneWidget,
+    );
     await tester.enterText(fieldLabeled('Name'), 'Backyard');
     await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
     await tester.enterText(fieldLabeled('Longitude (°)'), '14,51');
@@ -317,7 +727,7 @@ void main() {
     await tester.runAsync(() => vm.setLocation(45.5, 13.7));
     await pump(tester);
 
-    await tester.tap(find.text('Save as site'));
+    await tester.tap(find.byKey(const Key('sites.saveTransient')));
     await tester.pumpAndSettle();
 
     expect(find.text('New site'), findsOneWidget);
@@ -483,7 +893,7 @@ void main() {
       await tester.tap(button);
       await tester.pump();
       expect(find.text('Getting position…'), findsOneWidget);
-      expect(tester.widget<OutlinedButton>(button).onPressed, isNull);
+      expect(tester.widget<GeoActionRow>(button).onTap, isNull);
       fix.completeError(TimeoutException('no fix'));
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pumpAndSettle();
@@ -492,7 +902,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Use current position'), findsOneWidget);
-      expect(tester.widget<OutlinedButton>(button).onPressed, isNotNull);
+      expect(tester.widget<GeoActionRow>(button).onTap, isNotNull);
     });
 
     group('a fix that arrives after an edit', () {
@@ -577,10 +987,12 @@ void main() {
 
       testWidgets('a map pick is kept', (tester) async {
         await startLocating(tester);
-        await tester.ensureVisible(find.text('Pick on map'));
-        await tester.tap(find.text('Pick on map'));
+        await tester.ensureVisible(
+          find.byKey(const Key('siteEditor.pickOnMap')),
+        );
+        await tester.tap(find.byKey(const Key('siteEditor.pickOnMap')));
         await tester.pumpAndSettle();
-        await tester.tap(find.byTooltip('Enter coordinates'));
+        await tester.tap(find.byKey(const Key('location.coordinates')));
         await tester.pumpAndSettle();
         final fields = find.descendant(
           of: find.byType(AlertDialog),
@@ -590,7 +1002,7 @@ void main() {
         await tester.enterText(fields.at(1), '13.5');
         await tester.tap(find.text('Use'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byTooltip('Use this point'));
+        await tester.tap(find.byKey(const Key('location.usePoint')));
         await tester.pumpAndSettle();
         expect(find.widgetWithText(TextFormField, '44.50000'), findsOneWidget);
 
@@ -659,7 +1071,9 @@ void main() {
         expect(names.lookups, [(45.8123, 15.9771)]);
         expect(nameText(tester), 'Ljubljana');
         expect(
-          find.textContaining('Suggested by © OpenStreetMap contributors'),
+          find.textContaining(
+            'Filled automatically · © OpenStreetMap contributors',
+          ),
           findsOneWidget,
         );
         expect(vm.sites, isEmpty, reason: 'nothing saved before Save');
@@ -774,8 +1188,8 @@ void main() {
         pending.complete(ljubljana);
         await tester.runAsync(() => Future<void>.delayed(Duration.zero));
         await tester.pumpAndSettle();
-        expect(nameText(tester), isEmpty);
-        expect(find.textContaining('Suggested by'), findsNothing);
+        expect(nameText(tester), 'Site - 44.10000, 15.97710');
+        expect(find.textContaining('Filled automatically'), findsNothing);
       });
 
       testWidgets('off: the opt-in is offered, nothing is sent, typing a '
@@ -788,10 +1202,7 @@ void main() {
         );
         await pump(tester, at: AppRouter.siteEdit);
         await locate(tester);
-        expect(
-          find.byKey(const Key('siteEditor.placeNameOffer')),
-          findsOneWidget,
-        );
+        expect(find.byTooltip('Turn on place names'), findsOneWidget);
         expect(names.lookups, isEmpty, reason: 'nothing sent while off');
         expect(vm.settings.placeNameLookup, isFalse);
 
@@ -820,6 +1231,8 @@ void main() {
         );
         await pump(tester, at: AppRouter.siteEdit);
         await locate(tester);
+        await tester.tap(find.byKey(const Key('siteEditor.lookupName')));
+        await tester.pumpAndSettle();
         await tester.tap(find.text('Turn on place names'));
         for (var i = 0; i < 3; i++) {
           await tester.runAsync(() => Future<void>.delayed(Duration.zero));
@@ -836,15 +1249,17 @@ void main() {
         (
           'not found',
           const PlaceNameNotFound() as ReverseGeocodeResult,
-          'No place name found for this position; enter a name.',
+          'No place name found. The coordinate name can be saved.',
         ),
         (
           'a failure',
           const ReverseGeocodeFailed('offline') as ReverseGeocodeResult,
-          'No place name: the lookup failed. Enter a name.',
+          'Name lookup failed. The coordinate name can be saved.',
         ),
       ]) {
-        testWidgets('$label: says so, and a typed name saves', (tester) async {
+        testWidgets('$label: says so, and the automatic name saves', (
+          tester,
+        ) async {
           await build(
             tester,
             locationService: FakeLocationService(location: at),
@@ -853,13 +1268,9 @@ void main() {
           await pump(tester, at: AppRouter.siteEdit);
           await locate(tester);
           expect(find.text(helper), findsOneWidget);
-          expect(nameText(tester), isEmpty);
-          await tester.enterText(
-            find.byKey(const Key('siteEditor.name')),
-            'Field',
-          );
+          expect(nameText(tester), 'Site - 45.81230, 15.97710');
           await save(tester);
-          expect(vm.sites.single.name, 'Field');
+          expect(vm.sites.single.name, 'Site - 45.81230, 15.97710');
           expect(vm.sites.single.latitude, 45.8123);
         });
       }

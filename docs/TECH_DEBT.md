@@ -15,7 +15,7 @@
 
 ## Open items: index
 
-37 open (or partly open) items; 78 resolved items in the second part, plus TD-040 under "Recorded / resolved".
+38 open (or partly open) items; 78 resolved items in the second part, plus TD-040 under "Recorded / resolved".
 
 | ID | Severity | Item | Approved destination (plan §5) | Proposed task (FINAL roadmap) |
 | --- | --- | --- | --- | --- |
@@ -35,6 +35,8 @@
 | TD-117 | Low | Night/Moon/Weather unselected tabs used primary text and the selected weight was 500 (QA-06). **Fixed in code 2026-10-23 (P-4, included in the owner-authorized phone QA delivery); the scoped phone re-check passed; owner acceptance is pending** | — | Phone QA fix plan P-4 |
 | TD-118 | Low | Exact-times values stopped short of the content edge (QA-07). **Fixed in code 2026-10-23 (P-5, included in the owner-authorized phone QA delivery); the scoped phone re-check passed; owner acceptance is pending** | — | Phone QA fix plan P-5 |
 | TD-119 | Low | Weather B selected hour used neutral selection colours (QA-08). **Fixed in code 2026-10-23 (P-6, included in the owner-authorized phone QA delivery); the scoped phone re-check passed; owner acceptance is pending** | — | Phone QA fix plan P-6 |
+| TD-120 | Low | Tonight context refinement: compact spacing, direct calendar, combined site management. **Implemented and host/isolated Android verified 2026-10-23; release update installed on phone; owner acceptance pending** | Owner | [Scoped report](design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md) |
+| TD-121 | Low | Geo v2 plus owner screenshot refinement: compact Tonight place/date, one site list, temporary-position row,12dp map dot, compact form and automatic consented names. **Implemented, host/Android verified and updated on phone2026-10-23; owner acceptance pending** | Owner | [Latest refinement](design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md); [initial delivery](design/migration/GEO_FLOW_IMPLEMENTATION_2026_10_23.md) |
 | TD-020 | High | Site time model: progress recorded, recheck. **Rechecked by F24 A5 (2026-10-18): resolved; the ADR-007 §10 legacy-date mapping remains as designed** | S16.8 | F24 (A5, implemented) |
 | TD-025 | High | Named historical test gaps: recheck. **Rechecked by F24 A5 (2026-10-18): every named gap now has tests; obsolete** | S16.8 | F24 (A5, implemented) |
 | TD-013 | High | Unknown vs default: remainder recorded in the row (partly resolved) | Not scheduled; re-verify | — |
