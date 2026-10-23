@@ -150,6 +150,16 @@ final Map<String, HybridStep> hybridShots = {
     await c.scrollBy(-2000);
   },
   'home_candidates': (c) => c.push(AppRouter.candidates),
+  // app.js `error`: startup cannot read the data (the database is closed
+  // under it), so Tonight shows the load error. Destructive: render last.
+  'home_loaderror': (c) async {
+    await c.go(AppRouter.tonight);
+    await c.tester.runAsync(() async {
+      await c.fixture.db.close();
+      await c.fixture.vm.startup.retryBootstrap();
+    });
+    await c.settle();
+  },
   'home_sitesheet': (c) async {
     await c.go(AppRouter.tonight);
     await c.tapKey('context.site');

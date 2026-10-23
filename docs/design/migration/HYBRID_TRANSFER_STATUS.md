@@ -46,7 +46,7 @@ Status words: `pending`, `in progress`, `PASS`, `covered-by <ID>`, `native adapt
 `external-unverified`, `blocked`, `fail`, `OWNER` (waits on an owner decision listed under Deviations). Visual and
 functional are independent. Web sources are relative to `design/home-lab/`. Matrix A IDs refer to
 [WEB_DESIGN_INVENTORY.md](WEB_DESIGN_INVENTORY.md) behaviour rows. Pairs: `pairs-checkpoint2/`, `pairs-checkpoint3/`
-(web left, Flutter host right, 375 × 760 unless named `w412-*`); Android: `android/`, `android/b2/`, `android/b3/`, `android/b4/`
+(web left, Flutter host right, 375 × 760 unless named `w412-*`); Android: `android/`, `android/b2/`–`android/b5/`
 (`android-<frame>-<theme>.png`, each folder with its `integration-report.json`) from
 `integration_test/hybrid_transfer_capture_test.dart` on `emulator-5554`; reviewed web | Android pairs in
 `android-pairs/` (Android scaled to 375 logical px, status inset cropped) and the Dark/Field device sheets
@@ -80,7 +80,7 @@ or recorded; "Android" = the same frame captured on the emulator and opened.
 | ID | Surface / state | Flutter target | Visual | Functional | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | HT-H01 | Home ready | `tonight_home_screen.dart` | host PASS L/D/F; Android PASS | `tonight_home_screen_test` | `home-*.png` |
-| HT-H02 | Home states: no site, error/retry, loading, empty plan, unknown forecast, no dark, partial/stale/offline | same | no site: host PASS and Android PASS (release smoke, `smoke3.png`); error/retry: covered-by the no-site state message (the same state-message layout: 20 px icon, 20/600 heading, copy, full-width primary) with its own copy and Retry, and HT-DEV-09; loading: HT-DEV-08; Weather row states: wording as the reference (Forecast unavailable, No dark-time forecast), HT-DEV-10 | `home_screen_test` (load error + retry), `tonight_home_screen_test`, `field_mode_darkness_test` | `home_nosite.png`, `release-smoke/smoke3.png`, `web/checkpoint3/web-home-*` |
+| HT-H02 | Home states: no site, error/retry, loading, empty plan, unknown forecast, no dark, partial/stale/offline | same | no site: host PASS and Android PASS (release smoke, `smoke3.png`); error/retry: host PASS and Android PASS (a real startup failure: the fixture's database closed, then Retry; icon, 20/600 heading, copy and full-width Retry as the reference; no title or chips, HT-DEV-09); loading: HT-DEV-08; Weather row states: wording as the reference (Forecast unavailable, No dark-time forecast), HT-DEV-10 | `home_screen_test` (load error + retry), `tonight_home_screen_test`, `field_mode_darkness_test` | `home_nosite.png`, `home_loaderror.png`, `android-pairs/android-pair-home_loaderror.png`, `release-smoke/smoke3.png`, `web/checkpoint3/web-home-*` |
 | HT-H03 | Home site and night sheets (WQA-06) | `home_context_sheets.dart` (new) | host PASS; Android PASS; HT-DEV-05/06 | Apply site/night, Cancel keeps the plan (`tonight_home_screen_test` night sheet tests) | `home_sitesheet.png`, `home_nightsheet.png` |
 | HT-H04 | First-run onboarding (kept) | `welcome_screen.dart` | native adaptation | `welcome_screen_test` | — |
 | HT-H05 | Candidates | `tonight_candidates_screen.dart` | host PASS; Android PASS; HT-DEV-07 | choose target, filters, late answers (`tonight_candidates_screen_test`) | `home_candidates.png` |
@@ -236,7 +236,7 @@ Result of this run: **COMPLETE** (§9), re-checked against the final state (2026
 1. Reference fixed (`86873ce`, unchanged); the registry covers the mandatory scope.
 2. Every mandatory item is PASS, covered-by with its reason, a recorded native adaptation or an owner-decided
    deviation; no item is pending, blocked, failed or unverified.
-3. Visual PASS rests on reviewed web/host pairs and Android frames (`android/`, `b2`–`b4`, `android-pairs/`);
+3. Visual PASS rests on reviewed web/host pairs and Android frames (`android/`, `b2`–`b5`, `android-pairs/`);
    the remaining differences are recorded under Deviations, the three owner questions answered.
 4. Actions are wired and tested: unit/widget suite 2442 passed, 6 skipped, 0 failed; host E2E `core_loop_test`
    (with a restart on a file database) and `perf_scenarios_test` pass; native dialogs exercised on the device.
