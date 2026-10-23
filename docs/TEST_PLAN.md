@@ -3,8 +3,8 @@
 ## Required Checks
 
 Which checks a change needs, and when a passing run may be reused, is defined
-once in `CLAUDE.md`, "Verification Policy (canonical)" (V1–V3; redirected
-2026-09-27). The full gate is `dart run tool/check.dart`. Release and
+once in [VERIFICATION_POLICY](VERIFICATION_POLICY.md) (V1–V8; relocated
+2026-10-24 without changing acceptance requirements). The full gate is `dart run tool/check.dart`. Release and
 platform-sensitive changes also need the Android build and the device rows that
 their own gate names (`docs/RELEASE.md`, § Lifecycle matrix below).
 

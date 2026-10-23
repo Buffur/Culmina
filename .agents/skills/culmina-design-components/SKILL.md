@@ -5,6 +5,8 @@ description: Choose and compose existing Culmina form, navigation and data-displ
 
 # Culmina components
 
+Status: active task guidance, reconciled 2026-10-24. Read `docs/design/BASELINE.md` first for the adopted Hybrid/native sources and later refinements; `docs/VERIFICATION_POLICY.md` owns checks. Skills cannot authorize new scope.
+
 Read `docs/design/WORKFLOW.md`, then only the group needed below. Component contracts live in `docs/DESIGN_SYSTEM.md` sections 6–7a and in their actual Flutter implementations.
 
 ## Form elements
@@ -40,9 +42,9 @@ For status/state inputs, controlled disclosure and scientific display variants, 
 
 ## Composition and documentation
 
-Current production Home groups: context → night's conditions → due result when present → current plan and its action → candidates. The current owner brief targets an Android phone: one content column, a top app bar, compact navigation and reachable primary actions. The browser canvas may widen; the phone composition must remain a phone. Preserve the approved visual direction rather than copying the incumbent application appearance.
+Current production Home groups: title/context → Your plan and its action → The night ahead → next actions (due result/candidates), with explicit no-site/loading/error variants. The current owner brief targets an Android phone: one content column, a top app bar, compact navigation and reachable primary actions. The browser canvas may widen; the phone composition must remain a phone. Preserve the approved visual direction rather than copying the incumbent application appearance.
 
-The owner's 2026-10-19 browser review adds a reversible plan-first/conditions-first comparison and a separate Plan page. Plan-first is the lab's recommendation for returning to an existing plan; it is not a silent Flutter adoption. Plan editing follows the actual planner's fit/context/target/rig/blocks/estimates/Details/Save contracts. Read `docs/design/PLAN_CONCEPT_REVIEW_2026_10_19.md` for source links and the prototype boundary.
+Historical comparison: the 2026-10-19 browser review explored plan-first/conditions-first and a separate Plan page. The later approved final Hybrid transfer adopted the current plan-first native composition; use BASELINE and the actual source rather than that early experiment as current authority. Plan editing follows the actual planner's fit/context/target/rig/blocks/estimates/Details/Save contracts. Read `docs/design/PLAN_CONCEPT_REVIEW_2026_10_19.md` for source links and the prototype boundary.
 
 Inspect loading, no-site, missing target/equipment, unavailable weather, saved/changed and error states relevant to the surface. Unknown is never zero.
 

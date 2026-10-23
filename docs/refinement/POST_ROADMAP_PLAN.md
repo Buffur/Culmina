@@ -1,9 +1,11 @@
 # Culmina (formerly AstroPlan) — Post-Roadmap Refinement Plan
 
+> **Current routing (2026-10-24):** this file preserves approved clauses/S-ID aliases and owns RG/RD registers. It does not activate work; [PROGRESS](PROGRESS.md) and the current owner task determine the next permitted action. [AGENTS](../../AGENTS.md) owns the shared contract, [AI_WORKFLOW](../AI_WORKFLOW.md) owns session/integration procedure, and [VERIFICATION_POLICY](../VERIFICATION_POLICY.md) is the sole V1–V8 policy. Earlier dated sequence/status paragraphs below are history, not a second current queue.
+
 > **Owner AM-05 (2026-10-18):** current execution uses targeted Task/dependency tests and attention-item continuation under CLAUDE V1/V7 and FINAL_COMPLETION_ROADMAP version -08. Old blanket per-Task full-suite timing in the S-ID clauses below is superseded; meaningful domain probes and final G1/F26 checks remain. Do not treat historical S-clauses as a second active queue.
 
 > **Status (2026-10-18):** the strategic plan and the RG/RD registers of post-roadmap refinement.
-> **The active execution queue is [`FINAL_COMPLETION_ROADMAP.md`](FINAL_COMPLETION_ROADMAP.md)**, approved
+> **The approved F/G task contract is [`FINAL_COMPLETION_ROADMAP.md`](FINAL_COMPLETION_ROADMAP.md)**, approved
 > by the owner on 2026-10-18 (P8 base P6-2026-10-18-02; current AM-01–AM-03 version P6-2026-10-18-06, DECISIONS E.1). §5, "Stages 12–17 — Culmina release roadmap (RA.P)" (approved at G3, 2026-10-17, and amended
 > by C1–C6, AUD-01–AUD-17 and audit 09's M1–M16), was the queue until then; its remaining Task IDs are now
 > the roadmap's aliases (its §4), and §5 stays as the record of the approved clauses they trace to. §7, §8
@@ -299,7 +301,7 @@ keep their meaning. Validation results: `PROGRESS.md`, "Stage status", and the `
 
 **S12.1 — TD-104, remote CI green.** *Done 2026-10-17 (`461e38c`; the remote run 39020770255 passed).*
 
-**Current sequence (after audit 09 and the Stage 12–13 closure, 2026-10-17):** **Stage 12 closed** (bounded closure PASS at `570581e`; S12.2 optional, not performed). **Stage 13 blocked** at its closure on S13V-01 / TD-109: the splash before Android 12 cannot draw its icon on Android 8–11. The owner chooses a corrective S13.V1 (recommended) or carrying it to S16.8 and S17.5. Reduced motion (S13V-02) and the final cold-start numbers (S13V-03) are carried to S17.5. Then S14.1 (ADR-021) on the owner's start instruction, with the FITS-sample request.
+**Historical sequence (after audit 09 and the Stage 12–13 closure, 2026-10-17):** **Stage 12 closed** (bounded closure PASS at `570581e`; S12.2 optional, not performed). **Stage 13 blocked** at its closure on S13V-01 / TD-109: the splash before Android 12 cannot draw its icon on Android 8–11. The owner chooses a corrective S13.V1 (recommended) or carrying it to S16.8 and S17.5. Reduced motion (S13V-02) and the final cold-start numbers (S13V-03) are carried to S17.5. Then S14.1 (ADR-021) on the owner's start instruction, with the FITS-sample request.
 
 *Earlier:* **Current sequence (reconciled 2026-10-17):** S12.1, S12.3, S12.4, S13.1 and S13.2 are recorded done; S12.2 remains optional. S13.3 is implemented at `570581e`, with pre-12/reduced-motion device rows still UNVERIFIED. Reconcile/validate the Stage 12–13 closure record against that evidence; do not restart email, naming or logo research. Then S14.1 on the owner's start instruction. This documentation amendment starts no application Task.
 
@@ -468,13 +470,12 @@ and identity items are done (S12.3, S13.2), and the Play upload key is deferred 
 
 ## 9. Workflow rules
 
-These rules restate the post-roadmap governance in `CLAUDE.md` for Stage work. Where the two
-differ, `CLAUDE.md` wins.
+This section preserves Stage-work methods under the shared [AGENTS](../../AGENTS.md) contract. [AI_WORKFLOW](../AI_WORKFLOW.md) is the canonical preflight/coordination/handoff procedure; [VERIFICATION_POLICY](../VERIFICATION_POLICY.md) alone defines required checks. The owner’s current scope and Git permissions govern every step. No model/version choice or next-stage authorization is implied.
 
 ### 9.1 Stage workflow (default)
 
 ```text
-1. Fresh Opus 5.5 chat
+1. Fresh session where practical under V8
 2. Read the current Stage and the repository state
 3. Verify the prerequisites
 4. Create the Stage execution plan
@@ -482,13 +483,13 @@ differ, `CLAUDE.md` wins.
 6. Freeze the approved Task sequence
 7. Execute the Tasks sequentially
 8. One coherent Task per implementation session or chat, where practical
-9. Verify each Task (CLAUDE.md, Verification Policy V1–V3)
-10. Commit each completed Task
+9. Verify each Task (docs/VERIFICATION_POLICY.md V1–V3)
+10. Commit coherent completed work only if currently authorized
 11. Fresh, independent Stage validation against the frozen criteria (V4, V8)
 12. Focused corrective Tasks for blockers only; revalidate the affected surface (V5)
 13. Close the Stage when every frozen criterion passes (V7)
 14. Update PROGRESS.md
-15. Start the next Stage in a fresh chat
+15. Stop; start another Stage only under current explicit authorization
 ```
 
 ### 9.2 Task sizing
@@ -536,10 +537,10 @@ READ
 → VERIFY CURRENT STATE
 → PLAN
 → IMPLEMENT
-→ VERIFY (CLAUDE.md, Verification Policy: by change class, reusing valid evidence)
+→ VERIFY (docs/VERIFICATION_POLICY.md: by change class, reusing valid evidence)
 → SELF-REVIEW
 → UPDATE REQUIRED DOCS
-→ COMMIT
+→ COMMIT ONLY IF AUTHORIZED
 → STOP
 ```
 
@@ -586,7 +587,7 @@ solution looks practical.
 
 ### 9.8 Validation model
 
-The validation model is defined once, in `CLAUDE.md`, "Verification Policy (canonical)":
+The validation model is defined once, in [VERIFICATION_POLICY](../VERIFICATION_POLICY.md):
 - V1: the verification each change class needs (Task validation);
 - V2, V3: when a broader check satisfies a narrower one, and when passing evidence is reused;
 - V4: the frozen acceptance surface, and what may block (analysis-and-decision Stages use the
@@ -604,7 +605,7 @@ replaced by the policy (governance correction, 2026-09-27). The Stage-validation
 ### 9.9 Documentation duties
 
 - After every Task, update `PROGRESS.md`: the Task, its commit, and the finding IDs it resolved.
-- Keep the living registers current, as `CLAUDE.md`'s conventions require:
+- Update only the living-register statements invalidated by the task, as AGENTS/AI_WORKFLOW require:
   - `FEATURE_STATUS.md`;
   - `TECH_DEBT.md` (mark items resolved with the date and commit; never delete them);
   - `ARCHITECTURE.md` and `DATA_MODEL.md` Part B;

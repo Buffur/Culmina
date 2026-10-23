@@ -1,8 +1,14 @@
-# Culmina tooling overrides
+---
+paths:
+  - ".agents/skills/**"
+  - "tool/**"
+---
 
-- Product rules and existing dependencies remain authoritative. This tooling maintenance authorizes no R1-R5, SDK, app or dependency changes.
-- For integration_test, use `.agents/skills/flutter-add-integration-test/SKILL.md` as the corrected recipe. Standard native integration_test uses its binding and flutter test; no Flutter Driver extension in production main.dart. This overrides conflicting official/plugin recipe text.
-- Official Claude Dart/Flutter plugin: dart-flutter@dart-flutter 1.0.7. The old synced duplicate and generic Flutter plugin are disabled to avoid overlapping prescriptions. Use fully qualified skill names.
-- Impeccable: user skill 4.7.0; do not use the disabled Codex 4.3.1 plugin. Preserve Culmina decisions over generic detector opinions.
-- Context7: use one resolve/query sequence via the context7 MCP. Never repeat the same lookup through a second connector unless the primary route failed.
-- Dart MCP uses the isolated current-SDK cache configured in settings.local.json. For CLI health commands use `C:/Users/zalub/.codex/tools/culmina/claude.ps1`, which supplies the same scoped environment. No application debug process was running during verification.
+# Culmina tooling recipe routing
+
+Status: active, scoped Claude supplement (2026-10-24). [AGENTS](../../AGENTS.md) and [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md) govern scope and checks. Read only a relevant recipe; no tooling installation or product change follows from its availability.
+
+- Preserve the local correction in `.agents/skills/flutter-add-integration-test/SKILL.md`: standard native integration_test uses its binding and flutter test; no Flutter Driver extension in production main.dart.
+- Use one Context7 resolve/query route per documentation question; report a failed primary route before falling back.
+- Discover the actual local SDK/tools and configured MCP route. Do not silently substitute a conflicting shared cache. Installed, connected and successfully exercised remain separate claims.
+- Dated versions, absolute paths and one-machine observations were moved byte-for-byte to [the archive](../../docs/archive/governance-2026-10-24/README.md). Consult [AI_WORKFLOW](../../docs/AI_WORKFLOW.md) for portable procedure; verify dated references locally.

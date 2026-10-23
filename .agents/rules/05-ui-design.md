@@ -1,5 +1,7 @@
 # UI Design Rules
 
+Status: active supplement. Read [design/BASELINE](../../docs/design/BASELINE.md) for current native/reference authority and [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md) for checks.
+
 - Prefer a clean, minimalist, information-dense interface.
 - Avoid decorative astronomy artwork, excessive animation, and generic
   space-themed visual clutter.

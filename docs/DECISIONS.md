@@ -8,7 +8,7 @@
 >   order; then the Stage 11, 10, 9 and 8 planning decisions.
 > - **Superseded or amended decisions** stay where they are, unchanged; the table below links each to
 >   what replaced it. An E.1 entry that was later decided differently carries a short "Later" note.
-> - **Active queue:** `refinement/FINAL_COMPLETION_ROADMAP.md`, approved 2026-10-18
+> - **Approved task contract (not an automatic execution queue):** `refinement/FINAL_COMPLETION_ROADMAP.md`, approved 2026-10-18
 >   ([E.1](#final-completion-roadmap-approved-p8-2026-10-18)); the remaining Stage 12–17 Task IDs are its
 >   aliases. S13V-01 is handled by its F02; CA-OD1 and CA-OD3 were answered with D1–D5 and D7–D9
 >   ([E.1](#final-completion-roadmap-d1-to-d9-and-ux-s-answered-p6-2026-10-18)).
@@ -16,6 +16,7 @@
 >   F03) and ADR-022 (night conditions, F13) were accepted by the owner on 2026-10-18 (their sections
 >   below). Current open items:
 >   `refinement/PROGRESS.md`.
+> - **Current governance routing (2026-10-24):** [AGENTS](../AGENTS.md), [VERIFICATION_POLICY](VERIFICATION_POLICY.md) (the successor to historical CLAUDE V1–V8 citations) and [PROGRESS](refinement/PROGRESS.md). No recorded decision below is rewritten by that relocation.
 > - **Update log:** the dated header notes that used to open this file are kept verbatim at the end
 >   ("Appendix — Update log").
 

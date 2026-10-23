@@ -1,17 +1,17 @@
 # Prompt — Continue the current work
 
 > A reusable session prompt (created 2026-09-27, governance correction). The rules are
-> `CLAUDE.md` ("Post-Roadmap Workflow Governance", including the Verification Policy); this file is
+> [AGENTS](../../../AGENTS.md), [AI_WORKFLOW](../../AI_WORKFLOW.md) and [VERIFICATION_POLICY](../../VERIFICATION_POLICY.md); this file is
 > only the procedure.
 
-1. Read `docs/refinement/PROGRESS.md`: current state, reusable validation evidence, blockers and
-   the **Next allowed action**. That action is the whole scope of this session.
+1. Verify repository/worktree, branch/HEAD, upstream and dirty state under AI_WORKFLOW. Read `docs/refinement/PROGRESS.md`: current state, reusable validation evidence, blockers and
+   the **Next allowed action**. That action must fit the current owner request. A wait/review-only action does not authorize implementation; an older launch or Git permission does not restart.
 2. Read only what that action names: its definition in the active queue (`FINAL_COMPLETION_ROADMAP.md`,
    approved 2026-10-18; older S-IDs resolve through its §4), the ADRs, finding IDs and files it
    references, then the relevant code and tests. Do not re-audit the repository or reread earlier
    Stages' history.
-3. If the action is a frozen Task, the frozen sequence is the approval: `READ → VERIFY → PLAN →
-   IMPLEMENT → VERIFY → SELF-REVIEW → DOCS → COMMIT → CHECKPOINT`. A single-task scope stops
+3. If the current owner instruction activates a frozen Task, use its frozen sequence within that scope: `READ → VERIFY → PLAN →
+   IMPLEMENT → VERIFY → SELF-REVIEW → DOCS → COMMIT IF AUTHORIZED → CHECKPOINT`. A single-task scope stops
    here; an explicitly authorized finite group continues to its next dependency-ready task under
    its launch brief (for the full plan, `CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`). A prompt file's
    presence does not activate a grouped run. Verify by change class and reuse

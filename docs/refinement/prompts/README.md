@@ -1,21 +1,12 @@
-# Refinement prompts
+# Refinement session procedures
 
-Session prompts for post-roadmap refinement. A prompt is the scope of its own session only; the rules are
-`CLAUDE.md` (scope, approval and the canonical Verification Policy).
+Status: active procedure index; [AGENTS](../../../AGENTS.md), [AI_WORKFLOW](../../AI_WORKFLOW.md) and [VERIFICATION_POLICY](../../VERIFICATION_POLICY.md) own shared scope, coordination and V1–V8. [PROGRESS](../PROGRESS.md) is the sole current-state/next-action source.
 
-**Prepared bounded assessment:**
-- [`CLAUDE_UI_UX_REVIEW_AM02.md`](CLAUDE_UI_UX_REVIEW_AM02.md): repeat the UI/UX, usability, existing-function and potential-bug review against AM-02; assessment only, current app versus planned outcomes kept separate. Run on 2026-10-18: [FINALIZATION_REVIEW §34](../FINALIZATION_REVIEW.md#34-claude-repeat-uiux-review-am-02); its CRUX-01–04 became AM-03 (§35).
+| Prompt | Status / activation |
+| --- | --- |
+| [CONTINUE_CURRENT_WORK](CONTINUE_CURRENT_WORK.md) | Reusable: perform only the next action that fits the current owner task; a wait/acceptance boundary does not authorize implementation |
+| [INDEPENDENT_STAGE_VALIDATION](INDEPENDENT_STAGE_VALIDATION.md) | Reusable: read-only validation of the specifically named frozen acceptance surface; no fixes or new criteria |
+| [CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION](CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md) | Preserved finite-run launch contract. The 2026-10-18 run has historical dispositions in PROGRESS_HISTORY; this file's presence or an old launch does not reactivate it in a new narrow task or renew its Git permissions |
+| [CLAUDE_UI_UX_REVIEW_AM02](CLAUDE_UI_UX_REVIEW_AM02.md) | Completed 2026-10-18 assessment; [FINALIZATION_REVIEW §34](../FINALIZATION_REVIEW.md#34-claude-repeat-uiux-review-am-02) records findings; CRUX-01–04 became AM-03. Historical evidence, not an unstarted review |
 
-**In use (reusable procedures):**
-- [`CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`](CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md): full-plan implementation brief and explicit launch command for sequential F01–F26/G1–G4 on develop, current AM-05 baseline. Includes sources of truth, task mapping, proportional checks, single-writer coordination, task commits/pushes, resume checkpoints and attention-item continuation, final done/not-done report, targeted Task tests and consolidated integration/release gates. Prepared, not launched by its presence in Git.
-- [`CONTINUE_CURRENT_WORK.md`](CONTINUE_CURRENT_WORK.md): continue the next allowed action named in `../PROGRESS.md`.
-- [`INDEPENDENT_STAGE_VALIDATION.md`](INDEPENDENT_STAGE_VALIDATION.md): validate a Stage against its frozen surface (V4–V8).
-
-**Completed prompts, moved on 2026-10-18** to [`../../archive/refinement-prompts/`](../../archive/refinement-prompts/README.md)
-(unchanged; older documents still cite them by their former path `prompts/<name>.md`):
-- `STAGE_0_REFINEMENT_BASELINE.md`: the owner's Stage 0 prompt (2026-09-25), the authority behind
-  `PRODUCT_DIRECTION.md` and `POST_ROADMAP_PLAN.md`;
-- `AMEND_STAGES_6_11_AFTER_STAGE5.md`: the owner's brief that amended Stages 6–11 (2026-09-27);
-- `STAGE_7_PLANNING.md`: the Stage 7 planning prompt (2026-09-28);
-- `PRODUCT_REASSESSMENT.md`: the bounded Product Reassessment (RA.R1–RA.P, complete 2026-10-17);
-- `RA_R2_RESEARCH_PLAN.md`: the approved RA.R2 research plan (2026-10-17).
+Completed Stage 0, Stages 6–11 amendment, Stage 7 planning, Product Reassessment and RA.R2 prompts are in [archive/refinement-prompts](../../archive/refinement-prompts/README.md), unchanged with their IDs/provenance. Earlier design migration continuation/handoff prompts remain beside their evidence: [the archive map](../../archive/README.md) identifies successors. Do not launch their embedded next steps from this index.

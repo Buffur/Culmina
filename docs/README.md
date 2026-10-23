@@ -1,70 +1,54 @@
 # Culmina documentation map
 
-Culmina (formerly AstroPlan) is a planning-first Flutter/Dart astrophotography app: build a realistic
-Capture Plan for a target, rig, site and night, see whether it fits the imaging opportunity, then save
-it and record the result. This page says what to read and where each kind of fact lives. It holds no
-status itself. (`index.md` and `privacy/` are the published GitHub Pages site, not this map.)
+Status: active navigation and responsibility map. Current state belongs only to [refinement/PROGRESS](refinement/PROGRESS.md); this page deliberately does not duplicate schema/tool versions, test counts or delivery hashes. Culmina is a planning-first astrophotography organizer. `index.md` and `privacy/` are the published GitHub Pages site.
 
-## A new session reads, in order
+## Start a session
 
-1. [`../CLAUDE.md`](../CLAUDE.md): product constraints, scope and approval rules, the canonical
-   Verification Policy (V1–V8).
-2. [`refinement/PROGRESS.md`](refinement/PROGRESS.md): current state, **the next allowed action**, open
-   owner decisions, blockers, carried items and reusable evidence.
-3. Only what that action names: its Task in the active queue (below), the ADRs and finding IDs it cites,
-   the relevant traps in [`ENGINEERING_GUARDRAILS.md`](ENGINEERING_GUARDRAILS.md), then the code.
+1. [AGENTS](../AGENTS.md): shared product constraints, authority, permissions, reading routes and stop boundary. [CLAUDE](../CLAUDE.md) and [GEMINI](../GEMINI.md) are thin client adapters to that same core.
+2. [PROGRESS](refinement/PROGRESS.md): current integration baseline, authorized scope, implemented versus owner-accepted, pending criteria, reusable evidence and the next allowed action. Historical launches never automatically restart.
+3. [AI_WORKFLOW](AI_WORKFLOW.md): repository preflight, preservation, one-writer coordination, integration, handoff and build/package receipts. [VERIFICATION_POLICY](VERIFICATION_POLICY.md): the sole canonical V1–V8 policy.
+4. Read only the task's named approved contract, decisions/finding IDs and relevant [ENGINEERING_GUARDRAILS](ENGINEERING_GUARDRAILS.md), then relevant code/evidence. UI work also starts with [design/BASELINE](design/BASELINE.md).
 
-Do not reconstruct history to find the current task: dated "Next" lines in history files, audits and
-archived prompts are not instructions.
+## Intent, contracts and state
 
-## Plans and direction
-
-| Document | Role |
+| Source | Responsibility |
 | --- | --- |
-| [`refinement/FINAL_COMPLETION_ROADMAP.md`](refinement/FINAL_COMPLETION_ROADMAP.md) | **The approved execution queue** (owner, 2026-10-18, P8): the remaining work as Tasks F01–F26 and gates G1–G4 in Stages A–D, with the owner's D1–D9 answers, a check per acceptance criterion and the release rows |
-| [`refinement/FINALIZATION_REVIEW.md`](refinement/FINALIZATION_REVIEW.md) | The finalization workflow's record (P1–P8): coverage and UX findings, decisions, the P7 check. Its §§4–10 and §20 are hash-bound annexes of the roadmap; the rest is evidence, not a queue |
-| [`refinement/POST_ROADMAP_PLAN.md`](refinement/POST_ROADMAP_PLAN.md) | The RG and RD registers (§7, §8) and workflow rules (§9); §5, Stages 12–17 (G3, 2026-10-17, with C1–C6, AUD-01–AUD-17 and audit 09's M1–M16), was the queue until 2026-10-18 and its Task IDs are now the roadmap's aliases |
-| [`refinement/PRODUCT_DIRECTION.md`](refinement/PRODUCT_DIRECTION.md) | The accepted product direction; §9 lists what later owner decisions superseded |
-| [`refinement/STAGES_12_17_READINESS_REVIEW.md`](refinement/STAGES_12_17_READINESS_REVIEW.md), [`refinement/STAGES_12_17_AUDIT_AMENDMENTS.md`](refinement/STAGES_12_17_AUDIT_AMENDMENTS.md) | Inputs already applied to Stages 12–17 (corrections C1–C6; AUD-01–AUD-17 dispositions) |
-| [`audit/09_COMPREHENSIVE_AUDIT.md`](audit/09_COMPREHENSIVE_AUDIT.md), [`audit/10_UX_AUDIT.md`](audit/10_UX_AUDIT.md) | The audits behind the M1–M16 amendments and the proposal's UXA-C1–C5 fixes (evidence, not tasks) |
-| [`refinement/STAGE_11_MATRIX.md`](refinement/STAGE_11_MATRIX.md), [`refinement/STAGE_11_DEVICE_RUNBOOK.md`](refinement/STAGE_11_DEVICE_RUNBOOK.md) | The validation matrix and device runbook still used by S17.5 and S17.7 (the proposal's G1–G2) |
-| [`refinement/prompts/`](refinement/prompts/README.md) | Reusable session procedures (continue the current work; independent Stage validation) |
+| [PRODUCT_DIRECTION](refinement/PRODUCT_DIRECTION.md) | Accepted product direction; later owner decisions supersede only their named clauses |
+| [DECISIONS](DECISIONS.md) | Accepted ADRs and owner decisions, with provenance/supersession; each status block is authoritative |
+| [FINAL_COMPLETION_ROADMAP](refinement/FINAL_COMPLETION_ROADMAP.md) | Approved frozen F01–F26/G1–G4 criteria, not an automatically active queue |
+| [FINALIZATION_REVIEW](refinement/FINALIZATION_REVIEW.md) | P1–P8 preparation/decision evidence and hash-bound annexes; preserve bytes/IDs |
+| [POST_ROADMAP_PLAN](refinement/POST_ROADMAP_PLAN.md) | RG/RD registers and approved earlier S-ID aliases; session workflow routes to AI_WORKFLOW |
+| [FEATURE_STATUS](FEATURE_STATUS.md), [TECH_DEBT](TECH_DEBT.md), [SCIENTIFIC_INTEGRITY](SCIENTIFIC_INTEGRITY.md) | Feature, defect and calculation registers; inspect exact partial-resolution boundaries before acting |
+| [ARCHITECTURE](ARCHITECTURE.md), [DATA_MODEL](DATA_MODEL.md) | Intent and actual architecture/schema; verify actual schema from `app_database.dart`, not a copied navigation value |
+| [EXPORT_MANIFEST](EXPORT_MANIFEST.md) | Versioned session export contract and SessionManifestCodec association |
+| [IA_WIREFRAMES](IA_WIREFRAMES.md), [IA_WIREFRAMES_ADDENDUM](IA_WIREFRAMES_ADDENDUM.md) | Approved information-architecture intent, subject to later named amendments |
+| [PRODUCT_SPEC](PRODUCT_SPEC.md) | Phase 0 intent; current product direction has the explicit successor above |
 
-## Decisions, rules and registers
+## Design and evidence
 
-| Document | Holds |
+| Source | Responsibility / limit |
 | --- | --- |
-| [`DECISIONS.md`](DECISIONS.md) | ADRs (index at the top; ADR-021 and ADR-022 planned), owner decisions in E.1, and a table of superseded decisions |
-| [`ENGINEERING_GUARDRAILS.md`](ENGINEERING_GUARDRAILS.md) | The numbered traps ("CLAUDE.md trap N") for persistence, lifecycle, time, weather, metadata, UI, tests, privacy, signing and release |
-| [`SCIENTIFIC_INTEGRITY.md`](SCIENTIFIC_INTEGRITY.md) | Scientific issues SI-### (open and closed), the calculation register CALC-##, rules for scientific changes |
-| [`TECH_DEBT.md`](TECH_DEBT.md) | Defects and debt TD-### (open items first, with their scheduled Task) |
-| [`FEATURE_STATUS.md`](FEATURE_STATUS.md) | What exists, feature by feature (F-##) |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md), [`DATA_MODEL.md`](DATA_MODEL.md) | Design intent (Part A) and the actual architecture and schema (Part B; schema v25) |
-| [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) | UI tokens, accessibility and interaction patterns |
-| [`design/WORKFLOW.md`](design/WORKFLOW.md) | Project design skills, restrained visual direction, font examples and the isolated Home browser lab |
-| [`design/WEB_TO_FLUTTER_MIGRATION.md`](design/WEB_TO_FLUTTER_MIGRATION.md) | In-progress Hybrid / Geist web → Flutter migration ledger; resume via [`design/migration/CONTINUATION_PROMPT_2026_10_20.md`](design/migration/CONTINUATION_PROMPT_2026_10_20.md) |
-| [`IA_WIREFRAMES.md`](IA_WIREFRAMES.md), [`IA_WIREFRAMES_ADDENDUM.md`](IA_WIREFRAMES_ADDENDUM.md) | Accepted information-architecture intent (ADR-015, ADR-019) |
-| [`PRODUCT_SPEC.md`](PRODUCT_SPEC.md) | The Phase 0 product specification (design intent; the current direction is `PRODUCT_DIRECTION.md`) |
+| [design/BASELINE](design/BASELINE.md) | Current native tokens/typography/components, final frozen Hybrid reference, later approved refinements and acceptance boundaries |
+| [DESIGN_SYSTEM](DESIGN_SYSTEM.md), [design/WORKFLOW](design/WORKFLOW.md), [local skills](../.agents/skills/README.md) | Shared visual contracts and task-specific methods; code owns implemented values, skills cannot approve scope |
+| [Hybrid transfer record](design/migration/HYBRID_TRANSFER_STATUS.md) | Completed bounded transfer and explicit §9 owner confirmation; later delivery acceptance remains separate |
+| [Consolidation delivery](design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) | Integrated design/geo/identity preservation and dated test/build/physical observations; current next action still comes from PROGRESS |
+| [Earlier web-to-Flutter migration](design/WEB_TO_FLUTTER_MIGRATION.md) | Historical earlier port and coverage; its embedded continuation instructions are superseded by the final transfer record, not current work |
+| [STAGE_11_MATRIX](refinement/STAGE_11_MATRIX.md), [device runbook](refinement/STAGE_11_DEVICE_RUNBOOK.md), [TEST_PLAN](TEST_PLAN.md) | Frozen device/human/lifecycle checks and test methods; required checks are selected only under VERIFICATION_POLICY and the current task |
+| [RELEASE](RELEASE.md), [COMPLIANCE](COMPLIANCE.md) | Authorized release/signing and terms/privacy procedures; no signing secrets belong in agent context |
+| [privacy/index](privacy/index.md), [project page](index.md) | Published pages; changes need the appropriate task and guardrails |
+| [Tooling inventory](AI_TOOL_CAPABILITIES_2026_10_20.md), [maintenance results](design/tooling-update-2026-10-20/RESULT.md) | Dated machine/client observations; verify local availability/loading/authorization before relying on them |
 
-## Contracts, release and compliance
+## Procedures and historical material
 
-| Document | Holds |
+| Location | Responsibility / successor |
 | --- | --- |
-| [`EXPORT_MANIFEST.md`](EXPORT_MANIFEST.md) | The session export contract (`SessionManifestCodec`, manifest v2) |
-| [`TEST_PLAN.md`](TEST_PLAN.md) | Test types, the lifecycle matrix (L1–L8) and device checks |
-| [`RELEASE.md`](RELEASE.md) | Release build, signing and the move from Astro Planner (GitHub Releases; the Play procedure is deferred) |
-| [`COMPLIANCE.md`](COMPLIANCE.md) | Third-party terms, licences (GPL-3.0 with the §7 additional permission), permissions, privacy record |
-| [`privacy/index.md`](privacy/index.md), [`index.md`](index.md) | The published privacy policy and project page (GitHub Pages; edit only through a Task, trap 22) |
+| [Reusable prompts](refinement/prompts/README.md) | Procedures activated only by current owner scope; no implicit full-plan launch |
+| [PROGRESS_HISTORY](refinement/PROGRESS_HISTORY.md) | Verbatim superseded progress, including the complete pre-cleanup snapshot and its contradictions |
+| [POST_ROADMAP_PLAN_HISTORY](refinement/POST_ROADMAP_PLAN_HISTORY.md), `refinement/STAGE_N_*.md` | Approved earlier stage definitions and immutable dated validation outcomes |
+| [Independent develop review](refinement/DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md), [PROJECT_AUDIT](PROJECT_AUDIT.md), `audit/` | Dated audits/findings; not a current task queue or automatic repair permission |
+| `refinement/evidence/`, `design/migration/evidence/`, `../design/home-lab/evidence/` | Immutable input-specific logs, captures, fixtures and criterion mappings; browser/host/native/device/owner levels remain distinct |
+| `refinement/research/`, `design/` dated studies | Research/decision provenance; later intent and actual implementation are mapped in BASELINE |
+| [Archive index](archive/README.md) | Superseded materials and objects intentionally retained in place; open findings remain in canonical registers |
+| [Governance cleanup report](audit/AI_CONTEXT_CLEANUP_2026_10_24.md) | This cleanup's inventory, conflicts, verification, limitations and preservation evidence; not another current-state file |
 
-## History and evidence
-
-| Location | Contents |
-| --- | --- |
-| [`refinement/PROGRESS_HISTORY.md`](refinement/PROGRESS_HISTORY.md) | Every earlier PROGRESS entry, verbatim |
-| [`refinement/POST_ROADMAP_PLAN_HISTORY.md`](refinement/POST_ROADMAP_PLAN_HISTORY.md) | Stage 0–11 definitions, frozen Task sequences and acceptance; the plan's update log; audit traceability to Stages 1–11 |
-| `refinement/STAGE_N_*.md`, [`refinement/STAGE_12_13_CLOSURE.md`](refinement/STAGE_12_13_CLOSURE.md) | Stage validation reports (FAIL/BLOCKED records stay as written; later corrections and revalidations are separate reports) |
-| `refinement/evidence/` | Device checks, measurements, probe patches, renders and the identity artwork rounds (the 2026-10-23 mark and launch gesture are generated by `tool/culmina_mark.py`; the lab is `design/identity-lab/`) |
-| `refinement/research/` | Research reports behind RG, RA and S-research decisions |
-| `audit/` | Audits 01–08 (baseline `becae04` and the owner's dogfooding report; evidence for ENG-/SCI-/RT-/UX- IDs and "08 §N"); 09 and 10 (above) |
-| [`PROJECT_AUDIT.md`](PROJECT_AUDIT.md) | The 2026-09-21 takeover audit (point-in-time evidence) |
-| [`archive/`](archive/README.md) | Superseded documents: the master roadmap, the Phase 0 roadmap, the takeover handoff, completed prompts, the pre-condensation `CLAUDE.md`, the previous agent's documents |
+Old “CLAUDE.md V1–V8” citations route to VERIFICATION_POLICY through the adapter; old numbered traps route to ENGINEERING_GUARDRAILS. Historical schema/count/version/hash observations stay in their original evidence. A discrepancy between code and approved intent is a finding, not authority to rewrite either.

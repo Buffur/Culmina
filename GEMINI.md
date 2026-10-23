@@ -1,4 +1,9 @@
+# Culmina — Gemini / Antigravity adapter
 
-## Culmina tool maintenance routing
+Status: active client adapter, 2026-10-24. Load the shared contract, then follow only its task-specific reading routes.
 
-Use `docs/AI_TOOL_CAPABILITIES_2026_10_20.md` for current tool status and `.agents/skills/flutter-add-integration-test/SKILL.md` for the corrected integration_test recipe. Standard integration_test does not require Flutter Driver extension in production main.dart; this local correction overrides conflicting plugin recipes. Preserve all existing Culmina scope and design rules. The canonical user Impeccable skill is4.7.0; no new init or redesign is authorized by tooling maintenance. Use the configured context7 MCP once per documentation question, and the explicit dart-mcp-server configuration; do not fall back silently to a conflicting shared cache.
+@./AGENTS.md
+
+If this client/version does not expand imports, explicitly read [AGENTS.md](AGENTS.md) before work and report the loading limitation. Gemini CLI supports context imports and `/memory list` / `/memory show`; verify actual loading for the installed client. Antigravity's project-context documentation is linked in [AI_WORKFLOW](docs/AI_WORKFLOW.md); documentation support alone is not a runtime result.
+
+Current state: [PROGRESS](docs/refinement/PROGRESS.md). Verification: [VERIFICATION_POLICY](docs/VERIFICATION_POLICY.md). Machine-specific maintenance notes are [historical](docs/archive/governance-2026-10-24/README.md), not global SDK/plugin assumptions. Do not regenerate instructions or alter global settings.

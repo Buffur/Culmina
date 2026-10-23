@@ -1,5 +1,7 @@
 # Scientific Calculation Rules
 
+Status: active supplement to [AGENTS](../../AGENTS.md); verification is owned by [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md). Read only for the relevant task.
+
 - Every non-trivial calculation must document purpose, inputs, units, formula,
   assumptions, output, valid range, edge cases, reference/source, and tests.
 - Do not invent sensor specifications, astronomical constants, catalog values,

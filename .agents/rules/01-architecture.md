@@ -1,5 +1,7 @@
 # Architecture Rules
 
+Status: active supplement to [AGENTS](../../AGENTS.md); verification is owned by [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md). Read only for the relevant task.
+
 - Keep Flutter UI separate from ViewModels, repositories, data sources, and
   domain calculations.
 - Keep Drift APIs in the data layer; expose domain models through repository

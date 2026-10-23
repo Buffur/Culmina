@@ -1,19 +1,19 @@
 # Prompt — Independent Stage validation
 
 > A reusable session prompt (created 2026-09-27, governance correction). The rules it applies are
-> `CLAUDE.md`, "Verification Policy (canonical)", V1–V8; this file is only the procedure. Where the
-> two differ, `CLAUDE.md` wins.
+> [VERIFICATION_POLICY](../../VERIFICATION_POLICY.md), V1–V8; this file is only the procedure. Where the
+> two differ, the canonical policy wins.
 
 Validate **Stage N** (named by `PROGRESS.md`, "Next allowed action"). Validation only: do not fix
 anything you find.
 
 ## 1. Freeze the acceptance surface first (V4)
 
-Before reading any code, list — from `POST_ROADMAP_PLAN.md`, the Stage's section, and the ADRs and
+Before reading any code, identify the current owner-authorized validation target and list — from its approved task/Stage contract (F/G in FINAL_COMPLETION_ROADMAP, S-ID aliases in POST_ROADMAP_PLAN), and the ADRs and
 owner decisions it cites:
 - the Stage's and each Task's acceptance criteria;
 - the approved owner decisions the Stage delivers;
-- the explicit invariants that apply (the `CLAUDE.md` traps and ADRs the Stage touches);
+- the explicit invariants that apply (the `docs/ENGINEERING_GUARDRAILS.md` traps and ADRs the Stage touches);
 - the evidence the Stage requires (full gate, device rows, real samples), if any.
 
 That list is the whole surface. For an analysis-and-decision Stage it is the bounded list in the

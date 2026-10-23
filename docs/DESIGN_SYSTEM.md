@@ -1,10 +1,8 @@
 # Culmina (formerly AstroPlan) — Design System
 
-> **How to read this file (2026-10-18 documentation cleanup; no content changed).** Sections 1–9 are the
-> design system as built in Stage 5 and adopted in Stages 6–9 (tokens in `lib/core/theme/`). The dated
-> notes that opened this file until 2026-10-18 record later adoption steps (S6–S9); they are kept verbatim
-> at the end ("Appendix — Update log"). Open UI decisions: CA-OD1, the brand in the UI tokens (before S16.6;
-> `refinement/PROGRESS.md`).
+Status: active shared visual/interaction reference, reconciled 2026-10-24 against `94cebfb` for the known stale instructions below. [design/BASELINE](design/BASELINE.md) maps the final approved Hybrid/Geist reference, current native sources and later P-1–P-6, TD-120/TD-121 and identity changes. [VERIFICATION_POLICY](VERIFICATION_POLICY.md) owns checks; current authorization is in [PROGRESS](refinement/PROGRESS.md).
+
+Sections retain Stage 5–9 contract/adoption provenance; dated colour/geometry observations are not a second token authority. Read actual theme/components and later approved refinements before applying them. CA-OD1 is no longer an open branding decision (DECISIONS D1); owner acceptance of later delivery is a separate question. Historical update logs below remain unchanged.
 
 ## 1. Principles
 
@@ -14,8 +12,8 @@
   Notion-inspired direction, which is a direction and not a restriction (PRODUCT_DIRECTION §5.10).
 - **Field use** (`IA_WIREFRAMES.md` §3): targets of at least 48 dp, 200 % text, red mode one tap
   away, red or black only in red mode.
-- **Tokens only** (CLAUDE.md trap 12): `lib/presentation` never names a colour, sets text under
-  12 sp or shrink-wraps a tap target (`presentation_style_rules_test.dart`). A new colour token
+- **Tokens only** (CLAUDE.md trap 12): `lib/presentation` never names an unapproved colour or shrink-wraps a tap target; the base
+  text scale stays at least 12 sp, with explicit source-derived compact Hybrid exceptions (`presentation_style_rules_test.dart`). A new colour token
   goes into all three palettes.
 - **Rules applied throughout the app, not screen by screen** (08 §27, "Design System"): tokens
   change through the theme; shared components are adopted by the Stage that redesigns a screen.
@@ -49,7 +47,7 @@
 | Level | Token | Light | Dark | Field | Used by |
 | --- | --- | --- | --- | --- | --- |
 | Background | `scaffoldBackgroundColor` | `#FFFFFF` | `#191919` | `#000000` | Screens |
-| Surface | `colorScheme.surface` | `#F7F7F5` | `#202020` | `#110000` | Cards, sections |
+| Surface | `colorScheme.surface` | `#F7F7F5` | `#202020` | `#000000` | Theme surface; field grouping uses `cardColor` / `AppColors.fieldSurface` (`#110000`) |
 | Raised | `AppPalette.surfaceRaised` = `colorScheme.surfaceContainerHigh` | `#FFFFFF` | `#252525` | `#1A0000` | Dialogs, date pickers (Material reads `surfaceContainerHigh`) |
 | Border | `AppPalette.border` | `#E9E9E7` | `#2F2F2F` | `#330000` | Card outlines, dividers |
 
@@ -108,8 +106,8 @@ lockup with the name. The launcher icon keeps its own refreshed dark field in ev
 ## 3. Type scale (`AppTypography.scale`)
 
 Every theme uses one scale with the bundled owner-selected Geist family; sizes are sp
-(scaled by the user's text size). Shared roles use zero letter spacing. The adopted
-Hybrid Home roles below carry the source's specific tracking. The 2026-10-20/21
+(scaled by the user's text size). Most shared roles use zero letter spacing; named roles such as sectionHeading and the adopted
+Hybrid Home roles carry their explicit tracking. The 2026-10-20/21
 [native migration](design/WEB_TO_FLUTTER_MIGRATION.md) supersedes the earlier
 prototype-only guidance for original Hybrid / Geist.
 
@@ -130,8 +128,8 @@ prototype-only guidance for original Hybrid / Geist.
 - The app bar's title is 22/27.5, weight 500. `hybridAppBar` measures its
   wrapping title and preserves the full text scaler.
 - Tonight uses its own wrapping semantic header (`homeHeading`, 29/34.8,
-  weight 500, tracking -0.87). Its plan heading is 14/21, weight 600,
-  tracking -0.15; target 21/27.3, weight 500, tracking -0.5; rig 14/21.7.
+  weight 500, tracking -0.87). Its plan heading is 20/28, weight 600,
+  tracking -0.15; target 18/23.4, weight 500, neutral tracking; rig uses `body` 14/21.7.
   The editorial night heading is 25/32.5, weight 400, tracking -0.5.
   The wordmark and welcome link are 13/17.55 (600 and 400 respectively).
 - Hybrid fit-line measures use 12 sp captions, a 4 dp caption/value gap,
@@ -142,6 +140,25 @@ prototype-only guidance for original Hybrid / Geist.
   source-derived `HybridTokens` exceptions, not a reduced base text scale.
 - Tested: every style in every theme has the scale's size, line height and weight, and none is
   under 12 sp.
+
+### Named Hybrid roles (current source)
+
+These supplement the Material-role table above; they are not interchangeable aliases. Exact implementations/call sites in `app_typography.dart` remain the value authority.
+
+| Named role | Size / line | Weight |
+| --- | --- | --- |
+| `screenTitle` | 22/27.5 | 500 |
+| `sectionHeading` | 20/28, tracking -0.3 | 600 |
+| `sectionSubject` | 18/23.4 | 500 |
+| `itemTitle` | 16/22.4 | 600 |
+| `rowTitle` | 16/24 | 500 |
+| `value` | 15/21.75 | 400 |
+| `body` | 14/21.7 | 400 |
+| `caption` | 13/19.5 | 400 |
+| `dense` | 12/18 | 400 |
+| `support` | 14/22 | 400 |
+
+The editorial `nightHeading` and `answerHeading` use bundled Source Serif 4 at opsz 14. Root `navigationLabel` uses Roboto 11; calendar compact roles remain explicit HybridTokens exceptions. P-2 sets filled primary labels to 16/600; secondary actions retain their own role. These instructions document implemented adoption, not fresh visual/device acceptance.
 
 ## 4. Spacing and radius
 
@@ -156,6 +173,7 @@ prototype-only guidance for original Hybrid / Geist.
 | `AppRadius` | px | Use |
 | --- | --- | --- |
 | `small` | 6 | Cards, sections, text fields, buttons |
+| `menu` | 8 | Plan menus |
 | `large` | 12 | Dialogs, bottom sheets, a swiped row's background |
 | `pill` | 999 | Pills and chips |
 
@@ -237,7 +255,7 @@ still merges over them.
 
 ### 6.5 Icons
 
-- **Material icons, 24 dp** (the theme's default), outlined where a variant exists. An icon-only
+- **Current Hybrid glyphs:** `lib/presentation/shared/hybrid_icon.dart` carries adopted source paths; Material icons remain native/fallback controls. The following Stage 5 Material set is historical/general guidance, not an instruction to replace Hybrid glyphs. Material defaults are 24 dp, outlined where a variant exists. An icon-only
   button always has a `tooltip`.
 - **One icon per common action:**
   - add `Icons.add`;
@@ -679,3 +697,14 @@ evidence.
 > `app_spacing.dart`, `app_radius.dart`, `app_motion.dart`, `app_button_styles.dart`,
 > `app_theme.dart`).
 > **Tests:** `test/core/theme/` (tokens) and `test/presentation/design_system/` (the gallery).
+
+
+## Superseded navigation header (2026-10-18)
+
+Historical header relocated on 2026-10-24; BASELINE and the active introduction replace its routing.
+
+> **How to read this file (2026-10-18 documentation cleanup; no content changed).** Sections 1–9 are the
+> design system as built in Stage 5 and adopted in Stages 6–9 (tokens in `lib/core/theme/`). The dated
+> notes that opened this file until 2026-10-18 record later adoption steps (S6–S9); they are kept verbatim
+> at the end ("Appendix — Update log"). Open UI decisions: CA-OD1, the brand in the UI tokens (before S16.6;
+> `refinement/PROGRESS.md`).

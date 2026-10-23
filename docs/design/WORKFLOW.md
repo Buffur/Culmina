@@ -4,9 +4,11 @@ Prepared 2026-10-19 from the owner's request and supplied notes for UI Collectiv
 
 ## Authority and scope
 
-The owner requested reusable design skills and Home variations inspired by Notion and Google, with restrained colour and multiple font examples. This authorizes the skills and isolated browser concepts. The candidates do not change approved Flutter behavior, production tokens, navigation, roadmap criteria or release acceptance. Selection and actual-widget validation precede production adoption.
+Status: active workflow reconciled 2026-10-24 against the integration baseline in [PROGRESS](../refinement/PROGRESS.md). Read [BASELINE](BASELINE.md) for approved final Hybrid, production sources, later P-1–P-6 / TD-120 / TD-121 / identity refinements, evidence and owner-acceptance limits. Geist and Source Serif 4 are adopted native families; other lab candidates remain proposals.
 
-Use `CLAUDE.md` for scope and verification, the current task in `docs/refinement/FINAL_COMPLETION_ROADMAP.md` and its recorded decisions for behavior, `docs/DESIGN_SYSTEM.md` for visual contracts, and actual code for current implementation. Differences between a proposal and these sources must be named. Do not duplicate the roadmap or turn a style choice into a new gate.
+[AGENTS](../../AGENTS.md) defines current scope/permissions, [VERIFICATION_POLICY](../VERIFICATION_POLICY.md) owns V1–V8, [AI_WORKFLOW](../AI_WORKFLOW.md) owns coordination and handoff, [DESIGN_SYSTEM](../DESIGN_SYSTEM.md) and actual theme/components describe visual/interaction contracts. Read the owner's named task/decisions, not an assumed roadmap queue. Code proves implementation; an approved decision proves intent. Record a mismatch; neither a generic design skill nor a browser preference authorizes changing production.
+
+The rest of this workflow retains the design-lab methods and dated evolution. Early descriptions of Manrope, proposal-only Hybrid and conditions-first Home are historical where superseded by BASELINE. Do not interpret a historical instruction as an active adoption or regeneration request.
 
 ## Five skills, loaded selectively
 
@@ -22,7 +24,7 @@ These are repository-local `.agents/skills` entrypoints with valid skill frontma
 
 The actual workflow is: task/context → relevant skills and source contracts → a bounded comparison if a decision is open → implementation → scenario and token checks → evidence/handoff. Component documentation uses purpose, anatomy, variants, states, inputs, interactions, accessibility, exclusions and an actual adopter.
 
-## Browser comparison
+## Historical browser comparison and optional preview method
 
 Run from the repository root:
 
@@ -35,13 +37,13 @@ Open `http://127.0.0.1:4173`. It is a dependency-free static lab served on loopb
 - **Paper / Inter:** flat, Notion-inspired rows and restrained outlines; close to the current visual vocabulary.
 - **Focus / Roboto:** Google-inspired tonal grouping, softer panels and a clearer split between conditions and action.
 - **Journal / Source Serif 4 + Inter:** editorial headings and generous separation; compare heading character without sacrificing functional body text.
-- **Hybrid / Manrope:** the owner's preferred Paper-like base with Journal's The night ahead section; Source Serif 4 appears only in the section heading.
+- **Hybrid / Manrope (early historical candidate):** the owner's then-preferred Paper-like base with Journal's The night ahead section; Source Serif 4 appears only in the section heading.
 - **Line / Geist:** Linear-inspired alignment, compact metadata and section boundaries.
 - **Calm / Onest:** Things-inspired breathing room and a clearly separated next action.
 - **Folio / Source Sans 3:** Craft-inspired document rhythm and open sections.
 - There are **eleven** independent font choices: the original five plus Open Sans, Noto Sans, Source Sans 3, Geist, Onest and Golos Text. The specimen workbench compares the same editable Ukrainian sample, Latin and measurements. Official metadata, licences and font hashes are bundled; font popularity is not treated as a quality score.
 
-All seven concepts occupy a single horizontal slider with previous/next controls, keyboard arrows and direct concept selection. The single-screen mode shows one selected Android phone concept without expanding its app layout into desktop columns. Hybrid is the initial suggestion following the owner's 2026-10-19 preference; it is not a production selection.
+All seven concepts occupy a single horizontal slider with previous/next controls, keyboard arrows and direct concept selection. The single-screen mode shows one selected Android phone concept without expanding its app layout into desktop columns. That describes the initial 2026-10-19 experiment. The later final Hybrid / Geist reference was selected and transferred; BASELINE separates it from the other candidates.
 
 Compare the same fixture in all variants. Controls include light/dark/field, font, text scale, scenario, a selected-night picker, a detail view, and a local planner draft with explicit save/cancel. These are prototype interactions, not real astronomy, weather, persistence or production routing.
 
@@ -51,7 +53,7 @@ Home source: `lib/presentation/screens/tonight/tonight_home_screen.dart`; tab co
 
 `design/home-lab/tokens.json` contains a dated colour snapshot, role descriptions and prototype-only proposal overlays. `app.js` applies these roles; CSS consumes them rather than scattering colour literals. All compositions share a fixture so content does not bias comparison. The prototype is not a replacement design-system source.
 
-`scripts/build_inventory.py` exports the current local design sources into `inventory.json`: all 35 AppPalette roles in three themes, ColorScheme mappings, every raw AppColors constant, all 15 AppTypography styles, six spacing steps, three radii, motion values, ten documented component contracts and 21 complete source files with SHA-256. The catalogue has focused tabs instead of expanding everything at once. Source snapshots include the entire DESIGN_SYSTEM.md, theme implementations and relevant shared components. Historical adoption text remains historical; the current local implementation and decisions retain authority.
+`scripts/build_inventory.py` exports the current local design sources into `inventory.json`: all 35 AppPalette roles in three themes, ColorScheme mappings, every raw AppColors constant, the typography, spacing and radius set recorded at export time, motion values, ten documented component contracts and 21 complete source files with SHA-256. The catalogue has focused tabs instead of expanding everything at once. Source snapshots include the entire DESIGN_SYSTEM.md, theme implementations and relevant shared components. Historical adoption text remains historical; the current local implementation and decisions retain authority.
 
 Interactive HTML analogues include button hierarchy, disabled/loading/error states, input focus/error, single/multiple choice, status blocks, plan states, ContextLine, collapsible detail, confirmation and reduced-motion behavior. They are browser examples, not Flutter components.
 
@@ -69,11 +71,15 @@ Research and the extension's acceptance checklist: [Reference research](REFERENC
 
 Current extension completion evidence: [Requirement audit](../../design/home-lab/evidence/REFERENCE_EXTENSION.md).
 
-## Hybrid refinement and gap repairs (2026-10-19)
+## Historical lab evolution — not current task instructions
+
+The following dated sections preserve research/adoption provenance. Later native adoption and supersession are mapped in BASELINE.
+
+### Hybrid refinement and gap repairs (2026-10-19)
 
 The owner subsequently requested fixes from the video-guidance audit and a closer Notion/Apple study. See [research, component comparisons and the applied skill trial](NOTION_APPLE_STUDY_2026_10_19.md). The lab now has ten concepts; the default collection contains the original Hybrid plus Page, Soft and Desk. All four retain Journal's serif night heading and share the same data. The “All concepts” control retains the earlier comparisons.
 
-Token usage metadata covers all 13 proposal roles and all 35 AppPalette roles. The JSON spacing and radius maps drive the intended browser geometry through CSS variables. Run `python design/home-lab/scripts/check_inventory.py --self-test` before relying on the source snapshot; stale/missing source files are reported explicitly. Regenerate deliberately if relevant sources changed. This is a local check, not automatic synchronization or a claim of complete system conformance.
+Token usage metadata covers all 13 proposal roles and all 35 AppPalette roles. The JSON spacing and radius maps drive the intended browser geometry through CSS variables. The inventory is a dated source snapshot. Compare its recorded input hashes before relying on it; mismatch means historical coverage. A separately authorized checker can report staleness, but does not authorize regeneration of the frozen reference. No such regeneration belongs to documentation cleanup.
 
 The component skill has three on-demand API/state references. Its isolated native application example is `test/presentation/design_system/skill_application_test.dart`; the completion evidence records the actual run. The trial demonstrates one explicitly loaded workflow, not universal host discovery or production adoption. [Current refinement evidence](../../design/home-lab/evidence/HYBRID_REFINEMENT.md) supersedes the prior extension record for the changed lab inputs.
 
@@ -85,7 +91,7 @@ For future UI/UX documentation research, consult the [owner-supplied research br
 
 ## Home priority and the Plan page (2026-10-19)
 
-The owner requested a review using the additional sources, removal of the Hybrid plan edge and a project-grounded Plan page. See [the focused review and source comparison](PLAN_CONCEPT_REVIEW_2026_10_19.md). The browser now compares plan-first and conditions-first explicitly; returning users with an existing plan are shown the plan-first recommendation by default. The four Hybrid plan summaries use open spacing, without borders, shadows or contrasting card fills. This does not amend the current Flutter Home order.
+The owner requested a review using the additional sources, removal of the Hybrid plan edge and a project-grounded Plan page. See [the focused review and source comparison](PLAN_CONCEPT_REVIEW_2026_10_19.md). The browser now compares plan-first and conditions-first explicitly; returning users with an existing plan are shown the plan-first recommendation by default. The four Hybrid plan summaries use open spacing, without borders, shadows or contrasting card fills. This sentence described the experiment's scope at that date; the later final transfer adopted the current plan-first native composition (BASELINE).
 
 Open planner now navigates to `design/home-lab/plan.html`, a separate editable preview with selected context, target/rig, capture blocks, visible estimates, Details and persistent Save plan. Its dedicated localStorage sample can be saved/reopened and shown back on Home. Block Apply and plan Save remain distinct; unsaved changes, validation and failed-save/retry are demonstrated. All estimates use labelled fixture assumptions, not production astronomy or calibration-library calculations. [Current Plan/Home evidence](../../design/home-lab/evidence/PLAN_PREVIEW.md) records the changed inputs; earlier captures remain historical.
 

@@ -1,157 +1,17 @@
-# AstroPlan — AI Engineering Guidelines
+# Culmina — Claude Code adapter
 
-> Updated 2026-10-17: concise entry point; current status is in `docs/refinement/PROGRESS.md`. The prior file is preserved in `docs/archive/CLAUDE_2026-10-17_BEFORE_REASSESSMENT.md` as historical evidence only.
+Status: active client adapter, 2026-10-24. The shared repository contract is explicitly imported below. Read only its task routes; do not import all policy/history at startup.
 
-## Product and architecture
-
-- AstroPlan is a planning-first Flutter/Dart astrophotography organizer: construct a realistic Capture Plan, understand integration time, acquisition/session time, storage and fit within an imaging opportunity, then save and organize the result.
-- Owner AM-01 (2026-10-18): Capture Plan basic entry is simple frames → estimated time/storage/relative stacking gain → Save. Advanced fields/charts are reachable detail; preserve valid domain calculations and source/data safety. Normative project paths are repository-relative; visual references are in `docs/Examples/README.md`. Apply the accepted AM-01/AM-02/AM-03/AM-04 roadmap amendments; AM-04 makes Phone/DSLR exposure/count/ISO/WB and optional AF/MF basic, with astro-only advanced binning and explicit class-based sensitivity; UX32-01–05 and CRUX-01–04 are selected, with Home title choice AM03-T = B. Other review findings remain proposals until owner selection.
-- Weather, Moon, execution history, Logbook, export and backup support planning. Do not turn the app into a planetarium or telescope/camera controller.
-- Preserve useful scientific capabilities through clear hierarchy and progressive disclosure. An explicitly approved reassessment may propose removal or changed prominence; implementation still needs the resulting product decision.
-- Use Provider/ViewModels, go_router and Drift/SQLite. Keep presentation → ViewModels → repositories → data/services, with astronomy and capture calculations independent of Flutter.
-- Core planning, equipment, targets and records work offline; external services enrich the experience.
-- Unknown stays unknown. Use explicit units and established UTC/zone/DST/SessionNight abstractions. Never present √N stacking gain as absolute physical SNR or claim ISO increases photon collection. Distinguish theoretical payload from empirical file size.
-- No arbitrary universal scientific thresholds or black-box Astro Score. Preserve provenance, documented assumptions, user confirmation and data integrity.
-
-## Sources and instruction precedence
-
-1. Follow the owner's current explicit scope; an implementation prompt authorizes the complete named Task. Report conflicts with older decisions; do not silently invent approval for unrelated work.
-2. `docs/refinement/PROGRESS.md`: current work, blockers, evidence and next allowed action. Read the current summary and next action first, not its whole history.
-3. `docs/refinement/PRODUCT_DIRECTION.md`: accepted product direction; `docs/refinement/FINAL_COMPLETION_ROADMAP.md`: the approved execution queue (owner, 2026-10-18; F01–F26, G1–G4) with each Task's contract, dependencies and acceptance criteria; `docs/refinement/POST_ROADMAP_PLAN.md`: the RG/RD registers, workflow rules and the earlier Stage 12–17 clauses that the roadmap's S-ID aliases trace to; the named session prompt: Task boundaries and acceptance criteria.
-4. Code is evidence of actual behavior. ADRs and approved decisions define intended behavior. Record implementation deviations; never rewrite historical intent to match code.
-5. Relevant `.agents/rules/*.md` supplement this file. This file's scope/approval rules and canonical Verification Policy resolve conflicting older generic rules or skills. Do not assume `.agents/rules` or `.agents/skills` are automatically loaded by Claude Code: explicitly read only the relevant files.
-6. Auto-memory and old chat summaries are navigation hints, not current task authority. Verify remembered stages, test counts and next actions against PROGRESS and code; do not let stale memory restart a completed Stage.
-7. Historical roadmaps, audits and `docs/archive/` are evidence of their dated baseline, never the current task queue. The documentation map is `docs/README.md`; the takeover-era `PROJECT_HANDOFF.md` is archived in `docs/archive/master-roadmap/` as history; use refinement documents for current work.
-
-Read on demand:
-- `docs/ENGINEERING_GUARDRAILS.md`: required relevant traps before changing persistence, lifecycle, time, weather, metadata, UI, tests, privacy, signing or release. “CLAUDE.md trap N” in older documents resolves there, with numbering preserved.
-- `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/DECISIONS.md`: relevant architecture, schema and accepted ADR sections.
-- `docs/FEATURE_STATUS.md`, `docs/TECH_DEBT.md`, `docs/SCIENTIFIC_INTEGRITY.md`: relevant feature/finding/calculation IDs.
-- `docs/DESIGN_SYSTEM.md`: UI tokens, accessibility and interaction patterns; `docs/EXPORT_MANIFEST.md`: export contract, updated with SessionManifestCodec and versioned for incompatible changes.
-- `docs/design/WORKFLOW.md`: the five owner-requested Culmina design skills and the isolated Home browser lab; read the relevant skill for UI work. Browser candidates are proposals, not production acceptance.
-- `docs/archive/refinement-prompts/PRODUCT_REASSESSMENT.md`: the bounded reassessment's scope and review coverage (historical: RA.R1–RA.P completed 2026-10-17).
+@AGENTS.md
 
 ## Post-Roadmap Workflow Governance
 
-### Active scope and completion
+Scope and permissions: [AGENTS](AGENTS.md). Preflight, integration, handoff and build receipts: [AI_WORKFLOW](docs/AI_WORKFLOW.md). Current state and next allowed action: [PROGRESS](docs/refinement/PROGRESS.md). A fresh session must verify memory against these sources. A prior full-plan launch or delivery permission does not restart in a new bounded task.
 
-- Inspect and verify current code before modifying it or acting on an old finding.
-- Read the active prompt completely and resolve referenced files yourself. Read adjacent code only as needed; do not re-audit the repository for every Task.
-- Prefer the smallest complete change. Preserve existing patterns; no unrelated refactors, speculative abstractions, destructive commands, or reversal of user changes.
-- Approved implementation: READ → VERIFY → PLAN → IMPLEMENT → VERIFY → SELF-REVIEW → DOCS → COMMIT → STOP, subject to the owner's Git instructions. Multi-file or cross-layer work inside that scope needs no second approval.
-- A new unresolved product/scientific/architecture/provider decision or material scope expansion needs the appropriate decision gate. Ordinary implementation difficulty does not justify stopping.
-- Research, planning and validation do not authorize application changes. Record adjacent findings without opportunistic fixes. Reassessment may challenge past product choices without reopening unrelated passed criteria.
-- Do not start another Task/Stage automatically. A grouped run must explicitly name its authorized Tasks and stop conditions. Closing a Task and advancing the next-action record is not authorization to execute it.
-- Full-plan goal launch procedure: `docs/refinement/prompts/CLAUDE_FINAL_PLAN_GOAL_IMPLEMENTATION.md`. Only the owner's submission activates its finite F01–F26/G1–G4 group and Git permissions; a checked-in prompt is not a start. Within the launched group, checkpoint and continue eligible tasks, preserving local owner/resource gates and this Verification Policy.
-- Owner emulator/render clarification (2026-10-18): independently use and, where permitted, provision isolated Android emulators and actual-widget host renders during authorized implementation; find existing SDK tools beyond PATH. The absence of a physical phone alone must not block implementation. Label HOST/EMULATOR/physical evidence accurately and preserve specifically physical-device acceptance rows.
-- Each Task has one behavioral objective, dependencies, exclusions, acceptance criteria and a complete validation loop. Decompose incoherent large tasks; no line-count quotas.
-- Never remove or weaken tests to force a pass. Verification requirements are defined below, not duplicated in prompts or skills.
+## Verification Policy (canonical)
 
-### Research and context discipline
-
-- Research external facts that code cannot establish and that affect a decision. Use available WebSearch/WebFetch tools without requiring a separate request per query, within configured permissions; prefer primary sources, record URLs, access date, verified facts and unknowns.
-- Never claim browsing happened when tools were unavailable. Report the evidence gap; a Markdown instruction cannot enable tools or override managed permissions.
-- External APIs/datasets require evidence of reliability, terms/licence, provenance, privacy and failure behavior before adoption. Do not hardcode secrets or silently persist inferred metadata.
-- Read relevant skills only when needed; generic setup recipes do not authorize replacing working project architecture or dependencies.
-- Use a fresh session at completed Task boundaries and for independent validation where practical. Handoff only decisions, scope, changed files, acceptance evidence, unknowns and the next allowed action; do not require old chats.
-- Avoid unconditional imports of detailed guides/history: imports load their content too. Use topic references and selective reads.
-- Reuse existing research while its relevant facts remain current; refresh only facts that could change the decision. Do not use a full quality-gate run merely to investigate a documentation claim.
-
-### Documentation and Git
-
-- **Language (owner, 2026-10-17; revised 2026-10-17):**
-  - English is preferred for new and substantially revised persistent project documentation: research reports, roadmaps and plans, ADRs and decisions, progress records, decision sheets, task prompts, technical findings and registers. A preference, not an absolute rule: the user's explicit instruction takes precedence.
-  - Conversational replies follow the ongoing conversation and the user's latest request; no language is the default for every chat. An English document or quoted prompt alone does not change the conversation language.
-  - User quotations and historical source material (reviews, quotes) stay in their original language, with an English explanation only where needed for understanding. Existing documents are not bulk-translated.
-  - This policy does not change the application's UI language or reopen the deferred localisation scope.
-- Update only documents whose statements the change invalidates; record stable finding/decision IDs without renumbering. Keep intent separate from actual state and preserve superseded history.
-- A code change may require FEATURE_STATUS/TECH_DEBT, architecture/data-model actual-state sections, scientific assumptions or ADRs; update the relevant ones in the same change, not every register indiscriminately.
-- Keep CLAUDE.md and docs tracked. Record resolved findings with date and available commit evidence, never fabricate a future hash.
-- Keep commits coherent. Never reset --hard, force push, delete unknown user files, or access signing secrets without the required explicit owner authorization. Push/publication requires explicit authorization; read current restrictions from PROGRESS.
-- Signing keys/passwords are owner-managed: never create, read, print, commit or request them. Do not commit private real metadata samples or their values.
-- Update privacy/compliance documents when adding data leaving the device. New providers, monetization, hardware control, cloud/auth/social features, scraping, or deferred sky-map/mosaic scope need explicit approved scope.
-- State test/build/device/CI results accurately, identifying reused evidence and unverified surfaces. Historical test counts are not permanent acceptance criteria.
-
-### Verification Policy (canonical)
-
-This section is the **only** statement of what verification a change needs, when evidence may be reused, what a review may block on, and when work stops. Every other file (`.agents/rules/03-testing.md`, `POST_ROADMAP_PLAN.md` §9, `PROGRESS.md`, the prompts in `docs/refinement/prompts/`) refers here instead of restating it; where any of them differs, this section wins. Generic skills under `.agents/skills/` describe how to run a tool, not when this repository requires it. (Owner, 2026-09-27, the governance correction after Stages 1–4.)
-
-**Principle:** verification is proportional to what changed and to what evidence the change could have invalidated. Rigor is kept where the risk is; repetition that cannot change the answer is removed.
-
-**V1 — Required verification by change class.** Classify by the files actually changed; the highest class present wins.
-
-| Change class | Required verification |
-| --- | --- |
-| **Documentation / governance only**: only Markdown (`.md`) files under `docs/` or `.agents/`, the probe `.patch` files under `docs/`, `CLAUDE.md` or `README.md`. Any other file, of any type or location, is not in this class (the analyzer reads every `.dart` file in the package, the `.agents/skills` examples included) | References and IDs resolve; the changed text is consistent with the documents it cites; `git diff --check` (whitespace). No application test, analyzer or gate run. |
-| **Localized code change** (one feature area, no shared contract) | Targeted tests for the changed behaviour (new or updated), the tests of the touched files' area, `flutter analyze --no-pub`, `dart format` on the changed files, and `dart run tool/check_encoding.dart`. |
-| **Shared behaviour** (a ViewModel, shared widget, theme, router, repository interface, or anything several screens use) | The localized checks above plus meaningful regressions for every affected caller/area. Select by changed behavior and dependencies, not the whole repository by default. Broaden only when the affected set cannot be bounded; record why. |
-| **High-risk surface**: schema/migrations, persistence and data integrity, scientific calculations, time/night semantics (UTC, zones, DST, SessionNight), metadata parsing and provenance, backup/export formats, dependencies/lockfiles, build or test tooling (`tool/`, `analysis_options.yaml`, `build.yaml`, CI steps or the CI Flutter version) | Targeted tests for the changed contract and affected dependents, plus all named domain probes (migration/production-open and recovery fixtures, real-sample metadata checks, science/time reference vectors, snapshot/export round trips as applicable), analysis, changed-file format and encoding. High risk does not automatically require the full suite per Task. For dependency/tooling changes check the actual affected build/test paths; CI trigger-only changes need syntax/path selection checks. Broaden with a concrete impact reason if the affected set cannot be bounded. |
-| **Correction after a review** | See V5: the original finding(s), the criteria the correction touches, and the correction's own regression surface, at the class of the files it changes. |
-| **Task completion** (any code) | Apply the class above to the cumulative diff after the last relevant code change and check every acceptance criterion. A targeted passing set can close the Task's local verification; do not wait for all unrelated tests or asynchronous remote CI at every Task boundary. A genuinely unavailable mandatory check remains pending/NEEDS ATTENTION, never PASS. |
-| **Stage / release gate** | The frozen current gate checks, with V3 reuse. Consolidate the full quality gate and actual green remote CI at G1 and on F26 final changed release inputs; equivalent already passing evidence is reusable when its inputs are unchanged. No extra full-suite run solely for a Stage label, Task commit or Markdown update. |
-
-**Owner AM-05 (2026-10-18):** select the tests needed by the changed Task and its real dependency impact; do not automatically run or wait for every test after every Task. G1 and F26 retain the consolidated final full-gate/remote-CI requirements. Automatic CI may run in the background while independent work continues; queued/running/cancelled is not green, and an observed real failure must be triaged. This supersedes older blanket per-high-risk-Task/full-gate wording in historical S-clauses and prompts, without removing meaningful regressions or domain probes.
-
-**V2 — A broader check satisfies a narrower one.** The full gate contains the encoding check, format, `flutter analyze`, all unit/widget tests and the host E2E suite. After it passes on the final inputs, do not rerun any of those separately. Targeted tests during development are for fast feedback; they are not required again after a passing broader run on unchanged inputs.
-
-**V3 — Evidence reuse.** Passing evidence stays valid while the inputs relevant to it are unchanged. The inputs of the full gate are: application code (`lib/`, `assets/`, `android/`, `ios/`, other platform folders), test code (`test/`, `integration_test/`), dependencies (`pubspec.yaml`, `pubspec.lock`), and tooling (`tool/`, `analysis_options.yaml`, `build.yaml`, the Flutter version in `.github/workflows/ci.yml`); for an environment-dependent result (device, platform, real samples), also that environment.
-- A new commit hash, a new chat or session, a changed review document or a changed `PROGRESS.md` does **not** invalidate evidence.
-- Do not rerun a check to obtain a newer timestamp or hash. Rerun it only when (a) a relevant input changed, (b) the previous run is known to be invalid or incomplete, or (c) the acceptance gate being judged explicitly requires a fresh run.
-- To reuse, record one line: the result, the commit or state it ran on, and why nothing since invalidates it (for example: `git diff --stat <commit> HEAD -- . ':!docs' ':!CLAUDE.md'` is empty).
-
-**V4 — The acceptance surface is frozen before a review starts.** A Task review, Stage validation or sign-off judges only: the approved Task or Stage acceptance criteria; the approved owner decisions; the explicit invariants (the relevant traps in `docs/ENGINEERING_GUARDRAILS.md`, ADRs); and the verification this policy requires. A finding is a **BLOCKER** only if it shows:
-- A. evidence that one of those criteria, decisions or invariants is not met;
-- B. a regression caused by the work under review; or
-- C. a severe correctness, data-loss, data-integrity, privacy or safety defect exposed by the work (state the concrete failure, not a hypothetical).
-
-Everything else — a hypothetical edge case, an alternative design, an unspecified implementation detail, a preference, a newly invented policy — is recorded as `FOLLOW-UP`, `DEFERRED / IMPLEMENTATION DECISION` or `OWNER DECISION` (or in `TECH_DEBT.md` / `SCIENTIFIC_INTEGRITY.md`), and does not block. A review never adds acceptance criteria to the work it is judging, and never presents an inferred rule as an owner decision.
-
-**V5 — Revalidation after a correction.** After a corrective Task fixes a blocker, the next validation checks only:
-1. the original blocking finding(s);
-2. the acceptance criteria the correction touches;
-3. regressions plausibly caused by the correction (its own diff, at its V1 class).
-
-It does not restart open exploration of the Stage; everything else keeps its PASS. A complete Stage revalidation is chosen only when the correction changes the Stage's approved design or acceptance contract, or touches enough of the implementation that the earlier evidence is invalid under V3. Whoever chooses it records why in one line.
-
-**V6 — When a PASS may reopen.** Only on (a) new contradictory evidence (a failing test, a reproduced defect, a quoted contradiction), (b) a change to a relevant input under V3, or (c) an approved change to the criterion. A new session is not evidence; a different validator's reading of the same evidence is not by itself evidence.
-
-**V7 — Stop and converge.**
-- Inside an authorized finite run, an item genuinely impossible now is recorded as **NEEDS ATTENTION / Варто звернути увагу** in PROGRESS with F/G/CHK ID, implemented versus missing behavior/evidence, concrete reason/attempt, affected dependencies and condition for resumption. Continue the next safely executable independent item; do not wait, repeat futile attempts or self-approve missing evidence. Dependent items stay pending with their prerequisite named. Preserve blocker severity and data/science invariants; a label does not waive a requirement.
-- A run ends when all named items have an honest disposition and no safe eligible work remains. Report **COMPLETE** only if every mandatory acceptance/release condition passed; otherwise report **PARTIAL_WITH_ATTENTION**, with the full done/not-done register and next actions. A finished finite pass is not a claim that the product is complete. Isolate incomplete changes that would break the shared baseline before continuing; preserve their work without resetting user files.
-- When every frozen criterion passes and no V4 blocker remains, the Task or Stage **closes**: record it and advance the Next Allowed Action. Do not validate the validation.
-- If two consecutive validations of the same Task or Stage fail on interpretation or scope (findings that restate or reinterpret criteria already judged, rather than new contradictory evidence under V6), stop automatic revalidation of that item. Record the disagreement as NEEDS ATTENTION with the exact owner question, continue independent authorized work, and include it in the final report. (Stages 1–4 each needed the owner after two failed validations.)
-- Validation-only sessions never fix what they find; surviving blockers become focused corrective Tasks.
-
-**V8 — Fresh sessions.** Stage validation runs in a fresh session where practical, for independent reasoning. A fresh session reconstructs state from `PROGRESS.md` (its Next Allowed Action and reusable evidence), the frozen criteria and the sources they reference. It does not rerun tests whose inputs are unchanged (V3), reread historical audits or validation reports beyond those referenced, reopen passed criteria (V6), or reconstruct project history.
-
-**Analysis-and-decision Stages** (research, owner decisions, ADRs and provisional Tasks; no
-application code) are validated against a **bounded scope** — the V4 surface for such a Stage. The validation checks only:
-- that the Stage's research Tasks were completed;
-- that every required research gate has an explicit owner decision;
-- that the ADR or specification faithfully records those decisions;
-- that companion documents (wireframes, addenda) are consistent with it;
-- that the decisions are mapped to later implementation Stages;
-- that no direct contradiction makes an approved core flow impossible;
-- that no Stage acceptance criterion is unmet.
-
-A finding is blocking only when it demonstrates a direct contradiction with an approved owner
-decision or an explicit Stage acceptance criterion. These are recorded as `DEFERRED /
-IMPLEMENTATION DECISION`, not as blockers:
-- an unspecified implementation detail;
-- a hypothetical edge case;
-- an alternative design;
-- a policy that can safely be decided in the implementing Stage.
-
-Neither a validation nor its corrective Task creates new product requirements, or presents inferred
-rules as owner decisions. If the bounded validation passes, the Stage closes. If it fails, the
-report names only the exact approved decision or acceptance criterion that is contradicted, with
-evidence, and the Stage's scope is not expanded. (Owner, 2026-09-27; DECISIONS E.1, "Bounded
-validation for analysis and decision Stages".)
-
+The sole normative policy is [docs/VERIFICATION_POLICY.md](docs/VERIFICATION_POLICY.md), preserving V1–V8. This heading remains as a compatibility route for historical citations, not a second policy. Numbered “CLAUDE.md trap N” references resolve to [ENGINEERING_GUARDRAILS](docs/ENGINEERING_GUARDRAILS.md).
 
 ## Commands and operational state
 
-- Full gate when V1 requires it: `dart run tool/check.dart` (encoding, format, package analysis, unit/widget tests and per-file host E2E).
-- Documentation-only: reference/ID consistency and `git diff --check`; no application gate.
-- Use the toolchain recorded in PROGRESS; the machine default may be too old. Prefer `--no-pub` where the documented procedure permits it; release-build exception is in the engineering guide and RELEASE.md.
-- CI configuration is in `.github/workflows/ci.yml`; verify actual remote runs before asserting success. Do not infer CI state from a historical “not pushed” note.
+Read the relevant V1 class before running checks. Documentation-only work needs reference/ID consistency and `git diff --check`; no application gate. Commands and environment belong to their task-specific sources, not machine assumptions in this adapter. Inspect `/memory` in a fresh Claude session to verify this file and AGENTS loading. Scoped `.claude/rules` supplement applicable tasks; `.agents/rules` and skills are read selectively. Never run `/init` to create competing rules.
