@@ -10,10 +10,15 @@ class BackupViewModel extends ChangeNotifier {
 
   final BackupService _service;
   bool _busy = false;
+  bool _picking = false;
   bool _restoring = false;
   RestoreOutcome? _outcome;
 
   bool get busy => _busy || _restoring;
+
+  /// A file is being picked and checked (TD-113): the picker copies the
+  /// whole file first, which can take seconds for a large one.
+  bool get picking => _picking;
 
   /// A confirmed restore is being applied; nothing can be changed now.
   bool get restoring => _restoring;
@@ -46,11 +51,13 @@ class BackupViewModel extends ChangeNotifier {
   /// [BackupException] for a file that cannot be restored.
   Future<({BackupPreview preview, Object file})?> pick() async {
     _busy = true;
+    _picking = true;
     notifyListeners();
     try {
       return await _service.pick();
     } finally {
       _busy = false;
+      _picking = false;
       notifyListeners();
     }
   }

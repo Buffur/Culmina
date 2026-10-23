@@ -104,16 +104,23 @@ class BackupSection extends StatelessWidget {
     return choice ?? _RestoreChoice.cancel;
   }
 
+  static void _showRefusal(BuildContext context, String text) =>
+      ScaffoldMessenger.maybeOf(context)
+        ?..hideCurrentMessage()
+        ..showMessage(SnackBar(content: Text(text), persist: true));
+
   Future<void> _restore(BuildContext context, BackupViewModel vm) async {
     final ({BackupPreview preview, Object file})? picked;
     try {
       picked = await vm.pick();
     } on BackupException catch (e) {
-      if (context.mounted) showFailure(context, refusedText(e.problem));
+      // TD-113: a refused file is an outcome to read, not a passing notice;
+      // it stays until dismissed.
+      if (context.mounted) _showRefusal(context, refusedText(e.problem));
       return;
     } catch (e) {
       if (context.mounted) {
-        showFailure(context, FailureText.message('open the backup', e));
+        _showRefusal(context, FailureText.message('open the backup', e));
       }
       return;
     }
@@ -192,6 +199,14 @@ class BackupSection extends StatelessWidget {
           label: 'Restore from a backup',
           onPressed: vm.busy ? null : () => _restore(context, vm),
         ),
+        // TD-113: the picked file is copied and checked before anything is
+        // shown; say so meanwhile.
+        if (vm.picking)
+          const SettingsHint(
+            'Checking the file…',
+            key: Key('backup.checking'),
+            top: AppSpacing.sm,
+          ),
       ],
     );
   }

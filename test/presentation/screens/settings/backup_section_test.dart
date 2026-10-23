@@ -4,6 +4,8 @@
 // only after success; a refusal says the current data is unchanged; the
 // next app instance reports the outcome once.
 
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
@@ -32,6 +34,9 @@ class _FakeBackup implements BackupService {
   Object? restored;
   BackupProblem? refuse;
   bool cancelPick = false;
+
+  /// When set, a pick waits for it (a large file being copied and checked).
+  Completer<void>? pickGate;
   bool failBackup = false;
   bool dismissShare = false;
   bool failRestore = false;
@@ -48,6 +53,7 @@ class _FakeBackup implements BackupService {
 
   @override
   Future<({BackupPreview preview, Object file})?> pick() async {
+    if (pickGate case final gate?) await gate.future;
     if (refuse != null) throw BackupException(refuse!);
     if (cancelPick) return null;
     return (
@@ -251,6 +257,33 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('Your current data is unchanged'), findsOne);
     expect(find.byKey(const Key('backup.restore')), findsOneWidget);
+  });
+
+  // TD-113: a large picked file is copied and checked first; the section
+  // says so, and the refusal stays until dismissed instead of expiring.
+  testWidgets('a pick being checked says so; a refusal stays until '
+      'dismissed', (tester) async {
+    await pump(tester);
+    backup
+      ..refuse = BackupProblem.notABackup
+      ..pickGate = Completer<void>();
+    await tester.tap(find.byKey(const Key('backup.restore')));
+    await tester.pump();
+    expect(find.byKey(const Key('backup.checking')), findsOneWidget);
+    backup.pickGate!.complete();
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('backup.checking')), findsNothing);
+    expect(find.textContaining('not a Culmina backup'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 30));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('not a Culmina backup'),
+      findsOneWidget,
+      reason: 'no expiry: an outcome to read',
+    );
+    await tester.tap(find.byKey(const Key('appMessage.dismiss')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('not a Culmina backup'), findsNothing);
   });
 
   for (final (problem, reason) in [

@@ -114,7 +114,7 @@ or recorded; "Android" = the same frame captured on the emulator and opened.
 | HT-S04 | Privacy | same | host PASS; Android PASS | `place_name_switch_persistence_test` | `set-privacy.png` |
 | HT-S05 | Backup & data | `backup_section.dart` | host PASS; Android PASS; native adaptation (format) | `backup_section_test` | `set-backup.png` |
 | HT-S06 | About | `about_screen.dart` | host PASS; Android PASS; HT-DEV-14 | `about_screen_test` | `set-about.png` |
-| HT-X01 | Native-only: GPS/permissions, file import, export/share, backup files, metadata import, map picker | existing screens | native adaptation | release APK on `emulator-5554`: the Android location permission dialog, the share sheet with the backup file, the DocumentsUI picker and the refusal of a non-backup file PASS; a position request without a fix now ends with an explained failure (TD-112, fixed in this checkpoint); one existing behaviour stays a follow-up: TD-113 (Restore is silent after a 37 MB non-backup file; data unchanged) | `release-smoke/system-*.png`, `restore-refused-small-file.png`, `td112-position-failure-explained.png` |
+| HT-X01 | Native-only: GPS/permissions, file import, export/share, backup files, metadata import, map picker | existing screens | native adaptation | release APK on `emulator-5554`: the Android location permission dialog, the share sheet with the backup file, the DocumentsUI picker and the refusal of non-backup files (13 B and 37 MB) PASS; two gaps found there were fixed and re-checked on the final APK: TD-112 (a position request without a fix now ends with an explained failure; the Sites button shows it is running) and TD-113 ("Checking the file…" while a pick runs; a refusal stays until dismissed) | `release-smoke/system-*.png`, `td112-position-failure-2792fbe2.png`, `td113-refusal-stays-2792fbe2.png` |
 | HT-X02 | Release APK from `lib/main.dart`, smoke on the emulator | Android build | N/A | RELEASE | see "Release APK" |
 
 Excluded (contract §3): studio shell, concept/palette/gain-variant selectors, font gallery, phone frame, fake
@@ -190,8 +190,8 @@ its web reference with reviewed host pairs (`pairs-checkpoint3/`, web captures i
 
 Verification (risk-based, §6):
 
-- Unit/widget suite on the final code (the inputs of the release APK): `flutter test --no-pub` — **2441 passed,
-  6 skipped, 0 failed** (2026-10-23, after the TD-112 fix and its regression test). Earlier full runs on the way found the stale assertions that were updated to
+- Unit/widget suite on the final code (the inputs of the release APK): `flutter test --no-pub` — **2442 passed,
+  6 skipped, 0 failed** (2026-10-23, after the TD-112/TD-113 fixes and their regression tests). Earlier full runs on the way found the stale assertions that were updated to
   the reference (never weakened).
 - Host E2E (`tool/check.dart`'s per-file flutter-tester runs): `core_loop_test` (site → plan → save → process kill →
   reboot on the same SQLite **file** → result → Logbook → export) PASS; `perf_scenarios_test` PASS;
@@ -215,13 +215,13 @@ Release APK (contract §7):
 
 | Item | Value |
 | --- | --- |
-| Source | `develop` at `01b8049` plus the uncommitted checkpoint-3 working tree (no commit in this run); fingerprints at build time: `git diff HEAD | sha256sum` → `6515fd878233a28b…`, untracked `lib`/`test`/`integration_test` contents → `9bb7f181274f4952…`; rebuilt after the owner decisions (only a Dart doc comment had changed): byte-identical, `f763ebd7…1c98` again; then rebuilt once more with the TD-112 fix (`lib/data/services/geolocator_location_service.dart`, `lib/presentation/screens/sites/sites_screen.dart`) → `a2d9465a…`, the final artifact |
+| Source | `develop` at `01b8049` plus the uncommitted checkpoint-3 working tree (no commit in this run); fingerprints at build time: `git diff HEAD | sha256sum` → `6515fd878233a28b…`, untracked `lib`/`test`/`integration_test` contents → `9bb7f181274f4952…`; rebuilt after the owner decisions (only a Dart doc comment had changed): byte-identical, `f763ebd7…1c98` again; then rebuilt with the TD-112 fix (`a2d9465a…`) and with the TD-113 fix (`backup_section.dart`, `backup_viewmodel.dart`) → `2792fbe2…`, the final artifact, built from the committed source |
 | Command | `flutter build apk --release` (documented release path: without `--no-pub`, see ENGINEERING_GUARDRAILS), with the `GRADLE_OPTS` above; `pubspec.yaml`/`pubspec.lock` unchanged |
 | Entry point | normal `lib/main.dart`, no fixtures |
-| Artifact | `build/app/outputs/flutter-apk/app-release.apk`. First build: SHA-256 `f763ebd78fa620963580a7494671fb99345b20a27144234a63da3e84f1671c98` (74 958 274 bytes). **Final build** (after the TD-112 fix): SHA-256 `a2d9465a80248305ad39a83fa060968a9181221a9b5ea811c9af23980541a919` |
+| Artifact | `build/app/outputs/flutter-apk/app-release.apk`. First build: SHA-256 `f763ebd78fa620963580a7494671fb99345b20a27144234a63da3e84f1671c98` (74 958 274 bytes). Second build (TD-112 fix): `a2d9465a80248305ad39a83fa060968a9181221a9b5ea811c9af23980541a919`. **Final build** (TD-112 and TD-113 fixes, the committed source): SHA-256 `2792fbe2819d4a4615d34426605b43f4908976ba21d0b419e01e52099dafbb39` |
 | Package | `io.github.buffur.culmina`, versionName 1.0.0, versionCode 1, minSdk 24, targetSdk 36; ABIs arm64-v8a, armeabi-v7a, x86_64 |
 | Signing | v2, certificate `CN=Android Debug, O=Android, C=US` (SHA-256 `bc16984f…090c7d`): no `android/key.properties`, so the build uses the debug key — **перевірочний, не магазинний** |
-| Final artifact smoke | `a2d9465a…`, clean install, installed `base.apk` hash equal: first run → Tonight → Set site → Use current position (permission dialog; declined accuracy → explained failure in about 3 s) → Add site → Save site → `am force-stop` → relaunch: "Smoke site", computed night, plan kept (`release-smoke/smoke-a2d9465a-after-restart.png`); Restore picker with the 37 MB file still silent (TD-113) |
+| Final artifact smoke | `2792fbe2…`, clean install, installed `base.apk` hash equal: first run → Settings → Backup & data → Restore → DocumentsUI → the 37 MB file is refused and the message stays (~28 s and after navigating, until Dismiss) → Tonight → Set site → Use current position (permission dialog; declined accuracy → "Couldn't get your position. Please try again.") → Add site → Save site → `am force-stop` → relaunch: "Smoke site", computed night, plan kept (`release-smoke/smoke-2792fbe2-after-restart.png`). The earlier `a2d9465a…` build passed the same restart smoke |
 | System dialogs | The first artifact (`f763ebd7…`), clean install: Choose a site → Use current position → Android location permission dialog; Backup & data → Back up now → Android share sheet with `astroplan-backup-…astroplan` (dismissed, nothing shared); Restore from a backup → DocumentsUI picker → a 13-byte text file is refused with the data unchanged. Follow-ups TD-112, TD-113 (existing behaviour) |
 | Smoke | Installed on `emulator-5554` only; the installed `base.apk` SHA-256 equals the artifact's. Fresh first run → Welcome → Start planning → Tonight (no-site state message) → Set site → Add site → Save site ("Used for planning", IME kept the save bar visible) → `am force-stop` → relaunch: Tonight with "Smoke site", the computed night and the plan section; first-run state kept. Screenshots: `release-smoke/smoke1…8.png` |
 
@@ -233,6 +233,6 @@ Result of this run: **COMPLETE** (§9) — every mandatory registry item is PASS
 adaptation or an owner-accepted deviation; functions are wired and tested, the host E2E passes, and the regular
 release APK passed its smoke as the exact installed artifact. Limits of this result (§9 last paragraph): host and
 emulator evidence only — no phone, performance, 125/200 % text or store acceptance. Native system dialogs (location permission, file picker, share sheet) were exercised with the
-release APK on the emulator (HT-X01). TD-112 (a silent position request) was fixed and re-checked on the final
-APK; TD-113 (Restore silent after a 37 MB non-backup file, data unchanged) is an existing behaviour in code this
-transfer did not change and stays a follow-up (V4: not a criterion, regression or data-integrity defect). Committed locally on `develop` at the owner's request; not pushed.
+release APK on the emulator (HT-X01). The two gaps found there — a silent position request (TD-112) and a restore
+refusal that expired before a user could read it (TD-113) — were fixed and re-checked on the final APK; no open
+follow-up remains from this transfer. Committed locally on `develop` at the owner's request; not pushed.
