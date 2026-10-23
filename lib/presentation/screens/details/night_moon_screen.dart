@@ -123,9 +123,11 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                 horizontal: AppSpacing.sm + AppSpacing.xs,
               ),
             ),
+            labelColor: p.textPrimary,
+            unselectedLabelColor: p.textSecondary,
             labelStyle: text.bodySmall?.copyWith(
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
             unselectedLabelStyle: text.bodySmall?.copyWith(fontSize: 14),
             onTap: (value) => setState(() => page = value),

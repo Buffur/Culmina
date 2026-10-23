@@ -367,6 +367,7 @@ class AppTheme {
     // black text (5.25:1), replacing the D-06 red outline; hover underlines
     // instead of darkening. Pressed: every Hybrid button takes the selection
     // fill with primary text (`button:active`). Disabled: opacity .55.
+    // The label is `.primary-button`'s 16/600 (QA-04).
     final field = identical(hybrid, HybridTokens.field);
     Color disabled(Color c) => c.withValues(alpha: c.a * 0.55);
     return t.copyWith(
@@ -376,7 +377,7 @@ class AppTheme {
           shape: shape,
           textStyle: WidgetStateProperty.resolveWith(
             (states) => text.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               height: 1.5,
               decoration: field && states.contains(WidgetState.hovered)
                   ? TextDecoration.underline

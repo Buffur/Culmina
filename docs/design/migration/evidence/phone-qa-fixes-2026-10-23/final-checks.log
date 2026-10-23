@@ -1,0 +1,7 @@
+Formatted 8 files (0 changed) in 0.19 seconds.
+Encoding check passed: no mojibake found.
+Running build hooks...Running build hooks...
+
+git diff --check: PASS (exit 0).
+Generated platform registrants: content-identical with --ignore-cr-at-eol.
+All changed Dart and Markdown files: strict UTF-8 decode PASS.

@@ -49,7 +49,9 @@ Future<UnsavedChoice> askUnsavedChanges(
             : '"$plan" has changes that are not saved.',
       ),
       // plan.html `#leave-plan`: Cancel and Discard outlined, the save
-      // filled, wrapping from the end.
+      // filled, in one row that wraps from the end, 8 apart
+      // (`.leave-actions`): at a phone's width the save goes below (QA-05;
+      // the dialog's own overflow bar stacked all three).
       actions: library
           ? [
               _WideActions(
@@ -65,7 +67,21 @@ Future<UnsavedChoice> askUnsavedChanges(
                 ],
               ),
             ]
-          : [cancel(context), discard(context), save(context, saveLabel)],
+          : [
+              SizedBox(
+                width: double.infinity,
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: [
+                    cancel(context),
+                    discard(context),
+                    save(context, saveLabel),
+                  ],
+                ),
+              ),
+            ],
     ),
   );
   return choice ?? UnsavedChoice.cancel;

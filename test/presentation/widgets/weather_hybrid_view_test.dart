@@ -8,6 +8,9 @@ import 'dart:async';
 
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:astroplan/core/theme/app_palette.dart';
+import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -116,7 +119,7 @@ void main() {
     weather = _Weather(clock);
   });
 
-  Future<void> pump(WidgetTester tester) async {
+  Future<void> pump(WidgetTester tester, {ThemeData? theme}) async {
     tester.view.physicalSize = const Size(800, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -156,6 +159,7 @@ void main() {
       MultiProvider(
         providers: vm.providers,
         child: MaterialApp(
+          theme: theme,
           home: Scaffold(
             body: SingleChildScrollView(child: HybridWeatherView()),
           ),
@@ -311,6 +315,70 @@ void main() {
     await tester.pump();
     expect(find.text('27.5 °F · dew point 48.2 °F'), findsOneWidget);
   });
+
+  for (final entry in [
+    (
+      'light',
+      AppTheme.light,
+      const Color(0xFFC2E5FF),
+      const Color(0xFF113264),
+      const Color(0xFF0D74CE),
+    ),
+    (
+      'dark',
+      AppTheme.dark,
+      const Color(0xFF004074),
+      const Color(0xFFC2E6FF),
+      const Color(0xFF70B8FF),
+    ),
+    (
+      'field',
+      AppTheme.fieldTheme,
+      const Color(0xFF330000),
+      const Color(0xFFFF0000),
+      const Color(0xFFFF0000),
+    ),
+  ]) {
+    testWidgets('P-6: selected chart hour matches reference in ${entry.$1}', (
+      tester,
+    ) async {
+      await pump(tester, theme: entry.$2);
+      await tester.runAsync(
+        () => vm.vms.displaySettings.setWeatherView(WeatherView.charts),
+      );
+      await tester.pump();
+      Container cell(int index) => tester.widget<Container>(
+        find.descendant(
+          of: find.byKey(Key('weather.hour.$index')),
+          matching: find.byType(Container),
+        ),
+      );
+      void expectSelected(int index) {
+        final container = cell(index);
+        final decoration = container.decoration! as BoxDecoration;
+        final text = container.child! as Text;
+        expect(decoration.color, entry.$3);
+        expect(text.style!.color, entry.$4);
+        expect((decoration.border! as Border).bottom.color, entry.$5);
+        expect((decoration.border! as Border).bottom.width, 2);
+      }
+
+      expectSelected(0);
+      await tester.ensureVisible(find.byKey(const Key('weather.hour.2')));
+      await tester.tap(find.byKey(const Key('weather.hour.2')));
+      await tester.pump();
+      expectSelected(2);
+      final previous = cell(0);
+      expect(
+        (previous.decoration! as BoxDecoration).color,
+        HybridTokens.transparent,
+      );
+      expect(
+        (previous.child! as Text).style!.color,
+        entry.$2.extension<AppPalette>()!.textSecondary,
+      );
+    });
+  }
 
   // HT-W04: the presentation preference shows the same data as charts.
   testWidgets('B · Hourly charts: the same hours, one selectable at a time', (

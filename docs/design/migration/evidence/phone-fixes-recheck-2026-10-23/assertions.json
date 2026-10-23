@@ -1,0 +1,325 @@
+{
+  "night-light": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        55,
+        53,
+        47
+      ],
+      "exact_pixels": 1477
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        90,
+        89,
+        85
+      ],
+      "exact_pixels": 903
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        90,
+        89,
+        85
+      ],
+      "exact_pixels": 1354
+    }
+  ],
+  "moon-light": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        90,
+        89,
+        85
+      ],
+      "exact_pixels": 936
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        55,
+        53,
+        47
+      ],
+      "exact_pixels": 1384
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        90,
+        89,
+        85
+      ],
+      "exact_pixels": 1354
+    }
+  ],
+  "weather-light-chart": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        90,
+        89,
+        85
+      ],
+      "exact_pixels": 936
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        90,
+        89,
+        85
+      ],
+      "exact_pixels": 903
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        55,
+        53,
+        47
+      ],
+      "exact_pixels": 2009
+    }
+  ],
+  "night-dark": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        235,
+        235,
+        234
+      ],
+      "exact_pixels": 1477
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        165,
+        165,
+        163
+      ],
+      "exact_pixels": 903
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        165,
+        165,
+        163
+      ],
+      "exact_pixels": 1354
+    }
+  ],
+  "moon-dark": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        165,
+        165,
+        163
+      ],
+      "exact_pixels": 936
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        235,
+        235,
+        234
+      ],
+      "exact_pixels": 1384
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        165,
+        165,
+        163
+      ],
+      "exact_pixels": 1354
+    }
+  ],
+  "weather-dark-selected": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        165,
+        165,
+        163
+      ],
+      "exact_pixels": 936
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        165,
+        165,
+        163
+      ],
+      "exact_pixels": 903
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        235,
+        235,
+        234
+      ],
+      "exact_pixels": 2009
+    }
+  ],
+  "night-field": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "exact_pixels": 1477
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        170,
+        0,
+        0
+      ],
+      "exact_pixels": 903
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        170,
+        0,
+        0
+      ],
+      "exact_pixels": 1354
+    }
+  ],
+  "moon-field": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        170,
+        0,
+        0
+      ],
+      "exact_pixels": 936
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "exact_pixels": 1384
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        170,
+        0,
+        0
+      ],
+      "exact_pixels": 1354
+    }
+  ],
+  "weather-field-selected": [
+    {
+      "tab": 0,
+      "expected_rgb": [
+        170,
+        0,
+        0
+      ],
+      "exact_pixels": 936
+    },
+    {
+      "tab": 1,
+      "expected_rgb": [
+        170,
+        0,
+        0
+      ],
+      "exact_pixels": 903
+    },
+    {
+      "tab": 2,
+      "expected_rgb": [
+        255,
+        0,
+        0
+      ],
+      "exact_pixels": 2009
+    }
+  ],
+  "dialog-light": {
+    "Cancel": [
+      532,
+      1433,
+      784,
+      1589
+    ],
+    "Discard": [
+      810,
+      1433,
+      1077,
+      1589
+    ],
+    "Save and leave": [
+      598,
+      1615,
+      1077,
+      1771
+    ]
+  },
+  "dialog-dark": {
+    "Cancel": [
+      532,
+      1433,
+      784,
+      1589
+    ],
+    "Discard": [
+      810,
+      1433,
+      1077,
+      1589
+    ],
+    "Save and leave": [
+      598,
+      1615,
+      1077,
+      1771
+    ]
+  },
+  "dialog-field": {
+    "Cancel": [
+      532,
+      1433,
+      784,
+      1589
+    ],
+    "Discard": [
+      810,
+      1433,
+      1077,
+      1589
+    ],
+    "Save and leave": [
+      598,
+      1615,
+      1077,
+      1771
+    ]
+  },
+  "save-status-light": "PASS",
+  "save-status-dark": "PASS"
+}

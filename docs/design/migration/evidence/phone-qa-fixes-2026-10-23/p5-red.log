@@ -1,0 +1,34 @@
+00:00 +0: loading C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart
+00:00 +0: P-5: exact-time values reach the row edge at 1.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a numeric value within <0.01> of <355.0>
+  Actual: <338.5719757080078>
+   Which:  differs by <16.428024291992188>
+Value 15 Dec, 12:01 PM GMT+1
+to 15 Dec, 4:16 PM GMT+1 must end at the content edge
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart:231:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart line 231
+The test description was:
+  P-5: exact-time values reach the row edge at 1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -1: P-5: exact-time values reach the row edge at 1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: P-5: exact-time values reach the row edge at 1.0
+
+00:04 +0 -1: P-5: exact-time values reach the row edge at 2.0
+00:06 +1 -1: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart: P-5: exact-time values reach the row edge at 1.0

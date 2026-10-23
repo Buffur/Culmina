@@ -38,6 +38,7 @@ class SessionPlanViewModel extends ChangeNotifier {
        _current = currentSession {
     _site.addListener(_onSiteChanged);
     _current?.onWriteFailureChanged = notifyListeners;
+    _current?.onSessionChanged = notifyListeners;
   }
 
   final SiteViewModel _site;
@@ -293,6 +294,7 @@ class SessionPlanViewModel extends ChangeNotifier {
   void dispose() {
     _site.removeListener(_onSiteChanged);
     _current?.onWriteFailureChanged = null;
+    _current?.onSessionChanged = null;
     super.dispose();
   }
 }

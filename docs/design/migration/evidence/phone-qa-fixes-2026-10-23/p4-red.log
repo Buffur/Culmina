@@ -1,0 +1,82 @@
+00:00 +0: loading C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart
+00:00 +0: P-4: tab colors and weights follow selection in light
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: FontWeight:<FontWeight.w600>
+  Actual: FontWeight:<FontWeight.w500>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart:175:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart line 175
+The test description was:
+  P-4: tab colors and weights follow selection in light
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: P-4: tab colors and weights follow selection in light [E]
+  Test failed. See exception logs above.
+  The test description was: P-4: tab colors and weights follow selection in light
+
+00:01 +0 -1: P-4: tab colors and weights follow selection in dark
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: FontWeight:<FontWeight.w600>
+  Actual: FontWeight:<FontWeight.w500>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart:175:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart line 175
+The test description was:
+  P-4: tab colors and weights follow selection in dark
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -2: P-4: tab colors and weights follow selection in dark [E]
+  Test failed. See exception logs above.
+  The test description was: P-4: tab colors and weights follow selection in dark
+
+00:02 +0 -2: P-4: tab colors and weights follow selection in field
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: FontWeight:<FontWeight.w600>
+  Actual: FontWeight:<FontWeight.w500>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart:175:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart line 175
+The test description was:
+  P-4: tab colors and weights follow selection in field
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -3: P-4: tab colors and weights follow selection in field [E]
+  Test failed. See exception logs above.
+  The test description was: P-4: tab colors and weights follow selection in field
+
+00:04 +0 -3: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart: P-4: tab colors and weights follow selection in dark
+  C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart: P-4: tab colors and weights follow selection in field
+  C:/Users/zalub/AppData/Local/Temp/culqa/test/presentation/screens/details/night_moon_browse_test.dart: P-4: tab colors and weights follow selection in light

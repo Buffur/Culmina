@@ -80,6 +80,15 @@ class CurrentSession {
   /// Called when [writeFailure] changes.
   void Function()? onWriteFailureChanged;
 
+  /// Called after an autosave that changed which session is current or its
+  /// state (a saved plan back in draft, a new draft): the caller was told
+  /// about the edit before the write landed (QA-02). Not called for a write
+  /// that leaves both as they were.
+  void Function()? onSessionChanged;
+
+  static (int?, SessionStatus?, bool) _stateOf(Session? s) =>
+      (s?.id, s?.status, s?.plannedAtUtc != null);
+
   /// Why the last autosave failed, until one succeeds (TASK 15.1). A failed
   /// write never blocks the later ones; each writes the whole plan, so the
   /// next edit retries it.
@@ -296,6 +305,7 @@ class CurrentSession {
       if (edit && _edited) {
         if (_session case final written?) await _mark(written.id);
       }
+      if (_stateOf(current) != _stateOf(_session)) onSessionChanged?.call();
       if (failure == _writeFailure) return;
       _writeFailure = failure;
       onWriteFailureChanged?.call();

@@ -785,13 +785,13 @@ class _Charts extends StatelessWidget {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: i == selected
-                                    ? hybrid.selection
+                                    ? hybrid.selectedHourFill
                                     : HybridTokens.transparent,
                                 border: Border(
                                   bottom: BorderSide(
                                     width: 2,
                                     color: i == selected
-                                        ? hybrid.accent
+                                        ? hybrid.selectedHourRule
                                         : HybridTokens.transparent,
                                   ),
                                 ),
@@ -800,7 +800,7 @@ class _Charts extends StatelessWidget {
                                 time(s),
                                 style: AppTypography.dense.copyWith(
                                   color: i == selected
-                                      ? p.textPrimary
+                                      ? hybrid.selectedHourText
                                       : p.textSecondary,
                                   fontFeatures: const [
                                     FontFeature.tabularFigures(),

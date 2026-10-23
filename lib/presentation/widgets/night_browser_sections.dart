@@ -456,7 +456,7 @@ class _ExactTimesState extends State<_ExactTimes> {
                       children: [
                         Expanded(child: Text(label, style: small)),
                         const SizedBox(width: 8),
-                        Flexible(
+                        Expanded(
                           child: Text(
                             value,
                             textAlign: TextAlign.right,

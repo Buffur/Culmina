@@ -11,6 +11,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     required this.action,
     required this.onAction,
     required this.selection,
+    required this.selectedHourFill,
+    required this.selectedHourText,
+    required this.selectedHourRule,
     required this.surfaceSubtle,
     required this.surfaceSunken,
     required this.accent,
@@ -55,6 +58,15 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
 
   /// Selected rows, segments and pressed fills.
   final Color selection;
+
+  /// Weather B hour-axis selection fill (weather-radix.css blue5).
+  final Color selectedHourFill;
+
+  /// Text on [selectedHourFill] (blue12; Field retains primary red).
+  final Color selectedHourText;
+
+  /// Bottom rule of the selected Weather B hour (blue11).
+  final Color selectedHourRule;
 
   /// Subtle surface: selected navigation, quiet panels.
   final Color surfaceSubtle;
@@ -135,6 +147,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     action: Color(0xFF37352F),
     onAction: Color(0xFFFFFFFF),
     selection: Color(0xFFE9E9E7),
+    selectedHourFill: Color(0xFFC2E5FF),
+    selectedHourText: Color(0xFF113264),
+    selectedHourRule: Color(0xFF0D74CE),
     surfaceSubtle: Color(0xFFF7F7F5),
     surfaceSunken: Color(0xFFF0F0ED),
     accent: Color(0xFF0075DE),
@@ -163,6 +178,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     action: Color(0xFFEBEBEA),
     onAction: Color(0xFF191919),
     selection: Color(0xFF343432),
+    selectedHourFill: Color(0xFF004074),
+    selectedHourText: Color(0xFFC2E6FF),
+    selectedHourRule: Color(0xFF70B8FF),
     surfaceSubtle: Color(0xFF202020),
     surfaceSunken: Color(0xFF141414),
     accent: Color(0xFF62AFF3),
@@ -191,6 +209,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     action: Color(0xFFFF0000),
     onAction: Color(0xFF000000),
     selection: Color(0xFF330000),
+    selectedHourFill: Color(0xFF330000),
+    selectedHourText: Color(0xFFFF0000),
+    selectedHourRule: Color(0xFFFF0000),
     surfaceSubtle: Color(0xFF110000),
     surfaceSunken: Color(0xFF000000),
     accent: Color(0xFFFF0000),
@@ -220,6 +241,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     Color? action,
     Color? onAction,
     Color? selection,
+    Color? selectedHourFill,
+    Color? selectedHourText,
+    Color? selectedHourRule,
     Color? surfaceSubtle,
     Color? surfaceSunken,
     Color? accent,
@@ -246,6 +270,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     action: action ?? this.action,
     onAction: onAction ?? this.onAction,
     selection: selection ?? this.selection,
+    selectedHourFill: selectedHourFill ?? this.selectedHourFill,
+    selectedHourText: selectedHourText ?? this.selectedHourText,
+    selectedHourRule: selectedHourRule ?? this.selectedHourRule,
     surfaceSubtle: surfaceSubtle ?? this.surfaceSubtle,
     surfaceSunken: surfaceSunken ?? this.surfaceSunken,
     accent: accent ?? this.accent,
@@ -277,6 +304,21 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
       action: Color.lerp(action, other.action, t)!,
       onAction: Color.lerp(onAction, other.onAction, t)!,
       selection: Color.lerp(selection, other.selection, t)!,
+      selectedHourFill: Color.lerp(
+        selectedHourFill,
+        other.selectedHourFill,
+        t,
+      )!,
+      selectedHourText: Color.lerp(
+        selectedHourText,
+        other.selectedHourText,
+        t,
+      )!,
+      selectedHourRule: Color.lerp(
+        selectedHourRule,
+        other.selectedHourRule,
+        t,
+      )!,
       surfaceSubtle: Color.lerp(surfaceSubtle, other.surfaceSubtle, t)!,
       surfaceSunken: Color.lerp(surfaceSunken, other.surfaceSunken, t)!,
       accent: Color.lerp(accent, other.accent, t)!,

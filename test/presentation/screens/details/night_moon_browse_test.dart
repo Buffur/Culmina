@@ -8,8 +8,10 @@
 // the real app and database.
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/theme/app_palette.dart';
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -150,6 +152,115 @@ void main() {
       find.byKey(const Key('nightMoon.slider')),
     );
     return slider.semanticFormatterCallback!(slider.value);
+  }
+
+  for (final mode in ['light', 'dark', 'field']) {
+    testWidgets('P-4: tab colors and weights follow selection in $mode', (
+      tester,
+    ) async {
+      tester.platformDispatcher.platformBrightnessTestValue = mode == 'dark'
+          ? Brightness.dark
+          : Brightness.light;
+      addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+      await start(tester, activeSite: false);
+      if (mode == 'field') {
+        await tester.runAsync(vm.theme.toggleFieldMode);
+        await settle(tester);
+      }
+      final palette = AppPalette.of(tester.element(find.byType(TabBar)));
+      for (final selected in ['Night', 'Moon', 'Weather']) {
+        await tester.tap(find.widgetWithText(Tab, selected));
+        await settle(tester);
+        for (final label in ['Night', 'Moon', 'Weather']) {
+          final element = tester.element(find.text(label).last);
+          final style = DefaultTextStyle.of(element).style;
+          expect(
+            style.color,
+            label == selected ? palette.textPrimary : palette.textSecondary,
+            reason: '$mode $label with $selected selected',
+          );
+          expect(
+            style.fontWeight,
+            label == selected ? FontWeight.w600 : FontWeight.w400,
+          );
+          expect(style.fontSize, 14);
+        }
+        final bar = tester.widget<TabBar>(find.byType(TabBar));
+        expect((bar.indicator! as UnderlineTabIndicator).borderSide.width, 2);
+      }
+    });
+  }
+
+  for (final scale in [1.0, 2.0]) {
+    testWidgets('P-5: exact-time values reach the row edge at $scale', (
+      tester,
+    ) async {
+      final bytes = File('assets/fonts/Geist.ttf').readAsBytesSync();
+      await (FontLoader(
+        'Geist',
+      )..addFont(Future.value(ByteData.sublistView(bytes)))).load();
+      await start(tester, textScale: scale);
+      tester.view.physicalSize = const Size(375, 5000);
+      await tester.tap(find.widgetWithText(Tab, 'Night'));
+      await settle(tester);
+      await tester.ensureVisible(find.text('Exact times & reading key'));
+      await tester.tap(find.text('Exact times & reading key'));
+      await settle(tester);
+      final section = find
+          .ancestor(
+            of: find.text('Exact times & reading key'),
+            matching: find.byType(Column),
+          )
+          .first;
+      var rows = 0;
+      var intervals = 0;
+      for (final element
+          in find
+              .descendant(of: section, matching: find.byType(Row))
+              .evaluate()) {
+        final row = element.widget as Row;
+        if (row.children.length != 3 || row.children.last is! Flexible) {
+          continue;
+        }
+        final value = (row.children.last as Flexible).child;
+        if (value is! Text || value.textAlign != TextAlign.right) continue;
+        final rowFinder = find.byWidget(row);
+        final valueFinder = find.descendant(
+          of: rowFinder,
+          matching: find.byWidget(value),
+        );
+        expect(
+          tester.getRect(valueFinder).right,
+          closeTo(tester.getRect(rowFinder).right, 0.01),
+          reason: 'Value ${value.data} must end at the content edge',
+        );
+        rows++;
+        if (value.data!.contains('\nto ')) {
+          intervals++;
+          final paragraph = tester.renderObject<RenderParagraph>(valueFinder);
+          var offset = 0;
+          for (final line in value.data!.split('\n')) {
+            final end = offset + line.trimRight().length;
+            // Measure the last glyph, excluding line-break/trailing-space
+            // selection boxes, which can extend beyond the painted text.
+            final box = paragraph
+                .getBoxesForSelection(
+                  TextSelection(baseOffset: end - 1, extentOffset: end),
+                )
+                .single;
+            expect(
+              box.right,
+              closeTo(paragraph.size.width, 0.1),
+              reason: 'Each interval line ends at the right edge',
+            );
+            offset += line.length + 1;
+          }
+        }
+      }
+      expect(rows, greaterThanOrEqualTo(8));
+      expect(intervals, greaterThan(0));
+      expect(tester.takeException(), isNull);
+    });
   }
 
   testWidgets('missing-site conditions offer the real site picker', (

@@ -106,12 +106,37 @@ void main() {
         HybridTokens.field.moonUp,
         HybridTokens.field.moonFree,
         HybridTokens.field.weatherCaution,
+        HybridTokens.field.selectedHourFill,
+        HybridTokens.field.selectedHourText,
+        HybridTokens.field.selectedHourRule,
       ]) {
         expect(c.g, 0);
         expect(c.b, 0);
       }
     },
   );
+
+  test('P-6: Field hour-axis selection preserves its existing roles', () {
+    expect(HybridTokens.field.selectedHourFill, HybridTokens.field.selection);
+    expect(
+      HybridTokens.field.selectedHourText,
+      AppTheme.fieldTheme.extension<AppPalette>()!.textPrimary,
+    );
+    expect(HybridTokens.field.selectedHourRule, HybridTokens.field.accent);
+  });
+
+  test('P-6: selected-hour roles survive theme copying and interpolation', () {
+    for (final target in [HybridTokens.dark, HybridTokens.field]) {
+      final copy = target.copyWith();
+      final end = HybridTokens.light.lerp(target, 1);
+      expect(copy.selectedHourFill, target.selectedHourFill);
+      expect(copy.selectedHourText, target.selectedHourText);
+      expect(copy.selectedHourRule, target.selectedHourRule);
+      expect(end.selectedHourFill, target.selectedHourFill);
+      expect(end.selectedHourText, target.selectedHourText);
+      expect(end.selectedHourRule, target.selectedHourRule);
+    }
+  });
 
   testWidgets(
     'Geist form at 200 percent retains text, input and usable primary action',

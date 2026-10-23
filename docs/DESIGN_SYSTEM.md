@@ -185,7 +185,9 @@ still merges over them.
 | **Icon** | `IconButton` with a `tooltip` | `onSurfaceVariant` icon | Toolbar actions; the tooltip is its label |
 
 - **All buttons:** at least 48 dp tall (filled, outlined and elevated draw 48; text and icon buttons
-  keep Material's padded 48 dp tap target). Small radius, `labelLarge` text.
+  keep Material's padded 48 dp tap target). Small radius. Labels: the primary (filled) one 16/600
+  (`.primary-button` in the accepted Hybrid reference; QA-04, 2026-10-23), the others `labelLarge`
+  14/500 (`.secondary-button`).
 - **Disabled:** `textDisabled` text on transparent (secondary, tertiary), or Material's disabled
   fill (primary). WCAG exempts disabled controls from contrast.
 - **`ElevatedButton`** has no elevation in this flat design. It is themed as the secondary role on

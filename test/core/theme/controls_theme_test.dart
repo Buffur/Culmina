@@ -167,6 +167,21 @@ void main() {
     }
   });
 
+  // QA-04 (phone QA 2026-10-23): `.primary-button` is 16 px / 600 and
+  // `.secondary-button` 14 px / 500 in the accepted reference (86873ce);
+  // the filled buttons drew 500, so a primary action read like a secondary.
+  test('a primary (filled) label is 16/600, a secondary (outlined) one '
+      '14/500, in every theme', () {
+    for (final t in [AppTheme.light, AppTheme.dark, AppTheme.fieldTheme]) {
+      final primary = t.filledButtonTheme.style!.textStyle!.resolve({})!;
+      expect(primary.fontSize, 16);
+      expect(primary.fontWeight, FontWeight.w600);
+      final secondary = t.outlinedButtonTheme.style!.textStyle!.resolve({})!;
+      expect(secondary.fontSize, 14);
+      expect(secondary.fontWeight, FontWeight.w500);
+    }
+  });
+
   test('the destructive role is the error colour', () {
     final s = AppTheme.light.colorScheme;
     expect(

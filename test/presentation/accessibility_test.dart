@@ -10,6 +10,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -297,6 +298,20 @@ Uint8List _seedJpeg() {
 }
 
 void main() {
+  for (final entry in [
+    ('light', HybridTokens.light),
+    ('dark', HybridTokens.dark),
+  ]) {
+    test('P-6: selected hour has AA text contrast in ${entry.$1}', () {
+      final background = entry.$2.selectedHourFill.computeLuminance();
+      final text = entry.$2.selectedHourText.computeLuminance();
+      final ratio =
+          (text > background ? text + 0.05 : background + 0.05) /
+          (text > background ? background + 0.05 : text + 0.05);
+      expect(ratio, greaterThanOrEqualTo(4.5));
+    });
+  }
+
   for (final theme in _Theme.values) {
     for (final scale in [1.0, 2.0]) {
       testWidgets('every screen meets the guidelines: ${theme.name}, '
