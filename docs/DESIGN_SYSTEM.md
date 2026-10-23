@@ -4,6 +4,18 @@ Status: active shared visual/interaction reference, reconciled 2026-10-24 agains
 
 Sections retain Stage 5–9 contract/adoption provenance; dated colour/geometry observations are not a second token authority. Read actual theme/components and later approved refinements before applying them. CA-OD1 is no longer an open branding decision (DECISIONS D1); owner acceptance of later delivery is a separate question. Historical update logs below remain unchanged.
 
+## Read by task
+
+This is an indexed reference. For a focused production fix or review, locate the heading/anchor and read the relevant current section with its native definition/caller; do not load the whole file by default. [WORKFLOW](design/WORKFLOW.md#read-the-needed-contract) owns the reading route and work modes. Sections 8–9 and the dated appendix retain adoption/history and are read only when the task needs that provenance.
+
+| Surface | Start here |
+| --- | --- |
+| Weather hour selection or token mapping | [§2 Colour](#2-colour) |
+| Local Plan typography | [§3 Type scale](#3-type-scale-apptypographyscale) |
+| Screen gutter, component padding or touch targets | [§4 Spacing](#4-spacing-and-radius) |
+| Tonight site/night control | [Context line](#context-line) |
+| Other controls/data display | Only the named §6/§7a subsection |
+
 ## 1. Principles
 
 - **Answer first, then detail** (PRODUCT_DIRECTION §5.1–§5.2). The type scale and text roles exist
@@ -51,6 +63,8 @@ Sections retain Stage 5–9 contract/adoption provenance; dated colour/geometry 
 | Raised | `AppPalette.surfaceRaised` = `colorScheme.surfaceContainerHigh` | `#FFFFFF` | `#252525` | `#1A0000` | Dialogs, date pickers (Material reads `surfaceContainerHigh`) |
 | Border | `AppPalette.border` | `#E9E9E7` | `#2F2F2F` | `#330000` | Card outlines, dividers |
 
+Additional native Hybrid roles live in `lib/core/theme/hybrid_tokens.dart`, installed alongside AppPalette by `AppTheme._withTokens`. `surfaceSubtle` supplies the selected root-navigation surface (`lib/presentation/navigation/app_shell.dart`); `surfaceSunken` supplies recessed Moon-lane tracks and the Moon-up legend well (`lib/presentation/widgets/night_browser_sections.dart`). These are existing production roles, not browser-only proposals or aliases for raised overlays. In field mode `surfaceSubtle` is the dark-red grouping surface while `colorScheme.surface` remains black. Read values from the theme definitions.
+
 Cards are flat: no elevation, a 1 px border, the small radius.
 
 **Selected container** (light): `colorScheme.secondaryContainer` = the border grey `#E9E9E7` with
@@ -78,6 +92,10 @@ route sweep caught it on Settings' segmented control). Dark keeps Material's der
 `AppPalette` also holds the night-event, Moon, chart and Bortle colours (TASK 12.4) and `caution`
 (S1.9).
 
+The current native night-browser timeline and legend (`lib/presentation/widgets/night_browser_sections.dart`) read `HybridTokens.skyDay/skyCivil/skyNautical/skyAstronomical/skyDark` and `moonUp/moonFree`; lane position, thickness and text retain meaning beyond colour. The altitude chart (`lib/presentation/widgets/altitude_chart_widget.dart`) still reads AppPalette chart bands and `chartMoon`. They are different presentation roles, not a blanket migration from AppPalette.
+
+Current Weather (`lib/presentation/widgets/weather_hybrid_view.dart`) uses `HybridTokens.selectedHourFill/selectedHourText/selectedHourRule` for its selected hour axis, `caution` for the dew-margin heuristic, and `weatherNotice` for aging/stale, unknown-gap and offline-cache notices. `hourBackground/hourText` and `weatherCaution` remain defined but have no presentation callers at this baseline. Do not infer adoption from a token's name or replace freshness/unknown text with colour.
+
 The Culmina mark's colours (owner, 2026-10-23) are generated with its geometry by
 `tool/culmina_mark.py` into `lib/presentation/shared/culmina_mark_geometry.dart`
 (`CulminaMarkColors.light`, `.dark`, `.field`): the surface decides them, as in the splash and the
@@ -85,23 +103,27 @@ lockup with the name. The launcher icon keeps its own refreshed dark field in ev
 
 ### 2.5 Status and state tokens (S5.4)
 
+The following table describes AppPalette's fit tokens and `PlanState.tone` helper (`lib/presentation/shared/plan_state.dart`), not the compact badges' colour map.
+
 | Token | Light | Dark | Field | Used for |
 | --- | --- | --- | --- | --- |
 | `statusFits` | `#37352F` | `#EBEBEA` | `#FF0000` | Fits |
-| `statusTight` | `#9A5B00` | `#FFB74D` | `#FF0000` | Tight: a caution, at least as prominent as Fits (S1.9) |
+| `statusTight` | `#754600` | `#FFCA70` | `#FF0000` | Tight: a caution, at least as prominent as Fits (S1.9) |
 | `statusDoesNotFit` | `#B00020` | `#F28B82` | `#FF0000` | Doesn't fit |
 | `statusNoWindow` | `#B00020` | `#F28B82` | `#FF0000` | No window (a real night with none) |
 | `statusNeutral` | `#5A5955` | `#A5A5A3` | `#AA0000` | Needs a target / a block: a missing input is not a verdict (UX-15(2)) |
-| `stateUnsaved` | `#9A5B00` | `#FFB74D` | `#FF0000` | Not saved, Saved · changed |
+| `stateUnsaved` | `#754600` | `#FFCA70` | `#FF0000` | Not saved, Saved · changed |
 | `stateSettled` | `#37352F` | `#EBEBEA` | `#FF0000` | Saved, Tracking, Completed |
 | `stateQuiet` | `#5A5955` | `#A5A5A3` | `#AA0000` | Partly, Not done, Old log |
 
-- **Values unchanged:** they are the colours `FitText.color` already drew. It now reads these
-  tokens, so every screen keeps its look.
+- **Fit caller:** `FitText.color` in `lib/presentation/shared/night_text.dart` maps FitState to
+  the AppPalette status tokens; `StatusBlock` reads that mapping for its verdict.
 - **Contrast:** every token is AA as text on every surface in light and dark.
 - **Field mode:** everything is red, so the word carries the difference.
 - **Plan-state tones are tones, not verdicts.** Unsaved work draws attention; nothing is coloured
   good or bad (the ADR-012/ADR-013 spirit).
+
+Current `PlanStateLabel` (Tonight/planner) and `EntryStateBadge` (Logbook/opened entries) in `plan_state.dart` instead use `HybridTokens.success/successWash` for Saved/Tracking/Completed, `caution/cautionWash` for Not saved/Saved · changed/Partly, and `AppPalette.textPrimary` on Hybrid `selection` for Not done/Old log. `EntryStateBadge.due` (Not recorded) uses the caution pair. Preserve state words and existing icon variants: a saved or completed state is not a Fits verdict or a scientific quality score. Field roles remain red/black; this documentation grants no new owner/device acceptance.
 
 ## 3. Type scale (`AppTypography.scale`)
 
@@ -166,9 +188,13 @@ The editorial `nightHeading` and `answerHeading` use bundled Source Serif 4 at o
 | --- | --- | --- |
 | `xs` | 4 | A label and its value |
 | `sm` | 8 | Rows within a section |
-| `md` | 16 | A screen's side padding; a card's inner padding |
+| `md` | 16 | Component content padding and some page layouts; not a universal screen gutter |
 | `lg` | 24 | Between sections |
 | `xl`, `xxl` | 32, 48 | Large separations; 48 is also the minimum tap target |
+| `gutter` | 20 | Existing Hybrid side-padding step; actual screen geometry is caller-owned |
+| `section` | 28 | Existing Hybrid section-spacing step |
+
+The scale supplies reusable distances; component padding and screen gutters are distinct. `lib/presentation/shared/detail_scaffold.dart` uses `md` for page sides and summary-card padding. Current Tonight (`lib/presentation/screens/tonight/tonight_home_screen.dart`) uses literal `EdgeInsets.fromLTRB(20, 20, 20, 24)` in its ready/no-site and bootstrap-error lists; the planner (`lib/presentation/screens/home/home_screen.dart`) uses `(20, 8, 20, 32)`. Both have 20 logical px sides, matching `gutter` without reading it. The Stage 5 rhythm in the `app_spacing.dart` header is not a universal current geometry rule; do not normalize these screens to 16 or change code in a documentation reconciliation.
 
 | `AppRadius` | px | Use |
 | --- | --- | --- |
@@ -328,10 +354,7 @@ The answer first (ADR-019 §6; addendum §3.1–§3.2).
   `textTertiary`) above its value (`titleSmall`, `textPrimary`), one semantics node per pair, in a
   wrapping row (S6.16; they were inline pairs); an optional action slot (fill or trim, an outlined
   button since S6.16).
-- **The planner's status card** (S6.16) has a 4 px edge in the verdict's status token
-  (`planner.statusMark`), so the answer reads as the screen's primary surface; the word still
-  carries the meaning (red only, in field mode). Tonight's plan card holds the same block without
-  the edge.
+- **Current adoption:** `plan_status.dart` draws the planner's own Hybrid answer and uses `StatusBlock.headline` for wording; it does not instantiate this component or its historical 4px status edge. Tonight instantiates `StatusBlock` with its Hybrid fit-line variant. The component's other layouts remain capabilities, not universal screen requirements.
 - **Plain values in.** The state, durations and reason come from the fit analysis through the
   ViewModel; durations are formatted with `QuantityText`. It calculates nothing (trap 13).
 - `StatusBlock.headline(...)` is pure and tested.
@@ -340,15 +363,12 @@ The answer first (ADR-019 §6; addendum §3.1–§3.2).
 
 - **`PlanState`:** Not saved · Saved · Saved · changed · Tracking · Completed · Partly · Not done ·
   Old log (ADR-019 §3). The stored statuses stay internal; "Draft" is never shown.
-- **The mapping:** `PlanState.from(status, savedBefore, legacy)` maps today's stored fields: a
-  legacy row is an Old log; a `draft` is Not saved, or Saved · changed once saved before
-  (`plannedAtUtc`); `planned` is Saved; `inProgress` is Tracking; `completed` is Completed;
-  `abandoned` is Not done. Every combination is tested.
-- **Partly** has a word and a tone, but no stored data expresses it until Stage 8's result form.
-- **`PlanStateLabel`:** the word in its tone (`labelMedium`), in a quiet pill outlined in `border`.
-  It wraps at 200 % text and is not tappable.
+- **The mapping:** `PlanState.from(status:, savedBefore:, legacy:, resultKind:)` reads existing stored fields. Legacy is Old log; draft is Not saved or Saved · changed according to prior save; planned/inProgress map to Saved/Tracking; completed with `ResultKind.partly` maps to Partly, other completed results to Completed; abandoned maps to Not done. Partly is implemented, not a future Stage 8 placeholder.
+- **Current labels:** `PlanStateLabel` and `EntryStateBadge` use the compact Hybrid foreground/wash pairs described in [§2.5](#25-status-and-state-tokens-s54), not an outlined labelMedium pill driven by `PlanState.tone`. Preserve their state words and existing icon variants; neither widget is tappable. This describes source adoption, not a new owner/device acceptance.
 
 ### The night and opportunity timeline (S6.12; `widgets/altitude_chart_widget.dart`)
+
+`AltitudeChartWidget` remains available; `tonight_opportunity_widget.dart` contains a call, but that wrapper has no production instantiation in the current `lib/` tree. Current Night & Moon/Weather use the separate Hybrid browser in `night_browser_sections.dart`. The primitive's following full/compact capabilities are not evidence of current Night/planner adoption.
 
 One primitive (`AltitudeChartWidget` over `TimelineData`) at two `TimelineDensity`s: `full` (200
 px; the altitude grid with its labels in a left gutter, the Moon, the legend) and `compact` (88 px;
@@ -360,17 +380,9 @@ and windows is never drawn twice.
 
 ### The stacking-gain graph (S6.11; `widgets/capture_plan/stacking_gain_graph.dart`)
 
-One compact graph under each (filter, exposure) group's √N line: `StackingGainCurve`'s points
-(CALC-42) from one frame to twice the planned count, drawn in `chartTarget` over a `chartGrid`
-baseline, the planned count marked with `chartNow`/`chartNowCentre` (the altitude chart's "now"
-dot) and a guide line. 48 px high; the axis' ends are `Text` below it (`bodySmall`,
-`textTertiary`) so they scale and wrap. The number stays in the line above; the section's title is
-`AppWords.relativeStackingGain`. The text alternative gives the group's value and where the curve
-ends. A `CustomPaint`: no chart dependency.
-**Since S6.16 (TD-076):** the curve's end reads "For comparison: 200 frames · 14.1x" (`textTertiary`),
-and a line below names the plan's point, "Your plan: 100 frames · 10.0x" (`textPrimary`), beside a
-`PlanPointSwatch` drawn exactly like the dot (`StackingGainPainter.paintPoint`). The text
-alternative says which point is the plan and which is for comparison.
+Current `StackingGainGraph(curve:, groupLabel:, caption:, recorded:)` reads the existing `StackingGainCurve`; `caption` and recorded-frame count are optional. The graph presents relative improvement over integration time **normalized to the plan (1.00×)**, with text/legend entries for the plan and comparison and, when supplied, a recorded point. It is not absolute SNR or an image-quality prediction; preserve each filter/exposure group's meaning and the curve's scientific inputs.
+
+`lib/presentation/widgets/capture_plan/stacking_gain_graph.dart` owns the current layout and text alternative: `StackingGainPainter` uses a 320:150 logical aspect reference, a Hybrid `gainStart/gainEnd` line gradient and restrained area wash, with AppPalette border/text roles. It is not the old fixed 48px-high AppPalette-only graph. `capture_budget_summary.dart` supplies the current caller data. Existing adoption is recorded as HT-F15 in the [accepted transfer record](design/migration/HYBRID_TRANSFER_STATUS.md), with its §9 exclusions; later owner/device acceptance limits remain in BASELINE/PROGRESS. The S6.11/S6.16 wording in the dated update log is historical provenance, not a mandate to restore old geometry or colours.
 
 ### The change mark (S6.10; `lib/presentation/shared/change_mark.dart`)
 
@@ -418,28 +430,19 @@ Detail one tap away (ADR-019 §7; RD-06, RG-06: progressive disclosure, no modes
   uses the text roles, at 48 dp. The old badge (white text on the class colour, 32 px high) failed
   the tap-target and contrast guidelines once the sweep could see it.
 
+<a id="context-line"></a>
+
 ### The context line (S5.6; `lib/presentation/shared/context_line.dart`)
 
-"Ljubljana ▾ · Fri, Nov 13 ▾": the one control that says which site and night a screen describes,
-for Tonight and the planner (ADR-019 §5, §6; addendum §3.1–§3.2).
-- **Two parts:** the site and the night, each its own button (at least 48 dp, `titleSmall` in
-  `textPrimary`, a ▾ in `textSecondary`).
-  - Screen readers hear "Site: Ljubljana" and "Night: Fri, Nov 13", with the hints "Choose a site"
-    and "Choose a night".
-  - The line wraps at 200 % text.
-- **Callbacks only:** each part reports its tap. What choosing does (the site picker, or changing
-  the current plan's night, UX-11) is decided where the line is adopted (P6.3, P6.6).
-- **The zone rule, once** (trap 2), in `textTertiary` below the line:
-  - "Times in site zone Europe/Ljubljana, CET, UTC+01:00";
-  - when the site has no zone: "Times in device zone, UTC…" (`NightTimeFormatter.zoneCaption`).
-- **No site:** the site part reads "No site set". There is no night part and no zone rule (no
-  night without a site, ADR-007 §9).
-- **The night is today's `NightTimeFormatter.eveningDate`** ("Fri, Nov 13"). The glossary's "Fri
-  14 Nov" order is a formatter change for the Stage that adopts the line, not S5.6's.
+`ContextLine` exposes independent site/night choices. The constructor requires nullable `siteName` and `night` plus `onSite/onNight`; defaults are `framed:false`, `compact:false`, `noSiteLabel:ContextLine.noSite` ("No site set"). `siteDescription`, `zoneId` and `nightStartUtc` are optional and nullable.
 
-**Framed** (S6.16): `ContextLine(framed: true)` sets the line on a card (`context.card`), so the site
-and night read as one deliberate context area; each part leads with its icon (`place_outlined`,
-`event_outlined`, `textSecondary`). Tonight and the planner both use it framed.
+- **Component variants:** the default layout wraps; `compact:true` uses a row with single-line choices that can ellipsize. `framed:true` optionally wraps either layout in a `context.card`. Current choices use `AppTypography.caption` and Hybrid icons/chevron in `textPrimary`, not the older titleSmall/secondary-icon styling.
+- **Accessibility:** each choice retains a 48 × 48 dp minimum, enabled button semantics with its own tap action, a Choose a site/night hint and a full-label tooltip. Compact site semantics/tooltip use `siteDescription ?? siteName ?? ContextLine.noSite`; the wrapping variant uses `siteName ?? ContextLine.noSite`. `noSiteLabel` changes visible fallback text only. The full night label is "Night of …", formatted from the supplied evening date by `NightTimeFormatter.eveningDate`, even when compact display omits that prefix.
+- **Night and zone visibility:** the night choice depends on `night != null`; a zone caption in `textTertiary` requires both `night` and `nightStartUtc`. `zoneRule` delegates to `NightTimeFormatter.zoneCaption` (site zone or explicitly labelled device zone). A null `siteName` alone does not suppress a supplied night: callers must pass `night:null` and no night instant without a site (ADR-007 §9).
+- **Current Tonight caller:** `_Context` in `lib/presentation/screens/tonight/tonight_home_screen.dart` sets `compact:true`, `noSiteLabel:ContextLine.setSite` ("Set site"), compact `SiteLabel` display plus `siteDescription:SiteLabel.of(siteVm)`, `planVm.eveningDate` and `zoneId`. It leaves framing off and omits `nightStartUtc`, so no inline zone caption appears. `SessionPlanViewModel` supplies a null evening date for the default/no-site location. Callbacks in `home_context_sheets.dart` open Manage sites or the direct calendar (TD-120); confirmation updates the working plan, cancellation preserves it.
+- **Current planner:** `lib/presentation/screens/home/home_screen.dart` uses `HybridPlanRow` ("Site and night", `planner.context`) opening `PlanContextScreen` via `openPlanContext`, not a `ContextLine` instance. Apply changes updates the working plan; Close discards unapplied choices. It still uses `ContextLine.noSite` and `pickNight` for Copy. Keep this flow distinct from Tonight's direct actions.
+
+S5.6/S6.16 are adoption provenance, not a mandate to frame current callers: the [owner's Stage 6 decision](DECISIONS.md#stage-6-corrective-pass-decided-td-075td-080-the-planners-order-the-core-screens-finish-stage-6-2026-09-28) made a box/card optional. Current Hybrid adoption is recorded by HT-H01/HT-P01/HT-P02 in the [transfer record](design/migration/HYBRID_TRANSFER_STATUS.md); the later [TD-120 refinement](design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md) retains its pending owner acceptance. Component/gallery variants do not prove current screen adoption or new device acceptance.
 
 **The night picker** (`pickNight`, same file): the date picker in the app's theme, from a year ago
 to five years ahead as the planner's picker allows, titled "Choose a night". It returns the chosen
@@ -448,8 +451,7 @@ theme alone**, without the app-wide red filter.
 
 ### The detail-screen template (S5.7; `lib/presentation/shared/detail_scaffold.dart`)
 
-`DetailScaffold`: one layout for the detail screens, Night & Moon and Weather first (ADR-019 §9;
-addendum §3.4–§3.5), top to bottom:
+`DetailScaffold` remains an available shared template, exercised by `galleryDetailPage` in `test/presentation/design_system/gallery_entries.dart`. Current production code has no `DetailScaffold(...)` instantiation; Night & Moon/Weather use their own Hybrid composition. S5.7 and ADR-019 §9/addendum §3.4–§3.5 record the earlier template intent, not current adoption. Its supported anatomy is:
 1. **The header:**
    - the title (`titleLarge`, a semantic header);
    - its context ("Fri, Nov 13 · Ljubljana", `bodyMedium` in `textSecondary`);
@@ -463,8 +465,7 @@ addendum §3.4–§3.5), top to bottom:
 
 **Every time on the page is in the zone the header names; a section never repeats the zone
 caption.** The gallery sweeps a sample Night & Moon page (not a route) in the three themes at
-100 % and 200 % text. Stage 6 adds the real detail routes (`AppRouter` constants) to the route
-sweep (trap 17).
+100 % and 200 % text in that recorded gallery contract. A gallery sample does not prove a current route uses this template; inspect the actual screen and caller before adopting it.
 
 ### Launch (owner, 2026-10-23; `lib/presentation/shared/launch_gate.dart`)
 

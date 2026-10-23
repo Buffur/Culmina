@@ -1,21 +1,35 @@
-# Culmina Agent Skills
+# Culmina agent skills
 
-Routing reconciled 2026-10-24. This directory contains general Dart/Flutter recipes and other tool guidance; it is not an empty placeholder or the project's task queue.
+Use only guidance relevant to the current approved task. [AGENTS](../../AGENTS.md) owns scope, [PROGRESS](../../docs/refinement/PROGRESS.md) current state, [AI_WORKFLOW](../../docs/AI_WORKFLOW.md) execution and [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md) checks. Skill availability is not a task queue or permission to change architecture, dependencies, navigation or devices. Existing upstream metadata, licences and local amendments remain applicable.
 
-- Read only a skill relevant to the approved Task. Availability is not a requirement to apply it.
-- Follow the current architecture, dependencies, scope and canonical [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md) and shared [AGENTS](../../AGENTS.md) over generic setup/test recipes.
-- A recipe does not authorize new dependencies, changing navigation/state management, broad refactoring, or additional product scope.
-- Do not load the whole skills directory into each session. Discovery varies by client; reference a needed recipe explicitly and verify actual loading.
-- Project-specific procedures may also be added for an explicit owner request; keep their proposal/production boundaries clear.
+## Culmina design routing
 
-## Culmina design skills (owner request, 2026-10-19)
+Read [BASELINE](../../docs/design/BASELINE.md) and select the task surface below; follow [WORKFLOW's section-reading route](../../docs/design/WORKFLOW.md#read-the-needed-contract). Reading DESIGN_SYSTEM means its relevant current section and actual caller, not a whole-file dump of adoption/update history. This also supplies project context requested by generic UI guidance; a Git-only query needs no design route. [WORKFLOW modes](../../docs/design/WORKFLOW.md#work-modes) remain the single Explore / Implement-Fix / Review definition. Open only the skill needed by the surface:
 
-Read [the current design baseline](../../docs/design/BASELINE.md) and [the workflow](../../docs/design/WORKFLOW.md), then only the relevant skill:
+| Task | Entrypoint |
+| --- | --- |
+| Text roles, wrapping, weights or numeric readability | [Typography](culmina-design-typography/SKILL.md) |
+| Colours/surfaces and light/dark/field mappings | [Tokens](culmina-design-tokens/SKILL.md) |
+| Local density, alignment, padding, shape or motion | [Spacing](culmina-design-spacing/SKILL.md) |
+| An existing control or display | [Components](culmina-design-components/SKILL.md), then only the affected form/navigation/data-display reference |
+| Product meaning, scientific/data invariants or an exception | [Rules](culmina-design-rules/SKILL.md), then only the relevant decision/guardrail |
 
-- [Semantic tokens and themes](culmina-design-tokens/SKILL.md)
-- [Components by group](culmina-design-components/SKILL.md)
-- [Typography and font specimens](culmina-design-typography/SKILL.md)
-- [Spacing and shape](culmina-design-spacing/SKILL.md)
-- [Product rules and technical debt](culmina-design-rules/SKILL.md)
+Historical font/browser comparisons are linked on demand; production fixes do not require the lab history or every component group. Discovery differs by client: read the intended skill explicitly when needed rather than loading this entire directory.
 
-The approved frozen Hybrid reference and later native refinements are mapped in BASELINE; other browser candidates remain proposals. Skill availability never approves production changes. Local recipe amendments, provenance and licences remain intact.
+## Supporting Flutter recipes
+
+- [Layout diagnosis](flutter-fix-layout-issues/SKILL.md): diagnose a concrete constraint/overflow/ParentData problem before selecting flex, wrapping or scrolling.
+- [Adaptive layout](flutter-build-responsive-layout/SKILL.md): only for a named adaptive-layout task; a phone overflow does not authorize a sidebar/grid or orientation/navigation changes.
+- [Widget preview](flutter-add-widget-preview/SKILL.md): only for a named preview task; inspect existing native gallery/render fixtures and actual SDK support first.
+
+Other Dart/Flutter recipes remain available for their specific task. Their examples never override current contracts or verification requirements.
+
+## Reading-route examples: before and after
+
+Common preflight (AGENTS, PROGRESS, applicable overrides, relevant AI_WORKFLOW/verification and BASELINE) applies to both columns. These are source-based routing walkthroughs, not measured token savings or runtime client-loading tests.
+
+| Request | Before this routing change | Current route |
+| --- | --- | --- |
+| Focused typography correction | WORKFLOW mixed production routing with the full lab chronology; typography entrypoint included candidate/font/specimen history | WORKFLOW mode → typography skill → DESIGN_SYSTEM §3 + AppTypography + affected text caller. No font research unless that decision is explicitly open. |
+| Local phone layout error | Spacing entrypoint mixed native rhythm with browser variants; the generic layout recipe prescribed Expanded by error signature | WORKFLOW mode → spacing/affected contract → layout diagnostic recipe → causal ancestors/constraints/scroll owner. Read typography only if text roles are affected; no adaptive navigation or preview requirement. |
+| Explicitly authorized new-variant study | WORKFLOW and skills interleaved current contracts with dated concepts and comparison instructions | WORKFLOW Explore → named open decision + BASELINE constraints → relevant skill(s) → only relevant lab/research references. Record proposal/evidence/owner choice; production adoption stays separate. |

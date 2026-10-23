@@ -1,43 +1,29 @@
 ---
 name: culmina-design-spacing
-description: Apply Culmina spacing, shape, border and motion semantics. Use for density, alignment, responsive layouts or controlled shape comparisons.
+description: Apply Culmina spacing, shape and motion to focused density, alignment or layout corrections within the accepted composition. Adaptive navigation or alternative visual studies require their named task.
 ---
 
 # Culmina spacing and shape
 
-Status: active task guidance, reconciled 2026-10-24. Read `docs/design/BASELINE.md` first for the adopted Hybrid/native sources and later refinements; `docs/VERIFICATION_POLICY.md` owns checks. Skills cannot authorize new scope.
+Use for spacing, alignment, density, radius, borders and functional motion. Do not turn a phone overflow into a navigation/sidebar redesign. Use [WORKFLOW modes](../../../docs/design/WORKFLOW.md#work-modes).
 
-Read `docs/design/WORKFLOW.md`; use `lib/core/theme/app_spacing.dart`, `app_radius.dart`, `app_motion.dart` and the relevant layout as truth.
+## Read for this layout
 
-## Existing rhythm
+Read [BASELINE](../../../docs/design/BASELINE.md), [DESIGN_SYSTEM §4](../../../docs/DESIGN_SYSTEM.md#4-spacing-and-radius) (and §6.2 only for motion), `lib/core/theme/app_spacing.dart`, `app_radius.dart`, `app_motion.dart` as applicable, and the affected layout/callers. For constraint errors read the [diagnostic recipe](../flutter-fix-layout-issues/SKILL.md).
 
-| Token | Logical px | Decision |
-| --- | --- | --- |
-| `AppSpacing.xs` | 4 | A label and its value, closely related inline content |
-| `AppSpacing.sm` | 8 | Rows or controls inside a group |
-| `AppSpacing.md` | 16 | Phone side padding and group content padding |
-| `AppSpacing.lg` | 24 | Separation between sections |
-| `AppSpacing.xl` | 32 | Major separation where hierarchy warrants it |
-| `AppSpacing.xxl` | 48 | Large-scale layout rhythm, not a default card gap |
+<a id="existing-rhythm"></a>
 
-Production radii: `small = 6` for cards/fields/buttons, `menu = 8` for menus, `large = 12` for dialogs/sheets, `pill = 999` for appropriate compact controls. Keep a 1 px decorative boundary where the existing flat system needs it; do not add both a heavy border and a large shadow.
+## Choose spacing and shape
 
-## Density and responsive decisions
+- Separate scale, component padding and screen geometry. `md=16` is not a universal screen gutter. Existing `gutter=20` and `section=28` are scale steps, not commands to replace every layout gap. Tonight currently uses literal `(20,20,20,24)` list padding; the planner uses `(20,8,20,32)`. `DetailScaffold` uses `md` for page sides/summary padding. Preserve these source-specific choices rather than normalizing to 16.
+- Tighten relationships before shrinking text: group label/value, remove duplicate headings/wrappers, and give sections more separation than items. Keep the answer and primary action clear without making every item a card.
+- Diagnose local width/height and scrolling before choosing flex/wrapping/reflow. Preserve reachable 48 logical px targets, natural content growth and scrolling at large text; no fixed-height text cards or clipped line clamps as a repair.
+- Read radii from AppRadius (`small=6`, `menu=8`, `large=12`, `pill=999`). Keep functional/decorative boundaries distinct, ordinary groups flat, and overlays meaningful. No decorative star fields, glass, oversized artwork or unrelated visual effects.
+- Existing functional sky ramps (`night_browser_sections.dart`) and stacking-gain gradients (`capture_plan/stacking_gain_graph.dart`) are part of the adopted Hybrid presentation. The decorative-effects restriction does not ban these source-owned scientific/data displays; preserve their field palette and text/geometry cues.
+- Use AppMotion and preserve reduced motion. For an authorized browser comparison use its reduced-motion contract; [historical geometry studies](../../../docs/design/references/LAB_HISTORY.md#spacing-and-browser-geometry-studies) are optional and do not replace native tokens.
 
-- Tighten relationships before shrinking text: group label/value, remove duplicate headings, reduce redundant wrappers.
-- Give sections more separation than items within them. Preserve the main result and action without making every item a card.
-- Use content-driven reflow. At 412 logical px, no horizontal page scrolling or clipped primary action; the desktop browser must retain the Android phone viewport. Tablet/foldable adaptations require a separately named device scope; desktop columns are not the current phone proposal.
-- Minimum existing interaction target: 48 logical px. Visual density is not permission to reduce targets.
-- At 200% text use natural wrapping and document scrolling. Avoid fixed-height card content and clipped line clamps.
-- No decorative star fields, gradients, glass or oversized astronomy artwork. Use line icons, whitespace and typography.
-- Prefer no elevation for ordinary groups. Elevation explains overlays; a subtle surface change can explain grouping without a shadow.
-- The lab retains historical Hybrid, Paper, Focus, Journal, Line, Calm and Folio comparisons. The final Hybrid is adopted under BASELINE; unrelated candidates and Soft's radius remain proposals. Inspect current native tokens/layouts before applying any proposal.
-- Keep functional motion restrained; use `AppMotion` in Flutter and `prefers-reduced-motion` in browser concepts. Avoid recurring animation in a planning tool.
+<a id="density-and-responsive-decisions"></a>
 
-For a UI proposal, state the changed density/shape choices. For production changes, reuse existing tokens and verify affected layouts under the active task criteria.
+## Finish
 
-Historical browser implementation/reference notes (not current native instructions): the lab consumes JSON `space` as `--space-*`, `productionRadius` as `--radius-*`, and `proposalRadius` as each concept's `--concept-radius`. These control group rhythm and plan containers; remaining responsive chrome dimensions are local CSS choices. The Hybrid family adds Page / Soft / Desk; Soft's 14 radius remains a proposal.
-
-Original Hybrid `20261020-hybrid7` keeps Save/Open planner full width and uses content-width secondary actions with at least 48 px targets. Plan context rows use whitespace and consistent icon-free leading alignment; navigation/data boundaries retain separators. Proposal motion tokens are 120 ms feedback and 180 ms view continuity, with reduced motion disabled. These browser-only rules live in `hybrid-refinement.css` / `tokens.json.hybridRefinement`; production `AppMotion` and other concepts remain unchanged.
-
-At 200% browser text, the original Hybrid's four bottom destinations reflow into two rows, retaining full destination words and the requested 22 px labels instead of mid-word breaks or a text-size cap. Normal text keeps the established four-column bar. This describes the browser concept only; current native navigation and compact typography exceptions are mapped in BASELINE and AppTypography. Do not silently replace them.
+Record the affected spacing/shape decision, source/caller and checks under [V1–V8](../../../docs/VERIFICATION_POLICY.md). Separate a proposal from an implemented correction. Native layout/device and owner acceptance remain distinct.

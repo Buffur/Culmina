@@ -2799,3 +2799,130 @@ Vocabulary: Not started · Planning · In progress · In validation · Complete.
 - Keep it short enough to read at the start of every session.
 
 <!-- END VERBATIM PROGRESS 94cebfb -->
+
+
+## Design-skills maintenance pre-fix snapshot — 2026-10-24
+
+Source: `develop` HEAD `4ac20a9519d3444f2877c1ba5a61dd1f219b4659`, pre-existing dirty working tree before the owner's consolidated skills-maintenance task. Original PROGRESS bytes follow verbatim (SHA-256 `5dea0669ddf718e58a76d0a17e76bcd7268769bdd69ed86e757f90438bbeb0a0`). This snapshot includes the earlier uncommitted reconciliation, routing and validation handoffs; their permissions/next actions are inactive. Current status remains only in PROGRESS.md.
+
+<!-- BEGIN verbatim maintenance pre-fix PROGRESS snapshot -->
+
+# Culmina — current progress
+
+Status: **current operational handoff**, reconciled 2026-10-24. Read [AGENTS](../../AGENTS.md) first. This file records state and the next allowed action; it does not activate historical scopes. Verification is governed only by [V1–V8](../VERIFICATION_POLICY.md).
+
+## Current state
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Integration baseline | Documentation task base and unchanged HEAD: `develop` / `origin/develop` `4ac20a9519d3444f2877c1ba5a61dd1f219b4659`; one worktree at the owner checkout. Read-only `git ls-remote origin refs/heads/develop` on 2026-10-24 confirmed that exact remote head; local ahead/behind 0/0. The earlier governance cleanup is already delivered, not repeated. Application delivery remains `8a21e7b0a2018b223d8a1e4a73c4baa64167414f`. |
+| Current authorized scope | Owner's separate 2026-10-24 validation-only behavioral probes of the updated Culmina design skills. Five fresh Codex CLI read-only sessions completed; permitted output is one concise report and this handoff. No application/skill/configuration/tooling edits, fixes, tests/analyzer/full gate, installation, auth/permission/settings/memory changes, commit/push/merge, build or device/data operations authorized. |
+| Behavioral validation | **PARTIAL_WITH_ATTENTION**: [bounded report](../audit/CULMINA_DESIGN_SKILLS_BEHAVIOR_VALIDATION_2026_10_24.md). Natural selection of relevant skills and answer correctness passed in A–D; Git-only E read no design bodies. A/B fail the bounded-context criterion: observed full DESIGN_SYSTEM reads returned historical adoption/update sections. C/D/E pass. PBR-01 remains open for a separate narrowly authorized routing correction and A/B re-probe; no correction performed. Explicit-path controls NOT RUN because natural entrypoints were found; automatic activation/cross-client behavior is not claimed. |
+| Routing/recipe result | [WORKFLOW modes](../design/WORKFLOW.md#work-modes) are the sole Explore / Implement-Fix / Review routing. [Skill router and three before/after routes](../../.agents/skills/README.md#reading-route-examples-before-and-after) lead to only relevant contracts/groups. Lab/font/browser history moved with provenance, equivalent links and legacy anchors to [optional history](../design/references/LAB_HISTORY.md); current native token mappings remain in [semantic map](../../.agents/skills/culmina-design-tokens/references/semantic-map.md). Layout diagnosis now follows axis/constraints/scroll owner and the real ParentData ancestor rule; adaptive/sidebar/grid/orientation and preview infrastructure require their named scope. Preview checks existing native fixtures, Culmina themes and actual SDK first. |
+| Design-skill result | All three supplied findings reproduced at `4ac20a9` and corrected in [tokens](../../.agents/skills/culmina-design-tokens/SKILL.md), [navigation reference](../../.agents/skills/culmina-design-components/references/navigation.md), [spacing](../../.agents/skills/culmina-design-spacing/SKILL.md) and [DESIGN_SYSTEM](../DESIGN_SYSTEM.md). Definition/caller checks: HybridTokens + AppPalette/AppTheme → navigation, night-browser, Weather, fit/state displays; ContextLine → compact unframed Tonight, planner HybridPlanRow → PlanContextScreen; AppSpacing → Tonight/planner 20 px sides versus DetailScaffold 16 px. No token values or application behavior changed; no new implementation/decision conflict found in this bounded comparison. |
+| Documentation verification | V1 on this validation's two-file Markdown change: report claims match completed JSONL tool calls/results; local references/anchors/paths/IDs, scope and `git diff --check` passed. Client `codex-cli 0.163.0`, fresh ephemeral read-only exec for each probe; five distinct thread IDs, terminal turn.completed and exit 0. Before-probe 16-file dirty-input SHA-256 `6dca672973371059fd48c103d1f346e719b9be78fc697f13a7b886afd26bd1aa`; unchanged 13-file routing-guidance SHA-256 `55fa5da65cc0394334d266fabbda9b454aff5c26e3ee75b41c010579c9d1ad94`. The report records the fingerprint recipe, frozen rubric and prompt/event aggregate. Live repository reads support routing/reasoning only; no runtime render, pixel/accessibility/device/owner/F/G PASS. |
+| Cleanup delivery state | Documentation cleanup verified for owner review and the subsequent owner-authorized Git delivery: changed-document link/anchor/case/import checks, policy preservation, archive hashes, original-file scope comparison and `git diff --check` passed. Fresh Codex core-loading probe completed; independent source-snapshot review found no blocking documentation finding. Claude runtime review was access-blocked; Gemini/Antigravity runtime not tested. Details/limits: [cleanup report](../audit/AI_CONTEXT_CLEANUP_2026_10_24.md). No new application PASS. |
+| Implemented and integrated | Completed Hybrid transfer; P-1–P-6 (TD-114–TD-119); TD-120/TD-121 Tonight/geo refinements; rounded refreshed-dark R3 identity and full Flutter launch gesture. Source map: [design/BASELINE](../design/BASELINE.md). [Consolidation delivery](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) records preservation and integration onto the current base. |
+| Explicit owner acceptance | The owner confirmed the Hybrid transfer meets its bounded §9 contract: [transfer record](../design/migration/HYBRID_TRANSFER_STATUS.md), confirmation committed in `4f87c6c`. Its phone/performance/125–200%/store exclusions remain. ADR-021/ADR-022 were accepted 2026-10-18 in [DECISIONS](../DECISIONS.md). Neither fact accepts all later native changes or releases. |
+| Acceptance still pending | Owner visual acceptance of P-1–P-6, TD-120/TD-121 and combined identity/current geo delivery remains as recorded. Emulator/host/physical observations do not substitute for the owner. See [TECH_DEBT](../TECH_DEBT.md) and consolidation's manual acceptance list. |
+| Roadmap disposition | F01–F25 have historical implementation/evidence, with specific remaining criteria/findings. The finite pass ended **PARTIAL_WITH_ATTENTION**; the [independent 2026-10-19 review](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md) found incomplete F/G contracts. Later native deliveries do not automatically close them. F26 and G1–G4 are not claimed complete. The old broad launch is not active authorization in this cleanup. |
+| Preservation | This validation began with 16 pre-existing dirty Markdown inputs (13 tracked modifications, three untracked references), empty index and unchanged develop HEAD `4ac20a9`. All original tracked/index diffs and file hashes matched after the five probes. Only the new audit report and this handoff were then changed; skills/application/test/tooling/configuration/assets/dependencies/frozen snapshots remain unchanged. Prior current-state entries are retained verbatim below; all carried owner/device/F/G criteria and historical evidence remain intact. Safe probe artifacts/manifests are retained locally outside Git; raw logs/private paths are excluded from the report. |
+
+## Next allowed action
+
+**Stop and wait for owner review or a separately authorized bounded task.** This validation is complete with PBR-01 open. A focused routing correction may address section-level DESIGN_SYSTEM loading and re-probe A/B only when authorized. Do not implement that fix, resume a roadmap, change skills/application code, run gates/builds/device/data operations or perform Git delivery from this handoff.
+
+## Open questions and carried criteria
+
+This is a current routing summary, not a newly adjudicated task register. Stable criteria, findings and original evidence remain in their canonical registers and the preserved history. Do not close an item by analogy with a newer passing test.
+
+| IDs / surface | What remains / source for a future specifically authorized task |
+| --- | --- |
+| F01/F06/F10/F24 and review findings | The 2026-10-19 independent review records contradicted criteria and Windows failures at its dated baseline. Reproduce only relevant findings against current code before action; later implementation and passing suites do not prove their exact closure. [Review and criterion matrix](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md). |
+| F03 A5 versus F10 A3; F04 A4 | F03's early sample/resource-recording criterion is distinct from F10's actual real-FITS workflow gate (as the independent review explains). Real metadata/device evidence needs the exact file/workflow and unchanged reader inputs. Private samples stay outside Git. No new real-file run is claimed here. |
+| F02 A2/A3; S13V-01/TD-109; S13V-02/03 | Current launch/identity is integrated and API30/physical observations exist. The old “no SDK anywhere” explanation is obsolete; criterion-specific pre-12/12+, reduced-motion and timing qualification still needs explicit mapping to the final source/artifact/environment. Do not silently close historical device rows. |
+| F15 A4; F22 A1; F23 A2 | Calendar phone timing, Android process death/restoration, resolved Android dependency notices: retain exact criteria and evidence gaps. An available SDK, emulator drive or host PASS alone is insufficient. |
+| F25 A4, U/W; TD-114–TD-121 | Explicit owner visual acceptance, human comprehension, physical 200%/TalkBack and other unexercised rows remain separate from implemented/host/native evidence. Consult the named delivery reports for covered and excluded scenarios. |
+| G1; F26 / D6; G2–G4 | Frozen integration/CI/provider, packaging/measurement, owner signing, physical/human rehearsal, go/no-go and publication conditions remain. The combined debug-signed owner test APK is not F26 release qualification. No gate closure or publication permission is inferred. |
+| S1.5/S1.11, S2V-06, S3V-08, S10V-04, S11.6/S11.7 | Retained carried device/profile/human criteria: [STAGE_11_MATRIX](STAGE_11_MATRIX.md), [device runbook](STAGE_11_DEVICE_RUNBOOK.md) and historical dispositions. S6.E remains an owner-accepted **unverified** independent-participant gap, not a performed test. |
+| TD-072/S3F-01/S3F-02; TD-074; other TD/SI | Use current [TECH_DEBT](../TECH_DEBT.md) / [SCIENTIFIC_INTEGRITY](../SCIENTIFIC_INTEGRITY.md) entries and exact partial-resolution boundaries, not old “open defects not fixed” lists. This cleanup changes no finding dispositions. |
+| RD-02; RG-12; S12.2 | ADK skill / skills-lock / archive retention remains owner housekeeping, licence research remains deferred, trademark check remains optional. Preserve all material; none is deletion authority. [RG/RD registers](POST_ROADMAP_PLAN.md). |
+| Original evidence / external overrides | Private historical backups/device captures were not assumed available or copied into Git. Uninspected managed/cloud overrides remain unknown. Local auto-memory contains dated continuation hints; repository sources take precedence within the applicable instruction hierarchy. |
+
+## Reusable validation evidence
+
+Apply [V3](../VERIFICATION_POLICY.md#v3) per result, relevant inputs and environment. No application checks run in this cleanup. Do not reuse old UI results for changed UI surfaces just because they passed once.
+
+| Evidence | Input / applicability |
+| --- | --- |
+| [Combined delivery report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) and [verification.json](../design/migration/evidence/consolidated-2026-10-24/verification.json) | Source `8a21e7b`; host suite/E2E plus final 16 regressions and final analysis/format/encoding, API30 seven-frame capture, normal launch/hot reload, scoped canonical-phone inspection. The report preserves the original analyzer failure; it does not label that whole invocation green. Application/test/build inputs from that source to this cleanup baseline are unchanged; only permitted Markdown changes follow. This is recorded evidence reuse, not a fresh application run or expanded acceptance. |
+| [Hybrid transfer completion](../design/migration/HYBRID_TRANSFER_STATUS.md) | Its committed source, named pairs/Android captures and §9 owner's confirmation; later affected surfaces use their refinement reports. Exclusions stay explicit. |
+| [P-1–P-6 delivery](../design/migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](../design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md) | Scoped host/native/physical observations on their recorded inputs. The consolidation states what remained unchanged; do not generalize to untested settings, owner acceptance or F/G gates. |
+| Remote CI | Fresh GitHub connector read on 2026-10-24: run [40029616135](https://github.com/Buffur/Culmina/actions/runs/40029616135) completed/success at exact source `8a21e7b`. Build/test inputs from that source to this documentation cleanup are unchanged. This is observed existing CI evidence, not a new run or G1/F26/G2–G4 closure; the original consolidation “running” sentence remains historical. |
+
+## Historical routing
+
+The entire superseded PROGRESS at `94cebfb` is preserved verbatim with its SHA-256 in [PROGRESS_HISTORY](PROGRESS_HISTORY.md#governance-reconciliation-snapshot---2026-10-24): old run ledger, AM approvals/fingerprints, stages, blockers, Git/environment snapshots and contradictory next-action text. It preserves all IDs and provenance; its commands are inactive. [FINAL_COMPLETION_ROADMAP](FINAL_COMPLETION_ROADMAP.md) retains the frozen F/G/A/CHK contract and hash-bound annexes without edits; [POST_ROADMAP_PLAN](POST_ROADMAP_PLAN.md) retains RG/RD and earlier S-ID clauses.
+
+<details>
+<summary>Superseded operational entries from PROGRESS at 4ac20a9 (verbatim; inactive)</summary>
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Integration baseline | Before the owner-authorized cleanup delivery, `develop` and freshly fetched `origin/develop` were `94cebfb6b2a3379f5991e61e1bd88f7120804601`. The documentation successor is the cleanup commit containing this record; resolve its hash and remote delivery from Git. Application delivery: `8a21e7b0a2018b223d8a1e4a73c4baa64167414f`; only Markdown changed between that source and the baseline. GitHub default remains `main`; use explicit `develop` refs. Recheck this dated baseline at every new session. |
+| Current authorized scope | Owner's 2026-10-24 documentation/governance cleanup: shared agent rules, current-state reconciliation, design source map, conservative historical routing and documentation verification. No application, tests, assets, platforms, dependencies, generators, web reference or CI changes. The owner subsequently authorized committing and pushing only these cleanup changes to develop after a fresh Git/scope check. No roadmap/new task, device installation/uninstall/data operation or global settings changes are authorized. |
+| Preservation | Initial tree was clean: no staged/unstaged/untracked work, one worktree, develop ahead/behind 0/0, no unique unpublished commits across local branches. Local main's three commits ahead of origin/main are already reachable from develop. External original-file copies, SHA-256 tree/backup manifests and empty staged/unstaged patches were verified before editing. No bundle was needed for unique work. |
+
+## Next allowed action
+
+The owner authorized one commit and an ordinary push of this documentation cleanup to `develop`. Verify the staged paths/checks and actual remote delivery, then **stop and wait for owner review/acceptance or a new bounded task**. Do not resume F01–F26/G1–G4, redesign, build, install, commit or push from an older “next” line or delivery permission.
+
+</details>
+
+
+<details>
+<summary>Superseded design-reconciliation handoff from the pre-routing working tree at 4ac20a9 (verbatim; inactive)</summary>
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Current authorized scope | Owner's 2026-10-24 bounded design-skill reconciliation: token mappings, ContextLine API/adoption and spacing semantics, directly related DESIGN_SYSTEM sections and this handoff only. Documentation work is complete; no commit, push, merge, build, install, device/data operations or roadmap continuation is authorized. |
+| Documentation verification | V1 on the final five-file Markdown diff over `4ac20a9`: named paths/symbols, changed claims against definitions and actual callers, local references/anchors/case, cited IDs, allowed scope and `git diff --check` passed. Evidence is in this task's execution outputs (37 local links/anchors, 58 explicit paths, HT/TD IDs and source/caller checks); reconciled-document fingerprint is SHA-256 `fa857cf7113740db158c0294644cb58936b959f629d1ee14f633456066d2e790` (the four changed guidance documents, sorted path + NUL + LF text + NUL; excludes this handoff). Historical DESIGN_SYSTEM adoption/update sections and prior audit/evidence files remain unchanged. No Flutter tests/analyzer/full gate, frozen-inventory regeneration or fresh application/device/owner PASS. |
+| Preservation | Initial tree/index were clean, one worktree, no unique unpublished local commits; sole writer for this task. Final unstaged changes are exactly five Markdown files: the three skill/reference files, DESIGN_SYSTEM and this PROGRESS handoff; no staged or untracked changes. Superseded operational entries from `4ac20a9` are retained verbatim below because history-file edits are outside this task. Existing owner/device/F/G acceptance rows and evidence limits remain. |
+
+</details>
+
+
+<details>
+<summary>Superseded routing-task handoff from the pre-validation working tree at 4ac20a9 (verbatim; inactive)</summary>
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Current authorized scope | Owner's separate 2026-10-24 instruction-routing/recipe task: skill router, five Culmina design entrypoints/references, design WORKFLOW, three named Flutter recipes and this handoff. Work complete; no application change, SDK/plugin/dependency update, skills-lock edit, commit/push/merge, build or device/data operation authorized. |
+| Documentation verification | V1 for this task's Markdown changes over the preserved pre-routing dirty state at `4ac20a9`: local links/anchors/case, named paths/IDs, eight entrypoints' frontmatter/schema/descriptions, retained upstream metadata, history/link/anchor preservation, source-based three-route walkthroughs, scope and `git diff --check` passed. Guidance fingerprint (13 files excluding this handoff; sorted path + NUL + LF text + NUL): SHA-256 `55fa5da65cc0394334d266fabbda9b454aff5c26e3ee75b41c010579c9d1ad94`. Evidence: this chat's execution outputs and [official-doc/SDK source record](../../.agents/skills/references/flutter-layout-preview-sources-2026-10-24.md). Upstream quick_validate.py could not run because PyYAML is absent in both available Python runtimes; independent validation checked the exact plain-scalar YAML form and schema without installation. Context7 plus precise official-API fallback and read-only Flutter 3.47.4 source inspection support technical text; no compiled/runtime preview, client auto-loading probe, application gate or new device/owner PASS is claimed. |
+| Preservation | At this task's start, five prior uncommitted Markdown files were present and no staged/untracked work. Their bytes/patches and the recipe inputs were preserved with a verified manifest outside Git at `C:/Users/zalub/AppData/Local/Temp/culmina-routing-2026-10-24-0xd3x82o`. The prior DESIGN_SYSTEM and navigation-reference changes remain byte-for-byte intact; the corrected token map is preserved verbatim in its new reference. This task changes 11 existing Markdown files (including this handoff) and adds three necessary references: optional lab history, semantic mapping, shared dated Flutter API/SDK evidence. Cumulative working diff: 16 Markdown files; no unrelated/index changes. Prior operational entries remain verbatim below; carried owner/device/F/G criteria and historical evidence remain unchanged. |
+
+## Next allowed action
+
+**Stop and wait for owner review or another explicitly bounded task.** This documentation task is complete. The prior cleanup's Git delivery permission is historical; it authorizes no commit/push here. Do not begin application fixes, tests/builds, device/data operations or the next roadmap task.
+
+</details>
+
+## How to update this file
+
+Replace current state/next action rather than stacking dated alternatives. Preserve superseded entries verbatim in PROGRESS_HISTORY with source/revision. Update only the task's relevant registers and record exact criteria/evidence, pending owner/device rows, input revision/reuse reason, next action and current permissions. Historical task authorization never silently restarts. Results go in their bounded report; this file keeps a short routing summary.
+
+<!-- END verbatim maintenance pre-fix PROGRESS snapshot -->
+
+
+## Design-skills delivery authorization — 2026-10-24
+
+Superseded current rows/next action from the pre-delivery working tree at `4ac20a9`, retained verbatim. The owner subsequently authorized the reviewed Markdown package's commit and ordinary push to develop; this preserves the prior no-delivery boundary and does not authorize future work.
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Integration baseline | Unchanged `develop` HEAD `4ac20a9519d3444f2877c1ba5a61dd1f219b4659`, upstream `origin/develop`, local ahead/behind 0/0; one worktree. Remote freshness is limited to the earlier same-day read-only verification; no new fetch/delivery in this task. Application delivery remains `8a21e7b0a2018b223d8a1e4a73c4baa64167414f`. |
+| Current authorized scope | Owner's consolidated bounded documentation/skills maintenance: five existing design skills/references, skill router/WORKFLOW, directly related active DESIGN_SYSTEM sections, three Flutter Markdown recipes and this handoff/history preservation. No application/test/tooling/configuration/assets/dependency/lockfile/frozen-reference edits, installation, Git delivery, builds or device/data operations. |
+
+### Next allowed action (superseded)
+
+**Stop and wait for owner review or another explicitly bounded task.** This maintenance cycle and its V1/independent probes are complete. No maintenance finding remains from this scope; existing owner/device/F/G criteria below are unchanged. No commit/push, new UI task, roadmap continuation, build/install or device/data operation is authorized.

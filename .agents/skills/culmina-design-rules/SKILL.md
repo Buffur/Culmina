@@ -1,46 +1,45 @@
 ---
 name: culmina-design-rules
-description: Apply Culmina product-specific UI decisions, scientific invariants and documented debt boundaries. Use before implementing or reviewing a Culmina design change.
+description: Apply Culmina product/data invariants and documented exception boundaries to a named design task or review. Use the relevant decision clauses; do not reopen a roadmap or start design research.
 ---
 
 # Culmina design rules and technical debt
 
-Status: active task guidance, reconciled 2026-10-24. Read `docs/design/BASELINE.md` first for the adopted Hybrid/native sources and later refinements; `docs/VERIFICATION_POLICY.md` owns checks. Skills cannot authorize new scope.
+Use when a design decision touches product meaning, scientific/data invariants or a documented exception. Do not load historical reports as another task queue or infer approval from code. [WORKFLOW](../../../docs/design/WORKFLOW.md#work-modes) owns the work modes.
 
-Start with `docs/design/WORKFLOW.md`. Read the current task and referenced entries of `docs/DECISIONS.md`, `docs/TECH_DEBT.md` and `docs/ENGINEERING_GUARDRAILS.md`; never load historical reports as a second task queue.
+## Read the relevant contract
 
-## Product rules that change design decisions
+Read the owner task, [BASELINE](../../../docs/design/BASELINE.md), and only relevant entries in [DECISIONS](../../../docs/DECISIONS.md), [ENGINEERING_GUARDRAILS](../../../docs/ENGINEERING_GUARDRAILS.md) and [TECH_DEBT](../../../docs/TECH_DEBT.md). [PROGRESS](../../../docs/refinement/PROGRESS.md) owns current status/permissions.
 
-- Planning first: understand the night, make a realistic Capture Plan, save it and record a result. No telescope control, camera operation or invented Astro Score.
-- Answer first; details remain reachable. Basic camera parameters follow the selected camera class and approved AM-04 decisions; keep useful calculations behind clear disclosure.
-- Production Home is a summary: title/place/night → Your plan and Open planner → The night ahead → next actions (due result/candidates), with separate no-site/loading/error branches. This order is the adopted Hybrid, confirmed in the current source. No unguarded New plan or Start control on Home.
-- Use selected-night wording consistently. Remembered coordinates are not a live position; never label them Current position or silently overwrite edited inputs.
-- Preserve explicit units, source/freshness and Unknown. A missing forecast is not 0% cloud; relative stacking gain is not absolute SNR.
-- Fit (Fits / Tight / Doesn't fit / Needs input) and persistence (Saved / Saved · changed) are separate meanings. Use words and reasons, not green/red alone.
-- Keep Save/Discard/Cancel and draft boundaries. Do not silently save while changing a theme or navigating a concept.
-- Offline core remains meaningful. Simulated data in a concept must be visibly identified as an example.
-- The 2026-10-19 Notion/Paper + Journal preference is historical provenance. Hybrid/Geist was subsequently adopted and its final transfer accepted within its §9 contract. Other gallery concepts remain proposals; later TD-120/TD-121 and identity acceptance boundaries are in BASELINE.
+## Product rules that change decisions
 
-## Target platform and reference boundaries
+- Planning first: understand a night, build a realistic Capture Plan, save, then record results. No telescope/camera control or invented Astro Score.
+- Answer first, details reachable. Preserve existing camera-class/AM-04 behavior and calculations; do not simplify away scientific capabilities.
+- Current Home: title/place/night → Your plan/action → The night ahead → next actions, with no-site/loading/error branches. Preserve compact Weather, guarded drafts and the current native composition. No unguarded New plan or Start action.
+- Use selected-night wording and the existing UTC/zone/DST/SessionNight contracts. Remembered coordinates are not a live position; do not overwrite edited inputs silently.
+- Unknown is not zero. Preserve explicit units, source/freshness, theoretical versus measured storage, and relative stacking gain versus absolute SNR. Settings supplies initial Plan assumptions; AF/MF is descriptive, without an invented numeric MF control.
+- Fit and persistence/result state have different meanings. Keep words/reasons, draft/saved and planned/recorded boundaries, and Save/Discard/Cancel. Autosave of working edits is not explicit Save plan.
+- Offline core stays meaningful. Any illustrative fixture must be identified as an example. Field mode's intentional secondary contrast is a bounded dark-adaptation exception, not a defect to remove or general AA evidence.
 
-The owner explicitly requires an **Android app** concept. The browser is only the preview host. Preserve the approved restrained Hybrid Notion + Journal direction; use the existing application for functions, data and workflows, not as a visual template. Android anatomy governs app bars, Back, Material controls, touch targets, scrolling, system/keyboard insets and text scaling. Keep lab controls outside the app viewport. A desktop browser must not turn the phone concept into a web dashboard. Prior Apple, Fluent and Spectrum research supplies transferable principles, not Android component styling. Browser captures do not prove native gestures, keyboard behavior or device acceptance.
+<a id="target-platform-and-reference-boundaries"></a>
+
+Current native and Android anatomy/behavior come from BASELINE and actual components. [Earlier product-reference studies](../../../docs/design/references/LAB_HISTORY.md#product-reference-provenance) are optional provenance, not current adoption instructions.
 
 ## Debt handling
 
-An example in a video or pasted screenshot is not Culmina policy. In particular, never create an exception for inaccessible buttons or freeze a defect because an example called it legacy.
-
-Classify a real issue from the live register:
-
-| Evidence | Action |
+| Evidence | Disposition within the current task |
 | --- | --- |
-| Existing invariant or accepted exclusion | Preserve it and cite its decision |
-| Documented temporary exception | Preserve its exact boundary, reason and remediation task; do not expand it |
-| Regression or task criterion failure | Repair within the authorized task, applying `docs/VERIFICATION_POLICY.md` |
-| Adjacent unrelated defect | Record a precise finding; avoid opportunistic scope expansion |
-| Style preference or new behavior | Mark proposal; do not invent acceptance approval |
+| Existing invariant or accepted exclusion | Preserve and cite the relevant decision |
+| Documented temporary exception | Preserve its exact reason/boundary and remediation ID |
+| Regression or approved criterion failure | Report in Review; correct only within an authorized Implement/Fix task |
+| Adjacent unrelated issue | Record a precise finding without expanding implementation |
+| New behavior or style preference | Proposal/owner decision; do not invent acceptance |
 
-Existing intentional exception: field-mode secondary text has a documented dark-adaptation tradeoff (`docs/DESIGN_SYSTEM.md` §2), not general AA evidence. Existing science and time contracts are not debt to simplify away.
+An example in an external guide is not a Culmina debt exception. Stable IDs and pending owner/device criteria remain.
 
-## Handoff and review
+<a id="product-rules-that-change-design-decisions"></a>
+<a id="handoff-and-review"></a>
 
-Record: task/baseline; scenario; decisions and criteria; relevant components/tokens; changed files; checks/evidence; limitations; next allowed action. Reuse valid evidence under `docs/VERIFICATION_POLICY.md` V3. Distinguish browser prototype, host widget, emulator and physical-device evidence. Review against frozen criteria; avoid repeated preference-driven audits.
+## Finish
+
+Return the decision/invariant, actual affected source/caller, implemented versus accepted state, findings and [V1–V8](../../../docs/VERIFICATION_POLICY.md) evidence/limits. Browser, host, emulator, physical-device and owner acceptance are distinct.

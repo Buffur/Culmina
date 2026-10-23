@@ -1,145 +1,53 @@
 ---
 name: flutter-add-widget-preview
-description: Adds interactive widget previews to the project using the previews.dart system. Use when creating new UI components or updating existing screens to ensure consistent design and interactive testing.
+description: Create or update an isolated Flutter widget preview only for a named preview task. First inspect existing Culmina gallery/render fixtures and actual SDK support; ordinary UI fixes do not require preview infrastructure.
 metadata:
   model: models/gemini-3.1-pro-preview
   last_modified: Tue, 21 Apr 2026 20:05:23 GMT
 ---
-# Previewing Flutter Widgets
 
-## Contents
-- [Preview Guidelines](#preview-guidelines)
-- [Handling Limitations](#handling-limitations)
-- [Workflows](#workflows)
-- [Examples](#examples)
+# Previewing Flutter widgets
 
-## Preview Guidelines
+Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use only when an isolated preview is part of the requested task. Do not add preview annotations, a preview scaffold, dependencies or conditional-import refactoring merely because a UI component changes. Follow [WORKFLOW modes](../../../docs/design/WORKFLOW.md#work-modes).
 
-Use the Flutter Widget Previewer to render widgets in real-time, isolated from the full application context. 
+## Preview guidelines
 
-- **Target Elements:** Apply the `@Preview` annotation to top-level functions, static methods within a class, or public widget constructors/factories that have no required arguments and return a `Widget` or `WidgetBuilder`.
-- **Imports:** Always import `package:flutter/widget_previews.dart` to access the preview annotations.
-- **Custom Annotations:** Extend the `Preview` class to create custom annotations that inject common properties (e.g., themes, wrappers) across multiple widgets.
-- **Multiple Configurations:** Apply multiple `@Preview` annotations to a single target to generate multiple preview instances. Alternatively, extend `MultiPreview` to encapsulate common multi-preview configurations.
-- **Runtime Transformations:** Override the `transform()` method in custom `Preview` or `MultiPreview` classes to modify preview configurations dynamically at runtime (e.g., generating names based on dynamic values, which is impossible in a `const` context).
+1. Inspect existing native fixtures first: `test/presentation/design_system/gallery_entries.dart`, `gallery_harness.dart`, `render_gallery_test.dart`, `u_renders_test.dart`, `hybrid_transfer_renders_test.dart` and `skill_application_test.dart`. Reuse an appropriate fixture/host render for the requested state before proposing infrastructure.
+2. Check the actual SDK/API and available preview tooling without installing/updating them. Preview APIs evolve; a package's minimum Dart constraint is not proof of the active Flutter version. The [dated SDK/source check](../references/flutter-layout-preview-sources-2026-10-24.md#widget-preview-sdk-compatibility) records what was inspected here, not a permanent version promise or a running-preview result.
+3. For an authorized preview implementation, `package:flutter/widget_previews.dart` supplies Preview. Use supported public top-level functions/static methods returning Widget/WidgetBuilder or eligible public widget constructors/factories without required arguments. Annotation values must be constant; callbacks supplied to annotations must be static/top-level and public. Confirm exact targets and signatures in the installed API.
+4. Supply the requested context/constraints, state fixtures and Culmina themes: `AppTheme.light`, `AppTheme.dark`, `AppTheme.fieldTheme` in `lib/core/theme/app_theme.dart`, not arbitrary ThemeData.light/dark. Preserve the production field filter where applicable and load the actual bundled fonts for typography comparisons. A theme's brightness alone does not select field mode.
+5. Choose a wrapper/theme hook supported by that SDK, keep the scenario isolated, and retain all recorded evidence limitations. See the Markdown-only example below; no .dart preview file is created by this recipe.
 
-## Handling Limitations
+## Handling limitations
 
-Adhere to the following constraints when authoring previewable widgets, as the Widget Previewer runs in a web environment:
+The Widget Previewer runs on Flutter Web. Native plugins and invoking dart:io/dart:ffi APIs are unsupported; a transitive import alone is not proof that loading fails in current versions. A native gallery/host fixture may be the suitable route for such a widget. Prefer existing injected fakes/seams; do not restructure production imports automatically to make a preview compile. Record a required .dart/example/infrastructure change as separate work if the current task does not authorize it.
 
-- **No Native APIs:** Do not use native plugins or APIs from `dart:io` or `dart:ffi`. Widgets with transitive dependencies on `dart:io` or `dart:ffi` will throw exceptions upon invocation. Use conditional imports to mock or bypass these in preview mode.
-- **Asset Paths:** Use package-based paths for assets loaded via `dart:ui` `fromAsset` APIs (e.g., `packages/my_package_name/assets/my_image.png` instead of `assets/my_image.png`).
-- **Public Callbacks:** Ensure all callback arguments provided to preview annotations are public and constant to satisfy code generation requirements.
-- **Constraints:** Apply explicit constraints using the `size` parameter in the `@Preview` annotation if your widget is unconstrained, as the previewer defaults to constraining them to approximately half the viewport.
-
-## Workflows
-
-### Creating a Widget Preview
-Copy and track this checklist when implementing a new widget preview:
-
-- [ ] Import `package:flutter/widget_previews.dart`.
-- [ ] Identify a valid target (top-level function, static method, or parameter-less public constructor).
-- [ ] Apply the `@Preview` annotation to the target.
-- [ ] Configure preview parameters (`name`, `group`, `size`, `theme`, `brightness`, etc.) as needed.
-- [ ] If applying the same configuration to multiple widgets, extract the configuration into a custom class extending `Preview`.
-
-### Interacting with Previews
-Follow the appropriate conditional workflow to launch and interact with the Widget Previewer:
-
-**If using a supported IDE (Android Studio, IntelliJ, VS Code with Flutter 3.38+):**
-1. Launch the IDE. The Widget Previewer starts automatically.
-2. Open the "Flutter Widget Preview" tab in the sidebar.
-3. Toggle "Filter previews by selected file" at the bottom left if you want to view previews outside the currently active file.
-
-**If using the Command Line:**
-1. Navigate to the Flutter project's root directory.
-2. Run `flutter widget-preview start`.
-3. View the automatically opened Chrome environment.
-
-**Feedback Loop: Preview Iteration**
-1. Modify the widget code or preview configuration.
-2. Observe the automatic update in the Widget Previewer.
-3. If global state (e.g., static initializers) was modified: Click the global hot restart button at the bottom right.
-4. If only the local widget state needs resetting: Click the individual hot restart button on the specific preview card.
-5. Review errors in the IDE/CLI console -> fix -> repeat.
+Check asset loading paths for the actual loader/package and preview environment. Public callbacks, constraints, fonts, providers/localizations and error/loading/disabled state are part of the preview scenario, not optional evidence to infer from its appearance.
 
 ## Examples
 
-### Basic Preview
-```dart
-import 'package:flutter/widget_previews.dart';
-import 'package:flutter/material.dart';
+A public wrapper can provide the Culmina theme without depending on a version-specific PreviewThemeData constructor. This Markdown example matches the inspected 3.47.4 `WidgetWrapper = Widget Function(Widget)` signature; confirm it for another SDK. It is a static source example, not compiled or runtime-tested evidence.
 
-@Preview(name: 'My Sample Text', group: 'Typography')
-Widget mySampleText() {
-  return const Text('Hello, World!');
-}
+```dart
+import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
+
+Widget culminaLightPreview(Widget child) => MaterialApp(
+  theme: AppTheme.light,
+  home: Scaffold(body: child),
+);
+
+@Preview(name: 'Culmina light', wrapper: culminaLightPreview)
+Widget labelPreview() => const Text('Unknown');
 ```
 
-### Custom Preview with Runtime Transformation
-```dart
-import 'package:flutter/widget_previews.dart';
-import 'package:flutter/material.dart';
+Use the corresponding existing theme/field wrapper for other requested scenarios. In the inspected SDK, PreviewThemeData is abstract and custom implementations override apply; PreviewBuilder returns a Preview through build(), not toPreview(). Do not copy the superseded generic theme/builder examples. No executable .dart example files exist in this recipe directory at this task's baseline, so none need editing here.
 
-final class TransformativePreview extends Preview {
-  const TransformativePreview({
-    super.name,
-    super.group,
-  });
+## Workflows
 
-  PreviewThemeData _themeBuilder() {
-    return PreviewThemeData(
-      materialLight: ThemeData.light(),
-      materialDark: ThemeData.dark(),
-    );
-  }
+Only for an authorized preview run, use the installed supported IDE route or `flutter widget-preview start` after confirming that command exists in that SDK. Do not assume every IDE auto-starts a previewer or launch a browser/server in a documentation task. Capture the exact widget state/theme/size/scaler and actual launch/result; a static API check is not runtime compatibility proof.
 
-  @override
-  Preview transform() {
-    final originalPreview = super.transform();
-    final builder = originalPreview.toBuilder();
-    
-    builder
-      ..name = 'Transformed - ${originalPreview.name}'
-      ..theme = _themeBuilder;
+## Finish
 
-    return builder.toPreview();
-  }
-}
-
-@TransformativePreview(name: 'Custom Themed Button')
-Widget myButton() => const ElevatedButton(onPressed: null, child: Text('Click'));
-```
-
-### MultiPreview Implementation
-```dart
-import 'package:flutter/widget_previews.dart';
-import 'package:flutter/material.dart';
-
-/// Creates light and dark mode previews automatically.
-final class MultiBrightnessPreview extends MultiPreview {
-  const MultiBrightnessPreview({required this.name});
-
-  final String name;
-
-  @override
-  List<Preview> get previews => const [
-        Preview(brightness: Brightness.light),
-        Preview(brightness: Brightness.dark),
-      ];
-
-  @override
-  List<Preview> transform() {
-    final previews = super.transform();
-    return previews.map((preview) {
-      final builder = preview.toBuilder()
-        ..group = 'Brightness'
-        ..name = '$name - ${preview.brightness!.name}';
-      return builder.toPreview();
-    }).toList();
-  }
-}
-
-@MultiBrightnessPreview(name: 'Primary Card')
-Widget cardPreview() => const Card(child: Padding(padding: EdgeInsets.all(8.0), child: Text('Content')));
-```
+Apply [V1–V8](../../../docs/VERIFICATION_POLICY.md) for the actual change class. Report whether existing fixtures sufficed, actual SDK/API, changes made or separately needed, rendered evidence and limits. A browser/widget preview is not Android, physical-device, accessibility certification or owner acceptance; do not close those rows from it.
