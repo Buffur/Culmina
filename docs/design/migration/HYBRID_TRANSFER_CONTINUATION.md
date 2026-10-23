@@ -53,9 +53,11 @@ Carry forward:
 - `linux/`, `macos/`, `windows/` generated plugin registrants show as modified only by line endings (the Flutter
   tool regenerated them); their content is unchanged.
 
-After checkpoint 3 the owner decided HT-DEV-01, -02 and -16 (2026-10-23, the recommended set) and the run closed
-**COMPLETE** under §9 (see the status record's Checkpoint 3). Nothing is left in this transfer; a later code change
-needs a fresh release APK and smoke before that result is reused.
+After checkpoint 3 the owner decided HT-DEV-01, -02 and -16 (2026-10-23, the recommended set); two device gaps
+(TD-112, TD-113) were fixed, and the run closed **COMPLETE** under §9 with the final release APK `2792fbe2…` (see
+the status record's Checkpoint 3). Commits `1577cdd`, `501d98c`, `548d7d6` and the final record, not pushed.
+Nothing is left in this transfer; a later code change needs a fresh release APK and smoke before that result is
+reused.
 
 ## Where the work stands
 

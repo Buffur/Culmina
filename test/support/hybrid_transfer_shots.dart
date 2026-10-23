@@ -218,6 +218,11 @@ final Map<String, HybridStep> hybridShots = {
     await c.tester.runAsync(c.fixture.seedLogbook);
     await c.go(AppRouter.sessions);
   },
+  'logbook_progress': (c) async {
+    await c.tester.runAsync(c.fixture.seedLogbook);
+    await c.go(AppRouter.sessions);
+    await c.tapKey('logbook.progress');
+  },
   'logbook_b': (c) async {
     await c.tester.runAsync(c.fixture.seedLogbook);
     await c.go(AppRouter.sessions);

@@ -46,7 +46,7 @@ Status words: `pending`, `in progress`, `PASS`, `covered-by <ID>`, `native adapt
 `external-unverified`, `blocked`, `fail`, `OWNER` (waits on an owner decision listed under Deviations). Visual and
 functional are independent. Web sources are relative to `design/home-lab/`. Matrix A IDs refer to
 [WEB_DESIGN_INVENTORY.md](WEB_DESIGN_INVENTORY.md) behaviour rows. Pairs: `pairs-checkpoint2/`, `pairs-checkpoint3/`
-(web left, Flutter host right, 375 × 760 unless named `w412-*`); Android: `android/`, `android/b2/`, `android/b3/`
+(web left, Flutter host right, 375 × 760 unless named `w412-*`); Android: `android/`, `android/b2/`, `android/b3/`, `android/b4/`
 (`android-<frame>-<theme>.png`, each folder with its `integration-report.json`) from
 `integration_test/hybrid_transfer_capture_test.dart` on `emulator-5554`; reviewed web | Android pairs in
 `android-pairs/` (Android scaled to 375 logical px, status inset cropped) and the Dark/Field device sheets
@@ -80,7 +80,7 @@ or recorded; "Android" = the same frame captured on the emulator and opened.
 | ID | Surface / state | Flutter target | Visual | Functional | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | HT-H01 | Home ready | `tonight_home_screen.dart` | host PASS L/D/F; Android PASS | `tonight_home_screen_test` | `home-*.png` |
-| HT-H02 | Home states: no site, error/retry, loading, empty plan, unknown forecast, no dark, partial/stale/offline | same | no site, error: host PASS; loading HT-DEV-08; error HT-DEV-09; Weather row states HT-DEV-10 (wording matches: Forecast unavailable, No dark-time forecast) | `home_screen_test` (load error + retry), `tonight_home_screen_test`, `field_mode_darkness_test` | `home_nosite.png`, `web/checkpoint3/web-home-*` |
+| HT-H02 | Home states: no site, error/retry, loading, empty plan, unknown forecast, no dark, partial/stale/offline | same | no site: host PASS and Android PASS (release smoke, `smoke3.png`); error/retry: covered-by the no-site state message (the same state-message layout: 20 px icon, 20/600 heading, copy, full-width primary) with its own copy and Retry, and HT-DEV-09; loading: HT-DEV-08; Weather row states: wording as the reference (Forecast unavailable, No dark-time forecast), HT-DEV-10 | `home_screen_test` (load error + retry), `tonight_home_screen_test`, `field_mode_darkness_test` | `home_nosite.png`, `release-smoke/smoke3.png`, `web/checkpoint3/web-home-*` |
 | HT-H03 | Home site and night sheets (WQA-06) | `home_context_sheets.dart` (new) | host PASS; Android PASS; HT-DEV-05/06 | Apply site/night, Cancel keeps the plan (`tonight_home_screen_test` night sheet tests) | `home_sitesheet.png`, `home_nightsheet.png` |
 | HT-H04 | First-run onboarding (kept) | `welcome_screen.dart` | native adaptation | `welcome_screen_test` | — |
 | HT-H05 | Candidates | `tonight_candidates_screen.dart` | host PASS; Android PASS; HT-DEV-07 | choose target, filters, late answers (`tonight_candidates_screen_test`) | `home_candidates.png` |
@@ -94,13 +94,13 @@ or recorded; "Android" = the same frame captured on the emulator and opened.
 | HT-N02 | Moon tab | same | host PASS; Android PASS | `moon_calendar_hybrid_test` | `moon-*.png` |
 | HT-W01 | Weather A compact rows | `weather_hybrid_view.dart` | host PASS; Android PASS | `weather_hybrid_view_test`, `detail_screens_test` | `w-*.png`, `weather-a.png` |
 | HT-W02 | Weather B charts (WQA-05) | same | host PASS; Android PASS | same data as A (tests) | `wB-*.png` |
-| HT-W03 | Weather states | same | offline/error host PASS; Android PASS (offline); stale, partial (later start + cloud gaps) and no dark host PASS against `conditions.js` scenarios | retry, coverage words (`weather_hybrid_view_test`, `forecast_nights_test`) | `wx-offline.png`, `weather_stale.png`, `weather_partial.png`, `weather_nodark.png` |
+| HT-W03 | Weather states | same | host PASS and Android PASS: offline, stale, partial (later start + cloud gaps), no dark, against `conditions.js` scenarios | retry, coverage words (`weather_hybrid_view_test`, `forecast_nights_test`) | `wx-offline.png`, `weather_stale.png`, `weather_partial.png`, `weather_nodark.png`, `android-pairs/android-pair-weather_*.png` |
 | HT-W04 | Weather view preference | display settings | host PASS | default rows, persisted, old backups read rows (`display_settings_test`) | `set-appearance*.png` |
 | HT-L01 | Logbook list | `logbook_screen.dart` | host PASS L/D/F; Android PASS; HT-DEV-11 | `logbook_screen_test` | `logbook*.png` |
 | HT-L02 | Logbook filters, empty, no match | same | host PASS; Android PASS | filters/clear/range (`logbook_screen_test`) | `logbook_filters.png` |
 | HT-L03 | Entry detail | `session_detail_screen.dart` | host PASS; Android PASS; HT-DEV-12 | `session_detail_test`, `astrobin_export_test`, E2E export | `entry*.png` |
 | HT-L04 | Result editor | `results_screen.dart` | host PASS; Android PASS | `results_screen_test`, E2E result after restart | `result*.png` |
-| HT-L05 | Progress by target | `progress_screen.dart` | host PASS | `target_progress_test`, `logbook_screen_test` | — |
+| HT-L05 | Progress by target | `progress_screen.dart` | host PASS; Android PASS | `target_progress_test`, `logbook_screen_test` | `android-pairs/android-pair-logbook_progress.png` |
 | HT-B01 | Library root | `library_screen.dart` | host PASS L/D/F; Android PASS | counts/retry (`app_shell_navigation_test`) | `library.png` |
 | HT-B02 | Rigs/Targets/Sites lists | list screens | host PASS (375, 412); Android PASS | search, swipe delete (`equipment_selection_screen_test`, `target_*_test`, `sites_screen_test`) | `lib_rigs.png`, `lib_targets.png`, `lib_sites.png` |
 | HT-B03 | Rig/target/site records | `rig_detail_screen.dart`, `target_detail_screen.dart`, `site_detail_screen.dart` (new) | host PASS; Android PASS; catalogue record HT-DEV-02 | Edit/Delete/Undo (`library_manage_mode_test`) | `lib_rig.png`, `lib_target.png`, `lib_site.png` |
@@ -114,8 +114,8 @@ or recorded; "Android" = the same frame captured on the emulator and opened.
 | HT-S04 | Privacy | same | host PASS; Android PASS | `place_name_switch_persistence_test` | `set-privacy.png` |
 | HT-S05 | Backup & data | `backup_section.dart` | host PASS; Android PASS; native adaptation (format) | `backup_section_test` | `set-backup.png` |
 | HT-S06 | About | `about_screen.dart` | host PASS; Android PASS; HT-DEV-14 | `about_screen_test` | `set-about.png` |
-| HT-X01 | Native-only: GPS/permissions, file import, export/share, backup files, metadata import, map picker | existing screens | native adaptation | release APK on `emulator-5554`: the Android location permission dialog, the share sheet with the backup file, the DocumentsUI picker and the refusal of non-backup files (13 B and 37 MB) PASS; two gaps found there were fixed and re-checked on the final APK: TD-112 (a position request without a fix now ends with an explained failure; the Sites button shows it is running) and TD-113 ("Checking the file…" while a pick runs; a refusal stays until dismissed) | `release-smoke/system-*.png`, `td112-position-failure-2792fbe2.png`, `td113-refusal-stays-2792fbe2.png` |
-| HT-X02 | Release APK from `lib/main.dart`, smoke on the emulator | Android build | N/A | RELEASE | see "Release APK" |
+| HT-X01 | Native-only: GPS/permissions, file import, export/share, backup files, metadata import, map picker | existing screens | native adaptation | PASS on the final release APK `2792fbe2…` (emulator): Android location permission dialog, explained failure without a fix (TD-112 fixed), share sheet with the backup file, DocumentsUI picker, refusal of a non-backup file kept until dismissed (TD-113 fixed); metadata import and the map picker are unchanged by this transfer and covered by their existing tests | `release-smoke/system-*.png`, `td112-position-failure-2792fbe2.png`, `td113-refusal-stays-2792fbe2.png`, `system-share-sheet-2792fbe2.png` |
+| HT-X02 | Release APK from `lib/main.dart`, smoke on the emulator | Android build | N/A | PASS: final artifact `2792fbe2…` built and launched as the exact installed file | "Release APK" below, `release-smoke/` |
 
 Excluded (contract §3): studio shell, concept/palette/gain-variant selectors, font gallery, phone frame, fake
 status/gesture bars, browser-only preview notes ("saved in this browser").
@@ -211,28 +211,38 @@ layouts match the reviewed host pairs; differences are fixture data, the recorde
 own scroll position on one Weather frame. Builds on this machine need `GRADLE_OPTS="-Dorg.gradle.project.kotlin.incremental=false
 -Dkotlin.compiler.execution.strategy=in-process"` (Kotlin's incremental caches fail across the C:/D: drives).
 
-Release APK (contract §7):
+Release APK (contract §7) — the final artifact:
 
 | Item | Value |
 | --- | --- |
-| Source | `develop` at `01b8049` plus the uncommitted checkpoint-3 working tree (no commit in this run); fingerprints at build time: `git diff HEAD | sha256sum` → `6515fd878233a28b…`, untracked `lib`/`test`/`integration_test` contents → `9bb7f181274f4952…`; rebuilt after the owner decisions (only a Dart doc comment had changed): byte-identical, `f763ebd7…1c98` again; then rebuilt with the TD-112 fix (`a2d9465a…`) and with the TD-113 fix (`backup_section.dart`, `backup_viewmodel.dart`) → `2792fbe2…`, the final artifact, built from the committed source |
-| Command | `flutter build apk --release` (documented release path: without `--no-pub`, see ENGINEERING_GUARDRAILS), with the `GRADLE_OPTS` above; `pubspec.yaml`/`pubspec.lock` unchanged |
+| Source | `develop` at `548d7d6` (no file under `lib/`, `assets/`, `android/app/src/` or the pubspec differs between that commit and the build) |
+| Command | `flutter build apk --release` (documented release path: without `--no-pub`, see ENGINEERING_GUARDRAILS) with `GRADLE_OPTS="-Dorg.gradle.project.kotlin.incremental=false -Dkotlin.compiler.execution.strategy=in-process"`; `pubspec.yaml`/`pubspec.lock` unchanged |
 | Entry point | normal `lib/main.dart`, no fixtures |
-| Artifact | `build/app/outputs/flutter-apk/app-release.apk`. First build: SHA-256 `f763ebd78fa620963580a7494671fb99345b20a27144234a63da3e84f1671c98` (74 958 274 bytes). Second build (TD-112 fix): `a2d9465a80248305ad39a83fa060968a9181221a9b5ea811c9af23980541a919`. **Final build** (TD-112 and TD-113 fixes, the committed source): SHA-256 `2792fbe2819d4a4615d34426605b43f4908976ba21d0b419e01e52099dafbb39` |
+| Artifact | `build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `2792fbe2819d4a4615d34426605b43f4908976ba21d0b419e01e52099dafbb39` |
 | Package | `io.github.buffur.culmina`, versionName 1.0.0, versionCode 1, minSdk 24, targetSdk 36; ABIs arm64-v8a, armeabi-v7a, x86_64 |
 | Signing | v2, certificate `CN=Android Debug, O=Android, C=US` (SHA-256 `bc16984f…090c7d`): no `android/key.properties`, so the build uses the debug key — **перевірочний, не магазинний** |
-| Final artifact smoke | `2792fbe2…`, clean install, installed `base.apk` hash equal: first run → Settings → Backup & data → Restore → DocumentsUI → the 37 MB file is refused and the message stays (~28 s and after navigating, until Dismiss) → Tonight → Set site → Use current position (permission dialog; declined accuracy → "Couldn't get your position. Please try again.") → Add site → Save site → `am force-stop` → relaunch: "Smoke site", computed night, plan kept (`release-smoke/smoke-2792fbe2-after-restart.png`). The earlier `a2d9465a…` build passed the same restart smoke |
-| System dialogs | The first artifact (`f763ebd7…`), clean install: Choose a site → Use current position → Android location permission dialog; Backup & data → Back up now → Android share sheet with `astroplan-backup-…astroplan` (dismissed, nothing shared); Restore from a backup → DocumentsUI picker → a 13-byte text file is refused with the data unchanged. Follow-ups TD-112, TD-113 (existing behaviour) |
-| Smoke | Installed on `emulator-5554` only; the installed `base.apk` SHA-256 equals the artifact's. Fresh first run → Welcome → Start planning → Tonight (no-site state message) → Set site → Add site → Save site ("Used for planning", IME kept the save bar visible) → `am force-stop` → relaunch: Tonight with "Smoke site", the computed night and the plan section; first-run state kept. Screenshots: `release-smoke/smoke1…8.png` |
+| Smoke of this exact file | `emulator-5554` only, clean installs; the installed `base.apk` SHA-256 equals the artifact's. (1) First run → Welcome → Start planning → Tonight (no-site state) → Settings → Backup & data → Restore → DocumentsUI → a 37 MB non-backup file is refused and the message stays until Dismiss → Tonight → Set site → Use current position → Android permission dialog → declined accuracy → "Couldn't get your position. Please try again." → Add site → Save site → `am force-stop` → relaunch: "Smoke site", the computed night, the plan kept. (2) Back up now → Android share sheet with `astroplan-backup-…astroplan` (dismissed, nothing shared) |
+| Evidence | `release-smoke/smoke-2792fbe2-after-restart.png`, `td112-position-failure-2792fbe2.png`, `td113-refusal-stays-2792fbe2.png`, `system-share-sheet-2792fbe2.png`, `system-file-picker.png`, `system-location-permission.png` |
+
+Earlier builds of this run, kept as history: `f763ebd7…1c98` (the checkpoint-3 tree; its smoke `smoke1…8.png`,
+system dialogs and the 13-byte restore refusal; rebuilt byte-identical after a comment-only change) and
+`a2d9465a…` (TD-112 fix; restart smoke `smoke-a2d9465a-after-restart.png`). Both were superseded by `2792fbe2…`.
 
 Owner decisions (2026-10-23, in the run's chat: «робимо», the recommended set): HT-DEV-01 engine line rounding
-accepted; HT-DEV-02 catalogue edit and delete kept; HT-DEV-16 12 px floor kept. They change no code, so the
-release APK, its smoke and the test evidence above stay valid (V3: only this record changed after them).
+accepted; HT-DEV-02 catalogue edit and delete kept; HT-DEV-16 12 px floor kept. They change no code.
 
-Result of this run: **COMPLETE** (§9) — every mandatory registry item is PASS, covered-by, a recorded native
-adaptation or an owner-accepted deviation; functions are wired and tested, the host E2E passes, and the regular
-release APK passed its smoke as the exact installed artifact. Limits of this result (§9 last paragraph): host and
-emulator evidence only — no phone, performance, 125/200 % text or store acceptance. Native system dialogs (location permission, file picker, share sheet) were exercised with the
-release APK on the emulator (HT-X01). The two gaps found there — a silent position request (TD-112) and a restore
-refusal that expired before a user could read it (TD-113) — were fixed and re-checked on the final APK; no open
-follow-up remains from this transfer. Committed locally on `develop` at the owner's request; not pushed.
+Result of this run: **COMPLETE** (§9), re-checked against the final state (2026-10-23):
+
+1. Reference fixed (`86873ce`, unchanged); the registry covers the mandatory scope.
+2. Every mandatory item is PASS, covered-by with its reason, a recorded native adaptation or an owner-decided
+   deviation; no item is pending, blocked, failed or unverified.
+3. Visual PASS rests on reviewed web/host pairs and Android frames (`android/`, `b2`–`b4`, `android-pairs/`);
+   the remaining differences are recorded under Deviations, the three owner questions answered.
+4. Actions are wired and tested: unit/widget suite 2442 passed, 6 skipped, 0 failed; host E2E `core_loop_test`
+   (with a restart on a file database) and `perf_scenarios_test` pass; native dialogs exercised on the device.
+   The two gaps found on the device (TD-112, TD-113) are fixed; no open follow-up remains from this transfer.
+5. `flutter analyze` clean, format and encoding clean; no known regression.
+6. The regular release APK `2792fbe2…` was built from the committed source and that exact file passed the smoke.
+
+Limits (§9 last paragraph): host and emulator evidence only — no phone, performance, 125/200 % text or store
+acceptance. Committed locally on `develop` (`1577cdd`, `501d98c`, `548d7d6` and this record); not pushed.
