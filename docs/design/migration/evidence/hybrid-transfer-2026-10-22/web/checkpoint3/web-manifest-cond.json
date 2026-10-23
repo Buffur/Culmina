@@ -1,0 +1,234 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-night-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=night&from=plan&night=2026-10-19",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-night-b-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=night&from=plan&night=2026-10-19",
+   "steps": [
+    {
+     "scroll": [
+      ".android-scroll",
+      700
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-night-c-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=night&from=plan&night=2026-10-19",
+   "steps": [
+    {
+     "scroll": [
+      ".android-scroll",
+      1400
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-moon-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=moon&from=plan&night=2026-10-19",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-moon-b-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=moon&from=plan&night=2026-10-19",
+   "steps": [
+    {
+     "scroll": [
+      ".android-scroll",
+      700
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-weather-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=weather&from=plan&night=2026-10-19",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-weather-b-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=weather&from=plan&night=2026-10-19",
+   "steps": [
+    {
+     "scroll": [
+      ".android-scroll",
+      700
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-weather-c-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=weather&from=plan&night=2026-10-19",
+   "steps": [
+    {
+     "scroll": [
+      ".android-scroll",
+      1400
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-weatherB-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=weather&from=plan&night=2026-10-19&weatherPresentation=charts",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-weatherB-b-375",
+   "url": "http://127.0.0.1:4197/conditions.html?variant=blend&font=native&theme=light&scale=1&view=weather&from=plan&night=2026-10-19&weatherPresentation=charts",
+   "steps": [
+    {
+     "scroll": [
+      ".android-scroll",
+      700
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  }
+ ]
+}

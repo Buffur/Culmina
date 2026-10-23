@@ -96,6 +96,13 @@ class DriftTargetRepository
   }
 
   @override
+  Future<List<TargetAlias>> getAllAliases() async => [
+    for (final r in await _db.select(_db.targetAliases).get())
+      if (TargetAliasKind.fromStorage(r.kind) case final kind?)
+        TargetAlias(catalogId: r.catalogId, alias: r.alias, kind: kind),
+  ];
+
+  @override
   Future<int?> aliasCatalogVersion() {
     final newest = _db.targetAliases.catalogVersion.max();
     return (_db.selectOnly(

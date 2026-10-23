@@ -26,6 +26,16 @@ const retiredTerms = [
   'Session budget',
 ];
 
+/// The owner-accepted Hybrid reference (design/home-lab at 86873ce, accepted
+/// in ed29554; the transfer contract asks for its text exactly) names the
+/// working copy "the draft" in these sentences. Only these exact texts are
+/// exempt: "Draft" stays retired as a plan state and everywhere else.
+const referencePhrases = [
+  'apply updates the draft. save plan records it.', // plan.js screenBar
+  'already applied to the draft remain.', // plan.html #discard-edit
+  'cancel leaves the draft unchanged.', // app.js site and date details
+];
+
 /// What is left, per file and term: `path|term` → count. Remove an entry
 /// (or lower its count) when its screen stops using the term; never add one.
 const baseline = <String, int>{}; // emptied by P9.2 (S9.2)
@@ -42,7 +52,10 @@ Map<String, int> scanSource(String source) {
     if (trimmed.startsWith('//') || _directive.hasMatch(trimmed)) continue;
     for (final m in _literal.allMatches(line)) {
       if (_keyBefore.hasMatch(line.substring(0, m.start))) continue;
-      final text = m.group(0)!.toLowerCase();
+      var text = m.group(0)!.toLowerCase();
+      for (final phrase in referencePhrases) {
+        text = text.replaceAll(phrase, '');
+      }
       for (final term in retiredTerms) {
         final n = RegExp(r'\b' + RegExp.escape(term.toLowerCase()))
             .allMatches(text)

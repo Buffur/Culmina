@@ -9,6 +9,7 @@ import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_selection_screen.dart';
 import 'package:astroplan/presentation/screens/metadata/metadata_import_screen.dart';
+import 'package:astroplan/presentation/shared/list_mode.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/metadata_import_viewmodel.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
@@ -92,7 +93,12 @@ Future<_App> _start(WidgetTester t) async {
   addTearDown(planner.dispose);
   final router = GoRouter(
     routes: [
-      GoRoute(path: '/', builder: (_, _) => const EquipmentSelectionScreen()),
+      // The Library's rigs: a rig's record has Edit rig (library.js).
+      GoRoute(
+        path: '/',
+        builder: (_, _) =>
+            const EquipmentSelectionScreen(mode: ListMode.manage),
+      ),
       GoRoute(
         path: AppRouter.metadata,
         builder: (_, _) => const MetadataImportScreen(),
@@ -141,7 +147,9 @@ Future<void> _editElsewhere(
 }) async {
   app.router.pop();
   await _settle(t);
-  await t.tap(find.byTooltip('Edit rig'));
+  await t.tap(find.text('My phone'));
+  await _settle(t);
+  await t.tap(find.byKey(const Key('rigDetail.edit')));
   await _settle(t);
   // S7.6: the RAW size is one tap away, in "More (optional)".
   if (find.widgetWithText(TextFormField, from).evaluate().isEmpty) {
@@ -149,7 +157,9 @@ Future<void> _editElsewhere(
   }
   await t.enterText(find.widgetWithText(TextFormField, from).first, to);
   await t.pump();
-  await t.tap(find.text('Save'));
+  await t.tap(find.text('Save rig'));
+  await _settle(t);
+  await t.binding.handlePopRoute(); // back from the record to the list
   await _settle(t);
 }
 
@@ -166,7 +176,7 @@ void main() {
     await _settle(t);
     await _openMore(t); // S7.6: the rig's own RAW size, one tap away
     expect(find.widgetWithText(TextFormField, '45'), findsOneWidget);
-    await t.tap(find.text('Save'));
+    await t.tap(find.text('Save rig'));
     await _settle(t);
 
     expect((await app.rig(t)).averageRawFileSizeMB, 45);
@@ -197,7 +207,7 @@ void main() {
 
     await t.tap(find.byKey(const Key('import.open.1')));
     await _settle(t);
-    await t.tap(find.text('Save'));
+    await t.tap(find.text('Save rig'));
     await _settle(t);
 
     expect((await app.rig(t)).averageRawFileSizeMB, 45);
@@ -224,7 +234,7 @@ void main() {
     );
     await t.tap(find.byKey(const Key('import.open.1')));
     await _settle(t);
-    await t.tap(find.text('Save'));
+    await t.tap(find.text('Save rig'));
     await _settle(t);
     expect((await app.rig(t)).pixelPitchUm, 2.5);
 
@@ -233,7 +243,7 @@ void main() {
     await _settle(t);
     await t.tap(find.byKey(const Key('import.open.1')));
     await _settle(t);
-    await t.tap(find.text('Save'));
+    await t.tap(find.text('Save rig'));
     await _settle(t);
     expect((await app.rig(t)).pixelPitchUm, 2.414);
   });

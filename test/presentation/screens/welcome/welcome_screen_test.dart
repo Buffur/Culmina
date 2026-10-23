@@ -34,6 +34,7 @@ import '../../../support/jpeg_fixture.dart';
 import '../../../support/no_snapshot_weather.dart';
 import '../../../support/planner_harness.dart';
 import '../../../support/tiff_fixture.dart';
+import '../../../support/library_finders.dart';
 
 const welcomeSite = Key('welcome.site');
 
@@ -155,14 +156,8 @@ void main() {
     await tester.tap(find.text('Add site'));
     await settle(tester);
     await tester.enterText(find.byKey(const Key('siteEditor.name')), 'Garden');
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Latitude (°)'),
-      '46.05',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Longitude (°)'),
-      '14.51',
-    );
+    await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
+    await tester.enterText(fieldLabeled('Longitude (°)'), '14.51');
     await tapKey(tester, 'siteEditor.save');
     expect(vm.site.activeSite?.name, 'Garden', reason: 'chosen to plan with');
     // Back from the sites list (the editor closed itself on Save).

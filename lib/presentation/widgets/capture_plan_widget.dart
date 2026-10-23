@@ -77,7 +77,8 @@ class _BlockListState extends State<_BlockList> {
       context,
       index: index,
       block: block,
-      message: 'Deleted ${BlockText.row(block, null)}',
+      // plan.js removeBlock: "Block removed." (Undo beside it).
+      message: 'Block removed.',
     ),
   );
 
@@ -154,9 +155,8 @@ class _BlockListState extends State<_BlockList> {
       'add the calibration blocks',
       () => editBlocksWithUndo(
         context,
-        message: added.length == 1
-            ? 'Added 1 calibration block'
-            : 'Added ${added.length} calibration blocks',
+        // plan.js applyCalibration: the undo row's words.
+        message: 'Calibration frames added.',
         change: () => plan.addCaptureBlocks(added),
       ),
     );
@@ -207,7 +207,8 @@ class _BlockListState extends State<_BlockList> {
       'change the block',
       () => editBlocksWithUndo(
         context,
-        message: 'Changed in this plan: ${BlockText.row(edited, null)}',
+        // plan.js applyBlock: "Block edited.", with Undo.
+        message: 'Block edited.',
         change: () => plan.updateCaptureBlock(index, edited),
       ),
     );
@@ -301,20 +302,28 @@ class _BlockListState extends State<_BlockList> {
               final fits = placement == 'Outside the imaging window'
                   ? 'Outside the imaging window · adds to total time'
                   : !measured
-                  ? null
+                  ? (block.frameType != FrameType.light
+                        ? null
+                        : switch (fit.state) {
+                            FitState.needsInput =>
+                              'Window capacity unknown until site and '
+                                  'target are set',
+                            FitState.noWindow => PlanNightPhrase.apply(
+                              'No imaging window tonight',
+                              viewModel.eveningDate ?? viewModel.tonightKey,
+                              viewModel.tonightKey,
+                            ),
+                            _ => 'Window capacity unknown for this plan',
+                          })
                   : block.frameType != FrameType.light
                   ? placement
-                  : upTo == null
-                  ? 'Window capacity unknown for this plan'
-                  : unplaced == 0
-                  ? PlanNightPhrase.apply(
-                      'Fits: room for up to $upTo frames like this in '
-                      "tonight's window${shared ? ' (other blocks as planned)' : ''}",
-                      viewModel.eveningDate ?? viewModel.tonightKey,
-                      viewModel.tonightKey,
-                    )
                   : PlanNightPhrase.apply(
-                      "Only $upTo of ${block.frameCount} frames fit tonight's window",
+                      BlockText.whatFits(
+                        block,
+                        unplaced: unplaced,
+                        upTo: upTo,
+                        others: shared,
+                      ),
                       viewModel.eveningDate ?? viewModel.tonightKey,
                       viewModel.tonightKey,
                     );
@@ -332,7 +341,15 @@ class _BlockListState extends State<_BlockList> {
               return _ChangeMark(
                 // TD-010/TD-012: ObjectKey tracks this block instance
                 // regardless of position, and stays stable across a drag.
-                key: ObjectKey(block),
+                // The same instance added twice gets its own key per
+                // occurrence (a reused key would break the list).
+                key: switch ([
+                  for (var j = 0; j < index; j++)
+                    if (identical(blocks[j], block)) j,
+                ].length) {
+                  0 => ObjectKey(block),
+                  final n => ValueKey((identityHashCode(block), n)),
+                },
                 fresh: fresh,
                 // plan.js `.capture-block`: a subtle rule above, 14 above
                 // and 10 below the content.
@@ -446,11 +463,17 @@ class _BlockListState extends State<_BlockList> {
                             ),
                           const SizedBox(height: 8),
                           // plan.js `.block-actions`: Edit (120), then the
-                          // moves and Remove pushed to the end, 8 apart.
-                          Row(
+                          // moves and Remove pushed to the end, 8 apart; on
+                          // a narrow line (large text) the group wraps below.
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runSpacing: 8,
                             children: [
-                              SizedBox(
-                                width: 120,
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  minWidth: 120,
+                                ),
                                 child: OutlinedButton(
                                   key: Key('capture.edit.$index'),
                                   onPressed: () => _edit(index, block),
@@ -462,48 +485,52 @@ class _BlockListState extends State<_BlockList> {
                                   ),
                                 ),
                               ),
-                              const Spacer(),
-                              _MoveButton(
-                                key: Key('capture.moveUp.$index'),
-                                icon: HybridIcons.up,
-                                tooltip: 'Move block ${index + 1} up',
-                                onPressed: index == 0
-                                    ? null
-                                    : () => viewModel.reorderCaptureBlocks(
-                                        index,
-                                        index - 1,
-                                      ),
-                              ),
-                              const SizedBox(width: 8),
-                              _MoveButton(
-                                key: Key('capture.moveDown.$index'),
-                                icon: HybridIcons.downArrow,
-                                tooltip: 'Move block ${index + 1} down',
-                                onPressed: index == blocks.length - 1
-                                    ? null
-                                    : () => viewModel.reorderCaptureBlocks(
-                                        index,
-                                        index + 1,
-                                      ),
-                              ),
-                              const SizedBox(width: 8),
-                              TextButton(
-                                key: Key('capture.delete.$index'),
-                                onPressed: () => _delete(index, block),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: palette.textSecondary,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _MoveButton(
+                                    key: Key('capture.moveUp.$index'),
+                                    icon: HybridIcons.up,
+                                    tooltip: 'Move block ${index + 1} up',
+                                    onPressed: index == 0
+                                        ? null
+                                        : () => viewModel.reorderCaptureBlocks(
+                                            index,
+                                            index - 1,
+                                          ),
                                   ),
-                                  minimumSize: const Size(48, 48),
-                                ),
-                                child: Semantics(
-                                  label:
-                                      'Remove block ${index + 1}, ${BlockText.type(block.frameType)}',
-                                  excludeSemantics: true,
-                                  child: const Text('Remove'),
-                                ),
+                                  const SizedBox(width: 8),
+                                  _MoveButton(
+                                    key: Key('capture.moveDown.$index'),
+                                    icon: HybridIcons.downArrow,
+                                    tooltip: 'Move block ${index + 1} down',
+                                    onPressed: index == blocks.length - 1
+                                        ? null
+                                        : () => viewModel.reorderCaptureBlocks(
+                                            index,
+                                            index + 1,
+                                          ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  TextButton(
+                                    key: Key('capture.delete.$index'),
+                                    onPressed: () => _delete(index, block),
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: palette.textSecondary,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
+                                      minimumSize: const Size(48, 48),
+                                    ),
+                                    child: Semantics(
+                                      label:
+                                          'Remove block ${index + 1}, ${BlockText.type(block.frameType)}',
+                                      excludeSemantics: true,
+                                      child: const Text('Remove'),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -631,7 +658,24 @@ String _records(CaptureBlock block, CameraClass? cameraClass) {
       ? ' · WB ${block.whiteBalance == null ? 'unrecorded' : CaptureSettingsText.whiteBalance(block.whiteBalance!)}'
             ' · Focus ${block.focusMode == null ? 'unrecorded' : CaptureSettingsText.focus(block.focusMode!)}'
       : '';
-  if (cameraClass == null) return 'Choose a rig to record ISO or gain';
+  // plan.js recordsLine; a value already recorded on the block is never
+  // hidden while no rig is chosen (it is kept, and said).
+  if (cameraClass == null) {
+    final v = gain.value;
+    final kept = [
+      if (v != null)
+        '${switch (gain.kind) {
+          GainKind.iso => 'ISO',
+          GainKind.gain => 'Gain',
+          GainKind.unknown => 'ISO or gain',
+        }} ${QuantityText.number(v)}',
+      if (block.binning != 1) 'Binning ${block.binning}×${block.binning}',
+    ];
+    return [
+      'Choose a rig to record ISO or gain',
+      if (kept.isNotEmpty) '${kept.join(' · ')} kept',
+    ].join(' · ');
+  }
   return switch (cameraClass.lightSensitivity) {
     LightSensitivity.iso =>
       'ISO ${gain.kind == GainKind.iso ? gain.value!.toInt() : 'unrecorded'}$camera',

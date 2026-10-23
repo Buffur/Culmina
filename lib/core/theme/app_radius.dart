@@ -4,6 +4,9 @@ abstract final class AppRadius {
   /// Cards, sections, text fields and buttons.
   static const double small = 6;
 
+  /// Menus (plan.css `.plan-menu`).
+  static const double menu = 8;
+
   /// Dialogs, bottom sheets and a swiped row's background.
   static const double large = 12;
 

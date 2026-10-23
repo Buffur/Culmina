@@ -1,6 +1,6 @@
 // Hybrid transfer (2026-10-22) host renders for web/Flutter pairs. Opt-in,
 // outside the quality gate: ASTROPLAN_HYBRID_RENDERS=<directory> runs it.
-// ASTROPLAN_HYBRID_SIZE=375x760 (logical app area, DPR 1), _THEMES=light,dark,
+// ASTROPLAN_HYBRID_SIZE=375x760 (logical app area, DPR 1), _SCALE=2, _THEMES=light,dark,
 // field and _SHOTS=home,settings,... choose the frames. Real app, router,
 // ViewModels and an in-memory database on the hybridTransferFixture; bundled
 // Geist and Source Serif 4. Host renders only: the Android emulator run is
@@ -78,7 +78,10 @@ void main() {
       tester.platformDispatcher.platformBrightnessTestValue = theme == 'light'
           ? Brightness.light
           : Brightness.dark;
-      tester.platformDispatcher.textScaleFactorTestValue = 1;
+      // ASTROPLAN_HYBRID_SCALE=2: the 200 % text renders.
+      tester.platformDispatcher.textScaleFactorTestValue = double.parse(
+        Platform.environment['ASTROPLAN_HYBRID_SCALE'] ?? '1',
+      );
       tester.platformDispatcher.alwaysUse24HourFormatTestValue = true;
       addTearDown(tester.view.reset);
       addTearDown(tester.platformDispatcher.clearAllTestValues);
@@ -87,6 +90,8 @@ void main() {
       await tester.runAsync(() async {
         fixture = await HybridTransferFixture.create(
           AppDatabase(NativeDatabase.memory()),
+          // ASTROPLAN_HYBRID_NOSITE=1: a first install without a site.
+          withSite: Platform.environment['ASTROPLAN_HYBRID_NOSITE'] == null,
         );
         if (theme == 'field') await fixture.vm.theme.toggleFieldMode();
       });

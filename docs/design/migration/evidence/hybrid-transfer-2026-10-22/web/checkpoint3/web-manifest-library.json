@@ -1,0 +1,342 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-library-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-rigs-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-targets-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=targets]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-sites-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=sites]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-rig-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-open='rig:example-rig-dslr']"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-rig-b-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-open='rig:example-rig-dslr']"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      650
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-site-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=sites]"
+    },
+    {
+     "click": "[data-open='site:example-site-kyiv']"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-rigedit-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-open='rig:example-rig-dslr']"
+    },
+    {
+     "click": "[data-edit]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-rigedit-b-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-open='rig:example-rig-dslr']"
+    },
+    {
+     "click": "[data-edit]"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      650
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-rignew-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-add=rig]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-targetnew-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=targets]"
+    },
+    {
+     "click": "[data-add=target]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-sitenew-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=sites]"
+    },
+    {
+     "click": "[data-add=site]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-lib-siteedit-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=sites]"
+    },
+    {
+     "click": "[data-open='site:example-site-kyiv']"
+    },
+    {
+     "click": "[data-edit]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  }
+ ]
+}

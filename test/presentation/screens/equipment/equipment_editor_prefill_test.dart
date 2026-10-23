@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import '../../../support/metadata_candidates.dart';
+import '../../../support/library_finders.dart';
 
 class _Repository implements EquipmentRepository {
   final inserted = <EquipmentProfile>[];
@@ -84,7 +85,7 @@ void main() {
     expect(
       tester
           .widget<TextFormField>(
-            find.widgetWithText(TextFormField, 'Aperture diameter (mm)'),
+            fieldLabeled('Aperture diameter (mm, optional)'),
           )
           .controller!
           .text,
@@ -98,7 +99,7 @@ void main() {
       tester,
       EquipmentDraft.fromCandidate(phoneCandidate()),
     );
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
 
     final p = repo.inserted.single;
@@ -130,7 +131,7 @@ void main() {
     expect(_note(tester, EquipmentSpec.sensorSize), isNull);
     expect(_note(tester, EquipmentSpec.focalLength), 'From the file (JPEG)');
 
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
     final p = repo.inserted.single;
     expect(p.pixelPitchUm, 2.5);
@@ -156,7 +157,7 @@ void main() {
       tester,
       EquipmentDraft.fromCandidate(phoneCandidate(withDims: false)),
     );
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
     expect(find.text('Required'), findsWidgets);
     expect(repo.inserted, isEmpty);

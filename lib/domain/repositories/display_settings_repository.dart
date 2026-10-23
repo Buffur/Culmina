@@ -6,25 +6,32 @@ class DisplaySettings {
   const DisplaySettings({
     this.appearance = Appearance.system,
     this.units = DisplayUnits.metric,
+    this.weatherView = WeatherView.rows,
   });
 
   final Appearance appearance;
   final DisplayUnits units;
+  final WeatherView weatherView;
 
-  DisplaySettings copyWith({Appearance? appearance, DisplayUnits? units}) =>
-      DisplaySettings(
-        appearance: appearance ?? this.appearance,
-        units: units ?? this.units,
-      );
+  DisplaySettings copyWith({
+    Appearance? appearance,
+    DisplayUnits? units,
+    WeatherView? weatherView,
+  }) => DisplaySettings(
+    appearance: appearance ?? this.appearance,
+    units: units ?? this.units,
+    weatherView: weatherView ?? this.weatherView,
+  );
 
   @override
   bool operator ==(Object other) =>
       other is DisplaySettings &&
       other.appearance == appearance &&
-      other.units == units;
+      other.units == units &&
+      other.weatherView == weatherView;
 
   @override
-  int get hashCode => Object.hash(appearance, units);
+  int get hashCode => Object.hash(appearance, units, weatherView);
 }
 
 /// Persistence for [DisplaySettings]: one stored value per setting. Throws

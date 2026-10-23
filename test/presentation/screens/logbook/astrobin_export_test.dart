@@ -179,6 +179,10 @@ void main() {
     await seed(tester);
     AppRouter.router.go(AppRouter.sessionDetail(planId));
     await settle(tester);
+    // Hybrid: the entry's exports sit in "Export this entry".
+    await tester.ensureVisible(find.text('Export this entry'));
+    await tester.tap(find.text('Export this entry'));
+    await settle(tester);
     await tester.ensureVisible(find.byKey(const Key('detail.astrobin')));
     await tap(tester, 'detail.astrobin');
     expect(find.byKey(const Key('astrobin.empty')), findsOneWidget);
@@ -191,6 +195,10 @@ void main() {
     AppRouter.router.go(AppRouter.sessions);
     await settle(tester);
     AppRouter.router.go(AppRouter.sessionDetail(resultId));
+    await settle(tester);
+    // Hybrid: the entry's exports sit in "Export this entry".
+    await tester.ensureVisible(find.text('Export this entry'));
+    await tester.tap(find.text('Export this entry'));
     await settle(tester);
     await tester.ensureVisible(find.byKey(const Key('detail.astrobin')));
     await tap(tester, 'detail.astrobin');

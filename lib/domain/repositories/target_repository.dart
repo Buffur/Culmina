@@ -20,6 +20,10 @@ abstract class TargetRepository {
   /// [version], in one transaction (S7.4). Never changes a target row.
   Future<void> replaceAliases(int version, List<TargetAlias> aliases);
 
+  /// Every stored alias (S7.4), for naming a catalog object's other
+  /// designations beside it (the Hybrid target chooser's "also …").
+  Future<List<TargetAlias>> getAllAliases();
+
   /// Retrieves all available targets.
   Future<List<AstroTarget>> getAllTargets();
 

@@ -1,11 +1,16 @@
-import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../shared/plan_night_phrase.dart';
-
+import '../../../core/theme/app_palette.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../domain/models/session_night.dart';
+import '../../shared/hybrid_icon.dart';
+import '../../shared/hybrid_parts.dart';
+import '../../shared/plan_night_phrase.dart';
+import '../../widgets/capture_plan/block_editor_parts.dart';
+import 'home_context_sheets.dart';
 import '../../../domain/services/candidate_evaluator.dart';
 import '../../shared/capability_text.dart';
 import '../../shared/failure_feedback.dart';
@@ -20,7 +25,10 @@ import '../../../core/utils/quantity_text.dart';
 /// "What can I image tonight?" (TASK 10.4): every target evaluated for the
 /// chosen night with the same rules as Home's opportunity card, sorted by a
 /// column the user picks. Measured facts only — no score, no
-/// recommendation.
+/// recommendation. Hybrid (app.js `candidates` detail): the phone sheet with
+/// the action as its title and chevron rows; the native list keeps its
+/// sort, filters and measured captions (the reference's order is
+/// illustrative).
 class TonightCandidatesScreen extends StatefulWidget {
   const TonightCandidatesScreen({super.key});
 
@@ -77,64 +85,91 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     final settingsVm = context.watch<SettingsViewModel>();
     final siteVm = context.watch<SiteViewModel>();
     final night = planVm.sessionNight;
+    final p = AppPalette.of(context);
     // A list left open across the rollover follows the new night (S6.4).
     if (night != null && night != _rowsNight) _load();
+    // app.js `candidates` detail: the phone sheet, its title the action
+    // that opened it (F17 A5: the plan's night).
+    final title = PlanNightPhrase.candidatesAction(
+      planVm.eveningDate ?? planVm.tonightKey,
+      planVm.tonightKey,
+    );
     return Scaffold(
-      appBar: hybridAppBar(
-        context,
-        // F17 A5: the list is for the plan's night.
-        title: Text(
-          PlanNightPhrase.candidatesTitle(
-            planVm.eveningDate ?? planVm.tonightKey,
-            planVm.tonightKey,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh candidates',
-            onPressed: () => setState(_load),
-          ),
-        ],
-      ),
-      body: night == null
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  "Set a site to see tonight's candidates: they are worked "
-                  'out for a night at a site.',
-                  key: Key('tonight.noSite'),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            HomeSheetHeader(
+              actions: [
+                IconButton(
+                  tooltip: 'Refresh candidates',
+                  onPressed: () => setState(_load),
+                  icon: HybridIcon(
+                    HybridIcons.refresh,
+                    size: MediaQuery.textScalerOf(context).scale(20),
+                    color: p.textPrimary,
+                  ),
                 ),
-              ),
-            )
-          : FutureBuilder<List<TonightCandidate>?>(
-              future: _rows,
-              builder: (context, snapshot) {
-                if (snapshot.error case final error?) {
-                  return LoadFailureView(
-                    action: "evaluate tonight's targets",
-                    error: error,
-                  );
-                }
-                final all = snapshot.data;
-                if (all == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return _buildList(context, planVm, siteVm, settingsVm, all);
-              },
+              ],
             ),
+            Expanded(
+              child: night == null
+                  ? ListView(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      children: [
+                        _Title(title),
+                        Text(
+                          "Set a site to see tonight's candidates: they are "
+                          'worked out for a night at a site.',
+                          key: const Key('tonight.noSite'),
+                          style: _secondary(context),
+                        ),
+                      ],
+                    )
+                  : FutureBuilder<List<TonightCandidate>?>(
+                      future: _rows,
+                      builder: (context, snapshot) {
+                        if (snapshot.error case final error?) {
+                          return LoadFailureView(
+                            action: "evaluate tonight's targets",
+                            error: error,
+                          );
+                        }
+                        final all = snapshot.data;
+                        if (all == null) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return _buildList(
+                          context,
+                          title,
+                          planVm,
+                          siteVm,
+                          settingsVm,
+                          all,
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
+  static TextStyle _secondary(BuildContext context) => AppTypography.body
+      .copyWith(height: 1.5, color: AppPalette.of(context).textSecondary);
+
   Widget _buildList(
     BuildContext context,
+    String title,
     SessionPlanViewModel planVm,
     SiteViewModel siteVm,
     SettingsViewModel settingsVm,
     List<TonightCandidate> all,
   ) {
-    final theme = Theme.of(context);
+    final p = AppPalette.of(context);
     final night = planVm.sessionNight!;
     final zoneId = siteVm.displayZoneId;
     final types = {for (final r in all) r.target.type}.toList()..sort();
@@ -154,147 +189,251 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
       zoneId: zoneId,
     );
     final prefs = settingsVm.planningPreferences;
+    final select = AppTypography.body.copyWith(
+      height: 1.5,
+      color: p.textPrimary,
+    );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: Text(
-            'Night of ${NightTimeFormatter.eveningDate(night.eveningDate)}'
-            '${siteVm.locationName == null ? '' : ' at ${siteVm.locationName}'} · '
-            '${rows.length} of ${all.length} targets · sorted by '
-            '${_orderLabels[_sort]!}',
-            key: const Key('tonight.header'),
-            style: theme.textTheme.bodySmall,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          // TASK 15.3: the dropdowns share a row and ellipsize, so 200 %
-          // text does not overflow.
-          child: Wrap(
-            spacing: 12,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButton<CandidateSort>(
-                      key: const Key('tonight.sort'),
-                      isExpanded: true,
-                      value: _sort,
-                      items: [
-                        for (final e in _sortLabels.entries)
-                          DropdownMenuItem(
-                            value: e.key,
-                            child: Text(
-                              e.value,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                      ],
-                      onChanged: (v) => setState(() => _sort = v ?? _sort),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: DropdownButton<String?>(
-                      key: const Key('tonight.type'),
-                      isExpanded: true,
-                      value: _type,
-                      items: [
-                        const DropdownMenuItem(
-                          value: null,
-                          child: Text(
-                            'All types',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        for (final t in types)
-                          DropdownMenuItem(
-                            value: t,
-                            child: Text(t, overflow: TextOverflow.ellipsis),
-                          ),
-                      ],
-                      onChanged: (v) => setState(() => _type = v),
-                    ),
-                  ),
-                ],
-              ),
-              FilterChip(
-                key: const Key('tonight.own'),
-                label: const Text('Targets you added'),
-                selected: _ownOnly,
-                onSelected: (v) => setState(() => _ownOnly = v),
-              ),
-              FilterChip(
-                key: const Key('tonight.all'),
-                label: const Text('Show targets without a window'),
-                selected: !_withWindowOnly,
-                onSelected: (v) => setState(() => _withWindowOnly = !v),
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: rows.isEmpty
-              ? const Center(
-                  child: Text(
-                    'No target matches: none has an imaging window with '
-                    'these filters.',
-                    key: Key('tonight.empty'),
-                  ),
-                )
-              : ListView.separated(
-                  itemCount: rows.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
-                  itemBuilder: (context, i) {
-                    final r = rows[i];
-                    final t = r.target;
-                    final name =
-                        t.commonName != null && t.commonName != t.catalogId
-                        ? '${t.commonName} (${t.catalogId})'
-                        : t.commonName ?? t.catalogId;
-                    final reason = r.noWindowReason;
-                    final details = reason != null
-                        ? 'No window: ${OpportunityText.noWindowShort(reason, darknessLimitDeg: prefs.darknessLimit.degrees, minAltitudeDeg: prefs.minAltitudeDeg)}'
-                        : [
-                            '${at(r.firstWindowStartUtc!)} – ${at(r.lastWindowEndUtc!)}',
-                            'max ${QuantityText.degrees(r.maxAltitudeDeg!)}',
-                            r.minMoonSeparationDeg == null
-                                ? 'Moon down in the windows'
-                                : 'Moon ≥ ${QuantityText.degrees(r.minMoonSeparationDeg!)} away',
-                            if (r.frameFillFraction case final f?)
-                              CapabilityText.frameFillOf(f),
-                          ].join(' · ');
-                    return ListTile(
-                      key: Key('tonight.row.${t.id}'),
-                      title: Text(name),
-                      subtitle: Text('${t.type} · $details'),
-                      trailing: Text(
-                        OpportunityText.duration(r.usableTime),
-                        style: theme.textTheme.titleSmall,
-                      ),
-                      onTap: () async {
-                        await planVm.setTarget(t);
-                        if (context.mounted) context.pop();
-                      },
-                    );
-                  },
+    final header = <Widget>[
+      _Title(title),
+      Text(
+        'Night of ${NightTimeFormatter.eveningDate(night.eveningDate)}'
+        '${siteVm.locationName == null ? '' : ' at ${siteVm.locationName}'} · '
+        '${rows.length} of ${all.length} targets · sorted by '
+        '${_orderLabels[_sort]!}',
+        key: const Key('tonight.header'),
+        style: _secondary(context),
+      ),
+      const SizedBox(height: AppSpacing.md),
+      // TASK 15.3: the selects share a row and ellipsize, so 200 % text
+      // does not overflow.
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: BlockField(
+              label: 'Sort by',
+              child: DropdownButtonFormField<CandidateSort>(
+                key: const Key('tonight.sort'),
+                isExpanded: true,
+                initialValue: _sort,
+                style: select,
+                icon: hybridSelectIcon(context),
+                decoration: const InputDecoration(
+                  contentPadding: hybridSelectPadding,
                 ),
-        ),
+                items: [
+                  for (final e in _sortLabels.entries)
+                    DropdownMenuItem(
+                      value: e.key,
+                      child: Text(e.value, overflow: TextOverflow.ellipsis),
+                    ),
+                ],
+                onChanged: (v) => setState(() => _sort = v ?? _sort),
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.itemGap),
+          Expanded(
+            child: BlockField(
+              label: 'Type',
+              child: DropdownButtonFormField<String?>(
+                key: const Key('tonight.type'),
+                isExpanded: true,
+                initialValue: _type,
+                style: select,
+                icon: hybridSelectIcon(context),
+                decoration: const InputDecoration(
+                  contentPadding: hybridSelectPadding,
+                ),
+                items: [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All types', overflow: TextOverflow.ellipsis),
+                  ),
+                  for (final t in types)
+                    DropdownMenuItem(
+                      value: t,
+                      child: Text(t, overflow: TextOverflow.ellipsis),
+                    ),
+                ],
+                onChanged: (v) => setState(() => _type = v),
+              ),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      HybridCheckRow.plan(
+        key: const Key('tonight.own'),
+        label: 'Targets you added',
+        checked: _ownOnly,
+        onChanged: (v) => setState(() => _ownOnly = v),
+      ),
+      HybridCheckRow.plan(
+        key: const Key('tonight.all'),
+        label: 'Show targets without a window',
+        checked: !_withWindowOnly,
+        onChanged: (v) => setState(() => _withWindowOnly = !v),
+      ),
+      const SizedBox(height: AppSpacing.sm),
+      if (rows.isEmpty)
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           child: Text(
-            'Times in ${NightTimeFormatter.zoneCaption(night.startUtc, zoneId: zoneId)}. '
-            "Tap a target to make it the plan's target.",
-            style: theme.textTheme.bodySmall,
-            textAlign: TextAlign.center,
+            'No target matches: none has an imaging window with these '
+            'filters.',
+            key: const Key('tonight.empty'),
+            style: _secondary(context),
           ),
         ),
-      ],
+    ];
+    final footer = Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: Text(
+        'Times in ${NightTimeFormatter.zoneCaption(night.startUtc, zoneId: zoneId)}. '
+        "Tap a target to make it the plan's target.",
+        style: AppTypography.caption.copyWith(
+          height: 1.55,
+          color: p.textSecondary,
+        ),
+      ),
+    );
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      itemCount: header.length + rows.length + 1,
+      itemBuilder: (context, i) {
+        if (i < header.length) return header[i];
+        if (i == header.length + rows.length) return footer;
+        final r = rows[i - header.length];
+        final t = r.target;
+        final name = t.commonName != null && t.commonName != t.catalogId
+            ? '${t.commonName} (${t.catalogId})'
+            : t.commonName ?? t.catalogId;
+        final reason = r.noWindowReason;
+        final details = reason != null
+            ? 'No window: ${OpportunityText.noWindowShort(reason, darknessLimitDeg: prefs.darknessLimit.degrees, minAltitudeDeg: prefs.minAltitudeDeg)}'
+            : [
+                '${at(r.firstWindowStartUtc!)} – ${at(r.lastWindowEndUtc!)}',
+                'max ${QuantityText.degrees(r.maxAltitudeDeg!)}',
+                r.minMoonSeparationDeg == null
+                    ? 'Moon down in the windows'
+                    : 'Moon ≥ ${QuantityText.degrees(r.minMoonSeparationDeg!)} away',
+                if (r.frameFillFraction case final f?)
+                  CapabilityText.frameFillOf(f),
+              ].join(' · ');
+        return _CandidateRow(
+          key: Key('tonight.row.${t.id}'),
+          title: name,
+          caption: '${t.type} · $details',
+          usable: OpportunityText.duration(r.usableTime),
+          onTap: () async {
+            await planVm.setTarget(t);
+            if (context.mounted) context.pop();
+          },
+        );
+      },
+    );
+  }
+}
+
+/// The sheet's title (`.phone-detail #detail-body h2`): 23 px, 16 above
+/// and below.
+class _Title extends StatelessWidget {
+  const _Title(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.md),
+    child: Semantics(
+      header: true,
+      child: Text(
+        text,
+        style: AppTypography.homeTarget.copyWith(
+          fontSize: 23,
+          height: 1.3,
+          color: AppPalette.of(context).textPrimary,
+        ),
+      ),
+    ),
+  );
+}
+
+/// A candidate (app.js candidates, `.candidate-button`): the 14 px name,
+/// its 12 px caption, the usable time and a chevron; the whole row picks
+/// the target.
+class _CandidateRow extends StatelessWidget {
+  const _CandidateRow({
+    super.key,
+    required this.title,
+    required this.caption,
+    required this.usable,
+    required this.onTap,
+  });
+
+  final String title;
+  final String caption;
+  final String usable;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return Semantics(
+      button: true,
+      label: '$title, $caption, $usable usable',
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 56),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppTypography.body.copyWith(
+                          height: 1.5,
+                          color: p.textPrimary,
+                        ),
+                      ),
+                      Text(
+                        caption,
+                        style: AppTypography.dense.copyWith(
+                          height: 1.5,
+                          color: p.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.itemGap),
+                Text(
+                  usable,
+                  style: AppTypography.caption.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: p.textPrimary,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                HybridIcon(
+                  HybridIcons.chevron,
+                  size: MediaQuery.textScalerOf(context).scale(18),
+                  color: p.textSecondary,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

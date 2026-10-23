@@ -16,6 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import '../../../support/in_memory_equipment_repository.dart';
+import '../../../support/library_finders.dart';
 
 const _rig = EquipmentProfile(
   id: 4,
@@ -90,7 +91,7 @@ void main() {
   testWidgets('the glossary title and a primary Save', (tester) async {
     await open(tester);
     expect(find.text('Add rig'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Save'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Save rig'), findsOneWidget);
     expect(find.byType(ElevatedButton), findsNothing);
     expect(find.textContaining('Equipment'), findsNothing);
   });
@@ -99,17 +100,19 @@ void main() {
     tester,
   ) async {
     await open(tester);
-    expect(find.widgetWithText(TextFormField, 'Pixel size (µm)'), findsOne);
+    expect(fieldLabeled('Pixel size (µm)'), findsOne);
     expect(find.widgetWithText(TextFormField, '3.76'), findsOneWidget);
     await tester.enterText(find.widgetWithText(TextFormField, '6248'), '6000');
     await tester.enterText(find.widgetWithText(TextFormField, '4176'), '4000');
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Pixel size (µm)'),
-      '4',
-    );
+    await tester.enterText(fieldLabeled('Pixel size (µm)'), '4');
     await tester.pump();
-    expect(find.widgetWithText(TextFormField, '24.00'), findsOneWidget);
-    expect(find.widgetWithText(TextFormField, '16.00'), findsOneWidget);
+    // Derived, shown as text (library.js `library-derived`).
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('rigEditor.sensorSizeValue')))
+          .data,
+      '24.00 × 16.00 mm',
+    );
   });
 
   testWidgets('"More (optional)" is collapsed; its summary states what is '
@@ -117,17 +120,14 @@ void main() {
     await open(tester, existing: _rig);
     expect(find.text('Edit rig'), findsOneWidget);
     expect(find.text('maximum 300 s · RAW 50 MB · rotation 90°'), findsOne);
-    expect(
-      find.widgetWithText(TextFormField, 'Maximum sub-exposure (s)'),
-      findsNothing,
-    );
+    expect(fieldLabeled('Maximum sub-exposure (s)'), findsNothing);
     await tapMore(tester);
     for (final label in [
       'Maximum sub-exposure (s)',
       'Average RAW file size (MB)',
       'Rotation (°)',
     ]) {
-      expect(find.widgetWithText(TextFormField, label), findsOneWidget);
+      expect(fieldLabeled(label), findsOneWidget);
     }
   });
 
@@ -162,14 +162,11 @@ void main() {
       'why, and saves nothing', (tester) async {
     final repo = await open(tester, existing: _rig);
     await tapMore(tester);
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rotation (°)'),
-      '999',
-    );
+    await tester.enterText(fieldLabeled('Rotation (°)'), '999');
     await tapMore(tester); // closed again
-    expect(find.widgetWithText(TextFormField, 'Rotation (°)'), findsNothing);
+    expect(fieldLabeled('Rotation (°)'), findsNothing);
     await save(tester);
-    expect(find.widgetWithText(TextFormField, 'Rotation (°)'), findsOneWidget);
+    expect(fieldLabeled('Rotation (°)'), findsOneWidget);
     expect(find.textContaining('Must be'), findsOneWidget);
     expect(repo.updated, isEmpty);
   });

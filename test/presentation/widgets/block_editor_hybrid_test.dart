@@ -73,7 +73,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
-    expect(find.byKey(const Key('unsaved.discard')), findsNothing);
+    expect(find.byKey(const Key('discardEdit.discard')), findsNothing);
   });
 
   testWidgets('Escape uses the same dirty-draft guard as Back', (tester) async {
@@ -84,8 +84,8 @@ void main() {
     );
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('unsaved.cancel')));
+    expect(find.byKey(const Key('discardEdit.discard')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('discardEdit.keep')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
     expect(
@@ -245,26 +245,23 @@ void main() {
       frameCount: 20,
     );
     await open(tester, blocks: [light]);
+    // plan.js blockView: Details names what it holds (Binning and
+    // timing where the class offers binning).
     final details = find.byKey(const Key('blockDialog.details'));
     expect(
-      find.descendant(
-        of: details,
-        matching: find.text('Binning 1x1 · Inside the imaging window'),
-      ),
+      find.descendant(of: details, matching: find.text('Binning and timing')),
       findsOneWidget,
     );
     expect(find.byKey(const Key('blockDialog.binning')), findsNothing);
     await chooseSegment(tester, 'blockDialog.frameType', 'Bias');
     await tester.tap(find.byKey(const Key('blockDialog.useOther')));
     await tester.pumpAndSettle();
-    expect(
-      find.descendant(
-        of: details,
-        matching: find.textContaining('Taken outside the imaging window'),
-      ),
-      findsOneWidget,
-    );
     await openBlockDisclosure(tester, 'blockDialog.details');
+    expect(
+      find.text('Outside the window (twilight/dawn)'),
+      findsOneWidget,
+      reason: 'the planned timing, outside the window by default',
+    );
     expect(find.byKey(const Key('blockDialog.policy')), findsOneWidget);
     expect(find.byKey(const Key('blockDialog.binning')), findsOneWidget);
   });
@@ -273,11 +270,12 @@ void main() {
       'width', (tester) async {
     await open(tester);
     expect(
-      find.textContaining('Adds to this plan. Save plan records it.'),
+      find.text('Apply updates the draft. Save plan records it.'),
       findsOneWidget,
     );
+    // plan.css `.plan-savebar`: 20 at the sides.
     final apply = tester.getRect(find.byKey(const Key('blockDialog.submit')));
-    expect(apply.width, closeTo(412 - 32, 1));
+    expect(apply.width, closeTo(412 - 40, 1));
     expect(apply.height, greaterThanOrEqualTo(48));
     expect(find.byKey(const Key('blockDialog.cancel')), findsOneWidget);
   });

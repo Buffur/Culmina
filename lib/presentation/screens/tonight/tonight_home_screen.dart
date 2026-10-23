@@ -36,7 +36,7 @@ import '../../widgets/plan_status.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/startup_viewmodel.dart';
-import '../../shared/failure_feedback.dart';
+import 'home_context_sheets.dart';
 
 /// The Tonight tab's root (ADR-015, TASK 12.5; plan first since S6.13,
 /// ADR-019 §5), in the accepted Hybrid composition (design/home-lab
@@ -54,32 +54,73 @@ class TonightHomeScreen extends StatelessWidget {
     final startupVm = context.watch<StartupViewModel>();
     final Widget body;
     if (startupVm.hasBootstrapError) {
-      body = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Couldn't load your site, settings and current plan."),
-            TextButton(
-              onPressed: startupVm.retryBootstrap,
-              child: const Text('Retry'),
+      // app.js `error` (styles.css `.state-message`): an info icon, the
+      // 20/600 heading, what failed and Retry. The site and night are not
+      // shown: they did not load.
+      final p = AppPalette.of(context);
+      body = ListView(
+        key: const Key('tonight.loadError'),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+        children: [
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: HybridIcon(
+              HybridIcons.info,
+              size: MediaQuery.textScalerOf(context).scale(20),
+              color: p.textPrimary,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Semantics(
+            header: true,
+            child: Text(
+              "Couldn't load your plan",
+              style: AppTypography.homePlanHeading.copyWith(
+                height: 1.3,
+                color: p.textPrimary,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            "Your site, settings and current plan couldn't be loaded. Retry "
+            'to load them again.',
+            style: AppTypography.body.copyWith(
+              height: 1.5,
+              color: p.textSecondary,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          FilledButton(
+            key: const Key('tonight.retryLoad'),
+            onPressed: startupVm.retryBootstrap,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+            ),
+            child: const Text('Retry'),
+          ),
+        ],
       );
     } else if (startupVm.isLoading) {
       // S13.3: the mark continues the splash while startup really loads.
       body = const Center(child: StartupMark());
     } else {
+      // app.js `body`: without a site, where to observe comes first, then
+      // the plan; no night is computed for the default location (ADR-007
+      // §9).
+      final noSite = context.watch<SiteViewModel>().isDefaultLocation;
       // styles.css `.app-content` (Hybrid): 20 px on every side.
       body = ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-        children: const [
-          _Title(),
-          _Context(),
-          SizedBox(height: AppSpacing.md),
-          _PlanSection(),
-          _NightSection(),
-          _NextActions(),
+        children: [
+          const _Title(),
+          const _Context(),
+          const SizedBox(height: AppSpacing.md),
+          if (noSite) ...const [
+            _NoSite(),
+            SizedBox(height: AppSpacing.md),
+            _PlanSection(),
+          ] else ...const [_PlanSection(), _NightSection(), _NextActions()],
         ],
       );
     }
@@ -147,22 +188,12 @@ class _Context extends StatelessWidget {
         key: const Key('tonight.context'),
         child: ContextLine(
           siteName: SiteLabel.of(siteVm),
+          noSiteLabel: ContextLine.setSite,
           night: planVm.eveningDate,
           zoneId: siteVm.displayZoneId,
-          onSite: () => context.push(AppRouter.selectSite),
-          onNight: () async {
-            final picked = await pickNight(
-              context,
-              initial: planVm.eveningDate,
-            );
-            if (picked != null && context.mounted) {
-              await runWithFeedback(
-                context,
-                'change the night',
-                () => planVm.setEveningDate(picked),
-              );
-            }
-          },
+          // app.js `site` / `date` details (WQA-06): the phone sheets.
+          onSite: () => showHomeSiteSheet(context),
+          onNight: () => showHomeNightSheet(context),
         ),
       ),
     );
@@ -199,6 +230,96 @@ class _Section extends StatelessWidget {
         padding: EdgeInsets.only(top: top),
         child: child,
       ),
+    );
+  }
+}
+
+/// Where will you observe? (app.js `body`, `no-site`; styles.css
+/// `.state-message`): a 20 px pin, the 20/600 question, why, then Set site
+/// and the "Use current position" row with its arrow.
+class _NoSite extends StatelessWidget {
+  const _NoSite();
+
+  @override
+  Widget build(BuildContext context) {
+    final siteVm = context.watch<SiteViewModel>();
+    final p = AppPalette.of(context);
+    return Column(
+      key: const Key('tonight.noSite'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: AppSpacing.md),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: HybridIcon(
+            HybridIcons.pin,
+            size: MediaQuery.textScalerOf(context).scale(20),
+            color: p.textPrimary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Semantics(
+          header: true,
+          child: Text(
+            'Where will you observe?',
+            style: AppTypography.homePlanHeading.copyWith(
+              height: 1.3,
+              color: p.textPrimary,
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          'Set up your observing site to see the night, Moon and weather '
+          'for it.',
+          style: AppTypography.body.copyWith(
+            height: 1.5,
+            color: p.textSecondary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        FilledButton(
+          key: const Key('tonight.setSite'),
+          onPressed: () => context.push(AppRouter.selectSite),
+          style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+          child: const Text(ContextLine.setSite),
+        ),
+        // styles.css `.candidate-button`: 56 tall, 16/500, an arrow.
+        Semantics(
+          button: true,
+          label: 'Use current position',
+          excludeSemantics: true,
+          child: InkWell(
+            key: const Key('tonight.useCurrentPosition'),
+            onTap: () => useCurrentPositionWithFeedback(context, siteVm),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 56),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Use current position',
+                        style: AppTypography.itemTitle.copyWith(
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: p.textPrimary,
+                        ),
+                      ),
+                    ),
+                    HybridIcon(
+                      HybridIcons.arrow,
+                      size: MediaQuery.textScalerOf(context).scale(15),
+                      color: p.textPrimary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -379,45 +500,8 @@ class _NightSection extends StatelessWidget {
         style: AppTypography.nightHeading.copyWith(color: p.textPrimary),
       ),
     );
-    if (siteVm.isDefaultLocation) {
-      return Padding(
-        padding: const EdgeInsets.only(top: AppSpacing.lg),
-        child: _Section(
-          key: const Key('tonight.noSite'),
-          top: AppSpacing.lg,
-          strongRule: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              heading,
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'Set up your observing site to see tonight: the night, the '
-                'Moon and the weather are computed for it.',
-                style: AppTypography.body.copyWith(color: p.textSecondary),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              FilledButton(
-                onPressed: () =>
-                    useCurrentPositionWithFeedback(context, siteVm),
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
-                ),
-                child: const Text('Use current position'),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              OutlinedButton(
-                onPressed: () => context.push(AppRouter.selectSite),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
-                ),
-                child: const Text('Set site'),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+    // Home shows the site prompt instead (`_NoSite`).
+    if (siteVm.isDefaultLocation) return const SizedBox.shrink();
 
     final conditions = context.watch<NightConditionsViewModel>();
     final timeline = conditions.nightTimeline;

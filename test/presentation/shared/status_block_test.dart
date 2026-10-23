@@ -31,17 +31,17 @@ void main() {
         ),
       ),
     );
-    // styles.css .plan-measures: 12 px captions, 15 px/500 values,
-    // tabular numerals, 4 px label/value gap and 20 px between measures.
+    // Hybrid `.plan-measures`: 13 px captions, 15 px/500 values,
+    // tabular numerals, 4 px label/value gap and 24 px between measures.
     final caption = find.text('Needed in imaging window');
     final value = find.text('2 h 5 min');
-    expect(tester.widget<Text>(caption).style?.fontSize, 12);
+    expect(tester.widget<Text>(caption).style?.fontSize, 13);
     final style = tester.widget<Text>(value).style!;
     expect(style.fontSize, 15);
     expect(style.fontWeight, FontWeight.w500);
     expect(style.fontFeatures, contains(const FontFeature.tabularFigures()));
     expect(tester.getTopLeft(value).dy - tester.getBottomLeft(caption).dy, 4);
-    expect(tester.widget<Wrap>(find.byType(Wrap)).spacing, 20);
+    expect(tester.widget<Wrap>(find.byType(Wrap)).spacing, 24);
   });
 
   group('the headline', () {

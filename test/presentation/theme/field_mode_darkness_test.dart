@@ -119,6 +119,9 @@ void main() {
     await start(tester, fieldMode: true);
     expect(await colouredPixels(tester), 0, reason: 'Tonight');
 
+    // Without a site, "Where will you observe?" comes first (app.js).
+    await tester.ensureVisible(find.byKey(const Key('tonight.openPlanner')));
+    await settle(tester);
     await tester.tap(find.byKey(const Key('tonight.openPlanner')));
     await settle(tester);
     expect(find.byKey(const Key('fieldMode.toggle')), findsOneWidget);

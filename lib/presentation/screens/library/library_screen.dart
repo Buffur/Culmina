@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../shared/hybrid_icon.dart';
+import '../settings/settings_parts.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
 import '../../shared/field_mode_button.dart';
@@ -51,7 +55,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget build(BuildContext context) {
     final siteVm = context.watch<SiteViewModel>();
     final startup = context.watch<StartupViewModel>();
-    final site = siteVm.activeSite?.name;
+    final p = AppPalette.of(context);
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -67,92 +71,75 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   !snapshot.hasError
               ? snapshot.data
               : null;
-          final siteCount = startup.isLoading || startup.hasBootstrapError
+          final sites = startup.isLoading || startup.hasBootstrapError
               ? 'Count unavailable'
               : '${siteVm.sites.length} saved';
+          final caption = AppTypography.caption.copyWith(
+            height: 1.55,
+            color: p.textSecondary,
+          );
+          // library.js `rootView`.
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            padding: settingsPagePadding,
             children: [
-              ListTile(
-                subtitleTextStyle: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(fontSize: 14),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.sm,
-                ),
-                leading: const Icon(Icons.camera_alt_outlined),
-                title: const Text(AppWords.rigs),
-                subtitle: Text(
-                  counts == null
-                      ? 'Your cameras with their lenses or telescopes'
-                      : '${counts[0]} ${counts[0] == 1 ? 'rig' : 'rigs'} · '
-                            'cameras with lenses or telescopes',
-                ),
-                trailing: const Icon(Icons.chevron_right),
+              SettingsRow(
+                key: const Key('library.rigs'),
+                icon: HybridIcons.camera,
+                title: AppWords.rigs,
+                summary: counts == null
+                    ? 'Your cameras with their lenses or telescopes'
+                    : '${counts[0]} ${counts[0] == 1 ? 'rig' : 'rigs'} · your '
+                          'cameras with their lenses or telescopes',
                 onTap: () => context.push(AppRouter.libraryRigs),
               ),
-              const Divider(height: 1),
-              ListTile(
-                subtitleTextStyle: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(fontSize: 14),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.sm,
-                ),
-                leading: const Icon(Icons.auto_awesome_outlined),
-                title: const Text(AppWords.targets),
-                subtitle: Text(
-                  counts == null
-                      ? 'The catalog and the targets you added'
-                      : '${counts[1]} ${counts[1] == 1 ? 'target' : 'targets'}'
-                            ' · catalog and your additions',
-                ),
-                trailing: const Icon(Icons.chevron_right),
+              SettingsRow(
+                key: const Key('library.targets'),
+                icon: HybridIcons.target,
+                title: AppWords.targets,
+                summary: counts == null
+                    ? 'The catalogue and the targets you added'
+                    : '${counts[1]} ${counts[1] == 1 ? 'target' : 'targets'}'
+                          ' · the catalogue and the targets you added',
                 onTap: () => context.push(AppRouter.libraryTargets),
               ),
-              const Divider(height: 1),
-              ListTile(
-                subtitleTextStyle: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(fontSize: 14),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.sm,
-                ),
-                leading: const Icon(Icons.place_outlined),
-                title: const Text(AppWords.sites),
-                subtitle: Text(
-                  site == null
-                      ? '$siteCount · no active site'
-                      : '$siteCount · active: $site',
-                ),
-                trailing: const Icon(Icons.chevron_right),
+              SettingsRow(
+                key: const Key('library.sites'),
+                icon: HybridIcons.pin,
+                title: AppWords.sites,
+                summary: '$sites · choose the planning site in Plan',
                 onTap: () => context.push(AppRouter.librarySites),
               ),
-              const Divider(height: 1),
-              if (snapshot.hasError)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Couldn't load library counts. Lists remain available.",
-                    ),
-                    TextButton(
-                      key: const Key('library.retryCounts'),
-                      onPressed: _retry,
-                      child: const Text('Retry counts'),
-                    ),
-                  ],
+              if (snapshot.hasError) ...[
+                const SizedBox(height: AppSpacing.itemGap),
+                Text(
+                  "Couldn't load library counts. Lists remain available.",
+                  style: caption,
                 ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    key: const Key('library.retryCounts'),
+                    onPressed: _retry,
+                    child: const Text('Retry counts'),
+                  ),
+                ),
+              ],
               if (startup.hasBootstrapError)
-                TextButton(
-                  onPressed: startup.retryBootstrap,
-                  child: const Text('Retry loading saved site'),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: startup.retryBootstrap,
+                    child: const Text('Retry loading saved site'),
+                  ),
                 ),
+              // Progress moved to the Logbook (S8.5; RD-07, ADR-019 §8).
               Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.lg),
+                padding: const EdgeInsets.only(top: AppSpacing.itemGap),
                 child: Text(
                   'Progress by target lives in the Logbook.',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: caption,
                 ),
               ),
-              // Progress moved to the Logbook (S8.5; RD-07, ADR-019 §8).
             ],
           );
         },

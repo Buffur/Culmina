@@ -73,14 +73,17 @@ void main() {
 
   // S9.7: a recorded date (a sky-darkness reading's) reads with its year,
   // never as an ISO string.
-  test('a recorded date: month, day and year', () {
-    expect(
-      NightTimeFormatter.recordedDate(CalendarDate(2026, 8, 1)),
-      'Aug 1, 2026',
-    );
-    expect(
-      NightTimeFormatter.recordedDate(CalendarDate(2025, 12, 31)),
-      'Dec 31, 2025',
-    );
-  });
+  test(
+    'a recorded date: day, month and year ("25 Sep 2026", the reference)',
+    () {
+      expect(
+        NightTimeFormatter.recordedDate(CalendarDate(2026, 8, 1)),
+        '1 Aug 2026',
+      );
+      expect(
+        NightTimeFormatter.recordedDate(CalendarDate(2025, 12, 31)),
+        '31 Dec 2025',
+      );
+    },
+  );
 }

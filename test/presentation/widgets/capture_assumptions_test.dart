@@ -59,7 +59,8 @@ void main() {
       for (final b in [_light('Ha', 10), _light('OIII', 10)]) {
         await vm.plan.addCaptureBlock(b);
       }
-      await vm.disclosure.setOpen(PlannerSections.assumptions, true);
+      // Hybrid: the assumptions are inside Budget and assumptions.
+      await vm.disclosure.setOpen(PlannerSections.budgetDetails, true);
     });
     addTearDown(() => tester.runAsync(db.close));
     await tester.pumpWidget(
@@ -77,7 +78,14 @@ void main() {
   }
 
   String row(WidgetTester tester, String label) {
-    final r = find.ancestor(of: find.text(label), matching: find.byType(Row));
+    // The panel's rows (Budget and assumptions also lists Setup above it).
+    final r = find.ancestor(
+      of: find.descendant(
+        of: find.byKey(const Key('capturePlan.assumptionsBody')),
+        matching: find.text(label),
+      ),
+      matching: find.byType(Row),
+    );
     return tester
         .widgetList<Text>(
           find.descendant(of: r.first, matching: find.byType(Text)),
@@ -127,7 +135,7 @@ void main() {
       '5 min · not counted: no meridian crossing in the window',
     );
     expect(row(tester, 'Setup'), '30 min before the first window');
-    expect(row(tester, 'Feasibility margin'), '15 %');
+    expect(row(tester, 'Feasibility margin'), '15%');
     expect(
       CaptureAssumptionsPanel.rows(p, budget).map((r) => r.$2),
       containsAll([
@@ -172,11 +180,11 @@ void main() {
     expect(gates.cloudMaxPct, 70);
     expect(
       row(tester, 'Moon gate'),
-      'excludes time when the Moon is up and at least 40 % lit',
+      'excludes time when the Moon is up and at least 40% lit',
     );
     expect(
       row(tester, 'Cloud gate'),
-      'excludes forecast hours with more than 70 % cloud',
+      'excludes forecast hours with more than 70% cloud',
     );
   });
 
@@ -185,7 +193,7 @@ void main() {
     expect(find.text('Moon gate'), findsNothing);
     expect(
       row(tester, 'Cloud gate'),
-      'excludes forecast hours with more than 50 % cloud',
+      'excludes forecast hours with more than 50% cloud',
     );
   });
 
@@ -274,15 +282,18 @@ void main() {
     expect(vm.analysis.captureBudget.acquisitionMs, before.acquisitionMs);
   });
   testWidgets(
-    'assumptions Cancel and Back preserve values with keyboard at 200%',
+    'assumptions Close and Back preserve values with keyboard at 200%',
     (tester) async {
       await start(tester, PlanningPreferences());
       tester.view.physicalSize = const Size(412, 915);
       tester.platformDispatcher.textScaleFactorTestValue = 2;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       await tester.pump();
-      await tester.ensureVisible(find.byKey(const Key('planOverride.edit')));
-      await tester.tap(find.byKey(const Key('planOverride.edit')));
+      // The editor is the subject here: open it from its button's handler
+      // (the long 200 % plan puts the button far below the surface).
+      tester
+          .widget<OutlinedButton>(find.byKey(const Key('planOverride.edit')))
+          .onPressed!();
       await tester.pumpAndSettle();
       final field = find.byKey(const Key('planOverride.0'));
       await tester.ensureVisible(field);
@@ -294,14 +305,16 @@ void main() {
         findsOneWidget,
       );
       expect(vm.plan.planOverrides, isNull);
-      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+      // plan.js `requestCloseScreen`: a changed editor asks "Discard this
+      // edit?"; Keep editing keeps the input.
+      await tester.tap(find.byKey(const Key('scoped.close')));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('unsaved.cancel')));
+      await tester.tap(find.byKey(const Key('discardEdit.keep')));
       await tester.pumpAndSettle();
       expect(tester.widget<TextFormField>(field).controller!.text, '8');
-      await tester.pageBack();
+      await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('unsaved.discard')));
+      await tester.tap(find.byKey(const Key('discardEdit.discard')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('planOverride.apply')), findsNothing);
       expect(vm.plan.planOverrides, isNull);
@@ -316,15 +329,16 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = 2;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await tester.pump();
-    await tester.ensureVisible(find.byKey(const Key('planOverride.edit')));
-    await tester.tap(find.byKey(const Key('planOverride.edit')));
+    tester
+        .widget<OutlinedButton>(find.byKey(const Key('planOverride.edit')))
+        .onPressed!();
     await tester.pumpAndSettle();
     final handle = tester.ensureSemantics();
     for (final label in [
       'Time between frames (seconds)',
       'Setup outside the window (minutes)',
       'Fit margin (minutes)',
-      'File size per frame (MB)',
+      'Theoretical file size per frame (MB)',
     ]) {
       final text = find.text(label);
       await tester.ensureVisible(text);

@@ -1,0 +1,218 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-home-unknown-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=unknown",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-empty-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=empty",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-no-site-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=no-site",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-home-loading-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=loading",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-home-error-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=error",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-home-no-dark-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=no-dark",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-partial-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=partial",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-stale-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=stale",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-offline-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide&scenario=offline",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-sitesheet-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide",
+   "steps": [
+    {
+     "click": ".concept.variant-blend .app-context [data-action=site]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-home-nightsheet-375",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide",
+   "steps": [
+    {
+     "click": ".concept.variant-blend .app-context [data-action=date]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  }
+ ]
+}

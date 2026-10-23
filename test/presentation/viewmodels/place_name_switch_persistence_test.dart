@@ -15,6 +15,7 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/reverse_geocoder.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:drift/native.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -215,10 +216,19 @@ void main() {
     await tester.pumpAndSettle();
 
     privacy.failWrites = true;
-    await tester.tap(find.descendant(of: tile, matching: find.byType(Switch)));
+    await tester.tap(
+      find.descendant(of: tile, matching: find.byType(HybridSwitch)),
+    );
     await tester.runAsync(() => pumpEventQueue());
     await tester.pumpAndSettle();
-    expect(tester.widget<SwitchListTile>(tile).value, isFalse);
+    expect(
+      tester
+          .widget<HybridSwitch>(
+            find.descendant(of: tile, matching: find.byType(HybridSwitch)),
+          )
+          .value,
+      isFalse,
+    );
     expect(
       find.byKey(const Key('settings.placeNames.unsaved')),
       findsOneWidget,

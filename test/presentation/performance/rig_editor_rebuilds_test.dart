@@ -15,6 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import '../../support/in_memory_equipment_repository.dart';
+import '../../support/library_finders.dart';
 
 /// Counts the elements rebuilt while [action] runs: all of them, and the
 /// editor's dialog content (the [StatefulBuilder] under the [AlertDialog]).
@@ -105,7 +106,7 @@ void main() {
     tester,
   ) async {
     await _open(tester);
-    final field = find.widgetWithText(TextFormField, 'Rig name');
+    final field = fieldLabeled('Rig name');
     await tester.tap(field);
     await tester.pump();
     final counts = await _rebuilds(() async {

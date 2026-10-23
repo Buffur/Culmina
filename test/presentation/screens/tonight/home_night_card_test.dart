@@ -131,9 +131,10 @@ void main() {
       untilHour: 1, // rows end at 01:00 UTC: the night is cut short
     );
     final weather = lines(tester, 'tonight.weather');
-    // Hybrid's compact row shows temperature/wind; absent fields remain
-    // unknown. The known cloud value remains reachable in the detail.
-    expect(weather, contains('Temperature unknown · wind unknown'));
+    // night-ui.js weatherWidgetSummary: temperature and wind, or
+    // "Measurements incomplete"; never 0 for unknown. The known cloud value
+    // remains reachable in the detail.
+    expect(weather, contains('Measurements incomplete'));
     expect(
       weather.any(
         (l) => l.startsWith('Forecast for ') && l.contains('dark hours'),
@@ -141,21 +142,19 @@ void main() {
       isTrue,
       reason: weather.join(' | '),
     );
-    expect(weather, contains('Updated just now'));
+    expect(weather.any((l) => l.contains('Partial coverage')), isTrue);
     final night = lines(tester, 'tonight.night');
-    expect(night.any((l) => l.startsWith('Dark (Sun below −18°): ')), isTrue);
-    // Hybrid's supporting line: how long it is dark.
+    // app.js conditions: the dark span, then how long it is dark.
+    expect(night.any((l) => l.contains('–')), isTrue, reason: night.join());
     expect(
-      night.any((l) => RegExp(r'^\d+ h( \d+ min)? dark$').hasMatch(l)),
+      night.any((l) => RegExp(r'^\d+ h( \d+ min)? dark( · |$)').hasMatch(l)),
       isTrue,
       reason: night.join(' | '),
     );
     final moon = lines(tester, 'tonight.moon');
-    expect(moon.any((l) => l.contains('lit at midnight')), isTrue);
+    expect(moon.any((l) => l.contains('% lit')), isTrue);
     expect(
-      moon.any(
-        (l) => l.startsWith('Moon-free') || l.startsWith('No moon-free'),
-      ),
+      moon.any((l) => l.startsWith('Moon-free') || l.startsWith('Moon above')),
       isTrue,
     );
     // Each row opens its detail.
@@ -164,7 +163,7 @@ void main() {
     expect(find.byKey(const Key('conditions.page.2')), findsOneWidget);
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.facts'))).data,
-      startsWith('Cloud 30 %'),
+      startsWith('Cloud 30%'),
     );
   });
 
@@ -182,17 +181,15 @@ void main() {
       ),
       now: DateTime.utc(2026, 6, 20, 12),
     );
+    expect(lines(tester, 'tonight.night'), contains('No dark time tonight'));
     expect(
       lines(tester, 'tonight.night'),
-      contains('Dark (Sun below −18°): none tonight'),
+      contains('Sun stays above −18° · Europe/Oslo'),
     );
-    expect(
-      lines(tester, 'tonight.weather'),
-      contains('No dark time tonight: no hours to forecast'),
-    );
+    expect(lines(tester, 'tonight.weather'), contains('No dark-time forecast'));
     expect(
       lines(tester, 'tonight.moon'),
-      contains('No dark time this night, so no moon-free time.'),
+      contains('No dark time, so no moon-free dark'),
     );
   });
 }

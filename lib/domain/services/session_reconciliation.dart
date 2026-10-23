@@ -1,5 +1,6 @@
 import '../models/capture_block.dart';
 import '../models/execution.dart';
+import 'calibration_match.dart';
 
 /// One block, planned against what was confirmed (TASK 13.4).
 class BlockReconciliation {
@@ -74,4 +75,53 @@ class SessionReconciliation {
   double? get fraction => plannedIntegration == Duration.zero
       ? null
       : actualIntegration.inMilliseconds / plannedIntegration.inMilliseconds;
+
+  /// The light frames by comparable group (ADR-021 C16, the planner's
+  /// grouping; logbook.js `entryGainGroups`): equal filter, exposure,
+  /// recorded ISO or gain and binning stack together; a block whose
+  /// sensitivity is not recorded stays apart. Groups with nothing planned
+  /// are left out. Pure.
+  List<EntryLightGroup> lightGroups() {
+    final groups = <Object, EntryLightGroup>{};
+    for (final (i, r) in blocks.indexed) {
+      final b = r.block;
+      if (!r.isLight) continue;
+      final ms = (b.exposureTimeSeconds * 1000).round();
+      final Object key = b.gain.kind == GainKind.unknown
+          ? i
+          : (
+              CalibrationMatch.normalizedFilter(b.filterName),
+              ms,
+              b.gain,
+              b.binning,
+            );
+      final g = groups[key];
+      groups[key] = EntryLightGroup(
+        first: g?.first ?? b,
+        exposureMs: ms,
+        planned: (g?.planned ?? 0) + r.planned,
+        confirmed: (g?.confirmed ?? 0) + r.confirmed,
+      );
+    }
+    return [
+      for (final g in groups.values)
+        if (g.planned > 0) g,
+    ];
+  }
+}
+
+/// One comparable light group of an entry: planned and confirmed frames.
+class EntryLightGroup {
+  const EntryLightGroup({
+    required this.first,
+    required this.exposureMs,
+    required this.planned,
+    required this.confirmed,
+  });
+
+  /// The group's first block (its filter spelling, ISO or gain, binning).
+  final CaptureBlock first;
+  final int exposureMs;
+  final int planned;
+  final int confirmed;
 }

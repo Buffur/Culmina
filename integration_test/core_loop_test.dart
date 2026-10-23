@@ -31,6 +31,7 @@ import 'package:astroplan/domain/services/session_exporter.dart';
 import 'package:astroplan/domain/services/session_night_resolver.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,6 +44,7 @@ import '../test/support/fake_location_service.dart';
 import '../test/support/fake_reverse_geocoder.dart';
 import '../test/support/in_memory_display_preferences.dart';
 import '../test/support/in_memory_first_run.dart';
+import '../test/support/library_finders.dart';
 import '../test/support/planner_harness.dart';
 
 class _Clock extends Clock {
@@ -223,19 +225,15 @@ Future<void> addSite(
   AppRouter.router.go(AppRouter.selectSite);
   await settle(tester);
   await tap(tester, find.text('Add site'));
-  await tester.enterText(find.widgetWithText(TextFormField, 'Name'), name);
-  await tester.enterText(
-    find.widgetWithText(TextFormField, 'Latitude (°)'),
-    latitude,
+  await tester.enterText(fieldLabeled('Name'), name);
+  await tester.enterText(fieldLabeled('Latitude (°)'), latitude);
+  await tester.enterText(fieldLabeled('Longitude (°)'), longitude);
+  // Elevation is in "More (optional)" (library.js site form).
+  await tap(
+    tester,
+    find.byKey(const Key('section.${SiteEditorScreen.skyDarknessSection}')),
   );
-  await tester.enterText(
-    find.widgetWithText(TextFormField, 'Longitude (°)'),
-    longitude,
-  );
-  await tester.enterText(
-    find.widgetWithText(TextFormField, 'Elevation (m)'),
-    '300',
-  );
+  await tester.enterText(fieldLabeled('Elevation (m, optional)'), '300');
   await tap(tester, find.byKey(const Key('siteEditor.save')));
 }
 
@@ -246,16 +244,22 @@ Future<void> chooseTargetAndRig(WidgetTester tester) async {
   await scrollTo(tester, find.byKey(const Key('status.choose')));
   expect(find.text('Choose a target'), findsWidgets);
   await tap(tester, find.byKey(const Key('status.choose')));
-  expect(find.text('Choose a target'), findsOneWidget);
-  await tester.enterText(find.byType(TextField).first, 'Andromeda');
+  // plan.js `choiceView`: search, choose, then Apply changes.
+  expect(find.byKey(const Key('planTarget.search')), findsOneWidget);
+  await tester.enterText(
+    find.byKey(const Key('planTarget.search')),
+    'Andromeda',
+  );
   await settle(tester);
-  await tap(tester, find.textContaining('(M31)').first);
+  await tap(tester, find.text('M31 · Andromeda Galaxy'));
+  await tap(tester, find.byKey(const Key('planTarget.apply')));
 
   await scrollTo(tester, find.byKey(const Key('status.choose')));
   expect(find.text('Choose a rig'), findsWidgets);
   await tap(tester, find.byKey(const Key('status.choose')));
-  expect(find.text('Choose a rig'), findsOneWidget);
+  expect(find.byKey(const Key('planRig.apply')), findsOneWidget);
   await tap(tester, find.textContaining('ASI2600MC').first);
+  await tap(tester, find.byKey(const Key('planRig.apply')));
 
   // F09 A6 (UXA-C5): the empty plan's next step, then CAL-1 from the
   // lights (the example shortcut is gone; it stays a fixture).
@@ -376,16 +380,34 @@ void main() {
     expect(stored!.status, SessionStatus.completed);
     AppRouter.router.go(AppRouter.sessionDetail(runId));
     await settle(tester);
+    // logbook.js detail: the large state with how the result was reported.
     expect(
       find.descendant(
         of: find.byKey(const Key('detail.status')),
-        matching: find.text('Completed'),
+        matching: find.text('Completed, reported as planned'),
       ),
       findsOneWidget,
     );
 
     // Export: the manifest v2 that would be shared.
-    await scrollTo(tester, find.byKey(const Key('detail.export')));
+    // Export is inside "Export this entry" (logbook.js detail).
+    final detailList = find
+        .descendant(
+          of: find.byKey(const Key('detail.scroll')),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('section.logbook.export')),
+      300,
+      scrollable: detailList,
+    );
+    await tap(tester, find.byKey(const Key('section.logbook.export')));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('detail.export')),
+      300,
+      scrollable: detailList,
+    );
     await tap(tester, find.byKey(const Key('detail.export')));
     expect(device.share.shared, hasLength(1));
     final json = jsonDecode(

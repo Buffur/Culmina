@@ -46,7 +46,7 @@ void main() {
   testWidgets('each part reports its own tap', (tester) async {
     final r = await _pump(tester, night: _night);
     expect(find.text('Ljubljana'), findsOneWidget);
-    expect(find.text('Fri, Nov 13'), findsOneWidget);
+    expect(find.text('Night of 13 Nov'), findsOneWidget);
     await tester.tap(find.byKey(const Key('context.site')));
     await tester.tap(find.byKey(const Key('context.night')));
     expect(r.taps, ['site', 'night']);
@@ -69,7 +69,7 @@ void main() {
     expect(
       tester.getSemantics(find.byKey(const Key('context.night'))),
       matchesSemantics(
-        label: 'Night: Fri, Nov 13',
+        label: 'Night of 13 Nov',
         hint: 'Choose a night',
         isButton: true,
         hasEnabledState: true,

@@ -200,13 +200,14 @@ void main() {
   });
 
   // F24 A6: the same rule in the Library's manage mode, where a tap opens
-  // the target's editor instead of choosing it.
+  // the target's record instead of choosing it.
   testWidgets('manage mode (Library targets): a late older answer never '
-      'replaces the newer list; a tap edits the newest list\'s target', (
+      'replaces the newer list; a tap opens the newest list\'s target', (
     tester,
   ) async {
     await start(tester, mode: ListMode.manage);
-    expect(find.byIcon(Icons.chevron_right), findsNWidgets(2));
+    expect(find.byKey(const Key('targets.row.1')), findsOneWidget);
+    expect(find.byKey(const Key('targets.row.2')), findsOneWidget);
     await type(tester, 'And');
     await type(tester, 'Ori');
     expect(find.byKey(const Key('targets.searching')), findsOneWidget);
@@ -218,7 +219,9 @@ void main() {
     expect(find.text('Andromeda (C1)'), findsNothing);
     await tester.tap(find.text('Orion Nebula (C2)'));
     await tester.pumpAndSettle();
-    expect(find.text('Catalog ID: C2'), findsOneWidget);
+    // The record's "Catalogue id" fact (library.js own-target record).
+    expect(find.byKey(const Key('targetDetail.facts')), findsOneWidget);
+    expect(find.text('C2'), findsOneWidget);
     expect(plan.chosen, isNull, reason: 'managing never chooses');
   });
 
@@ -261,6 +264,6 @@ void main() {
     await tester.pump();
     expect(find.text('Orion Nebula (C2)'), findsOneWidget);
     expect(find.text('No results for "Orx".'), findsNothing);
-    expect(find.textContaining('No results'), findsNothing);
+    expect(find.text('None of your targets match.'), findsNothing);
   });
 }

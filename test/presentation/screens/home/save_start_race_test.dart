@@ -78,7 +78,8 @@ void main() {
     await settle(tester);
   }
 
-  final deleteBlock = find.byTooltip('Delete block');
+  // plan.js blockRow: each block's Remove.
+  final deleteBlock = find.byKey(const Key('capture.delete.0'));
 
   testWidgets('Save, then an edit: the planner and the stored session agree, '
       'and the edit counts as unsaved', (tester) async {

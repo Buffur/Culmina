@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'app_colors.dart';
 import 'app_palette.dart';
 import 'app_radius.dart';
+import 'app_spacing.dart';
 import 'app_typography.dart';
 import 'app_motion.dart';
 import 'hybrid_tokens.dart';
@@ -421,19 +422,26 @@ class AppTheme {
           backgroundColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.disabled)
                 ? t.scaffoldBackgroundColor
+                : states.contains(WidgetState.pressed)
+                ? hybrid.selection
                 : s.surface,
           ),
           elevation: const WidgetStatePropertyAll(0),
         ),
       ),
+      // plan.css `.quiet-button`: 14/500 secondary text, padding 8 12,
+      // at least 48 × 48.
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          minimumSize: tall,
+          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
           animationDuration: AppMotion.short,
           shape: shape,
           textStyle: label,
-          foregroundColor: onOff(p.textPrimary),
-          iconColor: onOff(p.textPrimary),
+          foregroundColor: onOff(p.textSecondary),
+          iconColor: onOff(p.textSecondary),
           overlayColor: overlay(p.textPrimary),
         ),
       ),
@@ -460,8 +468,11 @@ class AppTheme {
       // A quiet underline (08 §6): the enabled line is the control border
       // (colorScheme.outline, which Material reads); focus draws it 2 px in
       // the primary colour. Labels and hints are text roles (AA).
+      // plan.css `.block-input input`: a 1 px border and 12 padding round
+      // a 24 px line, 50 tall (Flutter paints the border inside the
+      // content padding, so 13).
       inputDecorationTheme: InputDecorationThemeData(
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: const EdgeInsets.all(13),
         constraints: const BoxConstraints(minHeight: 48),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.small),
@@ -492,7 +503,9 @@ class AppTheme {
                 : p.textSecondary,
           ),
         ),
-        hintStyle: TextStyle(color: p.textTertiary),
+        // `input::placeholder`: the secondary text (italic on plan pages,
+        // HybridPlanInputs).
+        hintStyle: TextStyle(color: p.textSecondary),
         helperStyle: TextStyle(color: p.textTertiary),
         errorStyle: TextStyle(color: s.error),
         prefixIconColor: p.textSecondary,
@@ -535,14 +548,21 @@ class AppTheme {
           ),
         ),
       ),
+      // Hybrid's menu (plan.css `.plan-menu`): flat, under its button, a
+      // control-border outline at radius 8, 4 above and below, 48 px items
+      // of 14 px text.
       popupMenuTheme: PopupMenuThemeData(
         color: p.surfaceRaised,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        position: PopupMenuPosition.under,
+        menuPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.small),
-          side: BorderSide(color: p.border),
+          borderRadius: BorderRadius.circular(AppRadius.menu),
+          side: BorderSide(color: p.controlBorder),
         ),
         labelTextStyle: WidgetStatePropertyAll(
-          text.bodyMedium?.copyWith(color: p.textPrimary),
+          AppTypography.body.copyWith(height: 1.5, color: p.textPrimary),
         ),
       ),
       menuTheme: MenuThemeData(

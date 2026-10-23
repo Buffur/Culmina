@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../domain/models/astro_target.dart';
 import '../../domain/models/equipment_profile.dart';
+import '../../domain/models/target_alias.dart';
 import '../../domain/repositories/equipment_repository.dart';
 import '../../domain/repositories/target_repository.dart';
 import '../../domain/repositories/undoable_deletion.dart';
@@ -62,6 +63,15 @@ class TargetsViewModel extends ChangeNotifier {
   /// Catalog and user targets matching [query] (all when empty).
   Future<List<AstroTarget>> search(String query) =>
       _repository.searchTargets(query);
+
+  /// Each catalog object's other designations and names, by catalog id.
+  Future<Map<String, List<TargetAlias>>> aliases() async {
+    final out = <String, List<TargetAlias>>{};
+    for (final a in await _repository.getAllAliases()) {
+      (out[a.catalogId] ??= []).add(a);
+    }
+    return out;
+  }
 
   Future<int> add(AstroTarget target) async {
     final id = await _repository.insertTarget(target);

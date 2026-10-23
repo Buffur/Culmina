@@ -291,10 +291,12 @@ void main() {
     await tapKey(tester, 'blockDialog.fromPhoto');
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('unsaved.cancel')));
+    expect(find.byKey(const Key('discardEdit.discard')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('discardEdit.keep')));
     await tester.pumpAndSettle();
     await tapKey(tester, 'blockDialog.cancel');
+    await tester.tap(find.byKey(const Key('discardEdit.discard')));
+    await tester.pumpAndSettle();
     expect(result.single, isNull, reason: 'Cancel stores nothing');
   });
 

@@ -1,9 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_evidence.dart';
@@ -15,7 +15,10 @@ import '../../../domain/models/tracking_type.dart';
 import '../../shared/app_words.dart';
 import '../../shared/collapsible_section.dart';
 import '../../shared/confirmation_patterns.dart';
-import '../../shared/delete_patterns.dart';
+import '../../shared/hybrid_app_bar.dart';
+import '../../shared/hybrid_parts.dart';
+import '../library/library_parts.dart';
+import '../settings/settings_parts.dart';
 import '../../shared/equipment_draft.dart';
 import '../../shared/equipment_form_input.dart';
 import '../../shared/equipment_import_text.dart';
@@ -27,30 +30,25 @@ import '../../viewmodels/library_viewmodels.dart';
 /// lives in the dialog and is not remembered.
 const rigEditorMoreSection = 'rigEditor.more';
 
-/// The rig editor (S3.5): Add, Edit, or a draft pre-filled from a metadata
-/// import (ADR-018 §2). Every value is built by [EquipmentDraft]; this dialog
-/// holds only controllers and layout. Returns the saved rig's id, or null
-/// when nothing was saved. Nothing is written unless the user presses Save.
-/// A changed editor asks before Back or a tap outside discards it (F05 A6,
-/// UXA-C4); an unchanged one closes at once.
+/// The rig editor (S3.5; library.js `rigForm`): Add, Edit, or a draft
+/// pre-filled from a metadata import (ADR-018 §2), on a page of its own.
+/// Every value is built by [EquipmentDraft]; this page holds only
+/// controllers and layout. Returns the saved rig's id, or null when nothing
+/// was saved. Nothing is written unless the user presses Save rig. A
+/// changed editor asks before Back discards it (F05 A6, UXA-C4); an
+/// unchanged one closes at once. Delete is on the rig's record (S9.1).
 Future<int?> showEquipmentEditor(
   BuildContext context, {
   EquipmentProfile? existing,
   EquipmentDraft? draft,
-  Future<bool> Function()? onDelete,
-}) => _EquipmentEditor(
-  draft ?? EquipmentDraft.fromProfile(existing),
-  onDelete,
-).show(context);
+}) =>
+    _EquipmentEditor(draft ?? EquipmentDraft.fromProfile(existing))
+        .show(context);
 
 class _EquipmentEditor {
-  _EquipmentEditor(this.form, this.onDelete);
+  _EquipmentEditor(this.form);
 
   final EquipmentDraft form;
-
-  /// The visible Delete of a saved rig (S9.1; RD-09 = M + S1): confirms,
-  /// deletes, and returns whether it did; the editor then closes.
-  final Future<bool> Function()? onDelete;
 
   static String _trim(double value) =>
       value == value.roundToDouble() ? value.toInt().toString() : '$value';
@@ -108,13 +106,8 @@ class _EquipmentEditor {
   }
 
   /// A capture format in words (ADR-021 C7).
-  static String captureFormatLabel(CaptureFormat f) => switch (f) {
-    CaptureFormat.dngUncompressed16 => 'Uncompressed DNG, 16-bit',
-    CaptureFormat.fits16 => 'FITS, 16-bit integer',
-    CaptureFormat.fits32float => 'FITS, 32-bit float',
-    CaptureFormat.compressedRaw => 'Compressed RAW (CR3, NEF, ARW …)',
-    CaptureFormat.jpegHeic => 'JPEG or HEIC',
-  };
+  static String captureFormatLabel(CaptureFormat f) =>
+      RigInputText.captureFormat(f);
 
   /// ADR-011 §6: a stored focal ratio above f/32 is shown for review, never
   /// converted. The f/ field's own bounds make the user fix it on save.
@@ -197,7 +190,10 @@ class _EquipmentEditor {
       child: Text(
         RigInputText.reason(spec),
         key: Key('rigEditor.reason.${spec.name}'),
-        style: Theme.of(context).textTheme.bodySmall,
+        style: AppTypography.caption.copyWith(
+          height: 1.55,
+          color: AppPalette.of(context).textSecondary,
+        ),
       ),
     );
 
@@ -210,7 +206,10 @@ class _EquipmentEditor {
         child: Text(
           PrefillText.note(p),
           key: Key('editor.prefill.${spec.name}'),
-          style: Theme.of(context).textTheme.bodySmall,
+          style: AppTypography.caption.copyWith(
+            height: 1.55,
+            color: AppPalette.of(context).textSecondary,
+          ),
         ),
       );
     }
@@ -300,8 +299,8 @@ class _EquipmentEditor {
       if (context.mounted) Navigator.of(context).pop();
     }
 
-    /// Back or a tap outside (F05 A6): an unchanged editor closes; a changed
-    /// one asks first, the site editor's prompt (TD-084).
+    /// Back or Cancel (F05 A6): an unchanged editor closes; a changed one
+    /// asks first, the site editor's prompt (TD-084).
     Future<void> leave(BuildContext context, StateSetter setDialogState) async {
       if (!changed()) {
         Navigator.of(context).pop();
@@ -310,7 +309,11 @@ class _EquipmentEditor {
       final label = nameCtrl.text.trim().isEmpty
           ? (isEdit ? existing.name : AppWords.addRig)
           : nameCtrl.text.trim();
-      final choice = await askUnsavedChanges(context, plan: label);
+      final choice = await askUnsavedChanges(
+        context,
+        plan: label,
+        library: true,
+      );
       if (!context.mounted) return;
       switch (choice) {
         case UnsavedChoice.cancel:
@@ -322,139 +325,230 @@ class _EquipmentEditor {
       }
     }
 
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return PopScope(
-              canPop: false,
-              onPopInvokedWithResult: (didPop, _) {
-                if (!didPop) leave(context, setDialogState);
-              },
-              child: AlertDialog(
+    final route = MaterialPageRoute<void>(
+      // A page over the record, with Back (library.js editors).
+      fullscreenDialog: false,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final p = AppPalette.of(context);
+          final style = libraryInputStyle(context);
+          final stacked = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
+          Widget pair(Widget a, Widget b) => stacked
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [a, b],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: AppSpacing.itemGap,
+                  children: [
+                    Expanded(child: a),
+                    Expanded(child: b),
+                  ],
+                );
+          Widget legend(String text) => Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.gutter),
+            child: Semantics(
+              header: true,
+              child: Text(
+                text,
+                style: AppTypography.sectionHeading.copyWith(
+                  color: p.textPrimary,
+                ),
+              ),
+            ),
+          );
+          final hint = AppTypography.caption.copyWith(
+            height: 1.55,
+            color: p.textSecondary,
+          );
+          final sensor =
+              sensorWCtrl.text.trim().isEmpty || sensorHCtrl.text.trim().isEmpty
+              ? null
+              : '${sensorWCtrl.text} × ${sensorHCtrl.text} mm';
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop) leave(context, setDialogState);
+            },
+            child: Scaffold(
+              appBar: hybridAppBar(
+                context,
                 // S7.6: the glossary words; "Equipment profile" is retired.
                 title: Text(isEdit ? AppWords.editRig : AppWords.addRig),
-                // Constrain width on larger screens. `sizeOf`, not `of`: the
-                // form must not rebuild on every frame of the keyboard's
-                // inset animation (S10.3; 08 §22).
-                content: SizedBox(
-                  width: min(MediaQuery.sizeOf(context).width * 0.9, 480),
+              ),
+              bottomNavigationBar: LibrarySaveBar(
+                saveKey: const Key('rigEditor.save'),
+                cancelKey: const Key('rigEditor.cancel'),
+                saveLabel: 'Save rig',
+                onCancel: () => leave(context, setDialogState),
+                // S7.6 (DESIGN_SYSTEM §9): Save is the primary button.
+                onSave: () => save(context, setDialogState),
+              ),
+              body: Form(
+                key: formKey,
+                child: HybridPlanInputs(
                   child: SingleChildScrollView(
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // ── Profile Identity ────────────────────────────
-                          TextFormField(
+                    key: const Key('rigEditor.scroll'),
+                    padding: settingsPagePadding,
+                    // Every field is built, so Save validates them all.
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SettingsCopy(
+                          isEdit
+                              ? 'Untouched values stay as recorded.'
+                              : 'Add the camera, sensor and optics. Unknown '
+                                    'values are never guessed.',
+                        ),
+                        if (existing?.needsApertureReview ?? false)
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSpacing.sm),
+                            child: _reviewBanner(context, existing!),
+                          ),
+                        if (existing != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSpacing.xs),
+                            child: Text(
+                              _provenance(existing),
+                              key: const Key('editor.provenance'),
+                              style: hint,
+                            ),
+                          ),
+                        LibraryField(
+                          label: 'Rig name',
+                          child: TextFormField(
                             controller: nameCtrl,
+                            style: style,
                             decoration: const InputDecoration(
-                              labelText: 'Rig name',
-                              hintText: 'e.g. ASI2600MC + 400 mm refractor',
+                              hintText: 'e.g. DSLR rig',
                             ),
                             validator: (v) => v == null || v.trim().isEmpty
                                 ? 'Required'
                                 : null,
                           ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: manufacturerCtrl,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Manufacturer',
-                                    hintText: 'e.g. ZWO',
+                        ),
+                        // S7.2a (ADR-020 §2): the user's choice, never
+                        // inferred; it decides the capture settings offered.
+                        legend(
+                          isEdit ? 'Camera type' : 'What takes the pictures?',
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        LibraryChoiceGrid<CameraClass>(
+                          key: const Key('equipmentEditor.cameraClass'),
+                          legend: 'Camera type',
+                          keyPrefix: 'equipmentEditor.cameraClass',
+                          options: [
+                            for (final c in CameraClass.values)
+                              (
+                                c,
+                                c == CameraClass.unknown
+                                    ? 'Not sure (Unknown)'
+                                    : c.label,
+                                c.name,
+                              ),
+                          ],
+                          value: cameraClass,
+                          onChanged: (c) =>
+                              setDialogState(() => cameraClass = c),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: AppSpacing.xs),
+                          child: Text(
+                            cameraClass == CameraClass.unknown
+                                ? 'The type stays Unknown. The app does not work '
+                                      'out sensor facts from it; you can set it '
+                                      'later.'
+                                : 'Chosen by you, never inferred from a name. It '
+                                      'decides the capture settings a plan '
+                                      'offers (ISO or gain, binning).',
+                            style: hint,
+                          ),
+                        ),
+                        // S7.3b (ADR-020 §8): the user's statement of a camera
+                        // setting, off by default; offered only where a camera
+                        // takes a dark per frame. A stored value is kept for
+                        // other types, and ignored.
+                        if (cameraClass.offersInCameraNoiseReduction)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: AppSpacing.itemGap,
+                            ),
+                            child: MergeSemantics(
+                              child: Semantics(
+                                checked: noiseReduction,
+                                child: InkWell(
+                                  key: const Key(
+                                    'equipmentEditor.noiseReduction',
+                                  ),
+                                  onTap: () => setDialogState(
+                                    () => noiseReduction = !noiseReduction,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: AppSpacing.sm,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: 4),
+                                        HybridCheckbox(checked: noiseReduction),
+                                        const SizedBox(width: 15),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            spacing: 2,
+                                            children: [
+                                              Text(
+                                                'In-camera noise reduction',
+                                                style: AppTypography.body
+                                                    .copyWith(
+                                                      height: 1.5,
+                                                      color: p.textPrimary,
+                                                    ),
+                                              ),
+                                              Text(
+                                                'Long-exposure noise reduction: '
+                                                'the camera takes a dark as long '
+                                                'as each light. The plan counts '
+                                                'that time.',
+                                                style: hint,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: cameraModelCtrl,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Model',
-                                    hintText: 'e.g. ASI2600MC',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          // S7.2a (ADR-020 §2): the user's choice, never
-                          // inferred; it decides the capture settings offered.
-                          DropdownButtonFormField<CameraClass>(
-                            key: const Key('equipmentEditor.cameraClass'),
-                            initialValue: cameraClass,
-                            isExpanded: true,
-                            decoration: const InputDecoration(
-                              labelText: 'Camera type',
                             ),
-                            items: [
-                              for (final c in CameraClass.values)
-                                DropdownMenuItem(
-                                  value: c,
-                                  child: Text(c.label),
-                                ),
-                            ],
-                            onChanged: (c) {
-                              if (c != null) {
-                                setDialogState(() => cameraClass = c);
-                              }
-                            },
                           ),
-                          // S7.3b (ADR-020 §8): the user's statement of a
-                          // camera setting, off by default; offered only where
-                          // a camera takes a dark per frame. A stored value is
-                          // kept for other types, and ignored.
-                          if (cameraClass.offersInCameraNoiseReduction)
-                            SwitchListTile(
-                              key: const Key('equipmentEditor.noiseReduction'),
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text('In-camera noise reduction'),
-                              subtitle: const Text(
-                                'Long-exposure noise reduction: the camera '
-                                'takes a dark as long as each light. The plan '
-                                'counts that time.',
-                              ),
-                              value: noiseReduction,
-                              onChanged: (v) =>
-                                  setDialogState(() => noiseReduction = v),
-                            ),
-                          const SizedBox(height: 20),
-                          // ── Sensor Section (Stellarium layout) ──────────
-                          Text(
-                            'Camera sensor',
-                            style: Theme.of(context).textTheme.labelMedium
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          // Resolution W × H px
-                          _StellariumRow(
-                            label: 'Resolution',
-                            unit: 'px',
-                            largestValue: EquipmentLimits.resolutionPx.max
-                                .toStringAsFixed(0),
-                            fieldW: TextFormField(
+                        legend('Camera sensor'),
+                        pair(
+                          LibraryField(
+                            label: 'Resolution width (px)',
+                            child: TextFormField(
+                              key: const Key('rigEditor.resolutionWidth'),
                               controller: resWCtrl,
+                              style: style,
                               keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
                               onChanged: (_) => setDialogState(autoSensorSize),
                               decoration: const InputDecoration(
                                 hintText: '6248',
                               ),
                               validator: EquipmentFormInput.validateResolution,
                             ),
-                            fieldH: TextFormField(
+                          ),
+                          LibraryField(
+                            label: 'Resolution height (px)',
+                            child: TextFormField(
+                              key: const Key('rigEditor.resolutionHeight'),
                               controller: resHCtrl,
+                              style: style,
                               keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
                               onChanged: (_) => setDialogState(autoSensorSize),
                               decoration: const InputDecoration(
                                 hintText: '4176',
@@ -462,206 +556,190 @@ class _EquipmentEditor {
                               validator: EquipmentFormInput.validateResolution,
                             ),
                           ),
-                          reasonNote(context, EquipmentSpec.resolution),
-                          prefillNote(context, EquipmentSpec.resolution),
-                          const SizedBox(height: 8),
-                          // S7.6 (UX-22): the pixel size is asked once (square
-                          // pixels); it was two fields on one controller.
-                          TextFormField(
+                        ),
+                        reasonNote(context, EquipmentSpec.resolution),
+                        prefillNote(context, EquipmentSpec.resolution),
+                        // S7.6 (UX-22): the pixel size is asked once (square
+                        // pixels); it was two fields on one controller.
+                        LibraryField(
+                          label: 'Pixel size (µm)',
+                          hint: 'Square pixels: one value.',
+                          child: TextFormField(
                             key: const Key('equipmentEditor.pixelSize'),
                             controller: pixelCtrl,
+                            style: style,
                             keyboardType: _decimal,
                             onChanged: (_) => setDialogState(autoSensorSize),
-                            decoration: const InputDecoration(
-                              labelText: 'Pixel size (µm)',
-                              hintText: '3.76',
-                              helperText: 'Square pixels: one value',
-                            ),
+                            decoration: const InputDecoration(hintText: '3.76'),
                             validator: EquipmentFormInput.required(
                               EquipmentLimits.pixelPitchUm,
                               'µm',
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          // S3.V8: a saved rig's pixel size of another
-                          // output mode was not copied; say why while empty.
-                          if (form.withheldFromSavedRig case final w?
-                              when pixelCtrl.text.trim().isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text(
-                                PrefillText.withheld(w),
-                                key: const Key('editor.withheld'),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
+                        ),
+                        // S3.V8: a saved rig's pixel size of another output
+                        // mode was not copied; say why while empty.
+                        if (form.withheldFromSavedRig case final w?
+                            when pixelCtrl.text.trim().isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSpacing.xs),
+                            child: Text(
+                              PrefillText.withheld(w),
+                              key: const Key('editor.withheld'),
+                              style: hint,
                             ),
-                          reasonNote(context, EquipmentSpec.pixelPitch),
-                          prefillNote(context, EquipmentSpec.pixelPitch),
-                          // Sensor Size W × H mm — auto-calculated
-                          _StellariumRow(
-                            label: 'Sensor size',
-                            unit: 'mm',
-                            largestValue: EquipmentLimits.sensorSideMm.max
-                                .toStringAsFixed(2),
-                            fieldW: TextFormField(
-                              controller: sensorWCtrl,
-                              readOnly: true,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                              textAlign: TextAlign.center,
-                              // S11.C2 (S11H-01): a derived value, in the
-                              // secondary text role (AA), not the disabled one.
-                              style: TextStyle(
-                                color: AppPalette.of(context).textSecondary,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: '23.50',
-                                filled: true,
-                              ),
-                              validator: EquipmentFormInput.required(
+                          ),
+                        reasonNote(context, EquipmentSpec.pixelPitch),
+                        prefillNote(context, EquipmentSpec.pixelPitch),
+                        // The sensor size, derived from resolution × pixel size
+                        // (library.js `library-derived`); still checked.
+                        FormField<void>(
+                          key: const Key('rigEditor.sensorSize'),
+                          validator: (_) =>
+                              EquipmentFormInput.required(
                                 EquipmentLimits.sensorSideMm,
                                 'mm',
-                              ),
-                            ),
-                            fieldH: TextFormField(
-                              controller: sensorHCtrl,
-                              readOnly: true,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                              textAlign: TextAlign.center,
-                              // S11.C2 (S11H-01): a derived value, in the
-                              // secondary text role (AA), not the disabled one.
-                              style: TextStyle(
-                                color: AppPalette.of(context).textSecondary,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: '15.70',
-                                filled: true,
-                              ),
-                              validator: EquipmentFormInput.required(
+                              )(sensorWCtrl.text) ??
+                              EquipmentFormInput.required(
                                 EquipmentLimits.sensorSideMm,
                                 'mm',
-                              ),
+                              )(sensorHCtrl.text),
+                          builder: (field) => Padding(
+                            padding: const EdgeInsets.only(
+                              top: AppSpacing.itemGap,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Sensor size (mm)',
+                                  style: AppTypography.value.copyWith(
+                                    height: 1.5,
+                                    color: p.textSecondary,
+                                  ),
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  sensor ??
+                                      'Not recorded until resolution and pixel '
+                                          'size are entered',
+                                  key: const Key('rigEditor.sensorSizeValue'),
+                                  style: AppTypography.value.copyWith(
+                                    height: 1.5,
+                                    color: sensor == null
+                                        ? p.textSecondary
+                                        : p.textPrimary,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: AppSpacing.xs,
+                                  ),
+                                  child: Text(
+                                    'Auto-calculated from resolution × pixel '
+                                    'size.',
+                                    style: hint,
+                                  ),
+                                ),
+                                if (field.errorText case final e?)
+                                  Text(
+                                    e,
+                                    style: hint.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .error,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Auto-calculated from resolution × pixel size',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: AppPalette.of(context).textTertiary,
-                                ),
-                          ),
-                          reasonNote(context, EquipmentSpec.sensorSize),
-                          prefillNote(context, EquipmentSpec.sensorSize),
-                          const SizedBox(height: 12),
-                          // Bit Depth removed
-                          const SizedBox(height: 20),
-                          Text(
-                            'Optics',
-                            style: Theme.of(context).textTheme.labelMedium
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          if (existing?.needsApertureReview ?? false)
-                            _reviewBanner(context, existing!),
-                          if (existing != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text(
-                                _provenance(existing),
-                                key: const Key('editor.provenance'),
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                          TextFormField(
+                        ),
+                        reasonNote(context, EquipmentSpec.sensorSize),
+                        prefillNote(context, EquipmentSpec.sensorSize),
+                        legend('Optics'),
+                        LibraryField(
+                          label: 'Effective focal length (mm)',
+                          child: TextFormField(
+                            key: const Key('rigEditor.focalLength'),
                             controller: focalCtrl,
+                            style: style,
                             keyboardType: _decimal,
                             onChanged: (_) => setDialogState(deriveFocalRatio),
-                            decoration: const InputDecoration(
-                              labelText: 'Effective focal length (mm)',
-                            ),
                             validator: EquipmentFormInput.required(
                               EquipmentLimits.focalLengthMm,
                               'mm',
                             ),
                           ),
-                          reasonNote(context, EquipmentSpec.focalLength),
-                          prefillNote(context, EquipmentSpec.focalLength),
-                          const SizedBox(height: 12),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: apertureCtrl,
-                                  onChanged: (_) => setDialogState(() {}),
-                                  // ADR-011 §4: with a diameter, N = f / D.
-                                  readOnly: diameterCtrl.text.trim().isNotEmpty,
-                                  keyboardType: _decimal,
-                                  decoration: InputDecoration(
-                                    labelText: 'Focal ratio (f/)',
-                                    helperText:
-                                        diameterCtrl.text.trim().isNotEmpty
-                                        ? 'From focal length ÷ diameter'
-                                        : null,
-                                  ),
-                                  validator: diameterCtrl.text.trim().isNotEmpty
-                                      ? null
-                                      : EquipmentFormInput.required(
-                                          EquipmentLimits.focalRatio,
-                                          '',
-                                        ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: diameterCtrl,
-                                  keyboardType: _decimal,
-                                  onChanged: (_) =>
-                                      setDialogState(deriveFocalRatio),
-                                  decoration: const InputDecoration(
-                                    labelText: 'Aperture diameter (mm)',
-                                    hintText: 'Optional',
-                                  ),
-                                  validator: EquipmentFormInput.optional(
-                                    EquipmentLimits.apertureDiameterMm,
-                                    'mm',
-                                  ),
-                                ),
-                              ),
-                            ],
+                        ),
+                        reasonNote(context, EquipmentSpec.focalLength),
+                        prefillNote(context, EquipmentSpec.focalLength),
+                        pair(
+                          LibraryField(
+                            label: 'Focal ratio (f/)',
+                            hint: diameterCtrl.text.trim().isNotEmpty
+                                ? 'From focal length ÷ diameter'
+                                : null,
+                            child: TextFormField(
+                              key: const Key('rigEditor.focalRatio'),
+                              controller: apertureCtrl,
+                              style: style,
+                              onChanged: (_) => setDialogState(() {}),
+                              // ADR-011 §4: with a diameter, N = f / D.
+                              readOnly: diameterCtrl.text.trim().isNotEmpty,
+                              keyboardType: _decimal,
+                              validator: diameterCtrl.text.trim().isNotEmpty
+                                  ? null
+                                  : EquipmentFormInput.required(
+                                      EquipmentLimits.focalRatio,
+                                      '',
+                                    ),
+                            ),
                           ),
-                          reasonNote(context, EquipmentSpec.focalRatio),
-                          prefillNote(context, EquipmentSpec.focalRatio),
-                          if (apertureError != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                apertureError!,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
+                          LibraryField(
+                            label: 'Aperture diameter (mm, optional)',
+                            child: TextFormField(
+                              key: const Key('rigEditor.diameter'),
+                              controller: diameterCtrl,
+                              style: style,
+                              keyboardType: _decimal,
+                              onChanged: (_) =>
+                                  setDialogState(deriveFocalRatio),
+                              validator: EquipmentFormInput.optional(
+                                EquipmentLimits.apertureDiameterMm,
+                                'mm',
                               ),
                             ),
-                          const SizedBox(height: 12),
-                          DropdownButtonFormField<TrackingType>(
+                          ),
+                        ),
+                        reasonNote(context, EquipmentSpec.focalRatio),
+                        prefillNote(context, EquipmentSpec.focalRatio),
+                        if (apertureError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSpacing.sm),
+                            child: Text(
+                              apertureError!,
+                              style: hint.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                          ),
+                        LibraryField(
+                          // S7.1 (RD-08 = T3): a plan may override it.
+                          label: 'Tracking (default for plans)',
+                          hint: 'A plan may override it.',
+                          child: DropdownButtonFormField<TrackingType>(
+                            key: const Key('rigEditor.tracking'),
                             initialValue: trackingType,
                             // S3.10: the chosen label wraps inside the field
                             // instead of overflowing on a phone at large text.
                             isExpanded: true,
+                            style: style,
+                            icon: hybridSelectIcon(context),
                             decoration: const InputDecoration(
-                              // S7.1 (RD-08 = T3): a plan may override it.
-                              labelText: 'Tracking (default for plans)',
+                              contentPadding: hybridSelectPadding,
                             ),
                             items: [
                               for (final t in TrackingType.values)
@@ -674,238 +752,152 @@ class _EquipmentEditor {
                               if (t != null) trackingType = t;
                             },
                           ),
-                          const SizedBox(height: 12),
-                          // S7.6 (UX-22): the rare values one tap away, their
-                          // meaning unchanged; the summary states what is set
-                          // (rebuilt only by these three fields' typing).
-                          ListenableBuilder(
-                            listenable: Listenable.merge([
-                              maxExposureCtrl,
-                              averageRawFileSizeMBCtrl,
-                              rotationCtrl,
-                            ]),
-                            builder: (context, _) => CollapsibleSection(
-                              sectionKey: rigEditorMoreSection,
-                              open: moreOpen,
-                              onToggle: () =>
-                                  setDialogState(() => moreOpen = !moreOpen),
-                              title: 'More (optional)',
-                              summary: _moreSummary(
-                                maxExposureCtrl.text,
-                                averageRawFileSizeMBCtrl.text,
-                                rotationCtrl.text,
-                                captureFormat,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextFormField(
-                                    controller: maxExposureCtrl,
-                                    keyboardType: _decimal,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Maximum sub-exposure (s)',
-                                      hintText:
-                                          'Optional — your mount/guiding limit',
+                        ),
+                        const SizedBox(height: AppSpacing.gutter),
+                        // S7.6 (UX-22): the rare values one tap away, their
+                        // meaning unchanged; the summary states what is set.
+                        ListenableBuilder(
+                          listenable: Listenable.merge([
+                            maxExposureCtrl,
+                            averageRawFileSizeMBCtrl,
+                            rotationCtrl,
+                          ]),
+                          builder: (context, _) => CollapsibleSection(
+                            sectionKey: rigEditorMoreSection,
+                            open: moreOpen,
+                            onToggle: () =>
+                                setDialogState(() => moreOpen = !moreOpen),
+                            title: 'More (optional)',
+                            summary: _moreSummary(
+                              maxExposureCtrl.text,
+                              averageRawFileSizeMBCtrl.text,
+                              rotationCtrl.text,
+                              captureFormat,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                pair(
+                                  LibraryField(
+                                    label: 'Manufacturer (optional)',
+                                    top: 0,
+                                    child: TextFormField(
+                                      controller: manufacturerCtrl,
+                                      style: style,
+                                      decoration: const InputDecoration(
+                                        hintText: 'e.g. ZWO',
+                                      ),
                                     ),
+                                  ),
+                                  LibraryField(
+                                    label: 'Model (optional)',
+                                    top: stacked ? AppSpacing.itemGap : 0,
+                                    child: TextFormField(
+                                      controller: cameraModelCtrl,
+                                      style: style,
+                                      decoration: const InputDecoration(
+                                        hintText: 'e.g. ASI2600MC',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                LibraryField(
+                                  label: 'Maximum sub-exposure (s)',
+                                  hint: 'Optional — your mount/guiding limit',
+                                  child: TextFormField(
+                                    controller: maxExposureCtrl,
+                                    style: style,
+                                    keyboardType: _decimal,
                                     validator: EquipmentFormInput.optional(
                                       EquipmentLimits.maxExposureS,
                                       's',
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  TextFormField(
+                                ),
+                                LibraryField(
+                                  label: 'Average RAW file size (MB)',
+                                  hint:
+                                      'Optional: makes the storage estimate '
+                                      'real',
+                                  child: TextFormField(
                                     controller: averageRawFileSizeMBCtrl,
+                                    style: style,
                                     onChanged: (_) => setDialogState(() {}),
                                     keyboardType: _decimal,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Average RAW file size (MB)',
-                                      hintText: 'e.g. 50.0',
-                                    ),
                                     validator: EquipmentFormInput.optional(
                                       EquipmentLimits.rawFileSizeMB,
                                       'MB',
                                     ),
                                   ),
-                                  prefillNote(
-                                    context,
-                                    EquipmentSpec.rawFileSize,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  DropdownButtonFormField<CaptureFormat?>(
-                                    key: const Key('rigEditor.captureFormat'),
-                                    initialValue: captureFormat,
-                                    isExpanded: true,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Capture format (optional)',
-                                      helperText:
-                                          'Gives a theoretical file size when no file is measured; '
-                                          'compressed formats have none.',
-                                      helperMaxLines: 3,
-                                    ),
-                                    items: [
-                                      const DropdownMenuItem(
-                                        value: null,
-                                        child: Text('Not set'),
-                                      ),
-                                      for (final f in CaptureFormat.values)
-                                        DropdownMenuItem(
-                                          value: f,
-                                          child: Text(captureFormatLabel(f)),
+                                ),
+                                prefillNote(context, EquipmentSpec.rawFileSize),
+                                LibraryField(
+                                  label: 'Capture format (optional)',
+                                  hint:
+                                      'Gives a theoretical file size when no '
+                                      'file is measured; compressed formats have '
+                                      'none.',
+                                  child:
+                                      DropdownButtonFormField<CaptureFormat?>(
+                                        key: const Key(
+                                          'rigEditor.captureFormat',
                                         ),
-                                    ],
-                                    onChanged: (f) =>
-                                        setDialogState(() => captureFormat = f),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  TextFormField(
+                                        initialValue: captureFormat,
+                                        isExpanded: true,
+                                        style: style,
+                                        icon: hybridSelectIcon(context),
+                                        decoration: const InputDecoration(
+                                          contentPadding: hybridSelectPadding,
+                                        ),
+                                        items: [
+                                          const DropdownMenuItem(
+                                            value: null,
+                                            child: Text('Not set'),
+                                          ),
+                                          for (final f in CaptureFormat.values)
+                                            DropdownMenuItem(
+                                              value: f,
+                                              child: Text(
+                                                captureFormatLabel(f),
+                                              ),
+                                            ),
+                                        ],
+                                        onChanged: (f) => setDialogState(
+                                          () => captureFormat = f,
+                                        ),
+                                      ),
+                                ),
+                                LibraryField(
+                                  label: 'Rotation (°)',
+                                  child: TextFormField(
                                     controller: rotationCtrl,
+                                    style: style,
                                     keyboardType:
                                         const TextInputType.numberWithOptions(
                                           decimal: true,
                                           signed: true,
                                         ),
-                                    decoration: const InputDecoration(
-                                      labelText: 'Rotation (°)',
-                                      hintText: 'Optional',
-                                    ),
                                     validator: EquipmentFormInput.optional(
                                       EquipmentLimits.rotationDeg,
                                       '°',
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                actions: [
-                  if (onDelete case final delete?)
-                    DeleteButton(
-                      key: const Key('rigEditor.delete'),
-                      tooltip: 'Delete rig',
-                      onPressed: () async {
-                        if (await delete() && context.mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                  // S7.6 (DESIGN_SYSTEM §9): Save is the primary button.
-                  FilledButton(
-                    key: const Key('rigEditor.save'),
-                    onPressed: () => save(context, setDialogState),
-                    child: const Text(AppWords.save),
-                  ),
-                ],
               ),
-            );
-          },
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
+    await Navigator.of(context).push(route);
     return savedId;
-  }
-}
-
-/// A Stellarium-style row: the label, then [FieldW] × [FieldH] Unit.
-class _StellariumRow extends StatelessWidget {
-  const _StellariumRow({
-    required this.label,
-    required this.unit,
-    required this.largestValue,
-    required this.fieldW,
-    required this.fieldH,
-  });
-
-  final String label;
-  final String unit;
-  final String largestValue;
-  final TextFormField fieldW;
-  final TextFormField fieldH;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final direction = Directionality.of(context);
-    final scaler = MediaQuery.textScalerOf(context);
-    double textWidth(String value, TextStyle? style) {
-      final painter = TextPainter(
-        text: TextSpan(text: value, style: style),
-        textDirection: direction,
-        textScaler: scaler,
-        maxLines: 1,
-      )..layout();
-      final width = painter.width;
-      painter.dispose();
-      return width;
-    }
-
-    // Match Material 3 TextField's bodyLarge style and themed content insets.
-    // Reserve the supported numeric range so typing does not repeatedly move
-    // a focused field between layouts; retain longer existing values as well.
-    final fieldTextWidth = [
-      largestValue,
-      fieldW.controller?.text ?? '',
-      fieldH.controller?.text ?? '',
-    ].map((value) => textWidth(value, theme.textTheme.bodyLarge)).reduce(max);
-    final padding =
-        theme.inputDecorationTheme.contentPadding?.resolve(direction) ??
-        const EdgeInsets.all(12);
-    final minimumFieldWidth =
-        fieldTextWidth.ceilToDouble() + padding.horizontal + 4;
-    final rowWidth =
-        2 * minimumFieldWidth +
-        textWidth('×', theme.textTheme.titleMedium) +
-        textWidth(unit, theme.textTheme.bodySmall) +
-        18;
-    // S3.10 (TD-069): the label sits above the W × H fields, so the fields
-    // get the dialog's whole width. Beside a fixed 90 dp label they were
-    // too narrow on a phone, and the read-only sensor fields clipped
-    // "9.89" to "9.8".
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: theme.textTheme.bodyMedium),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < rowWidth) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text('Width ($unit)', style: theme.textTheme.bodySmall),
-                  fieldW,
-                  const SizedBox(height: 12),
-                  Text('Height ($unit)', style: theme.textTheme.bodySmall),
-                  fieldH,
-                ],
-              );
-            }
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: fieldW),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: Text('×', style: theme.textTheme.titleMedium),
-                ),
-                Expanded(child: fieldH),
-                const SizedBox(width: 6),
-                Padding(
-                  padding: const EdgeInsets.only(top: 14),
-                  child: Text(unit, style: theme.textTheme.bodySmall),
-                ),
-              ],
-            );
-          },
-        ),
-      ],
-    );
   }
 }

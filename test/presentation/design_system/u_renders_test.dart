@@ -68,6 +68,7 @@ import '../../support/in_memory_first_run.dart';
 import '../../support/in_memory_privacy_preferences.dart';
 import '../../support/planner_harness.dart';
 import '../../support/sdk_fonts.dart';
+import '../../support/library_finders.dart';
 
 const _variable = 'ASTROPLAN_U_RENDERS';
 const _shot = Key('u.render');
@@ -640,7 +641,7 @@ void main() {
       final later = Completer<LocationResult>();
       fix = () => later.future;
       await tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
-      final latitude = find.widgetWithText(TextFormField, 'Latitude (°)');
+      final latitude = fieldLabeled('Latitude (°)');
       await tester.scrollUntilVisible(
         latitude,
         -200,

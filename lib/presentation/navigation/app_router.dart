@@ -9,6 +9,8 @@ import '../screens/about/about_screen.dart';
 import '../screens/details/night_moon_screen.dart';
 import '../screens/details/weather_detail_screen.dart';
 import '../screens/equipment/equipment_selection_screen.dart';
+import '../screens/home/plan_rig_screen.dart';
+import '../screens/home/plan_target_screen.dart';
 import '../screens/home/session_planner_route.dart';
 import '../screens/library/library_screen.dart';
 import '../screens/location/location_picker_screen.dart';
@@ -78,6 +80,13 @@ class AppRouter {
   /// UXA-C2): a rig created there is chosen for the plan.
   static const selectRigForPlan = '$selectRig?for=plan';
   static const selectSite = '/select/site';
+
+  /// The Library's targets and rigs over a scoped chooser (Hybrid "Add or
+  /// manage …"); [manageRigsForPlan] keeps D8 A: a rig created there
+  /// becomes the plan's.
+  static const manageTargets = '/manage/targets';
+  static const manageRigs = '/manage/rigs';
+  static const manageRigsForPlan = '$manageRigs?for=plan';
   static const siteEdit = '/site/edit';
   static const sitePick = '/site/pick';
   static const position = '/position';
@@ -214,15 +223,31 @@ class AppRouter {
         builder: (context, state) =>
             ResultsScreen(sessionId: int.parse(state.pathParameters['id']!)),
       ),
+      // Hybrid scoped choosers (plan.js `choiceView`): a radio list and
+      // Apply changes.
       GoRoute(
         path: selectTarget,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const TargetSelectionScreen(),
+        builder: (context, state) => const PlanTargetScreen(),
       ),
       GoRoute(
         path: selectRig,
         parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => PlanRigScreen(
+          forPlanAction: state.uri.queryParameters['for'] == 'plan',
+        ),
+      ),
+      GoRoute(
+        path: manageTargets,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) =>
+            const TargetSelectionScreen(mode: ListMode.manage),
+      ),
+      GoRoute(
+        path: manageRigs,
+        parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => EquipmentSelectionScreen(
+          mode: ListMode.manage,
           forPlanAction: state.uri.queryParameters['for'] == 'plan',
         ),
       ),

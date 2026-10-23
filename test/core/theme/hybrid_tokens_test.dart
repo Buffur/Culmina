@@ -13,6 +13,16 @@ void main() {
   final json = jsonDecode(
     File('design/home-lab/tokens.json').readAsStringSync(),
   ) as Map<String, dynamic>;
+  // The colour roles come from the reference's final computed cascade
+  // (hybrid-transfer evidence, plan.html at 86873ce), not tokens.json's
+  // first declarations: WQA-01's field action #FF0000 overrides the JSON's
+  // #AA0000 there.
+  final computed = jsonDecode(
+    File(
+      'docs/design/migration/evidence/hybrid-transfer-2026-10-22/web/'
+      'computed-theme-vars.json',
+    ).readAsStringSync(),
+  ) as Map<String, dynamic>;
   final themes = {
     'light': AppTheme.light,
     'dark': AppTheme.dark,
@@ -26,7 +36,11 @@ void main() {
         final theme = entry.value;
         final p = theme.extension<AppPalette>()!;
         final h = theme.extension<HybridTokens>()!;
-        final expected = json['themes'][entry.key] as Map<String, dynamic>;
+        final cascade = computed['${entry.key}:plan.html'] as Map;
+        final expected = <String, dynamic>{
+          for (final role in (json['themes'][entry.key] as Map).keys)
+            role: cascade['--$role'] ?? json['themes'][entry.key][role],
+        };
         final actual = <String, Color>{
           'surface-default': theme.scaffoldBackgroundColor,
           'surface-subtle': entry.key == 'field'
@@ -58,29 +72,16 @@ void main() {
             reason: '${entry.key}.${role.key}',
           );
         }
-        // D-06 (owner decision, 2026-10-21): field mode's primary action is
-        // transformed to red text and outline on black (contrast; see
-        // field_primary_action_contrast_test.dart). The JSON's action and
-        // on-action stay the tokens' values and the light/dark buttons.
-        if (entry.key == 'field') {
-          expect(
-            theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
-            theme.scaffoldBackgroundColor,
-          );
-          expect(
-            theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
-            p.textPrimary,
-          );
-        } else {
-          expect(
-            theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
-            h.action,
-          );
-          expect(
-            theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
-            h.onAction,
-          );
-        }
+        // WQA-01: every theme's primary action is the action fill with
+        // its on-action text (field: black on #FF0000).
+        expect(
+          theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
+          h.action,
+        );
+        expect(
+          theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
+          h.onAction,
+        );
         expect(theme.colorScheme.secondaryContainer, h.selection);
         expect(theme.textTheme.bodyMedium!.fontFamily, 'Geist');
         expect(theme.textTheme.bodyMedium!.fontSize, 16);

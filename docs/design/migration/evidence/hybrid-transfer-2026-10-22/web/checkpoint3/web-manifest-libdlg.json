@@ -1,0 +1,49 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-lib-rigunsaved-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-open='rig:example-rig-dslr']"
+    },
+    {
+     "click": "[data-edit]"
+    },
+    {
+     "fill": [
+      "[data-field=name]",
+      "Changed rig"
+     ]
+    },
+    {
+     "click": "[data-cancel-edit]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  }
+ ]
+}

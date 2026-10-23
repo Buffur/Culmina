@@ -42,6 +42,7 @@ const _everything = <String, Object>{
   'units.temperature': 'fahrenheit',
   'units.wind': 'ms',
   'units.elevation': 'feet',
+  'weather.view': 'charts',
 };
 
 Future<Map<String, Object?>> _throughFile() async => BackupPreferences.parse(
@@ -72,10 +73,25 @@ void main() {
             wind: WindUnit.ms,
             elevation: ElevationUnit.feet,
           ),
+          weatherView: WeatherView.charts,
         ),
       );
     },
   );
+
+  // Hybrid HT-W04: the Weather view travels with the backup; a backup
+  // from before it (no weather.view) restores the default, rows.
+  test('a backup without the Weather view restores rows', () async {
+    final before = {
+      'version': 1,
+      'string': {'appearance': 'dark'},
+    };
+    SharedPreferences.setMockInitialValues({'weather.view': 'charts'});
+    await BackupPreferences.restore(BackupPreferences.parse(before));
+    final s = await SharedPrefsDisplaySettingsRepository().load();
+    expect(s.appearance, Appearance.dark);
+    expect(s.weatherView, WeatherView.rows);
+  });
 
   test('a backup from before F21 (no string group) restores the defaults: '
       'System, °C, km/h, m', () async {

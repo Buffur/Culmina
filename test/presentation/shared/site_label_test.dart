@@ -155,10 +155,11 @@ void main() {
       }
     }
 
-    String siteText() => tester
+    // Home's context chip; the planner's Site and night row (Hybrid).
+    String siteText([String key = 'context.site']) => tester
         .widgetList<Text>(
           find.descendant(
-            of: find.byKey(const Key('context.site')),
+            of: find.byKey(Key(key)),
             matching: find.byType(Text),
           ),
         )
@@ -171,7 +172,11 @@ void main() {
 
     unawaited(AppRouter.router.push(AppRouter.session()));
     await settle();
-    expect(siteText(), contains(unsaved), reason: 'the planner');
+    expect(
+      siteText('planner.context'),
+      contains(unsaved),
+      reason: 'the planner',
+    );
     expect(find.textContaining('Current position'), findsNothing);
 
     AppRouter.router.go(AppRouter.welcome);
@@ -189,7 +194,8 @@ void main() {
     AppRouter.router.go(AppRouter.librarySites);
     await settle();
     expect(find.text(SiteLabel.unsaved), findsOneWidget, reason: 'Sites');
-    expect(find.text('46.0500, 14.5100'), findsOneWidget);
+    // library.js sites list: "46.05000°, 14.51000° · not saved".
+    expect(find.text('46.05000°, 14.51000° · not saved'), findsOneWidget);
     expect(find.textContaining('Current position'), findsNothing);
   });
 }

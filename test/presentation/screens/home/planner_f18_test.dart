@@ -202,11 +202,13 @@ void main() {
     );
     await tester.tap(fix);
     await settle(tester);
-    // The plan's rig list (D8 A): a tap chooses the rig for this plan.
+    // The plan's scoped rig chooser (plan.js rig): choose, then Apply.
     final rig = (await tester.runAsync(
       () => DriftEquipmentRepository(db).getAllEquipment(),
     ))!.first;
-    await tester.tap(find.widgetWithText(ListTile, rig.name));
+    await tester.tap(find.byKey(Key('planRig.choice.${rig.id}')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('planRig.apply')));
     await settle(tester);
     expect(vm.plan.selectedEquipment?.id, rig.id);
     AppRouter.router.go(AppRouter.session());

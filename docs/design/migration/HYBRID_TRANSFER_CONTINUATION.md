@@ -30,6 +30,33 @@ The run was stopped by the owner mid-checkpoint 2 with: "record where you stoppe
 prompt and continuation information, then commit and push to develop". This commit is that checkpoint; the
 transfer is **PARTIAL (in progress), not complete**.
 
+## Checkpoint 3 (2026-10-23) — read this before the checkpoint-2 sections below
+
+The second session continued from "Next steps" below and implemented the rest of the registry (Weather, Settings,
+Logbook, Library, the Plan's calibration builder, assumptions and menu, Home states, site/night sheets and
+candidates). The current per-item state, deviations (`HT-DEV-*`) and evidence are in
+[HYBRID_TRANSFER_STATUS.md](HYBRID_TRANSFER_STATUS.md) (Registry, "Deviations, native adaptations and owner
+questions", Checkpoint 3). Committed locally on `develop` at the owner's request (2026-10-23), without the superseded 2026-10-21 interim hunks
+(see the status record's "Pre-existing dirty work"); not pushed.
+
+Carry forward:
+
+- Android builds on this machine need Kotlin's in-process, non-incremental compile, because the pub cache (C:)
+  and the project (D:) are on different drives (Kotlin "different roots" incremental-cache failure). Pass it per
+  build, without repository changes: `GRADLE_OPTS="-Dorg.gradle.project.kotlin.incremental=false
+  -Dkotlin.compiler.execution.strategy=in-process"`.
+- Android captures: `flutter drive -d emulator-5554 --driver=test_driver/hybrid_migration_driver.dart
+  --target=integration_test/hybrid_transfer_capture_test.dart --dart-define=HYBRID_SHOTS=… --dart-define=HYBRID_THEMES=…`
+  with `CULMINA_NATIVE_EVIDENCE=docs/design/migration/evidence/hybrid-transfer-2026-10-22/android`. Keep batches
+  around 20 frames (the 10-minute test timeout). Frame names are in `test/support/hybrid_transfer_shots.dart`;
+  `home_nosite` needs `ASTROPLAN_HYBRID_NOSITE=1` on the host fixture.
+- `linux/`, `macos/`, `windows/` generated plugin registrants show as modified only by line endings (the Flutter
+  tool regenerated them); their content is unchanged.
+
+After checkpoint 3 the owner decided HT-DEV-01, -02 and -16 (2026-10-23, the recommended set) and the run closed
+**COMPLETE** under §9 (see the status record's Checkpoint 3). Nothing is left in this transfer; a later code change
+needs a fresh release APK and smoke before that result is reused.
+
 ## Where the work stands
 
 - Reference: `design/home-lab/` at `86873ce` (acceptance `ed29554`), unchanged. Registry, protocol and evidence:
@@ -95,7 +122,7 @@ transfer is **PARTIAL (in progress), not complete**.
   `wm size 750x1697` and gestural navigation (375 × 760 dp app area); `wm size reset` / `wm density reset` restore it.
 - Tooling: [tool/design/hybrid_transfer/README.md](../../../tool/design/hybrid_transfer/README.md).
 
-## Next steps (in order)
+## Next steps at checkpoint 2 (history; done in checkpoint 3)
 
 1. Run the targeted tests of the changed areas (theme/tokens, Tonight, planner, capture plan, night browser,
    confirmation patterns, navigation) and update old assertions to the reference; fix real regressions.

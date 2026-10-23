@@ -153,4 +153,46 @@ void main() {
     expect(progress[42]!.label, 'Orion Nebula');
     expect(progress[7]!.integration, const Duration(minutes: 5));
   });
+
+  // Hybrid (logbook.js progressByTarget): beneath each filter, frames group
+  // only when rig, exposure, recorded ISO or gain and binning all match; an
+  // unrecorded sensitivity is never combined.
+  test("groups each filter's frames by what would stack together", () {
+    CaptureBlock b(int id, double exp, CaptureGain gain) => CaptureBlock(
+      id: id,
+      frameType: FrameType.light,
+      filterName: 'L',
+      exposureTimeSeconds: exp,
+      frameCount: 100,
+      gain: gain,
+    );
+    final p = TargetProgress.of([
+      _run(
+        id: 1,
+        night: CalendarDate(2026, 12, 1),
+        blocks: [
+          b(1, 60, CaptureGain.iso(800)),
+          b(2, 30, CaptureGain.unknown()),
+        ],
+        confirmed: {1: 10, 2: 4},
+      ),
+      _run(
+        id: 2,
+        night: CalendarDate(2026, 12, 3),
+        blocks: [
+          b(3, 60, CaptureGain.iso(800)),
+          b(4, 30, CaptureGain.unknown()),
+        ],
+        confirmed: {3: 5, 4: 2},
+      ),
+    ])[42]!;
+    final groups = p.groups['L']!;
+    expect(groups, hasLength(3), reason: 'ISO 800 joined; unknowns apart');
+    final iso = groups.firstWhere((g) => g.known);
+    expect(iso.frames, 15);
+    expect(iso.integration, const Duration(minutes: 15));
+    expect(iso.nights, hasLength(2));
+    expect(iso.rig, 'Rig');
+    expect([for (final g in groups.where((g) => !g.known)) g.frames], [4, 2]);
+  });
 }

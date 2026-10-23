@@ -122,17 +122,15 @@ void main() {
     await settle(tester);
     final choices = find.byKey(const Key('settings.appearance'));
     final bounds = tester.getRect(choices);
-    expect(bounds.width, 380);
-    final shape = Theme.of(tester.element(choices))
-        .segmentedButtonTheme
-        .style!
-        .shape!
-        .resolve({});
-    expect(shape, isA<RoundedRectangleBorder>());
-    expect(
-      (shape! as RoundedRectangleBorder).borderRadius,
-      BorderRadius.circular(6),
-    );
+    // settings.css at 200 %: one choice per line, the column's full width
+    // (412 less two 20 px gutters), each a 6 px-rounded outline.
+    expect(bounds.width, 372);
+    for (final value in ['system', 'light', 'dark']) {
+      final choice = tester.getRect(
+        find.byKey(Key('settings.appearance.$value')),
+      );
+      expect(choice.width, closeTo(372, 0.5), reason: value);
+    }
     for (final label in ['System', 'Light', 'Dark']) {
       final text = find.descendant(of: choices, matching: find.text(label));
       final paragraph = tester.renderObject<RenderParagraph>(text);

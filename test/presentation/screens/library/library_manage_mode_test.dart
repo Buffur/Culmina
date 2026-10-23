@@ -1,9 +1,12 @@
 // S9.1 (RD-07, TD-053; E.1, D9-1, D9-2): the Library manages. A tap on a
-// rig, target or site opens it and never changes the plan or the active
-// site; the same lists opened to choose (`/select/…`) still choose. "Plan
-// this target" starts a new plan after the leave guard. Rigs, targets and
-// sites are deleted through the shared confirmation, from a visible Delete
-// or a swipe; a cancelled delete leaves everything as it was.
+// rig, target or site opens its record (library.js `detailView`) and never
+// changes the plan or the active site; the same lists opened to choose
+// (`/select/…`) still choose. "Plan this target" starts a new plan after the
+// leave guard. Rigs, your own targets and sites are deleted through the
+// shared confirmation, from the record's visible Delete or a swipe; a
+// cancelled delete leaves everything as it was. The bundled catalogue is
+// read-only (library.js catalogue record), so the plan's deletable target
+// below is one of your own.
 
 import 'dart:async';
 
@@ -15,10 +18,12 @@ import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/data/services/catalog_seeder.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
+import 'package:astroplan/domain/models/astro_target.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/library/library_parts.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,6 +35,7 @@ import '../../../support/fake_location_service.dart';
 import '../../../support/fake_reverse_geocoder.dart';
 import '../../../support/no_snapshot_weather.dart';
 import '../../../support/planner_harness.dart';
+import '../../../support/library_finders.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -43,6 +49,32 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pump(const Duration(milliseconds: 200));
     }
+  }
+
+  /// A Library row by its title.
+  Finder row(String title) => find.widgetWithText(LibraryRow, title);
+
+  /// Your own target, chosen for the plan: the catalogue cannot be deleted.
+  Future<AstroTarget> ownPlanTarget(WidgetTester tester) async {
+    final own = (await tester.runAsync(() async {
+      final repo = DriftTargetRepository(db);
+      final id = await repo.insertTarget(
+        const AstroTarget(
+          id: 0,
+          catalogId: 'Own 1',
+          commonName: 'Own nebula',
+          rightAscension: 83.82,
+          declination: -5.39,
+          type: 'Nebula',
+          source: 'user',
+        ),
+      );
+      final t = (await repo.getTargetById(id))!;
+      await vm.plan.setTarget(t);
+      await vm.plan.idle;
+      return t;
+    }))!;
+    return own;
   }
 
   Future<void> start(WidgetTester tester, String route) async {
@@ -103,12 +135,12 @@ void main() {
       'rig', (tester) async {
     await start(tester, AppRouter.libraryRigs);
     final rig = vm.plan.selectedEquipment!;
-    expect(find.byIcon(Icons.check_circle), findsNothing);
-    await tester.tap(find.widgetWithText(ListTile, rig.name));
+    expect(find.text('Chosen for this plan'), findsNothing);
+    await tester.tap(row(rig.name));
     await settle(tester);
-    expect(find.text('Edit rig'), findsOneWidget);
-    expect(find.byKey(const Key('rigEditor.delete')), findsOneWidget);
-    await tester.tap(find.text('Cancel'));
+    expect(find.byKey(const Key('rigDetail.edit')), findsOneWidget);
+    expect(find.byKey(const Key('rigDetail.delete')), findsOneWidget);
+    await tester.binding.handlePopRoute();
     await settle(tester);
     expect(vm.plan.selectedEquipment!.id, rig.id);
     expect(find.text('Rigs'), findsWidgets);
@@ -120,16 +152,16 @@ void main() {
     final m42 = vm.plan.selectedTarget!;
     await tester.enterText(find.byType(TextField).first, 'M31');
     await settle(tester);
-    await tester.tap(find.widgetWithText(ListTile, 'Andromeda Galaxy (M31)'));
+    await tester.tap(row('Andromeda Galaxy (M31)'));
     await settle(tester);
-    expect(find.text('Edit target'), findsOneWidget);
+    expect(find.text('Catalogue record'), findsOneWidget);
     expect(
       vm.plan.selectedTarget!.id,
       m42.id,
       reason: 'browsing chose nothing',
     );
 
-    await tester.tap(find.byKey(const Key('targetEditor.plan')));
+    await tester.tap(find.byKey(const Key('targetDetail.plan')));
     await settle(tester);
     // The plan has unsaved edits (choosePlan): Save · Discard · Cancel.
     expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
@@ -156,18 +188,37 @@ void main() {
     expect(vm.site.activeSite!.name, 'Dark site');
   });
 
-  testWidgets('from /select/target a tap still chooses', (tester) async {
+  // Hybrid (plan.js choiceView): /select/target is the plan's scoped
+  // chooser; a choice applies only with Apply changes, Close keeps the plan.
+  testWidgets('from /select/target a choice applies with Apply changes', (
+    tester,
+  ) async {
     await start(tester, AppRouter.tonight);
     unawaited(
       AppRouter.router.push(AppRouter.selectTarget),
     ); // as the planner opens it
     await settle(tester);
     expect(find.text('Choose a target'), findsOneWidget);
-    await tester.enterText(find.byType(TextField).first, 'M31');
+    await tester.enterText(find.byKey(const Key('planTarget.search')), 'M31');
     await settle(tester);
-    await tester.tap(find.widgetWithText(ListTile, 'Andromeda Galaxy (M31)'));
+    final m31 = find.text('M31 · Andromeda Galaxy');
+    await tester.tap(m31);
+    await settle(tester);
+    expect(vm.plan.selectedTarget?.catalogId, isNot('M31'), reason: 'a draft');
+    await tester.tap(find.byKey(const Key('scoped.close')));
+    await settle(tester);
+    expect(vm.plan.selectedTarget?.catalogId, isNot('M31'), reason: 'closed');
+
+    unawaited(AppRouter.router.push(AppRouter.selectTarget));
+    await settle(tester);
+    await tester.enterText(find.byKey(const Key('planTarget.search')), 'M31');
+    await settle(tester);
+    await tester.tap(m31);
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('planTarget.apply')));
     await settle(tester);
     expect(vm.plan.selectedTarget!.catalogId, 'M31');
+    expect(find.byKey(const Key('planTarget.apply')), findsNothing);
   });
 
   testWidgets('deleting a rig: a cancelled swipe keeps it; the editor\'s '
@@ -177,23 +228,23 @@ void main() {
       () => DriftEquipmentRepository(db).getAllEquipment(),
     );
     final last = before!.last;
-    final row = find.widgetWithText(ListTile, last.name);
+    final rigRow = row(last.name);
 
-    await tester.drag(row, const Offset(-500, 0));
+    await tester.drag(rigRow, const Offset(-500, 0));
     await settle(tester);
     expect(find.text('Delete this rig?'), findsOneWidget);
     await tester.tap(find.byKey(const Key('confirm.cancel')));
     await settle(tester);
-    expect(row, findsOneWidget, reason: 'the row springs back');
+    expect(rigRow, findsOneWidget, reason: 'the row springs back');
 
-    await tester.tap(row);
+    await tester.tap(rigRow);
     await settle(tester);
-    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await tester.tap(find.byKey(const Key('rigDetail.delete')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('confirm.action')));
     await settle(tester);
     expect(find.text('Rig deleted'), findsOneWidget);
-    expect(find.widgetWithText(ListTile, last.name), findsNothing);
+    expect(row(last.name), findsNothing);
     final after = await tester.runAsync(
       () => DriftEquipmentRepository(db).getAllEquipment(),
     );
@@ -209,19 +260,19 @@ void main() {
     tester,
   ) async {
     await start(tester, AppRouter.libraryRigs);
+    final target = await ownPlanTarget(tester);
     final saved = await tester.runAsync(() => vm.analysis.saveSession());
     final rig = vm.plan.selectedEquipment!;
-    final target = vm.plan.selectedTarget!;
     final rigs = DriftEquipmentRepository(db),
         targets = DriftTargetRepository(db);
 
-    await tester.tap(find.widgetWithText(ListTile, rig.name));
+    await tester.tap(row(rig.name));
     await settle(tester);
-    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await tester.tap(find.byKey(const Key('rigDetail.delete')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('confirm.cancel')));
     await settle(tester);
-    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await tester.tap(find.byKey(const Key('rigDetail.delete')));
     await settle(tester);
     await tester.tapAt(const Offset(4, 4)); // outside the dialog
     await settle(tester);
@@ -232,7 +283,7 @@ void main() {
     );
     expect(vm.plan.selectedEquipment?.id, rig.id);
 
-    await tester.tap(find.byKey(const Key('rigEditor.delete')));
+    await tester.tap(find.byKey(const Key('rigDetail.delete')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('confirm.action')));
     await settle(tester);
@@ -243,21 +294,14 @@ void main() {
     await settle(tester);
     await tester.enterText(find.byType(TextField).first, target.catalogId);
     await settle(tester);
-    await tester.tap(
-      find
-          .ancestor(
-            of: find.textContaining(target.catalogId),
-            matching: find.byType(ListTile),
-          )
-          .first,
-    );
+    await tester.tap(row('Own nebula (Own 1)'));
     await settle(tester);
-    await tester.tap(find.byKey(const Key('targetEditor.delete')));
+    await tester.tap(find.byKey(const Key('targetDetail.delete')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('confirm.cancel')));
     await settle(tester);
     expect(vm.plan.selectedTarget?.id, target.id);
-    await tester.tap(find.byKey(const Key('targetEditor.delete')));
+    await tester.tap(find.byKey(const Key('targetDetail.delete')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('confirm.action')));
     await settle(tester);
@@ -279,7 +323,7 @@ void main() {
   });
 
   // F19 A4: the shared delete confirmation, dismissed by system Back or by
-  // a tap outside it, deletes nothing: from a rig's and a target's editor
+  // a tap outside it, deletes nothing: from a rig's and a target's record
   // and from a swipe on the list.
   testWidgets('F19 A4: system Back and a tap outside dismiss a rig\'s and a '
       'target\'s delete confirmation; nothing is deleted', (tester) async {
@@ -288,7 +332,7 @@ void main() {
         targets = DriftTargetRepository(db);
     final allRigs = (await tester.runAsync(rigs.getAllEquipment))!;
     final rig = vm.plan.selectedEquipment!;
-    final target = vm.plan.selectedTarget!;
+    final target = await ownPlanTarget(tester);
 
     /// Opens the confirmation with [open], dismisses it with [dismiss].
     Future<void> dismissed(
@@ -311,62 +355,58 @@ void main() {
     Future<void> outside() => tester.tapAt(const Offset(4, 4));
 
     // A swipe on the plan's rig in the list.
-    final row = find.widgetWithText(ListTile, rig.name);
+    final rigRow = row(rig.name);
     await dismissed(
       'Delete this rig?',
-      () => tester.drag(row, const Offset(-500, 0)),
+      () => tester.drag(rigRow, const Offset(-500, 0)),
       back,
     );
-    expect(row, findsOneWidget, reason: 'the row springs back');
+    expect(rigRow, findsOneWidget, reason: 'the row springs back');
     await dismissed(
       'Delete this rig?',
-      () => tester.drag(row, const Offset(-500, 0)),
+      () => tester.drag(rigRow, const Offset(-500, 0)),
       outside,
     );
-    expect(row, findsOneWidget);
+    expect(rigRow, findsOneWidget);
 
-    // The same rig, from its editor.
-    await tester.tap(row);
+    // The same rig, from its record.
+    await tester.tap(rigRow);
     await settle(tester);
-    Future<void> deleteRig() =>
-        tester.tap(find.byKey(const Key('rigEditor.delete')));
+    Future<void> deleteRig() async {
+      await tester.ensureVisible(find.byKey(const Key('rigDetail.delete')));
+      await tester.tap(find.byKey(const Key('rigDetail.delete')));
+    }
+
     await dismissed('Delete this rig?', deleteRig, back);
     expect(
-      find.byKey(const Key('rigEditor.delete')),
+      find.byKey(const Key('rigDetail.delete')),
       findsOneWidget,
       reason: 'Back closed only the dialog',
     );
     await dismissed('Delete this rig?', deleteRig, outside);
-    expect(find.byKey(const Key('rigEditor.delete')), findsOneWidget);
+    expect(find.byKey(const Key('rigDetail.delete')), findsOneWidget);
     expect(find.text('Rig deleted'), findsNothing);
     expect(
       (await tester.runAsync(rigs.getAllEquipment))!.map((r) => r.id),
       allRigs.map((r) => r.id),
     );
     expect(vm.plan.selectedEquipment?.id, rig.id);
-    await tester.tap(find.text('Cancel')); // closes the editor unchanged
+    await back(); // closes the record
     await settle(tester);
 
-    // The plan's target, from its editor.
+    // The plan's target, from its record.
     AppRouter.router.go(AppRouter.libraryTargets);
     await settle(tester);
     await tester.enterText(find.byType(TextField).first, target.catalogId);
     await settle(tester);
-    await tester.tap(
-      find
-          .ancestor(
-            of: find.textContaining(target.catalogId),
-            matching: find.byType(ListTile),
-          )
-          .first,
-    );
+    await tester.tap(row('Own nebula (Own 1)'));
     await settle(tester);
     Future<void> deleteTarget() =>
-        tester.tap(find.byKey(const Key('targetEditor.delete')));
+        tester.tap(find.byKey(const Key('targetDetail.delete')));
     await dismissed('Delete this target?', deleteTarget, back);
-    expect(find.byKey(const Key('targetEditor.delete')), findsOneWidget);
+    expect(find.byKey(const Key('targetDetail.delete')), findsOneWidget);
     await dismissed('Delete this target?', deleteTarget, outside);
-    expect(find.byKey(const Key('targetEditor.delete')), findsOneWidget);
+    expect(find.byKey(const Key('targetDetail.delete')), findsOneWidget);
     expect(find.text('Target deleted'), findsNothing);
     expect(
       await tester.runAsync(() => targets.getTargetById(target.id)),
@@ -378,27 +418,32 @@ void main() {
   // S9.8 (D9-5): a save says so.
   testWidgets('saving a rig, a target and a site says so', (tester) async {
     await start(tester, AppRouter.libraryRigs);
-    await tester.tap(
-      find.widgetWithText(ListTile, vm.plan.selectedEquipment!.name),
-    );
+    await ownPlanTarget(tester);
+    await tester.tap(row(vm.plan.selectedEquipment!.name));
     await settle(tester);
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.byKey(const Key('rigDetail.edit')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('rigEditor.save')));
     await settle(tester);
     expect(find.text('Rig saved'), findsOneWidget);
 
     AppRouter.router.go(AppRouter.libraryTargets);
     await settle(tester);
-    await tester.enterText(find.byType(TextField).first, 'M31');
+    await tester.enterText(find.byType(TextField).first, 'Own');
     await settle(tester);
-    await tester.tap(find.widgetWithText(ListTile, 'Andromeda Galaxy (M31)'));
+    await tester.tap(row('Own nebula (Own 1)'));
     await settle(tester);
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.tap(find.byKey(const Key('targetDetail.edit')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('targetEditor.save')));
     await settle(tester);
     expect(find.text('Target saved'), findsOneWidget);
 
     AppRouter.router.go(AppRouter.librarySites);
     await settle(tester);
     await tester.tap(find.text('Dark site'));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('siteDetail.edit')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await settle(tester);
@@ -409,24 +454,25 @@ void main() {
   testWidgets('deleting a target: a cancelled swipe keeps it; the editor\'s '
       'Delete confirms, deletes and says so', (tester) async {
     await start(tester, AppRouter.libraryTargets);
-    await tester.enterText(find.byType(TextField).first, 'M31');
+    await ownPlanTarget(tester);
+    await tester.enterText(find.byType(TextField).first, 'Own');
     await settle(tester);
-    final row = find.widgetWithText(ListTile, 'Andromeda Galaxy (M31)');
-    await tester.drag(row, const Offset(-500, 0));
+    final targetRow = row('Own nebula (Own 1)');
+    await tester.drag(targetRow, const Offset(-500, 0));
     await settle(tester);
     expect(find.text('Delete this target?'), findsOneWidget);
     await tester.tap(find.byKey(const Key('confirm.cancel')));
     await settle(tester);
-    expect(row, findsOneWidget, reason: 'the row springs back');
+    expect(targetRow, findsOneWidget, reason: 'the row springs back');
 
-    await tester.tap(row);
+    await tester.tap(targetRow);
     await settle(tester);
-    await tester.tap(find.byKey(const Key('targetEditor.delete')));
+    await tester.tap(find.byKey(const Key('targetDetail.delete')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('confirm.action')));
     await settle(tester);
     expect(find.text('Target deleted'), findsOneWidget);
-    expect(row, findsNothing);
+    expect(targetRow, findsNothing);
   });
 
   testWidgets('a cancelled swipe on a site keeps it', (tester) async {
@@ -449,7 +495,7 @@ void main() {
     expect(find.text('Pick on map'), findsNothing);
     await tester.tap(find.text('Add site'));
     await settle(tester);
-    await tester.enterText(find.widgetWithText(TextFormField, 'Name'), 'Hill');
+    await tester.enterText(fieldLabeled('Name'), 'Hill');
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await settle(tester);
     expect(vm.site.sites.map((s) => s.name), contains('Hill'));
@@ -464,7 +510,10 @@ void main() {
     tester,
   ) async {
     await start(tester, AppRouter.librarySites);
-    await tester.tap(find.byTooltip('Delete site').last);
+    await tester.tap(find.text('Dark site'));
+    await settle(tester);
+    await tester.ensureVisible(find.byKey(const Key('siteDetail.delete')));
+    await tester.tap(find.byKey(const Key('siteDetail.delete')));
     await settle(tester);
     expect(find.text('Delete this site?'), findsOneWidget);
     await tester.tap(find.byKey(const Key('confirm.action')));

@@ -23,6 +23,7 @@ import 'package:provider/provider.dart';
 
 import '../../../support/fake_capture_file_access.dart';
 import '../../../support/fits_fixture.dart';
+import '../../../support/library_finders.dart';
 
 class _Planner extends ChangeNotifier implements SessionPlanViewModel {
   @override
@@ -99,7 +100,7 @@ void main() {
     String text(String label) => t
         .widget<EditableText>(
           find.descendant(
-            of: find.widgetWithText(TextFormField, label),
+            of: fieldLabeled(label),
             matching: find.byType(EditableText),
           ),
         )
@@ -107,16 +108,13 @@ void main() {
         .text;
     expect(text('Pixel size (µm)'), '3.76');
     expect(text('Effective focal length (mm)'), '400');
-    await t.tap(find.text('Cancel'));
+    await t.tap(find.byKey(const Key('rigEditor.cancel')));
     await settle();
     expect(await t.runAsync(repo.getAllEquipment), isEmpty);
 
     await t.tap(find.byKey(const Key('import.new')));
     await settle();
-    await t.enterText(
-      find.widgetWithText(TextFormField, 'Focal ratio (f/)'),
-      '5',
-    );
+    await t.enterText(fieldLabeled('Focal ratio (f/)'), '5');
     await t.ensureVisible(find.byKey(const Key('rigEditor.save')));
     await t.tap(find.byKey(const Key('rigEditor.save')));
     await settle();

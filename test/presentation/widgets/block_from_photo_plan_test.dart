@@ -121,7 +121,7 @@ void main() {
       }
     }
 
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
     final dng = (TiffFixture()..ifd0.addAll(phoneStyleDngIfd0())).build().bytes;
     files.file('DSC_0001.dng', dng, length: 24012345);
@@ -140,7 +140,12 @@ void main() {
     expect(block.gain, CaptureGain.iso(50));
     expect(block.fileEvidence!.bytes, 24012345);
     expect(block.origins[CaptureField.exposure]!.descriptor, 'DSC_0001.dng');
-    // F07: the block's own file sizes its storage.
+    // F07: the block's own file sizes its storage (the file-size basis, in
+    // Budget and assumptions).
+    await tester.ensureVisible(find.text('Budget and assumptions'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Budget and assumptions'));
+    await tester.pumpAndSettle();
     expect(find.textContaining('Measured from DSC_0001.dng'), findsOneWidget);
 
     late EquipmentProfile rigAfter;

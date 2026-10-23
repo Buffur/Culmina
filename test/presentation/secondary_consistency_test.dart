@@ -19,7 +19,7 @@ const secondaryScreens = [
   'lib/presentation/screens/details/night_moon_screen.dart',
   'lib/presentation/screens/details/weather_detail_screen.dart',
   'lib/presentation/widgets/sky_darkness_widget.dart',
-  'lib/presentation/widgets/weather_forecast_widget.dart',
+  'lib/presentation/widgets/weather_hybrid_view.dart',
   'lib/presentation/screens/execution/results_screen.dart',
 ];
 

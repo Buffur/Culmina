@@ -36,6 +36,7 @@ import '../../../support/jpeg_fixture.dart';
 import '../../../support/no_snapshot_weather.dart';
 import '../../../support/planner_harness.dart';
 import '../../../support/tiff_fixture.dart';
+import '../../../support/library_finders.dart';
 
 final _december = FixedClock(DateTime.utc(2026, 12, 15, 17));
 
@@ -122,24 +123,15 @@ void main() {
 
   /// Fills the required inputs by hand.
   Future<void> fillByHand(WidgetTester tester, String name) async {
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rig name'),
-      name,
-    );
+    await tester.enterText(fieldLabeled('Rig name'), name);
     await tester.enterText(find.widgetWithText(TextFormField, '6248'), '6000');
     await tester.enterText(find.widgetWithText(TextFormField, '4176'), '4000');
     await tester.enterText(
       find.byKey(const Key('equipmentEditor.pixelSize')),
       '3.76',
     );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Effective focal length (mm)'),
-      '400',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Focal ratio (f/)'),
-      '5',
-    );
+    await tester.enterText(fieldLabeled('Effective focal length (mm)'), '400');
+    await tester.enterText(fieldLabeled('Focal ratio (f/)'), '5');
     await tester.pump();
   }
 
@@ -216,7 +208,10 @@ void main() {
     await startAddRig(tester);
     await settle(tester);
     await fillByHand(tester, 'Not kept');
-    await tester.tap(find.text('Cancel'));
+    // library.js `cancelEdit`: a changed editor asks; Discard leaves it.
+    await tester.tap(find.byKey(const Key('rigEditor.cancel')));
+    await settle(tester);
+    await tester.tap(find.byKey(const Key('unsaved.discard')));
     await settle(tester);
 
     expect(vm.plan.selectedEquipment, isNull);

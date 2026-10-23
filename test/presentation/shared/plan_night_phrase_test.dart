@@ -12,13 +12,13 @@ void main() {
 
   test('tonight stays tonight; another night is named', () {
     expect(PlanNightPhrase.of(tonight, tonight), 'tonight');
-    expect(PlanNightPhrase.of(other, tonight), 'on Fri, Dec 18');
+    expect(PlanNightPhrase.of(other, tonight), 'on 18 Dec');
     expect(PlanNightPhrase.title(tonight, tonight), 'Tonight');
     expect(PlanNightPhrase.title(null, tonight), 'Tonight');
-    expect(PlanNightPhrase.title(other, tonight), 'Night of Fri, Dec 18');
+    expect(PlanNightPhrase.title(other, tonight), 'Night of 18 Dec');
     expect(
       PlanNightPhrase.candidatesTitle(other, tonight),
-      'Candidates for Fri, Dec 18',
+      'Candidates for 18 Dec',
     );
   });
 
@@ -39,7 +39,7 @@ void main() {
       expect(PlanNightPhrase.apply(t, tonight, tonight), t);
       final out = PlanNightPhrase.apply(t, other, tonight);
       expect(out.toLowerCase(), isNot(contains('tonight')), reason: t);
-      expect(out, contains('Fri, Dec 18'), reason: t);
+      expect(out, contains('18 Dec'), reason: t);
       // Every number survives unchanged.
       final digits = RegExp(r'[0-9]+');
       expect(
@@ -50,11 +50,11 @@ void main() {
     }
     expect(
       PlanNightPhrase.apply("Fill tonight's window: L × 3", other, tonight),
-      'Fill the window on Fri, Dec 18: L × 3',
+      'Fill the window on 18 Dec: L × 3',
     );
     expect(
       PlanNightPhrase.apply('Tonight the Moon is up.', other, tonight),
-      'On Fri, Dec 18 the Moon is up.',
+      'On 18 Dec the Moon is up.',
     );
   });
 }

@@ -25,6 +25,7 @@ class ContextLine extends StatelessWidget {
   const ContextLine({
     super.key,
     required this.siteName,
+    this.noSiteLabel = noSite,
     required this.night,
     required this.onSite,
     required this.onNight,
@@ -35,6 +36,9 @@ class ContextLine extends StatelessWidget {
 
   /// Null when no site is set.
   final String? siteName;
+
+  /// What the site chip says without a site.
+  final String noSiteLabel;
 
   /// The night's evening date; null without a site.
   final CalendarDate? night;
@@ -54,6 +58,9 @@ class ContextLine extends StatelessWidget {
 
   /// Shown instead of a site name when none is set.
   static const noSite = 'No site set';
+
+  /// Home's site chip without a site (app.js `app-context`): the action.
+  static const setSite = 'Set site';
 
   /// "Times in site zone Europe/Ljubljana, CET, UTC+01:00", or the device
   /// zone's caption when the site has no zone. Pure formatting.
@@ -79,7 +86,7 @@ class ContextLine extends StatelessWidget {
             _Choice(
               key: const Key('context.site'),
               icon: HybridIcons.homePin,
-              text: siteName ?? noSite,
+              text: siteName ?? noSiteLabel,
               semanticsLabel: '${AppWords.site}: ${siteName ?? noSite}',
               hint: 'Choose a site',
               onTap: onSite,

@@ -100,11 +100,12 @@ void main() {
       testWidgets('numeric fields show their whole value on a 375 dp phone: '
           '$name, text ${(scale * 100).round()} %', (tester) async {
         await _open(tester, draft, textScale: scale);
-        // Scroll the dialog through, checking every part.
+        // Scroll the editor through, checking every part.
         final problems = <String>{..._clipped(tester)};
         final list = find.descendant(
-          of: find.byType(AlertDialog),
+          of: find.byKey(const Key('rigEditor.scroll')),
           matching: find.byType(Scrollable),
+          matchRoot: true,
         );
         for (var i = 0; i < 6; i++) {
           await tester.drag(list.first, const Offset(0, -250));

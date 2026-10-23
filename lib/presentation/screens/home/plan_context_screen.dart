@@ -168,9 +168,15 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
             ),
           ],
           const SizedBox(height: 20),
-          const HybridNote(
+          // plan.css `.editor-help`: 13 at 1.6, secondary.
+          Text(
             'Changing the night edits this plan. To keep the saved plan and '
             'plan a copy, use More › Copy to another night.',
+            key: const Key('planContext.help'),
+            style: AppTypography.caption.copyWith(
+              height: 1.6,
+              color: AppPalette.of(context).textSecondary,
+            ),
           ),
         ],
       ),

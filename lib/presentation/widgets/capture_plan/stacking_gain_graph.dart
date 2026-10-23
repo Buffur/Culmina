@@ -323,7 +323,7 @@ class StackingGainPainter extends CustomPainter {
           text: text,
           style: TextStyle(
             fontFamily: 'Roboto',
-            fontSize: 11,
+            fontSize: HybridTokens.chartLabelSize,
             color: palette.textSecondary,
           ),
         ),

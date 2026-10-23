@@ -20,6 +20,9 @@ class SharedPrefsDisplaySettingsRepository
   static const windKey = 'units.wind';
   static const elevationKey = 'units.elevation';
 
+  /// The Weather page's presentation (Hybrid); absent reads as rows.
+  static const weatherViewKey = 'weather.view';
+
   /// F21 A5: set while a save writes its keys, removed once all are
   /// written; still set after a failed or interrupted save, whose keys may
   /// then mix two configurations.
@@ -31,6 +34,7 @@ class SharedPrefsDisplaySettingsRepository
     temperatureKey,
     windKey,
     elevationKey,
+    weatherViewKey,
     writingKey,
   };
 
@@ -46,6 +50,7 @@ class SharedPrefsDisplaySettingsRepository
           wind: WindUnit.fromStorage(p.getString(windKey)),
           elevation: ElevationUnit.fromStorage(p.getString(elevationKey)),
         ),
+        weatherView: WeatherView.fromStorage(p.getString(weatherViewKey)),
       );
     },
   );
@@ -61,6 +66,7 @@ class SharedPrefsDisplaySettingsRepository
             (temperatureKey, u.temperature.name),
             (windKey, u.wind.name),
             (elevationKey, u.elevation.name),
+            (weatherViewKey, settings.weatherView.name),
           ])
             if (p.getString(key) != name) (key, name),
         ];

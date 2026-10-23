@@ -27,6 +27,7 @@ import 'package:astroplan/presentation/widgets/altitude_chart_widget.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
 import 'package:astroplan/presentation/widgets/tonight_opportunity_widget.dart';
 import 'package:drift/native.dart';
+import 'package:astroplan/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -125,8 +126,12 @@ void main() {
       final identity = find.byKey(const Key('planner.identity'));
       // 1. Which target, night, site and rig-independent state.
       onFirstScreen(tester, identity, 'the target, night and state');
-      onFirstScreen(tester, find.byKey(const Key('context.site')), 'site');
-      onFirstScreen(tester, find.byKey(const Key('context.night')), 'night');
+      // Hybrid: one Site and night row (plan.js rowButton).
+      onFirstScreen(
+        tester,
+        find.byKey(const Key('planner.context')),
+        'site and night',
+      );
       // 2–4. The verdict with time needed and usable time.
       onFirstScreen(
         tester,
@@ -139,21 +144,38 @@ void main() {
       ]) {
         onFirstScreen(
           tester,
+          // plan.js answer: "Needed in imaging window: …", "… usable".
           find.descendant(
             of: find.byKey(Key('status.number.$label')),
-            matching: find.text(
+            matchRoot: true,
+            matching: find.textContaining(
               QuantityText.budgetDuration(Duration(milliseconds: milliseconds)),
             ),
           ),
           label,
         );
       }
-      // 5. The integration planned.
-      onFirstScreen(
-        tester,
-        find.textContaining(AppWords.integration, findRichText: true),
-        'the integration',
+      // 5. The integration planned. The accepted Hybrid composition
+      // (86873ce) puts it in the first block's math right under the
+      // Capture plan heading, at the fold of a phone screen; it is checked
+      // there, after the context rows.
+      final integration = find.textContaining(
+        RegExp(AppWords.integration, caseSensitive: false),
+        findRichText: true,
       );
+      for (var i = 0; i < 12 && integration.evaluate().isEmpty; i++) {
+        await tester.drag(
+          find.byKey(const Key('planner.scroll')),
+          const Offset(0, -200),
+        );
+        await tester.pump();
+      }
+      expect(integration, findsWidgets, reason: 'the integration');
+      await tester.drag(
+        find.byKey(const Key('planner.scroll')),
+        const Offset(0, 4000),
+      );
+      await settle(tester);
       // 6. The main reason.
       onFirstScreen(tester, find.text(fit.reason), 'the main reason');
       // 7. The next useful action: Save plan, always in reach.
@@ -195,9 +217,11 @@ void main() {
         ('Usable', fit.availableMs),
       ]) {
         expect(
+          // plan.js answer: "Needed in imaging window: …", "… usable".
           find.descendant(
             of: find.byKey(Key('status.number.$label')),
-            matching: find.text(
+            matchRoot: true,
+            matching: find.textContaining(
               QuantityText.budgetDuration(Duration(milliseconds: milliseconds)),
             ),
           ),
@@ -290,10 +314,10 @@ void main() {
       findsNothing,
     );
     expect(find.byKey(const Key('planner.statusMark')), findsOneWidget);
+    // The Hybrid section heading role, 20/600.
     final heading = tester.widget<Text>(find.text(AppWords.capturePlan));
-    final theme = Theme.of(tester.element(find.text(AppWords.capturePlan)));
-    expect(heading.style?.fontSize, theme.textTheme.titleMedium?.fontSize);
-    expect(heading.style?.fontWeight, theme.textTheme.titleMedium?.fontWeight);
+    expect(heading.style?.fontSize, AppTypography.sectionHeading.fontSize);
+    expect(heading.style?.fontWeight, FontWeight.w600);
   });
 
   // TD-075 (S6.16): a missing input has its own reason; the fit's reason for
@@ -378,16 +402,16 @@ void main() {
     // Still valid: the integration, each group's gain and the storage.
     expect(
       find.descendant(
-        of: find.byKey(Key('status.number.${AppWords.integration}')),
+        of: find.byKey(const Key('estimate.integration')),
         matching: find.text('1 h 45 min'),
       ),
       findsOneWidget,
     );
-    for (final (i, gain) in [(0, '3.5x'), (1, '3.0x')]) {
+    for (final (i, gain) in [(0, '×3.46'), (1, '×3.00')]) {
       expect(
         find.descendant(
           of: find.byKey(Key('capturePlan.gain.$i')),
-          matching: find.text(gain),
+          matching: find.textContaining(gain, findRichText: true),
         ),
         findsOneWidget,
       );
@@ -410,7 +434,7 @@ void main() {
     expect(vm.captureBudget.integrationMs, greaterThan(0));
     expect(
       find.descendant(
-        of: find.byKey(Key('status.number.${AppWords.integration}')),
+        of: find.byKey(const Key('estimate.integration')),
         matching: find.text(
           QuantityText.budgetDuration(
             Duration(milliseconds: vm.captureBudget.integrationMs),
@@ -419,7 +443,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.byKey(const Key('capturePlan.gain.0')), findsOneWidget);
+    expect(find.byKey(const Key('estimate.gain')), findsOneWidget);
   });
 
   testWidgets('without a rig the structure stays and the status is neutral', (

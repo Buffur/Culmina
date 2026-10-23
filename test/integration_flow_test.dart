@@ -1,3 +1,4 @@
+import 'package:astroplan/presentation/shared/plan_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -190,7 +191,10 @@ void main() {
     // TASK 11.3: Save stores a planned session with a plan snapshot; S8.5
     // shows its state as the plan-state label.
     expect(
-      find.descendant(of: find.byType(ListTile), matching: find.text('Saved')),
+      find.descendant(
+        of: find.byType(EntryStateBadge),
+        matching: find.text('Saved'),
+      ),
       findsOneWidget,
     );
   });

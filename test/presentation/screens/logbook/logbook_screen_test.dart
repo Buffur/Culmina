@@ -2,8 +2,9 @@
 // and results, never drafts, each with its state; Upcoming and Past; a
 // search over the target, the site and the notes; the filters in one panel,
 // kept by the ViewModel, combining with the search; delete after a
-// confirmation (S5.8); Progress by target at the top. (Since TASK 4.2 and
-// 11.3 in earlier forms.)
+// confirmation (S5.8); Progress by target at the top. Hybrid (owner sketch
+// 2026-10-21): one list grouped by month, the filters behind the button in
+// the search field. (Since TASK 4.2 and 11.3 in earlier forms.)
 
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart';
@@ -83,8 +84,10 @@ void main() {
 
   Finder title(int id) => find.byKey(Key('logbook.title.$id'));
 
+  // Owner sketch 2026-10-21 (logbook.js renderResults): one list, newest
+  // night first, grouped by month only.
   testWidgets('saved entries and old logs are listed with their state, '
-      'under Upcoming and Past; drafts are not', (tester) async {
+      'newest night first under their month; drafts are not', (tester) async {
     await seed(tester);
     await pumpList(tester);
 
@@ -108,15 +111,14 @@ void main() {
       ),
       findsOneWidget,
     );
-    final upcoming = tester.getTopLeft(
-      find.byKey(const Key('logbook.upcoming')),
-    );
-    final past = tester.getTopLeft(find.byKey(const Key('logbook.past')));
+    final january = tester.getTopLeft(find.text('January 2026'));
+    final december = tester.getTopLeft(find.text('December 2025'));
     expect(
       tester.getTopLeft(title(2)).dy,
-      inExclusiveRange(upcoming.dy, past.dy),
+      inExclusiveRange(january.dy, december.dy),
     );
-    expect(tester.getTopLeft(title(3)).dy, greaterThan(past.dy));
+    expect(tester.getTopLeft(title(3)).dy, greaterThan(december.dy));
+    expect(find.byKey(const Key('logbook.upcoming')), findsNothing);
     expect(find.textContaining('Legacy'), findsNothing);
     expect(find.textContaining('Draft'), findsNothing);
   });
@@ -159,21 +161,27 @@ void main() {
       'show a count, survive a rebuild and clear', (tester) async {
     await seed(tester);
     await pumpList(tester);
-    await tester.tap(find.byKey(const Key('logbook.filters')));
+    await tester.tap(find.byKey(const Key('logbook.filterToggle')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('logbook.filter.completed')));
     await settle(tester);
-    await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
-    await tester.tap(find.byKey(const Key('logbook.filters.done')));
+    await tester.tap(find.byKey(const Key('logbook.filterToggle')));
     await settle(tester);
+    expect(find.byKey(const Key('logbook.filters')), findsNothing);
 
     expect(title(2), findsNothing, reason: 'Saved is filtered out');
     expect(title(3), findsOneWidget);
     expect(title(1), findsOneWidget, reason: 'an old log counts as completed');
-    expect(find.text('1 filter on · Clear'), findsOneWidget);
+    // The count rides on the Filters button.
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('logbook.filterCount')),
+        matching: find.text('1'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('2 of 3 entries'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('logbook.searchToggle')));
-    await tester.pump();
     await tester.enterText(find.byKey(const Key('logbook.search')), 'm45');
     await settle(tester);
     expect(title(1), findsNothing);
@@ -186,7 +194,10 @@ void main() {
     expect(title(3), findsOneWidget);
     expect(vm.filter.count, 1);
 
-    await tester.tap(find.byKey(const Key('logbook.filter.clear')));
+    await tester.tap(find.byKey(const Key('logbook.filterToggle')));
+    await settle(tester);
+    await tester.ensureVisible(find.byKey(const Key('logbook.filters.clear')));
+    await tester.tap(find.byKey(const Key('logbook.filters.clear')));
     await settle(tester);
     expect(vm.filter.isEmpty, isTrue);
     expect(title(3), findsOneWidget);
@@ -211,18 +222,17 @@ void main() {
       final field = tester.widget<TextField>(search);
       expect(field.controller!.selection.baseOffset, 1);
       expect(field.focusNode!.hasFocus, isTrue);
-      expect(find.text('1 entry'), findsOneWidget);
+      expect(find.text('1 of 3 entries'), findsOneWidget);
       expect(title(2), findsOneWidget);
       await tester.tap(find.byKey(const Key('logbook.searchToggle')));
       await settle(tester);
       expect(find.text('3 entries'), findsOneWidget);
       expect(field.focusNode!.hasFocus, isTrue);
-      await tester.tap(find.byKey(const Key('logbook.filters')));
+      await tester.tap(find.byKey(const Key('logbook.filterToggle')));
       await settle(tester);
       expect(find.byType(BottomSheet), findsNothing);
       expect(find.byKey(const Key('logbook.filter.completed')), findsOneWidget);
-      await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
-      await tester.tap(find.byKey(const Key('logbook.filters.done')));
+      await tester.tap(find.byKey(const Key('logbook.filterToggle')));
       await settle(tester);
       expect(find.byKey(const Key('logbook.filter.completed')), findsNothing);
     },

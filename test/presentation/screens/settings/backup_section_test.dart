@@ -152,7 +152,7 @@ void main() {
     ];
     expect(
       find.textContaining(
-        'Made ${months[made.month - 1]} ${made.day}, ${made.year}, ',
+        'Made ${made.day} ${months[made.month - 1]} ${made.year}, ',
       ),
       findsOneWidget,
     );

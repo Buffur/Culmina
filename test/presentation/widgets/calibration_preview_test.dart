@@ -162,14 +162,25 @@ void main() {
       blocks: [_light('L'), _light('R', exposure: 60)],
     );
     await openPreview(tester);
-    expect(find.text('Build calibration frames'), findsWidgets);
-    expect(find.textContaining('Dark · 2 min'), findsNothing);
-    expect(find.textContaining('Dark · 120 s'), findsOneWidget);
-    expect(find.textContaining('Dark · 60 s'), findsOneWidget);
+    // plan.js `calibrationView`: a scoped page, one fieldset per block.
+    expect(find.text('Calibration frames'), findsOneWidget);
+    expect(find.textContaining('Exposure 2 min'), findsNothing);
+    expect(find.textContaining('Exposure 120 s'), findsOneWidget);
+    expect(find.textContaining('Exposure 60 s'), findsOneWidget);
     expect(find.textContaining('Flat (L)'), findsOneWidget);
     expect(find.textContaining('Flat (R)'), findsOneWidget);
-    expect(find.textContaining('Bias · ISO 800'), findsOneWidget);
-    expect(find.text('Add 5 blocks'), findsOneWidget);
+    expect(find.text('Dark frames'), findsNWidgets(2));
+    expect(find.text('Bias frames'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('calibration.row.4')),
+        matching: find.textContaining('ISO 800'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('calibration.row.4')), findsOneWidget);
+    expect(find.byKey(const Key('calibration.row.5')), findsNothing);
+    expect(find.text('Add selected frames'), findsOneWidget);
     await tester.tap(find.byKey(const Key('calibration.cancel')));
     await settle(tester);
     expect(vm.captureBlocks, hasLength(2));
@@ -186,12 +197,12 @@ void main() {
         'binning', (tester) async {
       await start(tester, rig: _rig(c), blocks: [_light('L')]);
       await openPreview(tester);
+      // Each row's settings line: its ISO or gain, then binning where the
+      // class bins.
       final rows = [
-        for (final t in tester.widgetList<Text>(
-          find.descendant(of: find.byType(Dialog), matching: find.byType(Text)),
-        ))
+        for (final t in tester.widgetList<Text>(find.byType(Text)))
           t.data ?? '',
-      ].where((t) => t.startsWith(RegExp('Dark ·|Flat|Bias'))).toList();
+      ].where((t) => t.endsWith('outside the imaging window')).toList();
       expect(rows, isNotEmpty);
       for (final r in rows) {
         expect(r.contains('1 × 1'), named, reason: r);
@@ -217,9 +228,10 @@ void main() {
     expect(vm.captureBlocks, hasLength(1));
     await enterExposures(tester, '2');
     await tester.enterText(find.byKey(const Key('calibration.count.0')), '12');
+    await tester.ensureVisible(find.byKey(const Key('calibration.toggle.2')));
     await tester.tap(find.byKey(const Key('calibration.toggle.2'))); // bias
     await settle(tester);
-    expect(find.text('Add 2 blocks'), findsOneWidget);
+    expect(find.byKey(const Key('calibration.count.2')), findsNothing);
     await tester.tap(find.byKey(const Key('calibration.confirm')));
     await settle(tester);
     final added = vm.captureBlocks.skip(1).toList();
@@ -227,7 +239,7 @@ void main() {
     expect(added.first.frameCount, 12);
     expect(added.first.exposureTimeSeconds, 120);
     expect(added.last.exposureTimeSeconds, 2);
-    expect(find.text('Added 2 calibration blocks'), findsOneWidget);
+    expect(find.text('Calibration frames added.'), findsOneWidget);
   });
 
   testWidgets('Undo after a newer edit keeps that edit', (tester) async {
@@ -258,7 +270,7 @@ void main() {
     );
     await openPreview(tester);
     expect(find.byKey(const Key('calibration.noDarks')), findsOneWidget);
-    expect(find.textContaining('Dark ·'), findsNothing);
+    expect(find.text('Dark frames'), findsNothing);
   });
 
   testWidgets('the missing-flat warning offers the preview', (tester) async {
@@ -284,7 +296,7 @@ void main() {
     );
     await openPreview(tester);
     Finder inPreview(String text) => find.descendant(
-      of: find.byType(AlertDialog),
+      of: find.byKey(const Key('calibration.scroll')),
       matching: find.textContaining(text),
     );
     expect(inPreview('Flat (R)'), findsOneWidget);
@@ -298,8 +310,8 @@ void main() {
       await start(tester, rig: _rig(CameraClass.phone), files: true);
       expect(
         find.textContaining(
-          'Start with your light frames; the calibration '
-          'frames can be built from them afterwards.',
+          'add frames later; the calibration frames can be built from your '
+          'lights afterwards.',
         ),
         findsOneWidget,
       );

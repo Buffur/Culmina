@@ -5,15 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/units/display_units.dart';
-import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/calendar_date.dart';
-import '../../../domain/models/capture_block.dart';
 import '../../../domain/models/session_result.dart';
 import '../../../domain/services/session_reconciliation.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
+import '../../shared/entry_text.dart';
+import '../../shared/field_mode_button.dart';
+import '../../shared/hybrid_icon.dart';
+import '../../shared/hybrid_parts.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/deleted_plan_fallback.dart';
 import '../../shared/failure_feedback.dart';
@@ -239,8 +244,39 @@ class _ResultsScreenState extends State<ResultsScreen> {
     // F19 A5: the form fills from the saved plan once its changes are
     // resolved, never from the working edits.
     if (!vm.pendingChanges) _fill(vm);
-    final theme = Theme.of(context);
-    final gap = const SizedBox(height: AppSpacing.md + AppSpacing.xs);
+    final p = AppPalette.of(context);
+    final legend = AppTypography.caption.copyWith(color: p.textSecondary);
+    final camera = vm.review?.cameraClass;
+    Widget field(
+      String label,
+      Widget input, {
+      String? hint,
+      double top = AppSpacing.gutter,
+    }) => Padding(
+      padding: EdgeInsets.only(top: top),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(label, style: legend),
+          const SizedBox(height: AppSpacing.xs),
+          input,
+          if (hint != null)
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xs),
+              child: Text(hint, style: legend.copyWith(height: 1.55)),
+            ),
+        ],
+      ),
+    );
+    Widget heading(String text, {double top = AppSpacing.gutter}) => Padding(
+      padding: EdgeInsets.only(top: top, bottom: AppSpacing.xs),
+      child: Semantics(header: true, child: Text(text, style: legend)),
+    );
+    final notes = AppTypography.value.copyWith(
+      fontSize: 16,
+      height: 1.5,
+      color: p.textPrimary,
+    );
     return CallbackShortcuts(
       bindings: {const SingleActivator(LogicalKeyboardKey.escape): _leave},
       child: Focus(
@@ -258,8 +294,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
               leading: IconButton(
                 tooltip: 'Back',
                 onPressed: _leave,
-                icon: const Icon(Icons.arrow_back),
+                icon: HybridIcon(
+                  HybridIcons.back,
+                  size: MediaQuery.textScalerOf(context).scale(24),
+                  strokeWidth: 1.8,
+                ),
               ),
+              actions: const [FieldModeButton()],
             ),
             bottomNavigationBar: !vm.pendingChanges && vm.canRecord
                 ? Padding(
@@ -268,26 +309,47 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     ),
                     child: SafeArea(
                       top: false,
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                      // logbook.css `.logbook-form-actions`: a rule, 12 0 4,
+                      // Cancel and Save result side by side.
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.gutter,
+                        ),
+                        padding: const EdgeInsets.only(
+                          top: AppSpacing.itemGap,
+                          bottom: AppSpacing.xs,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(top: BorderSide(color: p.border)),
+                        ),
+                        child: Row(
+                          spacing: AppSpacing.itemGap,
                           children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
+                            Expanded(
+                              child: OutlinedButton(
                                 key: const Key('results.cancel'),
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(
+                                    HybridTokens.minTarget,
+                                  ),
+                                ),
                                 onPressed: _leave,
                                 child: const Text('Cancel'),
                               ),
                             ),
-                            FilledButton(
-                              key: const Key('results.save'),
-                              onPressed: _outcome == null
-                                  ? null
-                                  : () => _save(vm),
-                              child: const Text('Save result'),
+                            Expanded(
+                              child: FilledButton(
+                                key: const Key('results.save'),
+                                style: FilledButton.styleFrom(
+                                  minimumSize: const Size.fromHeight(
+                                    HybridTokens.minTarget,
+                                  ),
+                                ),
+                                onPressed: _outcome == null
+                                    ? null
+                                    : () => _save(vm),
+                                child: const Text('Save result'),
+                              ),
                             ),
                           ],
                         ),
@@ -301,10 +363,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 if (!_filling) setState(() {});
               },
               child: ListView(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                key: const Key('results.scroll'),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter,
+                  AppSpacing.itemGap,
+                  AppSpacing.gutter,
+                  AppSpacing.lg,
+                ),
                 children: [
                   _Review(vm: vm),
-                  gap,
                   if (vm.pendingChanges)
                     _PendingChanges(
                       vm: vm,
@@ -318,117 +385,129 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     // F19 A2: finishing early is the user's explicit choice.
                     if (vm.nightUnderWay)
                       Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        padding: const EdgeInsets.only(top: AppSpacing.sm),
                         child: Text(
                           'This night is still under way. Saving a result now '
                           'finishes it early; you can edit the result later.',
                           key: const Key('results.early'),
-                          style: theme.textTheme.bodySmall,
+                          style: legend.copyWith(height: 1.55),
                         ),
                       ),
-                    Text('How did it go?', style: theme.textTheme.titleMedium),
+                    heading('Outcome'),
                     _Outcomes(
                       selected: _outcome,
                       onlyNotDone: vm.onlyNotDone,
                       onSelected: (o) => setState(() => _outcome = o),
                     ),
                     if (_outcome == ResultOutcome.asPlanned)
-                      Text(
-                        'Records every light block as fully taken. This is your '
-                        'report, not a frame count.',
-                        key: const Key('results.asPlannedNote'),
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    if (_outcome == ResultOutcome.partly)
-                      for (final b in vm.lightBlocks) ...[
-                        gap,
-                        TextFormField(
-                          key: Key('results.count.${b.id}'),
-                          controller: _counts[b.id],
-                          decoration: InputDecoration(
-                            labelText: '${_label(b)} · light frames',
-                            helperText: '${b.frameCount} planned',
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.sm),
+                        child: Text(
+                          'Records every light block as fully taken. This is '
+                          'your report, not a frame count.',
+                          key: const Key('results.asPlannedNote'),
+                          style: AppTypography.body.copyWith(
+                            height: 1.6,
+                            color: p.textSecondary,
                           ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          validator: _frames,
                         ),
-                      ],
-                    if (_outcome == ResultOutcome.notDone)
+                      ),
+                    if (_outcome == ResultOutcome.partly) ...[
+                      heading('Light frames you took'),
+                      for (final (i, b) in vm.lightBlocks.indexed)
+                        field(
+                          '${EntryText.block(b, camera)} · light frames',
+                          TextFormField(
+                            key: Key('results.count.${b.id}'),
+                            controller: _counts[b.id],
+                            style: AppTypography.body.copyWith(
+                              color: p.textPrimary,
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            validator: _frames,
+                          ),
+                          hint:
+                              '${b.frameCount} planned · a whole number, 0 or '
+                              'more',
+                          top: i == 0 ? 0 : AppSpacing.gutter,
+                        ),
+                    ],
+                    if (_outcome == ResultOutcome.notDone) ...[
+                      heading('Why? (optional)'),
                       _Reasons(
                         selected: _reason,
                         onSelected: (r) => setState(() => _reason = r),
                       ),
-                    gap,
-                    Text(
-                      'Notes (optional)',
-                      style: theme.textTheme.titleMedium,
+                    ],
+                    heading('Notes (optional)'),
+                    field(
+                      'Conditions and events',
+                      TextFormField(
+                        key: const Key('results.environment'),
+                        controller: _environment,
+                        style: notes,
+                        maxLines: 3,
+                        minLines: 3,
+                      ),
+                      top: 0,
                     ),
-                    gap,
-                    TextFormField(
-                      key: const Key('results.environment'),
-                      controller: _environment,
-                      decoration: const InputDecoration(
-                        labelText: 'Conditions and events',
+                    field(
+                      'Processing notes',
+                      TextFormField(
+                        key: const Key('results.processing'),
+                        controller: _processing,
+                        style: notes,
+                        maxLines: 3,
+                        minLines: 3,
                       ),
-                      maxLines: 3,
-                      minLines: 1,
                     ),
-                    gap,
-                    TextFormField(
-                      key: const Key('results.processing'),
-                      controller: _processing,
-                      decoration: const InputDecoration(
-                        labelText: 'Processing notes',
+                    heading('Conditions (optional)'),
+                    field(
+                      'Temperature (${_units.temperature.symbol})',
+                      TextFormField(
+                        key: const Key('results.temperature'),
+                        controller: _temperature,
+                        style: notes,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          signed: true,
+                          decimal: true,
+                        ),
+                        // −60…60 °C, in the unit typed.
+                        validator:
+                            _units.temperature == TemperatureUnit.fahrenheit
+                            ? _range(
+                                -76,
+                                140,
+                                TemperatureUnit.fahrenheit.symbol,
+                              )
+                            : _range(-60, 60, TemperatureUnit.celsius.symbol),
                       ),
-                      maxLines: 3,
-                      minLines: 1,
+                      top: 0,
                     ),
-                    gap,
-                    Text(
-                      'Conditions (optional)',
-                      style: theme.textTheme.titleMedium,
+                    field(
+                      'Relative humidity (%)',
+                      TextFormField(
+                        key: const Key('results.humidity'),
+                        controller: _humidity,
+                        style: notes,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        validator: _range(0, 100, '%'),
+                      ),
                     ),
-                    gap,
-                    TextFormField(
-                      key: const Key('results.temperature'),
-                      controller: _temperature,
-                      decoration: InputDecoration(
-                        labelText: 'Temperature (${_units.temperature.symbol})',
+                    field(
+                      'Cloud cover (%)',
+                      TextFormField(
+                        key: const Key('results.cloud'),
+                        controller: _cloud,
+                        style: notes,
+                        keyboardType: TextInputType.number,
+                        validator: _range(0, 100, '%'),
                       ),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        signed: true,
-                        decimal: true,
-                      ),
-                      // −60…60 °C, in the unit typed.
-                      validator:
-                          _units.temperature == TemperatureUnit.fahrenheit
-                          ? _range(-76, 140, TemperatureUnit.fahrenheit.symbol)
-                          : _range(-60, 60, TemperatureUnit.celsius.symbol),
-                    ),
-                    gap,
-                    TextFormField(
-                      key: const Key('results.humidity'),
-                      controller: _humidity,
-                      decoration: const InputDecoration(
-                        labelText: 'Relative humidity (%)',
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      validator: _range(0, 100, '%'),
-                    ),
-                    gap,
-                    TextFormField(
-                      key: const Key('results.cloud'),
-                      controller: _cloud,
-                      decoration: const InputDecoration(
-                        labelText: 'Cloud cover (%)',
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: _range(0, 100, '%'),
                     ),
                   ],
                 ],
@@ -439,75 +518,150 @@ class _ResultsScreenState extends State<ResultsScreen> {
       ),
     );
   }
-
-  static String _label(CaptureBlock b) =>
-      '${b.filterName ?? 'Light'} · ${QuantityText.exposure(b.exposureTimeSeconds)}';
 }
 
-/// The saved plan under review (ADR-019 §3.1): the snapshot's night, target,
-/// site and rig, and the planned light blocks. What it lacks is unavailable,
-/// never filled from today's site or rig (SI-008).
-class _Review extends StatelessWidget {
+/// The saved plan under review (ADR-019 §3.1; logbook.js
+/// `logbook-editor-identity`): target · night, then the plan's context and
+/// light frames one tap away. What the snapshot lacks is unavailable, never
+/// filled from today's site or rig (SI-008).
+class _Review extends StatefulWidget {
   const _Review({required this.vm});
 
   final ResultsViewModel vm;
 
   @override
+  State<_Review> createState() => _ReviewState();
+}
+
+class _ReviewState extends State<_Review> {
+  bool _open = false;
+
+  @override
   Widget build(BuildContext context) {
+    final vm = widget.vm;
     final s = vm.session!;
     final snap = vm.review;
-    final theme = Theme.of(context);
+    final p = AppPalette.of(context);
     // TD-086: an unreadable saved plan's row holds the working edits.
     final working = vm.savedPlanUnreadable;
     final night = snap?.eveningDate ?? (working ? null : s.eveningDate);
-    String row(String name, String? value) => '$name: ${value ?? 'unknown'}';
-    return Card(
+    final target = snap?.targetName ?? (working ? null : s.record.targetName);
+    final small = AppTypography.caption.copyWith(
+      height: 1.55,
+      color: p.textSecondary,
+    );
+    final planned = SessionReconciliation.plannedOnly(vm.lightBlocks)
+        .plannedIntegration;
+    return Column(
       key: const Key('results.review'),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.xs,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text('Saved plan', style: theme.textTheme.titleMedium),
-                PlanStateLabel(
-                  PlanState.of(s),
-                  key: const Key('results.state'),
-                ),
-              ],
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(
+            '${target ?? 'Target unknown'} · '
+            '${night == null ? 'night unknown' : NightTimeFormatter.eveningDateWithWeekday(night)}',
+            style: AppTypography.sectionSubject.copyWith(
+              fontWeight: FontWeight.w600,
+              height: 1.4,
+              color: p.textPrimary,
             ),
-            if (snap == null)
-              Text(
-                "The saved plan's details can't be read.",
-                key: const Key('results.reviewUnavailable'),
-                style: theme.textTheme.bodySmall,
-              ),
-            Text(
-              row(
-                AppWords.night,
-                night == null ? null : NightTimeFormatter.eveningDate(night),
-              ),
-            ),
-            Text(
-              row(
-                'Target',
-                snap?.targetName ?? (working ? null : s.record.targetName),
-              ),
-            ),
-            Text(row(AppWords.site, snap?.siteName)),
-            Text(row(AppWords.rig, snap?.rigName)),
-            for (final b in vm.lightBlocks)
-              Text(
-                '${_ResultsScreenState._label(b)} · ${b.frameCount} planned',
-                key: Key('results.planned.${b.id}'),
-              ),
-          ],
+          ),
         ),
-      ),
+        Semantics(
+          button: true,
+          expanded: _open,
+          child: InkWell(
+            key: const Key('results.reviewToggle'),
+            onTap: () => setState(() => _open = !_open),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: HybridTokens.minTarget,
+              ),
+              child: Row(
+                children: [
+                  // The browser's disclosure triangle.
+                  RotatedBox(
+                    quarterTurns: _open ? 1 : 0,
+                    child: CustomPaint(
+                      size: const Size(8, 9),
+                      painter: _Triangle(p.textPrimary),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      'Plan context and light frames',
+                      style: AppTypography.caption.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: p.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Offstage(
+          offstage: !_open,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('Saved plan', style: small),
+                  PlanStateLabel(
+                    PlanState.of(s),
+                    key: const Key('results.state'),
+                  ),
+                ],
+              ),
+              if (snap == null)
+                Text(
+                  "The saved plan's details can't be read.",
+                  key: const Key('results.reviewUnavailable'),
+                  style: small,
+                ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                '${snap?.siteName ?? 'Site unknown'} · '
+                '${snap?.rigName ?? 'Rig unknown'}',
+                style: AppTypography.body.copyWith(
+                  height: 1.6,
+                  color: p.textSecondary,
+                ),
+              ),
+              Text(
+                '${OpportunityText.duration(planned)} planned integration · '
+                'result only; saved plan unchanged.',
+                style: small,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              for (final b in vm.lightBlocks)
+                Container(
+                  key: Key('results.planned.${b.id}'),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.cellY,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: p.border)),
+                  ),
+                  child: Text(
+                    '${EntryText.block(b, snap?.cameraClass)} · '
+                    '${b.frameCount} planned',
+                    style: small,
+                  ),
+                ),
+              if (vm.lightBlocks.isEmpty)
+                Text('This plan has no light blocks.', style: small),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -536,9 +690,16 @@ class _NotYet extends StatelessWidget {
         : 'from ${date(start)}, '
               '${NightTimeFormatter.clockTime(context, start, zoneId: zone)} '
               '(${NightTimeFormatter.zoneCaption(start, zoneId: zone)})';
-    return Text(
-      "This night hasn't started yet. You can record the result $when.",
-      key: const Key('results.notYet'),
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: Text(
+        "This night hasn't started yet. You can record the result $when.",
+        key: const Key('results.notYet'),
+        style: AppTypography.body.copyWith(
+          height: 1.6,
+          color: AppPalette.of(context).textPrimary,
+        ),
+      ),
     );
   }
 }
@@ -554,68 +715,71 @@ class _PendingChanges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
     Future<void> run(String action, Future<void> Function() change) async {
       if (await runWithFeedback(context, action, change)) onResolved();
     }
 
-    return Card(
+    const tall = Size.fromHeight(HybridTokens.minTarget);
+    return Padding(
       key: const Key('results.pending'),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSpacing.sm,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
               'This plan changed since it was saved',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: AppTypography.itemTitle.copyWith(color: p.textPrimary),
             ),
-            Text(
-              vm.canSaveChanges
-                  ? 'Save or discard the changes first: the result is '
-                        'recorded against the saved plan.'
-                  : 'Discard the changes first: the result is recorded '
-                        'against the saved plan. To keep them, open the '
-                        'plan and save it.',
+          ),
+          Text(
+            vm.canSaveChanges
+                ? 'Save or discard the changes first: the result is '
+                      'recorded against the saved plan.'
+                : 'Discard the changes first: the result is recorded '
+                      'against the saved plan. To keep them, open the '
+                      'plan and save it.',
+            style: AppTypography.body.copyWith(
+              height: 1.6,
+              color: p.textSecondary,
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.xs,
-              children: [
-                if (vm.canSaveChanges)
-                  FilledButton(
-                    key: const Key('results.pending.save'),
-                    onPressed: () => run('save the plan', vm.saveChanges),
-                    child: const Text('Save changes'),
-                  ),
-                OutlinedButton(
-                  key: const Key('results.pending.discard'),
-                  onPressed: () async {
-                    final sure = await confirmDestructive(
-                      context,
-                      title: 'Discard the changes?',
-                      message:
-                          'The plan goes back to what was saved. The '
-                          "changes can't be recovered.",
-                      action: 'Discard',
-                    );
-                    if (sure && context.mounted) {
-                      await run('discard the changes', vm.discardChanges);
-                    }
-                  },
-                  child: const Text('Discard changes'),
-                ),
-                TextButton(
-                  key: const Key('results.pending.cancel'),
-                  onPressed: () => context.canPop()
-                      ? context.pop()
-                      : context.go(AppRouter.sessions),
-                  child: const Text('Cancel'),
-                ),
-              ],
+          ),
+          if (vm.canSaveChanges)
+            FilledButton(
+              key: const Key('results.pending.save'),
+              style: FilledButton.styleFrom(minimumSize: tall),
+              onPressed: () => run('save the plan', vm.saveChanges),
+              child: const Text('Save changes'),
             ),
-          ],
-        ),
+          OutlinedButton(
+            key: const Key('results.pending.discard'),
+            style: OutlinedButton.styleFrom(minimumSize: tall),
+            onPressed: () async {
+              final sure = await confirmDestructive(
+                context,
+                title: 'Discard the changes?',
+                message:
+                    'The plan goes back to what was saved. The '
+                    "changes can't be recovered.",
+                action: 'Discard',
+              );
+              if (sure && context.mounted) {
+                await run('discard the changes', vm.discardChanges);
+              }
+            },
+            child: const Text('Discard changes'),
+          ),
+          TextButton(
+            key: const Key('results.pending.cancel'),
+            onPressed: () => context.canPop()
+                ? context.pop()
+                : context.go(AppRouter.sessions),
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
     );
   }
@@ -630,18 +794,85 @@ class _SoFar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final r = reconciliation;
+    final p = AppPalette.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(ResultsText.integration(r), key: const Key('results.summary')),
+          Text(
+            ResultsText.integration(r),
+            key: const Key('results.summary'),
+            style: AppTypography.value.copyWith(
+              color: p.textPrimary,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
           if (r.rejectedLightFrames > 0)
             Text(
               '${r.rejectedLightFrames} light frames rejected earlier',
               key: const Key('results.rejected'),
+              style: AppTypography.caption.copyWith(color: p.textSecondary),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// A radio row (logbook.css `.logbook-choice`): the 24 px radio 5 in, its
+/// 14 px label (600 when chosen) 15 after; 48 tall with a subtle rule below.
+class _Choice extends StatelessWidget {
+  const _Choice({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return MergeSemantics(
+      child: Semantics(
+        inMutuallyExclusiveGroup: true,
+        checked: selected,
+        enabled: onTap != null,
+        child: InkWell(
+          onTap: onTap,
+          child: Opacity(
+            opacity: onTap == null ? 0.5 : 1,
+            child: Container(
+              constraints: const BoxConstraints(
+                minHeight: HybridTokens.minTarget,
+              ),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: p.border)),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 5),
+                  HybridRadio(checked: selected, size: 24),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: AppTypography.body.copyWith(
+                        height: 1.5,
+                        fontWeight: selected ? FontWeight.w600 : null,
+                        color: p.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -660,21 +891,20 @@ class _Outcomes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget chip(ResultOutcome o, String label) => ChoiceChip(
+    Widget choice(ResultOutcome o, String label) => _Choice(
       key: Key('results.outcome.${o.name}'),
-      label: Text(label),
+      label: label,
       selected: selected == o,
-      onSelected: onlyNotDone && o != ResultOutcome.notDone
+      onTap: onlyNotDone && o != ResultOutcome.notDone
           ? null
-          : (_) => onSelected(o),
+          : () => onSelected(o),
     );
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.xs,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        chip(ResultOutcome.asPlanned, AppWords.completedAsPlanned),
-        chip(ResultOutcome.partly, AppWords.partly),
-        chip(ResultOutcome.notDone, AppWords.notDone),
+        choice(ResultOutcome.asPlanned, AppWords.completedAsPlanned),
+        choice(ResultOutcome.partly, AppWords.partly),
+        choice(ResultOutcome.notDone, AppWords.notDone),
       ],
     );
   }
@@ -699,22 +929,34 @@ class _Reasons extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Text('Why? (optional)', style: Theme.of(context).textTheme.bodySmall),
-      Wrap(
-        spacing: AppSpacing.sm,
-        runSpacing: AppSpacing.xs,
-        children: [
-          for (final r in NotDoneReason.values)
-            ChoiceChip(
-              key: Key('results.reason.${r.name}'),
-              label: Text(_word(r)),
-              selected: selected == r,
-              onSelected: (on) => onSelected(on ? r : null),
-            ),
-        ],
-      ),
+      for (final r in NotDoneReason.values)
+        _Choice(
+          key: Key('results.reason.${r.name}'),
+          label: _word(r),
+          selected: selected == r,
+          onTap: () => onSelected(selected == r ? null : r),
+        ),
     ],
   );
+}
+
+class _Triangle extends CustomPainter {
+  const _Triangle(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) => canvas.drawPath(
+    Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, size.height / 2)
+      ..lineTo(0, size.height)
+      ..close(),
+    Paint()..color = color,
+  );
+
+  @override
+  bool shouldRepaint(_Triangle old) => old.color != color;
 }
 
 /// Wording for planned vs actual, shared with the Sessions list.

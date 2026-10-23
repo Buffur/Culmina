@@ -22,10 +22,7 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/fit_analyzer.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
-import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/shared/context_line.dart';
-import 'package:astroplan/presentation/shared/night_text.dart';
-import 'package:astroplan/presentation/widgets/capture_plan/capture_assumptions_panel.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/capture_budget_summary.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:astroplan/presentation/widgets/sky_darkness_widget.dart';
@@ -137,24 +134,18 @@ void main() {
     tester,
   ) async {
     await start(tester);
-    // The Hybrid rig row keeps its specifications inside the remembered
-    // "Rig details" reference disclosure; open it to reach that section.
-    await tester.tap(find.byTooltip('Rig details'));
-    await settle(tester);
     for (final key in PlannerSections.all) {
       expect(vm.disclosure.isOpen(key), isFalse, reason: key);
       expect(find.byKey(Key('section.$key')), findsOneWidget, reason: key);
     }
     final rig = vm.selectedEquipment!;
+    // Hybrid summaries (plan.js budgetDisclosure, gainDisclosure,
+    // rigDisclosure): what each holds; the sky's values.
     final summaries = {
-      PlannerSections.budgetDetails: CaptureBudgetSummary.budgetSummary(
-        vm.captureBudget,
-      ),
+      PlannerSections.budgetDetails:
+          'Window time, overheads and file-size basis',
       PlannerSections.gainHelp: CaptureBudgetSummary.gainSummary,
-      PlannerSections.gainCurve: 'Per group, relative to your plan',
-      PlannerSections.assumptions: CaptureAssumptionsPanel.summary(
-        vm.planningPreferences,
-      ),
+      PlannerSections.rigDetails: rig.name,
       PlannerSections.sky: SkyDarknessWidget.summary(vm.skyDarkness),
     };
     for (final MapEntry(:key, :value) in summaries.entries) {
@@ -167,21 +158,20 @@ void main() {
         reason: key,
       );
     }
-    // The rig's: its focal length, focal ratio and tracking.
-    final rigSummary = find.descendant(
-      of: find.byKey(const Key('section.${PlannerSections.rigDetails}')),
-      matching: find.byType(Text),
-    );
+    // The rig's focal length, focal ratio and tracking stay in its row.
     expect(
-      tester.widgetList<Text>(rigSummary).map((t) => t.data).join(' '),
-      allOf(
-        contains('mm · f/'),
-        contains('${AppWords.tracking}: ${rig.trackingType.label}'),
-      ),
+      tester
+          .widgetList<Text>(
+            find.descendant(
+              of: find.byKey(const Key('planner.rig')),
+              matching: find.byType(Text),
+            ),
+          )
+          .map((t) => t.data)
+          .join(' '),
+      allOf(contains(' mm f/'), contains('tracking ')),
     );
-    // Numbers, not "Advanced" or "More"; no verdict words.
-    expect(summaries[PlannerSections.budgetDetails], contains('needed'));
-    expect(summaries[PlannerSections.assumptions], contains('°'));
+    // No "Advanced" or "More"; no verdict words.
     for (final word in ['Advanced', 'More', 'good', 'fine']) {
       expect(find.textContaining(word), findsNothing, reason: word);
     }
@@ -230,8 +220,13 @@ void main() {
 
     // An unknown that weakens a result: storage and the sky, as unknown.
     expect(vm.captureBudget.storageMB, isNull);
-    expect(find.text('Estimated storage'), findsOneWidget);
-    expect(find.text('Unknown'), findsWidgets);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('capturePlan.storage')),
+        matching: find.text('Unknown'),
+      ),
+      findsOneWidget,
+    );
     expect(
       find.descendant(
         of: find.byKey(const Key('section.${PlannerSections.sky}')),
@@ -241,18 +236,16 @@ void main() {
     );
     // Unavailable weather, in the planner's row.
     expect(
-      find.text(WeatherText.summary(vm.nightWeather, vm.nightWeatherSummary)),
+      find.descendant(
+        of: find.byKey(const Key('planner.weather')),
+        matching: find.text('Forecast unavailable'),
+      ),
       findsOneWidget,
     );
-    // Active constraints: the darkness limit and minimum altitude.
-    expect(
-      find.text(CaptureAssumptionsPanel.summary(vm.planningPreferences)),
-      findsOneWidget,
-    );
-    // Capability warnings (TASK 8.6) and the focal ratio's review flag.
+    // Capability warnings (TASK 8.6) and the focal ratio's review flag:
+    // the rig row says the ratio needs review; NPF is in Rig details.
     expect(vm.rigCapability?.npf, isNotNull);
-    expect(find.text('NPF (untracked)'), findsOneWidget);
-    expect(find.textContaining('f/72 — please review'), findsOneWidget);
+    expect(find.textContaining('please review'), findsWidgets);
     expect(find.text('Focal length'), findsNothing); // folded
 
     // The reason a result cannot be evaluated: a target that never rises.
@@ -271,8 +264,8 @@ void main() {
     await settle(tester);
     expect(vm.fitAnalysis.state, FitState.noWindow);
     expect(find.text(vm.fitAnalysis.reason), findsOneWidget);
-    // Integration stays in the status, whatever the verdict.
-    expect(find.textContaining(AppWords.integration), findsWidgets);
+    // Integration stays in the estimate, whatever the verdict.
+    expect(find.byKey(const Key('estimate.integration')), findsOneWidget);
   });
 
   testWidgets('each Budget details line equals the calculator (ADR-009 §8 '
@@ -351,8 +344,8 @@ void main() {
     expect(line('setup'), startsWith(formatBudgetDuration(2700 * _s)));
     expect(line('totalTime'), formatBudgetDuration(17670050));
     expect(line('library'), '1 block, no time needed');
-    // The zone rule once per section (trap 2): the context line, the
-    // conditions and, for the setup's start time, Budget details.
+    // The zone rule (trap 2) beside the setup's start time, in Budget and
+    // assumptions; the Site and night row names the zone.
     expect(line('setup'), contains('start by'));
     expect(
       find.text(
@@ -361,10 +354,8 @@ void main() {
           zoneId: vm.site.displayZoneId,
         ),
       ),
-      findsNWidgets(3),
+      findsOneWidget,
     );
-    // The collapsed summary says the same numbers.
-    expect(find.text(CaptureBudgetSummary.budgetSummary(b)), findsOneWidget);
   });
 
   testWidgets('a section left open is open again after a restart', (
@@ -382,10 +373,8 @@ void main() {
     await start(tester, store: store, newDatabase: false);
     expect(identical(vm.disclosure, before), isFalse);
     expect(find.text('Integration (light exposure)'), findsOneWidget);
-    expect(
-      find.text('Time between frames'),
-      findsNothing,
-    ); // still closed (S7.2b's label)
+    // Stacking gain details, never opened, is still closed.
+    expect(find.byKey(const Key('capturePlan.gainHelp')), findsNothing);
   });
 }
 

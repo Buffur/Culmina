@@ -14,6 +14,7 @@ import '../../domain/models/night_timeline.dart';
 import '../../domain/models/visibility_window.dart';
 import '../../domain/services/moon_calendar.dart';
 import '../../domain/services/night_view.dart';
+import '../shared/hybrid_icon.dart';
 import '../shared/night_text.dart';
 import '../shared/sky_color_interpolation.dart';
 import '../shared/night_time_formatter.dart';
@@ -33,6 +34,29 @@ import '../viewmodels/site_viewmodel.dart';
 /// Moon lanes 4 px below; the rail's end labels, the hint, the key, the
 /// encoding note, "Exact times & reading key" and the cursor's state.
 class NightBarSection extends StatelessWidget {
+  /// The slider's spoken value at [utc]: "21:15, 19 Oct (site zone
+  /// Europe/Kyiv, EEST, UTC+03:00): Dark (Sun below −18°) · …".
+  static String readout(
+    BuildContext context,
+    NightView view,
+    DateTime utc,
+    String? zoneId,
+  ) {
+    String at(DateTime t) => NightTimeFormatter.instant(
+      context,
+      t,
+      windowStartUtc: view.night.startUtc,
+      zoneId: zoneId,
+    );
+    final wall = NightTimeFormatter.wallClock(utc, zoneId: zoneId);
+    final date = NightTimeFormatter.eveningDate(
+      CalendarDate.fromDateTimeFields(wall),
+    );
+    final zone = NightTimeFormatter.zoneCaption(utc, zoneId: zoneId);
+    return '${at(utc)}, $date ($zone): '
+        '${NightBrowseText.cursor(view.at(utc), view.limitDeg, at)}';
+  }
+
   const NightBarSection({super.key, this.compact = true, this.home = false});
 
   /// Kept for callers; the Hybrid browser is the compact one everywhere.
@@ -159,12 +183,15 @@ class NightBarSection extends StatelessWidget {
                       max: (n - 1).toDouble(),
                       divisions: n - 1,
                       label: at(cursor.instantUtc),
-                      semanticFormatterCallback: (v) {
-                        final instant = night.startUtc.add(
-                          Duration(minutes: v.round() * 5),
-                        );
-                        return '${at(instant)}: ${NightBrowseText.cursor(view.at(instant), view.limitDeg, at)}';
-                      },
+                      // The full read-out: the instant with its date and
+                      // zone (named across a DST change), then the sky,
+                      // the Moon and the dark interval's end.
+                      semanticFormatterCallback: (v) => readout(
+                        context,
+                        view,
+                        night.startUtc.add(Duration(minutes: v.round() * 5)),
+                        zoneId,
+                      ),
                       onChanged: (v) => browser.setCursor(
                         night.startUtc.add(Duration(minutes: v.round() * 5)),
                       ),
@@ -700,7 +727,9 @@ class _Legend extends StatelessWidget {
                 key(solid(hybrid.skyDark)),
                 compact
                     ? darkLabel
-                    : 'Dark · Sun below ${QuantityText.degrees(view.limitDeg)}',
+                    // night-ui.js legend: the limit, then the dark times.
+                    : 'Dark · Sun below ${QuantityText.degrees(view.limitDeg)}'
+                          ' · ${darkLabel.substring('Dark '.length)}',
               )
             else
               Text(
@@ -751,35 +780,42 @@ class NightReadingGuide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final browser = context.watch<NightBrowserViewModel>();
-    final zoneId = context.watch<SiteViewModel>().displayZoneId;
-    final view = browser.view;
-    final cursor = browser.cursor;
-    String at(DateTime utc) => NightTimeFormatter.instant(
-      context,
-      utc,
-      windowStartUtc: view.night.startUtc,
-      zoneId: zoneId,
+    final p = AppPalette.of(context);
+    final note = AppTypography.caption.copyWith(
+      height: 1.5,
+      color: p.textTertiary,
     );
-    final wall = NightTimeFormatter.wallClock(
-      cursor.instantUtc,
-      zoneId: zoneId,
-    );
-    final date = NightTimeFormatter.eveningDate(
-      CalendarDate.fromDateTimeFields(wall),
-    );
-    final zone = NightTimeFormatter.zoneCaption(
-      cursor.instantUtc,
-      zoneId: zoneId,
-    );
+    // conditions.js readingGuide: the full key, its note, then how the
+    // cursor reads. The cursor's own read-out is the slider's value.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _Legend(view: view, compact: false),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: 8),
+        _Legend(
+          view: browser.view,
+          compact: false,
+          at: (utc) => NightTimeFormatter.clockTime(
+            context,
+            utc,
+            zoneId: context.read<SiteViewModel>().displayZoneId,
+          ),
+        ),
+        const SizedBox(height: 8),
         Text(
-          '${at(cursor.instantUtc)}, $date ($zone): '
-          '${NightBrowseText.cursor(cursor, view.limitDeg, at)}',
-          key: const Key('nightMoon.cursor'),
+          'Sky colour blends between known Sun-event times. It is not '
+          'measured sky brightness.',
+          style: note,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'The cursor previews five-minute steps. Sky colour is not measured '
+          'brightness; Moon-free dark is dark time with the Moon below the '
+          'horizon.',
+          key: const Key('nightMoon.readingNote'),
+          style: AppTypography.caption.copyWith(
+            height: 1.65,
+            color: p.textSecondary,
+          ),
         ),
       ],
     );
@@ -1028,7 +1064,6 @@ class MoonCalendarSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final browser = context.watch<NightBrowserViewModel>();
-    final text = Theme.of(context).textTheme;
     final (year, month) = browser.month;
     final days = browser.monthDays;
     final week = MediaQuery.textScalerOf(context).scale(1) >= weekViewScale;
@@ -1046,36 +1081,53 @@ class MoonCalendarSection extends StatelessWidget {
       'November',
       'December',
     ];
+    final p = AppPalette.of(context);
+    // conditions.js calendar (`.section-actions`): the heading (20/600) and
+    // the month between two 48 px arrows, wrapping as text grows.
     final heading = Semantics(
       header: true,
       child: Text(
         'Moon calendar',
-        style: text.titleMedium?.copyWith(fontSize: 18),
+        style: AppTypography.sectionHeading.copyWith(color: p.textPrimary),
       ),
     );
-    final monthControls = Row(
-      children: [
+    Widget arrow(Key key, String tip, HybridIconData icon, int step) =>
         IconButton(
-          key: const Key('nightMoon.prevMonth'),
-          tooltip: 'Previous month',
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () => browser.showMonth(-1),
+          key: key,
+          tooltip: tip,
+          onPressed: () => browser.showMonth(step),
+          icon: HybridIcon(
+            icon,
+            size: MediaQuery.textScalerOf(context).scale(24),
+            strokeWidth: 1.8,
+            color: p.textPrimary,
+          ),
+        );
+    final monthControls = Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 4,
+      children: [
+        arrow(
+          const Key('nightMoon.prevMonth'),
+          'Previous month',
+          HybridIcons.previous,
+          -1,
         ),
-        Expanded(
-          child: Semantics(
-            header: true,
-            child: Text(
-              '${months[month - 1]} $year',
-              textAlign: TextAlign.center,
-              style: text.bodySmall,
+        Semantics(
+          header: true,
+          child: Text(
+            '${months[month - 1]} $year',
+            style: AppTypography.caption.copyWith(
+              color: p.textPrimary,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
         ),
-        IconButton(
-          key: const Key('nightMoon.nextMonth'),
-          tooltip: 'Next month',
-          icon: const Icon(Icons.chevron_right),
-          onPressed: () => browser.showMonth(1),
+        arrow(
+          const Key('nightMoon.nextMonth'),
+          'Next month',
+          HybridIcons.next,
+          1,
         ),
       ],
     );
@@ -1083,26 +1135,18 @@ class MoonCalendarSection extends StatelessWidget {
       key: const Key('nightMoon.calendar'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (week)
-          heading
-        else
-          LayoutBuilder(
-            builder: (context, constraints) => constraints.maxWidth >= 360
-                ? Row(
-                    children: [
-                      heading,
-                      const SizedBox(width: 8),
-                      Expanded(child: monthControls),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [heading, monthControls],
-                  ),
-          ),
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          children: [heading, if (!week) monthControls],
+        ),
         Text(
-          'Moon-free dark time per night. Viewing a night changes no plan.',
-          style: text.bodySmall,
+          'Tap a night to view it; your plan stays unchanged.',
+          style: AppTypography.caption.copyWith(
+            height: 1.65,
+            color: p.textSecondary,
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
         if (browser.monthError != null)
@@ -1137,7 +1181,9 @@ class _MonthGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.bodySmall;
+    final style = AppTypography.dense.copyWith(
+      color: AppPalette.of(context).textSecondary,
+    );
     final lead =
         DateTime.utc(days.first.date.year, days.first.date.month, 1).weekday -
         1; // Monday first
@@ -1159,11 +1205,11 @@ class _MonthGrid extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        // `.weekday-row span`: padding-bottom 8, then 4 to the days.
+        const SizedBox(height: 12),
         LayoutBuilder(
           builder: (context, constraints) {
-            final theme = Theme.of(context);
-            final width = (constraints.maxWidth - 24) / 7 - 4;
+            final width = constraints.maxWidth / 7 - 2;
             double height(String text, TextStyle? style) {
               final painter = TextPainter(
                 text: TextSpan(
@@ -1178,35 +1224,26 @@ class _MonthGrid extends StatelessWidget {
               return result;
             }
 
-            final extent = days.fold<double>(72, (largest, day) {
-              final date =
-                  '${day.date.day}${day.date == browser.planNight ? ' •' : ''}';
+            // `.calendar-grid button`: padding 4 1 and a 1 px border round
+            // the date (12/18), 3, the 20 px glyph, 3, the hours (12/1.4).
+            final extent = days.fold<double>(48, (largest, day) {
               return math.max(
                 largest,
-                36 +
-                    height(
-                      date,
-                      theme.textTheme.bodySmall?.copyWith(
-                        fontSize: 12,
-                        height: 1.2,
-                        fontWeight: day.date == browser.viewedDate
-                            ? FontWeight.bold
-                            : null,
-                      ),
-                    ) +
+                10 +
+                    18 +
+                    3 +
+                    20 +
+                    3 +
                     height(
                       MoonCalendarSection._short(day),
-                      theme.textTheme.labelSmall?.copyWith(
-                        fontSize: HybridTokens.calendarCaptionSize,
-                        height: 1.4,
-                      ),
+                      AppTypography.dense.copyWith(height: 1.4),
                     ),
               );
             });
             return GridView.count(
               key: const Key('nightMoon.month'),
               crossAxisCount: 7,
-              crossAxisSpacing: 4,
+              crossAxisSpacing: 0,
               mainAxisSpacing: 4,
               mainAxisExtent: extent.ceilToDouble(),
               shrinkWrap: true,
@@ -1259,15 +1296,24 @@ class _DayCell extends StatelessWidget {
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                '${day.date.day}${plan ? ' •' : ''}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontSize: 12,
-                  height: 1.2,
-                  fontWeight: viewed ? FontWeight.bold : null,
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: '${day.date.day}'),
+                    // conditions.js calendarDay: the plan's night mark.
+                    if (plan)
+                      TextSpan(
+                        text: ' •',
+                        style: AppTypography.dense.copyWith(
+                          fontSize: HybridTokens.calendarCaptionSize,
+                          color: p.textPrimary,
+                        ),
+                      ),
+                  ],
                 ),
+                style: AppTypography.dense.copyWith(color: p.textPrimary),
               ),
               const SizedBox(height: 3),
               SizedBox(
@@ -1284,8 +1330,7 @@ class _DayCell extends StatelessWidget {
               Text(
                 MoonCalendarSection._short(day),
                 textAlign: TextAlign.center,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontSize: HybridTokens.calendarCaptionSize,
+                style: AppTypography.dense.copyWith(
                   height: 1.4,
                   color: p.textSecondary,
                 ),

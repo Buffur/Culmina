@@ -1,0 +1,196 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-settings-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-appearance-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-appearance"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-appearance-b-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-appearance"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      650
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-planning-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-planning"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-planning-b-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-planning"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      650
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-privacy-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-privacy"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-backup-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-backup"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-set-about-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [
+    {
+     "click": "#settings-open-about"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  }
+ ]
+}

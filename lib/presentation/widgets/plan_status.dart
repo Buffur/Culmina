@@ -49,7 +49,7 @@ class PlanStatus extends StatelessWidget {
   /// answers another question (an empty plan is decided before a missing
   /// window), so it is shown only once nothing is missing.
   static const siteReason =
-      "Set a site to see the night and the target's windows.";
+      'Set an observing site to calculate the night and imaging window.';
   static const targetReason = "Choose a target to see tonight's windows.";
   static const rigReason =
       'A rig is needed to save the plan and to check exposures.';

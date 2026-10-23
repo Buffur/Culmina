@@ -38,6 +38,7 @@ import '../../../support/fake_location_service.dart';
 import '../../../support/fake_reverse_geocoder.dart';
 import '../../../support/in_memory_privacy_preferences.dart';
 import '../../../support/no_snapshot_weather.dart';
+import '../../../support/library_finders.dart';
 
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
@@ -132,10 +133,29 @@ void main() {
         timeZoneId: 'Europe/Ljubljana',
       );
 
-  Future<void> openSkyDarkness(WidgetTester tester) async {
-    await tester.tap(
-      find.byKey(const Key('section.${SiteEditorScreen.skyDarknessSection}')),
+  /// "Use current position", inside "Use device position" (library.js
+  /// `locationView`), which opens first when closed.
+  Future<void> useCurrentPosition(WidgetTester tester) async {
+    final button = find.byKey(const Key('siteEditor.useCurrentPosition'));
+    if (button.evaluate().isEmpty) {
+      await tester.tap(find.text('Use device position'));
+      await tester.pumpAndSettle();
+    }
+    await tester.ensureVisible(button);
+    await tester.pumpAndSettle();
+    await tester.tap(button);
+  }
+
+  /// Opens "More (optional)" (elevation, sky darkness, notes) when closed.
+  Future<void> openMore(WidgetTester tester) async {
+    if (find.byKey(const Key('siteEditor.elevation')).evaluate().isNotEmpty) {
+      return;
+    }
+    final header = find.byKey(
+      const Key('section.${SiteEditorScreen.skyDarknessSection}'),
     );
+    await tester.ensureVisible(header);
+    await tester.tap(header);
     await tester.pumpAndSettle();
   }
 
@@ -146,24 +166,19 @@ void main() {
   }
 
   Future<void> typeSite(WidgetTester tester) async {
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name'),
-      'Backyard',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Latitude (°)'),
-      '46.05',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Longitude (°)'),
-      '14.51',
-    );
+    await tester.enterText(fieldLabeled('Name'), 'Backyard');
+    await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
+    await tester.enterText(fieldLabeled('Longitude (°)'), '14.51');
   }
 
-  IconData? leadingIcon(WidgetTester tester, int id) {
-    final tile = tester.widget<ListTile>(find.byKey(ValueKey('site-$id')));
-    return (tile.leading as Icon).icon;
-  }
+  /// Whether the row of site [id] says it is the one used for planning.
+  bool marked(WidgetTester tester, int id) => find
+      .descendant(
+        of: find.byKey(ValueKey('site-$id')),
+        matching: find.text('Used for planning'),
+      )
+      .evaluate()
+      .isNotEmpty;
 
   testWidgets(
     'site Save stays above the IME and coordinate fields are spaced',
@@ -175,13 +190,17 @@ void main() {
       await tester.pumpAndSettle();
       final save = tester.getRect(find.byKey(const Key('siteEditor.save')));
       expect(save.bottom, lessThanOrEqualTo(615));
-      final latitude = find.widgetWithText(TextFormField, 'Latitude (°)');
-      final longitude = find.widgetWithText(TextFormField, 'Longitude (°)');
+      final latitude = fieldLabeled('Latitude (°)');
+      final longitude = fieldLabeled('Longitude (°)');
       await tester.ensureVisible(latitude);
       await tester.pumpAndSettle();
+      // library.js `library-pair`: side by side, 12 apart (stacked at large
+      // text, a label's height apart).
+      final a = tester.getRect(latitude), b = tester.getRect(longitude);
       expect(
-        tester.getTopLeft(longitude).dy - tester.getBottomLeft(latitude).dy,
-        greaterThanOrEqualTo(20),
+        b.left - a.right >= 12 || b.top - a.bottom >= 20,
+        isTrue,
+        reason: '$a / $b',
       );
       expect(tester.takeException(), isNull);
     },
@@ -208,15 +227,15 @@ void main() {
     await tester.runAsync(() => vm.selectSite(1));
     await pump(tester);
 
-    expect(leadingIcon(tester, 1), Icons.radio_button_checked);
-    expect(leadingIcon(tester, 2), Icons.radio_button_unchecked);
+    expect(marked(tester, 1), isTrue);
+    expect(marked(tester, 2), isFalse);
 
     await tester.tap(find.text('Dark site'));
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pumpAndSettle();
 
     expect(vm.activeSite?.id, 2);
-    expect(leadingIcon(tester, 2), Icons.radio_button_checked);
+    expect(marked(tester, 2), isTrue);
   });
 
   testWidgets('deleting the active site keeps its position as unsaved', (
@@ -226,7 +245,8 @@ void main() {
     await tester.runAsync(() => vm.selectSite(1));
     await pump(tester);
 
-    await tester.tap(find.byTooltip('Delete site'));
+    // A swipe deletes from the list (the record's Delete site too).
+    await tester.drag(find.text('Home'), const Offset(-500, 0));
     await tester.pumpAndSettle();
     expect(find.textContaining('is the active site'), findsOneWidget);
     await tester.tap(find.byKey(const Key('confirm.action'))); // S9.1
@@ -237,9 +257,12 @@ void main() {
     expect(vm.activeSite, isNull);
     // F23 A7: an unnamed unsaved position reads as one, with coordinates.
     expect(find.text(SiteLabel.unsaved), findsOneWidget);
-    expect(find.text('46.0500, 14.5100'), findsOneWidget);
+    expect(find.text('46.05000°, 14.51000° · not saved'), findsOneWidget);
     expect(find.text('Save as site'), findsOneWidget);
-    expect(find.text('No saved sites yet.'), findsOneWidget);
+    expect(
+      find.text('No saved sites yet. Add one with “Add site”.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('the editor rejects missing and out-of-range values', (
@@ -255,10 +278,7 @@ void main() {
     // S7.5 (RG-08 = E2): elevation is optional; empty is unknown.
     expect(find.text('Elevation is required'), findsNothing);
 
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Latitude (°)'),
-      '91',
-    );
+    await tester.enterText(fieldLabeled('Latitude (°)'), '91');
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await tester.pumpAndSettle();
     expect(find.text('Latitude must be between -90 and 90'), findsOneWidget);
@@ -271,23 +291,13 @@ void main() {
     await build(tester);
     await pump(tester, at: AppRouter.siteEdit);
 
-    expect(find.text('Europe/Ljubljana (device zone)'), findsOneWidget);
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name'),
-      'Backyard',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Latitude (°)'),
-      '46.05',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Longitude (°)'),
-      '14,51',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Elevation (m)'),
-      '295',
-    );
+    expect(find.text('Europe/Ljubljana'), findsOneWidget);
+    expect(find.textContaining('Device zone pre-filled'), findsOneWidget);
+    await tester.enterText(fieldLabeled('Name'), 'Backyard');
+    await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
+    await tester.enterText(fieldLabeled('Longitude (°)'), '14,51');
+    await openMore(tester);
+    await tester.enterText(fieldLabeled('Elevation (m, optional)'), '295');
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pumpAndSettle();
@@ -318,16 +328,14 @@ void main() {
   testWidgets('editing a site keeps what was not changed', (tester) async {
     await build(tester, sites: [site('Home', 46.05, 14.51)]);
     await tester.runAsync(() => vm.selectSite(1));
-    await pump(tester);
-
-    await tester.tap(find.byTooltip('Edit site'));
-    await tester.pumpAndSettle();
+    await pump(
+      tester,
+      at: AppRouter.siteEdit,
+      extra: SiteEditorArgs(site: vm.sites.single),
+    );
     expect(find.text('Edit site'), findsOneWidget);
     expect(find.text('Europe/Ljubljana'), findsOneWidget);
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name'),
-      'Garden',
-    );
+    await tester.enterText(fieldLabeled('Name'), 'Garden');
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pumpAndSettle();
@@ -347,21 +355,19 @@ void main() {
   ) async {
     await build(tester, sites: [site('Home', 46.05, 14.51)]);
     await tester.runAsync(() => vm.selectSite(1));
-    await pump(tester);
-
-    await tester.tap(find.byTooltip('Edit site'));
-    await tester.pumpAndSettle();
-    await openSkyDarkness(tester); // S7.5: collapsed by default
+    await pump(
+      tester,
+      at: AppRouter.siteEdit,
+      extra: SiteEditorArgs(site: vm.sites.single),
+    );
+    await openMore(tester); // S7.5: collapsed by default
     await tester.tap(
       find.widgetWithText(DropdownButtonFormField<int?>, 'Unknown'),
     );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bortle 5').last);
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'SQM (mag/arcsec²)'),
-      '20.4',
-    );
+    await tester.enterText(fieldLabeled('SQM (mag/arcsec²)'), '20.4');
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
     await tester.pumpAndSettle();
@@ -379,12 +385,9 @@ void main() {
   testWidgets('an out-of-range SQM is rejected', (tester) async {
     await build(tester);
     await pump(tester, at: AppRouter.siteEdit);
-    await openSkyDarkness(tester); // S7.5: collapsed by default
+    await openMore(tester); // S7.5: collapsed by default
 
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'SQM (mag/arcsec²)'),
-      '30',
-    );
+    await tester.enterText(fieldLabeled('SQM (mag/arcsec²)'), '30');
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await tester.pumpAndSettle();
     expect(find.text('SQM must be between 15 and 23'), findsOneWidget);
@@ -422,14 +425,12 @@ void main() {
         at: AppRouter.siteEdit,
         extra: SiteEditorArgs(site: vm.sites.single),
       );
+      await openMore(tester);
       final field = tester.widget<TextFormField>(
-        find.widgetWithText(TextFormField, 'Elevation (m)'),
+        fieldLabeled('Elevation (m, optional)'),
       );
       expect(field.controller!.text, isEmpty);
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Name'),
-        'Hilltop',
-      );
+      await tester.enterText(fieldLabeled('Name'), 'Hilltop');
       await save(tester);
       expect(vm.sites.single.elevation, isNull);
       expect(vm.sites.single.name, 'Hilltop');
@@ -447,7 +448,7 @@ void main() {
       expect(gps.calls, 0);
       final before = (vm.site.latitude, vm.site.longitude);
 
-      await tester.tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
+      await useCurrentPosition(tester);
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pumpAndSettle();
       expect(gps.calls, 1);
@@ -460,10 +461,7 @@ void main() {
         reason: 'the fix only fills the form (trap 2)',
       );
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Name'),
-        'Field',
-      );
+      await tester.enterText(fieldLabeled('Name'), 'Field');
       await save(tester);
       expect(vm.sites.single.latitude, 45.8123);
     });
@@ -483,9 +481,7 @@ void main() {
           locationService: FakeLocationService(answer: () => fix.future),
         );
         await pump(tester, at: AppRouter.siteEdit);
-        await tester.tap(
-          find.byKey(const Key('siteEditor.useCurrentPosition')),
-        );
+        await useCurrentPosition(tester);
         await tester.pump();
         expect(gps.calls, 1);
       }
@@ -506,18 +502,9 @@ void main() {
       testWidgets('a typed edit is kept, typing and Save stay available, and '
           'the fix is used only on request', (tester) async {
         await startLocating(tester);
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Latitude (°)'),
-          '46.1',
-        );
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Longitude (°)'),
-          '14.2',
-        );
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Name'),
-          'Typed',
-        );
+        await tester.enterText(fieldLabeled('Latitude (°)'), '46.1');
+        await tester.enterText(fieldLabeled('Longitude (°)'), '14.2');
+        await tester.enterText(fieldLabeled('Name'), 'Typed');
         expect(
           tester
               .widget<FilledButton>(find.byKey(const Key('siteEditor.save')))
@@ -545,14 +532,8 @@ void main() {
         tester,
       ) async {
         await startLocating(tester);
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Latitude (°)'),
-          '46.1',
-        );
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Longitude (°)'),
-          '14.2',
-        );
+        await tester.enterText(fieldLabeled('Latitude (°)'), '46.1');
+        await tester.enterText(fieldLabeled('Longitude (°)'), '14.2');
         await answer(tester);
         await tester.tap(
           find.descendant(
@@ -561,10 +542,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Name'),
-          'Typed',
-        );
+        await tester.enterText(fieldLabeled('Name'), 'Typed');
         await save(tester);
         expect(vm.sites.single.latitude, 46.1);
         expect(vm.sites.single.longitude, 14.2);
@@ -572,6 +550,7 @@ void main() {
 
       testWidgets('a map pick is kept', (tester) async {
         await startLocating(tester);
+        await tester.ensureVisible(find.text('Pick on map'));
         await tester.tap(find.text('Pick on map'));
         await tester.pumpAndSettle();
         await tester.tap(find.byTooltip('Enter coordinates'));
@@ -626,9 +605,7 @@ void main() {
       );
 
       Future<void> locate(WidgetTester tester) async {
-        await tester.tap(
-          find.byKey(const Key('siteEditor.useCurrentPosition')),
-        );
+        await useCurrentPosition(tester);
         for (var i = 0; i < 3; i++) {
           await tester.runAsync(() => Future<void>.delayed(Duration.zero));
           await tester.pump();
@@ -766,10 +743,7 @@ void main() {
         );
         await pump(tester, at: AppRouter.siteEdit);
         await locate(tester);
-        await tester.enterText(
-          find.widgetWithText(TextFormField, 'Latitude (°)'),
-          '44.1',
-        );
+        await tester.enterText(fieldLabeled('Latitude (°)'), '44.1');
         pending.complete(ljubljana);
         await tester.runAsync(() => Future<void>.delayed(Duration.zero));
         await tester.pumpAndSettle();
@@ -867,13 +841,11 @@ void main() {
     testWidgets('a GPS failure says why and changes no field', (tester) async {
       await build(tester);
       await pump(tester, at: AppRouter.siteEdit);
-      await tester.tap(find.byKey(const Key('siteEditor.useCurrentPosition')));
+      await useCurrentPosition(tester);
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pumpAndSettle();
       expect(find.byType(MaterialBanner), findsOneWidget);
-      final lat = tester.widget<TextFormField>(
-        find.widgetWithText(TextFormField, 'Latitude (°)'),
-      );
+      final lat = tester.widget<TextFormField>(fieldLabeled('Latitude (°)'));
       expect(lat.controller!.text, isEmpty);
     });
 
@@ -883,7 +855,8 @@ void main() {
       String label,
       String text,
     ) async {
-      final field = find.widgetWithText(TextFormField, label);
+      if (label != 'Name') await openMore(tester);
+      final field = fieldLabeled(label);
       await tester.ensureVisible(field);
       await tester.enterText(field, text);
       await tester.pumpAndSettle();
@@ -900,8 +873,8 @@ void main() {
 
     const edits = [
       ('Name', 'Changed name'),
-      ('Elevation (m)', '450'),
-      ('Notes', 'Private note'),
+      ('Elevation (m, optional)', '450'),
+      ('Notes (optional)', 'Private note'),
     ];
     for (final existing in [true, false]) {
       for (final system in [false, true]) {
@@ -938,8 +911,8 @@ void main() {
       );
       await editOnly(tester, 'Name', 'Changed name');
       await editOnly(tester, 'Name', 'Original');
-      await editOnly(tester, 'Elevation (m)', '450');
-      await editOnly(tester, 'Elevation (m)', '300');
+      await editOnly(tester, 'Elevation (m, optional)', '450');
+      await editOnly(tester, 'Elevation (m, optional)', '300');
       await back(tester, system: false);
       expect(find.text('Unsaved changes'), findsNothing);
       expect(find.byType(SiteEditorScreen), findsNothing);
@@ -949,7 +922,7 @@ void main() {
         'without asking', (tester) async {
       await build(tester);
       await pump(tester, at: AppRouter.siteEdit);
-      expect(find.text('Europe/Ljubljana (device zone)'), findsOneWidget);
+      expect(find.text('Europe/Ljubljana'), findsOneWidget);
       await back(tester, system: true);
       expect(find.text('Unsaved changes'), findsNothing);
       expect(find.byType(SiteEditorScreen), findsNothing);
@@ -980,7 +953,7 @@ void main() {
         at: AppRouter.siteEdit,
         extra: SiteEditorArgs(site: vm.sites.single),
       );
-      await editOnly(tester, 'Notes', 'Private note');
+      await editOnly(tester, 'Notes (optional)', 'Private note');
       await back(tester, system: false);
       await tester.tap(find.byKey(const Key('unsaved.save')));
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
@@ -1053,11 +1026,11 @@ void main() {
         at: AppRouter.siteEdit,
         extra: SiteEditorArgs(site: vm.sites.single),
       );
-      expect(find.text('Sky darkness (optional)'), findsOneWidget);
+      expect(find.text('More (optional)'), findsOneWidget);
       expect(find.text('Bortle 4'), findsOneWidget, reason: 'the summary');
       expect(find.text('SQM (mag/arcsec²)'), findsNothing, reason: 'closed');
 
-      await openSkyDarkness(tester);
+      await openMore(tester);
       expect(
         vm.disclosure.isOpen(SiteEditorScreen.skyDarknessSection),
         isTrue,
@@ -1067,10 +1040,7 @@ void main() {
         find.byKey(const Key('siteEditor.mapLink')),
       );
       expect(link().onPressed, isNotNull);
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Latitude (°)'),
-        '95',
-      );
+      await tester.enterText(fieldLabeled('Latitude (°)'), '95');
       await tester.pump();
       expect(link().onPressed, isNull);
     });
@@ -1079,13 +1049,18 @@ void main() {
         'closed section opens it and shows the message', (tester) async {
       await build(tester);
       await pump(tester, at: AppRouter.siteEdit);
-      expect(find.text('Unknown'), findsOneWidget, reason: 'the summary');
-      await openSkyDarkness(tester);
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'SQM (mag/arcsec²)'),
-        '30',
+      expect(
+        find.text('Elevation, sky darkness and notes'),
+        findsOneWidget,
+        reason: 'the summary: nothing set',
       );
-      await openSkyDarkness(tester); // closes it again
+      await openMore(tester);
+      await tester.enterText(fieldLabeled('SQM (mag/arcsec²)'), '30');
+      // Close it again.
+      await tester.tap(
+        find.byKey(const Key('section.${SiteEditorScreen.skyDarknessSection}')),
+      );
+      await tester.pumpAndSettle();
       await typeSite(tester);
       await save(tester);
       expect(find.text('SQM must be between 15 and 23'), findsOneWidget);

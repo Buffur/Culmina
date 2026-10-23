@@ -164,7 +164,8 @@ void main() {
     await tester.tap(choose);
     await tester.pumpAndSettle();
 
-    expect(find.text('Choose a target'), findsOneWidget);
+    // The plan's scoped target chooser (plan.js `choiceView`).
+    expect(find.byKey(const Key('planTarget.search')), findsOneWidget);
   });
 
   testWidgets('a default location shows a banner that offers to set the site', (
@@ -305,7 +306,11 @@ void main() {
       final row = find.byKey(const Key('planner.weather'));
       await tester.scrollUntilVisible(row, 300, scrollable: list);
       expect(
-        find.descendant(of: row, matching: find.textContaining('No forecast.')),
+        // Hybrid night row: "Forecast unavailable", then why.
+        find.descendant(
+          of: row,
+          matching: find.text('Offline or the service did not answer.'),
+        ),
         findsOneWidget,
       );
       await tester.scrollUntilVisible(
@@ -319,12 +324,12 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(row);
       await tester.pumpAndSettle();
-      expect(find.text('No forecast.'), findsOneWidget);
-      await tester.ensureVisible(find.text('Retry'));
+      expect(find.text('Forecast unavailable'), findsWidgets);
+      await tester.ensureVisible(find.text('Retry forecast'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Retry'));
+      await tester.tap(find.text('Retry forecast'));
       await tester.pumpAndSettle();
-      expect(find.text('No forecast.'), findsOneWidget);
+      expect(find.text('Forecast unavailable'), findsWidgets);
       expect(throwingWeather.calls, greaterThan(1));
     },
   );
@@ -358,16 +363,24 @@ void main() {
       await vm.ready;
     });
 
+    AppRouter.router.go(AppRouter.tonight);
     await tester.pumpWidget(wrap(vm));
     await tester.pumpAndSettle();
 
-    expect(
-      find.text("Couldn't load your site, settings and current plan."),
-      findsOneWidget,
-    );
+    // Tonight (app.js `error`): the state message and Retry.
+    expect(find.byKey(const Key('tonight.loadError')), findsOneWidget);
+    expect(find.text("Couldn't load your plan"), findsOneWidget);
+    expect(find.byKey(const Key('tonight.retryLoad')), findsOneWidget);
     expect(
       find.text('Select a Target and Equipment profile to begin planning.'),
       findsNothing,
+    );
+    // The planner says the same in its own words.
+    AppRouter.router.go(AppRouter.session());
+    await tester.pumpAndSettle();
+    expect(
+      find.text("Couldn't load your site, settings and current plan."),
+      findsOneWidget,
     );
 
     flakyTargets.shouldThrow = false;
@@ -378,6 +391,9 @@ void main() {
       find.text("Couldn't load your site, settings and current plan."),
       findsNothing,
     );
+    AppRouter.router.go(AppRouter.tonight);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('tonight.loadError')), findsNothing);
   });
 
   testWidgets('a saved site shows the correct evening date, not the UTC one '

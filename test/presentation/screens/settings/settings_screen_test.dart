@@ -6,6 +6,7 @@ import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:astroplan/presentation/screens/library/library_screen.dart';
 import 'package:astroplan/presentation/screens/logbook/logbook_screen.dart';
 
@@ -109,7 +110,7 @@ void main() {
     await build(tester);
     await pump(tester);
     expect(find.text('20°'), findsOneWidget);
-    expect(find.text('15 %'), findsOneWidget);
+    expect(find.text('15%'), findsOneWidget);
     expect(find.text('5 s'), findsOneWidget);
     // F12 (AM-01): the optional times are in the collapsed advanced group,
     // whose summary counts them.
@@ -121,13 +122,18 @@ void main() {
     await tester.tap(find.byKey(const Key('settings.advanced')));
     await tester.pumpAndSettle();
     expect(find.text('Not included'), findsNWidgets(5));
-    expect(find.textContaining('not scientific laws'), findsOneWidget);
     // S1.8 (UX-20): overheads are applied since TASK 5.4.
     expect(
-      find.textContaining("added to the capture plan's budget"),
+      find.textContaining('change the imaging window, the capture budget'),
       findsOneWidget,
     );
     expect(find.textContaining('later update'), findsNothing);
+    // How the defaults apply: assumptions, not laws, one tap away.
+    expect(find.textContaining('not scientific laws'), findsNothing);
+    await tester.tap(find.text('How these defaults apply'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('not scientific laws'), findsOneWidget);
+    expect(find.textContaining('Dither settling is separate'), findsOneWidget);
   });
 
   // S3.7 (ADR-018 §7): the import moved to the equipment screen.
@@ -137,7 +143,7 @@ void main() {
     await build(tester);
     await pump(tester, section: null);
     expect(find.text('Import metadata'), findsNothing);
-    expect(find.text('About & data sources'), findsOneWidget);
+    expect(find.text('About'), findsOneWidget);
   });
 
   // TASK 16.3: place names are opt-in, and the switch says what is sent.
@@ -148,14 +154,19 @@ void main() {
     final tile = find.byKey(const Key('settings.placeNames'));
     await tester.ensureVisible(tile);
     expect(find.textContaining('OpenStreetMap Nominatim'), findsOneWidget);
-    expect(tester.widget<SwitchListTile>(tile).value, isFalse);
+    bool on() => tester
+        .widget<HybridSwitch>(
+          find.descendant(of: tile, matching: find.byType(HybridSwitch)),
+        )
+        .value;
+    expect(on(), isFalse);
     await tester.tap(tile);
     await tester.pump();
     // F21 A6: On applies once it is stored, not before.
     await tester.runAsync(() => pumpEventQueue());
     await tester.pump();
     expect(vm.settings.placeNameLookup, isTrue);
-    expect(tester.widget<SwitchListTile>(tile).value, isTrue);
+    expect(on(), isTrue);
   });
 
   testWidgets(
@@ -201,7 +212,7 @@ void main() {
     await tester.tap(
       find.descendant(
         of: find.byKey(const Key('settings.dither')),
-        matching: find.byType(Switch),
+        matching: find.byType(HybridSwitch),
       ),
     );
     await tester.pump();

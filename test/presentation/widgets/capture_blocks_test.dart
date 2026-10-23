@@ -173,20 +173,35 @@ void main() {
         calibrationPolicy: CalibrationPolicy.library,
       ),
     ]);
+    // Hybrid block (plan.js blockRow): the title, then count × exposure =
+    // its time, integration only for lights.
     for (final row in [
-      'Ha · 60 s × 100 · 1 h 40 min',
-      'Light · 30 s × 10 · 5 min',
-      'Hydrogen-alpha 3 nm narrowband 2 · 120 s × 12 · 24 min',
-      'Dark · 60 s × 20 · 20 min',
-      'Flat (Ha) · 2 s × 20 · 40 s',
-      'Bias · 1/1000 s × 50 · from your library',
+      'Light · Ha',
+      '100 × 60 s = 1 h 40 min integration',
+      '10 × 30 s = 5 min integration',
+      'Light · Hydrogen-alpha 3 nm narrowband 2',
+      '12 × 120 s = 24 min integration',
+      'Dark',
+      '20 × 60 s = 20 min planned calibration, not integration',
+      'Flat · Ha',
+      '20 × 2 s = 40 s planned calibration, not integration',
+      'Bias',
     ]) {
       expect(find.text(row), findsWidgets, reason: row);
     }
-    // The empty filter reads as no filter: two "Light" rows.
-    expect(find.text('Light · 30 s × 10 · 5 min'), findsNWidgets(2));
-    expect(find.text('During the imaging window'), findsOneWidget);
-    expect(find.text('Outside the imaging window'), findsOneWidget);
+    expect(find.textContaining('50 × 1/1000 s = '), findsOneWidget);
+    // The empty filter reads as no filter: two "Light · no filter" blocks.
+    expect(find.text('Light · no filter'), findsNWidgets(2));
+    // Unmeasured (no site or target): no fit is claimed; the flat taken
+    // outside the window says where its time goes (plan.js fitLine).
+    expect(
+      find.text('Window capacity unknown until site and target are set'),
+      findsNWidgets(4),
+    );
+    expect(
+      find.text('Outside the imaging window · adds to total time'),
+      findsOneWidget,
+    );
     // Hybrid retains recorded camera values beside each block. The dark
     // matches no light (S7.3a), which is named in words: fields, no values.
     expect(
@@ -256,10 +271,12 @@ void main() {
     final before = stored(vm.captureBlocks);
     final middle = vm.captureBlocks[1];
 
-    await tester.tap(find.byTooltip('Delete block').at(1));
+    await tester.ensureVisible(find.byKey(const Key('capture.delete.1')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.delete.1')));
     await settle(tester);
     expect(vm.captureBlocks, hasLength(2));
-    expect(find.textContaining('Deleted Flat (G)'), findsOneWidget);
+    expect(find.text('Block removed.'), findsOneWidget);
 
     await tester.tap(find.text('Undo'));
     await settle(tester);
@@ -274,7 +291,9 @@ void main() {
   testWidgets('a timed-out Undo commits the delete', (tester) async {
     await start(tester);
     await blocks(tester, [_light(60, 10, filter: 'R'), _light(60, 5)]);
-    await tester.tap(find.byTooltip('Delete block').first);
+    await tester.ensureVisible(find.byKey(const Key('capture.delete.0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.delete.0')));
     await settle(tester);
     await settle(tester, frames: 40); // 8 s: the message times out
     expect(find.text('Undo'), findsNothing);
@@ -359,19 +378,22 @@ void main() {
       'shown for its group', (tester) async {
     await start(tester);
     await blocks(tester, [_light(60, 4, filter: 'L')]);
+    // Hybrid estimate: one group's gain (×√N) and its frames.
     Finder gain(String value) => find.descendant(
-      of: find.byKey(const Key('capturePlan.gain.0')),
+      of: find.byKey(const Key('estimate.gain')),
       matching: find.text(value),
     );
-    expect(gain('2.0x'), findsOneWidget);
+    expect(gain('×2.00'), findsOneWidget);
     expect(
       find.descendant(
-        of: find.byKey(const Key('capturePlan.gain.0')),
-        matching: find.textContaining('× 4'),
+        of: find.byKey(const Key('estimate.gain')),
+        matching: find.textContaining('4 frames'),
       ),
       findsOneWidget,
     );
-    await tester.tap(find.text('L · 60 s × 4 · 4 min'));
+    await tester.ensureVisible(find.byKey(const Key('capture.edit.0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.edit.0')));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('blockDialog.count')), '25');
     await tester.tap(find.byKey(const Key('blockDialog.submit')));
@@ -380,8 +402,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
     }
     expect(vm.captureBlocks.single.frameCount, 25);
-    expect(gain('5.0x'), findsOneWidget);
-    expect(gain('2.0x'), findsNothing);
+    expect(gain('×5.00'), findsOneWidget);
+    expect(gain('×2.00'), findsNothing);
     expect(find.textContaining('SNR'), findsNothing);
     await tester.runAsync(() => vm.plan.idle);
   });
@@ -396,13 +418,23 @@ void main() {
 
       expect(
         tester
-            .widget<IconButton>(find.byKey(const Key('capture.moveUp.0')))
+            .widget<IconButton>(
+              find.descendant(
+                of: find.byKey(const Key('capture.moveUp.0')),
+                matching: find.byType(IconButton),
+              ),
+            )
             .onPressed,
         isNull,
       );
       expect(
         tester
-            .widget<IconButton>(find.byKey(const Key('capture.moveDown.1')))
+            .widget<IconButton>(
+              find.descendant(
+                of: find.byKey(const Key('capture.moveDown.1')),
+                matching: find.byType(IconButton),
+              ),
+            )
             .onPressed,
         isNull,
       );
@@ -424,7 +456,7 @@ void main() {
       'button', (tester) async {
     await start(tester);
     await blocks(tester, [_light(60, 10, filter: 'L')]);
-    await tester.tap(find.text('L · 60 s × 10 · 10 min'));
+    await tester.tap(find.byKey(const Key('capture.edit.0')));
     await tester.pumpAndSettle();
     final submit = find.byKey(const Key('blockDialog.submit'));
     expect(tester.widget(submit), isA<FilledButton>());
@@ -436,31 +468,29 @@ void main() {
   });
 
   group('an edit briefly marks the row it changed', () {
-    double markOf(WidgetTester tester, String row) =>
-        tester
-            .widget<ListTile>(
-              find.ancestor(
-                of: find.text(row),
-                matching: find.byType(ListTile),
-              ),
-            )
-            .tileColor
-            ?.a ??
-        0;
+    // The block's tint (plan.js: a brief selection behind the block).
+    double markOf(WidgetTester tester, String row) => tester
+        .widget<ColoredBox>(
+          find
+              .ancestor(of: find.text(row), matching: find.byType(ColoredBox))
+              .first,
+        )
+        .color
+        .a;
 
     testWidgets('a new block is marked, then the mark fades; the others '
         'are not marked', (tester) async {
       await start(tester);
       await blocks(tester, [_light(60, 10, filter: 'L')]);
-      expect(markOf(tester, 'L · 60 s × 10 · 10 min'), 0);
+      expect(markOf(tester, '10 × 60 s = 10 min integration'), 0);
 
       await tester.runAsync(() => vm.plan.addCaptureBlock(_light(60, 5)));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
-      expect(markOf(tester, 'Light · 60 s × 5 · 5 min'), greaterThan(0));
-      expect(markOf(tester, 'L · 60 s × 10 · 10 min'), 0);
+      expect(markOf(tester, '5 × 60 s = 5 min integration'), greaterThan(0));
+      expect(markOf(tester, '10 × 60 s = 10 min integration'), 0);
       await tester.pump(const Duration(seconds: 2));
-      expect(markOf(tester, 'Light · 60 s × 5 · 5 min'), 0);
+      expect(markOf(tester, '5 × 60 s = 5 min integration'), 0);
       await tester.runAsync(() => vm.plan.idle);
     });
 
@@ -469,7 +499,7 @@ void main() {
       await blocks(tester, [_light(60, 10, filter: 'L')]);
       await tester.runAsync(() => vm.plan.addCaptureBlock(_light(60, 5)));
       await tester.pump();
-      expect(markOf(tester, 'Light · 60 s × 5 · 5 min'), 0);
+      expect(markOf(tester, '5 × 60 s = 5 min integration'), 0);
       await tester.runAsync(() => vm.plan.idle);
     });
   });

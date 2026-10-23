@@ -205,22 +205,50 @@ void main() {
     await settle(tester);
   }
 
+  /// The label/value rows under [key] as "Label: value" lines joined by
+  /// " | " (the Hybrid facts are two texts per row).
+  String facts(WidgetTester tester, String key) {
+    final texts = [
+      for (final t in tester.widgetList<Text>(
+        find.descendant(of: find.byKey(Key(key)), matching: find.byType(Text)),
+      ))
+        t.data ?? t.textSpan!.toPlainText(),
+    ];
+    return [
+      for (var i = 0; i + 1 < texts.length; i += 2)
+        '${texts[i]}: ${texts[i + 1]}',
+    ].join(' | ');
+  }
+
+  /// Every text under [key], joined by " | ".
+  String texts(WidgetTester tester, String key) => [
+    for (final t in tester.widgetList<Text>(
+      find.descendant(of: find.byKey(Key(key)), matching: find.byType(Text)),
+    ))
+      t.data ?? t.textSpan!.toPlainText(),
+  ].join(' | ');
+
+  /// Opens the entry's disclosure titled [title].
+  Future<void> open(WidgetTester tester, String title) async {
+    await tester.ensureVisible(find.text(title));
+    await tester.tap(find.text(title));
+    await settle(tester);
+  }
+
   testWidgets('the Completed filter (in the panel, S8.5) filters the list in '
       'the query', (tester) async {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessions);
     expect(find.byKey(Key('logbook.status.$plannedId')), findsOneWidget);
-    await tester.tap(find.byKey(const Key('logbook.filters')));
+    await tester.tap(find.byKey(const Key('logbook.filterToggle')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('logbook.filter.completed')));
-    await settle(tester);
-    await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
-    await tester.tap(find.byKey(const Key('logbook.filters.done')));
     await settle(tester);
     expect(find.byKey(Key('logbook.status.$completedId')), findsOneWidget);
     expect(find.byKey(const Key('logbook.status.$legacyId')), findsOneWidget);
     expect(find.byKey(Key('logbook.status.$plannedId')), findsNothing);
-    await tester.tap(find.byKey(const Key('logbook.filter.clear')));
+    await tester.ensureVisible(find.byKey(const Key('logbook.filters.clear')));
+    await tester.tap(find.byKey(const Key('logbook.filters.clear')));
     await settle(tester);
     expect(find.byKey(Key('logbook.status.$plannedId')), findsOneWidget);
   });
@@ -230,16 +258,20 @@ void main() {
   ) async {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessions);
-    await tester.tap(find.byKey(const Key('logbook.filters')));
+    await tester.tap(find.byKey(const Key('logbook.filterToggle')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('logbook.filter.target')));
     await settle(tester);
-    await tester.tap(find.byKey(const Key('logbook.pick.1')));
+    await tester.tap(find.text('Orion Nebula').last);
     await settle(tester);
-    expect(find.text('Orion Nebula'), findsOneWidget, reason: 'the panel');
-    await tester.ensureVisible(find.byKey(const Key('logbook.filters.done')));
-    await tester.tap(find.byKey(const Key('logbook.filters.done')));
-    await settle(tester);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('logbook.filter.target')),
+        matching: find.text('Orion Nebula'),
+      ),
+      findsOneWidget,
+      reason: 'the panel',
+    );
     expect(find.byKey(Key('logbook.status.$completedId')), findsOneWidget);
     expect(find.byKey(const Key('logbook.status.$legacyId')), findsNothing);
   });
@@ -313,45 +345,46 @@ void main() {
       'snapshot with plan vs actual and notes', (tester) async {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessionDetail(completedId));
-    expect(find.textContaining('At the start of imaging'), findsOneWidget);
-    expect(find.byKey(const Key('detail.night')), findsOneWidget);
-    expect(find.textContaining('Times in: '), findsOneWidget);
-    expect(find.text('Completed'), findsOneWidget);
-    expect(find.textContaining('Refractor 400'), findsWidgets);
-    expect(find.textContaining('Orion Nebula'), findsWidgets);
+    expect(find.text('At the start of imaging'), findsOneWidget);
     expect(
-      find.textContaining('L · 300 s: 10 of 24', findRichText: true),
-      findsOneWidget,
-    );
-    // S8.7: once in the result summary, once in planned against actual.
-    expect(
-      find.textContaining(
-        'Integration: 50 min of 2 h planned',
-        findRichText: true,
+      find.descendant(
+        of: find.byKey(const Key('detail.status')),
+        matching: find.textContaining('Completed'),
       ),
-      findsNWidgets(2),
-    );
-    expect(
-      find.textContaining('Wind after 23:00', findRichText: true),
       findsOneWidget,
     );
+    expect(find.textContaining('Orion Nebula'), findsWidgets);
+    // Planned and recorded: the block's plan and its count.
+    expect(find.textContaining('L · 300 s'), findsWidgets);
     expect(
-      find.textContaining('Temperature: −3.0 °C', findRichText: true),
-      findsOneWidget,
+      texts(tester, 'detail.block.0'),
+      allOf(
+        contains('Planned | 24 × 300 s · 2 h'),
+        contains('10 frames · 50 min'),
+      ),
     );
+    // S8.7: the result's summary; the totals in planned and recorded.
+    expect(find.text('Integration: 50 min of 2 h planned'), findsOneWidget);
+    expect(
+      texts(tester, 'detail.planVsActual'),
+      contains('Recorded integration | 50 min'),
+    );
+    expect(find.text('Wind after 23:00'), findsOneWidget);
+    expect(
+      facts(tester, 'detail.conditions'),
+      contains('Temperature: −3.0 °C'),
+    );
+    await open(tester, 'At the start of imaging');
+    expect(find.byKey(const Key('detail.night')), findsOneWidget);
+    expect(facts(tester, 'detail.night'), contains('Times in: '));
+    expect(find.textContaining('Refractor 400'), findsWidgets);
     expect(find.byKey(const Key('detail.editResults')), findsOneWidget);
     // S8.7 (I-6): a result offers Edit result and Copy to another night.
     expect(find.text('Copy to another night'), findsOneWidget);
     expect(find.byKey(const Key('detail.openInPlanner')), findsNothing);
     // S1.7 (UX-19): RA/Dec as in the target editor; typographic minus.
-    expect(
-      find.textContaining('05h35m16.8s, −05°23′24″', findRichText: true),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('Darkness limit: −18°', findRichText: true),
-      findsOneWidget,
-    );
+    expect(facts(tester, 'detail.target'), contains('05h35m16.8s, −05°23′24″'));
+    expect(facts(tester, 'detail.night'), contains('Darkness limit: −18°'));
   });
 
   testWidgets('a planned session renders from its plan snapshot', (
@@ -359,27 +392,22 @@ void main() {
   ) async {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessionDetail(plannedId));
-    expect(find.textContaining('Plan as saved'), findsOneWidget);
+    expect(find.text('Plan as saved'), findsOneWidget);
     expect(
-      find.textContaining('L · 300 s: 24 planned', findRichText: true),
-      findsOneWidget,
+      texts(tester, 'detail.block.0'),
+      contains('Planned | 24 × 300 s · 2 h'),
     );
     expect(find.text('Open in planner'), findsOneWidget);
     expect(find.byKey(const Key('detail.editResults')), findsNothing);
-    // S1.8 (UX-20, UX-18): no raw double, no "Notes: none", and the night
-    // key is not called a window.
-    expect(
-      find.textContaining('Focal ratio: f/5.0', findRichText: true),
-      findsOneWidget,
-    );
-    // S8.7: the notes and the conditions are two sections.
-    expect(find.text('None recorded.'), findsNWidgets(2));
-    expect(find.textContaining('Notes: ', findRichText: true), findsNothing);
-    expect(
-      find.textContaining('Night span: ', findRichText: true),
-      findsOneWidget,
-    );
-    expect(find.textContaining('Window: ', findRichText: true), findsNothing);
+    // Notes and conditions: none recorded, said once; never "Notes: none".
+    expect(find.text('None recorded.'), findsOneWidget);
+    expect(find.textContaining('Notes: '), findsNothing);
+    // S1.8 (UX-20, UX-18): no raw double, and the night key is not called
+    // a window.
+    await open(tester, 'Plan as saved');
+    expect(facts(tester, 'detail.rig'), contains('Focal ratio: f/5.0'));
+    expect(facts(tester, 'detail.night'), contains('Night span: '));
+    expect(facts(tester, 'detail.night'), isNot(contains('Window: ')));
   });
 
   // F19 A3: the entry shows the forecast saved with the plan — its source,
@@ -437,21 +465,19 @@ void main() {
       );
     });
     await pumpAt(tester, AppRouter.sessionDetail(plannedId));
+    await open(tester, 'Plan as saved');
+    final weather = facts(tester, 'detail.weather');
     for (final text in [
       'Forecast: as saved with the plan',
       'Source: open-meteo / best_match',
       'Age when saved: aging',
-      'Cloud cover (dark hours): 15–40 %',
+      'Cloud cover (dark hours): 15–40%',
     ]) {
-      expect(
-        find.textContaining(text, findRichText: true),
-        findsOneWidget,
-        reason: text,
-      );
+      expect(weather, contains(text), reason: text);
     }
     expect(
-      find.textContaining('Hours without forecast: ', findRichText: true),
-      findsOneWidget,
+      weather,
+      contains('Hours without forecast: '),
       reason: 'the saved hours after midnight had none',
     );
   });
@@ -522,18 +548,12 @@ void main() {
     expect(now.snapshot.fetchedAtUtc, DateTime.utc(2026, 12, 15, 19));
 
     await pumpAt(tester, AppRouter.sessionDetail(plannedId));
-    final weather = find.byKey(const Key('detail.weather'));
-    await tester.ensureVisible(weather);
-    final text = [
-      for (final t in tester.widgetList<Text>(
-        find.descendant(of: weather, matching: find.byType(Text)),
-      ))
-        t.data ?? t.textSpan!.toPlainText(),
-    ].join(' | ');
+    await open(tester, 'Plan as saved');
+    final text = facts(tester, 'detail.weather');
     for (final saved in [
       'as saved with the plan',
       'open-meteo / best_match',
-      '15–40 %',
+      '15–40%',
     ]) {
       expect(text, contains(saved), reason: saved);
     }
@@ -560,17 +580,17 @@ void main() {
     expect(find.byKey(const Key('detail.legacy')), findsOneWidget);
     expect(find.byKey(const Key('detail.night')), findsNothing);
     expect(
-      find.textContaining('Actual light frames: 35', findRichText: true),
-      findsOneWidget,
-    );
-    expect(
-      find.textContaining('Rejected frames: unknown', findRichText: true),
-      findsOneWidget,
+      texts(tester, 'detail.planVsActual'),
+      allOf(
+        contains('Actual light frames | 35'),
+        contains('Rejected frames | unknown'),
+      ),
     );
     expect(find.textContaining('unknown'), findsWidgets);
     // S8.7 (I-6): an old log offers Share and Export as file only.
     expect(find.byKey(const Key('detail.copy')), findsNothing);
     expect(find.byKey(const Key('detail.openInPlanner')), findsNothing);
+    await open(tester, 'Export this entry');
     expect(find.byKey(const Key('detail.share')), findsOneWidget);
   });
 
@@ -587,8 +607,15 @@ void main() {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessionDetail(completedId));
     expect(find.text('This target so far'), findsOneWidget);
-    expect(find.text('50 min from 1 result'), findsOneWidget);
-    expect(find.text('L: 50 min'), findsOneWidget);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('progress.total.1'))).data,
+      '50 min',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('progress.results.1'))).data,
+      startsWith('1 result · Last imaged '),
+    );
+    expect(find.text('L'), findsOneWidget);
     AppRouter.router.go(AppRouter.logbookProgress);
     await settle(tester);
     expect(find.byKey(const Key('progress.1')), findsOneWidget);
@@ -609,6 +636,8 @@ void main() {
   ) async {
     await seed(tester);
     await pumpAt(tester, AppRouter.sessionDetail(completedId));
+    await open(tester, 'Export this entry');
+    await tester.ensureVisible(find.byKey(const Key('detail.export')));
     await tester.tap(find.byKey(const Key('detail.export')));
     await settle(tester);
     expect(find.text('Export file created'), findsOneWidget); // S9.8

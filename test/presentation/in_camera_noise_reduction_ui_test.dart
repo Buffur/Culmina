@@ -21,6 +21,7 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/calibration_match.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_editor.dart';
 import 'package:astroplan/presentation/shared/equipment_draft.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
@@ -102,16 +103,25 @@ void main() {
       return repo;
     }
 
-    Future<void> chooseClass(WidgetTester tester, String label) async {
-      final field = find.byKey(const Key('equipmentEditor.cameraClass'));
-      await tester.ensureVisible(field);
-      await tester.tap(field);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(label).last);
+    /// Picks [c] in the editor's camera type grid (library.js).
+    Future<void> chooseClass(WidgetTester tester, CameraClass c) async {
+      final option = find.byKey(Key('equipmentEditor.cameraClass.${c.name}'));
+      await tester.ensureVisible(option);
+      await tester.tap(option);
       await tester.pumpAndSettle();
     }
 
     const toggle = Key('equipmentEditor.noiseReduction');
+
+    /// The noise reduction checkbox row's state.
+    bool checked(WidgetTester tester) => tester
+        .widget<HybridCheckbox>(
+          find.descendant(
+            of: find.byKey(toggle),
+            matching: find.byType(HybridCheckbox),
+          ),
+        )
+        .checked;
 
     for (final c in CameraClass.values) {
       final offered = c.offersInCameraNoiseReduction;
@@ -121,12 +131,7 @@ void main() {
         (tester) async {
           await open(tester, _rig(cameraClass: c));
           expect(find.byKey(toggle), offered ? findsOneWidget : findsNothing);
-          if (offered) {
-            expect(
-              tester.widget<SwitchListTile>(find.byKey(toggle)).value,
-              false,
-            );
-          }
+          if (offered) expect(checked(tester), isFalse);
           expect(tester.takeException(), isNull, reason: 'no overflow');
         },
       );
@@ -137,18 +142,14 @@ void main() {
       tester,
     ) async {
       final repo = await open(tester, _rig());
-      final control = find.descendant(
-        of: find.byKey(toggle),
-        matching: find.byType(Switch),
-      );
-      await tester.ensureVisible(control);
+      await tester.ensureVisible(find.byKey(toggle));
       await tester.pumpAndSettle();
-      await tester.tap(control);
+      await tester.tap(find.byKey(toggle));
       await tester.pumpAndSettle();
-      expect(tester.widget<SwitchListTile>(find.byKey(toggle)).value, isTrue);
-      await chooseClass(tester, 'Astro camera (mono)');
+      expect(checked(tester), isTrue);
+      await chooseClass(tester, CameraClass.astroMono);
       expect(find.byKey(toggle), findsNothing);
-      await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+      await tester.tap(find.widgetWithText(FilledButton, 'Save rig'));
       await tester.pumpAndSettle();
       final saved = repo.updated.single;
       expect(saved.cameraClass, CameraClass.astroMono);
@@ -275,7 +276,7 @@ void main() {
         );
         await vm.plan.idle;
         await vm.disclosure.setOpen(PlannerSections.budgetDetails, true);
-        await vm.disclosure.setOpen(PlannerSections.assumptions, true);
+        await vm.disclosure.setOpen(PlannerSections.budgetDetails, true);
       });
       expect(vm.analysis.calibrationMismatches[1], [
         CalibrationMismatch.darksTwice,
@@ -311,7 +312,7 @@ void main() {
       addTearDown(tester.view.reset);
       await start(tester, _rig());
       await tester.runAsync(
-        () => vm.disclosure.setOpen(PlannerSections.assumptions, true),
+        () => vm.disclosure.setOpen(PlannerSections.budgetDetails, true),
       );
       await tester.pumpWidget(
         MultiProvider(

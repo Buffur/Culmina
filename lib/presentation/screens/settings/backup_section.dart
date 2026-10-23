@@ -9,6 +9,8 @@ import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../viewmodels/backup_viewmodel.dart';
 import '../../../core/config/app_identity.dart';
+import '../../shared/hybrid_icon.dart';
+import 'settings_parts.dart';
 
 /// What the restore confirmation lets the user do (F01 A4, D2/D7, UX-S R1).
 enum _RestoreChoice { cancel, backUpFirst, restore }
@@ -148,41 +150,47 @@ class BackupSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<BackupViewModel?>();
     if (vm == null) return const SizedBox.shrink();
+    // settings.js `backupView`, natively: the app's one .astroplan file.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ListTile(
-          key: const Key('backup.backUp'),
-          contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.backup_outlined),
-          title: const Text('Back up now'),
-          subtitle: const Text(
-            'One .astroplan file with all your data. Save it anywhere.',
-          ),
-          enabled: !vm.busy,
-          onTap: () async {
-            var shared = false;
-            final done = await runWithFeedback(
-              context,
-              'back up',
-              () async => shared = await vm.backUp(),
-            );
-            if (!done || !context.mounted) return;
-            shared
-                ? showDone(context, 'Backup file created')
-                : showFailure(context, notShared);
-          },
+        const SettingsCopy(
+          'Your plans, results, sites, rigs, targets and these settings, in '
+          'one file.',
+          primary: true,
         ),
-        ListTile(
+        const SettingsHeading('Back up'),
+        const SettingsCopy(
+          'One .astroplan file with all your data. Save it anywhere.',
+        ),
+        SettingsAction(
+          key: const Key('backup.backUp'),
+          icon: HybridIcons.download,
+          label: 'Back up now',
+          onPressed: vm.busy
+              ? null
+              : () async {
+                  var shared = false;
+                  final done = await runWithFeedback(
+                    context,
+                    'back up',
+                    () async => shared = await vm.backUp(),
+                  );
+                  if (!done || !context.mounted) return;
+                  shared
+                      ? showDone(context, 'Backup file created')
+                      : showFailure(context, notShared);
+                },
+        ),
+        const SettingsHeading('Restore'),
+        SettingsCopy(
+          'Checked first; nothing changes until you confirm. '
+          '${AppIdentity.appName} then restarts to apply it.',
+        ),
+        SettingsAction(
           key: const Key('backup.restore'),
-          contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.settings_backup_restore),
-          title: const Text('Restore from a backup'),
-          subtitle: Text(
-            'Checked first; ${AppIdentity.appName} then restarts to apply it.',
-          ),
-          enabled: !vm.busy,
-          onTap: () => _restore(context, vm),
+          label: 'Restore from a backup',
+          onPressed: vm.busy ? null : () => _restore(context, vm),
         ),
       ],
     );

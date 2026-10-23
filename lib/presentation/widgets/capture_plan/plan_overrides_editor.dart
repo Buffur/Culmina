@@ -1,16 +1,28 @@
-import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/models/plan_overrides.dart';
+import '../../../core/theme/app_palette.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/utils/quantity_text.dart';
+import '../../../domain/models/plan_overrides.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/hybrid_app_bar.dart';
+import '../../shared/hybrid_parts.dart';
+import 'block_editor_parts.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 
 /// A local edit buffer: typing does not mutate the plan or global settings.
+///
+/// Hybrid (plan.js `assumptionsView`): a scoped page with the four fields,
+/// each with what it is and where its value comes from now or on Apply,
+/// "Use global defaults", and Apply changes in the apply bar. Unlike the
+/// reference, a field left empty keeps its default (the native plan stores
+/// each override on its own).
 class PlanOverridesEditor extends StatefulWidget {
   const PlanOverridesEditor({super.key});
 
@@ -40,21 +52,15 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
     Navigator.of(context).pop();
   }
 
+  /// Close or Back (plan.js `requestCloseScreen`): an unchanged editor
+  /// closes; a changed one asks "Discard this edit?" first.
   Future<void> _leave() async {
     if (_saving || _confirming) return;
     if (!_dirty) return _close();
     _confirming = true;
-    final choice = await askUnsavedChanges(context, plan: 'Plan assumptions');
+    final discard = await askDiscardEdit(context);
     _confirming = false;
-    if (!mounted) return;
-    switch (choice) {
-      case UnsavedChoice.cancel:
-        return;
-      case UnsavedChoice.discard:
-        _close();
-      case UnsavedChoice.save:
-        await _apply();
-    }
+    if (mounted && discard) _close();
   }
 
   @override
@@ -129,23 +135,53 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
   @override
   Widget build(BuildContext context) {
     final preferences = context.watch<SettingsViewModel>().planningPreferences;
-    final labels = [
+    final p = AppPalette.of(context);
+    // plan.js ASSUMPTION_FIELDS: the label, what it is, its global value.
+    const labels = [
       'Time between frames (seconds)',
       'Setup outside the window (minutes)',
       'Fit margin (minutes)',
-      'File size per frame (MB)',
+      'Theoretical file size per frame (MB)',
     ];
-    final hints = [
-      'Global: ${preferences.perFrameOverheadSeconds} s',
+    const hints = [
+      'Download, dither or settle time added to every frame.',
+      'Set-up and alignment done before the imaging window.',
+      'Fixed minutes when overridden. The global percentage uses the '
+          'usable window.',
+      'A planning figure, not measured from your files.',
+    ];
+    final globals = [
+      'Global default, '
+          '${QuantityText.number(preferences.perFrameOverheadSeconds)} s',
       preferences.setupMinutes == null
-          ? 'Global: not included'
-          : 'Global: ${preferences.setupMinutes!} min',
-      'Global: ${QuantityText.percent(preferences.feasibilityMarginPercent)}',
-      // Hybrid's wording: a figure the user enters is never measured
-      // evidence (its storage basis is planEstimate).
-      'A planning figure, not measured from your files. Empty: your file or '
-          'rig evidence.',
+          ? 'Global default, not included'
+          : 'Global default, '
+                '${QuantityText.number(preferences.setupMinutes!)} min',
+      'Global default, '
+          '${QuantityText.percent(preferences.feasibilityMarginPercent)} of '
+          'the usable window',
+      'Your file or rig evidence',
     ];
+    final recorded = [
+      _loaded?.interframeSeconds,
+      _loaded?.outsideSetupSeconds,
+      _loaded?.fixedMarginSeconds,
+      _loaded?.bytesPerFrame,
+    ];
+    // plan.js `assumptionFieldSource`: what applies now, or on Apply.
+    String source(int i) {
+      final text = _controllers[i].text.trim();
+      if (_inherit) return '${globals[i]} on Apply';
+      if (text != _initialTexts[i]) {
+        return text.isEmpty
+            ? '${globals[i]} on Apply'
+            : 'Plan override on Apply';
+      }
+      return recorded[i] == null
+          ? 'Current: ${globals[i]}'
+          : 'Current: Plan override';
+    }
+
     return CallbackShortcuts(
       bindings: {const SingleActivator(LogicalKeyboardKey.escape): _leave},
       child: Focus(
@@ -159,120 +195,114 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
           child: Scaffold(
             appBar: hybridAppBar(
               context,
+              leading: HybridCloseButton(onPressed: _leave),
               title: const Text('Plan assumptions'),
             ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _form,
-                onChanged: () {
-                  if (mounted) setState(() => _inherit = false);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'This plan only',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Optional overrides. Leave a field empty to use its default. '
-                      'A fixed margin replaces the global percentage; setup stays '
-                      'outside the imaging window. File size is an estimate.',
-                    ),
-                    const SizedBox(height: 12),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final width = constraints.maxWidth;
-                        return Wrap(
-                          spacing: 16,
-                          runSpacing: 20,
-                          children: [
-                            for (var i = 0; i < 4; i++)
-                              SizedBox(
-                                width: width,
-                                // Hybrid's label above the field: it wraps at
-                                // large text, so its unit is never cut off. The
-                                // field keeps the label as its accessible name.
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ExcludeSemantics(
-                                      child: Text(
-                                        labels[i],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Semantics(
-                                      label: labels[i],
-                                      child: TextFormField(
-                                        key: Key('planOverride.$i'),
-                                        controller: _controllers[i],
-                                        keyboardType:
-                                            const TextInputType.numberWithOptions(
-                                              decimal: true,
-                                            ),
-                                        decoration: InputDecoration(
-                                          helperText: hints[i],
-                                          helperMaxLines: 3,
-                                          errorMaxLines: 3,
-                                        ),
-                                        validator: (text) {
-                                          if (text == null ||
-                                              text.trim().isEmpty) {
-                                            return null;
-                                          }
-                                          final number = double.tryParse(
-                                            text.trim(),
-                                          );
-                                          if (number == null ||
-                                              !number.isFinite ||
-                                              number < 0 ||
-                                              (i == 3 && number == 0)) {
-                                            return i == 3
-                                                ? 'Enter a positive number or leave empty.'
-                                                : 'Enter zero or more, or leave empty.';
-                                          }
-                                          const maxima = [
-                                            3600,
-                                            720,
-                                            720,
-                                            10000,
-                                          ];
-                                          if (number > maxima[i]) {
-                                            return 'Enter ${maxima[i]} or less.';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+            body: HybridPlanInputs(
+              child: SingleChildScrollView(
+                key: const Key('planOverride.scroll'),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.gutter,
+                  AppSpacing.itemGap,
+                  AppSpacing.gutter,
+                  AppSpacing.gutter,
+                ),
+                child: Form(
+                  key: _form,
+                  onChanged: () {
+                    if (mounted) setState(() => _inherit = false);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // plan.css `.screen-intro`: 14 at 1.6, secondary.
+                      Text(
+                        _inherit
+                            ? 'Apply removes plan overrides. Sources below '
+                                  'show what will apply.'
+                            : 'Overrides for this plan only. Leave a field '
+                                  'empty to use its default.',
+                        key: const Key('planOverride.intro'),
+                        style: AppTypography.body.copyWith(
+                          height: 1.6,
+                          color: p.textSecondary,
+                        ),
+                      ),
+                      for (var i = 0; i < 4; i++)
+                        Padding(
+                          padding: EdgeInsets.only(top: AppSpacing.gutter),
+                          // Hybrid's label above the field: it wraps at large
+                          // text, so its unit is never cut off. The field
+                          // keeps the label as its accessible name.
+                          child: BlockField(
+                            label: labels[i],
+                            hint: hints[i],
+                            note: source(i),
+                            noteKey: Key('planOverride.source.$i'),
+                            child: TextFormField(
+                              key: Key('planOverride.$i'),
+                              controller: _controllers[i],
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                              decoration: const InputDecoration(
+                                errorMaxLines: 3,
                               ),
-                          ],
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      key: const Key('planOverride.reset'),
-                      onPressed: _saving
-                          ? null
-                          : () {
-                              _form.currentState?.reset();
-                              for (final controller in _controllers) {
-                                controller.clear();
-                              }
-                              setState(() => _inherit = true);
-                            },
-                      child: const Text('Use defaults'),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
+                              validator: (text) {
+                                if (text == null || text.trim().isEmpty) {
+                                  return null;
+                                }
+                                final number = double.tryParse(text.trim());
+                                if (number == null ||
+                                    !number.isFinite ||
+                                    number < 0 ||
+                                    (i == 3 && number == 0)) {
+                                  return i == 3
+                                      ? 'Enter a positive number or leave '
+                                            'empty.'
+                                      : 'Enter zero or more, or leave empty.';
+                                }
+                                const maxima = [3600, 720, 720, 10000];
+                                if (number > maxima[i]) {
+                                  return 'Enter ${maxima[i]} or less.';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: AppSpacing.gutter),
+                      // plan.css `.quiet-button`: 14/500 secondary, 48 tall.
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: TextButton(
+                          key: const Key('planOverride.reset'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: p.textSecondary,
+                            minimumSize: const Size(0, HybridTokens.minTarget),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.itemGap,
+                              vertical: AppSpacing.sm,
+                            ),
+                            textStyle: AppTypography.body.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onPressed: _saving
+                              ? null
+                              : () {
+                                  _form.currentState?.reset();
+                                  for (final controller in _controllers) {
+                                    controller.clear();
+                                  }
+                                  setState(() => _inherit = true);
+                                },
+                          child: const Text('Use global defaults'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -280,27 +310,10 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.viewInsetsOf(context).bottom,
               ),
-              child: SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Wrap(
-                    alignment: WrapAlignment.end,
-                    spacing: 12,
-                    runSpacing: 8,
-                    children: [
-                      TextButton(
-                        onPressed: _saving ? null : _leave,
-                        child: const Text('Cancel'),
-                      ),
-                      FilledButton(
-                        key: const Key('planOverride.apply'),
-                        onPressed: _saving ? null : _apply,
-                        child: const Text('Apply to this plan'),
-                      ),
-                    ],
-                  ),
-                ),
+              child: HybridApplyBar(
+                buttonKey: const Key('planOverride.apply'),
+                label: 'Apply changes',
+                onPressed: _saving ? null : _apply,
               ),
             ),
           ),

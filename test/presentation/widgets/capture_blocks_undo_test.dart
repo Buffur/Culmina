@@ -19,7 +19,6 @@ import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
-import 'package:astroplan/presentation/shared/example_text.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/blocks_undo.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
@@ -173,17 +172,15 @@ void main() {
     await build(tester, blocks: [_ha(10), _ha(20)]);
     final before = vm.captureBlocks.toList();
 
-    await tester.tap(find.text('Ha · 300 s × 20 · 1 h 40 min'));
+    await tester.tap(find.byKey(const Key('capture.edit.1')));
     await settle(tester);
     expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
     await tester.enterText(blockField('Frames'), '7');
     await tester.tap(find.byKey(const Key('blockDialog.submit')));
     await settle(tester);
     expect(vm.captureBlocks[1].frameCount, 7);
-    expect(
-      find.textContaining('Changed in this plan: Ha · 300 s × 7'),
-      findsOneWidget,
-    );
+    // plan.js applyBlock: "Block edited.", with Undo.
+    expect(find.text('Block edited.'), findsOneWidget);
     expect(await storedFrames(tester), [10, 7]);
 
     await tapUndo(tester);
@@ -212,7 +209,7 @@ void main() {
     await tester.tap(find.byKey(const Key('calibration.confirm')));
     await settle(tester);
     expect(vm.captureBlocks.length, greaterThan(1));
-    expect(find.textContaining('calibration blocks'), findsOneWidget);
+    expect(find.text('Calibration frames added.'), findsOneWidget);
 
     await tapUndo(tester);
     expect(vm.captureBlocks.single.frameCount, 10);
@@ -262,7 +259,7 @@ void main() {
   // the badge lasts until the first edit); a replaced plan is never touched.
   group('Delete with Undo owns only the deleted block (TD-082)', () {
     Future<void> deleteFirst(WidgetTester tester) async {
-      await tester.tap(find.byTooltip('Delete block').first);
+      await tester.tap(find.byKey(const Key('capture.delete.0')));
       await settle(tester);
     }
 
@@ -276,7 +273,9 @@ void main() {
 
       await deleteFirst(tester);
       expect(vm.plan.isExampleCapturePlan, isFalse);
-      await tester.tap(find.byTooltip('Add capture block'));
+      await tester.ensureVisible(find.byKey(const Key('capturePlan.addBlock')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('capturePlan.addBlock')));
       await tester.pumpAndSettle();
       await tester.enterText(blockField('Exposure (seconds)'), '60');
       await tester.enterText(blockField('Frames'), '7');
@@ -295,7 +294,9 @@ void main() {
       }
       expect(vm.captureBlocks.last.frameCount, 7);
       expect(vm.plan.isExampleCapturePlan, isFalse);
-      expect(find.text(ExampleText.plan), findsNothing);
+      // The badge sits in the planner's Capture plan heading (planner tests);
+      // here its source, the plan's example flag.
+      expect(vm.plan.isExampleCapturePlan, isFalse);
       expect(find.text(notUndone), findsNothing);
       expect(await storedFrames(tester), [100, 20, 20, 7]);
     });
@@ -327,7 +328,9 @@ void main() {
       final example = vm.captureBlocks.toList();
 
       await deleteFirst(tester);
-      expect(find.text(ExampleText.plan), findsNothing);
+      // The badge sits in the planner's Capture plan heading (planner tests);
+      // here its source, the plan's example flag.
+      expect(vm.plan.isExampleCapturePlan, isFalse);
       await tapUndo(tester);
 
       expect(vm.captureBlocks, hasLength(3));
@@ -339,7 +342,7 @@ void main() {
         );
       }
       expect(vm.plan.isExampleCapturePlan, isTrue);
-      expect(find.text(ExampleText.plan), findsOneWidget);
+      expect(vm.plan.isExampleCapturePlan, isTrue);
       expect(await storedFrames(tester), [100, 20, 20]);
     });
 
@@ -370,7 +373,7 @@ void main() {
       final snapshot = jsonEncode(saved.planSnapshot!.json);
       final before = vm.captureBlocks.toList();
 
-      await tester.tap(find.byTooltip('Delete block').at(1));
+      await tester.tap(find.byKey(const Key('capture.delete.1')));
       await settle(tester);
       await tapUndo(tester);
 

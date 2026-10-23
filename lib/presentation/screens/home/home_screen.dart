@@ -37,13 +37,13 @@ import '../../shared/unsaved_plan_prompt.dart';
 import '../../shared/plan_night_phrase.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../shared/hybrid_parts.dart';
+import '../../shared/rig_summary_text.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/models/moon_conditions.dart';
 import '../../../domain/models/night_timeline.dart';
 import '../../../domain/models/night_weather.dart';
 import '../../../domain/models/night_weather_summary.dart';
 import '../../../domain/models/session_night.dart';
-import '../../../domain/models/tracking_type.dart';
 import '../../../domain/models/camera_class.dart';
 import 'plan_context_screen.dart';
 
@@ -161,14 +161,10 @@ class HomeScreen extends StatelessWidget {
                             : equipment.name,
                         caption: equipment == null
                             ? AppWords.chooseRig
-                            : [
-                                // RD-04 (S6.8): the example says it is one.
-                                if (equipment.isExample) ExampleText.rig,
-                                equipment.cameraClass.label,
-                                '${_trimNumber(equipment.focalLengthMm)} mm '
-                                    '${_focalRatio(equipment)}',
-                                'tracking ${_trackingWords(planVm.effectiveTracking)}',
-                              ].join(' · '),
+                            : RigSummaryText.of(
+                                equipment,
+                                tracking: planVm.effectiveTracking,
+                              ),
                         // D8 A: a rig created there becomes this plan's.
                         onTap: () => context.push(
                           equipment == null
@@ -358,12 +354,16 @@ class _SaveBar extends StatelessWidget {
                 ),
               ),
             ),
+            // plan.css `.savebar-row` wraps: on a narrow bar the remedy's
+            // words wrap instead of pushing past the edge.
             if (missing != null)
-              TextButton(
-                key: const Key('planner.saveFix'),
-                onPressed: () =>
-                    context.push(missing.route ?? AppRouter.selectSite),
-                child: Text(missing.action ?? 'Set a site'),
+              Flexible(
+                child: TextButton(
+                  key: const Key('planner.saveFix'),
+                  onPressed: () =>
+                      context.push(missing.route ?? AppRouter.selectSite),
+                  child: Text(missing.action ?? 'Set a site'),
+                ),
               ),
           ],
         ),
@@ -484,6 +484,9 @@ class _PlanMenu extends StatelessWidget {
     return PopupMenuButton<_PlanAction>(
       key: const Key('planner.menu'),
       tooltip: 'Plan actions',
+      // plan.css `.plan-menu`: 220 wide, under the app bar.
+      constraints: const BoxConstraints(minWidth: 220),
+      offset: const Offset(0, AppSpacing.md),
       icon: HybridIcon(
         HybridIcons.planMore,
         size: MediaQuery.textScalerOf(context).scale(24),
@@ -496,11 +499,13 @@ class _PlanMenu extends StatelessWidget {
       itemBuilder: (context) => [
         const PopupMenuItem(
           key: Key('planner.newPlan'),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
           value: _PlanAction.newPlan,
           child: Text(AppWords.newPlan),
         ),
         const PopupMenuItem(
           key: Key('planner.copy'),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
           value: _PlanAction.copy,
           child: Text(AppWords.copyToAnotherNight),
         ),
@@ -595,14 +600,6 @@ String? _blockCount(SessionPlanViewModel plan) {
     '$frames frame${frames == 1 ? '' : 's'}',
   ].join(' · ');
 }
-
-/// The rig row's tracking words (plan.js: "tracking not recorded").
-String _trackingWords(TrackingType t) => switch (t) {
-  TrackingType.unknown => 'not recorded',
-  TrackingType.untracked => 'untracked',
-  TrackingType.tracked => 'tracked',
-  TrackingType.guided => 'guided',
-};
 
 /// Plan's Night & Moon row value: "7 h 30 min dark · 21:15–04:45", or why
 /// there is none (plan.js night rows; clock times without the day tag).

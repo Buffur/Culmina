@@ -21,8 +21,8 @@ import 'package:astroplan/domain/services/capture_budget_calculator.dart';
 import 'package:astroplan/domain/services/fit_analyzer.dart';
 import 'package:astroplan/presentation/shared/block_text.dart';
 import 'package:astroplan/presentation/shared/change_mark.dart';
-import 'package:astroplan/presentation/widgets/capture_plan/capture_budget_summary.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
+import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,6 +116,9 @@ void main() {
         await vm.plan.setEquipment((await rigs.getEquipmentById(rigId))!);
       }
       await vm.plan.idle;
+      // Hybrid: the budget facts and the file-size basis are inside Budget
+      // and assumptions.
+      await vm.disclosure.setOpen(PlannerSections.budgetDetails, true);
     });
     addTearDown(() => tester.runAsync(db.close));
     await tester.pumpWidget(
@@ -145,11 +148,20 @@ void main() {
     await tester.pump(const Duration(seconds: 2)); // past any change mark
   }
 
-  String textOf(WidgetTester tester, Key key) =>
-      tester.widget<Text>(find.byKey(key)).data!;
+  // A Text's own words, or a fact's value (its last Text).
+  String textOf(WidgetTester tester, Key key) {
+    final w = tester.widget(find.byKey(key));
+    if (w is Text) return w.data!;
+    return tester
+        .widgetList<Text>(
+          find.descendant(of: find.byKey(key), matching: find.byType(Text)),
+        )
+        .last
+        .data!;
+  }
 
-  testWidgets('Time needed · Total time equal the calculator (ADR-009 §8 '
-      'E1)', (tester) async {
+  testWidgets('the window load and the total equal the calculator (ADR-009 '
+      '§8 E1)', (tester) async {
     await start(tester, rig: _rig());
     await tester.runAsync(
       () => vm.setPlanningPreferences(
@@ -169,11 +181,19 @@ void main() {
     expect(b.sessionBudgetMs, 11920 * _s);
     // The approved Hybrid design writes capture budgets to the second
     // (`QuantityText.budgetDuration`); 11 920 s is 3 h 18 min 40 s.
-    expect(
-      CaptureBudgetSummary.budgetSummary(b),
-      'Time needed 3 h 18 min 40 s · Total time 3 h 18 min 40 s',
-    );
-    expect(find.text(CaptureBudgetSummary.budgetSummary(b)), findsOneWidget);
+    // Budget and assumptions: the window load and the total, each as the
+    // calculator gives it.
+    String fact(String key) => tester
+        .widgetList<Text>(
+          find.descendant(
+            of: find.byKey(Key(key)),
+            matching: find.byType(Text),
+          ),
+        )
+        .last
+        .data!;
+    expect(fact('budget.timeNeeded'), startsWith('3 h 18 min 40 s'));
+    expect(fact('budget.totalTime'), '3 h 18 min 40 s');
   });
 
   group('storage', () {
@@ -198,7 +218,7 @@ void main() {
                 matching: find.byType(Text),
               ),
             )
-            .last
+            .elementAt(1)
             .data,
         // F07: decimal units, two decimals (QuantityText.storage).
         '1.50 GB',
@@ -282,21 +302,14 @@ void main() {
           overheads: CaptureOverheads.fromPreferences(vm.planningPreferences),
         );
         expect(vm.analysis.framesThatFit(i), upTo, reason: 'block $i');
+        if (!block.isLight) continue; // a calibration block's placement
         final expected = BlockText.whatFits(
           block,
           unplaced: fit.unplacedFramesByBlock[i] ?? 0,
           upTo: upTo,
-          spare: upTo != null && upTo > block.frameCount
-              ? upTo - block.frameCount
-              : null,
           others: others,
         );
-        final row = find.byKey(Key('capture.whatFits.$i'));
-        if (expected == null) {
-          expect(row, findsNothing, reason: 'block $i');
-        } else {
-          expect(textOf(tester, Key('capture.whatFits.$i')), expected);
-        }
+        expect(textOf(tester, Key('capture.whatFits.$i')), expected);
       }
     }
 
@@ -309,7 +322,7 @@ void main() {
       expect(vm.analysis.fillWindowSpareFrames, max - 2);
       expect(
         textOf(tester, const Key('capture.whatFits.0')),
-        '+${max - 2} frames still fit tonight',
+        "Fits: room for up to $max frames like this in tonight's window",
       );
       expectRowsMatchTheFit(tester);
     });
@@ -326,8 +339,7 @@ void main() {
       expect(max, greaterThan(0), reason: 'part of the last block fits');
       expect(
         textOf(tester, const Key('capture.whatFits.1')),
-        '$unplaced frames do not fit tonight · up to $max × 300 s fit '
-        '(other blocks as planned)',
+        "Only $max of 400 frames fit tonight's window",
       );
       expectRowsMatchTheFit(tester);
     });
@@ -350,11 +362,16 @@ void main() {
         expect(max, greaterThan(4));
         expect(
           textOf(tester, Key('capture.whatFits.$i')),
-          '+${max - 4} frames still fit tonight (other blocks as planned)',
+          "Fits: room for up to $max frames like this in tonight's window "
+          '(other blocks as planned)',
         );
       }
       expect(vm.analysis.framesThatFit(2), isNull, reason: 'a dark');
-      expect(find.byKey(const Key('capture.whatFits.2')), findsNothing);
+      // The dark (taken outside the window) says only where its time goes.
+      expect(
+        textOf(tester, const Key('capture.whatFits.2')),
+        'Outside the imaging window · adds to total time',
+      );
       expectRowsMatchTheFit(tester);
     });
 
@@ -370,7 +387,12 @@ void main() {
         ),
       ]);
       expect(vm.fitAnalysis.state, FitState.nothingToFit);
-      expect(find.byKey(const Key('capture.whatFits.0')), findsNothing);
+      // No fit is claimed; a dark taken outside the window says only where
+      // its time goes (plan.js fitLine).
+      expect(
+        tester.widget<Text>(find.byKey(const Key('capture.whatFits.0'))).data,
+        'Outside the imaging window · adds to total time',
+      );
     });
   });
 
@@ -413,11 +435,11 @@ void main() {
       expect(tintOf(tester, mark), 0);
     });
 
-    testWidgets('an edit marks Time needed · Total time', (tester) async {
+    testWidgets('an edit marks Budget and assumptions', (tester) async {
       await start(tester, rig: _rig());
       await blocks(tester, [_light(60, 10, 'L')]);
       final budgetMark = find.ancestor(
-        of: find.text(CaptureBudgetSummary.budgetSummary(vm.captureBudget)),
+        of: find.text('Budget and assumptions'),
         matching: find.byKey(const Key('changeMark')),
       );
       expect(tintOf(tester, budgetMark.first), 0);
@@ -425,7 +447,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       final changed = find.ancestor(
-        of: find.text(CaptureBudgetSummary.budgetSummary(vm.captureBudget)),
+        of: find.text('Budget and assumptions'),
         matching: find.byKey(const Key('changeMark')),
       );
       expect(tintOf(tester, changed.first), greaterThan(0));

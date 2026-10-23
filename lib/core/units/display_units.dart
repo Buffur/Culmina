@@ -6,6 +6,24 @@ library;
 
 /// Appearance (PD-20): System (the default, D1 = A, new installs too),
 /// Light or Dark. Field mode is separate and unchanged.
+/// How the Weather page shows the night's hours (Hybrid, Settings →
+/// Appearance): A · Compact rows (the default) or B · Hourly charts. Both
+/// show the same data; the choice changes no plan.
+enum WeatherView {
+  rows('Compact rows', 'A'),
+  charts('Hourly charts', 'B');
+
+  const WeatherView(this.label, this.letter);
+
+  final String label;
+  final String letter;
+
+  /// An absent or unknown stored value (an older install or backup) reads
+  /// as the default, rows.
+  static WeatherView fromStorage(String? name) =>
+      values.firstWhere((v) => v.name == name, orElse: () => rows);
+}
+
 enum Appearance {
   system('System'),
   light('Light'),

@@ -18,6 +18,7 @@ import 'package:astroplan/domain/repositories/planning_preferences_repository.da
 import 'package:astroplan/domain/repositories/storage_failure.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -166,7 +167,7 @@ void main() {
     final headings = [
       'Capture budget',
       'Imaging window',
-      'Advanced',
+      'Gates and optional times',
       'Guidance',
     ];
     final ys = [
@@ -185,11 +186,11 @@ void main() {
     final before = vm.imagingOpportunity!.usableTime;
     expect(before, greaterThan(Duration.zero));
 
-    await tester.tap(inTile('settings.moonGate', Switch));
+    await tester.tap(inTile('settings.moonGate', HybridSwitch));
     await tester.pump();
     expect(vm.planningPreferences.moonGateEnabled, isFalse);
     expect(
-      find.text('Excludes time when the Moon is up and at least 50 % lit.'),
+      find.text('Excludes time when the Moon is up and at least 50% lit.'),
       findsOneWidget,
     );
     // Drag the threshold to 0 %: any Moon above the horizon excludes time.
@@ -200,7 +201,7 @@ void main() {
     await tester.pump();
     expect(vm.imagingOpportunity!.usableTime, before);
 
-    await tester.tap(inTile('settings.cloudGate', Switch));
+    await tester.tap(inTile('settings.cloudGate', HybridSwitch));
     await tester.pump();
     await save(tester);
     expect(vm.planningPreferences.moonGateMinIlluminationPct, 0);
@@ -220,7 +221,7 @@ void main() {
     await tester.pump();
     final before = vm.imagingOpportunity!.usableTime;
     expect(before, greaterThan(Duration.zero));
-    await tester.tap(inTile('settings.cloudGate', Switch));
+    await tester.tap(inTile('settings.cloudGate', HybridSwitch));
     await tester.pump();
     expect(vm.imagingOpportunity!.usableTime, before);
     await save(tester, reopen: true);
@@ -258,7 +259,7 @@ void main() {
   testWidgets('an overhead\'s value is edited within its range, persists and '
       'changes the budget', (tester) async {
     await build(tester);
-    await tester.tap(inTile('settings.dither', Switch));
+    await tester.tap(inTile('settings.dither', HybridSwitch));
     await tester.pump();
     final load = vm.captureBudget.windowLoadMs;
     await tester.tap(find.byTooltip('Settle: more'));
@@ -285,7 +286,7 @@ void main() {
 
   testWidgets('a setting that cannot be saved says so', (tester) async {
     await build(tester, preferences: _Broken());
-    await tester.tap(inTile('settings.cloudGate', Switch));
+    await tester.tap(inTile('settings.cloudGate', HybridSwitch));
     await tester.pump();
     await save(tester);
     expect(find.byKey(const Key('settings.unsaved')), findsOneWidget);

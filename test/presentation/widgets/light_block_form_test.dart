@@ -239,8 +239,12 @@ void main() {
   ) async {
     final result = <CaptureBlock?>[];
     await open(tester, result, proposal: _light(exposure: 60));
-    await tester.tap(find.text('Cancel'));
+    await tester.tap(find.byKey(const Key('blockDialog.cancel')));
     await tester.pumpAndSettle();
+    if (find.byKey(const Key('discardEdit.discard')).evaluate().isNotEmpty) {
+      await tester.tap(find.byKey(const Key('discardEdit.discard')));
+      await tester.pumpAndSettle();
+    }
     expect(result.single, isNull);
   });
 

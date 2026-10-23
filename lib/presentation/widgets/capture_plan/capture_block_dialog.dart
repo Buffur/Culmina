@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_block.dart';
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/hybrid_tokens.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/services/block_proposal.dart';
 import '../../../domain/services/calibration_match.dart';
@@ -16,6 +15,8 @@ import '../../shared/calibration_text.dart';
 import '../../shared/capture_settings_text.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/hybrid_icon.dart';
+import '../../shared/hybrid_parts.dart';
 import '../../shared/proposal_text.dart';
 import '../../shared/display_units_of.dart';
 import 'block_editor_parts.dart';
@@ -660,17 +661,6 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
   }
 
   Future<void> _submit() async {
-    // A field inside the closed Details is not built, so the form cannot
-    // check it: open Details first when its tint is invalid, so the check
-    // runs and its message shows (never a silent drop or a dead button).
-    if (!_details &&
-        _showCameraRecords &&
-        _tintApplies &&
-        _validateTint(_tint.text) != null) {
-      setState(() => _details = true);
-      await WidgetsBinding.instance.endOfFrame;
-      if (!mounted) return;
-    }
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final block = _build();
     _leaving = true;
@@ -772,7 +762,10 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
               key: const Key('blockDialog.binning'),
               initialValue: _binning,
               isExpanded: true, // S7.2b: wraps at 200 % text
+              style: Theme.of(context).textTheme.bodyLarge,
+              icon: hybridSelectIcon(context),
               decoration: InputDecoration(
+                contentPadding: hybridSelectPadding,
                 helperText:
                     _from(CaptureField.binning, _binning) ??
                     '1x1 is no binning.',
@@ -791,18 +784,8 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     final secondary = AppPalette.of(context).textSecondary;
     // plan.css: .screen-context 13 px, secondary.
     final context13 = text.bodySmall?.copyWith(fontSize: 13, color: secondary);
-    final policyShort = switch (_policy) {
-      CalibrationPolicy.outsideWindow => 'outside the imaging window',
-      CalibrationPolicy.inWindow => 'during the imaging window',
-      CalibrationPolicy.library => 'from your library',
-    };
-    final detailsSummary = [
-      if (_showBinning) 'Binning ${_binning}x$_binning',
-      isLight ? 'Inside the imaging window' : 'Taken $policyShort',
-      // A recorded tint is said while Details is closed.
-      if (_showCameraRecords && _tintApplies && _tint.text.trim().isNotEmpty)
-        'Tint ${_tint.text.trim()}',
-    ].join(' · ');
+    // plan.js blockView: what Details holds, by camera class.
+    final detailsSummary = _showBinning ? 'Binning and timing' : 'Timing';
     return CallbackShortcuts(
       bindings: {const SingleActivator(LogicalKeyboardKey.escape): _leave},
       child: Focus(
@@ -820,11 +803,17 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
               toolbarHeight: MediaQuery.textScalerOf(context).scale(1) >= 1.5
                   ? 96
                   : 56,
+              // The editor's only way out without applying (plan.js
+              // closeTop): a changed editor asks "Discard this edit?".
               leading: IconButton(
-                key: const Key('blockEditor.close'),
+                key: const Key('blockDialog.cancel'),
                 tooltip: 'Close editor',
                 onPressed: _leave,
-                icon: const Icon(Icons.close),
+                icon: HybridIcon(
+                  HybridIcons.close,
+                  size: MediaQuery.textScalerOf(context).scale(24),
+                  strokeWidth: 1.8,
+                ),
               ),
               // Hybrid's scoped-screen titles (plan.js screenTitle).
               title: Text(
@@ -835,436 +824,401 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
             body: SafeArea(
               top: false,
               bottom: false,
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  key: const Key('blockEditor.scroll'),
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                  // Hybrid's scoped form (plan.js blockView, plan.css
-                  // .scoped-form): one column, 20 px between its parts.
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 20,
-                    children: [
-                      Text(
-                        'Rig: ${widget.rigName ?? 'none chosen'}',
-                        key: const Key('blockDialog.rig'),
-                        style: context13,
-                      ),
-                      if (widget.proposal != null && isLight)
+              child: HybridPlanInputs(
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    key: const Key('blockEditor.scroll'),
+                    // plan.css `.plan-main` 20 at the sides; the scoped form
+                    // starts 12 below the app bar (padding 8 + 4).
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+                    // Hybrid's scoped form (plan.js blockView, plan.css
+                    // .scoped-form): one column, 20 px between its parts.
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 20,
+                      children: [
                         Text(
-                          'Proposed from your last light block: exposure, '
-                          '${fixed == GainKind.gain ? 'gain' : 'ISO'} and '
-                          'binning. Change them if needed.',
-                          key: const Key('blockDialog.proposal'),
+                          'Rig: ${widget.rigName ?? 'none chosen'}',
+                          key: const Key('blockDialog.rig'),
                           style: context13,
                         ),
-                      HybridSegmented<FrameType>(
-                        key: const Key('blockDialog.frameType'),
-                        legend: 'Frame type',
-                        keyPrefix: 'blockDialog.frameType',
-                        value: _type,
-                        options: [
-                          for (final t in FrameType.values)
-                            (t, BlockText.type(t), t.name),
-                        ],
-                        onChanged: (t) {
-                          if (t != _type) _setType(t);
-                        },
-                      ),
-                      if (tip != null && _tipsShown)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _tipMore ? '${tip.$1} ${tip.$2}' : tip.$1,
-                              key: const Key('blockDialog.tip'),
-                              style: muted,
-                            ),
-                            Wrap(
-                              spacing: 8,
-                              children: [
-                                TextButton(
-                                  key: const Key('blockDialog.tipMore'),
-                                  onPressed: () =>
-                                      setState(() => _tipMore = !_tipMore),
-                                  child: Text(_tipMore ? 'Less' : 'More'),
-                                ),
-                                TextButton(
-                                  key: const Key('blockDialog.hideTips'),
-                                  onPressed: () => _setTipsShown(false),
-                                  child: const Text('Hide tips'),
-                                ),
-                              ],
-                            ),
+                        if (widget.proposal != null && isLight)
+                          Text(
+                            'Proposed from your last light block: exposure, '
+                            '${fixed == GainKind.gain ? 'gain' : 'ISO'} and '
+                            'binning. Change them if needed.',
+                            key: const Key('blockDialog.proposal'),
+                            style: context13,
+                          ),
+                        HybridSegmented<FrameType>(
+                          key: const Key('blockDialog.frameType'),
+                          legend: 'Frame type',
+                          keyPrefix: 'blockDialog.frameType',
+                          value: _type,
+                          options: [
+                            for (final t in FrameType.values)
+                              (t, BlockText.type(t), t.name),
                           ],
-                        )
-                      else if (tip != null)
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextButton(
-                            key: const Key('blockDialog.showTips'),
-                            onPressed: () => _setTipsShown(true),
-                            child: const Text('Show tips'),
-                          ),
-                        ),
-                      if (from != null) ...[
-                        BlockField(
-                          label: _type == FrameType.darkFlat
-                              ? 'Matches the flat block'
-                              : 'Matches the light block',
-                          child: DropdownButtonFormField<int>(
-                            key: const Key('blockDialog.source'),
-                            initialValue: _sourceIndex.clamp(
-                              0,
-                              sources.length - 1,
-                            ),
-                            isExpanded: true,
-                            items: [
-                              for (var i = 0; i < sources.length; i++)
-                                DropdownMenuItem(
-                                  value: i,
-                                  child: Text(BlockText.row(sources[i], null)),
-                                ),
-                            ],
-                            onChanged: (v) {
-                              if (v != null) {
-                                setState(() {
-                                  _sourceIndex = v;
-                                  _prefillFlatGain();
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              CalibrationText.inherited(
-                                _type,
-                                from,
-                                withBinning:
-                                    widget.cameraClass.offersLightBinning,
-                              ),
-                              key: const Key('blockDialog.inherited'),
-                            ),
-                            TextButton(
-                              key: const Key('blockDialog.useOther'),
-                              onPressed: _useOtherValues,
-                              child: const Text('Use other values'),
-                            ),
-                          ],
-                        ),
-                      ],
-                      // Hybrid's "From a photo" disclosure, light blocks only.
-                      if (widget.fromPhoto != null && isLight)
-                        BlockDisclosure(
-                          key: const Key('blockDialog.photo'),
-                          title: 'From a photo',
-                          summary: _picked == null
-                              ? null
-                              : ProposalText.title(_picked!),
-                          open: _photoOpen,
-                          onToggle: () =>
-                              setState(() => _photoOpen = !_photoOpen),
-                          children: _photoReview(muted),
-                        ),
-                      // A keystroke rebuilds only this field and the total,
-                      // not the whole form (PERF: ~480 elements before).
-                      if (_typesExposure)
-                        ListenableBuilder(
-                          listenable: _exposure,
-                          builder: (context, _) => BlockField(
-                            label: 'Exposure (seconds)',
-                            // Where the value came from (.field-source).
-                            note: _from(
-                              CaptureField.exposure,
-                              ExposureInput.parse(_exposure.text),
-                            ),
-                            noteKey: const Key('blockDialog.exposureSource'),
-                            hint: _type == FrameType.bias
-                                ? 'The shortest your camera allows.'
-                                : 'For example 60, 2.5 or 1/125.',
-                            child: TextFormField(
-                              key: const Key('blockDialog.exposure'),
-                              controller: _exposure,
-                              decoration: const InputDecoration(
-                                hintText: 'e.g. 60 or 1/14',
-                                errorMaxLines: 3,
-                              ),
-                              // Fractions need "/", which a number pad lacks (C14).
-                              keyboardType: TextInputType.text,
-                              autocorrect: false,
-                              // Not shown; read only by the frame-type switch.
-                              onChanged: (_) => _exposureFromProposal = false,
-                              validator: (value) =>
-                                  ExposureInput.problem(value ?? ''),
-                            ),
-                          ),
-                        ),
-                      BlockField(
-                        label: 'Frames',
-                        child: TextFormField(
-                          key: const Key('blockDialog.count'),
-                          controller: _count,
-                          decoration: const InputDecoration(
-                            hintText: 'e.g. 30',
-                            errorMaxLines: 3,
-                          ),
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            final count = int.tryParse((value ?? '').trim());
-                            if (count == null || count < 1) {
-                              return 'Enter a whole number of at least 1';
-                            }
-                            if (count > CaptureBlock.maxFrameCount) {
-                              return 'At most ${CaptureBlock.maxFrameCount}';
-                            }
-                            return null;
+                          onChanged: (t) {
+                            if (t != _type) _setType(t);
                           },
                         ),
-                      ),
-                      // Hybrid's live total (.live-total), from the typed values.
-                      ListenableBuilder(
-                        listenable: _typed,
-                        builder: (context, _) => Semantics(
-                          liveRegion: true,
-                          child: Text(
-                            _total(),
-                            key: const Key('blockDialog.total'),
-                            style: text.bodyMedium?.copyWith(
-                              fontSize: 14,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      if ((isLight || _type == FrameType.flat) && !takesFilter)
-                        BlockField(
-                          label: 'Filter (optional)',
-                          hint: 'None means no filter.',
-                          note: _from(
-                            CaptureField.filter,
-                            _filter == 'None' ? null : _filter,
-                          ),
-                          child: DropdownButtonFormField<String>(
-                            key: const Key('blockDialog.filter'),
-                            initialValue: _filter,
-                            isExpanded: true, // S7.2b: wraps at 200 % text
-                            items: [
-                              for (final f in _filterOptions)
-                                DropdownMenuItem(value: f, child: Text(f)),
-                            ],
-                            onChanged: (v) {
-                              if (v != null) setState(() => _filter = v);
-                            },
-                          ),
-                        ),
-                      if (fixed != null && !takesGain)
-                        BlockField(
-                          label: fixed == GainKind.iso
-                              ? 'ISO (optional)'
-                              : 'Gain (optional)',
-                          hint:
-                              'Recorded only; it does not change the plan. '
-                              'Leave blank to keep it unrecorded.',
-                          note: _from(CaptureField.sensitivity, _typedGain()),
-                          child: TextFormField(
-                            key: const Key('blockDialog.gainValue'),
-                            controller: _gainValue,
-                            decoration: const InputDecoration(
-                              hintText: 'Unrecorded',
-                              errorMaxLines: 3,
-                            ),
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            validator: _validateGain,
-                            onChanged: (_) =>
-                                setState(() => _gainEdited = true),
-                          ),
-                        ),
-                      // ADR-021 C13: Unknown records no ISO or gain; the remedy is
-                      // the rig's camera type, never a guessed kind.
-                      if (fixed == null && !takesGain)
-                        Text(
-                          'ISO or gain: set the rig’s camera type (Rigs → Edit '
-                          'rig) to record it here.',
-                          key: const Key('blockDialog.chooseClass'),
-                          style: muted,
-                        ),
-                      if (_showCameraRecords) ..._cameraRecords(muted),
-                      if (kept.isNotEmpty)
-                        Text(
-                          'Also recorded: ${kept.join(', ')} (kept as it was).',
-                          key: const Key('blockDialog.kept'),
-                          style: muted,
-                        ),
-                      // Hybrid's Details disclosure (binning and timing), with the
-                      // current values in its summary so nothing hides silently.
-                      BlockDisclosure(
-                        key: const Key('blockDialog.details'),
-                        title: 'Details',
-                        summary: detailsSummary,
-                        open: _details,
-                        onToggle: () => setState(() => _details = !_details),
-                        children: [
-                          ?binning,
-                          if (isLight)
-                            Text(
-                              'Light frames are planned inside the imaging '
-                              'window.',
-                              style: muted,
-                            )
-                          else
-                            BlockField(
-                              label: 'Planned timing',
-                              child: DropdownButtonFormField<CalibrationPolicy>(
-                                key: const Key('blockDialog.policy'),
-                                initialValue: _policy,
-                                isExpanded: true, // S7.2b: wraps at 200 % text
-                                decoration: const InputDecoration(
-                                  helperText:
-                                      'Proposed: outside the window, so '
-                                      'calibration doesn’t use imaging time.',
-                                  helperMaxLines: 3,
-                                ),
-                                items: const [
-                                  DropdownMenuItem(
-                                    value: CalibrationPolicy.outsideWindow,
-                                    child: Text(
-                                      'Outside the window (twilight/dawn)',
-                                    ),
+                        if (tip != null && _tipsShown)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _tipMore ? '${tip.$1} ${tip.$2}' : tip.$1,
+                                key: const Key('blockDialog.tip'),
+                                style: muted,
+                              ),
+                              Wrap(
+                                spacing: 8,
+                                children: [
+                                  TextButton(
+                                    key: const Key('blockDialog.tipMore'),
+                                    onPressed: () =>
+                                        setState(() => _tipMore = !_tipMore),
+                                    child: Text(_tipMore ? 'Less' : 'More'),
                                   ),
-                                  DropdownMenuItem(
-                                    value: CalibrationPolicy.inWindow,
-                                    child: Text('During the window'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: CalibrationPolicy.library,
-                                    child: Text(
-                                      'From your library (no window time)',
-                                    ),
+                                  TextButton(
+                                    key: const Key('blockDialog.hideTips'),
+                                    onPressed: () => _setTipsShown(false),
+                                    child: const Text('Hide tips'),
                                   ),
                                 ],
-                                onChanged: (v) {
-                                  if (v != null) setState(() => _policy = v);
+                              ),
+                            ],
+                          )
+                        else if (tip != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              key: const Key('blockDialog.showTips'),
+                              onPressed: () => _setTipsShown(true),
+                              child: const Text('Show tips'),
+                            ),
+                          ),
+                        if (from != null) ...[
+                          BlockField(
+                            label: _type == FrameType.darkFlat
+                                ? 'Matches the flat block'
+                                : 'Matches the light block',
+                            child: DropdownButtonFormField<int>(
+                              key: const Key('blockDialog.source'),
+                              decoration: const InputDecoration(
+                                contentPadding: hybridSelectPadding,
+                              ),
+                              initialValue: _sourceIndex.clamp(
+                                0,
+                                sources.length - 1,
+                              ),
+                              isExpanded: true,
+                              style: text.bodyLarge,
+                              icon: hybridSelectIcon(context),
+                              items: [
+                                for (var i = 0; i < sources.length; i++)
+                                  DropdownMenuItem(
+                                    value: i,
+                                    child: Text(
+                                      BlockText.row(sources[i], null),
+                                    ),
+                                  ),
+                              ],
+                              onChanged: (v) {
+                                if (v != null) {
+                                  setState(() {
+                                    _sourceIndex = v;
+                                    _prefillFlatGain();
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                CalibrationText.inherited(
+                                  _type,
+                                  from,
+                                  withBinning:
+                                      widget.cameraClass.offersLightBinning,
+                                ),
+                                key: const Key('blockDialog.inherited'),
+                              ),
+                              TextButton(
+                                key: const Key('blockDialog.useOther'),
+                                onPressed: _useOtherValues,
+                                child: const Text('Use other values'),
+                              ),
+                            ],
+                          ),
+                        ],
+                        // Hybrid's "From a photo" disclosure, light blocks only.
+                        if (widget.fromPhoto != null && isLight)
+                          BlockDisclosure(
+                            key: const Key('blockDialog.photo'),
+                            title: 'From a photo',
+                            small: true,
+                            summary: _picked == null
+                                ? null
+                                : ProposalText.title(_picked!),
+                            open: _photoOpen,
+                            onToggle: () =>
+                                setState(() => _photoOpen = !_photoOpen),
+                            children: _photoReview(muted),
+                          ),
+                        // A keystroke rebuilds only this field and the total,
+                        // not the whole form (PERF: ~480 elements before).
+                        if (_typesExposure)
+                          ListenableBuilder(
+                            listenable: _exposure,
+                            builder: (context, _) => BlockField(
+                              label: 'Exposure (seconds)',
+                              // Where the value came from (.field-source).
+                              note: _from(
+                                CaptureField.exposure,
+                                ExposureInput.parse(_exposure.text),
+                              ),
+                              noteKey: const Key('blockDialog.exposureSource'),
+                              hint: _type == FrameType.bias
+                                  ? 'The shortest your camera allows.'
+                                  : 'For example 60, 2.5 or 1/125.',
+                              child: TextFormField(
+                                key: const Key('blockDialog.exposure'),
+                                controller: _exposure,
+                                decoration: const InputDecoration(
+                                  hintText: 'e.g. 60 or 1/14',
+                                  errorMaxLines: 3,
+                                ),
+                                // Fractions need "/", which a number pad lacks (C14).
+                                keyboardType: TextInputType.text,
+                                autocorrect: false,
+                                // Not shown; read only by the frame-type switch.
+                                onChanged: (_) => _exposureFromProposal = false,
+                                validator: (value) =>
+                                    ExposureInput.problem(value ?? ''),
+                              ),
+                            ),
+                          ),
+                        // .live-total sits 12 below Frames (margin-top -8).
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 12,
+                          children: [
+                            BlockField(
+                              label: 'Frames',
+                              child: TextFormField(
+                                key: const Key('blockDialog.count'),
+                                controller: _count,
+                                decoration: const InputDecoration(
+                                  hintText: 'e.g. 30',
+                                  errorMaxLines: 3,
+                                ),
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  final count = int.tryParse(
+                                    (value ?? '').trim(),
+                                  );
+                                  if (count == null || count < 1) {
+                                    return 'Enter a whole number of at least 1';
+                                  }
+                                  if (count > CaptureBlock.maxFrameCount) {
+                                    return 'At most ${CaptureBlock.maxFrameCount}';
+                                  }
+                                  return null;
                                 },
                               ),
                             ),
-                          if (_showCameraRecords && _tintApplies)
-                            BlockField(
-                              label: 'White balance tint (optional)',
-                              child: TextFormField(
-                                key: const Key('blockDialog.tint'),
-                                controller: _tint,
-                                decoration: const InputDecoration(
-                                  helperText:
-                                      'As the camera shows it; no unit.',
+                            // Hybrid's live total (.live-total), from the typed values.
+                            ListenableBuilder(
+                              listenable: _typed,
+                              builder: (context, _) => Semantics(
+                                liveRegion: true,
+                                child: Text(
+                                  _total(),
+                                  key: const Key('blockDialog.total'),
+                                  style: text.bodyMedium?.copyWith(
+                                    fontSize: 14,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  ),
                                 ),
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                      signed: true,
-                                    ),
-                                validator: _validateTint,
-                                onChanged: (_) => setState(() {}),
                               ),
                             ),
-                          if (origins.isNotEmpty)
-                            Text(
-                              [
-                                'Where the values came from:',
-                                for (final e in origins.entries)
-                                  '${CaptureSettingsText.field(e.key)}: '
-                                      '${CaptureSettingsText.origin(e.value)}',
-                              ].join('\n'),
-                              key: const Key('blockDialog.origins'),
-                              style: muted,
+                          ],
+                        ),
+                        if ((isLight || _type == FrameType.flat) &&
+                            !takesFilter)
+                          BlockField(
+                            label: 'Filter (optional)',
+                            hint: 'None means no filter.',
+                            note: _from(
+                              CaptureField.filter,
+                              _filter == 'None' ? null : _filter,
                             ),
-                        ],
-                      ),
-                      Text(
-                        'Records describe how you plan to shoot. Culmina does not '
-                        'control a camera.',
-                        style: muted,
-                      ),
-                    ],
+                            child: DropdownButtonFormField<String>(
+                              key: const Key('blockDialog.filter'),
+                              decoration: const InputDecoration(
+                                contentPadding: hybridSelectPadding,
+                              ),
+                              initialValue: _filter,
+                              isExpanded: true, // S7.2b: wraps at 200 % text
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              icon: hybridSelectIcon(context),
+                              items: [
+                                for (final f in _filterOptions)
+                                  DropdownMenuItem(value: f, child: Text(f)),
+                              ],
+                              onChanged: (v) {
+                                if (v != null) setState(() => _filter = v);
+                              },
+                            ),
+                          ),
+                        if (fixed != null && !takesGain)
+                          BlockField(
+                            label: fixed == GainKind.iso
+                                ? 'ISO (optional)'
+                                : 'Gain (optional)',
+                            // plan.js blockView: ISO says how to leave it
+                            // unrecorded; gain has no hint.
+                            hint: fixed == GainKind.iso
+                                ? 'Leave blank to keep it unrecorded.'
+                                : null,
+                            note: _from(CaptureField.sensitivity, _typedGain()),
+                            child: TextFormField(
+                              key: const Key('blockDialog.gainValue'),
+                              controller: _gainValue,
+                              decoration: const InputDecoration(
+                                hintText: 'Unrecorded',
+                                errorMaxLines: 3,
+                              ),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                              validator: _validateGain,
+                              onChanged: (_) =>
+                                  setState(() => _gainEdited = true),
+                            ),
+                          ),
+                        // ADR-021 C13: Unknown records no ISO or gain; the remedy is
+                        // the rig's camera type, never a guessed kind.
+                        if (fixed == null && !takesGain)
+                          Text(
+                            'ISO or gain: set the rig’s camera type (Rigs → Edit '
+                            'rig) to record it here.',
+                            key: const Key('blockDialog.chooseClass'),
+                            style: muted,
+                          ),
+                        if (_showCameraRecords) ..._cameraRecords(muted),
+                        if (kept.isNotEmpty)
+                          Text(
+                            'Also recorded: ${kept.join(', ')} (kept as it was).',
+                            key: const Key('blockDialog.kept'),
+                            style: muted,
+                          ),
+                        // Hybrid's Details disclosure (binning and timing), with the
+                        // current values in its summary so nothing hides silently.
+                        BlockDisclosure(
+                          key: const Key('blockDialog.details'),
+                          title: 'Details',
+                          summary: detailsSummary,
+                          open: _details,
+                          onToggle: () => setState(() => _details = !_details),
+                          children: [
+                            ?binning,
+                            if (isLight)
+                              Text(
+                                'Light frames are planned inside the imaging '
+                                'window.',
+                                style: muted,
+                              )
+                            else
+                              BlockField(
+                                label: 'Planned timing',
+                                child: DropdownButtonFormField<CalibrationPolicy>(
+                                  key: const Key('blockDialog.policy'),
+                                  initialValue: _policy,
+                                  isExpanded:
+                                      true, // S7.2b: wraps at 200 % text
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  icon: hybridSelectIcon(context),
+                                  decoration: const InputDecoration(
+                                    contentPadding: hybridSelectPadding,
+                                    helperText:
+                                        'Proposed: outside the window, so '
+                                        'calibration doesn’t use imaging time.',
+                                    helperMaxLines: 3,
+                                  ),
+                                  items: const [
+                                    DropdownMenuItem(
+                                      value: CalibrationPolicy.outsideWindow,
+                                      child: Text(
+                                        'Outside the window (twilight/dawn)',
+                                      ),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: CalibrationPolicy.inWindow,
+                                      child: Text('During the window'),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: CalibrationPolicy.library,
+                                      child: Text(
+                                        'From your library (no window time)',
+                                      ),
+                                    ),
+                                  ],
+                                  onChanged: (v) {
+                                    if (v != null) setState(() => _policy = v);
+                                  },
+                                ),
+                              ),
+                            if (origins.isNotEmpty)
+                              Text(
+                                [
+                                  'Where the values came from:',
+                                  for (final e in origins.entries)
+                                    '${CaptureSettingsText.field(e.key)}: '
+                                        '${CaptureSettingsText.origin(e.value)}',
+                                ].join('\n'),
+                                key: const Key('blockDialog.origins'),
+                                style: muted,
+                              ),
+                          ],
+                        ),
+                        Text(
+                          'Records describe how you plan to shoot. Culmina does not '
+                          'control a camera.',
+                          // plan.css `.editor-help`: 13 at 1.6, secondary.
+                          style: AppTypography.caption.copyWith(
+                            height: 1.6,
+                            color: AppPalette.of(context).textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-            // Hybrid's editor footer: what Apply does, then the full-width
-            // primary action; Cancel stays beside the explanation.
+            // Hybrid's editor footer (plan.js screenBar): what Apply does,
+            // then the full-width primary action, never the plan's Save
+            // (S6.9, F06 A7). Leaving without applying is the × above.
             bottomNavigationBar: Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.viewInsetsOf(context).bottom,
               ),
-              child: SafeArea(
-                top: false,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(color: AppPalette.of(context).border),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            // F06 A7 (AM-02): what the button changes, and what
-                            // it does not; no extra confirmation.
-                            Expanded(
-                              child: Text(
-                                // Hybrid's wording ("Apply updates the draft.
-                                // Save plan records it."), naming the Undo.
-                                widget.initial == null
-                                    ? 'Adds to this plan. Save plan records it.'
-                                    : 'Changes this plan, with Undo. Save plan '
-                                          'records it.',
-                                key: const Key('blockDialog.scope'),
-                                style: muted,
-                              ),
-                            ),
-                            TextButton(
-                              key: const Key('blockDialog.cancel'),
-                              onPressed: () {
-                                _leaving = true;
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        // S6.9: the editor's primary action; F06 A7: Add block /
-                        // Apply changes, never the plan's Save.
-                        FilledButton(
-                          key: const Key('blockDialog.submit'),
-                          style: FilledButton.styleFrom(
-                            minimumSize: const Size.fromHeight(
-                              HybridTokens.minTarget,
-                            ),
-                          ),
-                          onPressed: _submit,
-                          child: Text(
-                            widget.initial == null
-                                ? 'Add block'
-                                : 'Apply changes',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              child: HybridApplyBar(
+                noteKey: const Key('blockDialog.scope'),
+                buttonKey: const Key('blockDialog.submit'),
+                label: widget.initial == null ? 'Add block' : 'Apply changes',
+                onPressed: _submit,
               ),
             ),
           ),
@@ -1348,90 +1302,161 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     ];
   }
 
-  /// White balance and focus mode, optional records (ADR-021 C1, C3).
-  List<Widget> _cameraRecords(TextStyle? muted) => [
-    BlockField(
-      label: 'White balance (optional)',
-      child: DropdownButtonFormField<WhiteBalanceMode?>(
-        key: const Key('blockDialog.wbMode'),
-        initialValue: _wbMode,
-        isExpanded: true,
-        decoration: InputDecoration(
-          helperText: _from(CaptureField.wb, _wbOrNull()),
-        ),
-        items: [
-          const DropdownMenuItem(value: null, child: Text('Not recorded')),
-          for (final m in WhiteBalanceMode.values)
-            DropdownMenuItem(
-              value: m,
-              child: Text(CaptureSettingsText.mode(m)),
-            ),
-        ],
-        onChanged: (m) => setState(() => _wbMode = m),
-      ),
-    ),
-    if (_wbMode == WhiteBalanceMode.preset)
-      BlockField(
-        label: 'Preset',
-        child: DropdownButtonFormField<WhiteBalancePreset>(
-          key: const Key('blockDialog.wbPreset'),
-          initialValue: _wbPreset,
-          isExpanded: true,
-          items: [
-            for (final p in WhiteBalancePreset.values)
-              DropdownMenuItem(
-                value: p,
-                child: Text(CaptureSettingsText.preset(p)),
+  /// White balance and focus mode, optional records (ADR-021 C1, C3), as
+  /// plan.js blockView: a "White balance" group (legend 14/600, 10 below;
+  /// its fields 16 apart) with one Mode select listing Auto, the presets,
+  /// Kelvin and Custom, the colour temperature for Kelvin and the tint
+  /// where it applies; then the focus choice, with its note for MF.
+  List<Widget> _cameraRecords(TextStyle? muted) {
+    final fieldText = Theme.of(context).textTheme.bodyLarge;
+    final palette = AppPalette.of(context);
+    return [
+      Semantics(
+        container: true,
+        label: 'White balance',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ExcludeSemantics(
+              child: Text(
+                'White balance',
+                style: AppTypography.body.copyWith(
+                  height: 1.5,
+                  fontWeight: FontWeight.w600,
+                  color: palette.textPrimary,
+                ),
               ),
+            ),
+            const SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              spacing: 16,
+              children: [
+                BlockField(
+                  label: 'Mode (optional)',
+                  note: _from(CaptureField.wb, _wbOrNull()),
+                  child:
+                      DropdownButtonFormField<
+                        (WhiteBalanceMode?, WhiteBalancePreset?)
+                      >(
+                        key: const Key('blockDialog.wbMode'),
+                        decoration: const InputDecoration(
+                          contentPadding: hybridSelectPadding,
+                        ),
+                        initialValue: (
+                          _wbMode,
+                          _wbMode == WhiteBalanceMode.preset ? _wbPreset : null,
+                        ),
+                        isExpanded: true,
+                        style: fieldText,
+                        icon: hybridSelectIcon(context),
+                        items: [
+                          for (final (mode, preset) in _wbChoices)
+                            DropdownMenuItem(
+                              value: (mode, preset),
+                              child: Text(
+                                preset != null
+                                    ? CaptureSettingsText.preset(preset)
+                                    : mode != null
+                                    ? CaptureSettingsText.mode(mode)
+                                    : 'Unrecorded',
+                              ),
+                            ),
+                        ],
+                        onChanged: (v) {
+                          if (v == null) return;
+                          setState(() {
+                            _wbMode = v.$1;
+                            if (v.$2 != null) _wbPreset = v.$2!;
+                          });
+                        },
+                      ),
+                ),
+                if (_wbMode == WhiteBalanceMode.kelvin)
+                  BlockField(
+                    label: 'Colour temperature (K)',
+                    hint:
+                        '1000–40000 K are model sanity limits, not the '
+                        'camera’s range.',
+                    child: TextFormField(
+                      key: const Key('blockDialog.wbKelvin'),
+                      controller: _kelvin,
+                      decoration: const InputDecoration(
+                        hintText: 'e.g. 5600',
+                        errorMaxLines: 3,
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: _validateKelvin,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+                if (_tintApplies)
+                  BlockField(
+                    label: 'White balance tint (optional)',
+                    hint: _wbMode == WhiteBalanceMode.custom
+                        ? 'Custom is a measured camera balance, not a kelvin '
+                              'value. Record tint only if the camera reports '
+                              'it.'
+                        : 'Record the camera’s tint value or leave blank.',
+                    child: TextFormField(
+                      key: const Key('blockDialog.tint'),
+                      controller: _tint,
+                      decoration: const InputDecoration(
+                        hintText: 'Unrecorded',
+                        errorMaxLines: 3,
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
+                      validator: _validateTint,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+              ],
+            ),
           ],
-          onChanged: (p) {
-            if (p != null) setState(() => _wbPreset = p);
-          },
         ),
       ),
-    if (_wbMode == WhiteBalanceMode.kelvin)
-      BlockField(
-        label: 'Colour temperature (K)',
-        child: TextFormField(
-          key: const Key('blockDialog.wbKelvin'),
-          controller: _kelvin,
-          decoration: const InputDecoration(
-            hintText: 'e.g. 5600',
-            errorMaxLines: 3,
-          ),
-          keyboardType: TextInputType.number,
-          validator: _validateKelvin,
-          onChanged: (_) => setState(() {}),
-        ),
+      // Hybrid's focus record: a segmented choice (plan.js radioGroup).
+      HybridSegmented<FocusMode?>(
+        key: const Key('blockDialog.focus'),
+        legend: 'Focus mode (optional)',
+        keyPrefix: 'blockDialog.focus',
+        value: _focus,
+        options: const [
+          (null, 'Unrecorded', 'none'),
+          (FocusMode.af, 'AF', 'af'),
+          (FocusMode.mf, 'MF', 'mf'),
+        ],
+        onChanged: (f) => setState(() => _focus = f),
       ),
-    // Hybrid's focus record: a segmented choice (plan.js radioGroup).
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        HybridSegmented<FocusMode?>(
-          key: const Key('blockDialog.focus'),
-          legend: 'Focus mode (optional)',
-          keyPrefix: 'blockDialog.focus',
-          value: _focus,
-          options: const [
-            (null, 'Unrecorded', 'none'),
-            (FocusMode.af, 'AF', 'af'),
-            (FocusMode.mf, 'MF', 'mf'),
-          ],
-          onChanged: (f) => setState(() => _focus = f),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          _from(CaptureField.focusMode, _focus) ??
+      if (_from(CaptureField.focusMode, _focus) ??
               (_focus == FocusMode.mf
-                  ? 'Manual focus is a record only. Culmina has no '
+                  ? 'Manual focus is a record only. This app has no '
                         'lens-position value or camera focus control.'
-                  : 'A record only; the app does not control the camera.'),
+                  : null)
+          case final note?)
+        Text(
+          note,
           key: const Key('blockDialog.focusNote'),
-          style: muted,
+          style: AppTypography.caption.copyWith(
+            height: 1.55,
+            color: palette.textSecondary,
+          ),
         ),
-      ],
-    ),
+    ];
+  }
+
+  /// The Mode select's choices, in plan.js `WHITE_BALANCE` order.
+  static final List<(WhiteBalanceMode?, WhiteBalancePreset?)> _wbChoices = [
+    (null, null),
+    (WhiteBalanceMode.auto, null),
+    for (final p in WhiteBalancePreset.values) (WhiteBalanceMode.preset, p),
+    (WhiteBalanceMode.kelvin, null),
+    (WhiteBalanceMode.custom, null),
   ];
 
   /// The ISO or gain as typed, or null while it is empty or invalid.

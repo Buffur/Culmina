@@ -31,6 +31,7 @@ import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/library/library_parts.dart';
 import 'package:drift/native.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
@@ -447,18 +448,13 @@ void main() {
           await _settle(tester);
         }
 
-        Future<void> closeDialog() async {
-          Navigator.of(tester.element(find.byType(Dialog).last)).pop();
-          await _settle(tester);
-        }
-
         // The Logbook's filter panel.
         AppRouter.router.go(AppRouter.sessions);
         await _settle(tester);
-        await tap(find.byKey(const Key('logbook.filters')));
-        expect(find.byKey(const Key('logbook.filters.done')), findsOneWidget);
+        await tap(find.byKey(const Key('logbook.filterToggle')));
+        expect(find.byKey(const Key('logbook.filters')), findsOneWidget);
         await check('logbook filter panel');
-        await tap(find.byKey(const Key('logbook.filters.done')));
+        await tap(find.byKey(const Key('logbook.filterToggle')));
 
         // The AstroBin preview.
         await tap(find.byKey(const Key('logbook.menu')));
@@ -467,36 +463,35 @@ void main() {
         await check('AstroBin preview');
         await tap(find.byKey(const Key('astrobin.cancel')));
 
-        // The rig editor and the target editor.
+        // A rig's record and its editor; a catalogue target's record and
+        // the target editor (library.js: records open first).
         AppRouter.router.go(AppRouter.libraryRigs);
         await _settle(tester);
-        await tap(find.byType(ListTile));
+        await tap(find.byType(LibraryRow));
+        expect(find.byKey(const Key('rigDetail.edit')), findsOneWidget);
+        await check('rig record');
+        await tap(find.byKey(const Key('rigDetail.edit')));
         expect(find.byKey(const Key('rigEditor.save')), findsOneWidget);
         await check('rig editor');
-        await closeDialog();
+        await tap(find.byKey(const Key('rigEditor.cancel'))); // unchanged
         AppRouter.router.go(AppRouter.libraryTargets);
         await _settle(tester);
         await tester.enterText(find.byType(TextField).first, 'M42');
         await _settle(tester);
-        await tap(
-          find.ancestor(
-            of: find.textContaining('M42'),
-            matching: find.byType(ListTile),
-          ),
-        );
-        expect(find.byKey(const Key('targetEditor.delete')), findsOneWidget);
+        await tap(find.byType(LibraryRow));
+        expect(find.byKey(const Key('targetDetail.facts')), findsOneWidget);
+        await check('target record');
+        await tester.binding.handlePopRoute();
+        await _settle(tester);
+        await tap(find.byKey(const Key('targets.add')));
+        expect(find.byKey(const Key('targetEditor.save')), findsOneWidget);
         await check('target editor');
-        await closeDialog();
+        await tap(find.byKey(const Key('targetEditor.cancel'))); // unchanged
 
         // The block editor.
         AppRouter.router.go(AppRouter.session());
         await _settle(tester);
-        await tap(
-          find.ancestor(
-            of: find.textContaining(' × '),
-            matching: find.byType(ListTile),
-          ),
-        );
+        await tap(find.byKey(const Key('capture.edit.0')));
         expect(find.byKey(const Key('blockDialog.cancel')), findsOneWidget);
         await check('block editor');
         await tap(find.byKey(const Key('blockDialog.cancel')));
@@ -538,22 +533,47 @@ void main() {
     // S6.5: the full forecast is on the Weather detail.
     AppRouter.router.go(AppRouter.weather);
     await _settle(tester);
-    expect(find.byKey(const Key('weather.hours')), findsOneWidget);
-    // F14 A3: the full table is in Details.
-    await tester.ensureVisible(find.byKey(const Key('weather.details')));
-    await tester.tap(find.byKey(const Key('weather.details')));
-    await _settle(tester);
-    expect(find.byKey(const Key('weather.ranges')), findsOneWidget);
-    // UX-31: a range label never runs into its value.
-    final label = tester.getRect(find.text('Low cloud (below 3 km)'));
-    final value = tester.getRect(find.text('18 %'));
-    expect(value.left - label.right, greaterThanOrEqualTo(8));
-    // S1.13 (SCI-02): precipitation covers the preceding hour.
-    expect(
-      find.text('Chance of precipitation (preceding hour)'),
-      findsOneWidget,
+    // Hybrid A · Compact rows: each variable's range over the dark hours.
+    final rows = find.byKey(const Key('weather.rows'));
+    expect(rows, findsOneWidget);
+    // UX-31: a range label never runs into its value; at 200 % the value
+    // goes under its name.
+    final label = tester.getRect(
+      find.descendant(of: rows, matching: find.text('Cloud cover')),
     );
+    // The cloud row's value: the first percentage at or below its name.
+    final value =
+        [
+              for (final e
+                  in find
+                      .descendant(
+                        of: rows,
+                        matching: find.byWidgetPredicate(
+                          (w) =>
+                              w is Text &&
+                              (w.data?.endsWith('%') ?? false) &&
+                              !(w.data?.contains('known') ?? true),
+                        ),
+                      )
+                      .evaluate())
+                tester.getRect(find.byWidget(e.widget)),
+            ]
+            .where((r) => r.top >= label.top - 4)
+            .reduce((a, b) => a.top <= b.top ? a : b);
+    expect(
+      value.top >= label.bottom || value.left - label.right >= 8,
+      isTrue,
+      reason: '$label / $value',
+    );
+    // S1.13 (SCI-02): precipitation covers the preceding hour.
+    expect(find.text('Precipitation probability'), findsOneWidget);
+    expect(find.textContaining('preceding hour'), findsWidgets);
     expect(find.byKey(const Key('weather.precipNote')), findsOneWidget);
+    // F14 A3: the full table is in Forecast details.
+    await tester.ensureVisible(find.byKey(const Key('weather.details')));
+    await tester.tap(find.text('Forecast details'));
+    await _settle(tester);
+    expect(find.byKey(const Key('weather.table')), findsOneWidget);
   });
 
   // F18 A1 (AM-01): the altitude chart is out of the plan for this

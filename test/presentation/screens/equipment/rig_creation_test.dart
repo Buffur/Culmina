@@ -2,7 +2,8 @@
 // ("Not sure" = Unknown), then two equal choices ordered by class; each
 // required input says what needs it; a rig created for a plan action is
 // chosen exactly once, a failed save keeps the edits and chooses nothing;
-// a changed rig editor asks before Back or a tap outside discards it.
+// a changed rig editor asks before Back or Cancel discards it (the editor
+// is a page since the Hybrid transfer, so there is no outside to tap).
 
 import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/camera_class.dart';
@@ -22,6 +23,7 @@ import 'package:provider/provider.dart';
 
 import '../../../support/add_rig.dart';
 import '../../../support/in_memory_equipment_repository.dart';
+import '../../../support/library_finders.dart';
 
 class _Planner extends ChangeNotifier implements SessionPlanViewModel {
   final chosen = <EquipmentProfile>[];
@@ -145,24 +147,15 @@ void main() {
   }
 
   Future<void> fill(WidgetTester tester, {String name = 'Typed rig'}) async {
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rig name'),
-      name,
-    );
+    await tester.enterText(fieldLabeled('Rig name'), name);
     await tester.enterText(find.widgetWithText(TextFormField, '6248'), '6000');
     await tester.enterText(find.widgetWithText(TextFormField, '4176'), '4000');
     await tester.enterText(
       find.byKey(const Key('equipmentEditor.pixelSize')),
       '3.76',
     );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Effective focal length (mm)'),
-      '400',
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Focal ratio (f/)'),
-      '5',
-    );
+    await tester.enterText(fieldLabeled('Effective focal length (mm)'), '400');
+    await tester.enterText(fieldLabeled('Focal ratio (f/)'), '5');
     await tester.pump();
   }
 
@@ -177,6 +170,14 @@ void main() {
       : (find.byKey(Key(key)).evaluate().single.renderObject! as RenderBox)
             .localToGlobal(Offset.zero)
             .dy;
+
+  /// The Library opens a rig's record; its Edit rig opens the editor.
+  Future<void> editRig(WidgetTester tester, String name) async {
+    await tester.tap(find.text(name));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('rigDetail.edit')));
+    await tester.pumpAndSettle();
+  }
 
   bool enabled(WidgetTester tester, String key) =>
       tester.widget<ButtonStyleButton>(find.byKey(Key(key))).enabled;
@@ -263,10 +264,7 @@ void main() {
         expect(find.text(RigInputText.reason(spec)), findsOneWidget);
       }
       // No guessed default: Save still needs every required input.
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Rig name'),
-        'Only a name',
-      );
+      await tester.enterText(fieldLabeled('Rig name'), 'Only a name');
       await save(tester);
       expect(repo.inserted, isEmpty);
       expect(find.text('Required'), findsWidgets);
@@ -279,14 +277,13 @@ void main() {
         forPlan: false,
         repository: InMemoryEquipmentRepository([_astro]),
       );
-      await tester.tap(find.text('Mono rig'));
-      await tester.pumpAndSettle();
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Rig name'),
-        'Mono rig, renamed',
-      );
+      await editRig(tester, 'Mono rig');
+      await tester.enterText(fieldLabeled('Rig name'), 'Mono rig, renamed');
       await save(tester);
       expect(repo.updated.single.cameraClass, CameraClass.astroMono);
+      // Back from the rig's record to the list.
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
 
       await startAddRig(tester, cameraClass: CameraClass.dslrMirrorless);
       await fill(tester);
@@ -399,10 +396,7 @@ void main() {
     Future<void> openChanged(WidgetTester tester) async {
       await start(tester, forPlan: false);
       await startAddRig(tester);
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Rig name'),
-        'Half typed',
-      );
+      await tester.enterText(fieldLabeled('Rig name'), 'Half typed');
       await tester.pump();
     }
 
@@ -414,7 +408,8 @@ void main() {
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(
-        find.text('"Half typed" has changes that are not saved.'),
+        // library.js `cancelEdit`'s words.
+        find.text('Your changes to “Half typed” are not saved.'),
         findsOneWidget,
       );
       await tester.tap(find.byKey(const Key('unsaved.cancel')));
@@ -430,9 +425,11 @@ void main() {
       expect(repo.inserted, isEmpty);
     });
 
-    testWidgets('a tap outside a changed editor asks too', (tester) async {
+    testWidgets("the editor's Cancel on a changed editor asks too", (
+      tester,
+    ) async {
       await openChanged(tester);
-      await tester.tapAt(const Offset(4, 4));
+      await tester.tap(find.byKey(const Key('rigEditor.cancel')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
       await tester.tap(find.byKey(const Key('unsaved.cancel')));
@@ -452,23 +449,23 @@ void main() {
       expect(editor, findsNothing);
     });
 
-    testWidgets('an unchanged editor closes at once, by Back or a tap '
-        'outside', (tester) async {
+    testWidgets('an unchanged editor closes at once, by Back or Cancel', (
+      tester,
+    ) async {
       await start(
         tester,
         forPlan: false,
         repository: InMemoryEquipmentRepository([_astro]),
       );
-      await tester.tap(find.text('Mono rig'));
-      await tester.pumpAndSettle();
+      await editRig(tester, 'Mono rig');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('unsaved.discard')), findsNothing);
       expect(editor, findsNothing);
 
-      await tester.tap(find.text('Mono rig'));
+      await tester.tap(find.byKey(const Key('rigDetail.edit')));
       await tester.pumpAndSettle();
-      await tester.tapAt(const Offset(4, 4));
+      await tester.tap(find.byKey(const Key('rigEditor.cancel')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('unsaved.discard')), findsNothing);
       expect(editor, findsNothing);
@@ -483,11 +480,10 @@ void main() {
         forPlan: false,
         repository: InMemoryEquipmentRepository([_astro]),
       );
-      await tester.tap(find.text('Mono rig'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('equipmentEditor.cameraClass')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Phone').last);
+      await editRig(tester, 'Mono rig');
+      final phone = find.byKey(const Key('equipmentEditor.cameraClass.phone'));
+      await tester.ensureVisible(phone);
+      await tester.tap(phone);
       await tester.pumpAndSettle();
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();

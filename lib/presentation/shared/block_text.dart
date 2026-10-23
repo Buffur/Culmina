@@ -64,36 +64,24 @@ abstract final class BlockText {
           : QuantityText.duration(Duration(milliseconds: budget.exposureMs)),
   ].join(' · ');
 
-  /// What fits of this block tonight (S6.10; P6.9), only from the fit's own
-  /// outputs: [unplaced] from `FitResult.unplacedFramesByBlock`, [upTo]
-  /// from `FitAnalyzer.maxFramesForBlock` and [spare], how many more of it
-  /// still fit. Since F12 (TD-074) every light block has [upTo] and [spare],
-  /// each with every other block as planned, which [others] says when
-  /// other blocks share the window (two answers cannot both hold). Null
-  /// when there is nothing to say.
-  static String? whatFits(
+  /// What fits of this light block tonight (S6.10; P6.9; plan.js
+  /// `fitLine`), only from the fit's own outputs: [unplaced] from
+  /// `FitResult.unplacedFramesByBlock` and [upTo] from
+  /// `FitAnalyzer.maxFramesForBlock`, with every other block as planned,
+  /// which [others] says when other blocks share the window (F12, TD-074).
+  /// Worded for tonight; `PlanNightPhrase.apply` names another night.
+  static String whatFits(
     CaptureBlock b, {
     required int unplaced,
     int? upTo,
-    int? spare,
     bool others = false,
   }) {
+    if (upTo == null) return 'Window capacity unknown for this plan';
     final rest = others ? ' (other blocks as planned)' : '';
-    if (unplaced > 0) {
-      final head = unplaced == 1
-          ? '1 frame does not fit tonight'
-          : '$unplaced frames do not fit tonight';
-      return upTo != null && upTo > 0
-          ? '$head · up to $upTo × '
-                '${QuantityText.exposure(b.exposureTimeSeconds)} fit$rest'
-          : head;
-    }
-    if (spare != null && spare > 0) {
-      return spare == 1
-          ? '+1 frame still fits tonight$rest'
-          : '+$spare frames still fit tonight$rest';
-    }
-    return null;
+    return unplaced == 0
+        ? "Fits: room for up to $upTo frames like this in tonight's "
+              'window$rest'
+        : "Only $upTo of ${b.frameCount} frames fit tonight's window";
   }
 
   /// Where a calibration block's time goes; null for lights and library

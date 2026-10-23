@@ -146,10 +146,12 @@ void main() {
     expect(text(tester, 'blockDialog.exposure'), '300');
     expect(text(tester, 'blockDialog.gainValue'), '100');
     expect(find.text('L-eXtreme'), findsOneWidget, reason: 'the filter field');
+    // The binning is in Details (plan.js blockView).
+    await openBlockDisclosure(tester, 'blockDialog.details');
     expect(
       find.descendant(
-        of: find.byKey(const Key('blockDialog.details')),
-        matching: find.textContaining('Binning 2x2'),
+        of: find.byKey(const Key('blockDialog.binning')),
+        matching: find.text('2x2'),
       ),
       findsOneWidget,
       reason: 'closed Details',
@@ -198,10 +200,11 @@ void main() {
       ),
     );
     await tapKey(tester, 'blockDialog.fromPhoto');
+    await openBlockDisclosure(tester, 'blockDialog.details');
     expect(
       find.descendant(
-        of: find.byKey(const Key('blockDialog.details')),
-        matching: find.textContaining('Binning 2x2'),
+        of: find.byKey(const Key('blockDialog.binning')),
+        matching: find.text('2x2'),
       ),
       findsOneWidget,
     );
@@ -266,10 +269,12 @@ void main() {
         'L-eXtreme).',
       ),
     );
+    // The binning is in Details (plan.js blockView).
+    await openBlockDisclosure(tester, 'blockDialog.details');
     expect(
       find.descendant(
-        of: find.byKey(const Key('blockDialog.details')),
-        matching: find.textContaining('Binning 2x2'),
+        of: find.byKey(const Key('blockDialog.binning')),
+        matching: find.text('2x2'),
       ),
       findsOneWidget,
       reason: 'untouched',

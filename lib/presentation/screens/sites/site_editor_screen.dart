@@ -2,7 +2,13 @@ import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 
 import '../../shared/night_time_formatter.dart';
 import '../../../domain/models/calendar_date.dart';
+import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/hybrid_tokens.dart';
+import '../../shared/hybrid_parts.dart';
+import '../library/library_parts.dart';
+import '../settings/settings_parts.dart';
 import '../../shared/app_words.dart';
 
 import 'dart:async';
@@ -63,9 +69,10 @@ class SiteEditorArgs {
 /// S7.5 (RG-08 = E2, RG-09 = S3/M2, UX-21): coordinates come from typing,
 /// the map or "Use current position" (GPS only on that tap; the fix only
 /// fills the form until Save); elevation is optional and unknown when
-/// empty; Bortle and SQM sit in a collapsed "Sky darkness (optional)"
-/// section with the map link at the typed coordinates; leaving with
-/// changes asks Cancel · Discard · Save.
+/// empty; Bortle and SQM sit with the elevation and notes in a collapsed
+/// "More (optional)" section, with the map link at the typed coordinates
+/// (library.js `siteForm`); leaving with changes asks Cancel · Discard ·
+/// Save.
 class SiteEditorScreen extends StatefulWidget {
   const SiteEditorScreen({super.key, this.args = const SiteEditorArgs()});
 
@@ -117,6 +124,9 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   bool _saving = false;
   bool _locating = false;
 
+  /// "Use device position" stays open for this visit (library.js).
+  bool _locationOpen = false;
+
   /// F23 A5: the place-name proposal for a position from "Use current
   /// position" — for an empty name only, through the opt-in lookup.
   _NameLookup _nameLookup = _NameLookup.none;
@@ -166,7 +176,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     _opened; // the state before any edit
     if (_isNew) _prefillDeviceZone();
     // The sky-darkness summary and the map link follow the typing.
-    for (final c in [_latitude, _longitude, _sqm]) {
+    for (final c in [_latitude, _longitude, _sqm, _elevation]) {
       c.addListener(_refresh);
     }
     // The back guard follows every field (S7.V2); only a flip rebuilds.
@@ -401,7 +411,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     final label = _name.text.trim().isEmpty
         ? (_isNew ? AppWords.newSite : _original!.name)
         : _name.text.trim();
-    final choice = await askUnsavedChanges(context, plan: label);
+    final choice = await askUnsavedChanges(context, plan: label, library: true);
     if (!mounted) return;
     switch (choice) {
       case UnsavedChoice.cancel:
@@ -490,191 +500,305 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   }
 
   Widget _form(BuildContext context, TextInputType numberKeyboard) {
+    final p = AppPalette.of(context);
+    final style = libraryInputStyle(context);
+    final hint = AppTypography.caption.copyWith(
+      height: 1.55,
+      color: p.textSecondary,
+    );
+    final stacked = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
+    final latitude = LibraryField(
+      label: 'Latitude (°)',
+      hint: 'North + · −90 to 90',
+      child: TextFormField(
+        key: const Key('siteEditor.latitude'),
+        controller: _latitude,
+        style: style,
+        keyboardType: numberKeyboard,
+        validator: CoordinateInput.validateLatitude,
+      ),
+    );
+    final longitude = LibraryField(
+      label: 'Longitude (°)',
+      hint: 'East + · −180 to 180',
+      child: TextFormField(
+        key: const Key('siteEditor.longitude'),
+        controller: _longitude,
+        style: style,
+        keyboardType: numberKeyboard,
+        validator: CoordinateInput.validateLongitude,
+      ),
+    );
     return Scaffold(
       appBar: hybridAppBar(
         context,
         title: Text(_isNew ? AppWords.newSite : AppWords.editSite),
       ),
-      // S9.2: one primary Save, always in reach (DESIGN_SYSTEM §9).
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: FilledButton(
-              key: const Key('siteEditor.save'),
-              onPressed: _saving ? null : _save,
-              child: const Text(AppWords.saveSite),
-            ),
-          ),
-        ),
+      // library.js `saveBar`: Cancel and Save site, always in reach.
+      bottomNavigationBar: LibrarySaveBar(
+        saveKey: const Key('siteEditor.save'),
+        cancelKey: const Key('siteEditor.cancel'),
+        saveLabel: AppWords.saveSite,
+        onCancel: _saving ? null : _onBack,
+        onSave: _saving ? null : _save,
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            TextFormField(
-              key: const Key('siteEditor.name'),
-              controller: _name,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                helperText: _nameHelper,
-                helperMaxLines: 3,
-              ),
-              textCapitalization: TextCapitalization.words,
-              validator: SiteFormInput.validateName,
-            ),
-            if (_nameLookup == _NameLookup.offer)
-              _PlaceNameOffer(onTurnOn: _turnOnPlaceNames),
-            const SizedBox(height: AppSpacing.md + AppSpacing.xs),
-            TextFormField(
-              controller: _latitude,
-              decoration: const InputDecoration(
-                labelText: 'Latitude (°)',
-                helperText: 'Decimal degrees, north positive',
-              ),
-              keyboardType: numberKeyboard,
-              validator: CoordinateInput.validateLatitude,
-            ),
-            const SizedBox(height: AppSpacing.md + AppSpacing.xs),
-            TextFormField(
-              controller: _longitude,
-              decoration: const InputDecoration(
-                labelText: 'Longitude (°)',
-                helperText: 'Decimal degrees, east positive',
-              ),
-              keyboardType: numberKeyboard,
-              validator: CoordinateInput.validateLongitude,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Wrap(
-              spacing: 8,
+        child: HybridPlanInputs(
+          child: SingleChildScrollView(
+            key: const Key('siteEditor.scroll'),
+            padding: settingsPagePadding,
+            // Every field is built, so Save validates them all.
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextButton.icon(
-                  key: const Key('siteEditor.useCurrentPosition'),
-                  onPressed: _locating ? null : _useCurrentPosition,
-                  icon: const Icon(Icons.my_location),
-                  label: const Text('Use current position'),
+                const SettingsCopy(
+                  'Save a place; choose it separately in the Plan.',
                 ),
-                TextButton.icon(
-                  onPressed: _pickOnMap,
-                  icon: const Icon(Icons.map_outlined),
-                  label: const Text('Pick on map'),
+                LibraryField(
+                  label: 'Name',
+                  hint: _nameHelper,
+                  child: TextFormField(
+                    key: const Key('siteEditor.name'),
+                    controller: _name,
+                    style: style,
+                    textCapitalization: TextCapitalization.words,
+                    validator: SiteFormInput.validateName,
+                  ),
+                ),
+                if (_nameLookup == _NameLookup.offer)
+                  _PlaceNameOffer(onTurnOn: _turnOnPlaceNames),
+                // library.js `locationView`: the device position, asked for
+                // only on a tap; or a point on the map.
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.itemGap),
+                  child: CollapsibleSection(
+                    key: const Key('siteEditor.location'),
+                    sectionKey: 'siteEditor.location',
+                    title: 'Use device position',
+                    summary:
+                        'Permission required · manual entry always available',
+                    open: _locationOpen,
+                    onToggle: () =>
+                        setState(() => _locationOpen = !_locationOpen),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: AppSpacing.sm,
+                      children: [
+                        const SettingsCopy(
+                          'Only use this when the device is at your observing '
+                          'site. The position fills the coordinates below; '
+                          'nothing is saved until Save site.',
+                        ),
+                        OutlinedButton(
+                          key: const Key('siteEditor.useCurrentPosition'),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(
+                              HybridTokens.minTarget,
+                            ),
+                          ),
+                          onPressed: _locating ? null : _useCurrentPosition,
+                          child: Text(
+                            _locating
+                                ? 'Getting position…'
+                                : 'Use current position',
+                          ),
+                        ),
+                        OutlinedButton(
+                          key: const Key('siteEditor.pickOnMap'),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(
+                              HybridTokens.minTarget,
+                            ),
+                          ),
+                          onPressed: _pickOnMap,
+                          child: const Text('Pick on map'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.gutter),
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      'Coordinates and time zone',
+                      style: AppTypography.sectionHeading.copyWith(
+                        color: p.textPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+                if (stacked) ...[
+                  latitude,
+                  longitude,
+                ] else
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: AppSpacing.itemGap,
+                    children: [
+                      Expanded(child: latitude),
+                      Expanded(child: longitude),
+                    ],
+                  ),
+                LibraryField(
+                  label: 'Time zone',
+                  hint:
+                      '${_zoneFromDevice ? 'Device zone pre-filled: verify it '
+                                'for this site. ' : ''}'
+                      'Used for local dates, times and daylight-saving changes.',
+                  // A select that opens the searchable zone list.
+                  child: Semantics(
+                    button: true,
+                    child: InkWell(
+                      key: const Key('siteEditor.zone'),
+                      borderRadius: BorderRadius.circular(6),
+                      onTap: _pickZone,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          contentPadding: hybridSelectPadding,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _zoneId ??
+                                    'Unknown — night uses mean solar time',
+                                style: style,
+                              ),
+                            ),
+                            hybridSelectIcon(context),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.gutter),
+                // RG-08 = E2, RG-09 = S3: optional, without prominence; empty
+                // is unknown. One remembered section (library.js More).
+                CollapsibleSection(
+                  key: const Key('siteEditor.more'),
+                  sectionKey: SiteEditorScreen.skyDarknessSection,
+                  title: 'More (optional)',
+                  summary: _moreSummary(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      LibraryField(
+                        label:
+                            'Elevation (${_units.elevation.symbol}, optional)',
+                        hint:
+                            'Above sea level, '
+                            '${_units.elevation == ElevationUnit.feet ? 'in feet' : 'in metres'}. '
+                            'Empty stays unknown.',
+                        top: 0,
+                        child: TextFormField(
+                          key: const Key('siteEditor.elevation'),
+                          controller: _elevation,
+                          style: style,
+                          keyboardType: numberKeyboard,
+                          validator: (t) =>
+                              SiteFormInput.validateElevation(t, _units),
+                        ),
+                      ),
+                      if (FeatureScope.lightPollutionContext)
+                        ..._skyDarknessFields(),
+                      LibraryField(
+                        label: 'Notes (optional)',
+                        child: TextFormField(
+                          key: const Key('siteEditor.notes'),
+                          controller: _notes,
+                          style: style,
+                          minLines: 3,
+                          maxLines: 3,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.xs),
+                        child: Text(
+                          'Bortle and SQM are never converted into each other.',
+                          style: hint,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.schedule),
-              title: const Text('Time zone'),
-              subtitle: Text(
-                _zoneId == null
-                    ? 'Unknown — night uses mean solar time'
-                    : _zoneFromDevice
-                    ? '$_zoneId (device zone)'
-                    : _zoneId!,
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: _pickZone,
-            ),
-            // RG-08 = E2: optional, without prominence; empty is unknown.
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _elevation,
-              decoration: InputDecoration(
-                labelText: 'Elevation (${_units.elevation.symbol})',
-                helperText:
-                    'Optional · ${_units.elevation == ElevationUnit.feet ? 'feet' : 'metres'} '
-                    'above sea level; empty is unknown',
-              ),
-              keyboardType: numberKeyboard,
-              validator: (t) => SiteFormInput.validateElevation(t, _units),
-            ),
-            const SizedBox(height: AppSpacing.md + AppSpacing.xs),
-            if (FeatureScope.lightPollutionContext) _skyDarknessSection(),
-            const SizedBox(height: AppSpacing.md),
-            TextFormField(
-              controller: _notes,
-              decoration: const InputDecoration(labelText: 'Notes'),
-              maxLines: 3,
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  /// Bortle and SQM (RG-09 = S3): one collapsed, remembered section whose
-  /// summary states what is stored; each value with its source and date;
-  /// the map at the typed coordinates. Unknown by default, no conversion.
-  Widget _skyDarknessSection() {
+  /// "Bortle 4 · SQM 21.2 · 160 m", or what the section holds.
+  String _moreSummary() {
     final sqm = CoordinateInput.parse(_sqm.text);
-    final summary = [
+    final set = [
+      if (_elevation.text.trim().isNotEmpty)
+        '${_elevation.text.trim()} ${_units.elevation.symbol}',
       if (_bortle != null) 'Bortle $_bortle',
       if (sqm != null) 'SQM ${_sqm.text.trim()}',
     ];
-    final link = SiteFormInput.mapLink(_latitude.text, _longitude.text);
-    return CollapsibleSection(
-      sectionKey: SiteEditorScreen.skyDarknessSection,
-      title: 'Sky darkness (optional)',
-      summary: summary.isEmpty ? 'Unknown' : summary.join(' · '),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ..._skyDarknessFields(),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              key: const Key('siteEditor.mapLink'),
-              onPressed: link == null ? null : _openMap,
-              icon: const Icon(Icons.open_in_new),
-              label: const Text('Look it up on lightpollutionmap.app'),
-            ),
-          ),
-        ],
-      ),
-    );
+    return set.isEmpty ? 'Elevation, sky darkness and notes' : set.join(' · ');
   }
 
   /// Bortle and SQM with their source (TASK 7.3); a hidden value is kept
-  /// unchanged on save.
+  /// unchanged on save. The map opens at the typed coordinates.
   List<Widget> _skyDarknessFields() {
     final original = _original;
+    final style = libraryInputStyle(context);
     // S9.7: the source and a readable date, never an ISO string.
     String? sourceCaption(String? source, CalendarDate? date) => source == null
         ? null
         : 'Source: $source'
               '${date == null ? '' : ' · ${NightTimeFormatter.recordedDate(date)}'}';
+    final link = SiteFormInput.mapLink(_latitude.text, _longitude.text);
     return [
-      DropdownButtonFormField<int?>(
-        initialValue: _bortle,
-        decoration: InputDecoration(
-          labelText: 'Bortle class',
-          helperText: _bortle != null && _bortle == original?.bortleClass
-              ? sourceCaption(original?.bortleSource, original?.bortleDate)
-              : null,
+      LibraryField(
+        label: 'Bortle class',
+        hint: _bortle != null && _bortle == original?.bortleClass
+            ? sourceCaption(original?.bortleSource, original?.bortleDate)
+            : null,
+        child: DropdownButtonFormField<int?>(
+          key: const Key('siteEditor.bortle'),
+          initialValue: _bortle,
+          isExpanded: true,
+          style: style,
+          icon: hybridSelectIcon(context),
+          decoration: const InputDecoration(
+            contentPadding: hybridSelectPadding,
+          ),
+          items: [
+            const DropdownMenuItem(value: null, child: Text('Unknown')),
+            for (var b = 1; b <= 9; b++)
+              DropdownMenuItem(value: b, child: Text('Bortle $b')),
+          ],
+          onChanged: (value) => setState(() => _bortle = value),
         ),
-        items: [
-          const DropdownMenuItem(value: null, child: Text('Unknown')),
-          for (var b = 1; b <= 9; b++)
-            DropdownMenuItem(value: b, child: Text('Bortle $b')),
-        ],
-        onChanged: (value) => setState(() => _bortle = value),
       ),
-      TextFormField(
-        controller: _sqm,
-        decoration: InputDecoration(
-          labelText: 'SQM (mag/arcsec²)',
-          helperText:
-              sourceCaption(original?.sqmSource, original?.sqmDate) ??
-              'Empty = unknown',
+      LibraryField(
+        label: 'SQM (mag/arcsec²)',
+        hint:
+            sourceCaption(original?.sqmSource, original?.sqmDate) ??
+            'Empty = unknown. 15 to 23.',
+        child: TextFormField(
+          key: const Key('siteEditor.sqm'),
+          controller: _sqm,
+          style: style,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          validator: SiteFormInput.validateSqm,
         ),
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        validator: SiteFormInput.validateSqm,
+      ),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton(
+          key: const Key('siteEditor.mapLink'),
+          onPressed: link == null ? null : _openMap,
+          child: const Text('Look it up on lightpollutionmap.app'),
+        ),
       ),
     ];
   }

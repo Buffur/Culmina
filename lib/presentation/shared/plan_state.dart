@@ -143,3 +143,96 @@ class PlanStateLabel extends StatelessWidget {
     );
   }
 }
+
+/// A Logbook entry's state (logbook.js `logbook-status-badge`): the state's
+/// 16 px mark and its word, 13/500, on the state's wash (padding 3 × 6,
+/// radius 4); [due]: Not recorded, the due mark and the word at 400 on the
+/// caution wash.
+class EntryStateBadge extends StatelessWidget {
+  const EntryStateBadge(
+    this.state, {
+    super.key,
+    this.due = false,
+    this.large = false,
+    this.word,
+  });
+
+  /// Not recorded: a saved night that has ended without a result.
+  const EntryStateBadge.due({super.key, this.large = false})
+    : state = PlanState.saved,
+      due = true,
+      word = null;
+
+  final PlanState state;
+  final bool due;
+
+  /// The entry's header (`.logbook-state-large`): 20/500 with a 22 px mark.
+  final bool large;
+
+  /// Words instead of the state's name ("Completed, reported as planned").
+  final String? word;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final h = Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
+    final (fg, bg) = due
+        ? (h.caution, h.cautionWash)
+        : switch (state) {
+            PlanState.saved ||
+            PlanState.tracking ||
+            PlanState.completed => (h.success, h.successWash),
+            PlanState.notSaved ||
+            PlanState.savedChanged ||
+            PlanState.partly => (h.caution, h.cautionWash),
+            PlanState.notDone ||
+            PlanState.oldLog => (p.textPrimary, h.selection),
+          };
+    final mark = due
+        ? HybridIcons.markDue
+        : switch (state) {
+            PlanState.completed ||
+            PlanState.oldLog => HybridIcons.markCompleted,
+            PlanState.partly => HybridIcons.markPartly,
+            PlanState.notDone => HybridIcons.markNotDone,
+            _ => HybridIcons.markSaved,
+          };
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            HybridIcon(
+              mark,
+              size: MediaQuery.textScalerOf(context).scale(large ? 22 : 16),
+              strokeWidth: 1.7,
+              color: fg,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Flexible(
+              child: Text(
+                due ? 'Not recorded' : word ?? state.word,
+                semanticsLabel: due ? AppWords.resultNotRecorded : null,
+                style:
+                    (large
+                            ? AppTypography.sectionHeading
+                            : AppTypography.caption)
+                        .copyWith(
+                          color: fg,
+                          letterSpacing: 0,
+                          fontWeight: due ? FontWeight.w400 : FontWeight.w500,
+                          height: 1.4,
+                        ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

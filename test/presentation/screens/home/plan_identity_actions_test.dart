@@ -121,8 +121,14 @@ void main() {
       ),
       findsOneWidget,
     );
+    // plan.js identity: "Night of 10 Nov · Ends 11 Nov".
     expect(
-      inIdentity('Night of ${NightTimeFormatter.eveningDate(vm.eveningDate!)}'),
+      find.descendant(
+        of: identity,
+        matching: find.textContaining(
+          'Night of ${NightTimeFormatter.eveningDate(vm.eveningDate!)}',
+        ),
+      ),
       findsOneWidget,
     );
     expect(inIdentity('Not saved'), findsOneWidget);

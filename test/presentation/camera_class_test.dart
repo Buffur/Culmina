@@ -18,6 +18,7 @@ import 'package:astroplan/domain/services/capture_budget_calculator.dart';
 import 'package:astroplan/domain/services/session_snapshot_builder.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_editor.dart';
 import 'package:astroplan/presentation/shared/equipment_draft.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -255,19 +256,40 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
+    // library.js: the camera type is a grid of radio choices.
     final field = find.byKey(const Key('equipmentEditor.cameraClass'));
     expect(field, findsOneWidget);
+    for (final c in CameraClass.values) {
+      expect(
+        find.byKey(Key('equipmentEditor.cameraClass.${c.name}')),
+        findsOneWidget,
+      );
+    }
+    final unknown = find.byKey(
+      const Key('equipmentEditor.cameraClass.unknown'),
+    );
     expect(
-      find.descendant(of: field, matching: find.text('Unknown')),
+      find.descendant(of: unknown, matching: find.text('Not sure (Unknown)')),
       findsOneWidget,
     );
-    await tester.tap(field);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('DSLR or mirrorless').last);
+    expect(
+      tester
+          .widget<HybridRadio>(
+            find.descendant(of: unknown, matching: find.byType(HybridRadio)),
+          )
+          .checked,
+      isTrue,
+    );
+    final dslr = find.byKey(
+      const Key('equipmentEditor.cameraClass.dslrMirrorless'),
+    );
+    await tester.ensureVisible(dslr);
+    await tester.tap(dslr);
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull, reason: 'no overflow');
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.ensureVisible(find.byKey(const Key('rigEditor.save')));
+    await tester.tap(find.byKey(const Key('rigEditor.save')));
     await tester.pumpAndSettle();
     expect(repo.updated.single.cameraClass, CameraClass.dslrMirrorless);
   });

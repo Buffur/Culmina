@@ -1,10 +1,12 @@
-// D-06 (owner decision, 2026-10-21): in red field mode the primary action
-// (a FilledButton such as "Save plan") is red text with a red outline on
-// black, reaching WCAG AA (4.5:1) with red only. The JSON's black on #AA0000
-// (about 2.7:1) stays the light and dark themes' rule only for those themes.
+// WQA-01 (owner-accepted Hybrid reference 86873ce, replacing D-06): in red
+// field mode the primary action (a FilledButton such as "Save plan") is the
+// bright red #FF0000 fill with black text, 5.25:1 and red only; pressed, it
+// takes the selection fill with the primary text. Light and dark keep their
+// filled action.
 
 import 'package:astroplan/core/theme/app_palette.dart';
 import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,24 +17,31 @@ double _contrast(Color a, Color b) {
 }
 
 void main() {
-  test('field mode: the primary action is red on black with a red outline, '
-      'at least 4.5:1', () {
+  test('field mode (WQA-01): the primary action is black on #FF0000, at '
+      'least 4.5:1, red only', () {
     final theme = AppTheme.fieldTheme;
     final style = theme.filledButtonTheme.style!;
     const enabled = <WidgetState>{};
     final fg = style.foregroundColor!.resolve(enabled)!;
     final bg = style.backgroundColor!.resolve(enabled)!;
-    final side = style.side!.resolve(enabled)!;
-    final palette = theme.extension<AppPalette>()!;
-    expect(fg, palette.textPrimary);
-    expect(bg, theme.scaffoldBackgroundColor);
-    expect(side.color, palette.textPrimary);
+    expect(bg, const Color(0xFFFF0000));
+    expect(fg, const Color(0xFF000000));
+    expect(style.side, isNull);
     expect(_contrast(fg, bg), greaterThanOrEqualTo(4.5));
     // Red only: no green or blue light in the action.
-    for (final c in [fg, bg, side.color]) {
+    for (final c in [fg, bg]) {
       expect((c.g * 255).round(), 0);
       expect((c.b * 255).round(), 0);
     }
+    const pressed = {WidgetState.pressed};
+    expect(
+      style.backgroundColor!.resolve(pressed),
+      theme.extension<HybridTokens>()!.selection,
+    );
+    expect(
+      style.foregroundColor!.resolve(pressed),
+      theme.extension<AppPalette>()!.textPrimary,
+    );
   });
 
   test('light and dark keep the filled Hybrid action', () {

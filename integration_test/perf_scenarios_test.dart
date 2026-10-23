@@ -50,6 +50,7 @@ import '../test/support/fake_location_service.dart';
 import '../test/support/fake_reverse_geocoder.dart';
 import '../test/support/in_memory_display_preferences.dart';
 import '../test/support/in_memory_first_run.dart';
+import '../test/support/library_finders.dart';
 import '../test/support/planner_harness.dart';
 
 /// Whether timings are recorded: only on a device (profile mode gives
@@ -321,7 +322,7 @@ void main() {
     binding.testTextInput.register();
     addTearDown(binding.testTextInput.unregister);
     await watch('rigEditor.typeName', () async {
-      final name = find.widgetWithText(TextFormField, 'Rig name');
+      final name = fieldLabeled('Rig name');
       await tap(tester, name);
       await type(tester, name, 'Refractor 400');
     });
@@ -329,7 +330,9 @@ void main() {
       await tap(tester, pixel);
       await type(tester, pixel, '3.7612');
     });
-    await tap(tester, find.text('Cancel'));
+    // Cancel on the changed editor asks first (library.js `cancelEdit`).
+    await tap(tester, find.byKey(const Key('rigEditor.cancel')));
+    await tap(tester, find.byKey(const Key('unsaved.discard')));
 
     // 2. The planner: open it, edit a block through its dialog, change the
     // night and the target, open a section.
@@ -348,12 +351,8 @@ void main() {
       scrollable: list,
     );
     await settle(tester, 3);
-    final firstBlock = find
-        .descendant(
-          of: find.byType(CapturePlanWidget),
-          matching: find.byType(ListTile),
-        )
-        .first;
+    // The first block's Edit (plan.js block row).
+    final firstBlock = find.byKey(const Key('capture.edit.0'));
     await watch('planner.blockDialog', () async {
       await tap(tester, firstBlock);
       final count = find.byKey(const Key('blockDialog.count'));
@@ -422,12 +421,13 @@ void main() {
       await settle(tester);
     });
     await watch('logbook.filters', () async {
-      await tap(tester, find.byKey(const Key('logbook.filters')));
+      await tap(tester, find.byKey(const Key('logbook.filterToggle')));
       await tap(tester, find.byKey(const Key('logbook.filter.completed')));
       await settle(tester);
     });
-    // The Hybrid Logbook's filters are an inline panel: close it with Done.
-    await tap(tester, find.byKey(const Key('logbook.filters.done')));
+    // The Hybrid Logbook's filters are an inline panel under the search
+    // field's filter button (logbook.js): the button closes it.
+    await tap(tester, find.byKey(const Key('logbook.filterToggle')));
     await watch('logbook.entry', () async {
       AppRouter.router.go(AppRouter.sessions);
       await settle(tester);

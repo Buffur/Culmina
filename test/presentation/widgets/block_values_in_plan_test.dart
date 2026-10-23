@@ -220,7 +220,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('OIII · 300 s × 20 ·'));
+    await tester.tap(find.byKey(const Key('capture.edit.0')));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('blockDialog.count')), '30');
     await tester.tap(find.byKey(const Key('blockDialog.submit')));
@@ -228,7 +228,7 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(find.textContaining('Changed in this plan: OIII'), findsOneWidget);
+    expect(find.text('Block edited.'), findsOneWidget);
     expect(vm.captureBlocks.first.frameCount, 30);
     expect(vm.plan.hasUnsavedChanges, isTrue);
     final after = (await tester.runAsync(() => sessions.get(id)))!;
@@ -260,17 +260,27 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pump(const Duration(milliseconds: 200));
     }
-    final rows = find.descendant(
-      of: find.byKey(const Key('detail.planVsActual')),
-      matching: find.byType(RichText),
-    );
+    // Hybrid's Planned and recorded: each block's label, then its plan.
     final texts = [
-      for (final r in tester.widgetList<RichText>(rows)) r.text.toPlainText(),
+      for (final t in tester.widgetList<Text>(
+        find.descendant(
+          of: find.byKey(const Key('detail.planVsActual')),
+          matching: find.byType(Text),
+        ),
+      ))
+        t.data ?? '',
     ];
     expect(
       texts,
-      contains('Ha · 1/14 s · WB Cloudy, tint +2 · MF: 200 planned'),
+      contains(
+        allOf(
+          startsWith('Ha · 1/14 s · '),
+          endsWith(' · WB Cloudy, tint +2 · MF'),
+        ),
+      ),
     );
-    expect(texts, contains('OIII · 300 s: 20 planned'));
+    expect(texts, contains(startsWith('200 × 1/14 s')));
+    expect(texts, contains(startsWith('OIII · 300 s · ')));
+    expect(texts, contains(startsWith('20 × 300 s')));
   });
 }

@@ -137,7 +137,7 @@ void main() {
     expect(text, contains('Integration: 2 h of 2 h planned'));
     expect(text, contains('Ha · 300 s: 24 of 24'));
     expect(text, contains('Conditions: '));
-    expect(text, contains('80 % humidity'));
+    expect(text, contains('80% humidity'));
     expect(text, endsWith('— ${AppIdentity.appName}'));
     expect(text, isNot(contains('Private')));
     expect(text, isNot(contains('1234')));

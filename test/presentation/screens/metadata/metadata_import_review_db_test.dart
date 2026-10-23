@@ -266,7 +266,7 @@ void main() {
 
     await t.tap(find.byKey(const Key('import.new')));
     await _settle(t);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     expect(await app.counts(t), [1, 1, 1]);
     final rig = (await app.rigs(t)).single;
     expect(rig.metadataModel, 'TestMake TestPhone');
@@ -278,7 +278,7 @@ void main() {
 
     await t.tap(find.byKey(Key('import.open.${rig.id}')));
     await _settle(t);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     expect(await app.counts(t), [1, 1, 1], reason: 'no duplicate');
   });
 
@@ -291,7 +291,7 @@ void main() {
 
     await t.tap(find.byKey(const Key('import.open.1')));
     await _settle(t);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     var rig = (await app.rigs(t)).single;
     expect(rig.pixelPitchUm, 2.4);
     expect(
@@ -303,7 +303,7 @@ void main() {
     await _settle(t);
     await t.tap(find.byKey(const Key('import.open.1')));
     await _settle(t);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     rig = (await app.rigs(t)).single;
     expect(rig.pixelPitchUm, 2.414);
     expect(
@@ -322,7 +322,7 @@ void main() {
     expect(_headline(t), startsWith('Same camera as "Phone tele"'));
     await t.tap(find.byKey(const Key('import.newFrom.1')));
     await _settle(t);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     expect(await app.counts(t), [2, 2, 2]);
     final saved = await app.rigs(t);
     expect(saved.map((r) => r.focalLengthMm), containsAll([8.8, 6.57]));
@@ -334,7 +334,7 @@ void main() {
     await _pickPhone(t, app);
     await t.tap(find.byKey(const Key('import.new')));
     await _settle(t);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
 
     await t.tap(find.byTooltip('Back'));
     await _settle(t);
@@ -362,13 +362,13 @@ void main() {
     final pitch = find.widgetWithText(TextFormField, '3.76').first;
     expect(t.widget<TextFormField>(pitch).controller!.text, '');
     expect(find.byKey(const Key('editor.withheld')), findsOneWidget);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     expect(await app.counts(t), [1, 1, 1], reason: 'nothing without it');
 
     await t.enterText(pitch, '1.4');
     await _settle(t);
     expect(find.byKey(const Key('editor.withheld')), findsNothing);
-    await _tapText(t, 'Save');
+    await _tapText(t, 'Save rig');
     expect(await app.counts(t), [2, 2, 2]);
     final rig = (await app.rigs(t)).firstWhere((r) => r.focalLengthMm == 6.57);
     expect(rig.pixelPitchUm, 1.4);

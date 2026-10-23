@@ -32,6 +32,7 @@ import 'package:astroplan/domain/services/backup_service.dart';
 import 'package:astroplan/domain/services/session_exporter.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/screens/library/library_parts.dart';
 import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -315,17 +316,18 @@ void main() {
       expect(vm.theme.isFieldMode, isFalse);
       await shot('block-editor-keyboard-light_100');
       // The platform's Back (the route-pop message Android sends) on the
-      // dirty editor asks first; Cancel keeps the editor and its edit.
+      // dirty editor asks "Discard this edit?" first; Keep editing keeps
+      // the editor and its edit.
       await tester.binding.handlePopRoute();
       await _settle(tester);
-      expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
+      expect(find.byKey(const Key('discardEdit.discard')), findsOneWidget);
       await shot('block-editor-system-back-guard-light_100');
-      await tap(find.byKey(const Key('unsaved.cancel')));
+      await tap(find.byKey(const Key('discardEdit.keep')));
       expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
-      // Back again and Discard: the editor closes and the plan is unchanged.
+      // Back again and Discard edit: the editor closes, the plan unchanged.
       await tester.binding.handlePopRoute();
       await _settle(tester);
-      await tap(find.byKey(const Key('unsaved.discard')));
+      await tap(find.byKey(const Key('discardEdit.discard')));
       expect(vm.plan.captureBlocks.first.frameCount, originalCount);
       expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
       // The explicit Cancel on a dirty edit leaves the plan unchanged too.
@@ -334,9 +336,7 @@ void main() {
       await tester.enterText(countField, '${originalCount + 2}');
       await _settle(tester);
       await tap(find.byKey(const Key('blockDialog.cancel')));
-      if (find.byKey(const Key('unsaved.discard')).evaluate().isNotEmpty) {
-        await tap(find.byKey(const Key('unsaved.discard')));
-      }
+      await tap(find.byKey(const Key('discardEdit.discard')));
       expect(vm.plan.captureBlocks.first.frameCount, originalCount);
       expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
       await tap(find.byKey(const Key('planner.save')));
@@ -519,7 +519,8 @@ void main() {
       // The explicit per-plan buffer must not alter defaults while typing,
       // and persisted overrides must survive the real Logbook reopen action.
       await at(AppRouter.session());
-      await tap(find.byKey(const Key('section.planner.assumptions')));
+      // The overrides live in "Budget and assumptions" (plan.js).
+      await tap(find.byKey(const Key('section.planner.budgetDetails')));
       final globalDefaults = vm.settings.planningPreferences;
       final inheritedAcquisition = vm.captureBudget.acquisitionMs;
       Future<void> fillOverrides() async {
@@ -693,13 +694,13 @@ void main() {
       // dedicated host clipping test. Cancel leaves the rig unchanged.
       tester.platformDispatcher.textScaleFactorTestValue = 2;
       await at(AppRouter.libraryRigs);
-      await tap(find.byType(ListTile));
-      expect(find.byType(AlertDialog), findsOneWidget);
+      await tap(find.byType(LibraryRow));
+      expect(find.byKey(const Key('rigDetail.edit')), findsOneWidget);
       await reveal(find.text('Resolution'));
       await shot('rig-resolution-light_200');
       await reveal(find.text('Sensor size'));
       await shot('rig-sensor-size-light_200');
-      await tap(find.text('Cancel'));
+      await tester.binding.handlePopRoute(); // back from the rig's record
       tester.platformDispatcher.textScaleFactorTestValue = 1;
       await _settle(tester);
 

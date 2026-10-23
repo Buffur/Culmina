@@ -79,7 +79,7 @@ void main() {
       );
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
-      final note = find.text('Auto-calculated from resolution × pixel size');
+      final note = find.text('Auto-calculated from resolution × pixel size.');
       expect(note, findsOneWidget);
       // The derived fields sit below the fold: the guideline checks only
       // what is on screen.
@@ -134,13 +134,18 @@ void main() {
     await _settle(tester);
     final altitude = vm.conditions.currentAltitude!;
     expect(altitude, lessThan(0));
-    // The Hybrid Plan keeps the target's measurements in its remembered
-    // "Target details" disclosure.
-    await tester.tap(find.byTooltip('Target details'));
-    await _settle(tester);
-    expect(find.text('Altitude now'), findsOneWidget);
-    expect(find.text('−${altitude.abs().toStringAsFixed(1)}°'), findsOneWidget);
-    expect(find.textContaining('-'), findsNothing, reason: 'no hyphen-minus');
+    // Hybrid Plan: the target row's caption carries the altitude now.
+    final caption = tester
+        .widgetList<Text>(
+          find.descendant(
+            of: find.byKey(const Key('planner.target')),
+            matching: find.byType(Text),
+          ),
+        )
+        .map((t) => t.data ?? '')
+        .join(' | ');
+    expect(caption, contains('now −${altitude.abs().toStringAsFixed(1)}°'));
+    expect(caption, isNot(contains('-')), reason: 'no hyphen-minus');
   });
 
   // F18 A1: on another plan night the altitude now is secondary detail,
@@ -191,29 +196,18 @@ void main() {
     await _settle(tester);
     final altitude = vm.conditions.currentAltitude!;
     final degrees = '−${altitude.abs().toStringAsFixed(1)}°';
-    await tester.tap(find.byTooltip('Target details'));
-    await _settle(tester);
-    final summary = find.byKey(const Key('planner.target'));
-    expect(
-      find.descendant(of: summary, matching: find.text('Altitude now')),
-      findsNothing,
-    );
-    final detail = find.byKey(const Key('section.planner.currentSky'));
-    expect(detail, findsOneWidget);
-    expect(
-      find.descendant(
-        of: detail,
-        matching: find.text("Current sky (not the plan's night)"),
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: detail,
-        matching: find.text('Altitude now: $degrees'),
-      ),
-      findsOneWidget,
-    );
+    // Hybrid Plan: the altitude now stays in the target row's caption,
+    // labelled as not the plan's night.
+    final caption = tester
+        .widgetList<Text>(
+          find.descendant(
+            of: find.byKey(const Key('planner.target')),
+            matching: find.byType(Text),
+          ),
+        )
+        .map((t) => t.data ?? '')
+        .join(' | ');
+    expect(caption, contains("now $degrees (not the plan's night)"));
   });
 
   testWidgets('S11H-03: the zone picker marks the current zone with a check, '

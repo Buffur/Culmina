@@ -3,7 +3,14 @@
 // spec: {base, shots:[{id,file,query,width,height,theme,steps:[...],dump}]}
 // Read-only against design/home-lab; isolated contexts; no storage persisted.
 const repo = process.env.REPO;
-const {launchChromium} = require(repo + '/design/home-lab/scripts/browser_toolchain.cjs');
+// HT_PLAYWRIGHT: a local Playwright package path where the pinned toolchain is
+// absent (the version used is written to the manifest).
+const launchChromium = process.env.HT_PLAYWRIGHT
+  ? () => require(process.env.HT_PLAYWRIGHT).chromium.launch()
+  : require(repo + '/design/home-lab/scripts/browser_toolchain.cjs').launchChromium;
+const playwrightVersion = process.env.HT_PLAYWRIGHT
+  ? require(process.env.HT_PLAYWRIGHT + '/package.json').version
+  : '1.64.1 (pinned)';
 const fs = require('node:fs'), path = require('node:path');
 const [specFile, outDir] = process.argv.slice(2);
 const spec = JSON.parse(fs.readFileSync(specFile, 'utf8'));
@@ -92,6 +99,6 @@ function dumpStyles(frameSel) {
     await ctx.close();
   }
   await browser.close();
-  fs.writeFileSync(path.join(outDir, 'web-manifest-' + (spec.name || 'run') + '.json'), JSON.stringify({webSha: '86873ce343160c860706091e12b257090cc96d94', studio: [1200, 1000], zoom: 1, textScale: 1, shots: manifest}, null, 1));
+  fs.writeFileSync(path.join(outDir, 'web-manifest-' + (spec.name || 'run') + '.json'), JSON.stringify({webSha: '86873ce343160c860706091e12b257090cc96d94', playwright: playwrightVersion, studio: [1200, 1000], zoom: 1, textScale: 1, shots: manifest}, null, 1));
   console.log(JSON.stringify(manifest.map(m => [m.id, m.appArea, m.errors.length])));
 })().catch(e => { console.error(e); process.exit(1); });

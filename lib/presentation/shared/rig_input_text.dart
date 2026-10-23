@@ -1,4 +1,6 @@
 import '../../domain/models/camera_class.dart';
+import '../../domain/models/capture_evidence.dart';
+import '../../domain/models/spec_confidence.dart';
 import '../../domain/models/spec_provenance.dart';
 
 /// Why the rig editor asks for each required input, and the words of the
@@ -57,4 +59,34 @@ abstract final class RigInputText {
             'read.';
 
   static const savedAndChosen = 'Rig saved and chosen for this plan';
+
+  /// A capture format in words (ADR-021 C7).
+  static String captureFormat(CaptureFormat f) => switch (f) {
+    CaptureFormat.dngUncompressed16 => 'Uncompressed DNG, 16-bit',
+    CaptureFormat.fits16 => 'FITS, 16-bit integer',
+    CaptureFormat.fits32float => 'FITS, 32-bit float',
+    CaptureFormat.compressedRaw => 'Compressed RAW (CR3, NEF, ARW …)',
+    CaptureFormat.jpegHeic => 'JPEG or HEIC',
+  };
+
+  /// Where a group of specs came from (ADR-008 §6), in words: "Entered by
+  /// you", "From a file (DNG)", "Example values shipped with the app";
+  /// never a guess.
+  static String source(String? source, SpecConfidence? confidence) {
+    final from = switch (source) {
+      null => 'Not recorded',
+      'user' => 'Entered by you',
+      final s when s.startsWith('seed:') =>
+        'Example values shipped with the app',
+      final s when s.startsWith('metadata:') =>
+        'From a file (${s.substring('metadata:'.length).split(':').first.toUpperCase()})',
+      final s => s,
+    };
+    return switch (confidence) {
+      SpecConfidence.verified => '$from · verified',
+      SpecConfidence.reported => '$from · reported',
+      SpecConfidence.estimated => '$from · estimated',
+      null => from,
+    };
+  }
 }

@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:astroplan/core/config/app_identity.dart';
 import 'package:astroplan/presentation/screens/about/about_screen.dart';
+import 'package:astroplan/presentation/screens/settings/settings_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,6 +36,16 @@ void main() {
     expect(find.textContaining('CC BY 4.0'), findsOneWidget);
     expect(find.textContaining('lightpollutionmap.app'), findsWidgets);
     expect(find.text('Open-source licences'), findsOneWidget);
+    // The full notice, one tap away.
+    expect(find.byKey(const Key('about.noticeText')), findsNothing);
+    await tester.tap(find.text('OpenNGC notice'));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<SelectableText>(find.byKey(const Key('about.noticeText')))
+          .data,
+      File(AboutScreen.noticeAsset).readAsStringSync(),
+    );
   });
 
   // S9.5 (08 §23, D9-4): the author first, apart from third-party credit,
@@ -45,13 +56,16 @@ void main() {
     await pumpAbout(tester);
     final author = find.byKey(const Key('about.author'));
     expect(
-      find.descendant(of: author, matching: find.text('Made by Buffur')),
+      find.descendant(
+        of: author,
+        matching: find.textContaining('Made by Buffur'),
+      ),
       findsOneWidget,
     );
+    // settings.js aboutView: Reddit, then GitHub, as links.
     expect(
-      find.descendant(of: author, matching: find.byType(FilledButton)),
-      findsOneWidget,
-      reason: 'Reddit is the prominent link',
+      tester.getTopLeft(find.byKey(const Key('about.reddit'))).dy,
+      lessThan(tester.getTopLeft(find.byKey(const Key('about.github'))).dy),
     );
     expect(find.byKey(const Key('about.reddit')), findsOneWidget);
     expect(find.byKey(const Key('about.github')), findsOneWidget);
@@ -59,11 +73,11 @@ void main() {
     expect(AboutScreen.authorGitHub, 'https://github.com/Buffur');
     expect(
       tester.getTopLeft(author).dy,
-      lessThan(tester.getTopLeft(find.text('Data sources')).dy),
+      lessThan(tester.getTopLeft(find.text('Data sources in the app')).dy),
     );
     expect(
       tester.widget<Text>(find.byKey(const Key('about.version'))).data,
-      'Version ${AppIdentity.version}',
+      'Version ${AppIdentity.version} · Made by Buffur',
     );
   });
 
@@ -78,7 +92,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byKey(Key(key)),
-          matching: find.byType(TextButton),
+          matching: find.byType(SettingsLink),
         ),
         findsOneWidget,
         reason: key,
@@ -91,7 +105,12 @@ void main() {
     tester,
   ) async {
     await pumpAbout(tester);
-    final licence = tester.widget<Text>(find.byKey(const Key('about.licence')));
+    final licence = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(const Key('about.licence')),
+        matching: find.byType(Text),
+      ),
+    );
     expect(licence.data, contains('GPL-3.0'));
     expect(licence.data, contains(AppIdentity.appName));
     expect(licence.data, contains(AppIdentity.version));
@@ -118,7 +137,12 @@ void main() {
 
   testWidgets('summarises privacy and links the policy', (tester) async {
     await pumpAbout(tester);
-    final privacy = tester.widget<Text>(find.byKey(const Key('about.privacy')));
+    final privacy = tester.widget<Text>(
+      find.descendant(
+        of: find.byKey(const Key('about.privacy')),
+        matching: find.byType(Text),
+      ),
+    );
     for (final phrase in [
       'No account, no ads, no analytics',
       'stay on this device',

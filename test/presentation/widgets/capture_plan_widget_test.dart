@@ -102,7 +102,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(wrap());
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
 
     await tester.tap(find.widgetWithText(FilledButton, 'Add block'));
@@ -117,7 +117,7 @@ void main() {
 
   testWidgets('a zero or negative exposure is rejected', (tester) async {
     await tester.pumpWidget(wrap());
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
 
     await tester.enterText(blockField('Exposure (seconds)'), '0');
@@ -131,7 +131,7 @@ void main() {
 
   testWidgets('valid input adds a block and closes the dialog', (tester) async {
     await tester.pumpWidget(wrap());
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
 
     await tester.enterText(blockField('Exposure (seconds)'), '120');
@@ -158,10 +158,12 @@ void main() {
       );
       await tester.pumpWidget(wrap());
       await tester.pumpAndSettle();
-      // S1.7 (UX-19): "60 s", not "60.0s". S6.9: exposure × count.
-      expect(find.text('L · 60 s × 30 · 30 min'), findsOneWidget);
+      // S1.7 (UX-19): "60 s", not "60.0s". Hybrid block (plan.js
+      // blockRow): the title, then count × exposure = integration.
+      expect(find.text('Light · L'), findsOneWidget);
+      expect(find.text('30 × 60 s = 30 min integration'), findsOneWidget);
 
-      await tester.tap(find.text('L · 60 s × 30 · 30 min'));
+      await tester.tap(find.byKey(const Key('capture.edit.0')));
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
@@ -176,6 +178,7 @@ void main() {
       expect(vm.captureBlocks, hasLength(1));
       expect(vm.captureBlocks.single.frameCount, 45);
       expect(vm.captureBlocks.single.exposureTimeSeconds, 60.0);
+      expect(find.text('45 × 60 s = 45 min integration'), findsOneWidget);
     },
   );
 
@@ -183,8 +186,12 @@ void main() {
     await tester.pumpWidget(wrap());
     await tester.pumpAndSettle();
 
+    expect(find.text('Relative stacking gain'), findsOneWidget);
     expect(
-      find.text('Relative stacking gain (√N vs one frame)'),
+      find.text(
+        'Relative gain is ideal √N within comparable light frames, not '
+        'absolute signal-to-noise.',
+      ),
       findsOneWidget,
     );
     expect(find.textContaining('SNR'), findsNothing);
@@ -219,16 +226,13 @@ void main() {
     addTearDown(tester.view.reset);
     await vm.plan.setEquipment(_dslr);
     await tester.pumpWidget(wrap());
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.byKey(const Key('blockDialog.gainValue')));
     await tester.pumpAndSettle();
     expect(find.text('ISO (optional)'), findsOneWidget);
     expect(find.textContaining('ensitivity'), findsNothing);
-    final helper = find.text(
-      'Recorded only; it does not change the plan. Leave blank to keep it '
-      'unrecorded.',
-    );
+    final helper = find.text('Leave blank to keep it unrecorded.');
     expect(
       tester.renderObject<RenderParagraph>(helper).didExceedMaxLines,
       isFalse,
@@ -240,7 +244,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(wrap());
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('blockDialog.gainKind')), findsNothing);
     expect(find.byKey(const Key('blockDialog.chooseClass')), findsOneWidget);
@@ -252,7 +256,7 @@ void main() {
   ) async {
     await vm.plan.setEquipment(_dslr);
     await tester.pumpWidget(wrap());
-    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.tap(find.byKey(const Key('capturePlan.addLights')));
     await tester.pumpAndSettle();
 
     await chooseSegment(tester, 'blockDialog.frameType', 'Dark');
@@ -299,15 +303,19 @@ void main() {
     await tester.pumpWidget(wrap());
     await tester.pumpAndSettle();
 
-    // S6.7: the breakdown and the √N help are one tap away; the √N values
-    // stay visible. The lines carry the glossary's names (RD-14).
-    // F11 (C16): the group names its ISO or gain, here not recorded.
+    // S6.7: the breakdown and the √N help are one tap away (Hybrid: Budget
+    // and assumptions, Stacking gain details); the gain stays visible in
+    // the estimate. The lines carry the glossary's names (RD-14).
     expect(
-      find.text('Ha · 300 s · ISO or gain not recorded × 20'),
+      find.descendant(
+        of: find.byKey(const Key('estimate.gain')),
+        matching: find.text('×4.47'),
+      ),
       findsOneWidget,
     );
     expect(find.text('Integration (light exposure)'), findsNothing);
-    await tester.tap(find.text('Budget details'));
+    await tester.ensureVisible(find.text('Budget and assumptions'));
+    await tester.tap(find.text('Budget and assumptions'));
     await tester.pumpAndSettle();
     expect(find.text('Integration (light exposure)'), findsOneWidget);
     expect(
@@ -316,25 +324,28 @@ void main() {
         matching: find.text('1 h 40 min'),
       ),
       findsOneWidget,
-    ); // 20 x 300 s, also shown in the new estimate summary.
+    ); // 20 x 300 s, also shown in the estimate.
     expect(find.text('Imaging time (lights + overheads)'), findsOneWidget);
     expect(find.text('Total time'), findsOneWidget);
-    await tester.ensureVisible(
-      find.text('Relative stacking gain (√N vs one frame)'),
-    );
-    await tester.tap(find.text('Relative stacking gain (√N vs one frame)'));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('capturePlan.gainHelp')), findsOneWidget);
-    expect(find.textContaining('not a signal-to-noise ratio'), findsOneWidget);
-
-    await tester.ensureVisible(find.text('Assumptions'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Assumptions'));
-    await tester.pumpAndSettle();
-    // Setup (summary) + dither, refocus, filter change, flip, setup (panel).
+    // The assumptions sit in the same disclosure: setup in the facts, then
+    // dither, refocus, filter change, flip and setup in the panel.
     expect(find.text('Not included'), findsNWidgets(6));
     expect(find.text('5 s'), findsOneWidget); // per-frame default
-    expect(find.text('15 %'), findsOneWidget);
+    expect(find.text('15%'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Stacking gain details'));
+    await tester.tap(find.text('Stacking gain details'));
+    await tester.pumpAndSettle();
+    // F11 (C16): the group names its ISO or gain, here not recorded.
+    expect(
+      find.textContaining('Ha · 300 s · ISO or gain not recorded'),
+      findsWidgets,
+    );
+    expect(find.byKey(const Key('capturePlan.gainHelp')), findsOneWidget);
+    expect(
+      find.textContaining("isn't absolute signal-to-noise"),
+      findsOneWidget,
+    );
   });
 
   // TASK 8.6 acceptance: a phone with a 30 s block shows the NPF value and a

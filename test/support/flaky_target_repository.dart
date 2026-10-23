@@ -23,6 +23,12 @@ class FlakyTargetRepository implements TargetRepository {
   }
 
   @override
+  Future<List<TargetAlias>> getAllAliases() async {
+    _check();
+    return _delegate.getAllAliases();
+  }
+
+  @override
   Future<int?> aliasCatalogVersion() async {
     _check();
     return _delegate.aliasCatalogVersion();

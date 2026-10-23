@@ -1,0 +1,156 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web412-home",
+   "url": "http://127.0.0.1:4197/index.html?variant=blend&font=native&theme=light&scale=1&view=wide",
+   "steps": [],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    814
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web412-plan",
+   "url": "http://127.0.0.1:4197/plan.html?variant=blend&font=native&theme=light&scale=1",
+   "steps": [],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web412-cal",
+   "url": "http://127.0.0.1:4197/plan.html?variant=blend&font=native&theme=light&scale=1",
+   "steps": [
+    {
+     "click": "[data-build-calibration]"
+    }
+   ],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web412-lib-rigedit",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    },
+    {
+     "click": "[data-open='rig:example-rig-dslr']"
+    },
+    {
+     "click": "[data-edit]"
+    }
+   ],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web412-lib-rigs",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=library",
+   "steps": [
+    {
+     "click": "[data-open-list=rigs]"
+    }
+   ],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web412-logbook",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook",
+   "steps": [],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web412-settings",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=settings",
+   "steps": [],
+   "phone": [
+    414,
+    814
+   ],
+   "appArea": [
+    412,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  }
+ ]
+}

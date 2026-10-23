@@ -51,8 +51,10 @@ void main() {
     expect(QuantityText.signed(-3, digits: 1), '−3.0');
   });
 
-  test('percentages have a space before the sign', () {
-    expect(QuantityText.percent(3.4), '3 %');
-    expect(QuantityText.percent(97), '97 %');
+  // The Hybrid reference writes percentages without a space ("62%",
+  // app.js and conditions.js at 86873ce).
+  test('percentages are written as the reference writes them', () {
+    expect(QuantityText.percent(3.4), '3%');
+    expect(QuantityText.percent(97), '97%');
   });
 }

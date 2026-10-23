@@ -24,7 +24,6 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/night_view.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
-import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
 import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
@@ -145,6 +144,14 @@ void main() {
   String textOf(WidgetTester tester, String key) =>
       tester.widget<Text>(find.byKey(Key(key))).data!;
 
+  /// The slider's spoken read-out at the cursor (its semantic value).
+  String readout(WidgetTester tester) {
+    final slider = tester.widget<Slider>(
+      find.byKey(const Key('nightMoon.slider')),
+    );
+    return slider.semanticFormatterCallback!(slider.value);
+  }
+
   testWidgets('missing-site conditions offer the real site picker', (
     tester,
   ) async {
@@ -235,50 +242,55 @@ void main() {
       'nothing about the plan changes; Back to the plan', (tester) async {
     await start(tester);
     final blocks = vm.captureBlocks;
-    expect(
-      find.byKey(const Key('nightMoon.now')),
-      findsOneWidget,
-      reason: 'now lies in the plan\'s night',
-    );
+    // Now lies in the plan's night: the cursor starts at now.
+    expect(browser(tester).nowInView, isTrue);
     final cell = find.byKey(Key('nightMoon.day.${viewed.toIso8601String()}'));
     await tester.ensureVisible(cell);
     await tester.tap(cell);
     await settle(tester);
     expect(
       textOf(tester, 'nightMoon.viewing'),
-      NightBrowseText.viewing(
-        NightTimeFormatter.eveningDate(viewed),
-        NightTimeFormatter.eveningDate(tonight),
-      ),
+      'Your plan: Night of ${NightTimeFormatter.eveningDate(tonight)}. '
+      'Browsing changes nothing.',
     );
     expect(vm.eveningDate, tonight, reason: 'viewing is not adopting');
     expect(vm.captureBlocks, blocks);
     final b = browser(tester);
     expect(b.view.night.eveningDate, viewed);
-    // Now is not in the viewed night: the slider starts at its start.
-    expect(find.byKey(const Key('nightMoon.now')), findsNothing);
-    expect(find.byKey(const Key('nightMoon.start')), findsOneWidget);
-    expect(b.cursorUtc, b.view.night.startUtc);
-    final before = textOf(tester, 'nightMoon.cursor');
+    // Now is not in the viewed night: the cursor starts where dark starts
+    // (owner 2026-10-22, web startCursor).
+    expect(b.cursorUtc, b.jumpTarget(end: false));
+    expect(readout(tester), contains('Dark (Sun below −18°)'));
+    b.setCursor(b.view.night.startUtc);
+    await settle(tester);
+    final before = readout(tester);
     expect(before, contains('Daylight'));
     expect(before, contains('darkness in'));
     // Drag the slider to the middle of the night (midnight): dark.
     b.setCursor(b.view.night.startUtc.add(const Duration(hours: 12)));
     await settle(tester);
-    final mid = textOf(tester, 'nightMoon.cursor');
+    final mid = readout(tester);
     expect(mid, contains('Dark (Sun below −18°)'));
     expect(mid, contains('dark for another'));
     expect(mid, contains('site zone Europe/Ljubljana, CET'));
     expect(vm.eveningDate, tonight);
-    // "Night start" resets; another night resets the cursor too.
-    await tester.tap(find.byKey(const Key('nightMoon.start')));
+    // "Dark starts" jumps there; another night resets the cursor too.
+    await tester.ensureVisible(find.byKey(const Key('nightMoon.jumpStart')));
     await settle(tester);
-    expect(b.cursorUtc, b.view.night.startUtc);
+    await tester.tap(find.byKey(const Key('nightMoon.jumpStart')));
+    await settle(tester);
+    expect(b.cursorUtc, b.jumpTarget(end: false));
+    await tester.ensureVisible(find.byKey(const Key('nightMoon.backToPlan')));
+    await settle(tester);
     await tester.tap(find.byKey(const Key('nightMoon.backToPlan')));
     await settle(tester);
     expect(find.byKey(const Key('nightMoon.viewing')), findsNothing);
     expect(b.view.night.eveningDate, tonight);
-    expect(find.byKey(const Key('nightMoon.now')), findsOneWidget);
+    expect(
+      b.nowInView,
+      isTrue,
+      reason: 'back on the plan night, now is in view',
+    );
   });
 
   testWidgets('A2: Plan this night adopts a viewed night through D9; a saved '
@@ -350,7 +362,9 @@ void main() {
       await vm.site.selectSite(id);
     });
     await settle(tester);
-    expect(b.cursorUtc, b.view.night.startUtc, reason: 'revalidated');
+    // Revalidated to the new night's default (owner 2026-10-22, web
+    // startCursor): the start of its dark time.
+    expect(b.cursorUtc, b.jumpTarget(end: false), reason: 'revalidated');
     final kept = await tester.runAsync(
       () => DriftSessionRepository(db).get(saved.id),
     );
@@ -379,10 +393,10 @@ void main() {
     expect(b.month, (2026, 10));
     b.setCursor(DateTime.utc(2026, 10, 24, 21)); // 23:00 CEST
     await settle(tester);
-    expect(textOf(tester, 'nightMoon.cursor'), contains('CEST'));
+    expect(readout(tester), contains('CEST'));
     b.setCursor(DateTime.utc(2026, 10, 25, 3)); // 04:00 CET
     await settle(tester);
-    expect(textOf(tester, 'nightMoon.cursor'), contains(', CET, UTC+01:00'));
+    expect(readout(tester), contains(', CET, UTC+01:00'));
     expect(vm.eveningDate, tonight);
   });
 
@@ -416,7 +430,7 @@ void main() {
     for (final hours in [0, 6, 12, 18, 23]) {
       b.setCursor(b.view.night.startUtc.add(Duration(hours: hours)));
       await settle(tester);
-      final text = textOf(tester, 'nightMoon.cursor');
+      final text = readout(tester);
       expect(text, contains('Daylight · '), reason: '+$hours h');
       expect(text, contains('no more dark time this night'));
       expect(text, isNot(contains('darkness in')));
@@ -436,7 +450,7 @@ void main() {
       b.setCursor(b.view.night.startUtc.add(Duration(hours: hours)));
       await settle(tester);
       expect(b.cursor.darkChangeUtc, isNull);
-      final text = textOf(tester, 'nightMoon.cursor');
+      final text = readout(tester);
       expect(text, contains('Dark (Sun below −18°)'), reason: '+$hours h');
       expect(text, contains('dark until the night ends'));
       expect(text, isNot(contains('dark for another')));
@@ -453,16 +467,15 @@ void main() {
     final slider = find.byKey(const Key('nightMoon.slider'));
     expect(slider, findsOneWidget);
     final before = b.cursorUtc;
-    String readout() => textOf(tester, 'nightMoon.cursor');
 
     // Its semantics: a slider whose value is the instant the readout
     // starts with, with increase / decrease actions.
     SemanticsNode node() =>
         find.semantics.byFlag(SemanticsFlag.isSlider).evaluate().single;
     expect(node().value, isNotEmpty);
-    expect(node().value, startsWith('${node().label}: '));
+    expect(node().value, startsWith('${node().label}, '));
     expect(node().value, contains('Moon'));
-    expect(readout(), startsWith('${node().label}, '));
+    expect(node().value, readout(tester));
     expect(
       node().getSemanticsData().hasAction(SemanticsAction.increase),
       isTrue,
@@ -490,7 +503,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await settle(tester);
     expect(b.cursorUtc, before.add(const Duration(minutes: 5)));
-    expect(readout(), startsWith('${node().label}, '));
+    expect(readout(tester), startsWith('${node().label}, '));
     expect(node().value, up);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);

@@ -279,6 +279,8 @@ void main() {
       );
       await type(tester, 'blockDialog.exposure', '90');
       await tapKey(tester, 'blockDialog.cancel');
+      await tester.tap(find.byKey(const Key('discardEdit.discard')));
+      await tester.pumpAndSettle();
       expect(result.single, isNull);
     });
   });
@@ -351,7 +353,7 @@ void main() {
       await type(tester, 'blockDialog.gainValue', '800');
       await choose(tester, 'blockDialog.wbMode', 'Kelvin');
       await type(tester, 'blockDialog.wbKelvin', '4500');
-      await tapKey(tester, 'blockDialog.details');
+      // plan.js blockView: the tint sits in the White balance group.
       await type(tester, 'blockDialog.tint', '-3');
       await chooseSegment(tester, 'blockDialog.focus', 'MF');
       await submit(tester);
@@ -371,8 +373,8 @@ void main() {
       await open(tester, cameraClass: CameraClass.phone);
       await type(tester, 'blockDialog.exposure', '30');
       await type(tester, 'blockDialog.count', '20');
-      await choose(tester, 'blockDialog.wbMode', 'Preset');
-      await choose(tester, 'blockDialog.wbPreset', 'Cloudy');
+      // One Mode select lists the presets (plan.js WHITE_BALANCE).
+      await choose(tester, 'blockDialog.wbMode', 'Cloudy');
       await submit(tester);
       expect(
         result.single!.whiteBalance,
@@ -393,33 +395,20 @@ void main() {
       expect(find.textContaining('A whole number of kelvins'), findsOneWidget);
     });
 
-    // Migration re-review N1: the tint sits in Details; a closed Details
-    // must not let an invalid tint pass unchecked (no dead button, no
-    // silent drop).
+    // Migration re-review N1: an invalid tint never passes unchecked (no
+    // dead button, no silent drop). Hybrid: the tint is in the White
+    // balance group, built whenever it applies.
     for (final tint in ['2000', 'abc']) {
-      testWidgets('an invalid tint ($tint) in a closed Details fails by its '
-          'field', (tester) async {
+      testWidgets('an invalid tint ($tint) fails by its field', (tester) async {
         await open(tester, cameraClass: CameraClass.dslrMirrorless);
         await type(tester, 'blockDialog.exposure', '30');
         await type(tester, 'blockDialog.count', '20');
         await choose(tester, 'blockDialog.wbMode', 'Custom');
-        await openBlockDisclosure(tester, 'blockDialog.details');
         await type(tester, 'blockDialog.tint', tint);
-        // Close Details again.
-        final header = find.descendant(
-          of: find.byKey(const Key('blockDialog.details')),
-          matching: find.byType(InkWell),
-        );
-        await tester.ensureVisible(header.first);
-        await tester.pumpAndSettle();
-        await tester.tap(header.first);
-        await tester.pumpAndSettle();
-        expect(find.byKey(const Key('blockDialog.tint')), findsNothing);
-        expect(find.textContaining('Tint $tint'), findsOneWidget);
         await submit(tester);
         expect(result, isEmpty, reason: 'still open');
         expect(find.byKey(const Key('blockDialog.tint')), findsOneWidget);
-        expect(find.textContaining('as the camera shows it'), findsWidgets);
+        expect(fieldText(tester, 'blockDialog.tint'), tint);
         expect(tester.takeException(), isNull);
       });
     }
@@ -427,9 +416,15 @@ void main() {
     testWidgets('an old block without them reads "Not recorded" and stays '
         'unrecorded', (tester) async {
       await open(tester, initial: _light());
-      // White balance reads "Not recorded"; Hybrid's focus record is a
-      // segmented choice whose "Unrecorded" option is selected.
-      expect(find.text('Not recorded'), findsOneWidget);
+      // The white balance Mode reads "Unrecorded"; Hybrid's focus record is
+      // a segmented choice whose "Unrecorded" option is selected.
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('blockDialog.wbMode')),
+          matching: find.text('Unrecorded'),
+        ),
+        findsOneWidget,
+      );
       final handle = tester.ensureSemantics();
       expect(
         tester.getSemantics(find.byKey(const Key('blockDialog.focus.none'))),
@@ -528,7 +523,7 @@ void main() {
         const Rect.fromLTWH(0, 0, 412, 915),
         reason: 'the scoped editor occupies the native page, not a modal card',
       );
-      expect(find.byKey(const Key('blockEditor.close')), findsOneWidget);
+      expect(find.byKey(const Key('blockDialog.cancel')), findsOneWidget);
       for (final key in [
         'blockDialog.exposure',
         'blockDialog.count',
@@ -550,65 +545,59 @@ void main() {
     });
   });
 
+  // plan.html #discard-edit (Hybrid): leaving a changed editor asks
+  // "Discard this edit?"; Keep editing, Back and a tap outside keep it.
   group('A6: the discard guard', () {
-    testWidgets('a changed editor asks on Back; Cancel keeps it, Discard '
-        'returns nothing', (tester) async {
+    testWidgets('a changed editor asks on Back; Keep editing keeps it, '
+        'Discard edit returns nothing', (tester) async {
       await open(tester, initial: _light());
       await type(tester, 'blockDialog.count', '99');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('"L" has changes that are not saved.'), findsOneWidget);
-      await tester.tap(find.byKey(const Key('unsaved.cancel')));
+      expect(find.text('Discard this edit?'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('discardEdit.keep')));
       await tester.pumpAndSettle();
       expect(fieldText(tester, 'blockDialog.count'), '99');
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('unsaved.discard')));
+      await tester.tap(find.byKey(const Key('discardEdit.discard')));
       await tester.pumpAndSettle();
       expect(result.single, isNull);
     });
 
-    testWidgets('the full-page close asks; dismissing the prompt is Cancel', (
-      tester,
-    ) async {
+    testWidgets('the full-page close asks; dismissing the prompt keeps the '
+        'editor', (tester) async {
       await open(tester);
       await type(tester, 'blockDialog.exposure', '30');
-      await tester.tap(find.byKey(const Key('blockEditor.close')));
+      await tester.tap(find.byKey(const Key('blockDialog.cancel')));
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('unsaved.discard')), findsOneWidget);
+      expect(find.byKey(const Key('discardEdit.discard')), findsOneWidget);
       await tester.tapAt(const Offset(2, 2)); // dismiss the prompt
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('blockDialog.submit')), findsOneWidget);
+      expect(fieldText(tester, 'blockDialog.exposure'), '30');
       expect(result, isEmpty);
     });
 
-    testWidgets("the prompt's Save applies the block", (tester) async {
-      await open(tester, initial: _light());
-      await type(tester, 'blockDialog.count', '42');
-      await tester.binding.handlePopRoute();
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('unsaved.save')));
-      await tester.pumpAndSettle();
-      expect(result.single!.frameCount, 42);
-    });
-
-    testWidgets('an unchanged editor closes at once; an explicit Cancel '
-        'never applies', (tester) async {
+    testWidgets('an unchanged editor closes at once; closing never applies', (
+      tester,
+    ) async {
       await open(tester, initial: _light());
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('unsaved.discard')), findsNothing);
+      expect(find.byKey(const Key('discardEdit.discard')), findsNothing);
       expect(result.single, isNull);
 
       await open(tester, initial: _light());
-      await tester.tap(find.byKey(const Key('blockEditor.close')));
+      await tester.tap(find.byKey(const Key('blockDialog.cancel')));
       await tester.pumpAndSettle();
       expect(result.single, isNull);
 
       await open(tester, initial: _light());
       await type(tester, 'blockDialog.count', '7');
       await tapKey(tester, 'blockDialog.cancel');
-      expect(find.byKey(const Key('unsaved.discard')), findsNothing);
+      await tester.tap(find.byKey(const Key('discardEdit.discard')));
+      await tester.pumpAndSettle();
       expect(result.single, isNull);
     });
   });
@@ -619,8 +608,9 @@ void main() {
       await open(tester);
       expect(find.widgetWithText(FilledButton, 'Add block'), findsOneWidget);
       expect(find.text('Save'), findsNothing);
+      // plan.js screenBar: what Apply does, the same for both.
       expect(
-        find.textContaining('Adds to this plan. Save plan records it.'),
+        find.text('Apply updates the draft. Save plan records it.'),
         findsOneWidget,
       );
       await tapKey(tester, 'blockDialog.cancel');
@@ -629,7 +619,7 @@ void main() {
       expect(find.text('Apply changes'), findsOneWidget);
       expect(find.text('Save'), findsNothing);
       expect(
-        find.textContaining('Changes this plan, with Undo'),
+        find.text('Apply updates the draft. Save plan records it.'),
         findsOneWidget,
       );
     });

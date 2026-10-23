@@ -3,6 +3,8 @@
 // (test/support/hybrid_transfer_*.dart): real widgets, router, ViewModels,
 // astronomy and SQLite. --dart-define=HYBRID_SHOTS=home,settings and
 // HYBRID_THEMES=light,dark,field choose the frames.
+import 'dart:io';
+
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
@@ -67,6 +69,8 @@ void main() {
         expect(tester.takeException(), isNull, reason: '$name $theme');
         await binding.takeScreenshot('android-$name-$theme');
       }
-    });
+      // The screenshots need the device's integration_test plugin; the host
+      // gate (tool/check.dart) runs this folder on flutter-tester.
+    }, skip: !Platform.isAndroid);
   }
 }

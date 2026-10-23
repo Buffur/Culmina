@@ -104,8 +104,9 @@ void main() {
     WidgetTester tester, {
     double scale = 1,
     ThemeData? theme,
+    double width = 412,
   }) async {
-    tester.view.physicalSize = const Size(412, 915);
+    tester.view.physicalSize = Size(width, 915);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -115,7 +116,7 @@ void main() {
           theme: theme ?? AppTheme.light,
           home: MediaQuery(
             data: MediaQueryData(
-              size: const Size(412, 915),
+              size: Size(width, 915),
               textScaler: TextScaler.linear(scale),
             ),
             child: const Scaffold(
@@ -139,7 +140,11 @@ void main() {
     testWidgets('$name month uses hours/minutes and selected Hybrid fill', (
       tester,
     ) async {
-      await show(tester, theme: theme);
+      // The test font's square glyphs make "Moon calendar" (20 px) and
+      // "December 2026" far wider than the app's fonts, which share one row
+      // at 412 px (host render evidence); 600 px gives the test font that
+      // room, so the row rule is still checked.
+      await show(tester, theme: theme, width: 600);
       expect(find.text('Moon calendar'), findsOneWidget);
       expect(
         tester.getCenter(find.text('Moon calendar')).dy,

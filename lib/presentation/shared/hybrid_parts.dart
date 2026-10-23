@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_typography.dart';
+import '../../core/theme/hybrid_tokens.dart';
 import 'hybrid_icon.dart';
 
 /// Shared pieces of the accepted Hybrid reference (design/home-lab 86873ce;
@@ -333,12 +334,14 @@ class HybridApplyBar extends StatelessWidget {
     required this.onPressed,
     this.note = 'Apply updates the draft. Save plan records it.',
     this.buttonKey,
+    this.noteKey,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final String? note;
   final Key? buttonKey;
+  final Key? noteKey;
 
   @override
   Widget build(BuildContext context) {
@@ -356,6 +359,7 @@ class HybridApplyBar extends StatelessWidget {
               if (note != null) ...[
                 Text(
                   note!,
+                  key: noteKey,
                   style: AppTypography.caption.copyWith(
                     height: 1.55,
                     color: p.textSecondary,
@@ -389,15 +393,18 @@ class HybridApplyBar extends StatelessWidget {
 /// 2 px red ring and dot (hybrid-refinement.css). Decorative: the row
 /// carries the semantics.
 class HybridRadio extends StatelessWidget {
-  const HybridRadio({super.key, required this.checked});
+  const HybridRadio({super.key, required this.checked, this.size = 18});
 
   final bool checked;
+
+  /// 18 in the plan's forms (plan.css); 24 in Settings (settings.css).
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return SizedBox.square(
-      dimension: 18,
+      dimension: size,
       child: CustomPaint(
         painter: _RadioPainter(
           checked: checked,
@@ -426,20 +433,22 @@ class _RadioPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final c = size.center(Offset.zero);
+    // Drawn for 18 px and scaled, as the browser scales its radio.
+    final k = size.shortestSide / 18;
     if (!checked) {
       canvas.drawCircle(
         c,
-        8.5,
+        8.5 * k,
         Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1
+          ..strokeWidth = k
           ..color = off,
       );
       return;
     }
-    canvas.drawCircle(c, 9, Paint()..color = on);
-    canvas.drawCircle(c, 7, Paint()..color = surface);
-    canvas.drawCircle(c, 4.5, Paint()..color = on);
+    canvas.drawCircle(c, 9 * k, Paint()..color = on);
+    canvas.drawCircle(c, 7 * k, Paint()..color = surface);
+    canvas.drawCircle(c, 4.5 * k, Paint()..color = on);
   }
 
   @override
@@ -452,7 +461,7 @@ class _RadioPainter extends CustomPainter {
 
 /// A choice row (plan.css `.choice`): the radio, 10 before a 14 px title
 /// (600 when chosen) and a 13 px secondary caption; padding 10 0 and a
-/// subtle rule below.
+/// subtle rule below; at least 56 tall (`.choice-list .choice`).
 class HybridChoiceRow extends StatelessWidget {
   const HybridChoiceRow({
     super.key,
@@ -483,7 +492,7 @@ class HybridChoiceRow extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
+            constraints: const BoxConstraints(minHeight: 56),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
@@ -557,6 +566,272 @@ class HybridCloseButton extends StatelessWidget {
       HybridIcons.close,
       size: MediaQuery.textScalerOf(context).scale(24),
       strokeWidth: 1.8,
+    ),
+  );
+}
+
+/// A select's closed-state arrow (the browser `select` chevron the web
+/// reference shows, about 8 × 5 with a 2 px stroke): a small down chevron in
+/// the primary text colour.
+Widget hybridSelectIcon(BuildContext context) => Center(
+  // The dropdown sizes its icon slot to 24: centre the arrow in it.
+  widthFactor: 1,
+  heightFactor: 1,
+  child: RotatedBox(
+    quarterTurns: 1,
+    child: HybridIcon(
+      HybridIcons.chevron,
+      size: MediaQuery.textScalerOf(context).scale(14),
+      strokeWidth: 3.2,
+      color: AppPalette.of(context).textPrimary,
+    ),
+  ),
+);
+
+/// A select's padding: Chromium's `select` with 12 padding and a 1 px
+/// border is 49 tall at 16 px (an input is 50).
+const hybridSelectPadding = EdgeInsets.fromLTRB(13, 12.5, 13, 12.5);
+
+/// Plan pages' fields (plan.css `.planner-page input::placeholder`): the
+/// hint in italic secondary text.
+class HybridPlanInputs extends StatelessWidget {
+  const HybridPlanInputs({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Theme(
+      data: theme.copyWith(
+        inputDecorationTheme: theme.inputDecorationTheme.copyWith(
+          hintStyle: theme.inputDecorationTheme.hintStyle?.copyWith(
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
+/// Hybrid's switch (settings.css `input[role=switch]`): a 52 × 32 pill with
+/// a 2 px border and a 20 px knob 4 from the edge; off on the subtle
+/// surface with the control border and a secondary knob, on in the action
+/// colour with the on-action knob. Touch target 48.
+class HybridSwitch extends StatelessWidget {
+  const HybridSwitch({super.key, required this.value, this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final h = Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
+    final enabled = onChanged != null;
+    final track = Container(
+      width: 52,
+      height: 32,
+      decoration: BoxDecoration(
+        color: value ? h.action : h.surfaceSubtle,
+        border: Border.all(width: 2, color: value ? h.action : p.controlBorder),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: AnimatedAlign(
+        duration: const Duration(milliseconds: 120),
+        alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              color: value ? h.onAction : p.textSecondary,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+      ),
+    );
+    return Semantics(
+      toggled: value,
+      enabled: enabled,
+      onTap: enabled ? () => onChanged!(!value) : null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: enabled ? () => onChanged!(!value) : null,
+        child: SizedBox(
+          height: HybridTokens.minTarget,
+          child: Center(
+            child: Opacity(opacity: enabled ? 1 : 0.5, child: track),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A switch row (settings.css `.settings-switch`): a 15 px title and a
+/// 13 px secondary description beside the switch, 16 apart; padding 10 0
+/// and a subtle rule below. The whole row toggles.
+class HybridSwitchRow extends StatelessWidget {
+  const HybridSwitchRow({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+    this.description,
+    this.divider = true,
+  });
+
+  final String title;
+  final String? description;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+  final bool divider;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return MergeSemantics(
+      child: InkWell(
+        onTap: onChanged == null ? null : () => onChanged!(!value),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: divider
+                ? Border(bottom: BorderSide(color: p.border))
+                : null,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4,
+                    children: [
+                      Text(
+                        title,
+                        style: AppTypography.value.copyWith(
+                          height: 1.5,
+                          color: p.textPrimary,
+                        ),
+                      ),
+                      if (description case final d?)
+                        Text(
+                          d,
+                          style: AppTypography.caption.copyWith(
+                            height: 1.55,
+                            color: p.textSecondary,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                HybridSwitch(value: value, onChanged: onChanged),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The browser checkbox the reference shows (logbook.css `.logbook-check`):
+/// a 24 px square with a 1 px control border, radius 3; checked, filled in
+/// the primary text with a check in the surface colour.
+class HybridCheckbox extends StatelessWidget {
+  const HybridCheckbox({super.key, required this.checked, this.size = 24});
+
+  final bool checked;
+
+  /// The square's side: 24, or 18 in a plan form's `.check-row`.
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final surface = Theme.of(context).scaffoldBackgroundColor;
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: checked ? p.textPrimary : null,
+        border: Border.all(color: checked ? p.textPrimary : p.controlBorder),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: checked
+          ? HybridIcon(
+              HybridIcons.check,
+              size: size * 0.75,
+              strokeWidth: 2.4,
+              color: surface,
+            )
+          : null,
+    );
+  }
+}
+
+/// A checkbox row (`.logbook-check`): the box 4 in, its 14 px label 15
+/// after; 48 tall; the whole row toggles.
+class HybridCheckRow extends StatelessWidget {
+  const HybridCheckRow({
+    super.key,
+    required this.label,
+    required this.checked,
+    required this.onChanged,
+  }) : _box = 24,
+       _inset = 4,
+       _gap = 15;
+
+  /// A plan form's check row (plan.css `.check-row`): an 18 px box at the
+  /// edge, its label 12 after.
+  const HybridCheckRow.plan({
+    super.key,
+    required this.label,
+    required this.checked,
+    required this.onChanged,
+  }) : _box = 18,
+       _inset = 0,
+       _gap = 12;
+
+  final String label;
+  final bool checked;
+  final ValueChanged<bool> onChanged;
+  final double _box;
+  final double _inset;
+  final double _gap;
+
+  @override
+  Widget build(BuildContext context) => MergeSemantics(
+    child: Semantics(
+      checked: checked,
+      child: InkWell(
+        onTap: () => onChanged(!checked),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: HybridTokens.minTarget),
+          child: Row(
+            children: [
+              SizedBox(width: _inset),
+              HybridCheckbox(checked: checked, size: _box),
+              SizedBox(width: _gap),
+              Expanded(
+                child: Text(
+                  label,
+                  style: AppTypography.body.copyWith(
+                    height: 1.5,
+                    color: AppPalette.of(context).textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     ),
   );
 }

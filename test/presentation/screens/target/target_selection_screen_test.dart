@@ -4,9 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:astroplan/presentation/screens/target/target_selection_screen.dart';
 import 'package:astroplan/domain/repositories/target_repository.dart';
 import 'package:astroplan/domain/models/astro_target.dart';
+import 'package:astroplan/presentation/shared/list_mode.dart';
 
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
+
+import '../../../support/library_finders.dart';
 
 class MockTargetRepository implements TargetRepository {
   final List<AstroTarget> _targets = [];
@@ -61,14 +64,20 @@ class MockSessionPlanViewModel extends ChangeNotifier
 }
 
 void main() {
-  Widget createTestWidget(TargetRepository repo, SessionPlanViewModel planner) {
+  /// The targets list; the Library's ([ListMode.manage]) opens a target's
+  /// record, whose Edit target opens the editor (library.js).
+  Widget createTestWidget(
+    TargetRepository repo,
+    SessionPlanViewModel planner, {
+    ListMode mode = ListMode.choose,
+  }) {
     return MultiProvider(
       providers: [
         Provider<TargetRepository>.value(value: repo),
         ChangeNotifierProvider(create: (_) => TargetsViewModel(repo)),
         ChangeNotifierProvider<SessionPlanViewModel>.value(value: planner),
       ],
-      child: const MaterialApp(home: TargetSelectionScreen()),
+      child: MaterialApp(home: TargetSelectionScreen(mode: mode)),
     );
   }
 
@@ -81,12 +90,12 @@ void main() {
     await tester.pumpWidget(createTestWidget(repo, planner));
     await tester.pumpAndSettle();
 
-    // Tap FloatingActionButton to add custom target
-    await tester.tap(find.byType(FloatingActionButton));
+    // Add target opens the editor page.
+    await tester.tap(find.byKey(const Key('targets.add')));
     await tester.pumpAndSettle();
 
     // Tap save without entering anything
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save target'));
     await tester.pump();
 
     // Validation errors should appear for all 3 required fields
@@ -99,8 +108,8 @@ void main() {
   // expect the old "Must be a number" / "Must be 0.0 to 360.0" messages; they
   // now check the same rules (garbage, RA out of range, Dec out of range,
   // valid input saves) in the new format.
-  final raField = find.widgetWithText(TextFormField, 'Right ascension (J2000)');
-  final decField = find.widgetWithText(TextFormField, 'Declination (J2000)');
+  final raField = fieldLabeled('Right ascension (J2000)');
+  final decField = fieldLabeled('Declination (J2000)');
   const raError = 'Use hours: 05h35m17s, 5:35:17 or 5.588 (or degrees: 83.82°)';
   const decError = 'Use −05°23′28″, -5:23:28 or -5.391 (within ±90°)';
 
@@ -110,17 +119,22 @@ void main() {
   ) async {
     await tester.pumpWidget(createTestWidget(repo, MockSessionPlanViewModel()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(FloatingActionButton));
+    await tester.tap(find.byKey(const Key('targets.add')));
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name'),
-      'Test Target',
-    );
+    await tester.enterText(fieldLabeled('Name'), 'Test Target');
   }
 
   Future<void> save(WidgetTester tester) async {
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save target'));
     await tester.pump();
+  }
+
+  /// Opens the record of the target named [name], then its editor.
+  Future<void> editTarget(WidgetTester tester, String name) async {
+    await tester.tap(find.textContaining(name));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('targetDetail.edit')));
+    await tester.pumpAndSettle();
   }
 
   testWidgets('non-numeric input is rejected for RA and Dec', (tester) async {
@@ -159,7 +173,7 @@ void main() {
     await openAddDialog(tester, repo);
     await tester.enterText(raField, '05h35m17s');
     await tester.enterText(decField, '−05°23′28″');
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save target'));
     await tester.pumpAndSettle();
 
     expect(find.text(raError), findsNothing);
@@ -175,7 +189,7 @@ void main() {
 
   testWidgets('moving types are not offered for a new target', (tester) async {
     await openAddDialog(tester, MockTargetRepository());
-    await tester.tap(find.text('Galaxy'));
+    await tester.tap(find.byKey(const Key('targetEditor.type')));
     await tester.pumpAndSettle();
     for (final moving in ['Planet', 'Moon', 'Comet', 'Asteroid']) {
       expect(find.text(moving), findsNothing, reason: moving);
@@ -198,20 +212,18 @@ void main() {
         source: 'user',
       ),
     );
-    await tester.pumpWidget(createTestWidget(repo, MockSessionPlanViewModel()));
+    await tester.pumpWidget(
+      createTestWidget(repo, MockSessionPlanViewModel(), mode: ListMode.manage),
+    );
     await tester.pumpAndSettle();
     expect(find.textContaining('this object moves'), findsOneWidget);
 
-    await tester.tap(find.byTooltip('Edit target'));
-    await tester.pumpAndSettle();
-    expect(find.text('Catalog ID: C/2025 X1'), findsOneWidget);
+    await editTarget(tester, 'A comet');
+    expect(find.textContaining('Catalogue id: C/2025 X1.'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, '05h35m17.0s'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, '−05°23′28″'), findsOneWidget);
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name'),
-      'Renamed',
-    );
-    await tester.tap(find.text('Save'));
+    await tester.enterText(fieldLabeled('Name'), 'Renamed');
+    await tester.tap(find.text('Save target'));
     await tester.pumpAndSettle();
 
     final edited = repo.updated.single;
@@ -235,15 +247,14 @@ void main() {
         source: 'seed:catalog@1',
       ),
     );
-    await tester.pumpWidget(createTestWidget(repo, MockSessionPlanViewModel()));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Edit target'));
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Name'),
-      'Great Orion Nebula',
+    await tester.pumpWidget(
+      createTestWidget(repo, MockSessionPlanViewModel(), mode: ListMode.manage),
     );
-    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    // A catalogue entry keeps its earlier edit (HT-DEV-02).
+    await editTarget(tester, 'Orion Nebula');
+    await tester.enterText(fieldLabeled('Name'), 'Great Orion Nebula');
+    await tester.tap(find.text('Save target'));
     await tester.pumpAndSettle();
 
     final edited = repo.updated.single;
@@ -251,5 +262,39 @@ void main() {
     expect(edited.declination, -5.39111111);
     expect(edited.source, 'seed:catalog@1');
     expect(edited.catalogId, 'M42');
+  });
+
+  // library.js catalogue record: the bundled facts, then Edit target and
+  // Delete target, which the app keeps (HT-DEV-02).
+  testWidgets('a catalogue record shows its facts and keeps Edit and '
+      'Delete', (tester) async {
+    final repo = MockTargetRepository();
+    repo._targets.add(
+      const AstroTarget(
+        id: 3,
+        catalogId: 'M42',
+        commonName: 'Orion Nebula',
+        rightAscension: 83.82208333,
+        declination: -5.39111111,
+        type: 'Nebula',
+        source: 'seed:catalog@1',
+      ),
+    );
+    await tester.pumpWidget(
+      createTestWidget(repo, MockSessionPlanViewModel(), mode: ListMode.manage),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Orion Nebula'));
+    await tester.pumpAndSettle();
+    expect(find.text('Catalogue record'), findsOneWidget);
+    expect(find.byKey(const Key('targetDetail.facts')), findsOneWidget);
+    expect(find.byKey(const Key('targetDetail.edit')), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('targetDetail.delete')),
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    expect(find.byKey(const Key('targetDetail.delete')), findsOneWidget);
+    expect(repo.updated, isEmpty);
   });
 }

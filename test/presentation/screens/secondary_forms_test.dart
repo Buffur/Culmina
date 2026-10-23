@@ -26,6 +26,7 @@ import '../../support/fake_reverse_geocoder.dart';
 import '../../support/no_snapshot_weather.dart';
 import '../../support/planner_harness.dart';
 import '../../support/add_rig.dart';
+import '../../support/library_finders.dart';
 
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
@@ -88,18 +89,18 @@ void main() {
     await startAddRig(tester);
     await settle(tester);
     expect(find.text('Add rig'), findsWidgets);
-    expect(find.widgetWithText(FilledButton, 'Save'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Save rig'), findsOneWidget);
     expect(find.byType(ElevatedButton), findsNothing);
   });
 
-  testWidgets('the target editor: "Add a target" / "Edit target", one '
-      'primary Save', (tester) async {
+  testWidgets('the target editor: "Add target" / "Edit target", one '
+      'primary "Save target"', (tester) async {
     await start(tester, AppRouter.libraryTargets);
-    await tester.tap(find.byTooltip('Add a target'));
+    await tester.tap(find.byKey(const Key('targets.add')));
     await settle(tester);
-    expect(find.text('Add a target'), findsWidgets);
-    expect(find.widgetWithText(TextFormField, 'Name'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Save'), findsOneWidget);
+    expect(find.text('Add target'), findsWidgets);
+    expect(fieldLabeled('Name'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, 'Save target'), findsOneWidget);
     expect(find.byType(ElevatedButton), findsNothing);
   });
 
@@ -108,6 +109,9 @@ void main() {
   ) async {
     await start(tester, AppRouter.librarySites);
     await tester.tap(find.text('Home'));
+    await settle(tester);
+    // The site's record first (library.js), then its editor.
+    await tester.tap(find.byKey(const Key('siteDetail.edit')));
     await settle(tester);
     expect(find.text('Edit site'), findsOneWidget);
     expect(find.widgetWithText(FilledButton, 'Save site'), findsOneWidget);

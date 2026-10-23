@@ -5,6 +5,7 @@ import '../../core/config/feature_scope.dart';
 import '../viewmodels/theme_viewmodel.dart';
 import 'failure_feedback.dart';
 import 'hybrid_icon.dart';
+import 'hybrid_parts.dart';
 
 /// Red field mode, one tap from Tonight and the planner (ADR-015 §4,
 /// TASK 12.4). Reads the gate itself, so call sites never gate it again.
@@ -19,8 +20,13 @@ class FieldModeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!FeatureScope.fieldMode) return const SizedBox.shrink();
-    final on = context.watch<ThemeViewModel>().isFieldMode;
+    // A page shown without the app's theme state (an isolated test host)
+    // has no field mode to switch.
+    final theme = context.watch<ThemeViewModel?>();
+    if (!FeatureScope.fieldMode || theme == null) {
+      return const SizedBox.shrink();
+    }
+    final on = theme.isFieldMode;
     final scale = MediaQuery.textScalerOf(context);
     return Semantics(
       toggled: on,
@@ -54,15 +60,13 @@ class FieldModeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!FeatureScope.fieldMode) return const SizedBox.shrink();
-    return SwitchListTile(
+    // settings.js appearance: a switch row under the theme.
+    return HybridSwitchRow(
       key: const Key('fieldMode.tile'),
-      contentPadding: EdgeInsets.zero,
-      secondary: const Icon(Icons.nightlight_round),
-      title: const Text('Red field mode'),
-      subtitle: const Text(
-        'Red on black only, to keep your night vision. Stays on after a '
-        'restart.',
-      ),
+      title: 'Red field mode',
+      description:
+          'Red on black only, to keep your night vision. The same switch as '
+          'the moon button in the app bar.',
       value: context.watch<ThemeViewModel>().isFieldMode,
       onChanged: (_) => _toggle(context),
     );

@@ -26,6 +26,7 @@ class DisplaySettingsViewModel extends ChangeNotifier {
   DisplaySettings get settings => _shown;
   Appearance get appearance => _shown.appearance;
   DisplayUnits get units => _shown.units;
+  WeatherView get weatherView => _shown.weatherView;
 
   /// The newest choice could not be stored: shown with Retry.
   bool get unsaved => _failed;
@@ -50,6 +51,9 @@ class DisplaySettingsViewModel extends ChangeNotifier {
       _set(_shown.copyWith(appearance: a));
 
   Future<void> setUnits(DisplayUnits u) => _set(_shown.copyWith(units: u));
+
+  Future<void> setWeatherView(WeatherView v) =>
+      _set(_shown.copyWith(weatherView: v));
 
   /// Stores the newest choices again.
   Future<void> retry() => _write();

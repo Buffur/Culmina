@@ -23,6 +23,7 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:drift/native.dart';
+import 'package:astroplan/presentation/shared/hybrid_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -168,6 +169,13 @@ void main() {
   Future<Session> stored(WidgetTester tester) async =>
       (await tester.runAsync(() => sessions.get(id)))!;
 
+  /// The entry's Record or Edit result, from its Logbook row (owner sketch
+  /// 2026-10-21: no row buttons; the entry's primary action).
+  Future<void> openResult(WidgetTester tester, {bool edit = false}) async {
+    await tap(tester, 'logbook.entry.$id');
+    await tap(tester, edit ? 'detail.editResults' : 'detail.recordResult');
+  }
+
   String count(WidgetTester tester) => tester
       .widget<TextFormField>(find.byKey(Key('results.count.$lightId')))
       .controller!
@@ -202,12 +210,12 @@ void main() {
     'Escape leaves pristine results immediately and guards typed notes',
     (tester) async {
       await open(tester, _Kind.saved, at: _morning, route: false);
-      await tap(tester, 'logbook.recordResult.$id');
+      await openResult(tester);
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await settle(tester);
       expect(find.text('Discard result changes?'), findsNothing);
       expect(find.byKey(const Key('results.save')), findsNothing);
-      await tap(tester, 'logbook.recordResult.$id');
+      await tap(tester, 'detail.recordResult');
       final notes = find.byKey(const Key('results.environment'));
       await tester.enterText(notes, 'Keep these notes');
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
@@ -229,7 +237,11 @@ void main() {
     ) async {
       await open(tester, _Kind.run);
       expect(find.byKey(const Key('results.review')), findsOneWidget);
-      expect(find.byKey(Key('results.planned.$lightId')), findsOneWidget);
+      // The plan's context and light frames, one tap away.
+      expect(
+        find.byKey(Key('results.planned.$lightId'), skipOffstage: false),
+        findsOneWidget,
+      );
       expect(find.text('Integration: 50 min of 2 h planned'), findsOneWidget);
       expect(count(tester), '10');
       expect(find.byKey(const Key('results.confirmed.plus.1')), findsNothing);
@@ -289,7 +301,7 @@ void main() {
       expect(find.byKey(const Key('results.review')), findsOneWidget);
       expect(find.byKey(const Key('results.notYet')), findsOneWidget);
       expect(find.textContaining("hasn't started yet"), findsOneWidget);
-      expect(find.textContaining('from Tue, Dec 15'), findsOneWidget);
+      expect(find.textContaining('from 15 Dec'), findsOneWidget);
       expect(find.byKey(const Key('results.save')), findsNothing);
       expect((await stored(tester)).status, SessionStatus.planned);
     });
@@ -357,7 +369,7 @@ void main() {
 
     testWidgets('Back writes nothing', (tester) async {
       await open(tester, _Kind.saved, at: _morning, route: false);
-      await tap(tester, 'logbook.recordResult.$id');
+      await openResult(tester);
       await tap(tester, 'results.outcome.notDone');
       await tester.pageBack();
       await settle(tester);
@@ -402,7 +414,7 @@ void main() {
     expect(vm.plan.captureBlocks.map((b) => b.filterName), ['L', 'Ha']);
     expect(vm.plan.hasUnsavedChanges, isTrue);
     expect(
-      find.textContaining('Ha ·'),
+      find.textContaining('Ha ·', skipOffstage: false),
       findsNothing,
       reason: 'saved plan only',
     );
@@ -448,7 +460,7 @@ void main() {
       expect(find.byKey(const Key('results.pending')), findsOneWidget);
       expect(find.byKey(const Key('results.save')), findsNothing);
       expect(
-        find.byKey(Key('results.planned.$lightId')),
+        find.byKey(Key('results.planned.$lightId'), skipOffstage: false),
         findsNothing,
         reason: 'the working edits are not the saved plan',
       );
@@ -469,7 +481,7 @@ void main() {
       expect(saved.blocks.map((b) => b.filterName), ['L', 'Ha']);
       expect(saved.isSavedChanged, isFalse);
       expect(find.byKey(const Key('results.pending')), findsNothing);
-      expect(find.textContaining('Ha ·'), findsOneWidget);
+      expect(find.textContaining('Ha ·', skipOffstage: false), findsOneWidget);
       await tap(tester, 'results.outcome.asPlanned');
       await tap(tester, 'results.save');
       expect((await stored(tester)).record.actualLightFrames, 30);
@@ -495,8 +507,11 @@ void main() {
         'L',
       ], reason: 'the planner shows the saved plan again');
       // Reverting writes the saved blocks again (new ids).
-      expect(find.textContaining('24 planned'), findsOneWidget);
-      expect(find.textContaining('Ha ·'), findsNothing);
+      expect(
+        find.textContaining('24 planned', skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Ha ·', skipOffstage: false), findsNothing);
       await tap(tester, 'results.outcome.asPlanned');
       await tap(tester, 'results.save');
       expect((await stored(tester)).record.actualLightFrames, 24);
@@ -507,9 +522,11 @@ void main() {
     // F19 A1: each card says whether its result is recorded — words and an
     // icon, never colour alone, never elapsed time as completion — with
     // Record / Edit result and planned vs recorded integration.
-    Finder icon(int id, IconData data) => find.descendant(
+    Finder icon(int id, HybridIconData data) => find.descendant(
       of: find.byKey(Key('logbook.status.$id')),
-      matching: find.byIcon(data),
+      matching: find.byWidgetPredicate(
+        (w) => w is HybridIcon && w.data == data,
+      ),
     );
 
     testWidgets('F19 A1: a due report reads Result not recorded; once '
@@ -524,25 +541,34 @@ void main() {
       expect(
         find.descendant(
           of: find.byKey(Key('logbook.noResult.$id')),
-          matching: find.text('Result not recorded'),
+          matching: find.text('Not recorded'),
         ),
         findsOneWidget,
       );
-      expect(find.byIcon(Icons.pending_actions), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(Key('logbook.noResult.$id')),
+          matching: find.byWidgetPredicate(
+            (w) => w is HybridIcon && w.data == HybridIcons.markDue,
+          ),
+        ),
+        findsOneWidget,
+      );
       expect(
         find.text('Integration: none recorded of 2 h planned'),
         findsOneWidget,
       );
-      await tap(tester, 'logbook.recordResult.$id');
+      await openResult(tester);
       await tap(tester, 'results.outcome.partly');
       await tester.enterText(find.byKey(Key('results.count.$lightId')), '9');
       await tap(tester, 'results.save');
 
       expect(find.byKey(Key('logbook.noResult.$id')), findsNothing);
       expect(find.text('Partly'), findsOneWidget);
-      expect(icon(id, Icons.incomplete_circle_outlined), findsOneWidget);
+      expect(icon(id, HybridIcons.markPartly), findsOneWidget);
       expect(find.text('Integration: 45 min of 2 h planned'), findsOneWidget);
-      expect(find.byKey(Key('logbook.editResults.$id')), findsOneWidget);
+      await tap(tester, 'logbook.entry.$id');
+      expect(find.byKey(const Key('detail.editResults')), findsOneWidget);
     });
 
     testWidgets('F19 A1: a night ahead offers no result; Not done has its '
@@ -554,7 +580,7 @@ void main() {
         route: false,
       );
       expect(find.byKey(Key('logbook.noResult.$id')), findsNothing);
-      expect(find.byKey(Key('logbook.recordResult.$id')), findsNothing);
+      expect(find.byKey(Key('logbook.resultWhen.$id')), findsOneWidget);
       expect(find.text('Integration: 2 h planned'), findsOneWidget);
 
       await tester.runAsync(() async {
@@ -566,9 +592,10 @@ void main() {
       AppRouter.router.go(AppRouter.sessions);
       await settle(tester);
       expect(find.text('Not done'), findsOneWidget);
-      expect(icon(id, Icons.cancel_outlined), findsOneWidget);
+      expect(icon(id, HybridIcons.markNotDone), findsOneWidget);
       expect(find.byKey(Key('logbook.noResult.$id')), findsNothing);
-      expect(find.byKey(Key('logbook.editResults.$id')), findsOneWidget);
+      await tap(tester, 'logbook.entry.$id');
+      expect(find.byKey(const Key('detail.editResults')), findsOneWidget);
     });
 
     // F19 A5: no Record action on a night ahead, but never unexplained: the
@@ -582,17 +609,12 @@ void main() {
         at: DateTime.utc(2026, 12, 15, 10),
         route: false,
       );
-      expect(find.byKey(const Key('logbook.upcoming')), findsOneWidget);
-      expect(find.byKey(Key('logbook.recordResult.$id')), findsNothing);
       final card = find.byKey(Key('logbook.resultWhen.$id'));
       expect(card, findsOneWidget);
       final when = tester.widget<Text>(card).data!;
-      expect(
-        when,
-        startsWith(
-          'A result can be recorded once the night begins: from Tue, Dec 15, ',
-        ),
-      );
+      expect(when, startsWith('Record from 15 Dec, '));
+      // No saved zone here: the device's, said so.
+      expect(when, endsWith(' · device zone.'));
 
       await tester.tap(find.byKey(Key('logbook.title.$id')));
       await settle(tester);
@@ -600,19 +622,30 @@ void main() {
       expect(detail, findsOneWidget);
       expect(tester.widget<Text>(detail).data, when, reason: 'one wording');
       expect(find.byKey(const Key('detail.recordResult')), findsNothing);
+      // The action is shown, disabled, beside its reason.
+      expect(
+        tester
+            .widget<FilledButton>(
+              find.byKey(const Key('detail.recordResultLater')),
+            )
+            .onPressed,
+        isNull,
+      );
 
       // Once the night has begun the action replaces the explanation.
       clock.now = DateTime.utc(2026, 12, 16, 2);
       AppRouter.router.go(AppRouter.sessions);
       await settle(tester);
-      expect(find.byKey(Key('logbook.recordResult.$id')), findsOneWidget);
+      expect(find.byKey(Key('logbook.noResult.$id')), findsOneWidget);
       expect(find.byKey(Key('logbook.resultWhen.$id')), findsNothing);
+      await tap(tester, 'logbook.entry.$id');
+      expect(find.byKey(const Key('detail.recordResult')), findsOneWidget);
     });
 
     testWidgets('F19 A1: Completed as planned reads Completed with its own '
         'icon, on the card and on the entry', (tester) async {
       await open(tester, _Kind.saved, at: _morning, route: false);
-      await tap(tester, 'logbook.recordResult.$id');
+      await openResult(tester);
       await tap(tester, 'results.outcome.asPlanned');
       await tap(tester, 'results.save');
 
@@ -624,22 +657,26 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(icon(id, Icons.check_circle_outline), findsOneWidget);
-      expect(icon(id, Icons.incomplete_circle_outlined), findsNothing);
+      expect(icon(id, HybridIcons.markCompleted), findsOneWidget);
+      expect(icon(id, HybridIcons.markPartly), findsNothing);
       expect(find.byKey(Key('logbook.resultWhen.$id')), findsNothing);
       AppRouter.router.go(AppRouter.sessionDetail(id));
       await settle(tester);
       expect(
         find.descendant(
           of: find.byKey(const Key('detail.status')),
-          matching: find.byIcon(Icons.check_circle_outline),
+          matching: find.byWidgetPredicate(
+            (w) => w is HybridIcon && w.data == HybridIcons.markCompleted,
+          ),
         ),
         findsOneWidget,
       );
     });
 
-    testWidgets('an ended Saved plan offers Record result, on its row and '
-        'on the entry, with Copy to another night and no Open', (tester) async {
+    testWidgets('an ended Saved plan offers Record result on the entry, '
+        'with Copy to another night and no Open; its row says it is due', (
+      tester,
+    ) async {
       await open(tester, _Kind.saved, at: _morning, route: false);
       AppRouter.router.go(AppRouter.sessionDetail(id));
       await settle(tester);
@@ -648,7 +685,8 @@ void main() {
       expect(find.byKey(const Key('detail.openInPlanner')), findsNothing);
       AppRouter.router.go(AppRouter.sessions);
       await settle(tester);
-      await tap(tester, 'logbook.recordResult.$id');
+      expect(find.byKey(Key('logbook.noResult.$id')), findsOneWidget);
+      await openResult(tester);
       expect(find.byKey(const Key('results.review')), findsOneWidget);
     });
 
@@ -657,7 +695,7 @@ void main() {
       await open(tester, _Kind.completedRun, route: false);
       expect(find.byKey(Key('logbook.integration.$id')), findsOneWidget);
       expect(find.text('Integration: 50 min of 2 h planned'), findsOneWidget);
-      await tap(tester, 'logbook.editResults.$id');
+      await openResult(tester, edit: true);
       expect(count(tester), '10');
       await tester.enterText(find.byKey(Key('results.count.$lightId')), '9');
       await tap(tester, 'results.save');

@@ -48,6 +48,7 @@ import '../support/no_snapshot_weather.dart';
 import '../support/planner_harness.dart';
 import '../support/legacy_run.dart';
 import '../support/test_clock.dart';
+import '../support/library_finders.dart';
 
 /// No network: every forecast request fails as it does offline.
 class _Offline with NoSnapshotWeather implements WeatherRepository {}
@@ -447,7 +448,7 @@ void main() {
       await _pumpApp(tester, vm);
       unawaited(AppRouter.router.push(AppRouter.siteEdit));
       await _settle(tester);
-      final name = find.widgetWithText(TextFormField, 'Name');
+      final name = fieldLabeled('Name');
       await tester.enterText(name, 'Dark field');
       await tester.pump();
 

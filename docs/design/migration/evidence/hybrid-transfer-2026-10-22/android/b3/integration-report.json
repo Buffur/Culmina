@@ -1,0 +1,22 @@
+{
+  "view-dark": {
+    "physical": [
+      750.0,
+      1697.0
+    ],
+    "dpr": 2.0,
+    "paddingTop": 47.0,
+    "paddingBottom": 24.0,
+    "textScale": 1.0
+  },
+  "view-field": {
+    "physical": [
+      750.0,
+      1697.0
+    ],
+    "dpr": 2.0,
+    "paddingTop": 47.0,
+    "paddingBottom": 24.0,
+    "textScale": 1.0
+  }
+}

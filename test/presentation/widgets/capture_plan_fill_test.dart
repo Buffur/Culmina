@@ -119,7 +119,7 @@ void main() {
     expect(vm.captureBlocks.single.frameCount, target);
     expect(vm.fitAnalysis.state, isNot(FitState.doesNotFit));
     expect(find.textContaining("Doesn't fit"), findsNothing);
-    expect(find.textContaining('Capture ends'), findsOneWidget);
+    expect(find.textContaining('Capture end: '), findsOneWidget);
     // Already filled: the action disappears.
     expect(find.byKey(const Key('capturePlan.fillWindow')), findsNothing);
   });

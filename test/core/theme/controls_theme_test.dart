@@ -7,6 +7,7 @@ import 'package:astroplan/core/theme/app_button_styles.dart';
 import 'package:astroplan/core/theme/app_motion.dart';
 import 'package:astroplan/core/theme/app_palette.dart';
 import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -87,7 +88,8 @@ void main() {
       test('field labels, hints and helpers are text roles', () {
         final i = t.inputDecorationTheme;
         expect(i.labelStyle!.color, p.textSecondary);
-        expect(i.hintStyle!.color, p.textTertiary);
+        // plan.css / workspace.css `::placeholder`: the secondary text.
+        expect(i.hintStyle!.color, p.textSecondary);
         expect(i.helperStyle!.color, p.textTertiary);
         expect(i.errorStyle!.color, s.error);
       });
@@ -138,19 +140,30 @@ void main() {
     );
   });
 
-  test('primary and secondary buttons are at least 48 dp tall; the '
-      'pressed overlay is stronger than Material\'s 10 %', () {
+  test('primary and secondary buttons are at least 48 dp tall; pressed, '
+      'they take the selection fill (WQA-01)', () {
     for (final t in [AppTheme.light, AppTheme.dark, AppTheme.fieldTheme]) {
+      // WQA-01 (owner-accepted Hybrid reference 86873ce): a pressed Hybrid
+      // button takes the selection fill (`button:active`) instead of an
+      // overlay; text buttons keep the overlay stronger than Material's.
+      final selection = t.extension<HybridTokens>()!.selection;
       for (final style in [
         t.filledButtonTheme.style!,
         t.outlinedButtonTheme.style!,
         t.elevatedButtonTheme.style!,
       ]) {
         expect(style.minimumSize!.resolve({})!.height, 48);
-        final pressed = style.overlayColor!.resolve({WidgetState.pressed})!;
-        expect(pressed.a, closeTo(AppTheme.pressedOverlay, 0.01));
+        const pressed = {WidgetState.pressed};
+        expect(style.backgroundColor!.resolve(pressed), selection);
+        expect(style.overlayColor!.resolve(pressed)!.a, 0);
       }
       expect(t.elevatedButtonTheme.style!.elevation!.resolve({}), 0);
+      final text = t.textButtonTheme.style!;
+      expect(text.minimumSize!.resolve({})!.height, 48);
+      expect(
+        text.overlayColor!.resolve({WidgetState.pressed})!.a,
+        closeTo(AppTheme.pressedOverlay, 0.01),
+      );
     }
   });
 

@@ -20,6 +20,7 @@ import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:drift/native.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -164,22 +165,27 @@ void main() {
 
     // Walk the list so every section is built once; record its offset.
     final sections = <String, double>{};
+    // The Hybrid section titles (plan.js h2: HybridSectionTitle, and the
+    // serif "The night ahead").
     final headers = find.byWidgetPredicate(
-      (w) => w.runtimeType.toString() == '_SectionHeader',
+      (w) =>
+          w is HybridSectionTitle || (w is Text && w.data == 'The night ahead'),
     );
     var last = -1.0;
     while (position().pixels != last) {
       last = position().pixels;
       for (final e in headers.evaluate()) {
-        final title = tester
-            .widgetList<Text>(
-              find.descendant(
-                of: find.byWidget(e.widget),
-                matching: find.byType(Text),
-              ),
-            )
-            .first
-            .data!;
+        final title = e.widget is Text
+            ? (e.widget as Text).data!
+            : tester
+                  .widgetList<Text>(
+                    find.descendant(
+                      of: find.byWidget(e.widget),
+                      matching: find.byType(Text),
+                    ),
+                  )
+                  .first
+                  .data!;
         final box = e.renderObject! as RenderBox;
         sections.putIfAbsent(
           title,
@@ -210,8 +216,9 @@ void main() {
     await tester.pump();
     expect(find.byKey(const Key('planner.target')), findsOneWidget);
     expect(find.byKey(const Key('planner.rig')), findsOneWidget);
-    expect(find.byTooltip('Target details'), findsOneWidget);
-    expect(find.byTooltip('Rig details'), findsOneWidget);
+    // Hybrid: the target's facts are in its row, the rig's in its row and
+    // in Rig details below the estimate (built lazily, so walked above).
+    expect(sections.keys, contains('Estimate'));
     expect(extent, greaterThan(position().viewportDimension));
   });
 }

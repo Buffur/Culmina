@@ -2,7 +2,12 @@ import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/utils/quantity_text.dart';
+import '../../shared/entry_text.dart';
+import '../../shared/collapsible_section.dart';
 import '../../../domain/services/target_progress.dart';
 import '../../shared/app_words.dart';
 import '../../shared/night_time_formatter.dart';
@@ -28,6 +33,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final copy = AppTypography.body.copyWith(
+      height: 1.6,
+      color: p.textSecondary,
+    );
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -43,22 +53,52 @@ class _ProgressScreenState extends State<ProgressScreen> {
           if (list == null) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (list.isEmpty) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(AppSpacing.lg),
-                child: Text(
-                  'No results yet. Integration adds up here once you record '
-                  'how a saved plan went.',
-                  key: Key('progress.empty'),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
+          // logbook.js `progressView`.
           return ListView(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            children: [for (final p in list) TargetProgressCard(progress: p)],
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.gutter,
+              AppSpacing.itemGap,
+              AppSpacing.gutter,
+              AppSpacing.xl,
+            ),
+            children: [
+              Text('Recorded integration by target and filter.', style: copy),
+              if (list.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.md),
+                  child: Text(
+                    'No results yet. Integration adds up here once you '
+                    'record how a saved plan went.',
+                    key: const Key('progress.empty'),
+                    style: copy,
+                  ),
+                )
+              else ...[
+                for (final (i, t) in list.indexed)
+                  TargetProgressCard(progress: t, first: i == 0),
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.gutter),
+                  child: CollapsibleSection(
+                    key: const Key('progress.guide'),
+                    sectionKey: 'logbook.progressGuide',
+                    title: 'How totals are grouped',
+                    titleStyle: AppTypography.body.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: p.textPrimary,
+                    ),
+                    child: Text(
+                      'Totals per filter add every recorded frame. Beneath '
+                      'each filter, frames are grouped only when exposure, '
+                      'ISO or gain, binning and rig all match; "reported as '
+                      'planned" counts are your report, not counted files. '
+                      'This is integration time, not a measure of signal or '
+                      'image quality.',
+                      style: copy,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           );
         },
       ),
@@ -66,43 +106,124 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 }
 
-/// One target's progress; also shown on a session's detail.
+/// One target's progress (logbook.js `targetProgressView`); also on an
+/// entry's detail: the name and its total, the results and the last night,
+/// then each filter's total and the groups beneath it.
 class TargetProgressCard extends StatelessWidget {
-  const TargetProgressCard({super.key, required this.progress});
+  const TargetProgressCard({
+    super.key,
+    required this.progress,
+    this.first = true,
+  });
 
   final TargetProgress progress;
 
+  /// A later target starts below a rule.
+  final bool first;
+
   @override
   Widget build(BuildContext context) {
-    final p = progress;
-    final theme = Theme.of(context);
-    final night = p.lastNight;
-    return Container(
-      key: Key('progress.${p.targetId}'),
-      margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Theme.of(context).dividerColor),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    final t = progress;
+    final p = AppPalette.of(context);
+    final night = t.lastNight;
+    final caption = AppTypography.caption.copyWith(
+      height: 1.55,
+      color: p.textSecondary,
+    );
+    final rule = BorderSide(color: p.border);
+    Widget heading(String name, String total, TextStyle style, Key? key) =>
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.end,
+          spacing: AppSpacing.md,
+          runSpacing: AppSpacing.xs,
           children: [
-            Text(p.label, style: theme.textTheme.titleMedium),
+            Semantics(header: true, child: Text(name, style: style)),
             Text(
-              '${OpportunityText.duration(p.integration)} from '
-              '${p.sessionCount} ${p.sessionCount == 1 ? 'result' : 'results'}',
-              key: Key('progress.total.${p.targetId}'),
-              style: theme.textTheme.titleSmall,
+              total,
+              key: key,
+              style: style.copyWith(
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
-            if (night != null)
-              Text('Last imaged: ${NightTimeFormatter.eveningDate(night)}'),
-            for (final MapEntry(:key, :value) in p.perFilter.entries)
-              Text('$key: ${OpportunityText.duration(value)}'),
           ],
-        ),
+        );
+    return Container(
+      key: Key('progress.${t.targetId}'),
+      margin: EdgeInsets.only(top: first ? AppSpacing.md : AppSpacing.section),
+      padding: EdgeInsets.only(top: first ? 0 : AppSpacing.md),
+      decoration: BoxDecoration(border: first ? null : Border(top: rule)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          heading(
+            t.label,
+            OpportunityText.duration(t.integration),
+            AppTypography.itemTitle.copyWith(color: p.textPrimary),
+            Key('progress.total.${t.targetId}'),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            '${EntryText.plural(t.sessionCount, 'result')}'
+            '${night == null ? '' : ' · Last imaged ${NightTimeFormatter.eveningDateWithWeekday(night)}'}',
+            key: Key('progress.results.${t.targetId}'),
+            style: caption,
+          ),
+          for (final MapEntry(key: filter, value: total)
+              in t.perFilter.entries) ...[
+            const SizedBox(height: AppSpacing.md),
+            heading(
+              filter,
+              OpportunityText.duration(total),
+              AppTypography.body.copyWith(
+                fontWeight: FontWeight.w600,
+                color: p.textPrimary,
+              ),
+              null,
+            ),
+            for (final g in t.groups[filter] ?? const <ProgressGroup>[])
+              Container(
+                margin: const EdgeInsets.only(top: AppSpacing.itemGap),
+                padding: const EdgeInsets.only(top: AppSpacing.itemGap),
+                decoration: BoxDecoration(border: Border(top: rule)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: AppSpacing.xs,
+                  children: [
+                    Text(
+                      [
+                        QuantityText.exposure(g.exposureSeconds),
+                        EntryText.sensitivity(g.sensitivity, g.cameraClass),
+                        if (g.binning > 1) 'bin ${g.binning}×${g.binning}',
+                        g.rig,
+                      ].join(' · '),
+                      style: AppTypography.body.copyWith(
+                        height: 1.5,
+                        fontWeight: FontWeight.w500,
+                        color: p.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      '${EntryText.plural(g.frames, 'frame')} · '
+                      '${OpportunityText.duration(g.integration)} · '
+                      '${EntryText.plural(g.nights.length, 'night')}',
+                      style: AppTypography.caption.copyWith(
+                        height: 1.5,
+                        color: p.textPrimary,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    if (!g.known)
+                      Text(
+                        'Sensitivity not recorded: kept separate, never '
+                        'combined with another group.',
+                        style: caption,
+                      ),
+                  ],
+                ),
+              ),
+          ],
+        ],
       ),
     );
   }

@@ -24,6 +24,9 @@ class AppShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
   final bool showNavigation;
 
+  /// The root navigation bar (for tests and the host renders).
+  static const navigationKey = Key('app.navigation');
+
   /// The four roots with the reference's line icons (workspace.js `paths`).
   static List<({HybridIconData icon, String label})> get items => [
     (icon: HybridIcons.moon, label: 'Tonight'),
@@ -120,6 +123,7 @@ class AppShell extends StatelessWidget {
         bottomNavigationBar: !showNavigation
             ? null
             : DecoratedBox(
+                key: navigationKey,
                 decoration: BoxDecoration(
                   color: theme.scaffoldBackgroundColor,
                   border: Border(top: BorderSide(color: palette.border)),

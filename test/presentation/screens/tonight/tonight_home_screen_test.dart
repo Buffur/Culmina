@@ -23,10 +23,12 @@ import 'package:astroplan/presentation/shared/status_block.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
+import 'package:astroplan/domain/models/night_timeline.dart';
 import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:astroplan/presentation/shared/night_time_formatter.dart';
+import 'package:astroplan/presentation/navigation/app_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +38,7 @@ import '../../../support/fake_location_service.dart';
 import '../../../support/in_memory_first_run.dart';
 import '../../../support/no_snapshot_weather.dart';
 import '../../../support/planner_harness.dart';
+import '../../../support/library_finders.dart';
 
 /// The tests' now, for the planner and the saved plans alike (F24 A1).
 final _december = FixedClock(DateTime.utc(2026, 12, 15, 17));
@@ -153,12 +156,26 @@ void main() {
     expect(find.byKey(const Key('tonight.noSite')), findsNothing);
     await reveal(tester, 'tonight.night');
     expect(find.byKey(const Key('tonight.night')), findsOneWidget);
-    // F17 A1: the dark interval, not sunset to sunrise (on Night & Moon).
+    // F17 A1: the dark interval, not sunset to sunrise (on Night & Moon);
+    // app.js conditions: the span, then its length.
     expect(find.textContaining('Sunset to sunrise:'), findsNothing);
-    expect(find.textContaining('Dark (Sun below −18°):'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('tonight.night')),
+        matching: find.textContaining(' dark'),
+      ),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('tonight.moon')), findsOneWidget);
-    // S1.13 (SCI-09): the night's value, and when it applies.
-    expect(find.textContaining('% lit at midnight'), findsOneWidget);
+    // app.js conditions: the phase and the night's illumination; the hour
+    // it applies to is on Night & Moon (SCI-09).
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('tonight.moon')),
+        matching: find.textContaining('% lit'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('no forecast: says so, never a number', (tester) async {
@@ -169,7 +186,9 @@ void main() {
     expect(
       find.descendant(
         of: weather,
-        matching: find.textContaining('No forecast'),
+        matching: find.textContaining(
+          RegExp('Forecast unavailable|No forecast yet'),
+        ),
       ),
       findsOneWidget,
     );
@@ -349,10 +368,11 @@ void main() {
       final heading = find.byKey(const Key('tonight.planHeading'));
       final style = tester.widget<Text>(heading).style!;
       expect(tester.widget<Text>(heading).data, AppWords.yourPlan);
-      // Approved Hybrid styles.css: .home-section-title and .target-name.
-      expect(style.fontSize, 14);
+      // Approved Hybrid (hybrid-refinement.css): the section heading role,
+      // 20/600 at 1.4, -0.15.
+      expect(style.fontSize, 20);
       expect(style.fontWeight, FontWeight.w600);
-      expect(style.height, 1.5);
+      expect(style.height, 1.4);
       expect(style.letterSpacing, -0.15);
       expect(
         tester.getSemantics(heading),
@@ -362,10 +382,11 @@ void main() {
       final target = tester
           .widget<Text>(find.byKey(const Key('tonight.planTarget')))
           .style!;
-      expect(target.fontSize, 21);
+      // The section subject role, 18/500 at 1.3.
+      expect(target.fontSize, 18);
       expect(target.fontWeight, FontWeight.w500);
       expect(target.height, closeTo(1.3, 0.001));
-      expect(target.letterSpacing, -0.5);
+      expect(target.letterSpacing, 0);
       final rig = tester.widget<Text>(find.byKey(const Key('tonight.planRig')));
       expect(rig.style?.fontSize, 14);
       expect(rig.style?.height, 1.55);
@@ -375,11 +396,10 @@ void main() {
       expect(nightHeading.style?.letterSpacing, -0.5);
       final title = tester.widget<Text>(find.byKey(const Key('tonight.title')));
       expect(title.style?.height, closeTo(1.2, 0.001));
-      expect(tester.widget<Text>(find.text('culmina')).style?.fontSize, 13);
-      expect(
-        tester.widget<Text>(find.text('Welcome & setup')).style?.fontWeight,
-        FontWeight.w400,
-      );
+      // The accepted Home has no wordmark and no Welcome link (contract
+      // §2; first-run onboarding stays).
+      expect(find.text('culmina'), findsNothing);
+      expect(find.text('Welcome & setup'), findsNothing);
       // Hybrid's rig line leads with the catalogue ID of a named target.
       expect(
         tester.widget<Text>(find.byKey(const Key('tonight.planRig'))).data,
@@ -444,7 +464,9 @@ void main() {
       await tester.ensureVisible(candidates);
       await tester.tap(candidates);
       await settle(tester);
-      expect(find.text("Tonight's candidates"), findsWidgets);
+      // app.js `candidates` detail: the sheet's title is the action.
+      expect(find.byKey(const Key('tonight.header')), findsOneWidget);
+      expect(find.text('What can I image tonight?'), findsWidgets);
     });
 
     testWidgets('TD-080: with a target, What can I image tonight? stays in the '
@@ -505,11 +527,18 @@ void main() {
         'autosaves', (tester) async {
       await start(tester, lightFrames: 10);
       expect(vm.plan.eveningDate, CalendarDate(2026, 12, 15));
+      // app.js `date` detail: the sheet, its date field, Apply night.
       await tester.tap(find.byKey(const Key('context.night')));
       await settle(tester);
-      expect(find.text('Choose a night'), findsOneWidget);
+      expect(find.byKey(const Key('homeNight.apply')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('homeNight.date')));
+      await settle(tester);
       await tester.tap(find.text('20'));
       await tester.tap(find.text('OK'));
+      await settle(tester);
+      expect(find.text('Ends 21 Dec'), findsOneWidget);
+      expect(vm.plan.eveningDate, CalendarDate(2026, 12, 15), reason: 'draft');
+      await tester.tap(find.byKey(const Key('homeNight.apply')));
       await settle(tester);
       await tester.runAsync(() => vm.plan.idle);
       expect(vm.plan.eveningDate, CalendarDate(2026, 12, 20));
@@ -570,12 +599,15 @@ void main() {
 
       await tester.tap(find.byKey(const Key('context.night')));
       await settle(tester);
-      expect(find.text('Choose a night'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('homeNight.date')));
+      await settle(tester);
       await tester.tap(find.text('20')); // chosen, then cancelled
-      await tester.tap(find.text('Cancel'));
+      await tester.tap(find.text('OK'));
+      await settle(tester);
+      await tester.tap(find.byKey(const Key('homeSheet.cancel')));
       await settle(tester);
       await tester.runAsync(() => vm.plan.idle);
-      expect(find.text('Choose a night'), findsNothing);
+      expect(find.byKey(const Key('homeNight.apply')), findsNothing);
 
       expect(vm.plan.eveningDate, night);
       expect(blocks(), before);
@@ -605,23 +637,37 @@ void main() {
         expect(dark.thresholdDeg, limit.degrees);
         await reveal(tester, 'tonight.night');
         final ctx = tester.element(find.byKey(const Key('tonight.night')));
-        final expected = DarkText.span(
-          dark,
-          (utc) => NightTimeFormatter.instant(
-            ctx,
-            utc,
-            windowStartUtc: vm.conditions.nightTimeline!.night.startUtc,
-            zoneId: vm.site.displayZoneId,
+        final night = vm.conditions.nightTimeline!.night;
+        String at(DateTime utc) => NightTimeFormatter.instant(
+          ctx,
+          utc,
+          windowStartUtc: night.startUtc,
+          zoneId: vm.site.displayZoneId,
+        );
+        // app.js conditions: the dark span at the user's limit.
+        final (from, to) = switch (dark) {
+          SunCrossing(:final duskUtc, :final dawnUtc) => (
+            duskUtc ?? night.startUtc,
+            dawnUtc ?? night.endUtc,
           ),
+          _ => (night.startUtc, night.endUtc),
+        };
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('tonight.night')),
+            matching: find.text('${at(from)}–${at(to)}'),
+          ),
+          findsOneWidget,
         );
         expect(
           find.descendant(
             of: find.byKey(const Key('tonight.night')),
-            matching: find.text(expected),
+            matching: find.textContaining(
+              '${QuantityText.duration(to.difference(from))} dark',
+            ),
           ),
           findsOneWidget,
         );
-        expect(expected, contains(QuantityText.degrees(limit.degrees)));
       });
     }
 
@@ -642,19 +688,19 @@ void main() {
         findsOneWidget,
       );
       final ctx = tester.element(row);
+      String at(DateTime utc) => NightTimeFormatter.instant(
+        ctx,
+        utc,
+        windowStartUtc: moon.night.startUtc,
+        zoneId: vm.site.displayZoneId,
+      );
+      // app.js conditions: "Moon-free 00:30–04:45 (+1) · 4 h 15 min".
       expect(
         find.descendant(
           of: row,
           matching: find.text(
-            MoonText.moonFree(
-              free,
-              (utc) => NightTimeFormatter.instant(
-                ctx,
-                utc,
-                windowStartUtc: moon.night.startUtc,
-                zoneId: vm.site.displayZoneId,
-              ),
-            ),
+            'Moon-free ${free.intervals.map((i) => '${at(i.$1)}–${at(i.$2)}').join(', ')}'
+            ' · ${QuantityText.duration(free.moonFree)}',
           ),
         ),
         findsOneWidget,
@@ -703,7 +749,7 @@ void main() {
       expect(find.text('What can I image on $named?'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byKey(AppShell.navigationKey),
           matching: find.text('Tonight'),
         ),
         findsOneWidget,
@@ -720,7 +766,7 @@ void main() {
       expect(words.toLowerCase(), isNot(contains('tonight')), reason: words);
       await tester.tap(find.byKey(const Key('tonight.candidates')));
       await settle(tester);
-      expect(find.text('Candidates for $named'), findsOneWidget);
+      expect(find.text('What can I image on $named?'), findsOneWidget);
     });
 
     testWidgets('a missing target on another plan night names that night', (
@@ -754,7 +800,7 @@ void main() {
       await start(tester, site: false, firstRunDone: false);
       expect(find.text('Welcome to Culmina'), findsOneWidget);
       expect(find.byKey(const Key('tonight.noSite')), findsNothing);
-      expect(find.byType(NavigationBar), findsNothing);
+      expect(find.byKey(AppShell.navigationKey), findsNothing);
     });
 
     // A2: one page, purpose and permission, two optional steps, no target
@@ -798,7 +844,8 @@ void main() {
       await tester.tap(find.byKey(const Key('welcome.chooseRig')));
       await settle(tester);
       expect(find.text('Choose a rig'), findsWidgets);
-      await tester.pageBack();
+      // The scoped chooser closes with its × (plan.js scoped pages).
+      await tester.tap(find.byKey(const Key('scoped.close')));
       await settle(tester);
       expect(find.text('Welcome to Culmina'), findsOneWidget);
     });
@@ -830,10 +877,7 @@ void main() {
       await settle(tester);
       await tester.tap(find.byKey(const Key('addRig.byHand')));
       await settle(tester);
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Rig name'),
-        'Garden DSLR',
-      );
+      await tester.enterText(fieldLabeled('Rig name'), 'Garden DSLR');
       await tester.enterText(
         find.widgetWithText(TextFormField, '6248'),
         '6000',
@@ -847,13 +891,10 @@ void main() {
         '3.9',
       );
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Effective focal length (mm)'),
+        fieldLabeled('Effective focal length (mm)'),
         '135',
       );
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Focal ratio (f/)'),
-        '2.8',
-      );
+      await tester.enterText(fieldLabeled('Focal ratio (f/)'), '2.8');
       await tester.pump();
       await tester.ensureVisible(find.byKey(const Key('rigEditor.save')));
       await tester.tap(find.byKey(const Key('rigEditor.save')));

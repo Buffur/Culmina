@@ -350,7 +350,10 @@ void main() {
     }
     final line = find.byKey(const Key('tonight.resultDue'));
     expect(line, findsOneWidget);
-    expect(find.textContaining('Last night: '), findsOneWidget);
+    // app.js `.due-result`: "Record result", read as "Last night: …".
+    final handle = tester.ensureSemantics();
+    expect(find.bySemanticsLabel(RegExp('^Last night: ')), findsOneWidget);
+    handle.dispose();
     await tester.tap(line);
     for (var i = 0; i < 6; i++) {
       await tester.runAsync(() => Future<void>.delayed(Duration.zero));

@@ -8,11 +8,14 @@ import 'package:astroplan/domain/models/tracking_type.dart';
 import 'package:astroplan/domain/models/spec_confidence.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
 
+import 'package:astroplan/presentation/screens/library/library_parts.dart';
 import 'package:astroplan/presentation/shared/equipment_form_input.dart';
+import 'package:astroplan/presentation/shared/list_mode.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
 
 import '../../../support/add_rig.dart';
+import '../../../support/library_finders.dart';
 
 class MockEquipmentRepository implements EquipmentRepository {
   final List<EquipmentProfile> _profiles = [];
@@ -61,6 +64,14 @@ class MockSessionPlanViewModel extends ChangeNotifier
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
+/// Opens the first rig's record, then its editor (library.js: Edit rig).
+Future<void> editFirstRig(WidgetTester tester) async {
+  await tester.tap(find.byType(LibraryRow).first);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('rigDetail.edit')));
+  await tester.pumpAndSettle();
+}
+
 /// Opens the rig editor's "More (optional)" section (S7.6).
 Future<void> openMore(WidgetTester tester) async {
   final header = find.byKey(const Key('section.rigEditor.more'));
@@ -81,7 +92,10 @@ void main() {
         ChangeNotifierProvider(create: (_) => GearViewModel(repo)),
         ChangeNotifierProvider<SessionPlanViewModel>.value(value: planner),
       ],
-      child: const MaterialApp(home: EquipmentSelectionScreen()),
+      // The Library's rigs: a tap opens the rig's record (library.js).
+      child: const MaterialApp(
+        home: EquipmentSelectionScreen(mode: ListMode.manage),
+      ),
     );
   }
 
@@ -97,7 +111,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap save without entering anything
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pump();
 
     // Validation errors should appear
@@ -115,15 +129,12 @@ void main() {
     await tester.pumpAndSettle();
 
     // Enter valid name
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rig name'),
-      'Test Profile',
-    );
+    await tester.enterText(fieldLabeled('Rig name'), 'Test Profile');
 
     // Enter non-numeric in Resolution Width (hint: '6248')
     await tester.enterText(find.widgetWithText(TextFormField, '6248'), 'abc');
 
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pump();
 
     // Validation error should appear, saying what to type
@@ -140,13 +151,10 @@ void main() {
     await startAddRig(tester);
     await tester.pumpAndSettle();
 
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rig name'),
-      'Test Profile',
-    );
+    await tester.enterText(fieldLabeled('Rig name'), 'Test Profile');
     await tester.enterText(find.widgetWithText(TextFormField, '6248'), '0');
 
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pump();
 
     // TASK 8.4 (ADR-011 §4): bounds replaced "> 0"; a zero resolution now
@@ -165,34 +173,25 @@ void main() {
     await tester.pumpAndSettle();
 
     // We must enter all required fields because they now validate
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rig name'),
-      'Valid Rig',
-    );
+    await tester.enterText(fieldLabeled('Rig name'), 'Valid Rig');
 
     // Find inputs by hint text to target specific Stellarium rows
     final resW = find.widgetWithText(TextFormField, '6248');
     final resH = find.widgetWithText(TextFormField, '4176');
     // S7.6 (UX-22): the pixel size is one field.
-    final pixel = find.widgetWithText(TextFormField, 'Pixel size (µm)');
-    final sensorW = find.widgetWithText(TextFormField, '23.50');
-    final sensorH = find.widgetWithText(TextFormField, '15.70');
-    final focal = find.widgetWithText(
-      TextFormField,
-      'Effective focal length (mm)',
-    );
+    final pixel = fieldLabeled('Pixel size (µm)');
+    // The sensor size is derived from resolution × pixel size.
+    final focal = fieldLabeled('Effective focal length (mm)');
     // TASK 8.4 relabelled the f/ field (ADR-011 §3: unit-explicit names).
-    final aperture = find.widgetWithText(TextFormField, 'Focal ratio (f/)');
+    final aperture = fieldLabeled('Focal ratio (f/)');
 
     await tester.enterText(resW, '6000');
     await tester.enterText(resH, '4000');
     await tester.enterText(pixel, '3.76');
-    await tester.enterText(sensorW, '23.5');
-    await tester.enterText(sensorH, '15.7');
     await tester.enterText(focal, '400');
     await tester.enterText(aperture, '5.6');
 
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
 
     // Dialog should close, no validation errors
@@ -234,8 +233,7 @@ void main() {
       // a literal mojibake string in this file would itself trip that check.
       expect(find.textContaining('µm'), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.edit_outlined));
-      await tester.pumpAndSettle();
+      await editFirstRig(tester);
 
       // The pixel size's label (S7.6: one field), and the "Rotation (°)"
       // field, one tap away in "More (optional)".
@@ -253,27 +251,15 @@ void main() {
   }
 
   Future<void> fillSensor(WidgetTester tester) async {
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Rig name'),
-      'Refractor',
-    );
+    await tester.enterText(fieldLabeled('Rig name'), 'Refractor');
     await tester.enterText(find.widgetWithText(TextFormField, '6248'), '6248');
     await tester.enterText(find.widgetWithText(TextFormField, '4176'), '4176');
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Pixel size (µm)'),
-      '3.76',
-    );
+    await tester.enterText(fieldLabeled('Pixel size (µm)'), '3.76');
   }
 
-  final focalField = find.widgetWithText(
-    TextFormField,
-    'Effective focal length (mm)',
-  );
-  final ratioField = find.widgetWithText(TextFormField, 'Focal ratio (f/)');
-  final diameterField = find.widgetWithText(
-    TextFormField,
-    'Aperture diameter (mm)',
-  );
+  final focalField = fieldLabeled('Effective focal length (mm)');
+  final ratioField = fieldLabeled('Focal ratio (f/)');
+  final diameterField = fieldLabeled('Aperture diameter (mm, optional)');
 
   testWidgets('a diameter derives the focal ratio (N = f / D) and is saved', (
     tester,
@@ -315,11 +301,8 @@ void main() {
     await tester.tap(find.text('Guided').last);
     await tester.pumpAndSettle();
     await openMore(tester); // S7.6: one tap away
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Maximum sub-exposure (s)'),
-      '300',
-    );
-    await tester.tap(find.text('Save'));
+    await tester.enterText(fieldLabeled('Maximum sub-exposure (s)'), '300');
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
 
     final saved = repo._profiles.single;
@@ -327,7 +310,8 @@ void main() {
     expect(saved.apertureDiameterMm, 72);
     expect(saved.trackingType, TrackingType.guided);
     expect(saved.maxExposureS, 300);
-    expect(find.textContaining('f/5.6'), findsOneWidget);
+    // library.js `rigSubtitle`: the ratio to two decimals.
+    expect(find.textContaining('f/5.56'), findsOneWidget);
   });
 
   testWidgets('a ratio above f/32 is rejected by the form', (tester) async {
@@ -341,7 +325,7 @@ void main() {
     await fillSensor(tester);
     await tester.enterText(focalField, '400');
     await tester.enterText(ratioField, '72');
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
 
     expect(find.text('Must be 0.5–32'), findsOneWidget);
@@ -370,8 +354,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('f/72 — please review'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.edit_outlined));
-    await tester.pumpAndSettle();
+    await editFirstRig(tester);
     expect(find.textContaining('Please review'), findsOneWidget);
     expect(
       tester
@@ -390,7 +373,7 @@ void main() {
     // The user fixes it by entering the diameter.
     await tester.enterText(diameterField, '72');
     await tester.pump();
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
     final fixed = repo.updated.single;
     expect(fixed.focalRatio, closeTo(400 / 72, 1e-9));
@@ -407,12 +390,13 @@ void main() {
     await tester.pumpAndSettle();
     await openMore(tester); // S7.6: the rare values, one tap away
     for (final label in [
-      'px',
+      'Resolution width (px)',
+      'Resolution height (px)',
       'Pixel size (µm)',
-      'mm',
+      'Sensor size (mm)',
       'Effective focal length (mm)',
       'Focal ratio (f/)',
-      'Aperture diameter (mm)',
+      'Aperture diameter (mm, optional)',
       'Maximum sub-exposure (s)',
       'Average RAW file size (MB)',
       'Rotation (°)',
@@ -449,12 +433,11 @@ void main() {
     );
     await tester.pumpWidget(createTestWidget(repo, MockSessionPlanViewModel()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.edit_outlined));
-    await tester.pumpAndSettle();
+    await editFirstRig(tester);
     expect(find.textContaining('Camera specs: verified'), findsOneWidget);
     expect(find.textContaining('Optics: estimated'), findsOneWidget);
 
-    await tester.tap(find.text('Save'));
+    await tester.tap(find.text('Save rig'));
     await tester.pumpAndSettle();
     final saved = repo.updated.single;
     expect(saved.cameraConfidence, SpecConfidence.verified);

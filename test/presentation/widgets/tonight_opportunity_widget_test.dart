@@ -92,7 +92,7 @@ void main() {
       );
       expect(
         OpportunityText.reasons(segment, o),
-        'target below 30°; Moon up and at least 50 % lit (your Moon gate)',
+        'target below 30°; Moon up and at least 50% lit (your Moon gate)',
       );
       final day = o.excluded.first;
       expect(
@@ -120,10 +120,10 @@ void main() {
         ),
       );
       final w = o.windows.single;
-      expect(OpportunityText.moon(w), 'Moon down (85 % lit at midnight)');
+      expect(OpportunityText.moon(w), 'Moon down (85% lit at midnight)');
       expect(
         OpportunityText.weather(w),
-        'cloud 10–30 %, 1 h without forecast, stale forecast',
+        'cloud 10–30%, 1 h without forecast, stale forecast',
       );
     });
 
@@ -165,7 +165,7 @@ void main() {
     }
     expect(
       find.text(
-        '22:00 – 02:00 (+1): Moon up and at least 50 % lit '
+        '22:00 – 02:00 (+1): Moon up and at least 50% lit '
         '(your Moon gate)',
       ),
       findsOneWidget,

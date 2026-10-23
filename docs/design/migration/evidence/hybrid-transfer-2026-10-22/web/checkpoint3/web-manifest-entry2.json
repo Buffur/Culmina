@@ -1,0 +1,164 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-entry-gain-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook&entry=example-m31-2026-10-12",
+   "steps": [
+    {
+     "click": ".logbook-gain summary"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      450
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-entry-snap-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook&entry=example-m31-2026-10-12",
+   "steps": [
+    {
+     "click": "#logbook-snapshot"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      560
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-entry-export-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook&entry=example-m31-2026-10-12",
+   "steps": [
+    {
+     "click": ".logbook-export summary"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      3000
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-entry-upcoming-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook&entry=example-m42-2026-10-24",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-progress-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook",
+   "steps": [
+    {
+     "click": "[data-open-progress]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  },
+  {
+   "id": "web-progress-b-375",
+   "url": "http://127.0.0.1:4197/workspace.html?variant=blend&font=native&theme=light&scale=1&tab=logbook",
+   "steps": [
+    {
+     "click": "[data-open-progress]"
+    },
+    {
+     "scroll": [
+      ".android-scroll",
+      650
+     ]
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": false,
+   "errors": []
+  }
+ ]
+}

@@ -145,9 +145,20 @@ void main() {
     // S1.8: the planner's frame-fill wording (SCI-06); no "Home" (UX-20).
     expect(find.textContaining("of the frame's short side"), findsWidgets);
     expect(find.textContaining('fills '), findsNothing);
+    // The note closes the list (built once scrolled to).
+    await tester.scrollUntilVisible(
+      find.textContaining("Tap a target to make it the plan's target."),
+      500,
+      scrollable: find.byType(Scrollable).last,
+    );
     expect(
       find.textContaining("Tap a target to make it the plan's target."),
       findsOneWidget,
+    );
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('tonight.header')),
+      -500,
+      scrollable: find.byType(Scrollable).last,
     );
 
     final evaluated = await tester.runAsync(() async {

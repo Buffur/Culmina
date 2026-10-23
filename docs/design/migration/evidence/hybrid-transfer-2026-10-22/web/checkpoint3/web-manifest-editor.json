@@ -1,0 +1,77 @@
+{
+ "webSha": "86873ce343160c860706091e12b257090cc96d94",
+ "playwright": "1.62.1",
+ "studio": [
+  1200,
+  1000
+ ],
+ "zoom": 1,
+ "textScale": 1,
+ "shots": [
+  {
+   "id": "web-plan-light-375",
+   "url": "http://127.0.0.1:4197/plan.html?variant=blend&font=native&theme=light&scale=1",
+   "steps": [],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-editor-light-375",
+   "url": "http://127.0.0.1:4197/plan.html?variant=blend&font=native&theme=light&scale=1",
+   "steps": [
+    {
+     "click": "[data-edit-block]"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  },
+  {
+   "id": "web-editor-bottom-light-375",
+   "url": "http://127.0.0.1:4197/plan.html?variant=blend&font=native&theme=light&scale=1",
+   "steps": [
+    {
+     "click": "[data-edit-block]"
+    },
+    {
+     "scrollTo": ".editor-help"
+    }
+   ],
+   "phone": [
+    377,
+    814
+   ],
+   "appArea": [
+    375,
+    760
+   ],
+   "dpr": 1,
+   "font": "Geist, sans-serif",
+   "geistLoaded": true,
+   "serifLoaded": true,
+   "errors": []
+  }
+ ]
+}

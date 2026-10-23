@@ -32,6 +32,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     required this.moonUp,
     required this.moonFree,
     required this.weatherCaution,
+    required this.weatherNotice,
   });
 
   static const sourceRevision = '86873ce';
@@ -40,6 +41,9 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
   // Exact compact roles in the approved source. Large text uses full week rows.
   static const calendarCaptionSize = 10.0;
   static const navigationLabelSize = 11.0;
+
+  /// Chart tick labels (plan.css `.gain-graph text`, 11 px).
+  static const chartLabelSize = 11.0;
   static const minTarget = 48.0;
   static const appBarHeight = 64.0;
 
@@ -115,6 +119,10 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
   /// Weather caution (dew, stale).
   final Color weatherCaution;
 
+  /// The Weather page's freshness and gap notices (conditions.css
+  /// `--wx-caution`).
+  final Color weatherNotice;
+
   List<Color> get sky => [
     skyDay,
     skyCivil,
@@ -148,6 +156,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     moonUp: Color(0xFF607D8B),
     moonFree: Color(0xFF37352F),
     weatherCaution: Color(0xFF754600),
+    weatherNotice: Color(0xFF9A5B00),
   );
 
   static const dark = HybridTokens(
@@ -175,6 +184,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     moonUp: Color(0xFFB0BEC5),
     moonFree: Color(0xFFEBEBEA),
     weatherCaution: Color(0xFFFFCA70),
+    weatherNotice: Color(0xFFFFB74D),
   );
 
   static const field = HybridTokens(
@@ -202,6 +212,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     moonUp: Color(0xFFB00000),
     moonFree: Color(0xFFFF0000),
     weatherCaution: Color(0xFFFF0000),
+    weatherNotice: Color(0xFFFF0000),
   );
 
   @override
@@ -230,6 +241,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     Color? moonUp,
     Color? moonFree,
     Color? weatherCaution,
+    Color? weatherNotice,
   }) => HybridTokens(
     action: action ?? this.action,
     onAction: onAction ?? this.onAction,
@@ -255,6 +267,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     moonUp: moonUp ?? this.moonUp,
     moonFree: moonFree ?? this.moonFree,
     weatherCaution: weatherCaution ?? this.weatherCaution,
+    weatherNotice: weatherNotice ?? this.weatherNotice,
   );
 
   @override
@@ -285,6 +298,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
       moonUp: Color.lerp(moonUp, other.moonUp, t)!,
       moonFree: Color.lerp(moonFree, other.moonFree, t)!,
       weatherCaution: Color.lerp(weatherCaution, other.weatherCaution, t)!,
+      weatherNotice: Color.lerp(weatherNotice, other.weatherNotice, t)!,
     );
   }
 }

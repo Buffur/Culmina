@@ -25,6 +25,7 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/shared/example_text.dart';
 import 'package:drift/native.dart';
+import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -126,7 +127,8 @@ void main() {
     expect(vm.captureBlocks, hasLength(example.length));
     expect(ExampleCapturePlan.matches(vm.captureBlocks), isTrue);
     expect(vm.isExampleCapturePlan, isTrue);
-    expect(find.text(ExampleText.plan), findsOneWidget);
+    // The Capture plan heading's count, flagged first (RD-04).
+    expect(find.textContaining(ExampleText.plan), findsOneWidget);
     expect(offer, findsNothing);
     final stored = await tester.runAsync(
       () => DriftSessionRepository(
@@ -192,7 +194,12 @@ void main() {
     await tester.runAsync(() => vm.choosePlan());
     await settle(tester);
     expect(vm.selectedEquipment!.isExample, isTrue);
-    await tester.tap(find.byTooltip('Rig details'));
+    final details = find.byKey(
+      const Key('section.${PlannerSections.rigDetails}'),
+    );
+    await tester.ensureVisible(details);
+    await settle(tester);
+    await tester.tap(details);
     await settle(tester);
     expect(find.text(ExampleText.rigNote), findsOneWidget);
 

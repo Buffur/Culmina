@@ -75,7 +75,7 @@ void main() {
     final c = vm.moonConditions!;
     final pct = (c.illuminationAtMidnight * 100).round();
     expect(find.text('Moon'), findsOneWidget);
-    expect(find.text('Illumination at midnight: $pct %'), findsOneWidget);
+    expect(find.text('Illumination at midnight: $pct%'), findsOneWidget);
     expect(find.textContaining('approx'), findsNothing);
     expect(find.byKey(const Key('sky.moonUp')), findsNothing);
     expect(find.textContaining('Moon up'), findsNothing);

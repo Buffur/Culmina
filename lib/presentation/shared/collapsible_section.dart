@@ -28,7 +28,14 @@ class CollapsibleSection extends StatelessWidget {
     this.onToggle,
     this.topRule = true,
     this.titleStyle,
+    this.icon,
+    this.iconColor,
   });
+
+  /// A data icon before the title (conditions.css `.condition-data-heading`:
+  /// 20 px, 10 before the words), e.g. the Moon or the Sun.
+  final HybridIconData? icon;
+  final Color? iconColor;
 
   /// The Hybrid disclosure's thin rule above it (`.plan-disclosure`).
   final bool topRule;
@@ -94,15 +101,30 @@ class CollapsibleSection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        style:
-                            (titleStyle ??
-                                    AppTypography.sectionHeading.copyWith(
-                                      height: 1.4,
-                                      letterSpacing: 0,
-                                    ))
-                                .copyWith(color: p.textPrimary),
+                      Row(
+                        children: [
+                          if (icon case final i?) ...[
+                            HybridIcon(
+                              i,
+                              size: 20,
+                              strokeWidth: 1.7,
+                              color: iconColor ?? p.textPrimary,
+                            ),
+                            const SizedBox(width: 10),
+                          ],
+                          Flexible(
+                            child: Text(
+                              title,
+                              style:
+                                  (titleStyle ??
+                                          AppTypography.sectionHeading.copyWith(
+                                            height: 1.4,
+                                            letterSpacing: 0,
+                                          ))
+                                      .copyWith(color: p.textPrimary),
+                            ),
+                          ),
+                        ],
                       ),
                       if (summary != null)
                         Padding(

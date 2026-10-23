@@ -12,7 +12,6 @@ import 'package:astroplan/data/repositories/drift_location_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
-import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/capture_budget_summary.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/stacking_gain_graph.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
@@ -94,10 +93,10 @@ void main() {
 
   Future<void> openCurves(WidgetTester tester) async {
     await tester.ensureVisible(
-      find.byKey(const Key('section.${PlannerSections.gainCurve}')),
+      find.byKey(const Key('section.${PlannerSections.gainHelp}')),
     );
     await tester.tap(
-      find.byKey(const Key('section.${PlannerSections.gainCurve}')),
+      find.byKey(const Key('section.${PlannerSections.gainHelp}')),
     );
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
@@ -145,37 +144,42 @@ void main() {
   ) async {
     await start(tester);
     final handle = tester.ensureSemantics();
-    expect(find.text(AppWords.relativeStackingGain), findsOneWidget);
+    // Hybrid estimate: "Relative stacking gain", then one line per group,
+    // its ×√N against one of its own frames and what it groups (F11, C16).
+    expect(find.text('Relative stacking gain'), findsOneWidget);
     expect(find.textContaining('SNR'), findsNothing);
     final rows = [
-      ('Ha · 60 s · gain 100 × 120', '11.0x'),
-      ('Ha · 300 s · gain 100 × 12', '3.5x'),
-      ('No filter · 30 s · ISO or gain not recorded × 1', '1.0x'),
+      ('×10.95', ' vs one comparable frame · 120 × Ha · 60 s · gain 100'),
+      ('×3.46', ' vs one comparable frame · 12 × Ha · 300 s · gain 100'),
+      (
+        '×1.00',
+        ' vs one comparable frame · 1 × No filter · 30 s · ISO or gain not '
+            'recorded',
+      ),
     ];
-    for (final (i, (label, value)) in rows.indexed) {
+    for (final (i, (value, rest)) in rows.indexed) {
       final row = find.byKey(Key('capturePlan.gain.$i'));
       expect(
-        find.descendant(of: row, matching: find.text(label)),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(of: row, matching: find.text(value)),
-        findsOneWidget,
+        tester
+            .widget<Text>(find.descendant(of: row, matching: find.byType(Text)))
+            .textSpan!
+            .toPlainText(),
+        '$value$rest',
       );
     }
+    await openCurves(tester);
     expect(
       find.text(CaptureBudgetSummary.notComparable),
       findsOneWidget,
       reason: 'the unrecorded block says why it stands alone',
     );
-    await openCurves(tester);
     expect(
       find.bySemanticsLabel(
         RegExp(
           RegExp.escape(
             'Relative improvement over integration time, Ha · 60 s · gain 100: '
-            '1.00x at your plan, 2 h (120 frames); 0.71x at half that time; '
-            '1.41x at 4 h (240 frames), for comparison. Relative to your plan, '
+            '1.00x at your plan, 2 h (120 frames); 0.71× at half that time; '
+            '1.41× at 4 h (240 frames), for comparison. Relative to your plan, '
             'not a signal-to-noise ratio.',
           ),
         ),
@@ -207,27 +211,38 @@ void main() {
     ) async {
       await start(tester, blocks: blocks);
       expect(vm.captureBudget.lightGroups, isEmpty);
+      // The estimate invents no gain; Stacking gain details says what to add.
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('estimate.gain')),
+          matching: find.text('Unknown'),
+        ),
+        findsOneWidget,
+      );
+      await openCurves(tester);
       final empty = find.byKey(const Key('capturePlan.noGain'));
       expect(empty, findsOneWidget);
       expect(
-        tester.widget<Text>(empty).data,
-        'No light frames yet: add light frames to see their relative gain.',
+        find.descendant(
+          of: empty,
+          matching: find.text(
+            'No light frames yet: add light frames to see their relative '
+            'gain.',
+          ),
+        ),
+        findsOneWidget,
       );
-      expect(find.byKey(const Key('capturePlan.gain.0')), findsNothing);
-      expect(find.textContaining('1.0x'), findsNothing);
-      expect(
-        find.byKey(const Key('section.${PlannerSections.gainCurve}')),
-        findsNothing,
-        reason: 'no curve without a group',
-      );
+      expect(find.byType(StackingGainGraph), findsNothing);
 
       await tester.runAsync(() => vm.plan.addCaptureBlock(_light(60, 4, 'L')));
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));
       expect(empty, findsNothing);
-      final row = find.byKey(const Key('capturePlan.gain.0'));
       expect(
-        find.descendant(of: row, matching: find.text('2.0x')),
+        find.descendant(
+          of: find.byKey(const Key('estimate.gain')),
+          matching: find.text('×2.00'),
+        ),
         findsOneWidget,
       );
     });
@@ -245,37 +260,45 @@ void main() {
         .toList();
     final labels = [
       (
-        'Your plan: 2 h (120 frames) · 1.00x',
-        'For comparison: 4 h (240 frames) · 1.41x',
+        'Your plan: 2 h (120 frames) · 1.00×',
+        'Comparison: 4 h (240 frames) · 1.41×',
       ),
       (
-        'Your plan: 1 h (12 frames) · 1.00x',
-        'For comparison: 2 h (24 frames) · 1.41x',
+        'Your plan: 1 h (12 frames) · 1.00×',
+        'Comparison: 2 h (24 frames) · 1.41×',
       ),
       (
-        'Your plan: 30 s (1 frame) · 1.00x',
-        'For comparison: 2 min (4 frames) · 2.00x',
+        'Your plan: 30 s (1 frame) · 1.00×',
+        'Comparison: 2 min (4 frames) · 2.00×',
       ),
     ];
     for (final (i, (plan, comparison)) in labels.indexed) {
       final graph = find.byWidget(graphs[i]);
       expect(
+        // A legend item: its swatch, then its words.
         tester
             .widget<Text>(
               find.descendant(
-                of: graph,
-                matching: find.byKey(const Key('gainGraph.plan')),
+                of: find.descendant(
+                  of: graph,
+                  matching: find.byKey(const Key('gainGraph.plan')),
+                ),
+                matching: find.byType(Text),
               ),
             )
             .data,
         plan,
       );
       expect(
+        // A legend item: its swatch, then its words.
         tester
             .widget<Text>(
               find.descendant(
-                of: graph,
-                matching: find.byKey(const Key('gainGraph.comparison')),
+                of: find.descendant(
+                  of: graph,
+                  matching: find.byKey(const Key('gainGraph.comparison')),
+                ),
+                matching: find.byType(Text),
               ),
             )
             .data,

@@ -108,11 +108,11 @@ void main() {
         find.descendant(of: find.byKey(Key(key)), matching: find.text(text));
     expect(inReading('sky.bortle', 'Bortle 4'), findsOneWidget);
     expect(
-      inReading('sky.bortle', 'Source: user · Sep 23, 2026'),
+      inReading('sky.bortle', 'Source: user · 23 Sep 2026'),
       findsOneWidget,
     );
     expect(inReading('sky.sqm', 'SQM 21.30 mag/arcsec²'), findsOneWidget);
-    expect(inReading('sky.sqm', 'Source: meter · Aug 1, 2026'), findsOneWidget);
+    expect(inReading('sky.sqm', 'Source: meter · 1 Aug 2026'), findsOneWidget);
     expect(find.textContaining('2026-0'), findsNothing);
     expect(find.text('Look it up on lightpollutionmap.app'), findsOneWidget);
   });
@@ -126,7 +126,7 @@ void main() {
     expect(
       find.descendant(
         of: find.byKey(const Key('sky.sqm')),
-        matching: find.text('Source: meter · Aug 1, 2026'),
+        matching: find.text('Source: meter · 1 Aug 2026'),
       ),
       findsOneWidget,
     );

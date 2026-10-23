@@ -88,18 +88,26 @@ void main() {
       });
     }
 
-    testWidgets('a tap outside is Cancel; Discard is destructive', (
+    // plan.html #leave-plan (WQA-04): Cancel and Discard are secondary
+    // (outlined) buttons, the save the one filled action; the word carries
+    // Discard's meaning.
+    testWidgets('a tap outside is Cancel; Discard is a secondary action', (
       tester,
     ) async {
       final context = await _host(tester);
       final answer = askUnsavedChanges(context, plan: 'M42');
       await tester.pumpAndSettle();
-      final discard = tester.widget<TextButton>(
+      expect(
         find.byKey(const Key('unsaved.discard')),
+        isA<Finder>().having(
+          (f) => tester.widget(f),
+          'widget',
+          isA<OutlinedButton>(),
+        ),
       );
       expect(
-        discard.style!.foregroundColor!.resolve({}),
-        AppTheme.light.colorScheme.error,
+        tester.widget(find.byKey(const Key('unsaved.save'))),
+        isA<FilledButton>(),
       );
       await tester.tapAt(const Offset(5, 5));
       await tester.pumpAndSettle();

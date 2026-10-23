@@ -94,15 +94,15 @@ void main() {
     );
     expect(
       MoonText.duringDark(m(0)),
-      'Moon down while dark (3 % lit at midnight)',
+      'Moon down while dark (3% lit at midnight)',
     );
     expect(
       MoonText.duringDark(m(450)),
-      'Moon up all the dark time (3 % lit at midnight)',
+      'Moon up all the dark time (3% lit at midnight)',
     );
     expect(
       MoonText.duringDark(m(120)),
-      'Moon up 2 h of the 7 h 30 min dark (3 % lit at midnight)',
+      'Moon up 2 h of the 7 h 30 min dark (3% lit at midnight)',
     );
   });
 

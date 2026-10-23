@@ -18,6 +18,7 @@ import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
+import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -120,6 +121,9 @@ void main() {
         ),
       );
       await vm.plan.idle;
+      // Hybrid: the file-size basis and its actions are inside Budget and
+      // assumptions.
+      await vm.disclosure.setOpen(PlannerSections.budgetDetails, true);
     });
     addTearDown(() => tester.runAsync(db.close));
     await tester.pumpWidget(
@@ -135,10 +139,18 @@ void main() {
     await settle(tester);
   }
 
+  // The File size basis fact's value.
   String note(WidgetTester tester) => tester
-      .widget<Text>(find.byKey(const Key('capturePlan.storageNote')))
+      .widgetList<Text>(
+        find.descendant(
+          of: find.byKey(const Key('capturePlan.storageNote')),
+          matching: find.byType(Text),
+        ),
+      )
+      .last
       .data!;
 
+  // The Storage estimate's value (label, value, note).
   String total(WidgetTester tester) => tester
       .widgetList<Text>(
         find.descendant(
@@ -146,7 +158,7 @@ void main() {
           matching: find.byType(Text),
         ),
       )
-      .last
+      .elementAt(1)
       .data!;
 
   Future<EquipmentProfile> storedRig(WidgetTester tester) async =>
