@@ -22,6 +22,16 @@ For production work, use BASELINE to identify the accepted source, choose the re
 
 Do not follow optional historical links or read every component group to complete an ordinary fix/review. A pure Git/status request does not need this design context. These are content boundaries, not a mandated exact command order or a line quota.
 
+## Visual comparisons
+
+Read the accepted Culmina contract first, then only relevant [reference patterns](references/UI_REFERENCE_LIBRARY.md#local-fig-inspection) or [image provenance](references/UI_REFERENCE_LIBRARY.md#verification-addendum). Before comparing images, verify source/snapshot, source kind, actual visible screen/state, fixture result, theme, text scale and viewport/DPR; for Android distinguish installed APK, loaded VM and capture freshness, and wait for navigation to settle. A filename, fixture date, root route or successful hot reload alone is not proof. For local `.fig` research, retain file hashes/local node IDs and actual component declarations; distinguish components from presentation boards and declared variants/connections from rendered or executed behavior. Use like-for-like content where required; label historical before-images and external inspiration accurately, and derive no implementation requirement from stale, invalid or unverified evidence. Separate objective defects, optional refinements and significant design decisions requiring owner approval. The current owner-review target remains 100%; this rule starts no larger-text adaptation or automatic FIX.
+
+### Figma access and inspection depth
+
+Prefer the connected Figma MCP for accessible cloud design files: verify available tools/authentication, then access to the exact file/node; successful `whoami` alone does not prove that access. Read relevant component properties/variants and obtain node screenshots for visual comparison, following the applicable Figma skills. Record the actual tool results and any access limits. A rendered node is not proof that prototype interactions were executed.
+
+Local `.fig` exports can supply structural evidence without a cloud link, but decoding them is not MCP/editor rendering. If the available MCP tools cannot open/import a local export directly, import/open a copy in Figma within the owner's authorized scope, then use its actual `figma.com/design/<fileKey>/...` URL and a frame/component link from **Copy link to selection**. Community publication IDs and opaque local origin keys must not be substituted for a cloud file key. Do not require design links merely to continue valid local structural inspection, or label that fallback FULL_INSPECTION without adequate rendered/internal evidence. Preserve originals, licences and existing implementation-approval boundaries.
+
 ## Work modes
 
 This is the canonical design-mode routing for the five Culmina design skills and the supporting Flutter recipes. Select the mode from the owner's current task before choosing a method.

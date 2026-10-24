@@ -13,6 +13,7 @@ Read [BASELINE](../../docs/design/BASELINE.md) and select the task surface below
 | Local density, alignment, padding, shape or motion | [Spacing](culmina-design-spacing/SKILL.md) |
 | An existing control or display | [Components](culmina-design-components/SKILL.md), then only the affected form/navigation/data-display reference |
 | Product meaning, scientific/data invariants or an exception | [Rules](culmina-design-rules/SKILL.md), then only the relevant decision/guardrail |
+| Visual comparison, relevant external patterns or screenshot/source freshness | Read only needed [inspected reference patterns](../../docs/design/references/UI_REFERENCE_LIBRARY.md#local-fig-inspection) or [image-provenance rows](../../docs/design/references/UI_REFERENCE_LIBRARY.md#verification-addendum); follow [visual comparisons](../../docs/design/WORKFLOW.md#visual-comparisons) and the [Figma MCP/local-export route](../../docs/design/WORKFLOW.md#figma-access-and-inspection-depth) when relevant. Local exports prove declared structure, not live rendering/interaction; external examples are inspiration, not approved native rules. |
 
 Historical font/browser comparisons are linked on demand; production fixes do not require the lab history or every component group. Discovery differs by client: read the intended skill explicitly when needed rather than loading this entire directory.
 
