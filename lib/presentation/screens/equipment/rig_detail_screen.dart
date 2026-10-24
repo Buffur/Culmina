@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
@@ -119,7 +122,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
     final ratio = 'f/${_n(r.focalRatio)}';
     Widget heading(String text, {bool small = false}) => Padding(
       padding: EdgeInsets.only(
-        top: small ? AppSpacing.itemGap : AppSpacing.gutter,
+        top: small ? AppSpacing.itemGap : 0,
         bottom: AppSpacing.xs,
       ),
       child: Semantics(
@@ -135,173 +138,201 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
     return Scaffold(
       appBar: hybridAppBar(
         context,
-        title: Text(r.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(r.name),
         actions: const [FieldModeButton()],
       ),
       body: ListView(
         key: const Key('rigDetail.scroll'),
         padding: settingsPagePadding,
         children: [
-          LibraryRecordHeader(
-            caption: r.isExample
-                ? 'Example rig · not a measurement'
-                : 'Your rig · editable',
-            action: LibraryPrimaryAction(
-              key: const Key('rigDetail.edit'),
-              icon: HybridIcons.edit,
-              label: 'Edit rig',
-              onPressed: _edit,
-            ),
-          ),
-          heading('Camera'),
-          FactRows(key: const Key('rigDetail.camera'), [
-            ('Camera type', camera, null),
-            if (r.manufacturer case final m? when m.isNotEmpty)
-              ('Manufacturer', m, null),
-            if (r.cameraModel case final m? when m.isNotEmpty)
-              ('Model', m, null),
-            ('Resolution', resolution, null),
-            ('Pixel size', pixel, null),
-            ('Sensor size', sensor, null),
-          ]),
-          heading('Optics'),
-          FactRows(key: const Key('rigDetail.optics'), [
-            ('Effective focal length', '${_n(r.focalLengthMm)} mm', null),
-            (
-              'Focal ratio',
-              ratio,
-              r.needsApertureReview ? 'Above f/32 · please review' : null,
-            ),
-            if (r.apertureDiameterMm case final d?)
-              ('Aperture diameter', '${_n(d)} mm', null),
-            ('Tracking', r.trackingType.label, null),
-          ]),
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.gutter),
-            child: CollapsibleSection(
-              key: const Key('rigDetail.full'),
-              sectionKey: 'library.rigRecord',
-              title: 'Full rig record and sources',
-              summary: 'All values, including unknowns',
-              open: _fullOpen,
-              onToggle: () => setState(() => _fullOpen = !_fullOpen),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  heading('Camera', small: true),
-                  FactRows([
-                    (
-                      'Camera type',
-                      camera,
-                      r.cameraClass == CameraClass.unknown
-                          ? 'The app does not work out sensor facts from the '
-                                'type.'
-                          : null,
-                    ),
-                    ('Manufacturer', r.manufacturer ?? 'Not recorded', null),
-                    ('Model', r.cameraModel ?? 'Not recorded', null),
-                    if (r.cameraClass.offersInCameraNoiseReduction)
-                      (
-                        'In-camera noise reduction',
-                        r.inCameraNoiseReduction
-                            ? 'On: a dark as long as each light'
-                            : 'Off',
-                        null,
-                      ),
-                    ('Resolution', resolution, null),
-                    ('Pixel size', pixel, null),
-                    ('Sensor size', sensor, null),
-                  ]),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    'Camera specs: '
-                    '${RigInputText.source(r.cameraSource, r.cameraConfidence)}',
-                    style: caption,
-                  ),
-                  heading('Optics', small: true),
-                  FactRows([
-                    (
-                      'Effective focal length',
-                      '${_n(r.focalLengthMm)} mm',
-                      null,
-                    ),
-                    (
-                      'Focal ratio',
-                      ratio,
-                      r.apertureDiameterMm != null
-                          ? 'From focal length ÷ diameter'
-                          : null,
-                    ),
-                    (
-                      'Aperture diameter',
-                      switch (r.apertureDiameterMm) {
-                        final d? => '${_n(d)} mm',
-                        null => 'Not recorded',
-                      },
-                      null,
-                    ),
-                    (
-                      'Tracking (default for plans)',
-                      r.trackingType.label,
-                      'A plan may override it.',
-                    ),
-                  ]),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    'Optics: '
-                    '${RigInputText.source(r.opticsSource, r.opticsConfidence)}',
-                    style: caption,
-                  ),
-                  heading('Optional records', small: true),
-                  FactRows([
-                    (
-                      'Maximum sub-exposure',
-                      switch (r.maxExposureS) {
-                        final s? => '${_n(s)} s',
-                        null => 'Not recorded',
-                      },
-                      null,
-                    ),
-                    (
-                      'Average RAW file size',
-                      switch (r.averageRawFileSizeMB) {
-                        final mb? => QuantityText.storage(mb * 1e6),
-                        null => 'Not recorded',
-                      },
-                      'A measured size; empty leaves the storage estimate '
-                          'theoretical.',
-                    ),
-                    (
-                      'Capture format',
-                      switch (r.captureFormat) {
-                        final f? => RigInputText.captureFormat(f),
-                        null => 'Not recorded',
-                      },
-                      null,
-                    ),
-                    (
-                      'Rotation',
-                      switch (r.rotationDeg) {
-                        final d? => QuantityText.degrees(
-                          d,
-                          digits: d == d.roundToDouble() ? 0 : 2,
-                        ),
-                        null => 'Not recorded',
-                      },
-                      null,
-                    ),
-                  ]),
-                  if (r.metadataMake != null || r.metadataModel != null) ...[
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      'Imported from a file: '
-                      '${[?r.metadataMake, ?r.metadataModel].join(' ')}',
-                      style: caption,
-                    ),
-                  ],
-                ],
+          DocumentSection(
+            key: const Key('rigDetail.identityGroup'),
+            children: [
+              LibraryRecordHeader(
+                caption: r.isExample
+                    ? 'Example rig · not a measurement'
+                    : 'Your rig · editable',
+                action: LibraryPrimaryAction(
+                  key: const Key('rigDetail.edit'),
+                  icon: HybridIcons.edit,
+                  label: 'Edit rig',
+                  onPressed: _edit,
+                ),
               ),
-            ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('rigDetail.cameraGroup'),
+            children: [
+              heading('Camera'),
+              FactRows(key: const Key('rigDetail.camera'), [
+                ('Camera type', camera, null),
+                if (r.manufacturer case final m? when m.isNotEmpty)
+                  ('Manufacturer', m, null),
+                if (r.cameraModel case final m? when m.isNotEmpty)
+                  ('Model', m, null),
+                ('Resolution', resolution, null),
+                ('Pixel size', pixel, null),
+                ('Sensor size', sensor, null),
+              ]),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('rigDetail.opticsGroup'),
+            children: [
+              heading('Optics'),
+              FactRows(key: const Key('rigDetail.optics'), [
+                ('Effective focal length', '${_n(r.focalLengthMm)} mm', null),
+                (
+                  'Focal ratio',
+                  ratio,
+                  r.needsApertureReview ? 'Above f/32 · please review' : null,
+                ),
+                if (r.apertureDiameterMm case final d?)
+                  ('Aperture diameter', '${_n(d)} mm', null),
+                ('Tracking', r.trackingType.label, null),
+              ]),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('rigDetail.sourcesGroup'),
+            children: [
+              Padding(
+                padding: EdgeInsets.zero,
+                child: CollapsibleSection(
+                  key: const Key('rigDetail.full'),
+                  sectionKey: 'library.rigRecord',
+                  title: 'Full rig record and sources',
+                  summary: 'All values, including unknowns',
+                  open: _fullOpen,
+                  onToggle: () => setState(() => _fullOpen = !_fullOpen),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      heading('Camera', small: true),
+                      FactRows([
+                        (
+                          'Camera type',
+                          camera,
+                          r.cameraClass == CameraClass.unknown
+                              ? 'The app does not work out sensor facts from the '
+                                    'type.'
+                              : null,
+                        ),
+                        (
+                          'Manufacturer',
+                          r.manufacturer ?? 'Not recorded',
+                          null,
+                        ),
+                        ('Model', r.cameraModel ?? 'Not recorded', null),
+                        if (r.cameraClass.offersInCameraNoiseReduction)
+                          (
+                            'In-camera noise reduction',
+                            r.inCameraNoiseReduction
+                                ? 'On: a dark as long as each light'
+                                : 'Off',
+                            null,
+                          ),
+                        ('Resolution', resolution, null),
+                        ('Pixel size', pixel, null),
+                        ('Sensor size', sensor, null),
+                      ]),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Camera specs: '
+                        '${RigInputText.source(r.cameraSource, r.cameraConfidence)}',
+                        style: caption,
+                      ),
+                      heading('Optics', small: true),
+                      FactRows([
+                        (
+                          'Effective focal length',
+                          '${_n(r.focalLengthMm)} mm',
+                          null,
+                        ),
+                        (
+                          'Focal ratio',
+                          ratio,
+                          r.apertureDiameterMm != null
+                              ? 'From focal length ÷ diameter'
+                              : null,
+                        ),
+                        (
+                          'Aperture diameter',
+                          switch (r.apertureDiameterMm) {
+                            final d? => '${_n(d)} mm',
+                            null => 'Not recorded',
+                          },
+                          null,
+                        ),
+                        (
+                          'Tracking (default for plans)',
+                          r.trackingType.label,
+                          'A plan may override it.',
+                        ),
+                      ]),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Optics: '
+                        '${RigInputText.source(r.opticsSource, r.opticsConfidence)}',
+                        style: caption,
+                      ),
+                      heading('Optional records', small: true),
+                      FactRows([
+                        (
+                          'Maximum sub-exposure',
+                          switch (r.maxExposureS) {
+                            final s? => '${_n(s)} s',
+                            null => 'Not recorded',
+                          },
+                          null,
+                        ),
+                        (
+                          'Average RAW file size',
+                          switch (r.averageRawFileSizeMB) {
+                            final mb? => QuantityText.storage(mb * 1e6),
+                            null => 'Not recorded',
+                          },
+                          'A measured size; empty leaves the storage estimate '
+                              'theoretical.',
+                        ),
+                        (
+                          'Capture format',
+                          switch (r.captureFormat) {
+                            final f? => RigInputText.captureFormat(f),
+                            null => 'Not recorded',
+                          },
+                          null,
+                        ),
+                        (
+                          'Rotation',
+                          switch (r.rotationDeg) {
+                            final d? => QuantityText.degrees(
+                              d,
+                              digits: d == d.roundToDouble() ? 0 : 2,
+                            ),
+                            null => 'Not recorded',
+                          },
+                          null,
+                        ),
+                      ]),
+                      if (r.metadataMake != null ||
+                          r.metadataModel != null) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          'Imported from a file: '
+                          '${[?r.metadataMake, ?r.metadataModel].join(' ')}',
+                          style: caption,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.md),
           LibraryDeleteAction(

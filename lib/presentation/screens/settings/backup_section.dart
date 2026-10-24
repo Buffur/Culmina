@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/app_button_styles.dart';
 import '../../../domain/services/backup_service.dart';
 import '../../shared/app_messages.dart';
@@ -166,47 +170,59 @@ class BackupSection extends StatelessWidget {
           'one file.',
           primary: true,
         ),
-        const SettingsHeading('Back up'),
-        const SettingsCopy(
-          'One .astroplan file with all your data. Save it anywhere.',
+        const SizedBox(height: AppSpacing.md),
+        DocumentSection(
+          key: const Key('backup.backUpGroup'),
+          children: [
+            const SettingsHeading('Back up', top: 0),
+            const SettingsCopy(
+              'One .astroplan file with all your data. Save it anywhere.',
+            ),
+            SettingsAction(
+              key: const Key('backup.backUp'),
+              icon: HybridIcons.download,
+              label: 'Back up now',
+              onPressed: vm.busy
+                  ? null
+                  : () async {
+                      var shared = false;
+                      final done = await runWithFeedback(
+                        context,
+                        'back up',
+                        () async => shared = await vm.backUp(),
+                      );
+                      if (!done || !context.mounted) return;
+                      shared
+                          ? showDone(context, 'Backup file created')
+                          : showFailure(context, notShared);
+                    },
+            ),
+          ],
         ),
-        SettingsAction(
-          key: const Key('backup.backUp'),
-          icon: HybridIcons.download,
-          label: 'Back up now',
-          onPressed: vm.busy
-              ? null
-              : () async {
-                  var shared = false;
-                  final done = await runWithFeedback(
-                    context,
-                    'back up',
-                    () async => shared = await vm.backUp(),
-                  );
-                  if (!done || !context.mounted) return;
-                  shared
-                      ? showDone(context, 'Backup file created')
-                      : showFailure(context, notShared);
-                },
+        const SizedBox(height: AppSpacing.md),
+        DocumentSection(
+          key: const Key('backup.restoreGroup'),
+          children: [
+            const SettingsHeading('Restore', top: 0),
+            SettingsCopy(
+              'Checked first; nothing changes until you confirm. '
+              '${AppIdentity.appName} then restarts to apply it.',
+            ),
+            SettingsAction(
+              key: const Key('backup.restore'),
+              label: 'Restore from a backup',
+              onPressed: vm.busy ? null : () => _restore(context, vm),
+            ),
+            // TD-113: the picked file is copied and checked before anything is
+            // shown; say so meanwhile.
+            if (vm.picking)
+              const SettingsHint(
+                'Checking the file…',
+                key: Key('backup.checking'),
+                top: AppSpacing.sm,
+              ),
+          ],
         ),
-        const SettingsHeading('Restore'),
-        SettingsCopy(
-          'Checked first; nothing changes until you confirm. '
-          '${AppIdentity.appName} then restarts to apply it.',
-        ),
-        SettingsAction(
-          key: const Key('backup.restore'),
-          label: 'Restore from a backup',
-          onPressed: vm.busy ? null : () => _restore(context, vm),
-        ),
-        // TD-113: the picked file is copied and checked before anything is
-        // shown; say so meanwhile.
-        if (vm.picking)
-          const SettingsHint(
-            'Checking the file…',
-            key: Key('backup.checking'),
-            top: AppSpacing.sm,
-          ),
       ],
     );
   }
@@ -254,16 +270,28 @@ class _RestoreOutcomeNoticeState extends State<RestoreOutcomeNotice> {
 /// Shown instead of the app while a confirmed restore is applied (D7 A):
 /// nothing can be edited until the app has restarted with the result.
 class RestoringBackupApp extends StatelessWidget {
-  const RestoringBackupApp({super.key, this.theme, this.darkTheme});
+  const RestoringBackupApp({
+    super.key,
+    this.theme,
+    this.darkTheme,
+    this.themeMode = ThemeMode.system,
+    this.isFieldMode = false,
+  });
 
   final ThemeData? theme;
   final ThemeData? darkTheme;
+  final ThemeMode themeMode;
+  final bool isFieldMode;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: AppIdentity.appName,
-    theme: theme,
-    darkTheme: darkTheme,
+    theme: isFieldMode ? AppTheme.fieldTheme : theme,
+    darkTheme: isFieldMode ? AppTheme.fieldTheme : darkTheme,
+    themeMode: themeMode,
+    builder: (context, child) => isFieldMode
+        ? ColorFiltered(colorFilter: AppTheme.fieldFilter, child: child!)
+        : child!,
     debugShowCheckedModeBanner: false,
     home: const PopScope(
       canPop: false,

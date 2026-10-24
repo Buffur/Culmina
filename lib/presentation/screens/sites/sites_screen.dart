@@ -1,5 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -105,80 +108,107 @@ class _SitesScreenState extends State<SitesScreen> {
         key: const Key('sites.list'),
         padding: settingsPagePadding,
         children: [
-          LayoutBuilder(
-            builder: (context, box) {
-              final heading = const GeoHeading('Sites');
-              final button = TextButton(
-                key: const Key('sites.add'),
-                onPressed: add,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const HybridIcon(HybridIcons.plus, size: 18),
-                    const SizedBox(width: 8),
-                    const Text('Add site'),
-                  ],
+          DocumentSection(
+            joinNext: showTransient || shown.isNotEmpty,
+            children: [
+              LayoutBuilder(
+                builder: (context, box) {
+                  final heading = const GeoHeading('Sites');
+                  final button = TextButton(
+                    key: const Key('sites.add'),
+                    onPressed: add,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const HybridIcon(HybridIcons.plus, size: 18),
+                        const SizedBox(width: 8),
+                        const Text('Add site'),
+                      ],
+                    ),
+                  );
+                  if (MediaQuery.textScalerOf(context).scale(1) >= 1.5) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [heading, button],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      Expanded(child: heading),
+                      button,
+                    ],
+                  );
+                },
+              ),
+              if (sites.isNotEmpty) ...[
+                const SizedBox(height: AppSpacing.sm),
+                LibrarySearchField(
+                  key: const Key('sites.search'),
+                  controller: _search,
+                  label: 'Search sites',
+                  hint: 'Name, time zone or notes',
+                  onChanged: (v) => setState(() => _query = v),
                 ),
-              );
-              if (MediaQuery.textScalerOf(context).scale(1) >= 1.5) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [heading, button],
-                );
-              }
-              return Row(
-                children: [
-                  Expanded(child: heading),
-                  button,
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              if (!showTransient && shown.isEmpty) ...[
+                if (sites.isEmpty && !hasTransient)
+                  const SettingsCopy(
+                    'No saved sites yet. Add one with “Add site”.',
+                  )
+                else if (q.isNotEmpty) ...[
+                  SettingsCopy('Nothing matches “${_query.trim()}”.'),
+                  const SizedBox(height: AppSpacing.sm),
+                  OutlinedButton(
+                    onPressed: () {
+                      _search.clear();
+                      setState(() => _query = '');
+                    },
+                    child: const Text('Clear search'),
+                  ),
                 ],
-              );
-            },
+              ],
+            ],
           ),
-          if (sites.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.sm),
-            LibrarySearchField(
-              key: const Key('sites.search'),
-              controller: _search,
-              label: 'Search sites',
-              hint: 'Name, time zone or notes',
-              onChanged: (v) => setState(() => _query = v),
+          if (showTransient)
+            DocumentSection(
+              joinPrevious: true,
+              joinNext: shown.isNotEmpty,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              children: [_transientRow(siteVm, choosing)],
             ),
-            const SizedBox(height: AppSpacing.sm),
-          ],
-          if (showTransient) _transientRow(siteVm, choosing),
-          if (sites.isEmpty && !hasTransient)
-            const SettingsCopy('No saved sites yet. Add one with “Add site”.')
-          else if (shown.isEmpty && !showTransient && q.isNotEmpty) ...[
-            SettingsCopy('Nothing matches “${_query.trim()}”.'),
-            const SizedBox(height: AppSpacing.sm),
-            OutlinedButton(
-              onPressed: () {
-                _search.clear();
-                setState(() => _query = '');
-              },
-              child: const Text('Clear search'),
+          for (final (i, site) in shown.indexed)
+            DocumentSection(
+              joinPrevious: true,
+              joinNext: i < shown.length - 1,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              children: [_siteRow(site, activeId, choosing, siteVm)],
             ),
-          ],
-          for (final site in shown) _siteRow(site, activeId, choosing, siteVm),
           if (choosing) ...[
-            const SizedBox(height: AppSpacing.lg),
-            GeoHeading(
-              siteVm.isDefaultLocation
-                  ? 'Choose where you will observe'
-                  : 'Use another position',
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            GeoActionRow(
-              key: const Key('sites.useCurrentPosition'),
-              icon: HybridIcons.locate,
-              label: _locating ? 'Getting position…' : 'Use current position',
-              onTap: _locating ? null : () => _useCurrentPosition(siteVm),
-            ),
-            GeoActionRow(
-              key: const Key('sites.pickOnMap'),
-              icon: HybridIcons.map,
-              label: 'Pick on map',
-              onTap: () => context.push(AppRouter.position),
+            const SizedBox(height: AppSpacing.md),
+            DocumentSection(
+              children: [
+                GeoHeading(
+                  siteVm.isDefaultLocation
+                      ? 'Choose where you will observe'
+                      : 'Use another position',
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                GeoActionRow(
+                  key: const Key('sites.useCurrentPosition'),
+                  icon: HybridIcons.locate,
+                  label: _locating
+                      ? 'Getting position…'
+                      : 'Use current position',
+                  onTap: _locating ? null : () => _useCurrentPosition(siteVm),
+                ),
+                GeoActionRow(
+                  key: const Key('sites.pickOnMap'),
+                  icon: HybridIcons.map,
+                  label: 'Pick on map',
+                  onTap: () => context.push(AppRouter.position),
+                ),
+              ],
             ),
           ],
         ],

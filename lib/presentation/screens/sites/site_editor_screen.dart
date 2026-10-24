@@ -14,6 +14,9 @@ import '../../shared/geo_controls.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -648,7 +651,11 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       height: 1.55,
       color: p.textSecondary,
     );
-    final stacked = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
+    final stacked =
+        MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
+        MediaQuery.sizeOf(context).width -
+                2 * (AppSpacing.gutter + AppSpacing.md) <
+            400;
     final latitude = LibraryField(
       label: 'Latitude (°)',
       top: 0,
@@ -694,145 +701,165 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const GeoHeading('Position'),
-                const SizedBox(height: AppSpacing.sm),
-                GeoPositionActions(
-                  locating: _locating,
-                  onLocate: _useCurrentPosition,
-                  onMap: _pickOnMap,
-                ),
-                const SizedBox(height: AppSpacing.itemGap),
-                if (_positionSource.startsWith('From device GPS') ||
-                    _positionSource.startsWith('From map')) ...[
-                  SettingsCopy(_positionSource),
-                  const SizedBox(height: AppSpacing.sm),
-                ],
-                if (stacked) ...[
-                  latitude,
-                  longitude,
-                ] else
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: AppSpacing.itemGap,
-                    children: [
-                      Expanded(child: latitude),
-                      Expanded(child: longitude),
-                    ],
-                  ),
-                LibraryField(
-                  label: 'Name',
-                  top: 20,
-                  hint: _nameHelper,
-                  child: TextFormField(
-                    key: const Key('siteEditor.name'),
-                    controller: _name,
-                    maxLines: 1,
-                    style: style,
-                    decoration: InputDecoration(
-                      suffixIcon:
-                          _mayNameAutomatically && _validPosition != null
-                          ? IconButton(
-                              key: const Key('siteEditor.lookupName'),
-                              tooltip: _nameLookup == _NameLookup.offer
-                                  ? 'Turn on place names'
-                                  : 'Look up place name',
-                              onPressed: _nameLookup == _NameLookup.looking
-                                  ? null
-                                  : _nameAction,
-                              icon: const Icon(Icons.place_outlined, size: 18),
-                            )
-                          : null,
+                DocumentSection(
+                  key: const Key('siteEditor.positionGroup'),
+                  children: [
+                    const GeoHeading('Position'),
+                    const SizedBox(height: AppSpacing.sm),
+                    GeoPositionActions(
+                      locating: _locating,
+                      onLocate: _useCurrentPosition,
+                      onMap: _pickOnMap,
                     ),
-                    textCapitalization: TextCapitalization.words,
-                    validator: SiteFormInput.validateName,
-                  ),
+                    const SizedBox(height: AppSpacing.itemGap),
+                    if (_positionSource.startsWith('From device GPS') ||
+                        _positionSource.startsWith('From map')) ...[
+                      SettingsCopy(_positionSource),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                    if (stacked) ...[
+                      latitude,
+                      const SizedBox(height: AppSpacing.itemGap),
+                      longitude,
+                    ] else
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: AppSpacing.itemGap,
+                        children: [
+                          Expanded(child: latitude),
+                          Expanded(child: longitude),
+                        ],
+                      ),
+                  ],
                 ),
-                LibraryField(
-                  label: 'Time zone',
-                  top: 20,
-                  hint: _zoneFromDevice
-                      ? 'From device — check for this site.'
-                      : 'Used for local dates and daylight-saving changes.',
-                  // A select that opens the searchable zone list.
-                  child: Semantics(
-                    button: true,
-                    child: InkWell(
-                      key: const Key('siteEditor.zone'),
-                      borderRadius: BorderRadius.circular(6),
-                      onTap: _pickZone,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          contentPadding: hybridSelectPadding,
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('siteEditor.identityGroup'),
+                  children: [
+                    LibraryField(
+                      label: 'Name',
+                      top: 0,
+                      hint: _nameHelper,
+                      child: TextFormField(
+                        key: const Key('siteEditor.name'),
+                        controller: _name,
+                        maxLines: 1,
+                        style: style,
+                        decoration: InputDecoration(
+                          suffixIcon:
+                              _mayNameAutomatically && _validPosition != null
+                              ? IconButton(
+                                  key: const Key('siteEditor.lookupName'),
+                                  tooltip: _nameLookup == _NameLookup.offer
+                                      ? 'Turn on place names'
+                                      : 'Look up place name',
+                                  onPressed: _nameLookup == _NameLookup.looking
+                                      ? null
+                                      : _nameAction,
+                                  icon: const Icon(
+                                    Icons.place_outlined,
+                                    size: 18,
+                                  ),
+                                )
+                              : null,
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                _zoneId ??
-                                    'Unknown — night uses mean solar time',
-                                style: style,
-                              ),
+                        textCapitalization: TextCapitalization.words,
+                        validator: SiteFormInput.validateName,
+                      ),
+                    ),
+                    LibraryField(
+                      label: 'Time zone',
+                      top: AppSpacing.gutter,
+                      hint: _zoneFromDevice
+                          ? 'From device — check for this site.'
+                          : 'Used for local dates and daylight-saving changes.',
+                      // A select that opens the searchable zone list.
+                      child: Semantics(
+                        button: true,
+                        child: InkWell(
+                          key: const Key('siteEditor.zone'),
+                          borderRadius: BorderRadius.circular(6),
+                          onTap: _pickZone,
+                          child: InputDecorator(
+                            decoration: const InputDecoration(
+                              contentPadding: hybridSelectPadding,
                             ),
-                            hybridSelectIcon(context),
-                          ],
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _zoneId ??
+                                        'Unknown — night uses mean solar time',
+                                    style: style,
+                                  ),
+                                ),
+                                hybridSelectIcon(context),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: AppSpacing.lg),
                 // RG-08 = E2, RG-09 = S3: optional, without prominence; empty
                 // is unknown. One remembered section (library.js More).
-                CollapsibleSection(
-                  key: const Key('siteEditor.more'),
-                  sectionKey: SiteEditorScreen.skyDarknessSection,
-                  title: 'More (optional)',
-                  titleStyle: AppTypography.body.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: p.textPrimary,
-                  ),
-                  summary: _moreSummary(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      LibraryField(
-                        label:
-                            'Elevation (${_units.elevation.symbol}, optional)',
-                        hint:
-                            'Above sea level, '
-                            '${_units.elevation == ElevationUnit.feet ? 'in feet' : 'in metres'}. '
-                            'Empty stays unknown.',
-                        top: 0,
-                        child: TextFormField(
-                          key: const Key('siteEditor.elevation'),
-                          controller: _elevation,
-                          style: style,
-                          keyboardType: numberKeyboard,
-                          validator: (t) =>
-                              SiteFormInput.validateElevation(t, _units),
-                        ),
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('siteEditor.moreGroup'),
+                  children: [
+                    CollapsibleSection(
+                      key: const Key('siteEditor.more'),
+                      sectionKey: SiteEditorScreen.skyDarknessSection,
+                      title: 'More (optional)',
+                      titleStyle: AppTypography.body.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: p.textPrimary,
                       ),
-                      if (FeatureScope.lightPollutionContext)
-                        ..._skyDarknessFields(),
-                      LibraryField(
-                        label: 'Notes (optional)',
-                        child: TextFormField(
-                          key: const Key('siteEditor.notes'),
-                          controller: _notes,
-                          style: style,
-                          minLines: 3,
-                          maxLines: 3,
-                        ),
+                      summary: _moreSummary(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          LibraryField(
+                            label:
+                                'Elevation (${_units.elevation.symbol}, optional)',
+                            hint:
+                                'Above sea level, '
+                                '${_units.elevation == ElevationUnit.feet ? 'in feet' : 'in metres'}. '
+                                'Empty stays unknown.',
+                            top: 0,
+                            child: TextFormField(
+                              key: const Key('siteEditor.elevation'),
+                              controller: _elevation,
+                              style: style,
+                              keyboardType: numberKeyboard,
+                              validator: (t) =>
+                                  SiteFormInput.validateElevation(t, _units),
+                            ),
+                          ),
+                          if (FeatureScope.lightPollutionContext)
+                            ..._skyDarknessFields(),
+                          LibraryField(
+                            label: 'Notes (optional)',
+                            child: TextFormField(
+                              key: const Key('siteEditor.notes'),
+                              controller: _notes,
+                              style: style,
+                              minLines: 3,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSpacing.xs),
+                            child: Text(
+                              'Bortle and SQM are never converted into each other.',
+                              style: hint,
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: AppSpacing.xs),
-                        child: Text(
-                          'Bortle and SQM are never converted into each other.',
-                          style: hint,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: AppSpacing.itemGap),
                 SettingsCopy(

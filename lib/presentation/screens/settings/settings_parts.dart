@@ -249,8 +249,10 @@ class SettingsSlider extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.cellY),
           ExcludeSemantics(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
               children: [
                 for (final end in [range.$1, range.$2])
                   Text(format(end), style: ends),

@@ -3,6 +3,9 @@ import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -236,9 +239,14 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
               key: const Key('rigs.empty'),
               padding: settingsPagePadding,
               children: [
-                const SettingsCopy(AppWords.noRigs, primary: true),
-                const SizedBox(height: AppSpacing.md),
-                _panel(),
+                DocumentSection(
+                  key: const Key('rigs.emptyGroup'),
+                  children: [
+                    const SettingsCopy(AppWords.noRigs, primary: true),
+                    const SizedBox(height: AppSpacing.md),
+                    _panel(),
+                  ],
+                ),
               ],
             )
           // library.js `listView` rigs: search, Add rig, the rows.
@@ -246,53 +254,68 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
               key: const Key('rigs.list'),
               padding: settingsPagePadding,
               children: [
-                LibrarySearchField(
-                  key: const Key('rigs.search'),
-                  controller: _search,
-                  label: 'Search rigs',
-                  hint: 'Name, maker or model',
-                  onChanged: (v) => setState(() => _query = v),
-                ),
-                const SizedBox(height: AppSpacing.itemGap),
-                LibraryPrimaryAction(
-                  key: const Key('rigs.add'),
-                  icon: HybridIcons.plus,
-                  label: AppWords.addRig,
-                  onPressed: _showAddRig,
-                ),
-                if (q.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.itemGap),
-                    child: Text(
-                      '${shown.length} of ${_equipment.length} shown',
-                      key: const Key('rigs.count'),
-                      style: quiet,
+                DocumentSection(
+                  key: const Key('rigs.searchGroup'),
+                  children: [
+                    LibrarySearchField(
+                      key: const Key('rigs.search'),
+                      controller: _search,
+                      label: 'Search rigs',
+                      hint: 'Name, maker or model',
+                      onChanged: (v) => setState(() => _query = v),
                     ),
-                  ),
-                const SizedBox(height: AppSpacing.sm),
-                for (final eq in shown)
-                  SwipeToDelete(
-                    itemKey: ValueKey('eq_${eq.id}'),
-                    onDelete: () =>
-                        deleteRig(context, eq, reload: _loadEquipment),
-                    child: LibraryRow(
-                      key: Key('rigs.row.${eq.id}'),
-                      title: eq.name,
-                      caption: _subtitle(eq),
-                      note: [
-                        if (eq.isExample) ExampleText.rig,
-                        // Only when choosing: the Library describes the
-                        // rigs, not the plan (S9.1).
-                        if (choosing && eq.id == planVm.selectedEquipment?.id)
-                          'Chosen for this plan',
-                      ].join(' · ').ifEmpty,
-                      onTap: choosing
-                          ? () {
-                              planVm.setEquipment(eq);
-                              context.pop();
-                            }
-                          : () => _open(eq),
+                    const SizedBox(height: AppSpacing.itemGap),
+                    LibraryPrimaryAction(
+                      key: const Key('rigs.add'),
+                      icon: HybridIcons.plus,
+                      label: AppWords.addRig,
+                      onPressed: _showAddRig,
                     ),
+                    if (q.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: AppSpacing.itemGap),
+                        child: Text(
+                          '${shown.length} of ${_equipment.length} shown',
+                          key: const Key('rigs.count'),
+                          style: quiet,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                for (final (i, eq) in shown.indexed)
+                  DocumentSection(
+                    joinPrevious: i > 0,
+                    joinNext: i < shown.length - 1,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
+                    children: [
+                      SwipeToDelete(
+                        itemKey: ValueKey('eq_${eq.id}'),
+                        onDelete: () =>
+                            deleteRig(context, eq, reload: _loadEquipment),
+                        child: LibraryRow(
+                          key: Key('rigs.row.${eq.id}'),
+                          title: eq.name,
+                          caption: _subtitle(eq),
+                          note: [
+                            if (eq.isExample) ExampleText.rig,
+                            // Only when choosing: the Library describes the
+                            // rigs, not the plan (S9.1).
+                            if (choosing &&
+                                eq.id == planVm.selectedEquipment?.id)
+                              'Chosen for this plan',
+                          ].join(' · ').ifEmpty,
+                          onTap: choosing
+                              ? () {
+                                  planVm.setEquipment(eq);
+                                  context.pop();
+                                }
+                              : () => _open(eq),
+                        ),
+                      ),
+                    ],
                   ),
                 if (shown.isEmpty)
                   Padding(
@@ -313,22 +336,28 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
                       ],
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.md),
-                  child: CollapsibleSection(
-                    key: const Key('rigs.fromPhotoHelp'),
-                    sectionKey: 'library.rigsFromPhoto',
-                    title: 'Adding a rig from a photo',
-                    open: _helpOpen,
-                    onToggle: () => setState(() => _helpOpen = !_helpOpen),
-                    child: const SettingsCopy(
-                      'Add rig offers From a photo: a JPEG, HEIC or DNG file '
-                      '(or a FITS sub-frame) is read on this device and its '
-                      'values are proposed for you to confirm; other RAW '
-                      'files (CR3, NEF, ARW …) are not read, and nothing is '
-                      'guessed. Entering a rig by hand is always available.',
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('rigs.helpGroup'),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: CollapsibleSection(
+                        key: const Key('rigs.fromPhotoHelp'),
+                        sectionKey: 'library.rigsFromPhoto',
+                        title: 'Adding a rig from a photo',
+                        open: _helpOpen,
+                        onToggle: () => setState(() => _helpOpen = !_helpOpen),
+                        child: const SettingsCopy(
+                          'Add rig offers From a photo: a JPEG, HEIC or DNG file '
+                          '(or a FITS sub-frame) is read on this device and its '
+                          'values are proposed for you to confirm; other RAW '
+                          'files (CR3, NEF, ARW …) are not read, and nothing is '
+                          'guessed. Entering a rig by hand is always available.',
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),

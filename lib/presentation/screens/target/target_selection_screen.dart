@@ -3,6 +3,9 @@ import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -241,19 +244,24 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
         key: const Key('targets.list'),
         padding: settingsPagePadding,
         children: [
-          LibrarySearchField(
-            key: const Key('targets.search'),
-            controller: _searchController,
-            label: 'Search targets',
-            hint: 'Designation or name, e.g. M31 or Andromeda',
-            onChanged: _onSearchChanged,
-          ),
-          const SizedBox(height: AppSpacing.itemGap),
-          LibraryPrimaryAction(
-            key: const Key('targets.add'),
-            icon: HybridIcons.plus,
-            label: 'Add target',
-            onPressed: () => _edit(),
+          DocumentSection(
+            key: const Key('targets.searchGroup'),
+            children: [
+              LibrarySearchField(
+                key: const Key('targets.search'),
+                controller: _searchController,
+                label: 'Search targets',
+                hint: 'Designation or name, e.g. M31 or Andromeda',
+                onChanged: _onSearchChanged,
+              ),
+              const SizedBox(height: AppSpacing.itemGap),
+              LibraryPrimaryAction(
+                key: const Key('targets.add'),
+                icon: HybridIcons.plus,
+                label: 'Add target',
+                onPressed: () => _edit(),
+              ),
+            ],
           ),
           if (_initialLoading)
             const Padding(
@@ -277,25 +285,52 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
               onRetry: _loadTargets,
             )
           else ...[
-            const SettingsHeading('Your targets', top: AppSpacing.gutter),
-            if (own.isEmpty)
-              SettingsCopy(
-                _searchQuery.isEmpty
-                    ? 'None added yet. Add a target with its J2000 '
-                          'coordinates.'
-                    : 'None of your targets match.',
+            const SizedBox(height: AppSpacing.md),
+            DocumentSection(
+              joinNext: own.isNotEmpty,
+              children: [
+                const SettingsHeading('Your targets', top: 0),
+                if (own.isEmpty)
+                  SettingsCopy(
+                    _searchQuery.isEmpty
+                        ? 'None added yet. Add a target with its J2000 '
+                              'coordinates.'
+                        : 'None of your targets match.',
+                  ),
+              ],
+            ),
+            for (final (i, t) in own.indexed)
+              DocumentSection(
+                joinPrevious: true,
+                joinNext: i < own.length - 1,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                children: [row(t)],
               ),
-            for (final t in own) row(t),
-            const SettingsHeading('Catalogue', top: AppSpacing.gutter),
-            const SettingsHint('Bundled catalogue (OpenNGC-derived)', top: 0),
-            if (catalogue.isEmpty)
-              SettingsCopy(
-                _searchQuery.isEmpty
-                    ? 'No targets found.'
-                    : 'No results for "$_searchQuery".',
-                top: AppSpacing.sm,
+            const SizedBox(height: AppSpacing.md),
+            DocumentSection(
+              joinNext: catalogue.isNotEmpty,
+              children: [
+                const SettingsHeading('Catalogue', top: 0),
+                const SettingsHint(
+                  'Bundled catalogue (OpenNGC-derived)',
+                  top: 0,
+                ),
+                if (catalogue.isEmpty)
+                  SettingsCopy(
+                    _searchQuery.isEmpty
+                        ? 'No targets found.'
+                        : 'No results for "$_searchQuery".',
+                    top: AppSpacing.sm,
+                  ),
+              ],
+            ),
+            for (final (i, t) in catalogue.indexed)
+              DocumentSection(
+                joinPrevious: true,
+                joinNext: i < catalogue.length - 1,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                children: [row(t)],
               ),
-            for (final t in catalogue) row(t),
           ],
         ],
       ),

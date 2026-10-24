@@ -190,6 +190,7 @@ final _auditShots = <String, HybridStep>{
         child: RestoringBackupApp(
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
+          isFieldMode: c.fixture.vm.theme.isFieldMode,
         ),
       ),
     );
@@ -379,7 +380,7 @@ void main() {
         await tester.runAsync(() async {
           fixture = await HybridTransferFixture.create(
             AppDatabase(NativeDatabase.memory()),
-              savePlan: name != 'logbook_empty',
+            savePlan: name != 'logbook_empty',
             withSite: name != 'home_nosite',
           );
           if (theme == 'field') await fixture.vm.theme.toggleFieldMode();

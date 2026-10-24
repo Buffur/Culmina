@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_spacing.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -72,111 +77,141 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
       ),
       body: ListView(
         key: const Key('planContext.scroll'),
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          AppSpacing.itemGap,
+          AppSpacing.gutter,
+          AppSpacing.lg,
+        ),
         children: [
-          const HybridFieldLabel('Observing site'),
-          const SizedBox(height: 6),
-          if (site.sites.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                SiteLabel.of(site) ?? ContextLine.noSite,
-                style: AppTypography.body.copyWith(color: p.textPrimary),
-              ),
-            ),
-          for (final s in site.sites)
-            HybridChoiceRow(
-              key: Key('planContext.site.${s.id}'),
-              title: s.name,
-              caption:
-                  s.timeZoneId ??
-                  '${s.latitude.toStringAsFixed(4)}, '
-                      '${s.longitude.toStringAsFixed(4)}',
-              selected: s.id == _siteId,
-              onTap: () => setState(() => _siteId = s.id),
-            ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              key: const Key('planContext.manageSites'),
-              onPressed: () => context.push(AppRouter.selectSite),
-              child: const Text('Add or manage sites'),
-            ),
-          ),
-          const SizedBox(height: 12),
-          const HybridFieldLabel('Night'),
-          const SizedBox(height: 4),
-          // The select (plan.css): 49 tall, a control-border outline, 12 in.
-          Semantics(
-            button: true,
-            label: night == null
-                ? 'No night without a site'
-                : 'Night of ${NightTimeFormatter.eveningDate(night)}',
-            hint: 'Choose a night',
-            excludeSemantics: true,
-            child: InkWell(
-              key: const Key('planContext.night'),
-              borderRadius: BorderRadius.circular(6),
-              onTap: night == null
-                  ? null
-                  : () async {
-                      final picked = await pickNight(context, initial: night);
-                      if (picked != null && mounted) {
-                        setState(() => _night = picked);
-                      }
-                    },
-              child: Container(
-                constraints: const BoxConstraints(minHeight: 49),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: p.controlBorder),
+          DocumentSection(
+            joinNext: true,
+            children: [
+              const HybridFieldLabel('Observing site'),
+              const SizedBox(height: 6),
+              if (site.sites.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    SiteLabel.of(site) ?? ContextLine.noSite,
+                    style: AppTypography.body.copyWith(color: p.textPrimary),
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        night == null
-                            ? 'No night without a site'
-                            : 'Night of ${NightTimeFormatter.eveningDate(night)}',
-                        style: AppTypography.itemTitle.copyWith(
-                          fontWeight: FontWeight.w400,
-                          height: 1.4,
+            ],
+          ),
+          for (final s in site.sites)
+            DocumentSection(
+              joinPrevious: true,
+              joinNext: true,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              children: [
+                HybridChoiceRow(
+                  key: Key('planContext.site.${s.id}'),
+                  title: s.name,
+                  caption:
+                      s.timeZoneId ??
+                      '${s.latitude.toStringAsFixed(4)}, '
+                          '${s.longitude.toStringAsFixed(4)}',
+                  selected: s.id == _siteId,
+                  onTap: () => setState(() => _siteId = s.id),
+                ),
+              ],
+            ),
+          DocumentSection(
+            joinPrevious: true,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  key: const Key('planContext.manageSites'),
+                  onPressed: () => context.push(AppRouter.selectSite),
+                  child: const Text('Add or manage sites'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('planContext.nightGroup'),
+            children: [
+              const HybridFieldLabel('Night'),
+              const SizedBox(height: 4),
+              // The select (plan.css): 49 tall, a control-border outline, 12 in.
+              Semantics(
+                button: true,
+                label: night == null
+                    ? 'No night without a site'
+                    : 'Night of ${NightTimeFormatter.eveningDate(night)}',
+                hint: 'Choose a night',
+                excludeSemantics: true,
+                child: InkWell(
+                  key: const Key('planContext.night'),
+                  borderRadius: BorderRadius.circular(6),
+                  onTap: night == null
+                      ? null
+                      : () async {
+                          final picked = await pickNight(
+                            context,
+                            initial: night,
+                          );
+                          if (picked != null && mounted) {
+                            setState(() => _night = picked);
+                          }
+                        },
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 49),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: p.controlBorder),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            night == null
+                                ? 'No night without a site'
+                                : 'Night of ${NightTimeFormatter.eveningDate(night)}',
+                            style: AppTypography.itemTitle.copyWith(
+                              fontWeight: FontWeight.w400,
+                              height: 1.4,
+                              color: p.textPrimary,
+                            ),
+                          ),
+                        ),
+                        HybridIcon(
+                          HybridIcons.down,
+                          size: 18,
                           color: p.textPrimary,
                         ),
-                      ),
+                      ],
                     ),
-                    HybridIcon(
-                      HybridIcons.down,
-                      size: 18,
-                      color: p.textPrimary,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          if (night != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              'Ends ${NightTimeFormatter.eveningDate(night.addDays(1))}. '
-              '${zone == null ? 'Times are in the device zone.' : 'Times are in the site zone, $zone.'}',
-              style: AppTypography.caption.copyWith(
-                height: 1.55,
-                color: p.textSecondary,
+              if (night != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Ends ${NightTimeFormatter.eveningDate(night.addDays(1))}. '
+                  '${zone == null ? 'Times are in the device zone.' : 'Times are in the site zone, $zone.'}',
+                  style: AppTypography.caption.copyWith(
+                    height: 1.55,
+                    color: p.textSecondary,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 20),
+              // plan.css `.editor-help`: 13 at 1.6, secondary.
+              Text(
+                'Changing the night edits this plan. To keep the saved plan and '
+                'plan a copy, use More › Copy to another night.',
+                key: const Key('planContext.help'),
+                style: AppTypography.caption.copyWith(
+                  height: 1.6,
+                  color: AppPalette.of(context).textSecondary,
+                ),
               ),
-            ),
-          ],
-          const SizedBox(height: 20),
-          // plan.css `.editor-help`: 13 at 1.6, secondary.
-          Text(
-            'Changing the night edits this plan. To keep the saved plan and '
-            'plan a copy, use More › Copy to another night.',
-            key: const Key('planContext.help'),
-            style: AppTypography.caption.copyWith(
-              height: 1.6,
-              color: AppPalette.of(context).textSecondary,
-            ),
+            ],
           ),
         ],
       ),

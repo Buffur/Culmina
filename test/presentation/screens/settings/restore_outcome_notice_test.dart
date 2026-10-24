@@ -3,6 +3,7 @@
 // nothing to edit (D7 A).
 
 import 'package:astroplan/domain/services/backup_service.dart';
+import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/presentation/screens/settings/backup_section.dart';
 import 'package:astroplan/presentation/viewmodels/backup_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,36 @@ class _Stored implements BackupService {
 }
 
 void main() {
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    for (final field in [false, true]) {
+      testWidgets('restore retains $mode with Field $field', (tester) async {
+        await tester.pumpWidget(
+          RestoringBackupApp(
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: mode,
+            isFieldMode: field,
+          ),
+        );
+        final expected = field
+            ? AppTheme.fieldTheme
+            : mode == ThemeMode.light
+            ? AppTheme.light
+            : AppTheme.dark;
+        final context = tester.element(
+          find.byKey(const Key('restore.restoring')),
+        );
+        expect(Theme.of(context).colorScheme, expected.colorScheme);
+        expect(
+          find.byType(ColorFiltered),
+          field ? findsOneWidget : findsNothing,
+        );
+        expect(find.byType(ButtonStyleButton), findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+
   Future<_Stored> start(WidgetTester tester, RestoreOutcome? o) async {
     final service = _Stored(o);
     final vm = BackupViewModel(service);

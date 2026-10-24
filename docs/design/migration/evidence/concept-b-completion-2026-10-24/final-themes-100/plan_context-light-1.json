@@ -1,0 +1,371 @@
+{
+  "name": "plan_context",
+  "theme": "light",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Observing site",
+      "x": 36.0,
+      "y": 92.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Kyiv outskirts",
+      "x": 64.0,
+      "y": 144.0,
+      "w": 92.24604797363281,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Europe/Kyiv",
+      "x": 64.0,
+      "y": 165.0,
+      "w": 72.64399719238281,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Add or manage sites",
+      "x": 48.0,
+      "y": 225.0,
+      "w": 133.93797302246094,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Night",
+      "x": 36.0,
+      "y": 307.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Night of 19 Oct",
+      "x": 49.0,
+      "y": 344.5,
+      "w": 259.0,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.4
+    },
+    {
+      "text": "Ends 20 Oct. Times are in the site zone, Europe/Kyiv.",
+      "x": 36.0,
+      "y": 384.0,
+      "w": 303.0,
+      "h": 40.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Changing the night edits this plan. To keep the saved plan and plan a copy, use More › Copy to another night.",
+      "x": 36.0,
+      "y": 444.0,
+      "w": 303.0,
+      "h": 63.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "Site and night",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 142.5028076171875,
+      "h": 27.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Apply updates the draft. Save plan records it.",
+      "x": 20.0,
+      "y": 728.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Apply changes",
+      "x": 131.03441619873047,
+      "y": 768.0,
+      "w": 112.93116760253906,
+      "h": 24.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 58.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 134.0,
+      "w": 335.0,
+      "h": 61.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 134.0,
+      "w": 335.0,
+      "h": 61.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 134.0,
+      "w": 303.0,
+      "h": 61.0,
+      "padding": "EdgeInsets(0.0, 10.0, 0.0, 10.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 195.0,
+      "w": 335.0,
+      "h": 80.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 195.0,
+      "w": 335.0,
+      "h": 80.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "TextButton",
+      "key": "[<'planContext.manageSites'>]",
+      "x": 36.0,
+      "y": 211.0,
+      "w": 157.93797302246094,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 211.0,
+      "w": 157.93797302246094,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'planContext.nightGroup'>]",
+      "x": 20.0,
+      "y": 291.0,
+      "w": 335.0,
+      "h": 232.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 291.0,
+      "w": 335.0,
+      "h": 232.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 331.0,
+      "w": 303.0,
+      "h": 49.0,
+      "padding": "EdgeInsets.all(13.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'scoped.close'>]",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 56.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 56.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'planContext.apply'>]",
+      "x": 20.0,
+      "y": 756.0,
+      "w": 335.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 756.0,
+      "w": 335.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 12.0)"
+    }
+  ]
+}

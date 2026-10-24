@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_spacing.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -138,76 +143,108 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
       body: HybridPlanInputs(
         child: ListView(
           key: const Key('planTarget.scroll'),
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            AppSpacing.itemGap,
+            AppSpacing.gutter,
+            AppSpacing.lg,
+          ),
           children: [
-            const HybridFieldLabel('Search targets'),
-            const SizedBox(height: 4),
-            TextField(
-              key: const Key('planTarget.search'),
-              controller: _query,
-              autocorrect: false,
-              textInputAction: TextInputAction.search,
-              decoration: const InputDecoration(
-                hintText: 'Name, M31 or NGC 224',
-              ),
-              onChanged: (_) => _load(),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              [
-                '$_bundled bundled targets and $_yours Library targets. Library '
-                    'selections are copied into this plan.',
-                if (selected != null) 'Selected: ${title(selected)}.',
-              ].join(' '),
-              key: const Key('planTarget.note'),
-              style: note,
-            ),
-            const SizedBox(height: 8),
-            Semantics(
-              liveRegion: true,
-              child: Text(
-                _loading
-                    ? 'Searching…'
-                    : '${_found.length} result${_found.length == 1 ? '' : 's'}',
-                key: const Key('planTarget.count'),
-                style: AppTypography.caption.copyWith(color: p.textSecondary),
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (_error != null)
-              LoadFailureView(
-                action: 'load the targets',
-                error: _error!,
-                onRetry: _load,
-              )
-            else if (!_loading && _found.isEmpty)
-              Text(
-                'No matches. Try a catalogue number or another name.',
-                style: AppTypography.body.copyWith(color: p.textPrimary),
-              )
-            else ...[
-              const HybridFieldLabel('Choose a target'),
-              const SizedBox(height: 6),
-              for (final t in _found)
-                HybridChoiceRow(
-                  key: Key('planTarget.choice.${t.id}'),
-                  title: title(t),
-                  caption: _caption(t),
-                  selected: t.id == _chosen?.id,
-                  onTap: () => setState(() => _chosen = t),
+            DocumentSection(
+              key: const Key('planTarget.searchGroup'),
+              children: [
+                const HybridFieldLabel('Search targets'),
+                const SizedBox(height: 4),
+                TextField(
+                  key: const Key('planTarget.search'),
+                  controller: _query,
+                  autocorrect: false,
+                  textInputAction: TextInputAction.search,
+                  decoration: const InputDecoration(
+                    hintText: 'Name, M31 or NGC 224',
+                  ),
+                  onChanged: (_) => _load(),
                 ),
-            ],
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                key: const Key('planTarget.manage'),
-                onPressed: () async {
-                  await context.push(AppRouter.manageTargets);
-                  if (mounted) await _load();
-                },
-                child: const Text('Add or manage targets'),
-              ),
+                const SizedBox(height: 20),
+                Text(
+                  [
+                    '$_bundled bundled targets and $_yours Library targets. Library '
+                        'selections are copied into this plan.',
+                    if (selected != null) 'Selected: ${title(selected)}.',
+                  ].join(' '),
+                  key: const Key('planTarget.note'),
+                  style: note,
+                ),
+                const SizedBox(height: 8),
+                Semantics(
+                  liveRegion: true,
+                  child: Text(
+                    _loading
+                        ? 'Searching…'
+                        : '${_found.length} result${_found.length == 1 ? '' : 's'}',
+                    key: const Key('planTarget.count'),
+                    style: AppTypography.caption.copyWith(
+                      color: p.textSecondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            DocumentSection(
+              joinNext: true,
+              children: [
+                if (_error != null)
+                  LoadFailureView(
+                    action: 'load the targets',
+                    error: _error!,
+                    onRetry: _load,
+                  )
+                else if (!_loading && _found.isEmpty)
+                  Text(
+                    'No matches. Try a catalogue number or another name.',
+                    style: AppTypography.body.copyWith(color: p.textPrimary),
+                  )
+                else ...[
+                  const HybridFieldLabel('Choose a target'),
+                  const SizedBox(height: 6),
+                ],
+              ],
+            ),
+            if (_error == null)
+              for (final t in _found)
+                DocumentSection(
+                  joinPrevious: true,
+                  joinNext: true,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
+                  children: [
+                    HybridChoiceRow(
+                      key: Key('planTarget.choice.${t.id}'),
+                      title: title(t),
+                      caption: _caption(t),
+                      selected: t.id == _chosen?.id,
+                      onTap: () => setState(() => _chosen = t),
+                    ),
+                  ],
+                ),
+            DocumentSection(
+              joinPrevious: true,
+              children: [
+                const SizedBox(height: AppSpacing.xs),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    key: const Key('planTarget.manage'),
+                    onPressed: () async {
+                      await context.push(AppRouter.manageTargets);
+                      if (mounted) await _load();
+                    },
+                    child: const Text('Add or manage targets'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

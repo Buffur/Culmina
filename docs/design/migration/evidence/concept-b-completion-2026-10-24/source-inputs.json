@@ -1,0 +1,131 @@
+{
+  "base": "f0a5baa14a826784259ad79cd1f42e2607abf3a4",
+  "dirtyDartFingerprint": "7a0dfa041ee179d902ee5ba19639f9ccbf64b3f42194874f649415ff8bc20f9d",
+  "files": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "280efdeb3591216649665de039cd3d4cc02e40c80da58d6f5ba0dd69fa3644b9"
+    },
+    {
+      "path": "lib/presentation/screens/about/about_screen.dart",
+      "sha256": "1dec96c344dd2814cf89b9469b4f88166d37d7b41571150195ee5625e9240b2e"
+    },
+    {
+      "path": "lib/presentation/screens/details/night_moon_screen.dart",
+      "sha256": "85d300d5d694c3301b5e0acec5bf5800b92fac44c118963b03549a20bda7ef4f"
+    },
+    {
+      "path": "lib/presentation/screens/equipment/equipment_editor.dart",
+      "sha256": "e769ea887578d3e1a782d6baaa0c4ea3c5cb54c23d48bb33d2b54f40ef83bea5"
+    },
+    {
+      "path": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+      "sha256": "5400cbcc72090af08b440fe67d7acf850ead5f2ca83442bce6277a5fc8b01f4b"
+    },
+    {
+      "path": "lib/presentation/screens/equipment/rig_detail_screen.dart",
+      "sha256": "46fb8426ad4c87440f6dfddeaf564a9b9c8ff214ec47e04019f80dc0f6396267"
+    },
+    {
+      "path": "lib/presentation/screens/home/plan_context_screen.dart",
+      "sha256": "7c8a1f72c5580796e0bbd8a29c7ac7fdc033e663002ede6b4a92b8d8a48f1e28"
+    },
+    {
+      "path": "lib/presentation/screens/home/plan_rig_screen.dart",
+      "sha256": "7da1c9ba62f8adf0717fffdd4e7fa94a871265825be287b38f2baefd41c1cb34"
+    },
+    {
+      "path": "lib/presentation/screens/home/plan_target_screen.dart",
+      "sha256": "2ae6d5ff43b9a1f1d1662e6cab975da59d925f3adffa486b8adbd53649a3a512"
+    },
+    {
+      "path": "lib/presentation/screens/logbook/progress_screen.dart",
+      "sha256": "0d8f4e86dd927b836630f7ee97680f7e20b3913339540f5960f9a960d8d755b1"
+    },
+    {
+      "path": "lib/presentation/screens/logbook/session_detail_screen.dart",
+      "sha256": "e98365f63ceda7e8c7bd9bab960b56f7d67f354953cf26f2e89cc502f2d70231"
+    },
+    {
+      "path": "lib/presentation/screens/settings/backup_section.dart",
+      "sha256": "f2e47f69624e1c4c40e8433f07a86390e0b723439c309b5d5a6ba4973dbb863a"
+    },
+    {
+      "path": "lib/presentation/screens/settings/settings_parts.dart",
+      "sha256": "f3e7fc8c562074002f6a689262ccfa9367fcc53634b2bbe1f5a7c16f6a376f5c"
+    },
+    {
+      "path": "lib/presentation/screens/settings/settings_screen.dart",
+      "sha256": "064a53322c220e8fcfca58eb1eb4e966005e46eb83f829ee3fca9647f08a9993"
+    },
+    {
+      "path": "lib/presentation/screens/sites/site_detail_screen.dart",
+      "sha256": "323e42483e5d2bcef14a4135f6671f611a44da1f71019f526f67c0ab67b3d058"
+    },
+    {
+      "path": "lib/presentation/screens/sites/site_editor_screen.dart",
+      "sha256": "1781baa125e17d83f24fbf49797d09d0296431fadf7221a1d71960c927bfac07"
+    },
+    {
+      "path": "lib/presentation/screens/sites/sites_screen.dart",
+      "sha256": "2488d4f04dd80ca75412352acd4f35c3fd51ddecfe6d67f55e70f1695bdb3575"
+    },
+    {
+      "path": "lib/presentation/screens/target/target_detail_screen.dart",
+      "sha256": "ec21e9cf171906c9ffd65fc8aef6bf9b0058a207e3c4b83d023d3216ae5e9226"
+    },
+    {
+      "path": "lib/presentation/screens/target/target_editor_screen.dart",
+      "sha256": "1bae0d630b1a143e1098a2cd295f1fbf2b190640c1469184599e0b79e83abd9c"
+    },
+    {
+      "path": "lib/presentation/screens/target/target_selection_screen.dart",
+      "sha256": "1bc09bdf16f45cdf58a768ccc342bc043bf66e7aac1037e8c62d07c03c3aaf82"
+    },
+    {
+      "path": "lib/presentation/screens/tonight/tonight_candidates_screen.dart",
+      "sha256": "2ff512d805bb05e55c8de551da31794357ce6257df7ef912b4e9542f98b67371"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/calibration_preview_dialog.dart",
+      "sha256": "f86fa3e5474e5a6a6511556edcd0887165ffcd57c837828733696b847d52f075"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/capture_block_dialog.dart",
+      "sha256": "95e4e6695fc32511ad31bffd3fda5d1433dd2f660fb65dc6eea5b031704df547"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan/plan_overrides_editor.dart",
+      "sha256": "74c392ce71501e942aa5adff31ba31874512e133939b47a29b4f51281cce9a77"
+    },
+    {
+      "path": "lib/presentation/widgets/capture_plan_widget.dart",
+      "sha256": "32864ab549cad3e1da32325d064dbd0f315f4b30319a57d3445d09a2b8cac2fe"
+    },
+    {
+      "path": "lib/presentation/widgets/weather_hybrid_view.dart",
+      "sha256": "fa9d610127a682188f066738754a4136cb64119df9b71d2afd5b5a4f6b1faa28"
+    },
+    {
+      "path": "test/presentation/design_system/concept_b_app_audit_renders_test.dart",
+      "sha256": "a2f6e9bd5ccd24a8af2dbdbce7b6deff5216c0069060e4439e4f8d056476e6d4"
+    },
+    {
+      "path": "test/presentation/screens/settings/display_settings_test.dart",
+      "sha256": "c19f855e091080fa20be446c3db0f2ae5ea296e6523b155bc158b592d233e862"
+    },
+    {
+      "path": "test/presentation/screens/settings/restore_outcome_notice_test.dart",
+      "sha256": "47638804edc4ac3eac3aac052511a1a1a2e819148d07979101eba6ecec109c66"
+    }
+  ],
+  "unchangedInputs": [
+    "lib/domain",
+    "lib/data",
+    "assets",
+    "pubspec.yaml",
+    "pubspec.lock",
+    ".github/workflows/ci.yml"
+  ],
+  "note": "Base plus these dirty inputs identifies this task. Documentation and evidence do not change application inputs."
+}

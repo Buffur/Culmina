@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_spacing.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -116,57 +121,80 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
       ),
       body: ListView(
         key: const Key('planRig.scroll'),
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          AppSpacing.itemGap,
+          AppSpacing.gutter,
+          AppSpacing.lg,
+        ),
         children: [
-          if (_loading)
-            const SizedBox.shrink()
-          else if (_error != null)
-            LoadFailureView(
-              action: 'load the rigs',
-              error: _error!,
-              onRetry: _load,
-            )
-          else if (_rigs.isEmpty)
-            Text(
-              AppWords.noRigs,
-              key: const Key('planRig.empty'),
-              style: AppTypography.body.copyWith(color: p.textPrimary),
-            )
-          else ...[
-            const HybridFieldLabel('Choose a rig'),
-            const SizedBox(height: 6),
-            for (final r in _rigs)
-              HybridChoiceRow(
-                key: Key('planRig.choice.${r.id}'),
-                title: r.name,
-                caption: RigSummaryText.of(r),
-                selected: r.id == _chosen,
-                onTap: () => setState(() => _chosen = r.id),
-              ),
-          ],
-          const SizedBox(height: 20),
-          // plan.css `.editor-help`: 13 at 1.6, secondary.
-          Text(
-            'Camera type comes from the rig. Blocks show ISO or gain to match '
-            'it; values recorded for another type are kept.',
-            key: const Key('planRig.help'),
-            style: AppTypography.caption.copyWith(
-              height: 1.6,
-              color: AppPalette.of(context).textSecondary,
-            ),
+          DocumentSection(
+            joinNext: true,
+            children: [
+              if (_loading)
+                const SizedBox.shrink()
+              else if (_error != null)
+                LoadFailureView(
+                  action: 'load the rigs',
+                  error: _error!,
+                  onRetry: _load,
+                )
+              else if (_rigs.isEmpty)
+                Text(
+                  AppWords.noRigs,
+                  key: const Key('planRig.empty'),
+                  style: AppTypography.body.copyWith(color: p.textPrimary),
+                )
+              else ...[
+                const HybridFieldLabel('Choose a rig'),
+                const SizedBox(height: 6),
+              ],
+            ],
           ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              key: const Key('planRig.manage'),
-              onPressed: _manage,
-              child: Text(
-                _rigs.isEmpty && !_loading
-                    ? AppWords.addRig
-                    : 'Add or manage rigs',
+          if (!_loading && _error == null)
+            for (final r in _rigs)
+              DocumentSection(
+                joinPrevious: true,
+                joinNext: true,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                children: [
+                  HybridChoiceRow(
+                    key: Key('planRig.choice.${r.id}'),
+                    title: r.name,
+                    caption: RigSummaryText.of(r),
+                    selected: r.id == _chosen,
+                    onTap: () => setState(() => _chosen = r.id),
+                  ),
+                ],
               ),
-            ),
+          DocumentSection(
+            joinPrevious: true,
+            children: [
+              const SizedBox(height: 4),
+              // plan.css `.editor-help`: 13 at 1.6, secondary.
+              Text(
+                'Camera type comes from the rig. Blocks show ISO or gain to match '
+                'it; values recorded for another type are kept.',
+                key: const Key('planRig.help'),
+                style: AppTypography.caption.copyWith(
+                  height: 1.6,
+                  color: AppPalette.of(context).textSecondary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  key: const Key('planRig.manage'),
+                  onPressed: _manage,
+                  child: Text(
+                    _rigs.isEmpty && !_loading
+                        ? AppWords.addRig
+                        : 'Add or manage rigs',
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

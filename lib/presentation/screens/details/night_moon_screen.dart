@@ -280,7 +280,9 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                             const SizedBox(height: 16),
                             const DocumentSection(
                               key: Key('moon.calendarGroup'),
-                              padding: EdgeInsets.symmetric(vertical: 16),
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.md,
+                              ),
                               children: [
                                 MoonCalendarSection(insetHeader: true),
                               ],

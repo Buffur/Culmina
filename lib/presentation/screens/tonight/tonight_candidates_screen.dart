@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -115,7 +118,12 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
             Expanded(
               child: night == null
                   ? ListView(
-                      padding: const EdgeInsets.all(AppSpacing.md),
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.gutter,
+                        AppSpacing.itemGap,
+                        AppSpacing.gutter,
+                        AppSpacing.xl,
+                      ),
                       children: [
                         _Title(title),
                         Text(
@@ -195,88 +203,92 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     );
 
     final header = <Widget>[
-      _Title(title),
-      Text(
-        'Night of ${NightTimeFormatter.eveningDate(night.eveningDate)}'
-        '${siteVm.locationName == null ? '' : ' at ${siteVm.locationName}'} · '
-        '${rows.length} of ${all.length} targets · sorted by '
-        '${_orderLabels[_sort]!}',
-        key: const Key('tonight.header'),
-        style: _secondary(context),
-      ),
-      const SizedBox(height: AppSpacing.md),
-      // TASK 15.3: the selects share a row and ellipsize, so 200 % text
-      // does not overflow.
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      DocumentSection(
+        key: const Key('candidates.contextGroup'),
         children: [
-          Expanded(
-            child: BlockField(
-              label: 'Sort by',
-              child: DropdownButtonFormField<CandidateSort>(
-                key: const Key('tonight.sort'),
-                isExpanded: true,
-                initialValue: _sort,
-                style: select,
-                icon: hybridSelectIcon(context),
-                decoration: const InputDecoration(
-                  contentPadding: hybridSelectPadding,
-                ),
-                items: [
-                  for (final e in _sortLabels.entries)
-                    DropdownMenuItem(
-                      value: e.key,
-                      child: Text(e.value, overflow: TextOverflow.ellipsis),
-                    ),
-                ],
-                onChanged: (v) => setState(() => _sort = v ?? _sort),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.itemGap),
-          Expanded(
-            child: BlockField(
-              label: 'Type',
-              child: DropdownButtonFormField<String?>(
-                key: const Key('tonight.type'),
-                isExpanded: true,
-                initialValue: _type,
-                style: select,
-                icon: hybridSelectIcon(context),
-                decoration: const InputDecoration(
-                  contentPadding: hybridSelectPadding,
-                ),
-                items: [
-                  const DropdownMenuItem(
-                    value: null,
-                    child: Text('All types', overflow: TextOverflow.ellipsis),
-                  ),
-                  for (final t in types)
-                    DropdownMenuItem(
-                      value: t,
-                      child: Text(t, overflow: TextOverflow.ellipsis),
-                    ),
-                ],
-                onChanged: (v) => setState(() => _type = v),
-              ),
-            ),
+          _Title(title),
+          Text(
+            'Night of ${NightTimeFormatter.eveningDate(night.eveningDate)}'
+            '${siteVm.locationName == null ? '' : ' at ${siteVm.locationName}'} · '
+            '${rows.length} of ${all.length} targets · sorted by '
+            '${_orderLabels[_sort]!}',
+            key: const Key('tonight.header'),
+            style: _secondary(context),
           ),
         ],
       ),
-      const SizedBox(height: AppSpacing.sm),
-      HybridCheckRow.plan(
-        key: const Key('tonight.own'),
-        label: 'Targets you added',
-        checked: _ownOnly,
-        onChanged: (v) => setState(() => _ownOnly = v),
+      const SizedBox(height: AppSpacing.md),
+      DocumentSection(
+        key: const Key('candidates.filtersGroup'),
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BlockField(
+                label: 'Sort by',
+                child: DropdownButtonFormField<CandidateSort>(
+                  key: const Key('tonight.sort'),
+                  isExpanded: true,
+                  initialValue: _sort,
+                  style: select,
+                  icon: hybridSelectIcon(context),
+                  decoration: const InputDecoration(
+                    contentPadding: hybridSelectPadding,
+                  ),
+                  items: [
+                    for (final e in _sortLabels.entries)
+                      DropdownMenuItem(
+                        value: e.key,
+                        child: Text(e.value, overflow: TextOverflow.ellipsis),
+                      ),
+                  ],
+                  onChanged: (v) => setState(() => _sort = v ?? _sort),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.itemGap),
+              BlockField(
+                label: 'Type',
+                child: DropdownButtonFormField<String?>(
+                  key: const Key('tonight.type'),
+                  isExpanded: true,
+                  initialValue: _type,
+                  style: select,
+                  icon: hybridSelectIcon(context),
+                  decoration: const InputDecoration(
+                    contentPadding: hybridSelectPadding,
+                  ),
+                  items: [
+                    const DropdownMenuItem(
+                      value: null,
+                      child: Text('All types', overflow: TextOverflow.ellipsis),
+                    ),
+                    for (final t in types)
+                      DropdownMenuItem(
+                        value: t,
+                        child: Text(t, overflow: TextOverflow.ellipsis),
+                      ),
+                  ],
+                  onChanged: (v) => setState(() => _type = v),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          HybridCheckRow.plan(
+            key: const Key('tonight.own'),
+            label: 'Targets you added',
+            checked: _ownOnly,
+            onChanged: (v) => setState(() => _ownOnly = v),
+          ),
+          HybridCheckRow.plan(
+            key: const Key('tonight.all'),
+            label: 'Show targets without a window',
+            checked: !_withWindowOnly,
+            onChanged: (v) => setState(() => _withWindowOnly = !v),
+          ),
+        ],
       ),
-      HybridCheckRow.plan(
-        key: const Key('tonight.all'),
-        label: 'Show targets without a window',
-        checked: !_withWindowOnly,
-        onChanged: (v) => setState(() => _withWindowOnly = !v),
-      ),
-      const SizedBox(height: AppSpacing.sm),
+      const SizedBox(height: AppSpacing.md),
       if (rows.isEmpty)
         Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
@@ -301,7 +313,12 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     );
 
     return ListView.builder(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.gutter,
+        AppSpacing.itemGap,
+        AppSpacing.gutter,
+        AppSpacing.xl,
+      ),
       itemCount: header.length + rows.length + 1,
       itemBuilder: (context, i) {
         if (i < header.length) return header[i];
@@ -323,15 +340,23 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                 if (r.frameFillFraction case final f?)
                   CapabilityText.frameFillOf(f),
               ].join(' · ');
-        return _CandidateRow(
-          key: Key('tonight.row.${t.id}'),
-          title: name,
-          caption: '${t.type} · $details',
-          usable: OpportunityText.duration(r.usableTime),
-          onTap: () async {
-            await planVm.setTarget(t);
-            if (context.mounted) context.pop();
-          },
+        final index = i - header.length;
+        return DocumentSection(
+          joinPrevious: index > 0,
+          joinNext: index < rows.length - 1,
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          children: [
+            _CandidateRow(
+              key: Key('tonight.row.${t.id}'),
+              title: name,
+              caption: '${t.type} · $details',
+              usable: OpportunityText.duration(r.usableTime),
+              onTap: () async {
+                await planVm.setTarget(t);
+                if (context.mounted) context.pop();
+              },
+            ),
+          ],
         );
       },
     );

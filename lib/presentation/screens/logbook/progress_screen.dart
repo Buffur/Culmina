@@ -1,5 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
@@ -75,27 +78,44 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 )
               else ...[
                 for (final (i, t) in list.indexed)
-                  TargetProgressCard(progress: t, first: i == 0),
-                Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.gutter),
-                  child: CollapsibleSection(
-                    key: const Key('progress.guide'),
-                    sectionKey: 'logbook.progressGuide',
-                    title: 'How totals are grouped',
-                    titleStyle: AppTypography.body.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: p.textPrimary,
-                    ),
-                    child: Text(
-                      'Totals per filter add every recorded frame. Beneath '
-                      'each filter, frames are grouped only when exposure, '
-                      'ISO or gain, binning and rig all match; "reported as '
-                      'planned" counts are your report, not counted files. '
-                      'This is integration time, not a measure of signal or '
-                      'image quality.',
-                      style: copy,
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.md),
+                    child: DocumentSection(
+                      children: [
+                        TargetProgressCard(
+                          progress: t,
+                          first: i == 0,
+                          embedded: true,
+                        ),
+                      ],
                     ),
                   ),
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('progress.guideGroup'),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: CollapsibleSection(
+                        key: const Key('progress.guide'),
+                        sectionKey: 'logbook.progressGuide',
+                        title: 'How totals are grouped',
+                        titleStyle: AppTypography.body.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: p.textPrimary,
+                        ),
+                        child: Text(
+                          'Totals per filter add every recorded frame. Beneath '
+                          'each filter, frames are grouped only when exposure, '
+                          'ISO or gain, binning and rig all match; "reported as '
+                          'planned" counts are your report, not counted files. '
+                          'This is integration time, not a measure of signal or '
+                          'image quality.',
+                          style: copy,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ],
@@ -114,12 +134,16 @@ class TargetProgressCard extends StatelessWidget {
     super.key,
     required this.progress,
     this.first = true,
+    this.embedded = false,
   });
 
   final TargetProgress progress;
 
   /// A later target starts below a rule.
   final bool first;
+
+  /// Parent owns the group surface and inter-section spacing.
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
@@ -150,9 +174,13 @@ class TargetProgressCard extends StatelessWidget {
         );
     return Container(
       key: Key('progress.${t.targetId}'),
-      margin: EdgeInsets.only(top: first ? AppSpacing.md : AppSpacing.section),
-      padding: EdgeInsets.only(top: first ? 0 : AppSpacing.md),
-      decoration: BoxDecoration(border: first ? null : Border(top: rule)),
+      margin: embedded
+          ? EdgeInsets.zero
+          : EdgeInsets.only(top: first ? AppSpacing.md : AppSpacing.section),
+      padding: EdgeInsets.only(top: embedded || first ? 0 : AppSpacing.md),
+      decoration: BoxDecoration(
+        border: embedded || first ? null : Border(top: rule),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

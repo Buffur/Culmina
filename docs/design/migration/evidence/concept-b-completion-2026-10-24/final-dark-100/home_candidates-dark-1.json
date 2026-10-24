@@ -1,0 +1,460 @@
+{
+  "name": "home_candidates",
+  "theme": "dark",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Culmina",
+      "x": 16.0,
+      "y": 23.0,
+      "w": 255.0,
+      "h": 18.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 12.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "What can I image on 19 Oct?",
+      "x": 36.0,
+      "y": 108.0,
+      "w": 303.0,
+      "h": 60.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 23.0,
+      "weight": 500,
+      "height": 1.3
+    },
+    {
+      "text": "Night of 19 Oct at Kyiv outskirts · 96 of 164 targets · sorted by usable time, then size in frame",
+      "x": 36.0,
+      "y": 184.0,
+      "w": 303.0,
+      "h": 63.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Sort by",
+      "x": 36.0,
+      "y": 295.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Usable time",
+      "x": 53.0,
+      "y": 333.0,
+      "w": 76.49601745605469,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Type",
+      "x": 36.0,
+      "y": 380.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "All types",
+      "x": 53.0,
+      "y": 418.0,
+      "w": 55.622039794921875,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Targets you added",
+      "x": 66.0,
+      "y": 474.5,
+      "w": 273.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Show targets without a window",
+      "x": 66.0,
+      "y": 522.5,
+      "w": 273.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Andromeda Galaxy (M31)",
+      "x": 36.0,
+      "y": 605.0,
+      "w": 158.07406616210938,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Galaxy · 19:47 – 05:42 (+1) · max 81° · Moon ≥ 82° away · 47% of the frame's short side",
+      "x": 36.0,
+      "y": 626.0,
+      "w": 200.7799835205078,
+      "h": 54.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 12.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "9 h 55 min",
+      "x": 248.7799835205078,
+      "y": 632.5,
+      "w": 64.22001647949219,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "Triangulum Galaxy (M33)",
+      "x": 36.0,
+      "y": 712.0,
+      "w": 158.50804138183594,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Galaxy · 19:47 – 05:42 (+1) · max 70° · Moon ≥ 86° away · 16% of the frame's short side",
+      "x": 36.0,
+      "y": 733.0,
+      "w": 200.7799835205078,
+      "h": 54.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 12.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "9 h 55 min",
+      "x": 248.7799835205078,
+      "y": 739.5,
+      "w": 64.22001647949219,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 500,
+      "height": 1.5
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(16.0, 8.0, 8.0, 8.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": null,
+      "x": 271.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 271.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'homeSheet.close'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'candidates.contextGroup'>]",
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 187.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 187.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 92.0,
+      "w": 303.0,
+      "h": 92.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 16.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'candidates.filtersGroup'>]",
+      "x": 20.0,
+      "y": 279.0,
+      "w": 335.0,
+      "h": 294.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 279.0,
+      "w": 335.0,
+      "h": 294.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 53.0,
+      "y": 331.5,
+      "w": 246.0,
+      "h": 24.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 331.5,
+      "w": 36.0,
+      "h": 24.0,
+      "padding": "EdgeInsetsDirectional(0.0, 0.0, 12.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 53.0,
+      "y": 416.5,
+      "w": 246.0,
+      "h": 24.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 416.5,
+      "w": 36.0,
+      "h": 24.0,
+      "padding": "EdgeInsetsDirectional(0.0, 0.0, 12.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 476.0,
+      "w": 18.0,
+      "h": 18.0,
+      "padding": "EdgeInsets.all(1.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 524.0,
+      "w": 18.0,
+      "h": 18.0,
+      "padding": "EdgeInsets.all(1.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 589.0,
+      "w": 335.0,
+      "h": 107.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 589.0,
+      "w": 335.0,
+      "h": 107.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 589.0,
+      "w": 303.0,
+      "h": 107.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 16.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 696.0,
+      "w": 335.0,
+      "h": 107.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 696.0,
+      "w": 335.0,
+      "h": 107.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 696.0,
+      "w": 303.0,
+      "h": 107.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 16.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 803.0,
+      "w": 335.0,
+      "h": 107.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 803.0,
+      "w": 335.0,
+      "h": 107.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 803.0,
+      "w": 303.0,
+      "h": 107.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 16.0)"
+    }
+  ]
+}

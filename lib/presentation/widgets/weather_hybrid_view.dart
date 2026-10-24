@@ -442,7 +442,12 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
       DocumentSection(
         key: const Key('weather.limitGroup'),
         joinPrevious: s != null && !noDark && s.coveredHours > 0,
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          0,
+          AppSpacing.md,
+          AppSpacing.md,
+        ),
         children: [
           // Q3 (PD-18): the limitation, and a page the user opens.
           const SizedBox(height: 24),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/document_section.dart';
+
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
@@ -221,55 +223,63 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // plan.css `.screen-intro`: 14 at 1.6, secondary.
-                  Text(
-                    _rows.isEmpty
-                        ? 'Every light block already has the calibration it '
-                              'needs in this plan.'
-                        : 'Add proposed frames to this plan. Review counts '
-                              'before applying.',
-                    style: AppTypography.body.copyWith(
-                      height: 1.6,
-                      color: p.textSecondary,
-                    ),
+                  DocumentSection(
+                    key: const Key('calibration.contextGroup'),
+                    children: [
+                      // plan.css `.screen-intro`: 14 at 1.6, secondary.
+                      Text(
+                        _rows.isEmpty
+                            ? 'Every light block already has the calibration it '
+                                  'needs in this plan.'
+                            : 'Add proposed frames to this plan. Review counts '
+                                  'before applying.',
+                        style: AppTypography.body.copyWith(
+                          height: 1.6,
+                          color: p.textSecondary,
+                        ),
+                      ),
+                      // plan.css `.reference-light`: 13 at 1.6, primary. The
+                      // native builder references every light at once.
+                      if (_lights case final lights when lights.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: AppSpacing.gutter,
+                          ),
+                          child: Text(
+                            lights.length == 1
+                                ? 'References ${BlockText.row(lights.single, null)}'
+                                : 'References ${lights.length} light blocks; each '
+                                      'set names its light.',
+                            key: const Key('calibration.reference'),
+                            style: AppTypography.caption.copyWith(
+                              height: 1.6,
+                              color: p.textPrimary,
+                            ),
+                          ),
+                        ),
+                      if (widget.proposal.darksByCamera)
+                        Padding(
+                          key: const Key('calibration.noDarks'),
+                          padding: const EdgeInsets.only(
+                            top: AppSpacing.gutter,
+                          ),
+                          child: Text(
+                            "No darks: the camera's long-exposure noise "
+                            'reduction takes one after each light.',
+                            style: AppTypography.caption.copyWith(
+                              height: 1.6,
+                              color: p.textPrimary,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  // plan.css `.reference-light`: 13 at 1.6, primary. The
-                  // native builder references every light at once.
-                  if (_lights case final lights when lights.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: AppSpacing.gutter),
-                      child: Text(
-                        lights.length == 1
-                            ? 'References ${BlockText.row(lights.single, null)}'
-                            : 'References ${lights.length} light blocks; each '
-                                  'set names its light.',
-                        key: const Key('calibration.reference'),
-                        style: AppTypography.caption.copyWith(
-                          height: 1.6,
-                          color: p.textPrimary,
-                        ),
-                      ),
-                    ),
-                  if (widget.proposal.darksByCamera)
-                    Padding(
-                      key: const Key('calibration.noDarks'),
-                      padding: const EdgeInsets.only(top: AppSpacing.gutter),
-                      child: Text(
-                        "No darks: the camera's long-exposure noise "
-                        'reduction takes one after each light.',
-                        style: AppTypography.caption.copyWith(
-                          height: 1.6,
-                          color: p.textPrimary,
-                        ),
-                      ),
-                    ),
                   for (var i = 0; i < _rows.length; i++)
                     if (!_leftOutByFlat(i))
                       Padding(
                         key: Key('calibration.row.$i'),
-                        padding: const EdgeInsets.only(top: AppSpacing.gutter),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        padding: const EdgeInsets.only(top: AppSpacing.md),
+                        child: DocumentSection(
                           children: [
                             _Legend(_legend(_rows[i].type)),
                             // The legend's 18 px below its rule.

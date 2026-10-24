@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -228,51 +231,76 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                           color: p.textSecondary,
                         ),
                       ),
-                      for (var i = 0; i < 4; i++)
+                      for (final indices in const [
+                        [0, 1, 2],
+                        [3],
+                      ])
                         Padding(
-                          padding: EdgeInsets.only(top: AppSpacing.gutter),
-                          // Hybrid's label above the field: it wraps at large
-                          // text, so its unit is never cut off. The field
-                          // keeps the label as its accessible name.
-                          child: BlockField(
-                            label: labels[i],
-                            hint: hints[i],
-                            note: source(i),
-                            noteKey: Key('planOverride.source.$i'),
-                            child: TextFormField(
-                              key: Key('planOverride.$i'),
-                              controller: _controllers[i],
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                    decimal: true,
+                          padding: const EdgeInsets.only(top: AppSpacing.md),
+                          child: DocumentSection(
+                            children: [
+                              Semantics(
+                                header: true,
+                                child: Text(
+                                  indices.first == 0 ? 'Timing' : 'Storage',
+                                  style: AppTypography.sectionHeading.copyWith(
+                                    color: p.textPrimary,
                                   ),
-                              decoration: const InputDecoration(
-                                errorMaxLines: 3,
+                                ),
                               ),
-                              validator: (text) {
-                                if (text == null || text.trim().isEmpty) {
-                                  return null;
-                                }
-                                final number = double.tryParse(text.trim());
-                                if (number == null ||
-                                    !number.isFinite ||
-                                    number < 0 ||
-                                    (i == 3 && number == 0)) {
-                                  return i == 3
-                                      ? 'Enter a positive number or leave '
-                                            'empty.'
-                                      : 'Enter zero or more, or leave empty.';
-                                }
-                                const maxima = [3600, 720, 720, 10000];
-                                if (number > maxima[i]) {
-                                  return 'Enter ${maxima[i]} or less.';
-                                }
-                                return null;
-                              },
-                            ),
+                              for (final i in indices)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: AppSpacing.itemGap,
+                                  ),
+                                  // Hybrid's label above the field: it wraps at large
+                                  // text, so its unit is never cut off. The field
+                                  // keeps the label as its accessible name.
+                                  child: BlockField(
+                                    label: labels[i],
+                                    hint: hints[i],
+                                    note: source(i),
+                                    noteKey: Key('planOverride.source.$i'),
+                                    child: TextFormField(
+                                      key: Key('planOverride.$i'),
+                                      controller: _controllers[i],
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      decoration: const InputDecoration(
+                                        errorMaxLines: 3,
+                                      ),
+                                      validator: (text) {
+                                        if (text == null ||
+                                            text.trim().isEmpty) {
+                                          return null;
+                                        }
+                                        final number = double.tryParse(
+                                          text.trim(),
+                                        );
+                                        if (number == null ||
+                                            !number.isFinite ||
+                                            number < 0 ||
+                                            (i == 3 && number == 0)) {
+                                          return i == 3
+                                              ? 'Enter a positive number or leave '
+                                                    'empty.'
+                                              : 'Enter zero or more, or leave empty.';
+                                        }
+                                        const maxima = [3600, 720, 720, 10000];
+                                        if (number > maxima[i]) {
+                                          return 'Enter ${maxima[i]} or less.';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                      const SizedBox(height: AppSpacing.gutter),
+                      const SizedBox(height: AppSpacing.md),
                       // plan.css `.quiet-button`: 14/500 secondary, 48 tall.
                       Align(
                         alignment: AlignmentDirectional.centerStart,

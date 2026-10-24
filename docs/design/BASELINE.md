@@ -12,6 +12,7 @@ Status: active source map, reconciled 2026-10-24 against `develop` / `origin/dev
 | Frozen `design/home-lab/` at `86873ce343160c860706091e12b257090cc96d94` | Approved final Hybrid (`blend`) visual reference, accepted at `ed2955442110b31eec54fd8db436f1f4e0841993`; not an executable model for native science/data behavior. |
 | [Hybrid transfer record](migration/HYBRID_TRANSFER_STATUS.md) | Completed transfer's HT-* coverage, native adaptations/deviations and owner's bounded §9 confirmation. Its old local-branch/push/toolchain remarks are dated evidence. |
 | [P-1–P-6 delivery](migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](migration/GEO_OWNER_REFINEMENT_2026_10_23.md), [consolidation](migration/CONSOLIDATED_DELIVERY_2026_10_24.md) | Later implemented refinements and their specific verification/owner-acceptance limits. They are not interchangeable with the frozen browser. |
+| [Concept B whole-app 100% completion](CONCEPT_B_COMPLETION_100_2026_10_24.md) | Owner-authorized A–E extension and bounded consistency pass on base `f0a5baa`; per-child dispositions and exact host/physical evidence limits. Adaptive/owner/release criteria remain separate. |
 
 The frozen web tree ID is `993d674067c3df27a4d71cac2943830dba62226f`. Its files are unchanged between that reference and the reconciliation baseline. Serve/read the reference without modifying or regenerating it. Its fixtures are illustrative; native calculations, persistent data and failure states retain their production contracts.
 

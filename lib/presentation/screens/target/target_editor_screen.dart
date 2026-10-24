@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_spacing.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../core/utils/astro_math.dart';
@@ -203,105 +208,124 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SettingsCopy(
-                    '${existing == null ? '' : 'Catalogue id: ${existing.catalogId}. '}'
-                    'Coordinates are J2000. '
-                    '${existing == null ? 'Optional fields left empty stay unknown.' : 'Values you leave untouched keep exactly what is stored.'}',
-                  ),
-                  LibraryField(
-                    label: 'Name',
-                    child: TextFormField(
-                      key: const Key('targetEditor.name'),
-                      controller: _name,
-                      style: style,
-                      decoration: const InputDecoration(
-                        hintText: 'e.g. Andromeda Galaxy',
+                  DocumentSection(
+                    key: const Key('targetEditor.identityGroup'),
+                    children: [
+                      SettingsCopy(
+                        '${existing == null ? '' : 'Catalogue id: ${existing.catalogId}. '}'
+                        'Coordinates are J2000. '
+                        '${existing == null ? 'Optional fields left empty stay unknown.' : 'Values you leave untouched keep exactly what is stored.'}',
                       ),
-                      validator: (v) =>
-                          v == null || v.trim().isEmpty ? 'Required' : null,
-                    ),
-                  ),
-                  LibraryField(
-                    label: 'Object type',
-                    hint: TargetTypes.isMoving(_type)
-                        ? TargetTypes.movingWarning
-                        : 'New targets have fixed coordinates; moving objects '
-                              'are not offered.',
-                    child: DropdownButtonFormField<String>(
-                      key: const Key('targetEditor.type'),
-                      // F25 A1: a long type wraps instead of overflowing at
-                      // large text.
-                      isExpanded: true,
-                      initialValue: _type,
-                      style: style,
-                      icon: hybridSelectIcon(context),
-                      decoration: const InputDecoration(
-                        contentPadding: hybridSelectPadding,
-                      ),
-                      items: [
-                        for (final t in _types)
-                          DropdownMenuItem(
-                            value: t,
-                            child: Text(t, overflow: TextOverflow.ellipsis),
+                      LibraryField(
+                        label: 'Name',
+                        child: TextFormField(
+                          key: const Key('targetEditor.name'),
+                          controller: _name,
+                          style: style,
+                          decoration: const InputDecoration(
+                            hintText: 'e.g. Andromeda Galaxy',
                           ),
-                      ],
-                      onChanged: (v) {
-                        if (v != null) setState(() => _type = v);
-                      },
-                    ),
-                  ),
-                  LibraryField(
-                    label: 'Right ascension (J2000)',
-                    hint:
-                        'Hours 0–24 (a bare number is hours), or degrees with '
-                        '°: 83.82°',
-                    child: TextFormField(
-                      key: const Key('targetEditor.ra'),
-                      controller: _ra,
-                      style: style,
-                      decoration: const InputDecoration(
-                        hintText: '05h35m17s, 5:35:17 or 5.588 h',
+                          validator: (v) =>
+                              v == null || v.trim().isEmpty ? 'Required' : null,
+                        ),
                       ),
-                      validator: TargetFormInput.validateRightAscension,
-                    ),
-                  ),
-                  LibraryField(
-                    label: 'Declination (J2000)',
-                    hint: 'Degrees, −90 to +90',
-                    child: TextFormField(
-                      key: const Key('targetEditor.dec'),
-                      controller: _dec,
-                      style: style,
-                      decoration: const InputDecoration(
-                        hintText: '−05°23′28″, -5:23:28 or -5.39',
+                      LibraryField(
+                        label: 'Object type',
+                        hint: TargetTypes.isMoving(_type)
+                            ? TargetTypes.movingWarning
+                            : 'New targets have fixed coordinates; moving objects '
+                                  'are not offered.',
+                        child: DropdownButtonFormField<String>(
+                          key: const Key('targetEditor.type'),
+                          // F25 A1: a long type wraps instead of overflowing at
+                          // large text.
+                          isExpanded: true,
+                          initialValue: _type,
+                          style: style,
+                          icon: hybridSelectIcon(context),
+                          decoration: const InputDecoration(
+                            contentPadding: hybridSelectPadding,
+                          ),
+                          items: [
+                            for (final t in _types)
+                              DropdownMenuItem(
+                                value: t,
+                                child: Text(t, overflow: TextOverflow.ellipsis),
+                              ),
+                          ],
+                          onChanged: (v) {
+                            if (v != null) setState(() => _type = v);
+                          },
+                        ),
                       ),
-                      validator: TargetFormInput.validateDeclination,
-                    ),
+                    ],
                   ),
-                  LibraryField(
-                    label: 'Apparent size (arcmin, optional)',
-                    hint: 'Above 0, at most 3000′. Empty is unknown.',
-                    child: TextFormField(
-                      key: const Key('targetEditor.size'),
-                      controller: _size,
-                      style: style,
-                      keyboardType: decimal,
-                      validator: TargetFormInput.validateAngularSize,
-                    ),
-                  ),
-                  LibraryField(
-                    label: 'Magnitude (optional)',
-                    hint: '−30 to 30. Empty is unknown.',
-                    child: TextFormField(
-                      key: const Key('targetEditor.magnitude'),
-                      controller: _mag,
-                      style: style,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                        signed: true,
+                  const SizedBox(height: AppSpacing.md),
+                  DocumentSection(
+                    key: const Key('targetEditor.positionGroup'),
+                    children: [
+                      LibraryField(
+                        label: 'Right ascension (J2000)',
+                        top: 0,
+                        hint:
+                            'Hours 0–24 (a bare number is hours), or degrees with '
+                            '°: 83.82°',
+                        child: TextFormField(
+                          key: const Key('targetEditor.ra'),
+                          controller: _ra,
+                          style: style,
+                          decoration: const InputDecoration(
+                            hintText: '05h35m17s, 5:35:17 or 5.588 h',
+                          ),
+                          validator: TargetFormInput.validateRightAscension,
+                        ),
                       ),
-                      validator: TargetFormInput.validateMagnitude,
-                    ),
+                      LibraryField(
+                        label: 'Declination (J2000)',
+                        hint: 'Degrees, −90 to +90',
+                        child: TextFormField(
+                          key: const Key('targetEditor.dec'),
+                          controller: _dec,
+                          style: style,
+                          decoration: const InputDecoration(
+                            hintText: '−05°23′28″, -5:23:28 or -5.39',
+                          ),
+                          validator: TargetFormInput.validateDeclination,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  DocumentSection(
+                    key: const Key('targetEditor.optionalGroup'),
+                    children: [
+                      LibraryField(
+                        label: 'Apparent size (arcmin, optional)',
+                        top: 0,
+                        hint: 'Above 0, at most 3000′. Empty is unknown.',
+                        child: TextFormField(
+                          key: const Key('targetEditor.size'),
+                          controller: _size,
+                          style: style,
+                          keyboardType: decimal,
+                          validator: TargetFormInput.validateAngularSize,
+                        ),
+                      ),
+                      LibraryField(
+                        label: 'Magnitude (optional)',
+                        hint: '−30 to 30. Empty is unknown.',
+                        child: TextFormField(
+                          key: const Key('targetEditor.magnitude'),
+                          controller: _mag,
+                          style: style,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                            signed: true,
+                          ),
+                          validator: TargetFormInput.validateMagnitude,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

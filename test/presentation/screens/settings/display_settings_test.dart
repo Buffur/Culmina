@@ -123,13 +123,14 @@ void main() {
     final choices = find.byKey(const Key('settings.appearance'));
     final bounds = tester.getRect(choices);
     // settings.css at 200 %: one choice per line, the column's full width
-    // (412 less two 20 px gutters), each a 6 px-rounded outline.
-    expect(bounds.width, 372);
+    // (412 less two 20 px gutters and two 16 px section insets),
+    // each a 6 px-rounded outline. Text scaling remains uncapped.
+    expect(bounds.width, 340);
     for (final value in ['system', 'light', 'dark']) {
       final choice = tester.getRect(
         find.byKey(Key('settings.appearance.$value')),
       );
-      expect(choice.width, closeTo(372, 0.5), reason: value);
+      expect(choice.width, closeTo(340, 0.5), reason: value);
     }
     for (final label in ['System', 'Light', 'Dark']) {
       final text = find.descendant(of: choices, matching: find.text(label));

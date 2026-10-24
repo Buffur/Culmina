@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme/app_motion.dart';
+import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/utils/quantity_text.dart';
@@ -53,7 +54,10 @@ class CapturePlanWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const _BlockList(),
-          ?blockActions,
+          if (blockActions != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            blockActions!,
+          ],
           if (includeSummary) ...[
             const SizedBox(height: 28),
             const CaptureBudgetSummary(),

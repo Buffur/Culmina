@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_spacing.dart';
@@ -112,7 +115,7 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
     return Scaffold(
       appBar: hybridAppBar(
         context,
-        title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(name),
         actions: const [FieldModeButton()],
       ),
       body: ListView(
@@ -120,97 +123,126 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
         padding: settingsPagePadding,
         children: catalogue
             ? [
-                if (widget.onEdit == null) ...const [
-                  SettingsHeading('Catalogue record', top: 0),
-                  SettingsHint('Bundled catalogue · read-only', top: 0),
-                ] else
-                  LibraryRecordHeader(
-                    title: 'Catalogue record',
-                    caption: 'Bundled catalogue',
-                    action: edit,
-                  ),
-                const SizedBox(height: AppSpacing.sm),
-                FutureBuilder<Map<String, List<TargetAlias>>>(
-                  future: _aliases,
-                  builder: (context, snapshot) {
-                    final also = [
-                      for (final a in snapshot.data?[t.catalogId] ?? const [])
-                        if (a.alias != name) a.alias,
-                    ];
-                    return FactRows(key: const Key('targetDetail.facts'), [
-                      ('Designation', t.catalogId, null),
-                      ('Name', name, null),
-                      (
-                        'Also known as',
-                        also.isEmpty ? 'None recorded' : also.join(', '),
-                        null,
+                DocumentSection(
+                  key: const Key('targetDetail.identityGroup'),
+                  children: [
+                    if (widget.onEdit == null) ...const [
+                      SettingsHeading('Catalogue record', top: 0),
+                      SettingsHint('Bundled catalogue · read-only', top: 0),
+                    ] else
+                      LibraryRecordHeader(
+                        title: 'Catalogue record',
+                        caption: 'Bundled catalogue',
+                        action: edit,
                       ),
-                      ('Object type', t.type, null),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('targetDetail.factsGroup'),
+                  children: [
+                    FutureBuilder<Map<String, List<TargetAlias>>>(
+                      future: _aliases,
+                      builder: (context, snapshot) {
+                        final also = [
+                          for (final a
+                              in snapshot.data?[t.catalogId] ?? const [])
+                            if (a.alias != name) a.alias,
+                        ];
+                        return FactRows(key: const Key('targetDetail.facts'), [
+                          ('Designation', t.catalogId, null),
+                          ('Name', name, null),
+                          (
+                            'Also known as',
+                            also.isEmpty ? 'None recorded' : also.join(', '),
+                            null,
+                          ),
+                          ('Object type', t.type, null),
+                          ...coordinates,
+                          (
+                            'Magnitude (V)',
+                            switch (t.magnitude) {
+                              final m? => _n(m),
+                              null => 'Not recorded',
+                            },
+                            t.magnitude == null
+                                ? 'Not in the catalogue; never estimated.'
+                                : null,
+                          ),
+                          (
+                            'Source',
+                            "OpenNGC, via the app's bundled catalogue",
+                            null,
+                          ),
+                        ]);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('targetDetail.actionsGroup'),
+                  children: [
+                    SettingsCopy(
+                      widget.onEdit == null
+                          ? 'For different values, add your own target. The '
+                                'bundled record stays unchanged.'
+                          : 'An edit changes this entry in your app; untouched '
+                                'coordinates keep their catalogue values.',
+                      top: 0,
+                    ),
+                    const SizedBox(height: AppSpacing.itemGap),
+                    plan,
+                    ...delete,
+                  ],
+                ),
+              ]
+            : [
+                DocumentSection(
+                  key: const Key('targetDetail.identityGroup'),
+                  children: [
+                    LibraryRecordHeader(
+                      title: 'Your target',
+                      caption: 'Editable · J2000 coordinates',
+                      action: edit,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('targetDetail.factsGroup'),
+                  children: [
+                    FactRows(key: const Key('targetDetail.facts'), [
+                      if (t.catalogId != name)
+                        (
+                          'Catalogue id',
+                          t.catalogId,
+                          'Kept from when the target was added.',
+                        ),
+                      (
+                        'Object type',
+                        t.type,
+                        TargetTypes.isMoving(t.type)
+                            ? TargetTypes.movingWarning
+                            : null,
+                      ),
                       ...coordinates,
                       (
-                        'Magnitude (V)',
+                        'Magnitude',
                         switch (t.magnitude) {
                           final m? => _n(m),
                           null => 'Not recorded',
                         },
-                        t.magnitude == null
-                            ? 'Not in the catalogue; never estimated.'
-                            : null,
-                      ),
-                      (
-                        'Source',
-                        "OpenNGC, via the app's bundled catalogue",
                         null,
                       ),
-                    ]);
-                  },
+                    ]),
+                  ],
                 ),
-                SettingsCopy(
-                  widget.onEdit == null
-                      ? 'For different values, add your own target. The '
-                            'bundled record stays unchanged.'
-                      : 'An edit changes this entry in your app; untouched '
-                            'coordinates keep their catalogue values.',
-                  top: AppSpacing.itemGap,
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('targetDetail.actionsGroup'),
+                  children: [plan, ...delete],
                 ),
-                const SizedBox(height: AppSpacing.itemGap),
-                plan,
-                ...delete,
-              ]
-            : [
-                LibraryRecordHeader(
-                  title: 'Your target',
-                  caption: 'Editable · J2000 coordinates',
-                  action: edit,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                FactRows(key: const Key('targetDetail.facts'), [
-                  if (t.catalogId != name)
-                    (
-                      'Catalogue id',
-                      t.catalogId,
-                      'Kept from when the target was added.',
-                    ),
-                  (
-                    'Object type',
-                    t.type,
-                    TargetTypes.isMoving(t.type)
-                        ? TargetTypes.movingWarning
-                        : null,
-                  ),
-                  ...coordinates,
-                  (
-                    'Magnitude',
-                    switch (t.magnitude) {
-                      final m? => _n(m),
-                      null => 'Not recorded',
-                    },
-                    null,
-                  ),
-                ]),
-                const SizedBox(height: AppSpacing.gutter),
-                plan,
-                ...delete,
               ],
       ),
     );

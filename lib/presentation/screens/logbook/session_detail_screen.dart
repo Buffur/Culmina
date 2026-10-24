@@ -3,6 +3,9 @@ import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -127,11 +130,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         return Scaffold(
           appBar: hybridAppBar(
             context,
-            title: Text(
-              entryTitle(s),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            title: Text(entryTitle(s)),
             actions: const [FieldModeButton()],
           ),
           body: ListView(
@@ -143,78 +142,103 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               AppSpacing.xl,
             ),
             children: [
-              if ([if (s.name != null) targetAndNight(s), ?site].join(' · ')
-                  case final line when line.isNotEmpty)
-                Text(
-                  line,
-                  key: const Key('detail.context'),
-                  style: AppTypography.body.copyWith(
-                    height: 1.5,
-                    color: p.textSecondary,
+              DocumentSection(
+                key: const Key('detail.outcomeGroup'),
+                children: [
+                  if ([if (s.name != null) targetAndNight(s), ?site].join(' · ')
+                      case final line when line.isNotEmpty)
+                    Text(
+                      line,
+                      key: const Key('detail.context'),
+                      style: AppTypography.body.copyWith(
+                        height: 1.5,
+                        color: p.textSecondary,
+                      ),
+                    ),
+                  if (zoneRule != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                      child: Text(
+                        zoneRule,
+                        key: const Key('detail.zone'),
+                        style: AppTypography.dense.copyWith(
+                          color: p.textSecondary,
+                        ),
+                      ),
+                    ),
+                  _Result(
+                    session: s,
+                    reconciliation: data.reconciliation,
+                    onBack: _load,
                   ),
-                ),
-              if (zoneRule != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: Text(
-                    zoneRule,
-                    key: const Key('detail.zone'),
-                    style: AppTypography.dense.copyWith(color: p.textSecondary),
-                  ),
-                ),
-              _Result(
-                session: s,
-                reconciliation: data.reconciliation,
-                onBack: _load,
+                ],
               ),
               _PlanVsActual(session: s, reconciliation: data.reconciliation),
-              if (!s.legacy) _SnapshotSections(session: s),
+              if (!s.legacy)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.md),
+                  child: DocumentSection(
+                    key: const Key('detail.snapshotGroup'),
+                    children: [_SnapshotSections(session: s)],
+                  ),
+                ),
               _Notes(session: s),
               _Block(
                 title: 'This target so far',
                 child: switch (data.progress) {
-                  final progress? => TargetProgressCard(progress: progress),
+                  final progress? => TargetProgressCard(
+                    progress: progress,
+                    embedded: true,
+                  ),
                   null => const SettingsCopy(
                     'No recorded results for this target yet.',
                   ),
                 },
               ),
-              _Export(session: s, reconciliation: data.reconciliation),
-              if (!s.legacy) _NameTile(session: s, onChanged: _load),
-              Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.lg),
-                child: OutlinedButton(
-                  // S8.5 (S5.8, RD-09 S1): the entry's visible Delete.
-                  key: const Key('detail.delete'),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(HybridTokens.minTarget),
-                    foregroundColor:
-                        (Theme.of(context).extension<HybridTokens>() ??
-                                HybridTokens.light)
-                            .errorText,
-                  ),
-                  onPressed: () async {
-                    if (await deleteEntry(context, s) && context.mounted) {
-                      context.pop();
-                    }
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: AppSpacing.sm,
-                    children: [
-                      HybridIcon(
-                        HybridIcons.trash,
-                        size: MediaQuery.textScalerOf(context).scale(20),
-                        strokeWidth: 1.7,
-                        color:
+              const SizedBox(height: AppSpacing.md),
+              DocumentSection(
+                key: const Key('detail.actionsGroup'),
+                children: [
+                  _Export(session: s, reconciliation: data.reconciliation),
+                  if (!s.legacy) _NameTile(session: s, onChanged: _load),
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.lg),
+                    child: OutlinedButton(
+                      // S8.5 (S5.8, RD-09 S1): the entry's visible Delete.
+                      key: const Key('detail.delete'),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(
+                          HybridTokens.minTarget,
+                        ),
+                        foregroundColor:
                             (Theme.of(context).extension<HybridTokens>() ??
                                     HybridTokens.light)
                                 .errorText,
                       ),
-                      const Flexible(child: Text('Delete entry')),
-                    ],
+                      onPressed: () async {
+                        if (await deleteEntry(context, s) && context.mounted) {
+                          context.pop();
+                        }
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: AppSpacing.sm,
+                        children: [
+                          HybridIcon(
+                            HybridIcons.trash,
+                            size: MediaQuery.textScalerOf(context).scale(20),
+                            strokeWidth: 1.7,
+                            color:
+                                (Theme.of(context).extension<HybridTokens>() ??
+                                        HybridTokens.light)
+                                    .errorText,
+                          ),
+                          const Flexible(child: Text('Delete entry')),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -224,8 +248,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
   }
 }
 
-/// A Logbook section (`.logbook-section`): a rule, 16 above its 20/600
-/// heading; 20 from what comes before.
+/// A flat group of related record content, separated by the document rhythm.
 class _Block extends StatelessWidget {
   const _Block({
     super.key,
@@ -241,14 +264,9 @@ class _Block extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return Container(
-      margin: const EdgeInsets.only(top: AppSpacing.gutter),
+    return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.md),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: p.border)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: DocumentSection(
         children: [
           Semantics(
             header: true,
@@ -276,8 +294,10 @@ class _Disclosure extends StatefulWidget {
     required this.title,
     required this.child,
     this.summary,
+    this.top = AppSpacing.md,
   });
 
+  final double top;
   final String id;
   final String title;
   final String? summary;
@@ -292,7 +312,7 @@ class _DisclosureState extends State<_Disclosure> {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: AppSpacing.md),
+    padding: EdgeInsets.only(top: widget.top),
     child: CollapsibleSection(
       sectionKey: widget.id,
       title: widget.title,
@@ -555,6 +575,7 @@ class _SnapshotSections extends StatelessWidget {
     final title = started != null ? 'At the start of imaging' : 'Plan as saved';
     if (snap == null) {
       return _Disclosure(
+        top: 0,
         key: const Key('detail.noSnapshot'),
         id: 'logbook.snapshot',
         title: title,
@@ -594,6 +615,7 @@ class _SnapshotSections extends StatelessWidget {
     );
     final camera = snap.cameraClass;
     return _Disclosure(
+      top: 0,
       key: const Key('detail.snapshot'),
       id: 'logbook.snapshot',
       title: title,
@@ -935,8 +957,9 @@ class _Export extends StatelessWidget {
       strokeWidth: 1.7,
     );
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      padding: EdgeInsets.zero,
       child: _Disclosure(
+        top: 0,
         key: const Key('detail.exportSection'),
         id: 'logbook.export',
         title: 'Export this entry',
@@ -1118,7 +1141,7 @@ class _NameDialogState extends State<_NameDialog> {
       autofocus: true,
       maxLength: SessionRepository.maxNameLength,
       decoration: const InputDecoration(
-        helperText: 'Leave empty to show the target and night.',
+        helper: Text('Leave empty to show the target and night.'),
       ),
     ),
     actions: [

@@ -1,0 +1,17 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/screens/logbook/session_detail_test.dart
+00:00 +0: the Completed filter (in the panel, S8.5) filters the list in the query
+00:01 +1: the target filter keeps only that target (legacy excluded)
+00:02 +2: the legacy row reads Old log (S8.5); a tap opens the detail
+00:02 +3: S8.6: a name is set on the entry, never asked at Save; the Logbook shows it and searches it; removing it shows target · night
+00:03 +4: acceptance: a completed run renders from its execution-start snapshot with plan vs actual and notes
+00:03 +5: a planned session renders from its plan snapshot
+00:03 +6: the entry's forecast is the one saved with the plan
+00:03 +7: the entry keeps the saved forecast while a different live one is loaded
+00:04 +8: acceptance: a legacy log renders its stored text only
+00:04 +9: a session without a snapshot says so, never zeros
+00:04 +10: TASK 14.2: the detail shows the target so far; Library → Progress lists it
+00:04 +11: TASK 14.2: Progress says so when nothing is completed
+00:04 +12: TASK 14.3: Export file shares that session with its events
+00:05 +13: TASK 14.3: Export all shares every saved session
+00:05 +14: no overflow at 200 % text on a 360 × 640 dp phone
+00:05 +15: All tests passed!

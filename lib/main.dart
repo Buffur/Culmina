@@ -182,7 +182,8 @@ Future<Widget> _initialize() async {
   // The only place that picks implementations (TASK 12.3): ViewModels see
   // domain interfaces only.
   const clock = SystemClock();
-  final vms = AppViewModels(
+  late final AppViewModels vms;
+  vms = AppViewModels(
     targets: targetRepo,
     equipment: equipmentRepo,
     locations: locationRepo,
@@ -207,7 +208,11 @@ Future<Widget> _initialize() async {
     backup: FileBackupService(
       database,
       sessionRepo,
-      restartApp: () => _restartForRestore(database),
+      restartApp: () => _restartForRestore(
+        database,
+        fieldMode: vms.theme.isFieldMode,
+        appearance: vms.displaySettings.appearance,
+      ),
     ),
     sessions: sessionRepo,
     // ADR-017 §6: capture files are read in place, on Android only.
@@ -276,8 +281,23 @@ Future<Widget> _initialize() async {
 /// screen that cannot be edited, the database closes, and [_start] applies
 /// the staged restore before opening it again; returning from Recents in
 /// the meantime finds the same screen.
-Future<void> _restartForRestore(AppDatabase database) async {
-  runApp(RestoringBackupApp(theme: AppTheme.light, darkTheme: AppTheme.dark));
+Future<void> _restartForRestore(
+  AppDatabase database, {
+  required bool fieldMode,
+  required Appearance appearance,
+}) async {
+  runApp(
+    RestoringBackupApp(
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      isFieldMode: fieldMode,
+      themeMode: switch (appearance) {
+        Appearance.light => ThemeMode.light,
+        Appearance.dark => ThemeMode.dark,
+        Appearance.system => ThemeMode.system,
+      },
+    ),
+  );
   await WidgetsBinding.instance.endOfFrame;
   try {
     await database.close();

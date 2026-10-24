@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -79,97 +82,113 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
     return Scaffold(
       appBar: hybridAppBar(
         context,
-        title: Text(site.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(site.name),
         actions: const [FieldModeButton()],
       ),
       body: ListView(
         key: const Key('siteDetail.scroll'),
         padding: settingsPagePadding,
         children: [
-          LibraryRecordHeader(
-            caption: active
-                ? 'Your site · the one used for planning now'
-                : 'Your site · editable',
-            action: LibraryPrimaryAction(
-              key: const Key('siteDetail.edit'),
-              icon: HybridIcons.edit,
-              label: 'Edit site',
-              onPressed: () => context.push(
-                AppRouter.siteEdit,
-                extra: SiteEditorArgs(site: site),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          FactRows(key: const Key('siteDetail.facts'), [
-            (
-              'Latitude',
-              siteDegrees(site.latitude),
-              'Decimal degrees, north positive',
-            ),
-            (
-              'Longitude',
-              siteDegrees(site.longitude),
-              'Decimal degrees, east positive',
-            ),
-            (
-              'Time zone',
-              site.timeZoneId ?? 'Unknown — night uses mean solar time',
-              null,
-            ),
-          ]),
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.sm),
-            child: CollapsibleSection(
-              key: const Key('siteDetail.details'),
-              sectionKey: 'library.siteDetails',
-              title: 'Site details',
-              summary: 'Elevation, sky darkness and notes',
-              open: _detailsOpen,
-              onToggle: () => setState(() => _detailsOpen = !_detailsOpen),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  FactRows([
-                    (
-                      'Elevation',
-                      switch (site.elevation) {
-                        final m? =>
-                          '${QuantityText.elevation(m, unitsOf(context))} '
-                              'above sea level',
-                        null => 'Unknown',
-                      },
-                      null,
-                    ),
-                    (
-                      'Bortle class',
-                      switch (site.bortleClass) {
-                        final b? => 'Bortle $b',
-                        null => 'Unknown',
-                      },
-                      site.bortleClass != null && site.bortleSource != null
-                          ? 'Source: ${site.bortleSource}'
-                          : null,
-                    ),
-                    (
-                      'SQM',
-                      switch (site.sqm) {
-                        final q? => '${q.toStringAsFixed(2)} mag/arcsec²',
-                        null => 'Unknown',
-                      },
-                      site.sqm != null && site.sqmSource != null
-                          ? 'Source: ${site.sqmSource}'
-                          : null,
-                    ),
-                    ('Notes', site.notes ?? 'None', null),
-                  ]),
-                  const SettingsCopy(
-                    'Bortle and SQM are never converted into each other.',
-                    top: AppSpacing.sm,
+          DocumentSection(
+            key: const Key('siteDetail.identityGroup'),
+            children: [
+              LibraryRecordHeader(
+                caption: active
+                    ? 'Your site · the one used for planning now'
+                    : 'Your site · editable',
+                action: LibraryPrimaryAction(
+                  key: const Key('siteDetail.edit'),
+                  icon: HybridIcons.edit,
+                  label: 'Edit site',
+                  onPressed: () => context.push(
+                    AppRouter.siteEdit,
+                    extra: SiteEditorArgs(site: site),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('siteDetail.positionGroup'),
+            children: [
+              FactRows(key: const Key('siteDetail.facts'), [
+                (
+                  'Latitude',
+                  siteDegrees(site.latitude),
+                  'Decimal degrees, north positive',
+                ),
+                (
+                  'Longitude',
+                  siteDegrees(site.longitude),
+                  'Decimal degrees, east positive',
+                ),
+                (
+                  'Time zone',
+                  site.timeZoneId ?? 'Unknown — night uses mean solar time',
+                  null,
+                ),
+              ]),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('siteDetail.detailsGroup'),
+            children: [
+              Padding(
+                padding: EdgeInsets.zero,
+                child: CollapsibleSection(
+                  key: const Key('siteDetail.details'),
+                  sectionKey: 'library.siteDetails',
+                  title: 'Site details',
+                  summary: 'Elevation, sky darkness and notes',
+                  open: _detailsOpen,
+                  onToggle: () => setState(() => _detailsOpen = !_detailsOpen),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FactRows([
+                        (
+                          'Elevation',
+                          switch (site.elevation) {
+                            final m? =>
+                              '${QuantityText.elevation(m, unitsOf(context))} '
+                                  'above sea level',
+                            null => 'Unknown',
+                          },
+                          null,
+                        ),
+                        (
+                          'Bortle class',
+                          switch (site.bortleClass) {
+                            final b? => 'Bortle $b',
+                            null => 'Unknown',
+                          },
+                          site.bortleClass != null && site.bortleSource != null
+                              ? 'Source: ${site.bortleSource}'
+                              : null,
+                        ),
+                        (
+                          'SQM',
+                          switch (site.sqm) {
+                            final q? => '${q.toStringAsFixed(2)} mag/arcsec²',
+                            null => 'Unknown',
+                          },
+                          site.sqm != null && site.sqmSource != null
+                              ? 'Source: ${site.sqmSource}'
+                              : null,
+                        ),
+                        ('Notes', site.notes ?? 'None', null),
+                      ]),
+                      const SettingsCopy(
+                        'Bortle and SQM are never converted into each other.',
+                        top: AppSpacing.sm,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.md),
           LibraryDeleteAction(

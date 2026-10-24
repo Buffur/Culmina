@@ -193,41 +193,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (!overPlan && section == SettingsSection.appearance)
                 const _AppearancePage(),
               if (!overPlan && section == SettingsSection.privacy) ...[
-                const SettingsHeading('Place names', top: 0),
-                // TASK 16.3 (owner decision): opt-in, off by default.
-                HybridSwitchRow(
-                  key: const Key('settings.placeNames'),
-                  title: 'Look up place names',
-                  description:
-                      'Optional: the app sends the chosen coordinates to '
-                      'OpenStreetMap Nominatim. Off keeps coordinate labels.',
-                  value: settingsVm.placeNameLookup,
-                  onChanged: (on) => runWithFeedback(
-                    context,
-                    'save the place-name setting',
-                    () => settingsVm.setPlaceNameLookup(on),
-                  ),
-                ),
-                // F21 A6: Off is applied but not stored; say so, with Retry.
-                if (settingsVm.placeNameLookupUnsaved)
-                  _Unsaved(
-                    key: const Key('settings.placeNames.unsaved'),
-                    text:
-                        'Off for now, but not saved: after a restart place '
-                        'names would be on again.',
-                    retryKey: const Key('settings.placeNames.retry'),
-                    onRetry: () => runWithFeedback(
-                      context,
-                      'save the place-name setting',
-                      () => settingsVm.setPlaceNameLookup(false),
+                DocumentSection(
+                  key: const Key('settings.placeNamesGroup'),
+                  children: [
+                    const SettingsHeading('Place names', top: 0),
+                    // TASK 16.3 (owner decision): opt-in, off by default.
+                    HybridSwitchRow(
+                      key: const Key('settings.placeNames'),
+                      title: 'Look up place names',
+                      description:
+                          'Optional: the app sends the chosen coordinates to '
+                          'OpenStreetMap Nominatim. Off keeps coordinate labels.',
+                      value: settingsVm.placeNameLookup,
+                      onChanged: (on) => runWithFeedback(
+                        context,
+                        'save the place-name setting',
+                        () => settingsVm.setPlaceNameLookup(on),
+                      ),
                     ),
-                  ),
-                const SizedBox(height: AppSpacing.itemGap),
-                const CollapsibleSection(
-                  key: Key('settings.privacyApp'),
-                  sectionKey: 'settings.privacyApp',
-                  title: 'What leaves the device in the app',
-                  child: SettingsCopy(SettingsScreen.privacyText),
+                    // F21 A6: Off is applied but not stored; say so, with Retry.
+                    if (settingsVm.placeNameLookupUnsaved)
+                      _Unsaved(
+                        key: const Key('settings.placeNames.unsaved'),
+                        text:
+                            'Off for now, but not saved: after a restart place '
+                            'names would be on again.',
+                        retryKey: const Key('settings.placeNames.retry'),
+                        onRetry: () => runWithFeedback(
+                          context,
+                          'save the place-name setting',
+                          () => settingsVm.setPlaceNameLookup(false),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                DocumentSection(
+                  key: const Key('settings.privacyInfoGroup'),
+                  children: [
+                    const CollapsibleSection(
+                      key: Key('settings.privacyApp'),
+                      sectionKey: 'settings.privacyApp',
+                      title: 'What leaves the device in the app',
+                      child: SettingsCopy(SettingsScreen.privacyText),
+                    ),
+                  ],
                 ),
               ],
               if (!overPlan && section == SettingsSection.backup)
@@ -345,323 +355,358 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'Plan defaults. Saved snapshots stay unchanged.',
       primary: true,
     ),
-    const SettingsHeading('Capture budget'),
-    SettingsSlider(
-      key: const Key('settings.perFrame'),
-      top: AppSpacing.sm,
-      // S7.2b (ADR-020 §4, I1): the one interval concept, relabelled.
-      title: 'Time between frames',
-      help: 'Download and delay after each exposure. Measure your rig.',
-      value: p.perFrameOverheadSeconds,
-      // S9.4: the model's range (0–120 s), not a narrower one.
-      range: PlanningPreferences.perFrameRange,
-      divisions: 120,
-      label: '${p.perFrameOverheadSeconds.round()} s',
-      format: (v) => '${v.round()} s',
-      onChanged: (v) => update(p.copyWith(perFrameOverheadSeconds: v)),
-    ),
-    SettingsSlider(
-      key: const Key('settings.margin'),
-      title: 'Fit margin',
-      help: 'Shows Tight when less than this share of usable time remains.',
-      value: p.feasibilityMarginPercent,
-      range: PlanningPreferences.marginRange,
-      divisions: 50,
-      label: QuantityText.percent(p.feasibilityMarginPercent),
-      format: QuantityText.percent,
-      onChanged: (v) => update(p.copyWith(feasibilityMarginPercent: v)),
-    ),
-    const SizedBox(height: AppSpacing.lg),
-    CollapsibleSection(
-      key: const Key('settings.scopeHelp'),
-      sectionKey: 'settings.scopeHelp',
-      title: 'How these defaults apply',
-      open: _scopeOpen,
-      onToggle: () => setState(() => _scopeOpen = !_scopeOpen),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSpacing.itemGap,
-        children: [
-          SettingsCopy(
-            'Save applies these defaults to the current plan’s budget and '
-            'fit. An explicit assumption in the plan overrides the matching '
-            'default. A saved plan keeps its recorded values until you '
-            'explicitly save changes to it.',
-          ),
-          SettingsCopy(
-            'Window limits, gates and the optional times below change the '
-            'imaging window, the capture budget and the fit. They are '
-            'planning assumptions, not scientific laws.',
-          ),
-          SettingsCopy(
-            'Time between frames is measured from one exposure’s end to the '
-            'next exposure’s start. A camera’s start-to-start interval '
-            'includes the exposure; subtract it first. Dither settling is '
-            'separate.',
-          ),
-        ],
-      ),
-    ),
-    const SettingsHeading('Imaging window'),
-    const SettingsCopy('Changes when the planner counts time as usable.'),
-    SettingsSlider(
-      key: const Key('settings.minAltitude'),
-      title: 'Minimum target altitude',
-      help:
-          'Below this the target is not counted as usable. Low altitude '
-          'means more atmosphere, extinction and poor seeing.',
-      value: p.minAltitudeDeg,
-      range: PlanningPreferences.minAltitudeRange,
-      divisions: 55,
-      label: QuantityText.degrees(p.minAltitudeDeg),
-      format: QuantityText.degrees,
-      onChanged: (v) => update(p.copyWith(minAltitudeDeg: v)),
-    ),
-    const SizedBox(height: AppSpacing.sm),
-    HybridSegmented<DarknessLimit>.settings(
-      key: const Key('settings.darknessLimit'),
-      legend: 'Darkness limit (Sun altitude)',
-      legendStyle: settingsLegendStyle(context),
-      keyPrefix: 'settings.darknessLimit',
-      options: [
-        for (final l in DarknessLimit.values)
-          (l, QuantityText.degrees(l.degrees), l.name),
-      ],
-      value: p.darknessLimit,
-      onChanged: (l) => update(p.copyWith(darknessLimit: l)),
-    ),
-    const SettingsHint(
-      '−18° is full astronomical darkness. −15° or −12° give longer windows '
-      'with a brighter sky background.',
-      top: AppSpacing.xs,
-    ),
-    const SizedBox(height: AppSpacing.lg),
-    // F12 (AM-01; SP11): the optional gates and times, collapsed.
-    CollapsibleSection(
-      key: const Key('settings.advanced'),
-      sectionKey: 'settings.advanced',
-      title: 'Gates and optional times',
-      summary: SettingsScreen.advancedSummary(p),
-      open: _advancedOpen,
-      onToggle: () => setState(() => _advancedOpen = !_advancedOpen),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SettingsCopy(
-            'When on, the gates and optional times change the imaging '
-            'window, the capture budget and the fit.',
-          ),
-          // RD-11 = S9, TD-050: the optional gates of ADR-013 (G4, G5).
-          _GateTile(
-            key: const Key('settings.moonGate'),
-            title: 'Moon gate',
-            enabled: p.moonGateEnabled,
-            percent: p.moonGateMinIlluminationPct,
-            on: (pct) =>
-                'Excludes time when the Moon is up and at least $pct lit.',
-            off: 'Off: the Moon never excludes time.',
-            onToggle: (on) => update(p.copyWith(moonGateEnabled: on)),
-            onPercent: (v) => update(p.copyWith(moonGateMinIlluminationPct: v)),
-          ),
-          _GateTile(
-            key: const Key('settings.cloudGate'),
-            title: 'Cloud gate',
-            enabled: p.cloudGateEnabled,
-            percent: p.cloudGateMaxPct,
-            on: (pct) =>
-                'Excludes forecast hours with more than $pct cloud. An hour '
-                'without a forecast is never excluded.',
-            off: 'Off: the forecast never excludes time.',
-            onToggle: (on) => update(p.copyWith(cloudGateEnabled: on)),
-            onPercent: (v) => update(p.copyWith(cloudGateMaxPct: v)),
-          ),
-          const SettingsCopy(
-            'Optional times are assumptions. Off means not included, not '
-            'measured as zero. Setup stays outside the imaging window.',
-            top: AppSpacing.itemGap,
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.dither'),
-            title: 'Dither',
-            enabled: p.ditherEveryNFrames != null,
-            summary: p.ditherEveryNFrames == null
-                ? 'Not included'
-                : 'Every ${p.ditherEveryNFrames} lights, '
-                      '${p.ditherSettleSeconds.round()} s to settle each',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(ditherEveryNFrames: (on ? 3 : null,)),
-            ),
-            steppers: [
-              if (p.ditherEveryNFrames case final n?)
-                SettingsStepper(
-                  key: const Key('settings.dither.every'),
-                  label: 'Every',
-                  value: n.toDouble(),
-                  range: (1, 100),
-                  step: 1,
-                  format: (v) => '${v.round()} lights',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(ditherEveryNFrames: (v.round(),)),
-                  ),
-                ),
-              if (p.ditherEveryNFrames != null)
-                SettingsStepper(
-                  key: const Key('settings.dither.settle'),
-                  label: 'Settle',
-                  value: p.ditherSettleSeconds,
-                  range: PlanningPreferences.overheadSecondsRange,
-                  step: 5,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(p.copyWith(ditherSettleSeconds: v)),
-                ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.refocus'),
-            title: 'Refocus',
-            enabled: p.refocusEveryMinutes != null,
-            summary: p.refocusEveryMinutes == null
-                ? 'Not included'
-                : 'Every ${p.refocusEveryMinutes!.round()} min, '
-                      '${p.refocusSeconds.round()} s each',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(refocusEveryMinutes: (on ? 60.0 : null,)),
-            ),
-            steppers: [
-              if (p.refocusEveryMinutes case final every?)
-                SettingsStepper(
-                  key: const Key('settings.refocus.every'),
-                  label: 'Every',
-                  value: every,
-                  range: PlanningPreferences.refocusIntervalRange,
-                  step: 10,
-                  format: (v) => '${v.round()} min',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(refocusEveryMinutes: (v,)),
-                  ),
-                ),
-              if (p.refocusEveryMinutes != null)
-                SettingsStepper(
-                  key: const Key('settings.refocus.duration'),
-                  label: 'Takes',
-                  value: p.refocusSeconds,
-                  range: PlanningPreferences.overheadSecondsRange,
-                  step: 10,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(p.copyWith(refocusSeconds: v)),
-                ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.filterChange'),
-            title: 'Filter change',
-            enabled: p.filterChangeSeconds != null,
-            summary: p.filterChangeSeconds == null
-                ? 'Not included'
-                : '${p.filterChangeSeconds!.round()} s per change',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(filterChangeSeconds: (on ? 30.0 : null,)),
-            ),
-            steppers: [
-              if (p.filterChangeSeconds case final s?)
-                SettingsStepper(
-                  key: const Key('settings.filterChange.seconds'),
-                  label: 'Takes',
-                  value: s,
-                  range: PlanningPreferences.overheadSecondsRange,
-                  step: 5,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(filterChangeSeconds: (v,)),
-                  ),
-                ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.flip'),
-            title: 'Meridian flip',
-            enabled: p.meridianFlipSeconds != null,
-            summary: p.meridianFlipSeconds == null
-                ? 'Not included'
-                : '${QuantityText.duration(Duration(seconds: p.meridianFlipSeconds!.round()))}, '
-                      'once, when the target crosses the meridian',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(
-                meridianFlipSeconds: (on ? 300.0 : null,),
+    const SizedBox(height: AppSpacing.md),
+    DocumentSection(
+      key: const Key('settings.budgetGroup'),
+      children: [
+        const SettingsHeading('Capture budget', top: 0),
+        SettingsSlider(
+          key: const Key('settings.perFrame'),
+          top: AppSpacing.sm,
+          // S7.2b (ADR-020 §4, I1): the one interval concept, relabelled.
+          title: 'Time between frames',
+          help: 'Download and delay after each exposure. Measure your rig.',
+          value: p.perFrameOverheadSeconds,
+          // S9.4: the model's range (0–120 s), not a narrower one.
+          range: PlanningPreferences.perFrameRange,
+          divisions: 120,
+          label: '${p.perFrameOverheadSeconds.round()} s',
+          format: (v) => '${v.round()} s',
+          onChanged: (v) => update(p.copyWith(perFrameOverheadSeconds: v)),
+        ),
+        SettingsSlider(
+          key: const Key('settings.margin'),
+          title: 'Fit margin',
+          help: 'Shows Tight when less than this share of usable time remains.',
+          value: p.feasibilityMarginPercent,
+          range: PlanningPreferences.marginRange,
+          divisions: 50,
+          label: QuantityText.percent(p.feasibilityMarginPercent),
+          format: QuantityText.percent,
+          onChanged: (v) => update(p.copyWith(feasibilityMarginPercent: v)),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        CollapsibleSection(
+          key: const Key('settings.scopeHelp'),
+          sectionKey: 'settings.scopeHelp',
+          title: 'How these defaults apply',
+          open: _scopeOpen,
+          onToggle: () => setState(() => _scopeOpen = !_scopeOpen),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: AppSpacing.itemGap,
+            children: [
+              SettingsCopy(
+                'Save applies these defaults to the current plan’s budget and '
+                'fit. An explicit assumption in the plan overrides the matching '
+                'default. A saved plan keeps its recorded values until you '
+                'explicitly save changes to it.',
               ),
-            ),
-            steppers: [
-              if (p.meridianFlipSeconds case final s?)
-                SettingsStepper(
-                  key: const Key('settings.flip.seconds'),
-                  label: 'Takes',
-                  value: s,
-                  range: PlanningPreferences.flipSecondsRange,
-                  step: 30,
-                  format: (v) => '${v.round()} s',
-                  onChanged: (v) => update(
-                    p.withOptionalOverheads(meridianFlipSeconds: (v,)),
+              SettingsCopy(
+                'Window limits, gates and the optional times below change the '
+                'imaging window, the capture budget and the fit. They are '
+                'planning assumptions, not scientific laws.',
+              ),
+              SettingsCopy(
+                'Time between frames is measured from one exposure’s end to the '
+                'next exposure’s start. A camera’s start-to-start interval '
+                'includes the exposure; subtract it first. Dither settling is '
+                'separate.',
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+    const SizedBox(height: AppSpacing.md),
+    DocumentSection(
+      key: const Key('settings.windowGroup'),
+      children: [
+        const SettingsHeading('Imaging window', top: 0),
+        const SettingsCopy('Changes when the planner counts time as usable.'),
+        SettingsSlider(
+          key: const Key('settings.minAltitude'),
+          title: 'Minimum target altitude',
+          help:
+              'Below this the target is not counted as usable. Low altitude '
+              'means more atmosphere, extinction and poor seeing.',
+          value: p.minAltitudeDeg,
+          range: PlanningPreferences.minAltitudeRange,
+          divisions: 55,
+          label: QuantityText.degrees(p.minAltitudeDeg),
+          format: QuantityText.degrees,
+          onChanged: (v) => update(p.copyWith(minAltitudeDeg: v)),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        HybridSegmented<DarknessLimit>.settings(
+          key: const Key('settings.darknessLimit'),
+          legend: 'Darkness limit (Sun altitude)',
+          legendStyle: settingsLegendStyle(context),
+          keyPrefix: 'settings.darknessLimit',
+          options: [
+            for (final l in DarknessLimit.values)
+              (l, QuantityText.degrees(l.degrees), l.name),
+          ],
+          value: p.darknessLimit,
+          onChanged: (l) => update(p.copyWith(darknessLimit: l)),
+        ),
+        const SettingsHint(
+          '−18° is full astronomical darkness. −15° or −12° give longer windows '
+          'with a brighter sky background.',
+          top: AppSpacing.xs,
+        ),
+      ],
+    ),
+    const SizedBox(height: AppSpacing.md),
+    DocumentSection(
+      key: const Key('settings.gatesGroup'),
+      children: [
+        // F12 (AM-01; SP11): the optional gates and times, collapsed.
+        CollapsibleSection(
+          key: const Key('settings.advanced'),
+          sectionKey: 'settings.advanced',
+          title: 'Gates and optional times',
+          summary: SettingsScreen.advancedSummary(p),
+          open: _advancedOpen,
+          onToggle: () => setState(() => _advancedOpen = !_advancedOpen),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SettingsCopy(
+                'When on, the gates and optional times change the imaging '
+                'window, the capture budget and the fit.',
+              ),
+              // RD-11 = S9, TD-050: the optional gates of ADR-013 (G4, G5).
+              _GateTile(
+                key: const Key('settings.moonGate'),
+                title: 'Moon gate',
+                enabled: p.moonGateEnabled,
+                percent: p.moonGateMinIlluminationPct,
+                on: (pct) =>
+                    'Excludes time when the Moon is up and at least $pct lit.',
+                off: 'Off: the Moon never excludes time.',
+                onToggle: (on) => update(p.copyWith(moonGateEnabled: on)),
+                onPercent: (v) =>
+                    update(p.copyWith(moonGateMinIlluminationPct: v)),
+              ),
+              _GateTile(
+                key: const Key('settings.cloudGate'),
+                title: 'Cloud gate',
+                enabled: p.cloudGateEnabled,
+                percent: p.cloudGateMaxPct,
+                on: (pct) =>
+                    'Excludes forecast hours with more than $pct cloud. An hour '
+                    'without a forecast is never excluded.',
+                off: 'Off: the forecast never excludes time.',
+                onToggle: (on) => update(p.copyWith(cloudGateEnabled: on)),
+                onPercent: (v) => update(p.copyWith(cloudGateMaxPct: v)),
+              ),
+              const SettingsCopy(
+                'Optional times are assumptions. Off means not included, not '
+                'measured as zero. Setup stays outside the imaging window.',
+                top: AppSpacing.itemGap,
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.dither'),
+                title: 'Dither',
+                enabled: p.ditherEveryNFrames != null,
+                summary: p.ditherEveryNFrames == null
+                    ? 'Not included'
+                    : 'Every ${p.ditherEveryNFrames} lights, '
+                          '${p.ditherSettleSeconds.round()} s to settle each',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(ditherEveryNFrames: (on ? 3 : null,)),
+                ),
+                steppers: [
+                  if (p.ditherEveryNFrames case final n?)
+                    SettingsStepper(
+                      key: const Key('settings.dither.every'),
+                      label: 'Every',
+                      value: n.toDouble(),
+                      range: (1, 100),
+                      step: 1,
+                      format: (v) => '${v.round()} lights',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(
+                          ditherEveryNFrames: (v.round(),),
+                        ),
+                      ),
+                    ),
+                  if (p.ditherEveryNFrames != null)
+                    SettingsStepper(
+                      key: const Key('settings.dither.settle'),
+                      label: 'Settle',
+                      value: p.ditherSettleSeconds,
+                      range: PlanningPreferences.overheadSecondsRange,
+                      step: 5,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) =>
+                          update(p.copyWith(ditherSettleSeconds: v)),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.refocus'),
+                title: 'Refocus',
+                enabled: p.refocusEveryMinutes != null,
+                summary: p.refocusEveryMinutes == null
+                    ? 'Not included'
+                    : 'Every ${p.refocusEveryMinutes!.round()} min, '
+                          '${p.refocusSeconds.round()} s each',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(
+                    refocusEveryMinutes: (on ? 60.0 : null,),
                   ),
                 ),
-            ],
-          ),
-          _OptionalOverhead(
-            key: const Key('settings.setup'),
-            title: 'Setup before the first window',
-            enabled: p.setupMinutes != null,
-            summary: p.setupMinutes == null
-                ? 'Not included'
-                : '${p.setupMinutes!.round()} min, in the total time only',
-            onToggle: (on) => update(
-              p.withOptionalOverheads(setupMinutes: (on ? 30.0 : null,)),
-            ),
-            steppers: [
-              if (p.setupMinutes case final m?)
-                SettingsStepper(
-                  key: const Key('settings.setup.minutes'),
-                  label: 'Takes',
-                  value: m,
-                  range: PlanningPreferences.setupMinutesRange,
-                  step: 5,
-                  format: (v) => '${v.round()} min',
-                  onChanged: (v) =>
-                      update(p.withOptionalOverheads(setupMinutes: (v,))),
+                steppers: [
+                  if (p.refocusEveryMinutes case final every?)
+                    SettingsStepper(
+                      key: const Key('settings.refocus.every'),
+                      label: 'Every',
+                      value: every,
+                      range: PlanningPreferences.refocusIntervalRange,
+                      step: 10,
+                      format: (v) => '${v.round()} min',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(refocusEveryMinutes: (v,)),
+                      ),
+                    ),
+                  if (p.refocusEveryMinutes != null)
+                    SettingsStepper(
+                      key: const Key('settings.refocus.duration'),
+                      label: 'Takes',
+                      value: p.refocusSeconds,
+                      range: PlanningPreferences.overheadSecondsRange,
+                      step: 10,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) => update(p.copyWith(refocusSeconds: v)),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.filterChange'),
+                title: 'Filter change',
+                enabled: p.filterChangeSeconds != null,
+                summary: p.filterChangeSeconds == null
+                    ? 'Not included'
+                    : '${p.filterChangeSeconds!.round()} s per change',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(
+                    filterChangeSeconds: (on ? 30.0 : null,),
+                  ),
                 ),
+                steppers: [
+                  if (p.filterChangeSeconds case final s?)
+                    SettingsStepper(
+                      key: const Key('settings.filterChange.seconds'),
+                      label: 'Takes',
+                      value: s,
+                      range: PlanningPreferences.overheadSecondsRange,
+                      step: 5,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(filterChangeSeconds: (v,)),
+                      ),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.flip'),
+                title: 'Meridian flip',
+                enabled: p.meridianFlipSeconds != null,
+                summary: p.meridianFlipSeconds == null
+                    ? 'Not included'
+                    : '${QuantityText.duration(Duration(seconds: p.meridianFlipSeconds!.round()))}, '
+                          'once, when the target crosses the meridian',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(
+                    meridianFlipSeconds: (on ? 300.0 : null,),
+                  ),
+                ),
+                steppers: [
+                  if (p.meridianFlipSeconds case final s?)
+                    SettingsStepper(
+                      key: const Key('settings.flip.seconds'),
+                      label: 'Takes',
+                      value: s,
+                      range: PlanningPreferences.flipSecondsRange,
+                      step: 30,
+                      format: (v) => '${v.round()} s',
+                      onChanged: (v) => update(
+                        p.withOptionalOverheads(meridianFlipSeconds: (v,)),
+                      ),
+                    ),
+                ],
+              ),
+              _OptionalOverhead(
+                key: const Key('settings.setup'),
+                title: 'Setup before the first window',
+                enabled: p.setupMinutes != null,
+                summary: p.setupMinutes == null
+                    ? 'Not included'
+                    : '${p.setupMinutes!.round()} min, in the total time only',
+                onToggle: (on) => update(
+                  p.withOptionalOverheads(setupMinutes: (on ? 30.0 : null,)),
+                ),
+                steppers: [
+                  if (p.setupMinutes case final m?)
+                    SettingsStepper(
+                      key: const Key('settings.setup.minutes'),
+                      label: 'Takes',
+                      value: m,
+                      range: PlanningPreferences.setupMinutesRange,
+                      step: 5,
+                      format: (v) => '${v.round()} min',
+                      onChanged: (v) =>
+                          update(p.withOptionalOverheads(setupMinutes: (v,))),
+                    ),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     ),
-    const SettingsHeading('Guidance'),
-    const SettingsCopy(
-      'Changes advice only; never the imaging window or the fit.',
-    ),
-    SettingsSlider(
-      key: const Key('settings.npfK'),
-      title: 'NPF star-trail tolerance (k)',
-      help:
-          'For untracked exposures (Michaud NPF rule): 1 = round stars, up '
-          'to 3 = slightly elongated. Higher allows longer sub-exposures.',
-      value: p.npfK,
-      range: PlanningPreferences.npfKRange,
-      divisions: 4,
-      label: 'k = ${p.npfK.toStringAsFixed(1)}',
-      format: (v) => 'k = ${v.toStringAsFixed(1)}',
-      onChanged: (v) => update(p.copyWith(npfK: v)),
-    ),
-    SettingsSlider(
-      key: const Key('settings.dewMargin'),
-      title: 'Dew warning margin',
-      help:
-          'Warn when the air temperature is within this margin of the dew '
-          'point.',
-      value: p.dewMarginC,
-      range: PlanningPreferences.dewMarginRange,
-      divisions: 20,
-      // F21 A3: a temperature difference (2 °C = 3.6 °F).
-      label: QuantityText.temperatureDifference(p.dewMarginC, unitsOf(context)),
-      format: (v) => QuantityText.temperatureDifference(v, unitsOf(context)),
-      onChanged: (v) => update(p.copyWith(dewMarginC: v)),
+    const SizedBox(height: AppSpacing.md),
+    DocumentSection(
+      key: const Key('settings.guidanceGroup'),
+      children: [
+        const SettingsHeading('Guidance', top: 0),
+        const SettingsCopy(
+          'Changes advice only; never the imaging window or the fit.',
+        ),
+        SettingsSlider(
+          key: const Key('settings.npfK'),
+          title: 'NPF star-trail tolerance (k)',
+          help:
+              'For untracked exposures (Michaud NPF rule): 1 = round stars, up '
+              'to 3 = slightly elongated. Higher allows longer sub-exposures.',
+          value: p.npfK,
+          range: PlanningPreferences.npfKRange,
+          divisions: 4,
+          label: 'k = ${p.npfK.toStringAsFixed(1)}',
+          format: (v) => 'k = ${v.toStringAsFixed(1)}',
+          onChanged: (v) => update(p.copyWith(npfK: v)),
+        ),
+        SettingsSlider(
+          key: const Key('settings.dewMargin'),
+          title: 'Dew warning margin',
+          help:
+              'Warn when the air temperature is within this margin of the dew '
+              'point.',
+          value: p.dewMarginC,
+          range: PlanningPreferences.dewMarginRange,
+          divisions: 20,
+          // F21 A3: a temperature difference (2 °C = 3.6 °F).
+          label: QuantityText.temperatureDifference(
+            p.dewMarginC,
+            unitsOf(context),
+          ),
+          format: (v) =>
+              QuantityText.temperatureDifference(v, unitsOf(context)),
+          onChanged: (v) => update(p.copyWith(dewMarginC: v)),
+        ),
+      ],
     ),
   ];
 }
@@ -788,93 +833,120 @@ class _AppearancePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SettingsHeading('Theme', top: 0),
-        if (vm != null) ...[
-          HybridSegmented<Appearance>.settings(
-            key: const Key('settings.appearance'),
-            legend: 'Theme',
-            showLegend: false,
-            keyPrefix: 'settings.appearance',
-            options: [for (final a in Appearance.values) (a, a.label, a.name)],
-            value: vm.appearance,
-            onChanged: (a) => change(() => vm.setAppearance(a)),
-          ),
-          SettingsHint(
-            'System follows this device’s light or dark setting (now '
-            '$system).${fieldMode ? ' Applies when red field mode is off.' : ''}',
-            top: AppSpacing.xs,
-          ),
-        ],
-        const FieldModeTile(),
-        const SettingsHeading('Text size'),
-        SettingsCopy(
-          'Text follows Android’s font size (now '
-          '${QuantityText.percent(MediaQuery.textScalerOf(context).scale(100))}). '
-          'Change it in Android’s display settings.',
-          key: const Key('settings.textSize'),
+        DocumentSection(
+          key: const Key('settings.themeGroup'),
+          children: [
+            const SettingsHeading('Theme', top: 0),
+            if (vm != null) ...[
+              HybridSegmented<Appearance>.settings(
+                key: const Key('settings.appearance'),
+                legend: 'Theme',
+                showLegend: false,
+                keyPrefix: 'settings.appearance',
+                options: [
+                  for (final a in Appearance.values) (a, a.label, a.name),
+                ],
+                value: vm.appearance,
+                onChanged: (a) => change(() => vm.setAppearance(a)),
+              ),
+              SettingsHint(
+                'System follows this device’s light or dark setting (now '
+                '$system).${fieldMode ? ' Applies when red field mode is off.' : ''}',
+                top: AppSpacing.xs,
+              ),
+            ],
+            const FieldModeTile(),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        DocumentSection(
+          key: const Key('settings.textGroup'),
+          children: [
+            const SettingsHeading('Text size', top: 0),
+            SettingsCopy(
+              'Text follows Android’s font size (now '
+              '${QuantityText.percent(MediaQuery.textScalerOf(context).scale(100))}). '
+              'Change it in Android’s display settings.',
+              key: const Key('settings.textSize'),
+            ),
+          ],
         ),
         if (vm != null && units != null) ...[
-          const SettingsHeading('Units'),
-          const SettingsCopy(
-            'Shown units only: stored values and calculations stay in °C, '
-            'km/h and m.',
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          HybridSegmented<TemperatureUnit>.settings(
-            key: const Key('settings.units.temperature'),
-            legend: 'Temperature',
-            legendStyle: legend,
-            keyPrefix: 'settings.units.temperature',
-            options: [
-              for (final u in TemperatureUnit.values) (u, u.symbol, u.name),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('settings.unitsGroup'),
+            children: [
+              const SettingsHeading('Units', top: 0),
+              const SettingsCopy(
+                'Shown units only: stored values and calculations stay in °C, '
+                'km/h and m.',
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              HybridSegmented<TemperatureUnit>.settings(
+                key: const Key('settings.units.temperature'),
+                legend: 'Temperature',
+                legendStyle: legend,
+                keyPrefix: 'settings.units.temperature',
+                options: [
+                  for (final u in TemperatureUnit.values) (u, u.symbol, u.name),
+                ],
+                value: units.temperature,
+                onChanged: (u) =>
+                    change(() => vm.setUnits(units.copyWith(temperature: u))),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              HybridSegmented<WindUnit>.settings(
+                key: const Key('settings.units.wind'),
+                legend: 'Wind',
+                legendStyle: legend,
+                keyPrefix: 'settings.units.wind',
+                options: [
+                  for (final u in WindUnit.values) (u, u.symbol, u.name),
+                ],
+                value: units.wind,
+                onChanged: (u) =>
+                    change(() => vm.setUnits(units.copyWith(wind: u))),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              HybridSegmented<ElevationUnit>.settings(
+                key: const Key('settings.units.elevation'),
+                legend: 'Elevation',
+                legendStyle: legend,
+                keyPrefix: 'settings.units.elevation',
+                options: [
+                  for (final u in ElevationUnit.values) (u, u.symbol, u.name),
+                ],
+                value: units.elevation,
+                onChanged: (u) =>
+                    change(() => vm.setUnits(units.copyWith(elevation: u))),
+              ),
             ],
-            value: units.temperature,
-            onChanged: (u) =>
-                change(() => vm.setUnits(units.copyWith(temperature: u))),
           ),
-          const SizedBox(height: AppSpacing.xs),
-          HybridSegmented<WindUnit>.settings(
-            key: const Key('settings.units.wind'),
-            legend: 'Wind',
-            legendStyle: legend,
-            keyPrefix: 'settings.units.wind',
-            options: [for (final u in WindUnit.values) (u, u.symbol, u.name)],
-            value: units.wind,
-            onChanged: (u) =>
-                change(() => vm.setUnits(units.copyWith(wind: u))),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          HybridSegmented<ElevationUnit>.settings(
-            key: const Key('settings.units.elevation'),
-            legend: 'Elevation',
-            legendStyle: legend,
-            keyPrefix: 'settings.units.elevation',
-            options: [
-              for (final u in ElevationUnit.values) (u, u.symbol, u.name),
+          const SizedBox(height: AppSpacing.md),
+          DocumentSection(
+            key: const Key('settings.weatherGroup'),
+            children: [
+              // HT-W04: how the Weather page shows the night's hours.
+              const SettingsHeading('Weather view', top: 0),
+              HybridSegmented<WeatherView>.settings(
+                key: const Key('settings.weatherView'),
+                legend: 'Weather view',
+                showLegend: false,
+                keyPrefix: 'settings.weatherView',
+                options: [
+                  for (final v in WeatherView.values)
+                    (v, '${v.letter} · ${v.label}', v.name),
+                ],
+                value: vm.weatherView,
+                onChanged: (v) => change(() => vm.setWeatherView(v)),
+              ),
+              const SettingsHint(
+                'Choose the Weather detail view. Both use the same forecast. '
+                'Tonight keeps its compact weather summary; the night timeline '
+                'keeps its gradient.',
+                top: AppSpacing.xs,
+              ),
             ],
-            value: units.elevation,
-            onChanged: (u) =>
-                change(() => vm.setUnits(units.copyWith(elevation: u))),
-          ),
-          // HT-W04: how the Weather page shows the night's hours.
-          const SettingsHeading('Weather view', top: AppSpacing.md),
-          HybridSegmented<WeatherView>.settings(
-            key: const Key('settings.weatherView'),
-            legend: 'Weather view',
-            showLegend: false,
-            keyPrefix: 'settings.weatherView',
-            options: [
-              for (final v in WeatherView.values)
-                (v, '${v.letter} · ${v.label}', v.name),
-            ],
-            value: vm.weatherView,
-            onChanged: (v) => change(() => vm.setWeatherView(v)),
-          ),
-          const SettingsHint(
-            'Choose the Weather detail view. Both use the same forecast. '
-            'Tonight keeps its compact weather summary; the night timeline '
-            'keeps its gradient.',
-            top: AppSpacing.xs,
           ),
           if (vm.unsaved)
             _Unsaved(
