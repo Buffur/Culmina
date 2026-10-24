@@ -1,0 +1,44 @@
+source,surface,adoption,frames,findings
+lib/presentation/screens/about/about_screen.dart,About,later application,"settings_about,settings_about_b,licenses",CBA-10
+lib/presentation/screens/details/night_moon_screen.dart,Night and Moon pages,adopted,"night,night_b,night_c,moon,moon_b,night_exact_open,night_reading_open,night_moon_open,night_sun_open",
+lib/presentation/screens/details/weather_detail_screen.dart,Weather route wrapper,adopted,"weather,weather_charts,weather_offline,weather_stale,weather_partial,weather_nodark",
+lib/presentation/screens/equipment/add_rig_panel.dart,Camera-class add sheet,native choice boundary,"rig_add_sheet,rig_new",
+lib/presentation/screens/equipment/equipment_editor.dart,Rig editor,later application,"lib_rig_edit,lib_rig_edit_b,rig_new,rig_new_b,rig_ime",CBA-07
+lib/presentation/screens/equipment/equipment_selection_screen.dart,Rigs management,later application,"lib_rigs,manage_rigs,rigs_no_results,rig_add_sheet",CBA-07
+lib/presentation/screens/equipment/rig_detail_screen.dart,Rig record,later application; typography defects,"lib_rig,lib_rig_full,lib_rig_b","CBA-02,CBA-04,CBA-07"
+lib/presentation/screens/execution/results_screen.dart,Record result,adopted with defect,"result,result_b,result_notdone,result_completed,result_ime",CBA-06
+lib/presentation/screens/home/home_screen.dart,Plan,adopted with spacing defect,"plan,plan_b,plan_c,plan_actions,plan_empty",CBA-05
+lib/presentation/screens/home/plan_context_screen.dart,Plan site and night chooser,later application,plan_context,CBA-08
+lib/presentation/screens/home/plan_rig_screen.dart,Plan rig chooser,later application,plan_rig,CBA-08
+lib/presentation/screens/home/plan_target_screen.dart,Plan target chooser,later application,plan_target,CBA-08
+lib/presentation/screens/home/session_planner_route.dart,Planner loading/restoration wrapper,route-state wrapper; no separate concept,"plan,plan_empty",
+lib/presentation/screens/library/library_parts.dart,Shared library rows/forms/save bar,shared components; equal-height save bar works,"lib_rig_edit,lib_target_new,lib_site_edit",
+lib/presentation/screens/library/library_screen.dart,Library index,adopted,library,
+lib/presentation/screens/location/location_picker_screen.dart,Map position / coordinate entry,functional map exception,"geo_map,site_pick,map_coordinates",
+lib/presentation/screens/logbook/astrobin_export.dart,AstroBin export preview,native dialog exception,astrobin_preview,
+lib/presentation/screens/logbook/logbook_screen.dart,"Logbook index, filter/search",adopted; filters stay functional controls,"logbook,logbook_b,logbook_filters,logbook_empty",
+lib/presentation/screens/logbook/progress_screen.dart,Progress by target,later application,"logbook_progress,logbook_progress_b,progress_empty",CBA-09
+lib/presentation/screens/logbook/session_detail_screen.dart,Logbook entry record,later application; typography defect,"entry,entry_b,entry_c,entry_due,entry_name,entry_copy","CBA-02,CBA-09"
+lib/presentation/screens/metadata/metadata_import_screen.dart,Capture-file import and review,pre-existing semantic cards,"metadata,metadata_ready,metadata_read,metadata_read_b,metadata_unreadable",
+lib/presentation/screens/settings/backup_section.dart,"Backup, refusal, confirmation and restoring root",nested page later application; root field-mode defect,"settings_backup,backup_error,backup_restore,restore_wait","CBA-01,CBA-10"
+lib/presentation/screens/settings/settings_parts.dart,Shared settings and fact rows,shared components,"lib_rig,lib_target,lib_site,settings_planning",CBA-04
+lib/presentation/screens/settings/settings_screen.dart,Settings index and Appearance/Planning/Privacy,index adopted; nested pages later application,"settings,settings_appearance,settings_appearance_b,settings_planning,settings_planning_b,settings_privacy,plan_settings","CBA-03,CBA-10"
+lib/presentation/screens/sites/site_detail_screen.dart,Site record,later application; typography defects,"lib_site,lib_site_b","CBA-02,CBA-04,CBA-07"
+lib/presentation/screens/sites/site_editor_screen.dart,Site editor,later application,"geo_add,geo_more,lib_site_edit,lib_site_edit_b,site_ime,site_name_consent",CBA-07
+lib/presentation/screens/sites/sites_screen.dart,Saved sites and alternative position,later application with accepted geo composition,"geo_sites,geo_transient,lib_sites,select_sites",CBA-07
+lib/presentation/screens/sites/zone_picker_dialog.dart,Time-zone picker,native dialog exception,zone_dialog,
+lib/presentation/screens/startup/unsupported_database_screen.dart,Unsupported database recovery,standalone safety exception,"unsupported_newer,unsupported_older,unsupported_confirm",CBA-01 adjacent observation
+lib/presentation/screens/target/target_detail_screen.dart,Target record,later application; typography defects,"lib_target,lib_target_b","CBA-02,CBA-04,CBA-07"
+lib/presentation/screens/target/target_editor_screen.dart,Target editor,later application,"lib_target_new,lib_target_new_b,target_invalid,target_ime",CBA-07
+lib/presentation/screens/target/target_selection_screen.dart,Targets management,later application,"lib_targets,manage_targets,targets_no_results",CBA-07
+lib/presentation/screens/tonight/home_context_sheets.dart,Home context entry points,native choice/navigation boundary,"home_sitesheet,home_nightsheet",
+lib/presentation/screens/tonight/tonight_candidates_screen.dart,Candidate targets,later application,"home_candidates,candidates_b",CBA-08
+lib/presentation/screens/tonight/tonight_home_screen.dart,Tonight,adopted,"home,home_timeline,home_long,home_nosite,home_loaderror,home_wxfail",
+lib/presentation/screens/welcome/welcome_screen.dart,Welcome,pre-existing semantic cards,"welcome,welcome_b",
+lib/presentation/widgets/capture_plan/capture_block_dialog.dart,Capture block editor,shared/auxiliary; see findings or native exception,"plan_editor,plan_editor_bottom,plan_editor_dialog,capture_ime",CBA-08
+lib/presentation/widgets/capture_plan/calibration_preview_dialog.dart,Calibration preview,shared/auxiliary; see findings or native exception,"plan_cal,plan_cal_b",CBA-08
+lib/presentation/widgets/capture_plan/plan_overrides_editor.dart,Plan assumptions editor,shared/auxiliary; see findings or native exception,"plan_asm,plan_asm_b",CBA-08
+lib/presentation/widgets/capture_plan/storage_actions.dart,Capture storage file confirmation,shared/auxiliary; see findings or native exception,storage_file,
+lib/presentation/shared/confirmation_patterns.dart,Unsaved/delete confirmations,shared/auxiliary; see findings or native exception,"lib_rig_unsaved,lib_rig_delete,plan_editor_dialog",
+lib/presentation/navigation/app_shell.dart,Root navigation,shared/auxiliary; see findings or native exception,"home,logbook,library,settings",
+lib/presentation/shared/hybrid_app_bar.dart,Shared adaptive app bar,shared/auxiliary; see findings or native exception,"settings_appearance,entry,lib_rig","CBA-02,CBA-03"

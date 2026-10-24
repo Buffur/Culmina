@@ -1,0 +1,466 @@
+{
+  "name": "lib_site_edit",
+  "theme": "field",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/library",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Position",
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 22.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "Current position",
+      "x": 62.22339630126953,
+      "y": 120.0,
+      "w": 105.05320739746094,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Map",
+      "x": 273.89859771728516,
+      "y": 120.0,
+      "w": 28.702804565429688,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Latitude (°)",
+      "x": 20.0,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Longitude (°)",
+      "x": 193.5,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Name",
+      "x": 20.0,
+      "y": 262.0,
+      "w": 335.0,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Time zone",
+      "x": 20.0,
+      "y": 358.0,
+      "w": 335.0,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Europe/Kyiv",
+      "x": 37.0,
+      "y": 397.5,
+      "w": 287.0,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Used for local dates and daylight-saving changes.",
+      "x": 20.0,
+      "y": 437.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "More (optional)",
+      "x": 20.0,
+      "y": 487.0,
+      "w": 100.82241821289062,
+      "h": 22.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "Elevation, sky darkness and notes",
+      "x": 20.0,
+      "y": 511.0,
+      "w": 200.0178985595703,
+      "h": 18.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.4
+    },
+    {
+      "text": "Changes are saved to this site.",
+      "x": 20.0,
+      "y": 547.0,
+      "w": 335.0,
+      "h": 22.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Edit site",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 82.95321655273438,
+      "h": 27.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Cancel",
+      "x": 77.9706039428711,
+      "y": 774.0,
+      "w": 45.55879211425781,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Save site",
+      "x": 239.13800048828125,
+      "y": 772.0,
+      "w": 70.2239990234375,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 537.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 32.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'siteEditor.useCurrentPosition'>]",
+      "x": 20.0,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(12.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'siteEditor.pickOnMap'>]",
+      "x": 193.5,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 193.5,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(12.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 76.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'siteEditor.latitude'>]",
+      "x": 20.0,
+      "y": 193.0,
+      "w": 161.5,
+      "h": 49.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 193.5,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 76.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'siteEditor.longitude'>]",
+      "x": 193.5,
+      "y": 193.0,
+      "w": 161.5,
+      "h": 49.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 242.0,
+      "w": 335.0,
+      "h": 96.0,
+      "padding": "EdgeInsets(0.0, 20.0, 0.0, 0.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'siteEditor.name'>]",
+      "x": 20.0,
+      "y": 289.0,
+      "w": 335.0,
+      "h": 49.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 338.0,
+      "w": 335.0,
+      "h": 119.0,
+      "padding": "EdgeInsets(0.0, 20.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 433.0,
+      "w": 335.0,
+      "h": 24.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 481.0,
+      "w": 335.0,
+      "h": 54.0,
+      "padding": "EdgeInsets(0.0, 6.0, 0.0, 6.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 509.0,
+      "w": 200.0178985595703,
+      "h": 20.0,
+      "padding": "EdgeInsets(0.0, 2.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 547.0,
+      "w": 335.0,
+      "h": 22.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0,
+      "padding": "EdgeInsets(20.0, 8.0, 20.0, 4.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'siteEditor.cancel'>]",
+      "x": 20.0,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'siteEditor.save'>]",
+      "x": 193.5,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 193.5,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    }
+  ]
+}

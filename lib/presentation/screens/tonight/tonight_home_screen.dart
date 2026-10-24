@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/site_label.dart';
+import '../../shared/document_section.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
@@ -198,37 +199,15 @@ class _Context extends StatelessWidget {
   }
 }
 
-/// A document section (notion-hybrid.css): one thin rule above it, then
-/// [top] of space before its content.
+/// One of the owner's three tonal Home groups, containing existing content.
 class _Section extends StatelessWidget {
-  const _Section({
-    super.key,
-    required this.child,
-    this.top = AppSpacing.md,
-    this.strongRule = false,
-  });
+  const _Section({super.key, required this.child});
 
   final Widget child;
-  final double top;
-
-  /// The conditions section's rule is the control border, not the subtle
-  /// one (catalog.css `.conditions`).
-  final bool strongRule;
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: strongRule ? p.controlBorder : p.border),
-        ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: top),
-        child: child,
-      ),
-    );
+    return DocumentSection(children: [child]);
   }
 }
 
@@ -598,10 +577,8 @@ class _NightSection extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.lg),
+      padding: const EdgeInsets.only(top: AppSpacing.md),
       child: _Section(
-        top: AppSpacing.lg,
-        strongRule: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

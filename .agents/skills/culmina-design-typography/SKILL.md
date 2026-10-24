@@ -16,7 +16,7 @@ Read [BASELINE](../../../docs/design/BASELINE.md), [DESIGN_SYSTEM §3](../../../
 
 ## Choose and verify the role
 
-- Match meaning to the existing Material or named Hybrid role before adjusting size/weight/height/tracking. Geist is the adopted UI face; Source Serif 4 at opsz 14 owns editorial/answer headings. Root-navigation Roboto and the compact Hybrid exceptions stay explicit. Do not force named roles back into an older generic scale.
+- Match meaning to the existing Material or named Hybrid role before adjusting size/weight/height/tracking. The approved [Concept B task](../../../docs/design/CONCEPT_B_IMPLEMENTATION_2026_10_24.md) adopts Geist throughout production prose, headings, navigation and chart labels. Earlier Source Serif 4/Roboto roles are superseded; compact sizes remain explicit and MaterialIcons remains an icon font. Do not force named roles back into an older generic scale.
 - Diagnose available width, wrapping and padding before shrinking text. Current Material bodyMedium/bodySmall are 16/13 sp; the base 12 sp floor and documented smaller compact exceptions are different contracts. Preserve the user's text scaler and full accessible labels.
 - Check affected long names/errors, Ukrainian І і Ї ї Є є Ґ ґ, punctuation, degree/multiplication/minus signs and ambiguous digits. Use tabular numerals for comparable measurements/times without making all text monospace. Inspect actual bundled glyphs where coverage matters.
 - For an explicitly open family decision only, use the [candidate/licence history](../../../docs/design/references/LAB_HISTORY.md#historical-candidate-comparisons) and the existing source/licence records. Compare identical content/composition and record pair/fallback; no automatic font download or asset refresh.

@@ -279,7 +279,24 @@ void main() {
       'and the month; the calendar agrees with the detail', (tester) async {
     await start(tester);
     expect(find.byKey(const Key('nightMoon.viewing')), findsNothing);
+    expect(find.byKey(const Key('nightMoon.legend')), findsNothing);
+    expect(find.byKey(const Key('nightMoon.encoding')), findsNothing);
+    final rail = tester.getRect(find.byKey(const Key('nightMoon.rail')));
+    final jumps = tester.getRect(find.byKey(const Key('nightMoon.jumpStart')));
+    expect(rail.top - jumps.bottom, greaterThanOrEqualTo(16));
+    expect(
+      tester.getSize(find.byKey(const Key('nightMoon.slider'))).height,
+      greaterThanOrEqualTo(48),
+    );
+    await tester.tap(find.byKey(const Key('nightMoon.exactToggle')));
+    await settle(tester);
     expect(find.byKey(const Key('nightMoon.legend')), findsOneWidget);
+    expect(find.byKey(const Key('nightMoon.encoding')), findsOneWidget);
+    final preview = browser(tester).cursor.instantUtc;
+    await tester.tap(find.byKey(const Key('nightMoon.exactToggle')));
+    await settle(tester);
+    expect(find.byKey(const Key('nightMoon.encoding')), findsNothing);
+    expect(browser(tester).cursor.instantUtc, preview);
     final handle = tester.ensureSemantics();
     expect(
       find.bySemanticsLabel(RegExp('Night bar: Daylight')),

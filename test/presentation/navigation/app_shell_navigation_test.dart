@@ -168,6 +168,43 @@ void main() {
     }
   });
 
+  testWidgets('navigation content is centred in equal destinations on phones', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    for (final width in [320.0, 375.0, 412.0]) {
+      for (final scale in [1.0, 2.0]) {
+        tester.view.physicalSize = Size(width, 900);
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearAllTestValues);
+        await settle(tester);
+        final bar = tester.getRect(find.byKey(AppShell.navigationKey));
+        final rects = [
+          for (final tab in ['tonight', 'logbook', 'library', 'settings'])
+            tester.getRect(find.byKey(Key('nav.$tab'))),
+        ];
+        expect(rects.first.top - bar.top, closeTo(8, .01));
+        expect(bar.bottom - rects.last.bottom, closeTo(8, .01));
+        for (final rect in rects) {
+          expect(rect.width, closeTo(rects.first.width, .01));
+          expect(rect.height, greaterThanOrEqualTo(56));
+        }
+        for (final tab in ['Tonight', 'Logbook', 'Library', 'Settings']) {
+          final target = find.byKey(Key('nav.${tab.toLowerCase()}'));
+          final group = find.descendant(
+            of: target,
+            matching: find.byType(Wrap),
+          );
+          final bounds = tester.getRect(target);
+          final content = tester.getRect(group);
+          expect(content.center.dx, closeTo(bounds.center.dx, .01));
+          expect(content.center.dy, closeTo(bounds.center.dy, .01));
+        }
+        expect(tester.takeException(), isNull);
+      }
+    }
+  });
+
   testWidgets('scoped workspace pages retain one global field switch and no '
       'root navigation', (tester) async {
     await pumpApp(tester);

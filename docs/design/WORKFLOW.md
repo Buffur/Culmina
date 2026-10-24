@@ -52,7 +52,7 @@ For a constraint error, the [layout diagnostic recipe](../../.agents/skills/flut
 
 Deliver the bounded diff or review findings with: task/mode and input state; chosen existing roles/components and actual callers; decision/source references; checks required by V1–V8; evidence limits, pending owner/device criteria and the next permitted action. For Explore, include the proposal and unresolved choice rather than claiming adoption. For Review, keep the result read-only.
 
-Current UI typography is Geist with Source Serif 4 editorial/answer roles and documented compact exceptions. The Android phone composition and current native behavior remain authoritative under BASELINE; a local layout fix does not introduce tablet/desktop composition. Preserve Unknown, provenance/units/time semantics, Save/Discard/Cancel and fit versus persistence/result states. Browser or widget previews do not establish Android/device or owner acceptance.
+Current UI typography is Geist throughout production UI, including editorial/answer roles and root navigation, under the [approved Concept B task](CONCEPT_B_IMPLEMENTATION_2026_10_24.md). Documented compact sizes remain explicit. The Android phone composition and current native behavior remain authoritative under BASELINE; a local layout fix does not introduce tablet/desktop composition. Preserve Unknown, provenance/units/time semantics, Save/Discard/Cancel and fit versus persistence/result states. Browser or widget previews do not establish Android/device or owner acceptance.
 
 ## Keep related guidance current
 

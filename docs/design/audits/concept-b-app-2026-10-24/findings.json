@@ -1,0 +1,155 @@
+[
+  {
+    "id": "CBA-01",
+    "priority": "P1",
+    "kind": "confirmed defect",
+    "title": "Restore root loses the active Field presentation",
+    "location": "lib/main.dart:279; lib/presentation/screens/settings/backup_section.dart:256",
+    "evidence": [
+      "utility-final/restore_wait-field-2.png"
+    ],
+    "impact": "A Field user is shown neutral white text and spinner during restore instead of the red/black night-vision presentation.",
+    "recommendation": "Carry the effective Field theme/filter into the standalone restoring app without touching backup/data semantics. Inspect unsupported-database roots separately; their unknown persisted theme is not waived by this audit.",
+    "command": "impeccable harden"
+  },
+  {
+    "id": "CBA-02",
+    "priority": "P2",
+    "kind": "confirmed defect",
+    "title": "Four record headers still force a single line",
+    "location": "lib/presentation/screens/logbook/session_detail_screen.dart:132; lib/presentation/screens/equipment/rig_detail_screen.dart:138; lib/presentation/screens/target/target_detail_screen.dart:115; lib/presentation/screens/sites/site_detail_screen.dart:82",
+    "evidence": [
+      "dark-200/entry-dark-2.png",
+      "dark-200/lib_rig-dark-2.png",
+      "dark-200/lib_target-dark-2.png",
+      "dark-200/lib_site-dark-2.png"
+    ],
+    "impact": "At 200%, complete record identity is visually cut to Andromed / DSLR 135 / Kyiv although the title widget contains the full name. Session dates disappear. The app bar can reserve wrapping height while the child forbids wrapping.",
+    "recommendation": "Remove caller-imposed line clamps and verify complete names/date at 375 dp, with the shared app-bar measurement corrected.",
+    "command": "impeccable typeset"
+  },
+  {
+    "id": "CBA-03",
+    "priority": "P2",
+    "kind": "confirmed defect",
+    "title": "Shared AppBar estimates 48 dp actions although the actual Field action is 64 dp at 200%",
+    "location": "lib/presentation/shared/hybrid_app_bar.dart:43; lib/presentation/shared/field_mode_button.dart:36",
+    "evidence": [
+      "dark-200/settings_appearance-dark-2.png",
+      "theme-200/settings_appearance-light-2.png",
+      "theme-200/settings_appearance-field-2.png"
+    ],
+    "impact": "Appearance is laid out as two lines in a 64 dp toolbar, with a text rectangle at y=-23, height 110: the title is cut off at the top. The helper measured a wider title slot than Material actually provides.",
+    "recommendation": "Measure the actual available leading/title/action constraints at the user scale, retaining full names and reachable 48 dp controls. Do not reduce text size to hide the defect.",
+    "command": "impeccable layout"
+  },
+  {
+    "id": "CBA-04",
+    "priority": "P2",
+    "kind": "confirmed defect",
+    "title": "Record facts keep two narrow columns at 200%",
+    "location": "lib/presentation/screens/settings/settings_parts.dart:455",
+    "evidence": [
+      "dark-200/lib_rig-dark-2.png",
+      "dark-200/lib_target-dark-2.png",
+      "dark-200/lib_site-dark-2.png"
+    ],
+    "impact": "FactRows shares width between Flexible label/value columns. Manufacturer breaks inside the word, units and coordinates require excessive lines, and scanning a fact pair becomes slow. There is no RenderFlex exception to catch this.",
+    "recommendation": "Stack each label/value/note pair when its measured width or text scale requires it; retain units, full names and tabular values.",
+    "command": "impeccable layout"
+  },
+  {
+    "id": "CBA-05",
+    "priority": "P2",
+    "kind": "confirmed defect",
+    "title": "Fill the window touches the preceding capture action",
+    "location": "lib/presentation/widgets/capture_plan_widget.dart:56; lib/presentation/screens/home/home_screen.dart:201",
+    "evidence": [
+      "dark-100/plan_actions-dark-1.png",
+      "dark-200/plan_actions-dark-2.png"
+    ],
+    "impact": "Build calibration and Fill the window share a boundary with zero gap. At 200%, calibration y=266 h=96 ends exactly where Fill y=362 begins; both are 303 dp wide, so the controls read as a joined box.",
+    "recommendation": "Add the existing 8 dp inter-action separation at the composition boundary; keep both actions and their large-text stacking.",
+    "command": "impeccable layout"
+  },
+  {
+    "id": "CBA-06",
+    "priority": "P2",
+    "kind": "confirmed defect",
+    "title": "Record result footer buttons have unequal height at 200%",
+    "location": "lib/presentation/screens/execution/results_screen.dart:334",
+    "evidence": [
+      "dark-200/result_b-dark-2.png",
+      "dark-200/result_ime-dark-2.png"
+    ],
+    "impact": "Cancel is 161.5 x 56 dp at y=724; Save result is 161.5 x 112 dp at y=696. The center-aligned Row makes the pair visibly uneven when Save result wraps. Other editors already use LibrarySaveBar with equal-height stretching.",
+    "recommendation": "Use the established equal-height footer anatomy, preserve form validation/Save/Cancel, and verify with IME insets and both scales.",
+    "command": "impeccable layout"
+  },
+  {
+    "id": "CBA-07",
+    "priority": "P2",
+    "kind": "extension gap",
+    "title": "Library child lists, records and editors retain the former composition",
+    "location": "lib/presentation/screens/equipment/; lib/presentation/screens/target/; lib/presentation/screens/sites/",
+    "evidence": [
+      "dark-100/lib_rigs-dark-1.png",
+      "dark-100/lib_rig-dark-1.png",
+      "dark-100/lib_rig_edit-dark-1.png",
+      "dark-100/lib_target-dark-1.png",
+      "dark-100/lib_site_edit-dark-1.png"
+    ],
+    "impact": "The Library index has the new grouped surface, but the next tap returns to bare list/record/form sections. Camera/Optics, position/name/zone and catalogue/own targets are separated only by whitespace or rules.",
+    "recommendation": "Specify coherent groups per child screen: record identity/actions, measured facts, optional detail; editor field groups and search/result sections. Preserve manage-versus-select semantics, lazy lists and the accepted current-site/saved-sites/alternative-position order.",
+    "command": "impeccable shape"
+  },
+  {
+    "id": "CBA-08",
+    "priority": "P2",
+    "kind": "extension gap",
+    "title": "Plan choosers, capture/assumption/calibration editors and candidate list remain outside the grouping direction",
+    "location": "lib/presentation/screens/home/plan_*_screen.dart; lib/presentation/screens/tonight/tonight_candidates_screen.dart; lib/presentation/widgets/capture_plan/",
+    "evidence": [
+      "dark-100/plan_context-dark-1.png",
+      "dark-100/plan_target-dark-1.png",
+      "dark-100/plan_editor-dark-1.png",
+      "dark-100/plan_asm-dark-1.png",
+      "dark-100/plan_cal-dark-1.png",
+      "dark-100/home_candidates-dark-1.png"
+    ],
+    "impact": "Opening an action from grouped Plan changes to a long ungrouped form or list. Site/night, exposure/count/recording, timing/storage overrides and calibration frame types have distinct reading tasks that are currently differentiated mainly by spacing.",
+    "recommendation": "Define groups around existing tasks, preserving Apply-to-draft versus explicit Save plan, choice/search semantics, conditional fields, scientific warnings and input widths at 200%. Candidate filters and results should stay lazy/scrollable.",
+    "command": "impeccable shape"
+  },
+  {
+    "id": "CBA-09",
+    "priority": "P2",
+    "kind": "extension gap",
+    "title": "Logbook entry details and Progress retain the old flat document",
+    "location": "lib/presentation/screens/logbook/session_detail_screen.dart:137; lib/presentation/screens/logbook/progress_screen.dart:59",
+    "evidence": [
+      "dark-100/entry-dark-1.png",
+      "dark-100/entry_c-dark-1.png",
+      "dark-100/logbook_progress-dark-1.png"
+    ],
+    "impact": "The month-grouped Logbook index opens records whose outcome/actions, planned-versus-recorded values, saved snapshot, notes and export have no corresponding surface groups. Progress similarly mixes target, filter and rig subtotals in one long page.",
+    "recommendation": "Group existing reading tasks while preserving planned/recorded separation, immutable snapshots, comparable-group rules and export/delete ownership. Avoid one card per data row.",
+    "command": "impeccable shape"
+  },
+  {
+    "id": "CBA-10",
+    "priority": "P2",
+    "kind": "extension gap",
+    "title": "Settings child pages retain old whitespace/rule sectioning",
+    "location": "lib/presentation/screens/settings/settings_screen.dart:189; lib/presentation/screens/settings/backup_section.dart:160; lib/presentation/screens/about/about_screen.dart",
+    "evidence": [
+      "dark-100/settings_appearance-dark-1.png",
+      "dark-100/settings_planning-dark-1.png",
+      "dark-100/settings_backup-dark-1.png",
+      "dark-100/settings_about-dark-1.png"
+    ],
+    "impact": "The grouped Preferences/Data index opens ungrouped Theme/Text/Units/Weather, planning defaults, privacy, backup and About documents. The parent/child visual language is inconsistent, especially in long editor pages.",
+    "recommendation": "Group related existing settings, separate backup from restore and informational notices, retain immediate-versus-staged changes, persistence feedback and current Save/Cancel ownership.",
+    "command": "impeccable shape"
+  }
+]

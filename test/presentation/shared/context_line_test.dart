@@ -52,6 +52,58 @@ void main() {
     expect(r.taps, ['site', 'night']);
   });
 
+  for (final width in [320.0, 375.0, 412.0]) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets('compact context follows the site width at $width / $scale', (
+        tester,
+      ) async {
+        tester.view.physicalSize = Size(width, 800);
+        tester.view.devicePixelRatio = 1;
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearAllTestValues);
+        final handle = tester.ensureSemantics();
+        Future<Rect> show(String name) async {
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: AppTheme.dark,
+              home: Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ContextLine(
+                    compact: true,
+                    siteName: name,
+                    night: _night,
+                    onSite: () {},
+                    onNight: () {},
+                  ),
+                ),
+              ),
+            ),
+          );
+          final site = tester.getRect(find.byKey(const Key('context.site')));
+          final night = tester.getRect(find.byKey(const Key('context.night')));
+          expect(night.left - site.right, closeTo(4, .01));
+          expect(site.top, night.top);
+          expect(site.height, greaterThanOrEqualTo(48));
+          expect(night.height, greaterThanOrEqualTo(48));
+          expect(night.right, lessThanOrEqualTo(width - 20));
+          expect(
+            tester.getSemantics(find.byKey(const Key('context.site'))).label,
+            contains(name),
+          );
+          expect(tester.takeException(), isNull);
+          return site;
+        }
+
+        final short = await show('A');
+        final long = await show('A very long observing site near the mountain');
+        expect(long.width, greaterThan(short.width));
+        handle.dispose();
+      });
+    }
+  }
+
   testWidgets('each part is a labelled 48 dp button', (tester) async {
     final handle = tester.ensureSemantics();
     await _pump(tester, night: _night);

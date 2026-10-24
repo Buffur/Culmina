@@ -56,7 +56,7 @@ class AppShell extends StatelessWidget {
     // workspace.css `.app-nav` (Hybrid): a subtle top rule, padding 8 4,
     // four equal 56 px buttons 2 apart; the selected one on the subtle
     // surface (radius 6) in 600 primary, the others 400 secondary; a 19 px
-    // icon 5 above the 11 px Roboto label. At large text, two per row.
+    // icon 5 above the 11 px Geist label. At large text, two per row.
     Widget button(int i) {
       final selected = i == navigationShell.currentIndex;
       final color = selected ? palette.textPrimary : palette.textSecondary;
@@ -131,7 +131,10 @@ class AppShell extends StatelessWidget {
                 child: SafeArea(
                   top: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 8,
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

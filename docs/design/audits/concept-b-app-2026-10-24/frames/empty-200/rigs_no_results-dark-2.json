@@ -1,0 +1,291 @@
+{
+  "name": "rigs_no_results",
+  "theme": "dark",
+  "scale": 2.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Name, maker or model",
+      "x": 36.0,
+      "y": 90.0,
+      "w": 259.0,
+      "h": 39.0,
+      "family": "Geist",
+      "maxLines": 1,
+      "didExceedMaxLines": true,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Add rig",
+      "x": 154.8408203125,
+      "y": 163.0,
+      "w": 109.318359375,
+      "h": 48.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "0 of 1 shown",
+      "x": 20.0,
+      "y": 231.0,
+      "w": 335.0,
+      "h": 39.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Nothing matches “NoSuchRig”.",
+      "x": 20.0,
+      "y": 294.0,
+      "w": 335.0,
+      "h": 90.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "Clear search",
+      "x": 104.6507797241211,
+      "y": 400.0,
+      "w": 165.6984405517578,
+      "h": 40.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Adding a rig from a photo",
+      "x": 20.0,
+      "y": 470.0,
+      "w": 301.0,
+      "h": 112.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Rigs",
+      "x": 64.0,
+      "y": 4.5,
+      "w": 90.6400146484375,
+      "h": 55.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "IconButton",
+      "key": null,
+      "x": 299.0,
+      "y": 81.5,
+      "w": 56.0,
+      "h": 56.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 299.0,
+      "y": 81.5,
+      "w": 56.0,
+      "h": 56.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": null,
+      "x": 20.0,
+      "y": 155.0,
+      "w": 335.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 155.0,
+      "w": 335.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 219.0,
+      "w": 335.0,
+      "h": 51.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 278.0,
+      "w": 335.0,
+      "h": 170.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 294.0,
+      "w": 335.0,
+      "h": 90.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'rigs.clearSearch'>]",
+      "x": 20.0,
+      "y": 392.0,
+      "w": 335.0,
+      "h": 56.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 392.0,
+      "w": 335.0,
+      "h": 56.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 448.0,
+      "w": 335.0,
+      "h": 140.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 464.0,
+      "w": 335.0,
+      "h": 124.0,
+      "padding": "EdgeInsets(0.0, 6.0, 0.0, 6.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 72.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 145.17201232910156,
+      "y": 120.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(13.0)"
+    }
+  ]
+}

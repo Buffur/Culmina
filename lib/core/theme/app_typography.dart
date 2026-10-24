@@ -20,26 +20,19 @@ abstract final class AppTypography {
   /// Supporting copy, distinct from the 16 sp data/body role.
   static final TextStyle support = _style(14, 22, FontWeight.w400);
 
-  /// Source Serif 4 as the browser loads it (Google Fonts wght-only file =
-  /// the variable font at opsz 14; measured, see SourceSerif4.source.json).
-  static const serifFamily = 'Source Serif 4';
-  static const serifVariations = [FontVariation('opsz', 14)];
+  /// Night section heading; the same Geist family as every other UI role.
+  static final TextStyle nightHeading = _style(
+    25,
+    32.5,
+    FontWeight.w500,
+  ).copyWith(letterSpacing: -0.5);
 
-  static TextStyle serif(double size, double lineHeight, double tracking) =>
-      TextStyle(
-        fontFamily: serifFamily,
-        fontVariations: serifVariations,
-        fontSize: size,
-        height: lineHeight / size,
-        fontWeight: FontWeight.w400,
-        letterSpacing: tracking,
-      );
-
-  /// Editorial night section ("The night ahead"): serif 25/32.5, -0.5.
-  static final TextStyle nightHeading = serif(25, 32.5, -0.5);
-
-  /// Night, Moon and Weather answers: serif 28/36.4, -0.02 em.
-  static final TextStyle answerHeading = serif(28, 36.4, -0.56);
+  /// Night, Moon and Weather answers retain their size in the unified family.
+  static final TextStyle answerHeading = _style(
+    28,
+    36.4,
+    FontWeight.w500,
+  ).copyWith(letterSpacing: -0.56);
 
   // The Hybrid role scale (owner-accepted 2026-10-22, a594837/93e0eb6):
   // a label never reads smaller than the content it introduces.
@@ -74,9 +67,9 @@ abstract final class AppTypography {
   /// Dense data only (tables, hourly strip, calendar, chart axes): 12/400.
   static final TextStyle dense = _style(12, 18, FontWeight.w400);
 
-  /// Root navigation labels: the platform face (Roboto), 11.
+  /// Root navigation labels use the shared family, at the compact 11 sp role.
   static const TextStyle navigationLabel = TextStyle(
-    fontFamily: 'Roboto',
+    fontFamily: HybridTokens.fontFamily,
     fontSize: 11,
     height: 1.5,
     letterSpacing: 0,

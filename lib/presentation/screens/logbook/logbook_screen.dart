@@ -1,5 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -255,8 +258,14 @@ class _LogbookScreenState extends State<LogbookScreen> {
                       ),
                     ),
                   // logbook.js: Progress by target, a row of its own.
-                  _ProgressRow(
-                    onTap: () => context.push(AppRouter.logbookProgress),
+                  const SizedBox(height: 16),
+                  DocumentSection(
+                    key: const Key('logbook.progressGroup'),
+                    children: [
+                      _ProgressRow(
+                        onTap: () => context.push(AppRouter.logbookProgress),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -326,44 +335,50 @@ class _LogbookScreenState extends State<LogbookScreen> {
                       ),
                     for (final (i, MapEntry(key: (year, month), value: list))
                         in months.entries.indexed) ...[
-                      Padding(
-                        padding: const EdgeInsets.only(top: AppSpacing.gutter),
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: p.border)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: AppSpacing.xs,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Expanded(
-                                  child: Semantics(
-                                    header: true,
-                                    child: Text(
-                                      '${_monthNames[month - 1]} $year',
-                                      style: quiet.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.4,
-                                      ),
+                      const SizedBox(height: 16),
+                      DocumentSection(
+                        key: ValueKey('logbook.month.$year.$month'),
+                        joinNext: true,
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Expanded(
+                                child: Semantics(
+                                  header: true,
+                                  child: Text(
+                                    '${_monthNames[month - 1]} $year',
+                                    style: quiet.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.4,
                                     ),
                                   ),
                                 ),
-                                if (i == 0)
-                                  Text(
-                                    count,
-                                    key: const Key('logbook.resultCount'),
-                                    style: quiet,
-                                  ),
-                              ],
-                            ),
+                              ),
+                              if (i == 0)
+                                Text(
+                                  count,
+                                  key: const Key('logbook.resultCount'),
+                                  style: quiet,
+                                ),
+                            ],
                           ),
-                        ),
+                        ],
                       ),
-                      for (final s in list) _row(context, vm, s),
+                      for (final (rowIndex, session) in list.indexed)
+                        DocumentSection(
+                          joinPrevious: true,
+                          joinNext: rowIndex != list.length - 1,
+                          padding: EdgeInsets.fromLTRB(
+                            16,
+                            0,
+                            16,
+                            rowIndex == list.length - 1 ? 16 : 0,
+                          ),
+                          children: [_row(context, vm, session)],
+                        ),
                     ],
                   ],
                 ),
@@ -595,33 +610,29 @@ class _LogbookScreenState extends State<LogbookScreen> {
               children: [
                 // The state is the entry's right column, beside the title
                 // and its first details line.
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 2,
-                        children: [
-                          Text(
-                            entryTitle(session),
-                            key: Key('logbook.title.${session.id}'),
-                            style: AppTypography.rowTitle.copyWith(
-                              color: p.textPrimary,
-                            ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final information = Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 2,
+                      children: [
+                        Text(
+                          entryTitle(session),
+                          key: Key('logbook.title.${session.id}'),
+                          style: AppTypography.rowTitle.copyWith(
+                            color: p.textPrimary,
                           ),
-                          Text(
-                            details,
-                            style: AppTypography.body.copyWith(
-                              height: 1.6,
-                              color: p.textSecondary,
-                            ),
+                        ),
+                        Text(
+                          details,
+                          style: AppTypography.body.copyWith(
+                            height: 1.6,
+                            color: p.textSecondary,
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.itemGap),
-                    Column(
+                        ),
+                      ],
+                    );
+                    final states = Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 4,
                       children: [
@@ -634,8 +645,29 @@ class _LogbookScreenState extends State<LogbookScreen> {
                             key: Key('logbook.noResult.${session.id}'),
                           ),
                       ],
-                    ),
-                  ],
+                    );
+                    // Keep complete status labels readable as text grows. A side column
+                    // receives unbounded width in a Row; stacking uses the actual group width.
+                    if (MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
+                        constraints.maxWidth < 280) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          information,
+                          const SizedBox(height: 8),
+                          states,
+                        ],
+                      );
+                    }
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: information),
+                        const SizedBox(width: AppSpacing.itemGap),
+                        states,
+                      ],
+                    );
+                  },
                 ),
                 // TASK 13.4 (owner): planned vs actual for a result; F19 A1:
                 // the plan alone for an entry without counts.

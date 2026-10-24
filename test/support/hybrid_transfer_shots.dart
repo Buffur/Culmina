@@ -157,7 +157,28 @@ final Map<String, HybridStep> hybridShots = {
   },
   'geo_map': (c) => c.push(AppRouter.position),
   'home': (c) => c.go(AppRouter.tonight),
+  'home_blocks_source': (c) async {
+    await c.tester.runAsync(c.fixture.seedLogbook);
+    await c.go(AppRouter.tonight);
+  },
+  'home_timeline': (c) async {
+    await c.go(AppRouter.tonight);
+    await c.tester.scrollUntilVisible(
+      find.byKey(const Key('nightMoon.jumpStart')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await c.settle();
+  },
   'plan': (c) => c.push(AppRouter.session()),
+  'plan_b': (c) async {
+    await c.push(AppRouter.session());
+    await c.scrollBy(1200, key: 'planner.scroll');
+  },
+  'plan_c': (c) async {
+    await c.push(AppRouter.session());
+    await c.scrollBy(10000, key: 'planner.scroll');
+  },
   'night': (c) => c.push(AppRouter.nightMoon),
   'night_b': (c) async {
     await c.push(AppRouter.nightMoon);

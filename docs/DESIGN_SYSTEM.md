@@ -63,9 +63,9 @@ This is an indexed reference. For a focused production fix or review, locate the
 | Raised | `AppPalette.surfaceRaised` = `colorScheme.surfaceContainerHigh` | `#FFFFFF` | `#252525` | `#1A0000` | Dialogs, date pickers (Material reads `surfaceContainerHigh`) |
 | Border | `AppPalette.border` | `#E9E9E7` | `#2F2F2F` | `#330000` | Card outlines, dividers |
 
-Additional native Hybrid roles live in `lib/core/theme/hybrid_tokens.dart`, installed alongside AppPalette by `AppTheme._withTokens`. `surfaceSubtle` supplies the selected root-navigation surface (`lib/presentation/navigation/app_shell.dart`); `surfaceSunken` supplies recessed Moon-lane tracks and the Moon-up legend well (`lib/presentation/widgets/night_browser_sections.dart`). These are existing production roles, not browser-only proposals or aliases for raised overlays. In field mode `surfaceSubtle` is the dark-red grouping surface while `colorScheme.surface` remains black. Read values from the theme definitions.
+Additional native Hybrid roles live in `lib/core/theme/hybrid_tokens.dart`, installed alongside AppPalette by `AppTheme._withTokens`. `surfaceSubtle` supplies the selected root-navigation surface (`lib/presentation/navigation/app_shell.dart`) and the approved Concept B document groups (`lib/presentation/shared/document_section.dart`); `surfaceSunken` supplies recessed Moon-lane tracks and the Moon-up legend well (`lib/presentation/widgets/night_browser_sections.dart`). These are existing production roles, not browser-only proposals or aliases for raised overlays. In field mode `surfaceSubtle` is the dark-red grouping surface while `colorScheme.surface` remains black. Read values from the theme definitions.
 
-Cards are flat: no elevation, a 1 px border, the small radius.
+Existing outlined cards retain their border and small radius. The owner-approved [Concept B document groups](design/CONCEPT_B_IMPLEMENTATION_2026_10_24.md) use `DocumentSection`: flat semantic `surfaceSubtle`, no elevation or outline, 8 dp radius and 16 dp default padding. They group existing controls without adding an interaction. A local Material paints existing ink/focus feedback above the group surface; no clipping or semantic merging is added. Logbook joins lazy month slices into continuous groups.
 
 **Selected container** (light): `colorScheme.secondaryContainer` = the border grey `#E9E9E7` with
 `onSecondaryContainer` = primary text, for selected segments and the navigation bar's indicator.
@@ -152,7 +152,7 @@ prototype-only guidance for original Hybrid / Geist.
 - Tonight uses its own wrapping semantic header (`homeHeading`, 29/34.8,
   weight 500, tracking -0.87). Its plan heading is 20/28, weight 600,
   tracking -0.15; target 18/23.4, weight 500, neutral tracking; rig uses `body` 14/21.7.
-  The editorial night heading is 25/32.5, weight 400, tracking -0.5.
+  The editorial night heading is Geist 25/32.5, weight 500, tracking -0.5.
   The wordmark and welcome link are 13/17.55 (600 and 400 respectively).
 - Hybrid fit-line measures use 12 sp captions, a 4 dp caption/value gap,
   15 sp/500 tabular values and 20 dp between groups. The other StatusBlock
@@ -180,7 +180,7 @@ These supplement the Material-role table above; they are not interchangeable ali
 | `dense` | 12/18 | 400 |
 | `support` | 14/22 | 400 |
 
-The editorial `nightHeading` and `answerHeading` use bundled Source Serif 4 at opsz 14. Root `navigationLabel` uses Roboto 11; calendar compact roles remain explicit HybridTokens exceptions. P-2 sets filled primary labels to 16/600; secondary actions retain their own role. These instructions document implemented adoption, not fresh visual/device acceptance.
+The owner-approved Concept B task supersedes the earlier Source Serif 4 and Roboto role exceptions: all production prose uses Geist. `nightHeading` is 25/32.5, 500, tracking -0.5; `answerHeading` is 28/36.4, 500, tracking -0.56. Root `navigationLabel` uses Geist 11; calendar compact sizes remain explicit HybridTokens exceptions. MaterialIcons remains an icon font; historical font assets and frozen browser references are preserved. P-2 sets filled primary labels to 16/600; secondary actions retain their own role. These instructions document implemented adoption, not fresh visual/device acceptance.
 
 ## 4. Spacing and radius
 
@@ -436,7 +436,7 @@ Detail one tap away (ADR-019 §7; RD-06, RG-06: progressive disclosure, no modes
 
 `ContextLine` exposes independent site/night choices. The constructor requires nullable `siteName` and `night` plus `onSite/onNight`; defaults are `framed:false`, `compact:false`, `noSiteLabel:ContextLine.noSite` ("No site set"). `siteDescription`, `zoneId` and `nightStartUtc` are optional and nullable.
 
-- **Component variants:** the default layout wraps; `compact:true` uses a row with single-line choices that can ellipsize. `framed:true` optionally wraps either layout in a `context.card`. Current choices use `AppTypography.caption` and Hybrid icons/chevron in `textPrimary`, not the older titleSmall/secondary-icon styling.
+- **Component variants:** the default layout wraps; `compact:true` uses content-sized single-line choices separated by 4 dp. The site flexes into remaining space and can ellipsize; the date retains its natural width. A short site no longer reserves an expanded column before the date (owner correction, 2026-10-24). `framed:true` optionally wraps either layout in a `context.card`. Current choices use `AppTypography.caption` and Hybrid icons/chevron in `textPrimary`, not the older titleSmall/secondary-icon styling.
 - **Accessibility:** each choice retains a 48 × 48 dp minimum, enabled button semantics with its own tap action, a Choose a site/night hint and a full-label tooltip. Compact site semantics/tooltip use `siteDescription ?? siteName ?? ContextLine.noSite`; the wrapping variant uses `siteName ?? ContextLine.noSite`. `noSiteLabel` changes visible fallback text only. The full night label is "Night of …", formatted from the supplied evening date by `NightTimeFormatter.eveningDate`, even when compact display omits that prefix.
 - **Night and zone visibility:** the night choice depends on `night != null`; a zone caption in `textTertiary` requires both `night` and `nightStartUtc`. `zoneRule` delegates to `NightTimeFormatter.zoneCaption` (site zone or explicitly labelled device zone). A null `siteName` alone does not suppress a supplied night: callers must pass `night:null` and no night instant without a site (ADR-007 §9).
 - **Current Tonight caller:** `_Context` in `lib/presentation/screens/tonight/tonight_home_screen.dart` sets `compact:true`, `noSiteLabel:ContextLine.setSite` ("Set site"), compact `SiteLabel` display plus `siteDescription:SiteLabel.of(siteVm)`, `planVm.eveningDate` and `zoneId`. It leaves framing off and omits `nightStartUtc`, so no inline zone caption appears. `SessionPlanViewModel` supplies a null evening date for the default/no-site location. Callbacks in `home_context_sheets.dart` open Manage sites or the direct calendar (TD-120); confirmation updates the working plan, cancellation preserves it.

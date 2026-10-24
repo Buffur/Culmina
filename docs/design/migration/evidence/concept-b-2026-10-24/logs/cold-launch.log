@@ -1,0 +1,7 @@
+Starting: Intent { cmp=io.github.buffur.culmina/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: io.github.buffur.culmina/.MainActivity
+TotalTime: 1900
+WaitTime: 1903
+Complete

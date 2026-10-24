@@ -8,9 +8,13 @@
 // Reorder-index correctness (TD-010) is covered at the ViewModel level in
 // planner_capture_blocks_test.dart, where it's deterministic and fast.
 
+import 'dart:io';
+
 import 'package:astroplan/domain/models/camera_class.dart';
+import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:drift/native.dart';
@@ -97,6 +101,63 @@ void main() {
       ),
     );
   }
+
+  testWidgets('large text stacks capture actions within a document group', (
+    tester,
+  ) async {
+    // Use the shipped face for the constrained-width regression. Ahem's
+    // equal-width glyphs do not represent the production button geometry.
+    final bytes = File('assets/fonts/Geist.ttf').readAsBytesSync();
+    await (FontLoader(
+      'Geist',
+    )..addFont(Future.value(ByteData.sublistView(bytes)))).load();
+    tester.view.physicalSize = const Size(375, 1000);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearAllTestValues);
+    await vm.addCaptureBlock(
+      CaptureBlock(
+        frameType: FrameType.light,
+        exposureTimeSeconds: 60,
+        frameCount: 120,
+      ),
+    );
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: vm.providers,
+        child: MaterialApp(
+          theme: AppTheme.light,
+          home: const Scaffold(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 36),
+                child: CapturePlanWidget(includeSummary: false),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final add = find.byKey(const Key('capturePlan.addBlock'));
+    final calibration = find.byKey(const Key('capturePlan.buildCalibration'));
+    final addRect = tester.getRect(add);
+    final calibrationRect = tester.getRect(calibration);
+    expect(addRect.width, 303);
+    expect(calibrationRect.width, addRect.width);
+    expect(calibrationRect.top, greaterThanOrEqualTo(addRect.bottom + 8));
+    expect(addRect.height, greaterThanOrEqualTo(48));
+    expect(calibrationRect.height, greaterThanOrEqualTo(48));
+    await tester.ensureVisible(add);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'capture actions');
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
+    expect(vm.captureBlocks, hasLength(1));
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('empty exposure and frame count are rejected, not defaulted', (
     tester,

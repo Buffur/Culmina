@@ -1,0 +1,15 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/capture_plan_widget_test.dart
+00:00 +0: large text stacks capture actions within a document group
+00:01 +1: empty exposure and frame count are rejected, not defaulted
+00:01 +2: a zero or negative exposure is rejected
+00:01 +3: valid input adds a block and closes the dialog
+00:02 +4: tapping a block opens a pre-filled edit dialog that updates it
+00:02 +5: stacking gain is labeled as relative, not SNR
+00:02 +6: unknown storage renders as Unknown, not a fabricated 0.0 MB
+00:02 +7: the ISO/gain field is labelled neutrally; its helper wraps
+00:03 +8: without a rig the dialog names the camera-type remedy
+00:03 +9: the dialog saves a calibration policy and a typed gain
+00:03 +10: breakdown, "Not included" assumptions and gain help render
+00:04 +11: a phone on a tripod with a 30 s light block is warned
+00:04 +12: a guided rig without a maximum exposure gets no warning
+00:04 +13: All tests passed!

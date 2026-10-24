@@ -1,0 +1,1026 @@
+{
+  "name": "zone_dialog",
+  "theme": "dark",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Position",
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 22.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "Current position",
+      "x": 62.22339630126953,
+      "y": 120.0,
+      "w": 105.05320739746094,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Map",
+      "x": 273.89859771728516,
+      "y": 120.0,
+      "w": 28.702804565429688,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Latitude (°)",
+      "x": 20.0,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Longitude (°)",
+      "x": 193.5,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Name",
+      "x": 20.0,
+      "y": 262.0,
+      "w": 335.0,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Choose a position to fill the name.",
+      "x": 20.0,
+      "y": 342.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Time zone",
+      "x": 20.0,
+      "y": 382.0,
+      "w": 335.0,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Unknown — night uses mean solar time",
+      "x": 37.0,
+      "y": 421.5,
+      "w": 287.0,
+      "h": 23.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Used for local dates and daylight-saving changes.",
+      "x": 20.0,
+      "y": 461.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "More (optional)",
+      "x": 20.0,
+      "y": 511.0,
+      "w": 100.82241821289062,
+      "h": 22.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "Elevation, sky darkness and notes",
+      "x": 20.0,
+      "y": 535.0,
+      "w": 200.0178985595703,
+      "h": 18.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.4
+    },
+    {
+      "text": "Saving here also uses this site for planning.",
+      "x": 20.0,
+      "y": 571.0,
+      "w": 335.0,
+      "h": 22.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "New site",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 89.62799072265625,
+      "h": 27.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Cancel",
+      "x": 77.9706039428711,
+      "y": 774.0,
+      "w": 45.55879211425781,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Save site",
+      "x": 239.13800048828125,
+      "y": 772.0,
+      "w": 70.2239990234375,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Time zone",
+      "x": 44.0,
+      "y": 152.5,
+      "w": 287.0,
+      "h": 27.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Search, e.g. Ljubljana",
+      "x": 88.0,
+      "y": 204.5,
+      "w": 234.0,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "",
+      "x": 48.0,
+      "y": 204.5,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Unknown",
+      "x": 52.0,
+      "y": 253.81999969482422,
+      "w": 223.0,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Night uses mean solar time",
+      "x": 52.0,
+      "y": 277.8199996948242,
+      "w": 223.0,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "",
+      "x": 291.0,
+      "y": 265.5,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Africa/Abidjan",
+      "x": 52.0,
+      "y": 328.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Africa/Accra",
+      "x": 52.0,
+      "y": 376.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Africa/Addis_Ababa",
+      "x": 52.0,
+      "y": 424.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Africa/Algiers",
+      "x": 52.0,
+      "y": 472.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Africa/Asmara",
+      "x": 52.0,
+      "y": 520.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Africa/Asmera",
+      "x": 52.0,
+      "y": 568.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Africa/Bamako",
+      "x": 52.0,
+      "y": 616.5,
+      "w": 263.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Cancel",
+      "x": 273.4412078857422,
+      "y": 625.5,
+      "w": 45.55879211425781,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 561.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 32.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'siteEditor.useCurrentPosition'>]",
+      "x": 20.0,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(12.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'siteEditor.pickOnMap'>]",
+      "x": 193.5,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 193.5,
+      "y": 106.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(12.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 76.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'siteEditor.latitude'>]",
+      "x": 20.0,
+      "y": 193.0,
+      "w": 161.5,
+      "h": 49.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 193.5,
+      "y": 166.0,
+      "w": 161.5,
+      "h": 76.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'siteEditor.longitude'>]",
+      "x": 193.5,
+      "y": 193.0,
+      "w": 161.5,
+      "h": 49.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 242.0,
+      "w": 335.0,
+      "h": 120.0,
+      "padding": "EdgeInsets(0.0, 20.0, 0.0, 0.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'siteEditor.name'>]",
+      "x": 20.0,
+      "y": 289.0,
+      "w": 335.0,
+      "h": 49.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 338.0,
+      "w": 335.0,
+      "h": 24.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 362.0,
+      "w": 335.0,
+      "h": 119.0,
+      "padding": "EdgeInsets(0.0, 20.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 457.0,
+      "w": 335.0,
+      "h": 24.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 505.0,
+      "w": 335.0,
+      "h": 54.0,
+      "padding": "EdgeInsets(0.0, 6.0, 0.0, 6.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 533.0,
+      "w": 200.0178985595703,
+      "h": 20.0,
+      "padding": "EdgeInsets(0.0, 2.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 571.0,
+      "w": 335.0,
+      "h": 22.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 752.0,
+      "w": 375.0,
+      "h": 60.0,
+      "padding": "EdgeInsets(20.0, 8.0, 20.0, 4.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'siteEditor.cancel'>]",
+      "x": 20.0,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'siteEditor.save'>]",
+      "x": 193.5,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 193.5,
+      "y": 760.0,
+      "w": 161.5,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.all(20.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 128.5,
+      "w": 335.0,
+      "h": 51.0,
+      "padding": "EdgeInsets(24.0, 24.0, 24.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 179.5,
+      "w": 335.0,
+      "h": 432.0,
+      "padding": "EdgeInsets(16.0, 12.0, 16.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 241.5,
+      "w": 303.0,
+      "h": 72.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#eff7a]",
+      "x": 36.0,
+      "y": 241.5,
+      "w": 303.0,
+      "h": 72.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 241.5,
+      "w": 303.0,
+      "h": 72.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 241.5,
+      "w": 303.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "Divider",
+      "key": null,
+      "x": 36.0,
+      "y": 313.5,
+      "w": 303.0,
+      "h": 1.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 313.5,
+      "w": 303.0,
+      "h": 1.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 313.5,
+      "w": 303.0,
+      "h": 1.0,
+      "padding": "EdgeInsets(0.0, 0.0, 0.0, 1.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 314.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#76aac]",
+      "x": 36.0,
+      "y": 314.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 314.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 314.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 362.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#e9447]",
+      "x": 36.0,
+      "y": 362.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 362.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 362.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 410.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#66ec1]",
+      "x": 36.0,
+      "y": 410.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 410.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 410.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 458.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#d9eb0]",
+      "x": 36.0,
+      "y": 458.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 458.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 458.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 506.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#b8652]",
+      "x": 36.0,
+      "y": 506.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 506.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 506.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 554.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#93cac]",
+      "x": 36.0,
+      "y": 554.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 554.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 554.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "ListTile",
+      "key": null,
+      "x": 36.0,
+      "y": 602.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": "[GlobalKey#ad9c4]",
+      "x": 36.0,
+      "y": 602.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 36.0,
+      "y": 602.5,
+      "w": 303.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 602.5,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 0.0, 24.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 611.5,
+      "w": 335.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(24.0, 0.0, 24.0, 24.0)"
+    },
+    {
+      "type": "TextButton",
+      "key": null,
+      "x": 261.4412078857422,
+      "y": 611.5,
+      "w": 69.55879211425781,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 261.4412078857422,
+      "y": 611.5,
+      "w": 69.55879211425781,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 64.0,
+      "y": 219.5,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(13.0)"
+    }
+  ]
+}

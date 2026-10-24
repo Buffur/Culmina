@@ -1,0 +1,273 @@
+{
+  "name": "unsupported_confirm",
+  "theme": "dark",
+  "scale": 2.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Your data can't be upgraded",
+      "x": 24.0,
+      "y": -4.0,
+      "w": 327.0,
+      "h": 112.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "Your planner data comes from a pre-release build of Culmina (data version 1) and cannot be upgraded. Nothing has been changed. You can start with fresh data; the old file is kept on this device, not deleted.",
+      "x": 24.0,
+      "y": 124.0,
+      "w": 327.0,
+      "h": 528.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Start with fresh data",
+      "x": 40.0,
+      "y": 684.0,
+      "w": 295.0,
+      "h": 96.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Culmina",
+      "x": 16.0,
+      "y": 4.5,
+      "w": 169.49679565429688,
+      "h": 55.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Start with fresh data?",
+      "x": 28.0,
+      "y": 120.0,
+      "w": 319.0,
+      "h": 110.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Your old sites, rigs, targets and plans will no longer be shown in the app. The old data file is kept on this device, renamed, and is not deleted.",
+      "x": 28.0,
+      "y": 246.0,
+      "w": 319.0,
+      "h": 294.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Cancel",
+      "x": 227.8823699951172,
+      "y": 572.0,
+      "w": 91.11763000488281,
+      "h": 40.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Start fresh",
+      "x": 178.47357177734375,
+      "y": 628.0,
+      "w": 140.52642822265625,
+      "h": 40.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 748.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 748.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'unsupportedDb.reset'>]",
+      "x": 24.0,
+      "y": 676.0,
+      "w": 327.0,
+      "h": 112.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 24.0,
+      "y": 676.0,
+      "w": 327.0,
+      "h": 112.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.all(20.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 112.0,
+      "w": 335.0,
+      "h": 118.0,
+      "padding": "EdgeInsets(8.0, 8.0, 8.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 230.0,
+      "w": 335.0,
+      "h": 334.0,
+      "padding": "EdgeInsets(8.0, 16.0, 8.0, 24.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 564.0,
+      "w": 335.0,
+      "h": 136.0,
+      "padding": "EdgeInsets(24.0, 0.0, 24.0, 24.0)"
+    },
+    {
+      "type": "TextButton",
+      "key": null,
+      "x": 215.8823699951172,
+      "y": 564.0,
+      "w": 115.11763000488281,
+      "h": 56.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 215.8823699951172,
+      "y": 564.0,
+      "w": 115.11763000488281,
+      "h": 56.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "TextButton",
+      "key": "[<'unsupportedDb.confirm'>]",
+      "x": 166.47357177734375,
+      "y": 620.0,
+      "w": 164.52642822265625,
+      "h": 56.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 166.47357177734375,
+      "y": 620.0,
+      "w": 164.52642822265625,
+      "h": 56.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    }
+  ]
+}

@@ -5,7 +5,7 @@ Current mapping guidance carried forward from the 2026-10-24 token/source reconc
 | Semantic role | Production source | When to use |
 | --- | --- | --- |
 | `surface-default` | `Theme.of(context).scaffoldBackgroundColor` (`ThemeData`) | The page canvas |
-| `surface-subtle` | `HybridTokens.surfaceSubtle`; generic theme surfaces remain `ColorScheme.surface` and field `cardColor` | Quiet Hybrid grouping; selected root navigation uses this role. Field `ColorScheme.surface` is black, while `surfaceSubtle` and `cardColor` use the dark-red grouping surface |
+| `surface-subtle` | `HybridTokens.surfaceSubtle`; generic theme surfaces remain `ColorScheme.surface` and field `cardColor` | Quiet Hybrid grouping; selected root navigation and Concept B `DocumentSection` use this role. Field `ColorScheme.surface` is black, while `surfaceSubtle` and `cardColor` use the dark-red grouping surface |
 | `surface-raised` | `AppPalette.surfaceRaised`, `surfaceContainerHigh` | Dialogs, menus and sheets above the page |
 | `surface-sunken` | `HybridTokens.surfaceSunken` | Recessed Moon-lane tracks and the Moon-up legend well in `night_browser_sections.dart`; distinct from raised overlays |
 | `text-primary` | `AppPalette.textPrimary` | Answers, values and meaningful headings |
@@ -25,4 +25,4 @@ Current mapping guidance carried forward from the 2026-10-24 token/source reconc
 
 Read actual values from `lib/core/theme/app_colors.dart`, `app_palette.dart`, `hybrid_tokens.dart` and `app_theme.dart`; the browser lab's `tokens.json` is an explicitly dated proposal snapshot, not a source of production constants.
 
-Caller map (under `lib/presentation/`): `navigation/app_shell.dart` reads `surfaceSubtle`; `widgets/night_browser_sections.dart` reads sunken/sky/Moon roles; `widgets/weather_hybrid_view.dart` reads selected-hour and weather-notice roles; `shared/plan_state.dart` defines both the palette tone helper and Hybrid badges; `shared/night_text.dart` defines `FitText.color`, used by `shared/status_block.dart`; `widgets/altitude_chart_widget.dart` retains AppPalette chart roles. `AppTheme._withTokens` installs both extensions for light/dark/field. Similar values or names do not make these APIs interchangeable or require migrating every AppPalette caller.
+Caller map (under `lib/presentation/`): `navigation/app_shell.dart` and `shared/document_section.dart` read `surfaceSubtle`; `widgets/night_browser_sections.dart` reads sunken/sky/Moon roles; `widgets/weather_hybrid_view.dart` reads selected-hour and weather-notice roles; `shared/plan_state.dart` defines both the palette tone helper and Hybrid badges; `shared/night_text.dart` defines `FitText.color`, used by `shared/status_block.dart`; `widgets/altitude_chart_widget.dart` retains AppPalette chart roles. `AppTheme._withTokens` installs both extensions for light/dark/field. Similar values or names do not make these APIs interchangeable or require migrating every AppPalette caller.

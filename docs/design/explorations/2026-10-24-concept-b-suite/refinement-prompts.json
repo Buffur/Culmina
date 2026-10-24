@@ -1,0 +1,25 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "refinements": [
+    {
+      "name": "logbook",
+      "prompt": "Edit ONLY these precise artifacts in this Culmina Logbook CONCEPT B image. Keep all seven records, exact numbers, labels, badges, search/filter controls, section grouping, and footer unchanged. Change the big Logbook page title from serif to the Geist-like SANS-Serif used by the original source; the heading should be the same sans family as the record names and other UI, NOT a serif. Restore the small field-mode crescent icon at the top RIGHT of the app bar, aligned with the Logbook title, as in the current app. Replace any smoky texture or vignette with flat #191919 page and #202020 section fills if possible. Do not invent more actions or remove any records. Keep the CONCEPT B · NOT IMPLEMENTED label."
+    },
+    {
+      "name": "moon",
+      "prompt": "Edit ONLY the following Culmina Moon CONCEPT B artifacts, preserve all 31 calendar dates/durations and phase graphics, exact text, units, selected day 19, navigation, all sections and positions. Remove the right-chevron arrow on the 'Dark · Moon above horizon / 9 h 55 min remaining' state block: that state has NO click action. Do not remove the real chevron on 'Read the time browser' nor real preview actions. Make the selected Moon tab underline and selected calendar-day outline neutral #EBEBEA as in the source, rather than blue; retain blue in the SCIENTIFIC SKY RAMP and Moon lanes. Flatten atmospheric background texture to uniform #191919 page / #202020 sections, no glow or shading, if possible. Do not add controls, change any date/duration, or remove the timeline. Preserve CONCEPT B · NOT IMPLEMENTED external label."
+    },
+    {
+      "name": "weather",
+      "prompt": "Edit ONLY these artifacts in this Culmina Weather CONCEPT B image. Preserve all content, every number, warning, provenance line, date, site-zone label, forecast limit, controls, groups, layout and exact row positions. Remove right-pointing action chevrons at the right edge of the five STATIC Dark-time statistics data rows (Temperature, Relative humidity, Cloud cover, Wind / gusts, Precipitation probability). They are data, not links. Keep genuine chevrons for Hourly values and Forecast details, all View this night buttons and night-navigation arrows. Change section headings Dark-time statistics, Forecast details and Coming nights to the same Geist-like SANS family as the UI. ONLY the main answer Cloud 0–59% in the dark stays editorial serif. Preserve blue measurement icons. Keep CONCEPT B · NOT IMPLEMENTED label. Do not omit content or add controls."
+    },
+    {
+      "name": "result",
+      "prompt": "Edit ONLY the selected Partly radio control color in this Culmina Record result CONCEPT B image. Replace its blue selected center/accent with neutral white/off-white #EBEBEA as in the current Culmina dark theme. Keep its selection and outer radio geometry. ALL other pixels, text, form field values 96 and 30, empty fields, notes, section layout, buttons, title and CONCEPT B · NOT IMPLEMENTED label stay unchanged. No new content or controls."
+    },
+    {
+      "name": "plan",
+      "prompt": "Edit this Culmina Plan CONCEPT B image to restore existing BELOW-THE-FOLD content missing from the first concept. Image 1 is the generated concept to edit, Image 2 is the COMPLETE real current Plan screenshot with synthetic QA data. Keep ALL existing concept content, numbers, fields, context, capture actions, tracking warning, Estimate values, Unknown storage and current save footer. Make the image taller; do not shrink text or delete upper sections. After the existing Budget and assumptions /Window time, overheads and file-size basis row, ADD the two existing collapsed disclosure rows visible in Image 2: 'Stacking gain details' /'Per-group table and time curve'; 'Rig details' /'DSLR · 135 mm lens'. Put these in the same flat tonal group as assumptions. Then ADD a final flat tonal section titled 'The night ahead' in the existing Source Serif 4-like editorial style, containing the two genuine detail navigation rows: moon line icon 'Night & Moon' /'9 h 55 min dark · 19:47–05:42' /'Moon-free 00:17–05:42 · First quarter, 62%' with a right chevron; weather line icon 'Weather' /'Cloud 0–59% in the dark' /'Full dark-time coverage · updated just now' with a right chevron. Below these rows keep the existing collapsed 'Sky darkness' /'Unknown' disclosure. Only after all this content place the footer 'Saved on this device.' and the single full-width 'Save plan' button. NO bottom root navigation. Keep exact source labels/data/units and no invented scientific measures. Keep all earlier concept blocks and external CONCEPT B · NOT IMPLEMENTED label. Maintain the quiet dark tonal block style, flat #191919/#202020 surfaces, same readable sans type scale. Do not add any new capability."
+    }
+  ]
+}

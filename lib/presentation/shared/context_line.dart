@@ -86,7 +86,7 @@ class ContextLine extends StatelessWidget {
         if (compact)
           Row(
             children: [
-              Expanded(
+              Flexible(
                 child: _Choice(
                   key: const Key('context.site'),
                   icon: HybridIcons.homePin,
@@ -99,17 +99,15 @@ class ContextLine extends StatelessWidget {
                 ),
               ),
               if (night != null) ...[
-                const SizedBox(width: AppSpacing.sm),
-                Flexible(
-                  child: _Choice(
-                    key: const Key('context.night'),
-                    icon: HybridIcons.planner,
-                    text: NightTimeFormatter.eveningDate(night!),
-                    semanticsLabel: nightText!,
-                    hint: 'Choose a night',
-                    singleLine: true,
-                    onTap: onNight,
-                  ),
+                const SizedBox(width: AppSpacing.xs),
+                _Choice(
+                  key: const Key('context.night'),
+                  icon: HybridIcons.planner,
+                  text: NightTimeFormatter.eveningDate(night!),
+                  semanticsLabel: nightText!,
+                  hint: 'Choose a night',
+                  singleLine: true,
+                  onTap: onNight,
                 ),
               ],
             ],

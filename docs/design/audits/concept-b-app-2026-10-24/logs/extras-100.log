@@ -1,0 +1,41 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart
+00:00 +0: Concept B app audit: metadata_ready dark 1.0
+00:03 +1: Concept B app audit: metadata_read dark 1.0
+00:05 +2: Concept B app audit: metadata_read_b dark 1.0
+00:07 +3: Concept B app audit: metadata_unreadable dark 1.0
+00:09 +4: Concept B app audit: plan_actions dark 1.0
+00:11 +5: Concept B app audit: capture_ime dark 1.0
+00:15 +6: Concept B app audit: rig_ime dark 1.0
+00:19 +7: Concept B app audit: site_ime dark 1.0
+00:23 +8: Concept B app audit: target_ime dark 1.0
+00:27 +9: Concept B app audit: target_invalid dark 1.0
+00:31 +10: Concept B app audit: astrobin_preview dark 1.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: StateError:<Bad state: No element>
+astrobin_preview route
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart:383:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart line 383
+The test description was:
+  Concept B app audit: astrobin_preview dark 1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:33 +10 -1: Concept B app audit: astrobin_preview dark 1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Concept B app audit: astrobin_preview dark 1.0
+  
+00:33 +10 -1: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart: Concept B app audit: astrobin_preview dark 1.0

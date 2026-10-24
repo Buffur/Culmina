@@ -1,5 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -82,32 +85,37 @@ class _LibraryScreenState extends State<LibraryScreen> {
           return ListView(
             padding: settingsPagePadding,
             children: [
-              SettingsRow(
-                key: const Key('library.rigs'),
-                icon: HybridIcons.camera,
-                title: AppWords.rigs,
-                summary: counts == null
-                    ? 'Your cameras with their lenses or telescopes'
-                    : '${counts[0]} ${counts[0] == 1 ? 'rig' : 'rigs'} · your '
-                          'cameras with their lenses or telescopes',
-                onTap: () => context.push(AppRouter.libraryRigs),
-              ),
-              SettingsRow(
-                key: const Key('library.targets'),
-                icon: HybridIcons.target,
-                title: AppWords.targets,
-                summary: counts == null
-                    ? 'The catalogue and the targets you added'
-                    : '${counts[1]} ${counts[1] == 1 ? 'target' : 'targets'}'
-                          ' · the catalogue and the targets you added',
-                onTap: () => context.push(AppRouter.libraryTargets),
-              ),
-              SettingsRow(
-                key: const Key('library.sites'),
-                icon: HybridIcons.pin,
-                title: AppWords.sites,
-                summary: '$sites · choose the planning site in Plan',
-                onTap: () => context.push(AppRouter.librarySites),
+              DocumentSection(
+                key: const Key('library.collectionsGroup'),
+                children: [
+                  SettingsRow(
+                    key: const Key('library.rigs'),
+                    icon: HybridIcons.camera,
+                    title: AppWords.rigs,
+                    summary: counts == null
+                        ? 'Your cameras with their lenses or telescopes'
+                        : '${counts[0]} ${counts[0] == 1 ? 'rig' : 'rigs'} · your '
+                              'cameras with their lenses or telescopes',
+                    onTap: () => context.push(AppRouter.libraryRigs),
+                  ),
+                  SettingsRow(
+                    key: const Key('library.targets'),
+                    icon: HybridIcons.target,
+                    title: AppWords.targets,
+                    summary: counts == null
+                        ? 'The catalogue and the targets you added'
+                        : '${counts[1]} ${counts[1] == 1 ? 'target' : 'targets'}'
+                              ' · the catalogue and the targets you added',
+                    onTap: () => context.push(AppRouter.libraryTargets),
+                  ),
+                  SettingsRow(
+                    key: const Key('library.sites'),
+                    icon: HybridIcons.pin,
+                    title: AppWords.sites,
+                    summary: '$sites · choose the planning site in Plan',
+                    onTap: () => context.push(AppRouter.librarySites),
+                  ),
+                ],
               ),
               if (snapshot.hasError) ...[
                 const SizedBox(height: AppSpacing.itemGap),

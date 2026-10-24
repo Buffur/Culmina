@@ -1,6 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+
+import '../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -170,320 +173,351 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
     ];
     final index = slots.isEmpty ? 0 : _hour.clamp(0, slots.length - 1);
     final children = <Widget>[
-      // The answer for the dark span (`.weather-answer`).
-      Semantics(
-        header: true,
-        child: Text(
-          headline,
-          key: const Key('weather.facts'),
-          style: AppTypography.answerHeading.copyWith(
-            height: 1.3,
-            color: p.textPrimary,
-          ),
-        ),
-      ),
-      if (available != null && !noDark && available.age != WeatherAge.current)
-        Text(
-          '${available.age == WeatherAge.stale ? 'Stale' : 'Aging'} snapshot · '
-          'forecast, not current conditions.',
-          key: const Key('weather.freshnessNotice'),
-          style: status.copyWith(color: hybrid.weatherNotice),
-        ),
-      if (s != null && !noDark) ...[
-        const SizedBox(height: 8),
-        Text(
-          'Dark ${at(s.fromUtc)} → ${at(s.toUtc)} · '
-          '${QuantityText.duration(s.toUtc.difference(s.fromUtc))}',
-          key: const Key('weather.span'),
-          style: AppTypography.body.copyWith(
-            height: 1.55,
-            color: p.textSecondary,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-        ),
-      ] else if (s != null) ...[
-        const SizedBox(height: 8),
-        Text(
-          WeatherText.span(
-            s,
-            context
-                .watch<SettingsViewModel>()
-                .planningPreferences
-                .darknessLimit
-                .degrees,
-            at,
-          ),
-          key: const Key('weather.span'),
-          style: AppTypography.body.copyWith(
-            height: 1.55,
-            color: p.textSecondary,
-          ),
-        ),
-      ],
-      if (s != null &&
-          !noDark &&
-          s.cloudCover != null &&
-          cloudKnown < s.totalHours)
-        Text(
-          '$cloudKnown of ${s.totalHours} hourly cloud samples known · gaps '
-          'stay unknown.',
-          key: const Key('weather.headlineCoverage'),
-          style: status,
-        ),
-      if (s != null && !noDark)
-        if (WeatherText.trend(s, at) case final trend?) ...[
-          const SizedBox(height: 12),
-          Text(
-            trend,
-            key: const Key('weather.trend'),
-            style: AppTypography.value.copyWith(
-              height: 1.55,
-              color: p.textPrimary,
-              fontFeatures: const [FontFeature.tabularFigures()],
+      DocumentSection(
+        key: const Key('weather.summaryGroup'),
+        children: [
+          // The answer for the dark span (`.weather-answer`).
+          Semantics(
+            header: true,
+            child: Text(
+              headline,
+              key: const Key('weather.facts'),
+              style: AppTypography.answerHeading.copyWith(
+                height: 1.3,
+                color: p.textPrimary,
+              ),
             ),
           ),
-        ],
-      // How far to trust it (`.weather-trust`).
-      const SizedBox(height: 16),
-      if (state is NightWeatherOutOfRange)
-        Text(
-          WeatherText.outOfRange,
-          key: const Key('weather.outOfRange'),
-          style: quiet,
-        )
-      else if (state case NightWeatherUnavailable(:final failure))
-        Text(
-          WeatherText.failure(failure),
-          key: const Key('weather.unavailable'),
-          style: status,
-        )
-      else if (state is NightWeatherLoading || state is NightWeatherIdle)
-        const LinearProgressIndicator(key: Key('weather.loading')),
-      if (s != null)
-        if (WeatherText.coverageCount(s) case final count?)
-          Text(count, key: const Key('weather.coverage'), style: status),
-      if (available != null) ...[
-        const SizedBox(height: 4),
-        Text(
-          'Updated ${NightTimeFormatter.previewInstant(context, available.snapshot.fetchedAtUtc, zoneId: zoneId)}'
-          ' · ${QuantityText.duration(available.ageDuration)} old',
-          key: const Key('weather.updated'),
-          style: quiet,
-        ),
-        if (s != null && !noDark && !s.complete)
-          Text(
-            'Forecast gaps remain unknown.',
-            key: const Key('weather.gaps'),
-            style: status.copyWith(color: hybrid.weatherNotice),
-          ),
-        if (available.refreshFailed case final f?)
-          Text(
-            'Offline · cached forecast. ${WeatherText.failure(f)}',
-            key: const Key('weather.refreshFailed'),
-            style: status.copyWith(color: hybrid.weatherNotice),
-          ),
-      ],
-      if (!noDark && (unavailable || available != null)) ...[
-        const SizedBox(height: 10),
-        OutlinedButton(
-          key: const Key('weather.refresh'),
-          style: OutlinedButton.styleFrom(
-            minimumSize: const Size.fromHeight(48),
-          ),
-          onPressed: c.refreshWeather,
-          child: Text(unavailable ? 'Retry forecast' : 'Refresh forecast'),
-        ),
-      ],
-      // The presentation, and where it is chosen.
-      if (s != null && !noDark && s.coveredHours > 0) ...[
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text('${view.letter} · ${view.label} · ', style: quiet),
-            InkWell(
-              key: const Key('weather.changeView'),
-              // Settings → Appearance, above the tabs as Settings opens it.
-              onTap: () => Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute<void>(
-                  settings: const RouteSettings(name: '/settings/appearance'),
-                  builder: (_) =>
-                      const SettingsScreen(section: SettingsSection.appearance),
-                ),
+          if (available != null &&
+              !noDark &&
+              available.age != WeatherAge.current)
+            Text(
+              '${available.age == WeatherAge.stale ? 'Stale' : 'Aging'} snapshot · '
+              'forecast, not current conditions.',
+              key: const Key('weather.freshnessNotice'),
+              style: status.copyWith(color: hybrid.weatherNotice),
+            ),
+          if (s != null && !noDark) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Dark ${at(s.fromUtc)} → ${at(s.toUtc)} · '
+              '${QuantityText.duration(s.toUtc.difference(s.fromUtc))}',
+              key: const Key('weather.span'),
+              style: AppTypography.body.copyWith(
+                height: 1.55,
+                color: p.textSecondary,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 48),
-                child: Center(
-                  widthFactor: 1,
-                  child: Text(
-                    'Change in Settings → Appearance',
-                    style: quiet.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationColor: p.textSecondary,
-                    ),
-                  ),
-                ),
+            ),
+          ] else if (s != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              WeatherText.span(
+                s,
+                context
+                    .watch<SettingsViewModel>()
+                    .planningPreferences
+                    .darknessLimit
+                    .degrees,
+                at,
+              ),
+              key: const Key('weather.span'),
+              style: AppTypography.body.copyWith(
+                height: 1.55,
+                color: p.textSecondary,
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 12),
-        Semantics(
-          header: true,
-          child: Text(
-            'Dark-time statistics',
-            style: AppTypography.sectionHeading.copyWith(color: p.textPrimary),
-          ),
-        ),
-        if (view == WeatherView.charts)
-          _Charts(
-            slots: slots,
-            units: units,
-            zoneId: zoneId,
-            windowStartUtc: night?.startUtc,
-            selected: index,
-            onSelect: (i) => setState(() => _hour = i),
-          )
-        else
-          _Rows(slots: slots, units: units),
-        if (s.dewRiskHours > 0)
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.notes),
-            child: Text(
-              '${s.dewRiskHours} of ${s.dewKnownHours} samples have a dew '
-              'point within '
-              '${QuantityText.temperatureDifference(s.dewMarginC, units)} of '
-              'air. A caution, not a condensation forecast.',
-              key: const Key('weather.dew'),
-              style: _note(context).copyWith(color: hybrid.caution),
+          if (s != null &&
+              !noDark &&
+              s.cloudCover != null &&
+              cloudKnown < s.totalHours)
+            Text(
+              '$cloudKnown of ${s.totalHours} hourly cloud samples known · gaps '
+              'stay unknown.',
+              key: const Key('weather.headlineCoverage'),
+              style: status,
             ),
-          ),
-        const SizedBox(height: 10),
-        Text(
-          'Ranges summarize known dark-time samples. Temperature, humidity, '
-          'cloud and wind are instantaneous. Gusts and precipitation '
-          'probability describe the preceding hour; * marks partial '
-          'dark-time overlap. Probability is %, not rainfall amount.',
-          key: const Key('weather.precipNote'),
-          style: _note(context),
-        ),
-        // `.wx-hour-slider`: an hour to inspect, then its values.
-        const SizedBox(height: 16),
-        Text(
-          'Inspect an hour',
-          style: AppTypography.caption.copyWith(
-            height: 1.5,
-            color: p.textSecondary,
-          ),
-        ),
-        if (slots.length > 1)
-          SliderTheme(
-            // notion-hybrid.css `.wx-hour-slider input`: the browser range
-            // in the accent, a small thumb, no tick marks.
-            data: SliderTheme.of(context).copyWith(
-              trackHeight: 4,
-              activeTrackColor: hybrid.accent,
-              thumbColor: hybrid.accent,
-              inactiveTrackColor: p.border,
-              overlayColor: hybrid.accent.withValues(alpha: 0.12),
-              tickMarkShape: SliderTickMarkShape.noTickMark,
-              thumbShape: const RoundSliderThumbShape(
-                enabledThumbRadius: 8,
-                elevation: 0,
-                pressedElevation: 0,
-              ),
-              showValueIndicator: ShowValueIndicator.never,
-            ),
-            child: Slider(
-              key: const Key('weather.hourSlider'),
-              value: index.toDouble(),
-              min: 0,
-              max: (slots.length - 1).toDouble(),
-              divisions: slots.length - 1,
-              semanticFormatterCallback: (v) =>
-                  _instant(context, slots[v.round()], zoneId),
-              onChanged: (v) => setState(() => _hour = v.round()),
-            ),
-          ),
-        _HourDetails(
-          slot: slots[index],
-          units: units,
-          zoneId: zoneId,
-          open: _hourOpen,
-          onToggle: () => setState(() => _hourOpen = !_hourOpen),
-          time: NightTimeFormatter.clockTime(
-            context,
-            slots[index].timeUtc,
-            zoneId: zoneId,
-          ),
-        ),
-      ],
-      // Q3 (PD-18): the limitation, and a page the user opens.
-      const SizedBox(height: 24),
-      Text.rich(
-        TextSpan(
-          children: [
-            const TextSpan(
-              text:
-                  'This forecast does not predict astronomical seeing or '
-                  'transparency. ',
-            ),
-            WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: InkWell(
-                key: const Key('weather.clearOutside'),
-                onTap: () => launchUrl(
-                  ClearOutsideLink.at(site.latitude, site.longitude),
-                  mode: LaunchMode.externalApplication,
+          if (s != null && !noDark)
+            if (WeatherText.trend(s, at) case final trend?) ...[
+              const SizedBox(height: 12),
+              Text(
+                trend,
+                key: const Key('weather.trend'),
+                style: AppTypography.value.copyWith(
+                  height: 1.55,
+                  color: p.textPrimary,
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 48),
-                  child: Center(
-                    widthFactor: 1,
-                    child: Text(
-                      'Look at Clear Outside',
-                      style: AppTypography.caption.copyWith(
-                        height: 1.7,
-                        color: p.textSecondary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: p.textSecondary,
+              ),
+            ],
+          // How far to trust it (`.weather-trust`).
+          const SizedBox(height: 16),
+          if (state is NightWeatherOutOfRange)
+            Text(
+              WeatherText.outOfRange,
+              key: const Key('weather.outOfRange'),
+              style: quiet,
+            )
+          else if (state case NightWeatherUnavailable(:final failure))
+            Text(
+              WeatherText.failure(failure),
+              key: const Key('weather.unavailable'),
+              style: status,
+            )
+          else if (state is NightWeatherLoading || state is NightWeatherIdle)
+            const LinearProgressIndicator(key: Key('weather.loading')),
+          if (s != null)
+            if (WeatherText.coverageCount(s) case final count?)
+              Text(count, key: const Key('weather.coverage'), style: status),
+          if (available != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              'Updated ${NightTimeFormatter.previewInstant(context, available.snapshot.fetchedAtUtc, zoneId: zoneId)}'
+              ' · ${QuantityText.duration(available.ageDuration)} old',
+              key: const Key('weather.updated'),
+              style: quiet,
+            ),
+            if (s != null && !noDark && !s.complete)
+              Text(
+                'Forecast gaps remain unknown.',
+                key: const Key('weather.gaps'),
+                style: status.copyWith(color: hybrid.weatherNotice),
+              ),
+            if (available.refreshFailed case final f?)
+              Text(
+                'Offline · cached forecast. ${WeatherText.failure(f)}',
+                key: const Key('weather.refreshFailed'),
+                style: status.copyWith(color: hybrid.weatherNotice),
+              ),
+          ],
+          if (!noDark && (unavailable || available != null)) ...[
+            const SizedBox(height: 10),
+            OutlinedButton(
+              key: const Key('weather.refresh'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+              ),
+              onPressed: c.refreshWeather,
+              child: Text(unavailable ? 'Retry forecast' : 'Refresh forecast'),
+            ),
+          ],
+        ],
+      ),
+      const SizedBox(height: 16),
+      // The presentation, and where it is chosen.
+      if (s != null && !noDark && s.coveredHours > 0) ...[
+        DocumentSection(
+          key: const Key('weather.statisticsGroup'),
+          joinNext: true,
+          children: [
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text('${view.letter} · ${view.label} · ', style: quiet),
+                InkWell(
+                  key: const Key('weather.changeView'),
+                  // Settings → Appearance, above the tabs as Settings opens it.
+                  onTap: () => Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute<void>(
+                      settings: const RouteSettings(
+                        name: '/settings/appearance',
+                      ),
+                      builder: (_) => const SettingsScreen(
+                        section: SettingsSection.appearance,
+                      ),
+                    ),
+                  ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    child: Center(
+                      widthFactor: 1,
+                      child: Text(
+                        'Change in Settings → Appearance',
+                        style: quiet.copyWith(
+                          decoration: TextDecoration.underline,
+                          decorationColor: p.textSecondary,
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Semantics(
+              header: true,
+              child: Text(
+                'Dark-time statistics',
+                style: AppTypography.sectionHeading.copyWith(
+                  color: p.textPrimary,
+                ),
+              ),
+            ),
+            if (view == WeatherView.charts)
+              _Charts(
+                slots: slots,
+                units: units,
+                zoneId: zoneId,
+                windowStartUtc: night?.startUtc,
+                selected: index,
+                onSelect: (i) => setState(() => _hour = i),
+              )
+            else
+              _Rows(slots: slots, units: units),
+            if (s.dewRiskHours > 0)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.notes),
+                child: Text(
+                  '${s.dewRiskHours} of ${s.dewKnownHours} samples have a dew '
+                  'point within '
+                  '${QuantityText.temperatureDifference(s.dewMarginC, units)} of '
+                  'air. A caution, not a condensation forecast.',
+                  key: const Key('weather.dew'),
+                  style: _note(context).copyWith(color: hybrid.caution),
+                ),
+              ),
+            const SizedBox(height: 10),
+            Text(
+              'Ranges summarize known dark-time samples. Temperature, humidity, '
+              'cloud and wind are instantaneous. Gusts and precipitation '
+              'probability describe the preceding hour; * marks partial '
+              'dark-time overlap. Probability is %, not rainfall amount.',
+              key: const Key('weather.precipNote'),
+              style: _note(context),
+            ),
+            // `.wx-hour-slider`: an hour to inspect, then its values.
+            const SizedBox(height: 16),
+            Text(
+              'Inspect an hour',
+              style: AppTypography.caption.copyWith(
+                height: 1.5,
+                color: p.textSecondary,
+              ),
+            ),
+            if (slots.length > 1)
+              SliderTheme(
+                // notion-hybrid.css `.wx-hour-slider input`: the browser range
+                // in the accent, a small thumb, no tick marks.
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: 4,
+                  activeTrackColor: hybrid.accent,
+                  thumbColor: hybrid.accent,
+                  inactiveTrackColor: p.border,
+                  overlayColor: hybrid.accent.withValues(alpha: 0.12),
+                  tickMarkShape: SliderTickMarkShape.noTickMark,
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 8,
+                    elevation: 0,
+                    pressedElevation: 0,
+                  ),
+                  showValueIndicator: ShowValueIndicator.never,
+                ),
+                child: Slider(
+                  key: const Key('weather.hourSlider'),
+                  value: index.toDouble(),
+                  min: 0,
+                  max: (slots.length - 1).toDouble(),
+                  divisions: slots.length - 1,
+                  semanticFormatterCallback: (v) =>
+                      _instant(context, slots[v.round()], zoneId),
+                  onChanged: (v) => setState(() => _hour = v.round()),
+                ),
+              ),
+            _HourDetails(
+              slot: slots[index],
+              units: units,
+              zoneId: zoneId,
+              open: _hourOpen,
+              onToggle: () => setState(() => _hourOpen = !_hourOpen),
+              time: NightTimeFormatter.clockTime(
+                context,
+                slots[index].timeUtc,
+                zoneId: zoneId,
               ),
             ),
           ],
         ),
-        key: const Key('weather.notSeeing'),
-        style: AppTypography.caption.copyWith(
-          height: 1.7,
-          color: p.textSecondary,
-        ),
+      ],
+      DocumentSection(
+        key: const Key('weather.limitGroup'),
+        joinPrevious: s != null && !noDark && s.coveredHours > 0,
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: [
+          // Q3 (PD-18): the limitation, and a page the user opens.
+          const SizedBox(height: 24),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(
+                  text:
+                      'This forecast does not predict astronomical seeing or '
+                      'transparency. ',
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: InkWell(
+                    key: const Key('weather.clearOutside'),
+                    onTap: () => launchUrl(
+                      ClearOutsideLink.at(site.latitude, site.longitude),
+                      mode: LaunchMode.externalApplication,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      child: Center(
+                        widthFactor: 1,
+                        child: Text(
+                          'Look at Clear Outside',
+                          style: AppTypography.caption.copyWith(
+                            height: 1.7,
+                            color: p.textSecondary,
+                            decoration: TextDecoration.underline,
+                            decorationColor: p.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            key: const Key('weather.notSeeing'),
+            style: AppTypography.caption.copyWith(
+              height: 1.7,
+              color: p.textSecondary,
+            ),
+          ),
+        ],
       ),
       if (available != null)
         Padding(
           padding: const EdgeInsets.only(top: AppSpacing.sm),
-          child: CollapsibleSection(
-            key: const Key('weather.details'),
-            sectionKey: 'conditions.weatherDetails',
-            title: 'Forecast details',
-            summary: 'Hourly values, layers and source',
-            child: _Details(
-              state: available,
-              summary: s,
-              units: units,
-              zoneId: zoneId,
-              leadDays: switch (night?.eveningDate) {
-                final n? => ForecastOverview.daysBetween(
-                  ForecastOverview.localDate(
-                    available.snapshot.fetchedAtUtc,
-                    site.timeContext,
-                  ),
-                  n,
+          child: DocumentSection(
+            key: const Key('weather.detailsGroup'),
+            children: [
+              CollapsibleSection(
+                key: const Key('weather.details'),
+                sectionKey: 'conditions.weatherDetails',
+                title: 'Forecast details',
+                summary: 'Hourly values, layers and source',
+                child: _Details(
+                  state: available,
+                  summary: s,
+                  units: units,
+                  zoneId: zoneId,
+                  leadDays: switch (night?.eveningDate) {
+                    final n? => ForecastOverview.daysBetween(
+                      ForecastOverview.localDate(
+                        available.snapshot.fetchedAtUtc,
+                        site.timeContext,
+                      ),
+                      n,
+                    ),
+                    null => null,
+                  },
                 ),
-                null => null,
-              },
-            ),
+              ),
+            ],
           ),
         ),
       const _ComingNights(),
@@ -1443,95 +1477,102 @@ class _ComingNights extends StatelessWidget {
     return Padding(
       key: const Key('weather.nights'),
       padding: const EdgeInsets.only(top: AppSpacing.section),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: DocumentSection(
+        key: const Key('weather.comingGroup'),
         children: [
-          Semantics(
-            header: true,
-            child: Text(
-              'Coming nights',
-              style: AppTypography.sectionHeading.copyWith(
-                color: p.textPrimary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'The forecast covers some or all of these nights. Later dates '
-            'have no forecast.',
-            style: AppTypography.caption.copyWith(
-              height: 1.65,
-              color: p.textSecondary,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          for (final (i, n) in overview.nights.indexed)
-            DecoratedBox(
-              key: Key('weather.night.${n.eveningDate.toIso8601String()}'),
-              decoration: BoxDecoration(
-                border: i == 0
-                    ? null
-                    : Border(top: BorderSide(color: p.border)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Night of ${NightTimeFormatter.eveningDate(n.eveningDate)}'
-                      '${n.eveningDate == plan.eveningDate ? ' · your plan' : ''}',
-                      style: AppTypography.value.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: p.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _coverageWords(n),
-                      key: Key(
-                        'weather.night.${n.eveningDate.toIso8601String()}.coverage',
-                      ),
-                      style: small,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      n.summary.span == NightWeatherSpan.noDark
-                          ? 'No dark hours to summarize'
-                          : n.summary.cloudCover == null
-                          ? 'Cloud unknown'
-                          : 'Cloud ${QuantityText.percentRange(n.summary.cloudCover!.min, n.summary.cloudCover!.max)} '
-                                'in covered dark hours',
-                      style: small,
-                    ),
-                    if (browser != null) ...[
-                      const SizedBox(height: 8),
-                      OutlinedButton(
-                        key: Key(
-                          'weather.night.${n.eveningDate.toIso8601String()}.view',
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(48),
-                        ),
-                        onPressed: () => browser.viewNight(n.eveningDate),
-                        child: const Text('View this night'),
-                      ),
-                    ],
-                  ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  'Coming nights',
+                  style: AppTypography.sectionHeading.copyWith(
+                    color: p.textPrimary,
+                  ),
                 ),
               ),
-            ),
-          if (beyond != null)
-            Text(
-              'No forecast from ${NightTimeFormatter.eveningDate(beyond)}: '
-              'beyond the 16-day forecast. Night and Moon browsing remain '
-              'available.',
-              key: const Key('weather.nights.beyond'),
-              style: AppTypography.caption.copyWith(
-                height: 1.65,
-                color: p.textSecondary,
+              const SizedBox(height: 8),
+              Text(
+                'The forecast covers some or all of these nights. Later dates '
+                'have no forecast.',
+                style: AppTypography.caption.copyWith(
+                  height: 1.65,
+                  color: p.textSecondary,
+                ),
               ),
-            ),
+              const SizedBox(height: AppSpacing.md),
+              for (final (i, n) in overview.nights.indexed)
+                DecoratedBox(
+                  key: Key('weather.night.${n.eveningDate.toIso8601String()}'),
+                  decoration: BoxDecoration(
+                    border: i == 0
+                        ? null
+                        : Border(top: BorderSide(color: p.border)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.md,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Night of ${NightTimeFormatter.eveningDate(n.eveningDate)}'
+                          '${n.eveningDate == plan.eveningDate ? ' · your plan' : ''}',
+                          style: AppTypography.value.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: p.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _coverageWords(n),
+                          key: Key(
+                            'weather.night.${n.eveningDate.toIso8601String()}.coverage',
+                          ),
+                          style: small,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          n.summary.span == NightWeatherSpan.noDark
+                              ? 'No dark hours to summarize'
+                              : n.summary.cloudCover == null
+                              ? 'Cloud unknown'
+                              : 'Cloud ${QuantityText.percentRange(n.summary.cloudCover!.min, n.summary.cloudCover!.max)} '
+                                    'in covered dark hours',
+                          style: small,
+                        ),
+                        if (browser != null) ...[
+                          const SizedBox(height: 8),
+                          OutlinedButton(
+                            key: Key(
+                              'weather.night.${n.eveningDate.toIso8601String()}.view',
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size.fromHeight(48),
+                            ),
+                            onPressed: () => browser.viewNight(n.eveningDate),
+                            child: const Text('View this night'),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              if (beyond != null)
+                Text(
+                  'No forecast from ${NightTimeFormatter.eveningDate(beyond)}: '
+                  'beyond the 16-day forecast. Night and Moon browsing remain '
+                  'available.',
+                  key: const Key('weather.nights.beyond'),
+                  style: AppTypography.caption.copyWith(
+                    height: 1.65,
+                    color: p.textSecondary,
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
     );

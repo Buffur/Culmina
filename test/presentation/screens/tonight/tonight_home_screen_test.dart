@@ -395,7 +395,8 @@ void main() {
       expect(rig.style?.height, 1.55);
       final nightHeading = tester.widget<Text>(find.text('The night ahead'));
       expect(nightHeading.style?.fontSize, 25);
-      expect(nightHeading.style?.fontWeight, FontWeight.w400);
+      expect(nightHeading.style?.fontFamily, 'Geist');
+      expect(nightHeading.style?.fontWeight, FontWeight.w500);
       expect(nightHeading.style?.letterSpacing, -0.5);
       final title = tester.widget<Text>(find.byKey(const Key('tonight.title')));
       expect(title.style?.height, closeTo(1.2, 0.001));

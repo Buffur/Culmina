@@ -161,6 +161,9 @@ void main() {
       -100,
       scrollable: plannerScrollable,
     );
+    await Scrollable.ensureVisible(tester.element(choose), alignment: 0.5);
+    await tester.pumpAndSettle();
+    expect(choose.hitTestable(), findsOneWidget);
     await tester.tap(choose);
     await tester.pumpAndSettle();
 

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Culmina · Concept B screen gallery</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: dark; --page: #111; --text: #ebebea; --muted: #b3b3b1; --border: #454543; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text); font: 16px/1.5 system-ui, sans-serif; }
+  header, footer { max-width: 1050px; margin: auto; padding: 24px; }
+  h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  h2 { margin: 0 0 8px; font-size: 20px; }
+  p { margin: 8px 0; }
+  .muted, small { color: var(--muted); }
+  nav, .modes { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+  button { color: var(--text); background: var(--page); border: 1px solid var(--border); border-radius: 6px; min-height: 48px; padding: 10px 16px; font: inherit; cursor: pointer; }
+  button:hover { background: #242424; }
+  button[aria-pressed="true"] { color: #191919; background: #ebebea; border-color: #ebebea; font-weight: 600; }
+  a { color: #b2dcfa; text-underline-offset: 4px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid #b2dcfa; outline-offset: 4px; }
+  .comparison { display: flex; gap: 24px; justify-content: center; align-items: start; padding: 0 24px 24px; overflow-x: auto; }
+  figure { margin: 0; flex: 0 0 375px; width: 375px; }
+  figure[hidden] { display: none; }
+  figcaption { min-height: 110px; padding: 0 0 16px; }
+  img { display: block; width: 100%; height: auto; background: #191919; }
+  .image-link { display: inline-block; margin-top: 8px; }
+  .mobile-picker { display: none; }
+  select { min-height: 48px; padding: 8px 12px; color: var(--text); background: var(--page); border: 1px solid var(--border); border-radius: 6px; font: inherit; }
+  select:focus-visible { outline: 2px solid #b2dcfa; outline-offset: 4px; }
+  @media (max-width: 820px) {
+    .comparison { justify-content: flex-start; padding: 0 16px 16px; }
+    .comparison.single { justify-content: center; }
+    .single figure { flex-basis: min(100%, 420px); width: min(100%, 420px); }
+    header, footer { padding: 20px 16px; }
+    h1 { font-size: 22px; }
+    #screens { display: none; }
+    .mobile-picker { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+    figcaption small { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Culmina · Concept B across the app</h1>
+  <p><strong>CONCEPT / NOT IMPLEMENTED.</strong></p>
+  <details id="intro" open><summary>About this study</summary>
+    <p>Eight generated screen studies using the same quiet tonal blocks as the Home concept. Compare the grouping and hierarchy. The app and frozen reference are unchanged by this exploration.</p>
+  </details>
+  <nav id="screens" aria-label="Choose a screen"></nav>
+  <label class="mobile-picker">Screen <select id="screen-select" aria-label="Choose a screen"></select></label>
+  <div class="modes" aria-label="Choose comparison view">
+    <button type="button" data-mode="concept">Concept</button>
+    <button type="button" data-mode="both" aria-label="Current + concept">Compare</button>
+    <button type="button" data-mode="current">Current</button>
+  </div>
+  <h2 id="screen-title" aria-live="polite">Plan</h2>
+  <p id="screen-note" class="muted"></p>
+</header>
+<main id="comparison" class="comparison">
+  <figure id="current-column">
+    <figcaption><h2>Current · real Flutter render</h2><small>Synthetic QA fixture, dark theme, 100%, 375 logical px wide. This is a source screenshot.</small><br><a id="current-link" class="image-link" href="current/flutter-plan-extended-dark-375.png">Open current image</a></figcaption>
+    <img id="current-image" src="current/flutter-plan-extended-dark-375.png" alt="Current Plan screen" decoding="async">
+  </figure>
+  <figure id="concept-column">
+    <figcaption><h2>Concept B · not implemented</h2><small>Actual generated raster. Approximate typography, icon strokes and scientific graphics are not implementation specifications.</small><br><a id="concept-link" class="image-link" href="concepts/plan.png">Open concept image</a></figcaption>
+    <img id="concept-image" src="concepts/plan.png" alt="Generated Plan concept in the Home B style" decoding="async">
+  </figure>
+</main>
+<footer>
+  <p><a href="style-reference-home-b.png">Home B style reference</a> · <a href="README.md">Sources, tradeoffs and limitations</a> · <a href="prompts.json">Exact prompts</a></p>
+  <p class="muted">Both columns use the same nominal phone width. Raster canvases and font metrics differ. All data is synthetic. No physical-device, accessibility, calculation or owner-acceptance result is established by these concepts.</p>
+</footer>
+<script>
+  const screens = [
+    { id: 'plan', label: 'Plan', note: 'Status → site, target and rig → capture blocks → estimate and assumptions. Preserve the tracking warning and Unknown storage.', current: 'flutter-plan-extended-dark-375.png' },
+    { id: 'logbook', label: 'Logbook', note: 'One monthly document block with seven records, plus the separate progress action. Planned, saved and recorded states remain distinct.' },
+    { id: 'moon', label: 'Moon', note: 'Moon-free answer, the complete October calendar and the time browser. Selecting a viewed night does not silently change the plan.' },
+    { id: 'weather', label: 'Weather', note: 'Forecast summary and provenance, known-sample statistics, optional detail and coming-night coverage. Unknown and forecast limits stay explicit.' },
+    { id: 'night', label: 'Night', note: 'Night context, dark-time answer, time browser and optional reading sections. Raster colors and positions are illustrative, not calculation evidence.' },
+    { id: 'library', label: 'Library', note: 'One collection block for Rigs, Targets and Sites. Keep a short list short; no new dashboard features.' },
+    { id: 'settings', label: 'Settings', note: 'Two blocks: Preferences and Data and about. Row summaries remain links to their existing editors, not new inline settings.' },
+    { id: 'result', label: 'Record result', note: 'Outcome, frame counts, optional notes and optional measured conditions. Blank fields stay blank; Cancel and Save result remain explicit.' }
+  ];
+  let mode = matchMedia('(max-width: 820px)').matches ? 'concept' : 'both';
+  let active = screens.some(s => s.id === location.hash.slice(1)) ? location.hash.slice(1) : 'plan';
+  const nav = document.querySelector('#screens');
+  const picker = document.querySelector('#screen-select');
+  if (matchMedia('(max-width: 820px)').matches) document.querySelector('#intro').open = false;
+  for (const screen of screens) {
+    const button = document.createElement('button');
+    button.type = 'button'; button.textContent = screen.label; button.dataset.screen = screen.id;
+    button.addEventListener('click', () => { active = screen.id; history.replaceState(null, '', '#' + active); render(); });
+    nav.append(button);
+    const option = document.createElement('option'); option.value = screen.id; option.textContent = screen.label; picker.append(option);
+  }
+  picker.addEventListener('change', () => { active = picker.value; history.replaceState(null, '', '#' + active); render(); });
+  function render() {
+    const screen = screens.find(s => s.id === active);
+    picker.value = active;
+    document.querySelector('#screen-title').textContent = screen.label;
+    document.querySelector('#screen-note').textContent = screen.note;
+    const current = 'current/' + (screen.current || `flutter-${active}-dark-375.png`);
+    const concept = `concepts/${active}.png`;
+    document.querySelector('#current-image').src = current;
+    document.querySelector('#current-image').alt = `Current ${screen.label} screen from Flutter`;
+    document.querySelector('#concept-image').src = concept;
+    document.querySelector('#concept-image').alt = `${screen.label}: generated concept B, not implemented`;
+    document.querySelector('#current-link').href = current;
+    document.querySelector('#concept-link').href = concept;
+    document.querySelector('#current-column').hidden = mode === 'concept';
+    document.querySelector('#concept-column').hidden = mode === 'current';
+    document.querySelector('#comparison').classList.toggle('single', mode !== 'both');
+    for (const button of nav.children) button.setAttribute('aria-pressed', String(button.dataset.screen === active));
+    for (const button of document.querySelectorAll('[data-mode]')) button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
+    document.title = `${screen.label} · Culmina Concept B`;
+  }
+  for (const button of document.querySelectorAll('[data-mode]')) button.addEventListener('click', () => { mode = button.dataset.mode; render(); });
+  addEventListener('hashchange', () => { const id = location.hash.slice(1); if (screens.some(s => s.id === id)) { active = id; render(); } });
+  render();
+</script>
+</body>
+</html>

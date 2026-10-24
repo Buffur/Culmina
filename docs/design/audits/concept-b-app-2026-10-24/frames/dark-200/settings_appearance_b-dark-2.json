@@ -1,0 +1,295 @@
+{
+  "name": "settings_appearance_b",
+  "theme": "dark",
+  "scale": 2.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/settings",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Red on black only, to keep your night vision. The same switch as the moon button in the app bar.",
+      "x": 20.0,
+      "y": -149.0,
+      "w": 267.0,
+      "h": 200.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Text size",
+      "x": 20.0,
+      "y": 73.0,
+      "w": 335.0,
+      "h": 56.0,
+      "family": "Geist",
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "Text follows Android’s font size (now 200%). Change it in Android’s display settings.",
+      "x": 20.0,
+      "y": 133.0,
+      "w": 335.0,
+      "h": 180.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "Units",
+      "x": 20.0,
+      "y": 325.0,
+      "w": 335.0,
+      "h": 56.0,
+      "family": "Geist",
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "Shown units only: stored values and calculations stay in °C, km/h and m.",
+      "x": 20.0,
+      "y": 385.0,
+      "w": 335.0,
+      "h": 135.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "Temperature",
+      "x": 20.0,
+      "y": 524.0,
+      "w": 335.0,
+      "h": 45.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "°C",
+      "x": 189.48400115966797,
+      "y": 581.0,
+      "w": 32.03199768066406,
+      "h": 42.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "°F",
+      "x": 191.58399963378906,
+      "y": 643.0,
+      "w": 27.832000732421875,
+      "h": 42.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Wind",
+      "x": 20.0,
+      "y": 697.0,
+      "w": 335.0,
+      "h": 45.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "km/h",
+      "x": 169.63479614257812,
+      "y": 754.0,
+      "w": 71.73040771484375,
+      "h": 42.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Appearance",
+      "x": 64.0,
+      "y": -23.0,
+      "w": 231.0,
+      "h": 110.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": -208.0,
+      "w": 335.0,
+      "h": 269.0,
+      "padding": "EdgeInsets(0.0, 10.0, 0.0, 10.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 61.0,
+      "w": 335.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 4.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 133.0,
+      "w": 335.0,
+      "h": 180.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 313.0,
+      "w": 335.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 4.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 385.0,
+      "w": 335.0,
+      "h": 135.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 573.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 635.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 746.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 808.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 72.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.all(8.0)"
+    }
+  ]
+}

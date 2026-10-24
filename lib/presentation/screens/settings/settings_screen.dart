@@ -1,5 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -701,53 +704,64 @@ class _SettingsIndex extends StatelessWidget {
       body: ListView(
         padding: settingsPagePadding,
         children: [
-          const SettingsHeading('Preferences', top: 0),
-          SettingsRow(
-            key: const Key('settings.open.appearance'),
-            icon: HybridIcons.moon,
-            title: 'Appearance',
-            summary: units == null
-                ? 'Theme, field mode and display units'
-                : '${fieldMode ? 'Red field mode' : display!.appearance.label}'
-                      ' · text $textSize · ${units.temperature.symbol}, '
-                      '${units.wind.symbol}, ${units.elevation.symbol}',
-            onTap: () => open(SettingsSection.appearance),
+          DocumentSection(
+            key: const Key('settings.preferencesGroup'),
+            children: [
+              const SettingsHeading('Preferences', top: 0),
+              SettingsRow(
+                key: const Key('settings.open.appearance'),
+                icon: HybridIcons.moon,
+                title: 'Appearance',
+                summary: units == null
+                    ? 'Theme, field mode and display units'
+                    : '${fieldMode ? 'Red field mode' : display!.appearance.label}'
+                          ' · text $textSize · ${units.temperature.symbol}, '
+                          '${units.wind.symbol}, ${units.elevation.symbol}',
+                onTap: () => open(SettingsSection.appearance),
+              ),
+              SettingsRow(
+                key: const Key('settings.open.planning'),
+                icon: HybridIcons.target,
+                title: 'Planning',
+                summary:
+                    '${QuantityText.degrees(p.minAltitudeDeg)} altitude · '
+                    '${QuantityText.degrees(p.darknessLimit.degrees)} Sun · '
+                    '${QuantityText.percent(p.feasibilityMarginPercent)} margin · '
+                    '${p.perFrameOverheadSeconds.round()} s between frames',
+                onTap: () => open(SettingsSection.planning),
+              ),
+              SettingsRow(
+                key: const Key('settings.open.privacy'),
+                icon: HybridIcons.pin,
+                title: 'Privacy',
+                summary: 'Place-name lookup ${placeNames ? 'on' : 'off'}',
+                onTap: () => open(SettingsSection.privacy),
+              ),
+            ],
           ),
-          SettingsRow(
-            key: const Key('settings.open.planning'),
-            icon: HybridIcons.target,
-            title: 'Planning',
-            summary:
-                '${QuantityText.degrees(p.minAltitudeDeg)} altitude · '
-                '${QuantityText.degrees(p.darknessLimit.degrees)} Sun · '
-                '${QuantityText.percent(p.feasibilityMarginPercent)} margin · '
-                '${p.perFrameOverheadSeconds.round()} s between frames',
-            onTap: () => open(SettingsSection.planning),
-          ),
-          SettingsRow(
-            key: const Key('settings.open.privacy'),
-            icon: HybridIcons.pin,
-            title: 'Privacy',
-            summary: 'Place-name lookup ${placeNames ? 'on' : 'off'}',
-            onTap: () => open(SettingsSection.privacy),
-          ),
-          const SettingsHeading('Data and about'),
-          SettingsRow(
-            key: const Key('settings.open.backup'),
-            icon: HybridIcons.download,
-            title: 'Backup & data',
-            summary: 'Back up or restore plans, results and your library',
-            onTap: () => open(SettingsSection.backup),
-          ),
-          SettingsRow(
-            key: const Key('settings.open.about'),
-            icon: HybridIcons.book,
-            title: 'About',
-            summary:
-                '${AppIdentity.appName} ${AppIdentity.version} · data sources '
-                'and licence',
-            divider: false,
-            onTap: () => context.push(AppRouter.about),
+          const SizedBox(height: 16),
+          DocumentSection(
+            key: const Key('settings.dataGroup'),
+            children: [
+              const SettingsHeading('Data and about', top: 0),
+              SettingsRow(
+                key: const Key('settings.open.backup'),
+                icon: HybridIcons.download,
+                title: 'Backup & data',
+                summary: 'Back up or restore plans, results and your library',
+                onTap: () => open(SettingsSection.backup),
+              ),
+              SettingsRow(
+                key: const Key('settings.open.about'),
+                icon: HybridIcons.book,
+                title: 'About',
+                summary:
+                    '${AppIdentity.appName} ${AppIdentity.version} · data sources '
+                    'and licence',
+                divider: false,
+                onTap: () => context.push(AppRouter.about),
+              ),
+            ],
           ),
         ],
       ),

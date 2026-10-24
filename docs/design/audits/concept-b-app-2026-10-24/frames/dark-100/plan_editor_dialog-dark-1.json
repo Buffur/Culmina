@@ -1,0 +1,707 @@
+{
+  "name": "plan_editor_dialog",
+  "theme": "dark",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Rig: DSLR · 135 mm lens",
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5384615384615385
+    },
+    {
+      "text": "Frame type",
+      "x": 20.0,
+      "y": 116.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5384615384615385
+    },
+    {
+      "text": "Light",
+      "x": 73.06892649332681,
+      "y": 155.5,
+      "w": 33.7064208984375,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Dark",
+      "x": 190.91320037841794,
+      "y": 155.5,
+      "w": 30.660003662109375,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Flat",
+      "x": 305.71105702718097,
+      "y": 155.5,
+      "w": 24.220016479492188,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Bias",
+      "x": 95.43899154663086,
+      "y": 209.5,
+      "w": 27.594009399414062,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Dark flat",
+      "x": 251.91098403930664,
+      "y": 209.5,
+      "w": 55.6500244140625,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Exposure (seconds)",
+      "x": 20.0,
+      "y": 264.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "e.g. 60 or 1/14",
+      "x": 37.0,
+      "y": 301.0,
+      "w": 301.0,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "For example 60, 2.5 or 1/125.",
+      "x": 20.0,
+      "y": 342.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Frames",
+      "x": 20.0,
+      "y": 382.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "e.g. 30",
+      "x": 37.0,
+      "y": 419.0,
+      "w": 301.0,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "= 2 h 1 min of integration",
+      "x": 20.0,
+      "y": 468.0,
+      "w": 335.0,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Filter (optional)",
+      "x": 20.0,
+      "y": 509.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "None",
+      "x": 37.0,
+      "y": 545.5,
+      "w": 38.81599426269531,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "None means no filter.",
+      "x": 20.0,
+      "y": 586.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "ISO (optional)",
+      "x": 20.0,
+      "y": 626.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Unrecorded",
+      "x": 37.0,
+      "y": 663.0,
+      "w": 301.0,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Leave blank to keep it unrecorded.",
+      "x": 20.0,
+      "y": 704.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "White balance",
+      "x": 20.0,
+      "y": 744.0,
+      "w": 335.0,
+      "h": 21.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Mode (optional)",
+      "x": 20.0,
+      "y": 775.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Auto",
+      "x": 37.0,
+      "y": 811.5,
+      "w": 34.30400085449219,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Edit block",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 102.76200866699219,
+      "h": 27.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Apply updates the draft. Save plan records it.",
+      "x": 20.0,
+      "y": 728.0,
+      "w": 335.0,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Apply changes",
+      "x": 131.03441619873047,
+      "y": 768.0,
+      "w": 112.93116760253906,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Discard this edit?",
+      "x": 44.0,
+      "y": 317.0,
+      "w": 287.0,
+      "h": 27.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Unapplied fields in this editor will be discarded. Changes you already applied to the draft remain.",
+      "x": 44.0,
+      "y": 360.0,
+      "w": 287.0,
+      "h": 63.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Keep editing",
+      "x": 101.66119384765625,
+      "y": 461.0,
+      "w": 81.32598876953125,
+      "h": 20.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Discard edit",
+      "x": 222.9871826171875,
+      "y": 459.0,
+      "w": 92.0128173828125,
+      "h": 24.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": "[<'blockEditor.screen'>]",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 652.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 652.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 375.0,
+      "h": 1060.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 32.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 142.0,
+      "w": 111.84427388509114,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 137.84427388509113,
+      "y": 142.0,
+      "w": 108.79785664876302,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 252.64213053385416,
+      "y": 142.0,
+      "w": 102.35786946614583,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 196.0,
+      "w": 150.47199249267578,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 176.47199249267578,
+      "y": 196.0,
+      "w": 178.52800750732422,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'blockDialog.exposure'>]",
+      "x": 20.0,
+      "y": 288.0,
+      "w": 335.0,
+      "h": 50.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 338.0,
+      "w": 335.0,
+      "h": 24.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'blockDialog.count'>]",
+      "x": 20.0,
+      "y": 406.0,
+      "w": 335.0,
+      "h": 50.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 37.0,
+      "y": 545.5,
+      "w": 278.0,
+      "h": 24.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 545.5,
+      "w": 36.0,
+      "h": 24.0,
+      "padding": "EdgeInsetsDirectional(0.0, 0.0, 12.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 582.0,
+      "w": 335.0,
+      "h": 24.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'blockDialog.gainValue'>]",
+      "x": 20.0,
+      "y": 650.0,
+      "w": 335.0,
+      "h": 50.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 700.0,
+      "w": 335.0,
+      "h": 24.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 37.0,
+      "y": 811.5,
+      "w": 278.0,
+      "h": 24.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 811.5,
+      "w": 36.0,
+      "h": 24.0,
+      "padding": "EdgeInsetsDirectional(0.0, 0.0, 12.0, 0.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'blockDialog.cancel'>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 716.0,
+      "w": 375.0,
+      "h": 96.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'blockDialog.submit'>]",
+      "x": 20.0,
+      "y": 756.0,
+      "w": 335.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 756.0,
+      "w": 335.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 12.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0,
+      "padding": "EdgeInsets.all(20.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 293.0,
+      "w": 335.0,
+      "h": 51.0,
+      "padding": "EdgeInsets(24.0, 24.0, 24.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 344.0,
+      "w": 335.0,
+      "h": 103.0,
+      "padding": "EdgeInsets(24.0, 16.0, 24.0, 24.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 447.0,
+      "w": 335.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(24.0, 0.0, 24.0, 24.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'discardEdit.keep'>]",
+      "x": 85.66119384765625,
+      "y": 447.0,
+      "w": 113.32598876953125,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 85.66119384765625,
+      "y": 447.0,
+      "w": 113.32598876953125,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'discardEdit.discard'>]",
+      "x": 206.9871826171875,
+      "y": 447.0,
+      "w": 124.0128173828125,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 206.9871826171875,
+      "y": 447.0,
+      "w": 124.0128173828125,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    }
+  ]
+}

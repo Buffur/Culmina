@@ -1,0 +1,303 @@
+[
+  {
+    "source": "lib/presentation/screens/about/about_screen.dart",
+    "surface": "About",
+    "adoption": "later application",
+    "frames": "settings_about,settings_about_b,licenses",
+    "findings": "CBA-10"
+  },
+  {
+    "source": "lib/presentation/screens/details/night_moon_screen.dart",
+    "surface": "Night and Moon pages",
+    "adoption": "adopted",
+    "frames": "night,night_b,night_c,moon,moon_b,night_exact_open,night_reading_open,night_moon_open,night_sun_open",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/details/weather_detail_screen.dart",
+    "surface": "Weather route wrapper",
+    "adoption": "adopted",
+    "frames": "weather,weather_charts,weather_offline,weather_stale,weather_partial,weather_nodark",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/equipment/add_rig_panel.dart",
+    "surface": "Camera-class add sheet",
+    "adoption": "native choice boundary",
+    "frames": "rig_add_sheet,rig_new",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/equipment/equipment_editor.dart",
+    "surface": "Rig editor",
+    "adoption": "later application",
+    "frames": "lib_rig_edit,lib_rig_edit_b,rig_new,rig_new_b,rig_ime",
+    "findings": "CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+    "surface": "Rigs management",
+    "adoption": "later application",
+    "frames": "lib_rigs,manage_rigs,rigs_no_results,rig_add_sheet",
+    "findings": "CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/equipment/rig_detail_screen.dart",
+    "surface": "Rig record",
+    "adoption": "later application; typography defects",
+    "frames": "lib_rig,lib_rig_full,lib_rig_b",
+    "findings": "CBA-02,CBA-04,CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/execution/results_screen.dart",
+    "surface": "Record result",
+    "adoption": "adopted with defect",
+    "frames": "result,result_b,result_notdone,result_completed,result_ime",
+    "findings": "CBA-06"
+  },
+  {
+    "source": "lib/presentation/screens/home/home_screen.dart",
+    "surface": "Plan",
+    "adoption": "adopted with spacing defect",
+    "frames": "plan,plan_b,plan_c,plan_actions,plan_empty",
+    "findings": "CBA-05"
+  },
+  {
+    "source": "lib/presentation/screens/home/plan_context_screen.dart",
+    "surface": "Plan site and night chooser",
+    "adoption": "later application",
+    "frames": "plan_context",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/screens/home/plan_rig_screen.dart",
+    "surface": "Plan rig chooser",
+    "adoption": "later application",
+    "frames": "plan_rig",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/screens/home/plan_target_screen.dart",
+    "surface": "Plan target chooser",
+    "adoption": "later application",
+    "frames": "plan_target",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/screens/home/session_planner_route.dart",
+    "surface": "Planner loading/restoration wrapper",
+    "adoption": "route-state wrapper; no separate concept",
+    "frames": "plan,plan_empty",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/library/library_parts.dart",
+    "surface": "Shared library rows/forms/save bar",
+    "adoption": "shared components; equal-height save bar works",
+    "frames": "lib_rig_edit,lib_target_new,lib_site_edit",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/library/library_screen.dart",
+    "surface": "Library index",
+    "adoption": "adopted",
+    "frames": "library",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/location/location_picker_screen.dart",
+    "surface": "Map position / coordinate entry",
+    "adoption": "functional map exception",
+    "frames": "geo_map,site_pick,map_coordinates",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/logbook/astrobin_export.dart",
+    "surface": "AstroBin export preview",
+    "adoption": "native dialog exception",
+    "frames": "astrobin_preview",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/logbook/logbook_screen.dart",
+    "surface": "Logbook index, filter/search",
+    "adoption": "adopted; filters stay functional controls",
+    "frames": "logbook,logbook_b,logbook_filters,logbook_empty",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/logbook/progress_screen.dart",
+    "surface": "Progress by target",
+    "adoption": "later application",
+    "frames": "logbook_progress,logbook_progress_b,progress_empty",
+    "findings": "CBA-09"
+  },
+  {
+    "source": "lib/presentation/screens/logbook/session_detail_screen.dart",
+    "surface": "Logbook entry record",
+    "adoption": "later application; typography defect",
+    "frames": "entry,entry_b,entry_c,entry_due,entry_name,entry_copy",
+    "findings": "CBA-02,CBA-09"
+  },
+  {
+    "source": "lib/presentation/screens/metadata/metadata_import_screen.dart",
+    "surface": "Capture-file import and review",
+    "adoption": "pre-existing semantic cards",
+    "frames": "metadata,metadata_ready,metadata_read,metadata_read_b,metadata_unreadable",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/settings/backup_section.dart",
+    "surface": "Backup, refusal, confirmation and restoring root",
+    "adoption": "nested page later application; root field-mode defect",
+    "frames": "settings_backup,backup_error,backup_restore,restore_wait",
+    "findings": "CBA-01,CBA-10"
+  },
+  {
+    "source": "lib/presentation/screens/settings/settings_parts.dart",
+    "surface": "Shared settings and fact rows",
+    "adoption": "shared components",
+    "frames": "lib_rig,lib_target,lib_site,settings_planning",
+    "findings": "CBA-04"
+  },
+  {
+    "source": "lib/presentation/screens/settings/settings_screen.dart",
+    "surface": "Settings index and Appearance/Planning/Privacy",
+    "adoption": "index adopted; nested pages later application",
+    "frames": "settings,settings_appearance,settings_appearance_b,settings_planning,settings_planning_b,settings_privacy,plan_settings",
+    "findings": "CBA-03,CBA-10"
+  },
+  {
+    "source": "lib/presentation/screens/sites/site_detail_screen.dart",
+    "surface": "Site record",
+    "adoption": "later application; typography defects",
+    "frames": "lib_site,lib_site_b",
+    "findings": "CBA-02,CBA-04,CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/sites/site_editor_screen.dart",
+    "surface": "Site editor",
+    "adoption": "later application",
+    "frames": "geo_add,geo_more,lib_site_edit,lib_site_edit_b,site_ime,site_name_consent",
+    "findings": "CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/sites/sites_screen.dart",
+    "surface": "Saved sites and alternative position",
+    "adoption": "later application with accepted geo composition",
+    "frames": "geo_sites,geo_transient,lib_sites,select_sites",
+    "findings": "CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/sites/zone_picker_dialog.dart",
+    "surface": "Time-zone picker",
+    "adoption": "native dialog exception",
+    "frames": "zone_dialog",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/startup/unsupported_database_screen.dart",
+    "surface": "Unsupported database recovery",
+    "adoption": "standalone safety exception",
+    "frames": "unsupported_newer,unsupported_older,unsupported_confirm",
+    "findings": "CBA-01 adjacent observation"
+  },
+  {
+    "source": "lib/presentation/screens/target/target_detail_screen.dart",
+    "surface": "Target record",
+    "adoption": "later application; typography defects",
+    "frames": "lib_target,lib_target_b",
+    "findings": "CBA-02,CBA-04,CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/target/target_editor_screen.dart",
+    "surface": "Target editor",
+    "adoption": "later application",
+    "frames": "lib_target_new,lib_target_new_b,target_invalid,target_ime",
+    "findings": "CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/target/target_selection_screen.dart",
+    "surface": "Targets management",
+    "adoption": "later application",
+    "frames": "lib_targets,manage_targets,targets_no_results",
+    "findings": "CBA-07"
+  },
+  {
+    "source": "lib/presentation/screens/tonight/home_context_sheets.dart",
+    "surface": "Home context entry points",
+    "adoption": "native choice/navigation boundary",
+    "frames": "home_sitesheet,home_nightsheet",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/tonight/tonight_candidates_screen.dart",
+    "surface": "Candidate targets",
+    "adoption": "later application",
+    "frames": "home_candidates,candidates_b",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+    "surface": "Tonight",
+    "adoption": "adopted",
+    "frames": "home,home_timeline,home_long,home_nosite,home_loaderror,home_wxfail",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/screens/welcome/welcome_screen.dart",
+    "surface": "Welcome",
+    "adoption": "pre-existing semantic cards",
+    "frames": "welcome,welcome_b",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/widgets/capture_plan/capture_block_dialog.dart",
+    "surface": "Capture block editor",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "plan_editor,plan_editor_bottom,plan_editor_dialog,capture_ime",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/widgets/capture_plan/calibration_preview_dialog.dart",
+    "surface": "Calibration preview",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "plan_cal,plan_cal_b",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/widgets/capture_plan/plan_overrides_editor.dart",
+    "surface": "Plan assumptions editor",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "plan_asm,plan_asm_b",
+    "findings": "CBA-08"
+  },
+  {
+    "source": "lib/presentation/widgets/capture_plan/storage_actions.dart",
+    "surface": "Capture storage file confirmation",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "storage_file",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/shared/confirmation_patterns.dart",
+    "surface": "Unsaved/delete confirmations",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "lib_rig_unsaved,lib_rig_delete,plan_editor_dialog",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/navigation/app_shell.dart",
+    "surface": "Root navigation",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "home,logbook,library,settings",
+    "findings": ""
+  },
+  {
+    "source": "lib/presentation/shared/hybrid_app_bar.dart",
+    "surface": "Shared adaptive app bar",
+    "adoption": "shared/auxiliary; see findings or native exception",
+    "frames": "settings_appearance,entry,lib_rig",
+    "findings": "CBA-02,CBA-03"
+  }
+]

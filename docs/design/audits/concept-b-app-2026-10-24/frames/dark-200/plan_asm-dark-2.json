@@ -1,0 +1,303 @@
+{
+  "name": "plan_asm",
+  "theme": "dark",
+  "scale": 2.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Overrides for this plan only. Leave a field empty to use its default.",
+      "x": 20.0,
+      "y": 185.0,
+      "w": 335.0,
+      "h": 135.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "Time between frames (seconds)",
+      "x": 20.0,
+      "y": 340.0,
+      "w": 335.0,
+      "h": 78.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Download, dither or settle time added to every frame.",
+      "x": 20.0,
+      "y": 500.0,
+      "w": 335.0,
+      "h": 80.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Current: Global default, 5 s",
+      "x": 20.0,
+      "y": 584.0,
+      "w": 335.0,
+      "h": 39.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Setup outside the window (minutes)",
+      "x": 20.0,
+      "y": 643.0,
+      "w": 335.0,
+      "h": 78.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Set-up and alignment done before the imaging window.",
+      "x": 20.0,
+      "y": 803.0,
+      "w": 335.0,
+      "h": 80.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Plan assumptions",
+      "x": 64.0,
+      "y": 31.5,
+      "w": 231.0,
+      "h": 110.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Apply updates the draft. Save plan records it.",
+      "x": 20.0,
+      "y": 644.0,
+      "w": 335.0,
+      "h": 80.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Apply changes",
+      "x": 74.56885528564453,
+      "y": 744.0,
+      "w": 225.86228942871094,
+      "h": 48.0,
+      "family": "Geist",
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 173.0,
+      "w": 375.0,
+      "h": 1616.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 20.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 320.0,
+      "w": 335.0,
+      "h": 303.0,
+      "padding": "EdgeInsets(0.0, 20.0, 0.0, 0.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'planOverride.0'>]",
+      "x": 20.0,
+      "y": 422.0,
+      "w": 335.0,
+      "h": 74.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 496.0,
+      "w": 335.0,
+      "h": 84.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 580.0,
+      "w": 335.0,
+      "h": 43.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 623.0,
+      "w": 335.0,
+      "h": 342.0,
+      "padding": "EdgeInsets(0.0, 20.0, 0.0, 0.0)"
+    },
+    {
+      "type": "TextFormField",
+      "key": "[<'planOverride.1'>]",
+      "x": 20.0,
+      "y": 725.0,
+      "w": 335.0,
+      "h": 74.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 799.0,
+      "w": 335.0,
+      "h": 84.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 173.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 173.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'scoped.close'>]",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 56.0,
+      "h": 173.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 56.0,
+      "h": 173.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 54.5,
+      "w": 72.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 303.0,
+      "y": 54.5,
+      "w": 64.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 54.5,
+      "w": 64.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 632.0,
+      "w": 375.0,
+      "h": 180.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 632.0,
+      "w": 375.0,
+      "h": 180.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 632.0,
+      "w": 375.0,
+      "h": 180.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 632.0,
+      "w": 375.0,
+      "h": 180.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 8.0)"
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'planOverride.apply'>]",
+      "x": 20.0,
+      "y": 732.0,
+      "w": 335.0,
+      "h": 72.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 732.0,
+      "w": 335.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(20.0, 12.0, 20.0, 12.0)"
+    }
+  ]
+}

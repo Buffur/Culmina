@@ -1,5 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -270,7 +273,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
     );
     Widget heading(String text, {double top = AppSpacing.gutter}) => Padding(
       padding: EdgeInsets.only(top: top, bottom: AppSpacing.xs),
-      child: Semantics(header: true, child: Text(text, style: legend)),
+      child: Semantics(
+        header: true,
+        child: Text(
+          text,
+          style: AppTypography.itemTitle.copyWith(color: p.textPrimary),
+        ),
+      ),
     );
     final notes = AppTypography.value.copyWith(
       fontSize: 16,
@@ -393,121 +402,151 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           style: legend.copyWith(height: 1.55),
                         ),
                       ),
-                    heading('Outcome'),
-                    _Outcomes(
-                      selected: _outcome,
-                      onlyNotDone: vm.onlyNotDone,
-                      onSelected: (o) => setState(() => _outcome = o),
-                    ),
-                    if (_outcome == ResultOutcome.asPlanned)
-                      Padding(
-                        padding: const EdgeInsets.only(top: AppSpacing.sm),
-                        child: Text(
-                          'Records every light block as fully taken. This is '
-                          'your report, not a frame count.',
-                          key: const Key('results.asPlannedNote'),
-                          style: AppTypography.body.copyWith(
-                            height: 1.6,
-                            color: p.textSecondary,
-                          ),
+                    DocumentSection(
+                      key: const Key('results.outcomeGroup'),
+                      children: [
+                        heading('Outcome', top: 0),
+                        _Outcomes(
+                          selected: _outcome,
+                          onlyNotDone: vm.onlyNotDone,
+                          onSelected: (o) => setState(() => _outcome = o),
                         ),
-                      ),
-                    if (_outcome == ResultOutcome.partly) ...[
-                      heading('Light frames you took'),
-                      for (final (i, b) in vm.lightBlocks.indexed)
-                        field(
-                          '${EntryText.block(b, camera)} · light frames',
-                          TextFormField(
-                            key: Key('results.count.${b.id}'),
-                            controller: _counts[b.id],
-                            style: AppTypography.body.copyWith(
-                              color: p.textPrimary,
+                        if (_outcome == ResultOutcome.asPlanned)
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppSpacing.sm),
+                            child: Text(
+                              'Records every light block as fully taken. This is '
+                              'your report, not a frame count.',
+                              key: const Key('results.asPlannedNote'),
+                              style: AppTypography.body.copyWith(
+                                height: 1.6,
+                                color: p.textSecondary,
+                              ),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            validator: _frames,
                           ),
-                          hint:
-                              '${b.frameCount} planned · a whole number, 0 or '
-                              'more',
-                          top: i == 0 ? 0 : AppSpacing.gutter,
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    if (_outcome == ResultOutcome.partly)
+                      DocumentSection(
+                        key: const Key('results.framesGroup'),
+                        children: [
+                          heading('Light frames you took', top: 0),
+                          for (final (i, b) in vm.lightBlocks.indexed)
+                            field(
+                              '${EntryText.block(b, camera)} · light frames',
+                              TextFormField(
+                                key: Key('results.count.${b.id}'),
+                                controller: _counts[b.id],
+                                style: AppTypography.body.copyWith(
+                                  color: p.textPrimary,
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                validator: _frames,
+                              ),
+                              hint:
+                                  '${b.frameCount} planned · a whole number, 0 or '
+                                  'more',
+                              top: i == 0 ? 0 : AppSpacing.gutter,
+                            ),
+                        ],
+                      ),
+                    if (_outcome == ResultOutcome.notDone)
+                      DocumentSection(
+                        key: const Key('results.reasonGroup'),
+                        children: [
+                          heading('Why? (optional)', top: 0),
+                          _Reasons(
+                            selected: _reason,
+                            onSelected: (r) => setState(() => _reason = r),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 16),
+                    DocumentSection(
+                      key: const Key('results.notesGroup'),
+                      children: [
+                        heading('Notes (optional)', top: 0),
+                        field(
+                          'Conditions and events',
+                          TextFormField(
+                            key: const Key('results.environment'),
+                            controller: _environment,
+                            style: notes,
+                            maxLines: 3,
+                            minLines: 3,
+                          ),
+                          top: 0,
                         ),
-                    ],
-                    if (_outcome == ResultOutcome.notDone) ...[
-                      heading('Why? (optional)'),
-                      _Reasons(
-                        selected: _reason,
-                        onSelected: (r) => setState(() => _reason = r),
-                      ),
-                    ],
-                    heading('Notes (optional)'),
-                    field(
-                      'Conditions and events',
-                      TextFormField(
-                        key: const Key('results.environment'),
-                        controller: _environment,
-                        style: notes,
-                        maxLines: 3,
-                        minLines: 3,
-                      ),
-                      top: 0,
-                    ),
-                    field(
-                      'Processing notes',
-                      TextFormField(
-                        key: const Key('results.processing'),
-                        controller: _processing,
-                        style: notes,
-                        maxLines: 3,
-                        minLines: 3,
-                      ),
-                    ),
-                    heading('Conditions (optional)'),
-                    field(
-                      'Temperature (${_units.temperature.symbol})',
-                      TextFormField(
-                        key: const Key('results.temperature'),
-                        controller: _temperature,
-                        style: notes,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          signed: true,
-                          decimal: true,
+                        field(
+                          'Processing notes',
+                          TextFormField(
+                            key: const Key('results.processing'),
+                            controller: _processing,
+                            style: notes,
+                            maxLines: 3,
+                            minLines: 3,
+                          ),
                         ),
-                        // −60…60 °C, in the unit typed.
-                        validator:
-                            _units.temperature == TemperatureUnit.fahrenheit
-                            ? _range(
-                                -76,
-                                140,
-                                TemperatureUnit.fahrenheit.symbol,
-                              )
-                            : _range(-60, 60, TemperatureUnit.celsius.symbol),
-                      ),
-                      top: 0,
+                      ],
                     ),
-                    field(
-                      'Relative humidity (%)',
-                      TextFormField(
-                        key: const Key('results.humidity'),
-                        controller: _humidity,
-                        style: notes,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
+                    const SizedBox(height: 16),
+                    DocumentSection(
+                      key: const Key('results.conditionsGroup'),
+                      children: [
+                        heading('Conditions (optional)', top: 0),
+                        field(
+                          'Temperature (${_units.temperature.symbol})',
+                          TextFormField(
+                            key: const Key('results.temperature'),
+                            controller: _temperature,
+                            style: notes,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              signed: true,
+                              decimal: true,
+                            ),
+                            // −60…60 °C, in the unit typed.
+                            validator:
+                                _units.temperature == TemperatureUnit.fahrenheit
+                                ? _range(
+                                    -76,
+                                    140,
+                                    TemperatureUnit.fahrenheit.symbol,
+                                  )
+                                : _range(
+                                    -60,
+                                    60,
+                                    TemperatureUnit.celsius.symbol,
+                                  ),
+                          ),
+                          top: 0,
                         ),
-                        validator: _range(0, 100, '%'),
-                      ),
-                    ),
-                    field(
-                      'Cloud cover (%)',
-                      TextFormField(
-                        key: const Key('results.cloud'),
-                        controller: _cloud,
-                        style: notes,
-                        keyboardType: TextInputType.number,
-                        validator: _range(0, 100, '%'),
-                      ),
+                        field(
+                          'Relative humidity (%)',
+                          TextFormField(
+                            key: const Key('results.humidity'),
+                            controller: _humidity,
+                            style: notes,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            validator: _range(0, 100, '%'),
+                          ),
+                        ),
+                        field(
+                          'Cloud cover (%)',
+                          TextFormField(
+                            key: const Key('results.cloud'),
+                            controller: _cloud,
+                            style: notes,
+                            keyboardType: TextInputType.number,
+                            validator: _range(0, 100, '%'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ],

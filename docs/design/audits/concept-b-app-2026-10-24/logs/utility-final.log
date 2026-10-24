@@ -1,0 +1,12 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart
+00:00 +0: Concept B app audit: site_name_consent dark 2.0
+00:03 +1: Concept B app audit: storage_file dark 2.0
+00:06 +2: Concept B app audit: unsupported_newer dark 2.0
+00:07 +3: Concept B app audit: unsupported_older dark 2.0
+00:08 +4: Concept B app audit: restore_wait dark 2.0
+00:09 +5: Concept B app audit: site_name_consent field 2.0
+00:11 +6: Concept B app audit: storage_file field 2.0
+00:14 +7: Concept B app audit: unsupported_newer field 2.0
+00:14 +8: Concept B app audit: unsupported_older field 2.0
+00:15 +9: Concept B app audit: restore_wait field 2.0
+00:16 +10: All tests passed!

@@ -1,0 +1,22 @@
+{
+  "package": "io.github.buffur.culmina",
+  "installedApkSha256": "81e5d7d485a4d0753584d5d68c9d698cc07d27d5d72a63cc7df719e1d630eb36",
+  "localApkSha256": "81e5d7d485a4d0753584d5d68c9d698cc07d27d5d72a63cc7df719e1d630eb36",
+  "process": "20124",
+  "errorPatternMatches": 0,
+  "coldLaunch": "ok",
+  "physicalSize": "1220x2712",
+  "textScale": 1,
+  "observedScreens": [
+    "Tonight",
+    "Plan",
+    "Logbook",
+    "Library",
+    "Settings",
+    "Night",
+    "Moon",
+    "Weather"
+  ],
+  "mutations": "APK replacement only; no uninstall, data clear, or record edits",
+  "privateEvidenceRoot": "C:\\Users\\zalub\\.codex\\tmp\\culmina-b-implementation-20261024"
+}

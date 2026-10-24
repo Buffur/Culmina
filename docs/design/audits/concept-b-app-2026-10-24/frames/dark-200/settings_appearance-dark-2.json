@@ -1,0 +1,324 @@
+{
+  "name": "settings_appearance",
+  "theme": "dark",
+  "scale": 2.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/settings",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Theme",
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 56.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "System",
+      "x": 155.06079864501953,
+      "y": 144.0,
+      "w": 100.87840270996094,
+      "h": 42.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Light",
+      "x": 173.635986328125,
+      "y": 206.0,
+      "w": 63.72802734375,
+      "h": 42.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Dark",
+      "x": 174.83999633789062,
+      "y": 268.0,
+      "w": 61.32000732421875,
+      "h": 42.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "System follows this device’s light or dark setting (now Dark).",
+      "x": 20.0,
+      "y": 322.0,
+      "w": 335.0,
+      "h": 120.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Red field mode",
+      "x": 20.0,
+      "y": 452.0,
+      "w": 206.43002319335938,
+      "h": 45.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Red on black only, to keep your night vision. The same switch as the moon button in the app bar.",
+      "x": 20.0,
+      "y": 501.0,
+      "w": 267.0,
+      "h": 200.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Text size",
+      "x": 20.0,
+      "y": 723.0,
+      "w": 335.0,
+      "h": 56.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "Text follows Android’s font size (now 200%). Change it in Android’s display settings.",
+      "x": 20.0,
+      "y": 783.0,
+      "w": 335.0,
+      "h": 180.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Appearance",
+      "x": 64.0,
+      "y": -23.0,
+      "w": 231.0,
+      "h": 110.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 60.0,
+      "padding": "EdgeInsets(0.0, 0.0, 0.0, 4.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 136.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 198.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 260.0,
+      "w": 335.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 318.0,
+      "w": 335.0,
+      "h": 124.0,
+      "padding": "EdgeInsets(0.0, 4.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 442.0,
+      "w": 335.0,
+      "h": 269.0,
+      "padding": "EdgeInsets(0.0, 10.0, 0.0, 10.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 560.5,
+      "w": 52.0,
+      "h": 32.0,
+      "padding": "EdgeInsets.all(2.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 305.0,
+      "y": 566.5,
+      "w": 24.0,
+      "h": 20.0,
+      "padding": "EdgeInsets(2.0, 0.0, 2.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 307.0,
+      "y": 566.5,
+      "w": 20.0,
+      "h": 20.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 711.0,
+      "w": 335.0,
+      "h": 72.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 4.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 783.0,
+      "w": 335.0,
+      "h": 180.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 72.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.all(8.0)"
+    }
+  ]
+}

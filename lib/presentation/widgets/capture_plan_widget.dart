@@ -37,8 +37,13 @@ import 'plan_tracking.dart';
 /// heading (UX-09), and each row says what will be captured. Composes
 /// smaller widgets; no calculations happen here.
 class CapturePlanWidget extends StatelessWidget {
-  const CapturePlanWidget({super.key, this.blockActions});
+  const CapturePlanWidget({
+    super.key,
+    this.blockActions,
+    this.includeSummary = true,
+  });
   final Widget? blockActions;
+  final bool includeSummary;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +54,10 @@ class CapturePlanWidget extends StatelessWidget {
         children: [
           const _BlockList(),
           ?blockActions,
-          const SizedBox(height: 28),
-          const CaptureBudgetSummary(),
+          if (includeSummary) ...[
+            const SizedBox(height: 28),
+            const CaptureBudgetSummary(),
+          ],
         ],
       ),
     );
@@ -542,8 +549,8 @@ class _BlockListState extends State<_BlockList> {
               );
             },
           ),
-        // plan.js `.capture-actions`: a subtle rule, 12 above two equal
-        // buttons 8 apart (the longer label wraps; both keep its height).
+        // Keep paired actions equal-width. At large text they stack so
+        // calibration words can wrap at spaces within the document group.
         if (blocks.isNotEmpty)
           DecoratedBox(
             decoration: BoxDecoration(
@@ -551,37 +558,53 @@ class _BlockListState extends State<_BlockList> {
             ),
             child: Padding(
               padding: const EdgeInsets.only(top: 12),
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        key: const Key('capturePlan.addBlock'),
-                        onPressed: _add,
-                        child: const Text(
-                          'Add block',
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final actions = <Widget>[
+                    OutlinedButton(
+                      key: const Key('capturePlan.addBlock'),
+                      onPressed: _add,
+                      child: const Text(
+                        'Add block',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    if (blocks.any((b) => b.isLight))
+                      OutlinedButton(
+                        key: const Key('capturePlan.buildCalibration'),
+                        onPressed: _buildCalibration,
+                        child: Text(
+                          flatsMissing.isEmpty ? 'Build calibration frames' : 'Build calibration frames, with the missing flats',
                           textAlign: TextAlign.center,
                         ),
                       ),
+                  ];
+                  if (MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
+                      constraints.maxWidth < 280) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        actions.first,
+                        if (actions.length > 1) ...[
+                          const SizedBox(height: 8),
+                          actions.last,
+                        ],
+                      ],
+                    );
+                  }
+                  return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(child: actions.first),
+                        if (actions.length > 1) ...[
+                          const SizedBox(width: 8),
+                          Expanded(child: actions.last),
+                        ],
+                      ],
                     ),
-                    // CAL-1 (F09 A2): the labelled entry, also the
-                    // missing-flat warning's shortcut.
-                    if (blocks.any((b) => b.isLight)) ...[
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: OutlinedButton(
-                          key: const Key('capturePlan.buildCalibration'),
-                          onPressed: _buildCalibration,
-                          child: Text(
-                            flatsMissing.isEmpty ? 'Build calibration frames' : 'Build calibration frames, with the missing flats',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ),

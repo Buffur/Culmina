@@ -489,6 +489,33 @@ void main() {
         await tester.runAsync(app.vm.newSession);
         AppRouter.router.go(AppRouter.session());
         await _settle(tester);
+        expect(
+          find.byKey(const Key('planner.scroll')),
+          findsOneWidget,
+          reason:
+              'Fresh plan route: ${AppRouter.router.routeInformationProvider.value.uri}; '
+              '${tester.widgetList<Text>(find.byType(Text)).map((t) => t.data).take(25).toList()}',
+        );
+        // The preceding audit ends at the bottom. A new plan reuses the
+        // scroll position; search from its top rather than past the target.
+        final freshScrollable = find
+            .descendant(
+              of: find.byKey(const Key('planner.scroll')),
+              matching: find.byType(Scrollable),
+            )
+            .first;
+        tester.state<ScrollableState>(freshScrollable).position.jumpTo(0);
+        await _settle(tester);
+        await tester.scrollUntilVisible(
+          find.byKey(const Key('capturePlan.addLights')),
+          300,
+          scrollable: find
+              .descendant(
+                of: find.byKey(const Key('planner.scroll')),
+                matching: find.byType(Scrollable),
+              )
+              .first,
+        );
         expect(find.byKey(const Key('capturePlan.addLights')), findsOneWidget);
         final fresh = await _audit(tester, contrast: theme != _Theme.field);
         if (fresh.isNotEmpty) {
@@ -518,7 +545,25 @@ void main() {
         }
 
         Future<void> tap(Finder f) async {
-          await tester.ensureVisible(f.first);
+          if (f.evaluate().isEmpty) {
+            await tester.scrollUntilVisible(
+              f,
+              300,
+              scrollable: find
+                  .byWidgetPredicate(
+                    (w) =>
+                        w is Scrollable &&
+                        w.axisDirection == AxisDirection.down,
+                  )
+                  .first,
+            );
+          }
+          await Scrollable.ensureVisible(
+            tester.element(f.first),
+            alignment: 0.5,
+          );
+          await _settle(tester);
+          expect(f.first.hitTestable(), findsOneWidget);
           await tester.tap(f.first);
           await _settle(tester);
         }

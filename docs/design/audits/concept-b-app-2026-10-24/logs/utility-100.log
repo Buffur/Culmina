@@ -1,0 +1,44 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart
+00:00 +0: Concept B app audit: backup_restore dark 1.0
+00:03 +1: Concept B app audit: backup_error dark 1.0
+00:06 +2: Concept B app audit: licenses dark 1.0
+00:08 +3: Concept B app audit: zone_dialog dark 1.0
+00:11 +4: Concept B app audit: site_pick dark 1.0
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/12.png
+00:13 +5: Concept B app audit: restore_wait dark 1.0
+00:13 +6: Concept B app audit: unsupported_newer dark 1.0
+00:14 +7: Concept B app audit: unsupported_older dark 1.0
+00:15 +8: Concept B app audit: astrobin_preview dark 1.0
+00:18 +9: All tests passed!

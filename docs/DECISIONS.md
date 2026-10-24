@@ -391,6 +391,10 @@ registered by TASK 0.2; each is decided in its own ADR task in `docs/MASTER_ROAD
 
 ## E.1 Resolved decisions
 
+### Concept B grouping and one production font — 2026-10-24
+
+The owner approved implementation of Home Concept B and its eight-screen suite, with the explicit boundary that the design only groups existing elements, preserves current functions and uses one consistent font throughout the project. [Task/specification](design/CONCEPT_B_IMPLEMENTATION_2026_10_24.md): native semantic document groups, existing page gutters and scientific/state contracts, and Geist for production prose, headings, navigation and chart labels. This supersedes the prior Source Serif 4 editorial/answer and Roboto navigation/chart exceptions. MaterialIcons remains an icon font; original concepts, font assets/licences and frozen reference history are preserved. Implementation evidence and pending acceptance live in [PROGRESS](refinement/PROGRESS.md); this is no roadmap, Git delivery or release authorization.
+
 ### The full launch gesture is shown before the app opens (owner, 2026-10-23)
 
 - **Decided by:** the owner, in chat, 2026-10-23 (second brief that day): «Спочатку користувач бачить повну анімацію, після її завершення відкривається робочий інтерфейс» ["First the user sees the full animation; after it ends the working interface opens"], and that the speed of the main screen's appearance is not this task's priority; the approved static mark (R3 → refreshed dark → medium star tips) is not to be redrawn.

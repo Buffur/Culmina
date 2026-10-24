@@ -20,7 +20,7 @@ The frozen web tree ID is `993d674067c3df27a4d71cac2943830dba62226f`. Its files 
 Read values from their owners; this map deliberately does not duplicate token tables:
 
 - Semantic colours/surfaces: `lib/core/theme/app_colors.dart`, `app_palette.dart`, `app_theme.dart`; adopted additional Hybrid roles: `hybrid_tokens.dart`.
-- Typography: `lib/core/theme/app_typography.dart`, actual call sites and theme mapping. Geist is adopted UI typography, Source Serif 4 is the editorial/answer face (opsz 14); root-navigation Roboto and compact exceptions remain explicit. Both the Material-role scale and newer named Hybrid roles exist. Do not force current native body/heading roles back to the earlier Manrope or 14/12 bodyMedium/bodySmall instructions.
+- Typography: `lib/core/theme/app_typography.dart`, actual call sites and theme mapping. The owner-approved [Concept B implementation](CONCEPT_B_IMPLEMENTATION_2026_10_24.md) uses Geist for all production prose, headings, navigation and chart labels. Compact sizes remain explicit; MaterialIcons is an icon font. Earlier Source Serif 4/Roboto roles are superseded, while frozen reference assets remain historical. Both the Material-role scale and newer named Hybrid roles exist. Do not force current native body/heading roles back to the earlier Manrope or 14/12 bodyMedium/bodySmall instructions.
 - Spacing/radii/motion/buttons: `app_spacing.dart`, `app_radius.dart`, `app_motion.dart`, `app_button_styles.dart`, `app_theme.dart`; shared layout/components live in `lib/presentation/shared/` and navigation in `lib/presentation/navigation/`.
 - Font files, licences/provenance: `assets/fonts/`, `pubspec.yaml` and `SourceSerif4.source.json`. Browser fonts/licences remain a separate preserved reference collection.
 

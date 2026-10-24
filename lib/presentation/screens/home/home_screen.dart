@@ -1,6 +1,9 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/document_section.dart';
+
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,6 +26,7 @@ import '../../shared/night_time_formatter.dart';
 import '../../../domain/models/target_types.dart';
 import '../../shared/field_mode_button.dart';
 import '../../widgets/capture_plan_widget.dart';
+import '../../widgets/capture_plan/capture_budget_summary.dart';
 import '../../widgets/plan_tracking.dart';
 import '../../widgets/sky_darkness_widget.dart';
 import '../../shared/night_text.dart';
@@ -98,164 +102,195 @@ class HomeScreen extends StatelessWidget {
                     key: const Key('planner.scroll'),
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                     children: [
-                      const _PlanIdentity(),
-                      const PlanStatus(showFillAction: false),
+                      DocumentSection(
+                        key: const Key('planner.statusGroup'),
+                        children: const [
+                          _PlanIdentity(),
+                          PlanStatus(showFillAction: false),
+                        ],
+                      ),
                       const SizedBox(height: 24),
                       // plan.js `rowButton` (Hybrid): the plan's context,
                       // target and rig, each opening its scoped chooser.
-                      HybridPlanRow(
-                        key: const Key('planner.context'),
-                        label: 'Site and night',
-                        value: SiteLabel.of(siteVm) ?? ContextLine.noSite,
-                        caption: planVm.sessionNight == null
-                            ? 'No night without a site'
-                            : siteVm.displayZoneId == null
-                            ? 'Times in the device zone'
-                            : 'Site zone: ${siteVm.displayZoneId}',
-                        onTap: () => openPlanContext(context),
-                      ),
-                      HybridPlanRow(
-                        key: Key(
-                          target == null
-                              ? 'planner.noTarget'
-                              : 'planner.target',
-                        ),
-                        label: 'Target',
-                        value: target == null
-                            ? 'Not chosen'
-                            : (target.commonName != null &&
-                                  target.commonName != target.catalogId)
-                            ? '${target.catalogId} · ${target.commonName}'
-                            : target.commonName ?? target.catalogId,
-                        caption: target == null
-                            ? 'Choose a target'
-                            : [
-                                target.type,
-                                // ADR-010 §3: existing moving-type targets
-                                // stay usable, with a visible warning.
-                                if (TargetTypes.isMoving(target.type))
-                                  TargetTypes.movingWarning,
-                                // TASK 10.3: inside the night's windows,
-                                // not at culmination (possibly daylight).
-                                if (conditionsVm.imagingOpportunity
-                                    case final o?)
-                                  o.maxAltitudeInWindowsDeg == null
-                                      ? words('no window tonight')
-                                      : 'max ${QuantityText.degrees(o.maxAltitudeInWindowsDeg!, digits: 1)} in windows',
-                                // F18 A1: the altitude at this moment, said
-                                // so when the plan's night is another one.
-                                if (conditionsVm.currentAltitude case final a?)
-                                  otherNight
-                                      ? "now ${QuantityText.degrees(a, digits: 1)} (not the plan's night)"
-                                      : 'now ${QuantityText.degrees(a, digits: 1)}',
-                              ].join(' · '),
-                        onTap: () => context.push(AppRouter.selectTarget),
-                      ),
-                      HybridPlanRow(
-                        key: Key(
-                          equipment == null ? 'planner.noRig' : 'planner.rig',
-                        ),
-                        label: AppWords.rig,
-                        value: equipment == null
-                            ? 'Not chosen'
-                            : equipment.name,
-                        caption: equipment == null
-                            ? AppWords.chooseRig
-                            : RigSummaryText.of(
-                                equipment,
-                                tracking: planVm.effectiveTracking,
-                              ),
-                        // D8 A: a rig created there becomes this plan's.
-                        onTap: () => context.push(
-                          equipment == null
-                              ? AppRouter.selectRigForPlan
-                              : AppRouter.selectRig,
-                        ),
+                      DocumentSection(
+                        key: const Key('planner.inputsGroup'),
+                        children: [
+                          HybridPlanRow(
+                            key: const Key('planner.context'),
+                            label: 'Site and night',
+                            value: SiteLabel.of(siteVm) ?? ContextLine.noSite,
+                            caption: planVm.sessionNight == null
+                                ? 'No night without a site'
+                                : siteVm.displayZoneId == null
+                                ? 'Times in the device zone'
+                                : 'Site zone: ${siteVm.displayZoneId}',
+                            onTap: () => openPlanContext(context),
+                          ),
+                          HybridPlanRow(
+                            key: Key(
+                              target == null
+                                  ? 'planner.noTarget'
+                                  : 'planner.target',
+                            ),
+                            label: 'Target',
+                            value: target == null
+                                ? 'Not chosen'
+                                : (target.commonName != null &&
+                                      target.commonName != target.catalogId)
+                                ? '${target.catalogId} · ${target.commonName}'
+                                : target.commonName ?? target.catalogId,
+                            caption: target == null
+                                ? 'Choose a target'
+                                : [
+                                    target.type,
+                                    // ADR-010 §3: existing moving-type targets
+                                    // stay usable, with a visible warning.
+                                    if (TargetTypes.isMoving(target.type))
+                                      TargetTypes.movingWarning,
+                                    // TASK 10.3: inside the night's windows,
+                                    // not at culmination (possibly daylight).
+                                    if (conditionsVm.imagingOpportunity
+                                        case final o?)
+                                      o.maxAltitudeInWindowsDeg == null
+                                          ? words('no window tonight')
+                                          : 'max ${QuantityText.degrees(o.maxAltitudeInWindowsDeg!, digits: 1)} in windows',
+                                    // F18 A1: the altitude at this moment, said
+                                    // so when the plan's night is another one.
+                                    if (conditionsVm.currentAltitude
+                                        case final a?)
+                                      otherNight
+                                          ? "now ${QuantityText.degrees(a, digits: 1)} (not the plan's night)"
+                                          : 'now ${QuantityText.degrees(a, digits: 1)}',
+                                  ].join(' · '),
+                            onTap: () => context.push(AppRouter.selectTarget),
+                          ),
+                          HybridPlanRow(
+                            key: Key(
+                              equipment == null
+                                  ? 'planner.noRig'
+                                  : 'planner.rig',
+                            ),
+                            label: AppWords.rig,
+                            value: equipment == null
+                                ? 'Not chosen'
+                                : equipment.name,
+                            caption: equipment == null
+                                ? AppWords.chooseRig
+                                : RigSummaryText.of(
+                                    equipment,
+                                    tracking: planVm.effectiveTracking,
+                                  ),
+                            // D8 A: a rig created there becomes this plan's.
+                            onTap: () => context.push(
+                              equipment == null
+                                  ? AppRouter.selectRigForPlan
+                                  : AppRouter.selectRig,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
-                      HybridSectionTitle(
-                        AppWords.capturePlan,
-                        trailing: _blockCount(planVm),
-                      ),
-                      const SizedBox(height: 6),
-                      CapturePlanWidget(
-                        blockActions: PlanStatus.missingInput(planVm) == null
-                            ? FillWindowAction(fit: analysisVm.fitAnalysis)
-                            : null,
-                      ),
-                      if (equipment != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: CollapsibleSection(
-                            key: const Key('planner.rigDetails'),
-                            sectionKey: PlannerSections.rigDetails,
-                            title: 'Rig details',
-                            summary: equipment.name,
-                            child: _RigDetails(rig: equipment),
+                      DocumentSection(
+                        key: const Key('planner.captureGroup'),
+                        children: [
+                          HybridSectionTitle(
+                            AppWords.capturePlan,
+                            trailing: _blockCount(planVm),
                           ),
-                        ),
+                          const SizedBox(height: 6),
+                          CapturePlanWidget(
+                            includeSummary: false,
+                            blockActions:
+                                PlanStatus.missingInput(planVm) == null
+                                ? FillWindowAction(fit: analysisVm.fitAnalysis)
+                                : null,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      DocumentSection(
+                        key: const Key('planner.estimateGroup'),
+                        children: [
+                          const CaptureBudgetSummary(),
+                          if (equipment != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: CollapsibleSection(
+                                key: const Key('planner.rigDetails'),
+                                sectionKey: PlannerSections.rigDetails,
+                                title: 'Rig details',
+                                summary: equipment.name,
+                                child: _RigDetails(rig: equipment),
+                              ),
+                            ),
+                        ],
+                      ),
                       // AM-01 (F18 A1): the night and its forecast in full
                       // are on their detail screens; here one factual row
                       // each (plan.js night rows). Without a site the
                       // location row is shown (ADR-012).
-                      const SizedBox(height: 32),
-                      Semantics(
-                        header: true,
-                        child: Text(
-                          'The night ahead',
-                          style: AppTypography.nightHeading.copyWith(
-                            letterSpacing: -0.25,
-                            color: AppPalette.of(context).textPrimary,
+                      const SizedBox(height: 16),
+                      DocumentSection(
+                        key: const Key('planner.nightGroup'),
+                        children: [
+                          Semantics(
+                            header: true,
+                            child: Text(
+                              'The night ahead',
+                              style: AppTypography.nightHeading.copyWith(
+                                letterSpacing: -0.25,
+                                color: AppPalette.of(context).textPrimary,
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 4),
+                          if (planVm.sessionNight case final night?) ...[
+                            HybridNightRow(
+                              key: const Key('planner.night'),
+                              icon: HybridIcons.lucideMoon,
+                              label: 'Night & Moon',
+                              value: _nightValue(
+                                context,
+                                night,
+                                conditionsVm,
+                                siteVm.displayZoneId,
+                                words,
+                              ),
+                              extra: _moonExtra(
+                                context,
+                                night,
+                                conditionsVm,
+                                siteVm.displayZoneId,
+                              ),
+                              onTap: () => context.push(AppRouter.nightMoon),
+                            ),
+                            HybridNightRow(
+                              key: const Key('planner.weather'),
+                              icon: HybridIcons.lucideCloud,
+                              iconColor: Theme.of(context)
+                                  .extension<HybridTokens>()
+                                  ?.accent,
+                              label: 'Weather',
+                              value: _weatherValue(conditionsVm),
+                              extra: _weatherExtra(conditionsVm),
+                              onTap: () => context.push(AppRouter.weather),
+                            ),
+                          ] else
+                            HybridPlanRow(
+                              // Only while the default position is in use.
+                              label: AppWords.site,
+                              value:
+                                  siteVm.locationName ??
+                                  'Not set (default position)',
+                              caption:
+                                  '${siteVm.latitude.toStringAsFixed(4)}, '
+                                  '${siteVm.longitude.toStringAsFixed(4)}'
+                                  '${siteVm.locationNameAttribution == null ? '' : ' · ${siteVm.locationNameAttribution}'}',
+                              onTap: () => context.push(AppRouter.selectSite),
+                            ),
+                          const SkyDarknessWidget(),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      if (planVm.sessionNight case final night?) ...[
-                        HybridNightRow(
-                          key: const Key('planner.night'),
-                          icon: HybridIcons.lucideMoon,
-                          label: 'Night & Moon',
-                          value: _nightValue(
-                            context,
-                            night,
-                            conditionsVm,
-                            siteVm.displayZoneId,
-                            words,
-                          ),
-                          extra: _moonExtra(
-                            context,
-                            night,
-                            conditionsVm,
-                            siteVm.displayZoneId,
-                          ),
-                          onTap: () => context.push(AppRouter.nightMoon),
-                        ),
-                        HybridNightRow(
-                          key: const Key('planner.weather'),
-                          icon: HybridIcons.lucideCloud,
-                          iconColor: Theme.of(context)
-                              .extension<HybridTokens>()
-                              ?.accent,
-                          label: 'Weather',
-                          value: _weatherValue(conditionsVm),
-                          extra: _weatherExtra(conditionsVm),
-                          onTap: () => context.push(AppRouter.weather),
-                        ),
-                      ] else
-                        HybridPlanRow(
-                          // Only while the default position is in use.
-                          label: AppWords.site,
-                          value:
-                              siteVm.locationName ??
-                              'Not set (default position)',
-                          caption:
-                              '${siteVm.latitude.toStringAsFixed(4)}, '
-                              '${siteVm.longitude.toStringAsFixed(4)}'
-                              '${siteVm.locationNameAttribution == null ? '' : ' · ${siteVm.locationNameAttribution}'}',
-                          onTap: () => context.push(AppRouter.selectSite),
-                        ),
-                      const SkyDarknessWidget(),
-                      const SizedBox(height: 32),
                     ],
                   ),
                 ),

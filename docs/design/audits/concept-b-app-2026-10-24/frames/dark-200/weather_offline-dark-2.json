@@ -1,0 +1,387 @@
+{
+  "name": "weather_offline",
+  "theme": "dark",
+  "scale": 2.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Coverage: 10/10 hourly samples in dark time",
+      "x": 36.0,
+      "y": -114.0,
+      "w": 303.0,
+      "h": 126.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Updated 18 Oct, 18:00 GMT+3 · 0 min old",
+      "x": 36.0,
+      "y": 16.0,
+      "w": 303.0,
+      "h": 86.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.65
+    },
+    {
+      "text": "Offline · cached forecast. Offline or the service did not answer.",
+      "x": 36.0,
+      "y": 102.0,
+      "w": 303.0,
+      "h": 168.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "Refresh forecast",
+      "x": 78.50717163085938,
+      "y": 288.0,
+      "w": 217.98565673828125,
+      "h": 40.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "A · Compact rows ·",
+      "x": 36.0,
+      "y": 384.0,
+      "w": 225.86203002929688,
+      "h": 43.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.65
+    },
+    {
+      "text": "Change in Settings → Appearance",
+      "x": 36.0,
+      "y": 427.0,
+      "w": 303.0,
+      "h": 86.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.65
+    },
+    {
+      "text": "Dark-time statistics",
+      "x": 36.0,
+      "y": 525.0,
+      "w": 303.0,
+      "h": 112.0,
+      "family": "Geist",
+      "size": 20.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "Temperature",
+      "x": 64.0,
+      "y": 667.0,
+      "w": 152.86962890625,
+      "h": 38.0,
+      "family": "Geist",
+      "size": 13.0,
+      "weight": 500,
+      "height": 1.45
+    },
+    {
+      "text": "6.5 °C · dew point 2 °C",
+      "x": 36.0,
+      "y": 715.0,
+      "w": 303.0,
+      "h": 90.0,
+      "family": "Geist",
+      "size": 15.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "10/10 known · dew point 10/10 known",
+      "x": 36.0,
+      "y": 808.0,
+      "w": 303.0,
+      "h": 72.0,
+      "family": "Geist",
+      "size": 12.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Weather",
+      "x": 64.0,
+      "y": 4.5,
+      "w": 173.90557861328125,
+      "h": 55.0,
+      "family": "Geist",
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    },
+    {
+      "text": "Night",
+      "x": 16.0,
+      "y": 65.5,
+      "w": 69.13201904296875,
+      "h": 43.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5384615384615385
+    },
+    {
+      "text": "Moon",
+      "x": 117.13201904296875,
+      "y": 65.5,
+      "w": 72.072021484375,
+      "h": 43.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.5384615384615385
+    },
+    {
+      "text": "Weather",
+      "x": 221.20404052734375,
+      "y": 65.5,
+      "w": 113.64639282226562,
+      "h": 43.0,
+      "family": "Geist",
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.5384615384615385
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 112.0,
+      "w": 375.0,
+      "h": 700.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 112.0,
+      "w": 375.0,
+      "h": 700.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'weather.summaryGroup'>]",
+      "x": 20.0,
+      "y": -659.0,
+      "w": 335.0,
+      "h": 1011.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": -659.0,
+      "w": 335.0,
+      "h": 1011.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "OutlinedButton",
+      "key": "[<'weather.refresh'>]",
+      "x": 36.0,
+      "y": 280.0,
+      "w": 303.0,
+      "h": 56.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 280.0,
+      "w": 303.0,
+      "h": 56.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'weather.statisticsGroup'>]",
+      "x": 20.0,
+      "y": 368.0,
+      "w": 335.0,
+      "h": 1932.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 368.0,
+      "w": 335.0,
+      "h": 1932.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": "[<'weather.rows'>]",
+      "x": 36.0,
+      "y": 637.0,
+      "w": 303.0,
+      "h": 1088.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 653.0,
+      "w": 303.0,
+      "h": 241.0,
+      "padding": "EdgeInsets(0.0, 14.0, 0.0, 14.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 112.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 112.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 72.0,
+      "h": 64.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 303.0,
+      "y": 0.0,
+      "w": 64.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 101.13201904296875,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 0.0, 2.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 64.0,
+      "w": 101.13201904296875,
+      "h": 46.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 101.13201904296875,
+      "y": 64.0,
+      "w": 104.072021484375,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 0.0, 2.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 101.13201904296875,
+      "y": 64.0,
+      "w": 104.072021484375,
+      "h": 46.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 205.20404052734375,
+      "y": 64.0,
+      "w": 145.64639282226562,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 0.0, 2.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 205.20404052734375,
+      "y": 64.0,
+      "w": 145.64639282226562,
+      "h": 46.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    }
+  ]
+}

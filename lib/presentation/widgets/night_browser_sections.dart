@@ -31,8 +31,8 @@ import '../viewmodels/site_viewmodel.dart';
 /// Hybrid composition (night-ui.js `timeline`, night.css, accepted web
 /// reference 86873ce): "Preview time" and the previewed instant; two jumps
 /// to the start and end of dark time; the 14 px sky band with its two 8 px
-/// Moon lanes 4 px below; the rail's end labels, the hint, the key, the
-/// encoding note, "Exact times & reading key" and the cursor's state.
+/// Moon lanes 4 px below; the rail's end labels and hint, the optional key
+/// and encoding note in "Exact times & reading key", and the cursor's state.
 class NightBarSection extends StatelessWidget {
   /// The slider's spoken value at [utc]: "21:15, 19 Oct (site zone
   /// Europe/Kyiv, EEST, UTC+03:00): Dark (Sun below −18°) · …".
@@ -135,11 +135,12 @@ class NightBarSection extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.md),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 3),
           child: SizedBox(
-            height: 42,
+            key: const Key('nightMoon.rail'),
+            height: 48,
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -230,28 +231,6 @@ class NightBarSection extends StatelessWidget {
         const SizedBox(height: 10),
         Text('Drag to preview · arrow keys step 5 min.', style: caption),
         const SizedBox(height: 12),
-        _Legend(
-          view: view,
-          compact: true,
-          // night-ui.js legend: clock times without the next-day tag.
-          at: (utc) =>
-              NightTimeFormatter.clockTime(context, utc, zoneId: zoneId),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          dark == null
-              ? 'Sky colour blends between known Sun-event times. There is no '
-                    'dark time (Sun below '
-                    '${QuantityText.degrees(view.limitDeg)}) this night. It '
-                    'is not measured sky brightness or a quality score.'
-              : 'Sky colour blends between known Sun-event times; black marks '
-                    'dark time (Sun below '
-                    '${QuantityText.degrees(view.limitDeg)}). It is not '
-                    'measured sky brightness or a quality score.',
-          key: const Key('nightMoon.encoding'),
-          style: caption,
-        ),
-        const SizedBox(height: 8),
         _ExactTimes(view: view, zoneId: zoneId),
         const SizedBox(height: 10),
         Text(
@@ -536,7 +515,9 @@ class _ExactTimesState extends State<_ExactTimes> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
+          key: const Key('nightMoon.exactToggle'),
           button: true,
+          enabled: true,
           expanded: _open,
           excludeSemantics: true,
           label: 'Exact times & reading key',
@@ -574,6 +555,30 @@ class _ExactTimesState extends State<_ExactTimes> {
           ),
         ),
         if (_open) ...[
+          _Legend(
+            view: view,
+            compact: true,
+            at: (utc) => NightTimeFormatter.clockTime(
+              context,
+              utc,
+              zoneId: widget.zoneId,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            dark == null
+                ? 'Sky colour blends between known Sun-event times. There is no '
+                      'dark time (Sun below '
+                      '${QuantityText.degrees(view.limitDeg)}) this night. It '
+                      'is not measured sky brightness or a quality score.'
+                : 'Sky colour blends between known Sun-event times; black marks '
+                      'dark time (Sun below '
+                      '${QuantityText.degrees(view.limitDeg)}). It is not '
+                      'measured sky brightness or a quality score.',
+            key: const Key('nightMoon.encoding'),
+            style: AppTypography.caption.copyWith(color: p.textSecondary),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
@@ -1037,7 +1042,9 @@ class NightBarPainter extends CustomPainter {
 /// only). At large text the month becomes a readable week list rather
 /// than squeezed cells.
 class MoonCalendarSection extends StatelessWidget {
-  const MoonCalendarSection({super.key});
+  const MoonCalendarSection({super.key, this.insetHeader = false});
+
+  final bool insetHeader;
 
   /// Large text switches to the week view (SP07).
   static const weekViewScale = 1.5;
@@ -1135,17 +1142,25 @@ class MoonCalendarSection extends StatelessWidget {
       key: const Key('nightMoon.calendar'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Wrap(
-          alignment: WrapAlignment.spaceBetween,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 8,
-          children: [heading, if (!week) monthControls],
-        ),
-        Text(
-          'Tap a night to view it; your plan stays unchanged.',
-          style: AppTypography.caption.copyWith(
-            height: 1.65,
-            color: p.textSecondary,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: insetHeader ? 16 : 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                children: [heading, if (!week) monthControls],
+              ),
+              Text(
+                'Tap a night to view it; your plan stays unchanged.',
+                style: AppTypography.caption.copyWith(
+                  height: 1.65,
+                  color: p.textSecondary,
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: AppSpacing.md),

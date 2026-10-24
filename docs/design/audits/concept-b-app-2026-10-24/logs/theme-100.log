@@ -1,0 +1,30 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart
+00:00 +0: Concept B app audit: home light 1.0
+00:02 +1: Concept B app audit: plan_actions light 1.0
+00:04 +2: Concept B app audit: lib_rig light 1.0
+00:07 +3: Concept B app audit: lib_rig_edit light 1.0
+00:10 +4: Concept B app audit: lib_target light 1.0
+00:12 +5: Concept B app audit: lib_target_new light 1.0
+00:15 +6: Concept B app audit: lib_site light 1.0
+00:17 +7: Concept B app audit: lib_site_edit light 1.0
+00:20 +8: Concept B app audit: settings_appearance light 1.0
+00:22 +9: Concept B app audit: settings_planning light 1.0
+00:23 +10: Concept B app audit: metadata_read_b light 1.0
+00:25 +11: Concept B app audit: backup_restore light 1.0
+00:28 +12: Concept B app audit: astrobin_preview light 1.0
+00:30 +13: Concept B app audit: restore_wait light 1.0
+00:31 +14: Concept B app audit: home field 1.0
+00:32 +15: Concept B app audit: plan_actions field 1.0
+00:34 +16: Concept B app audit: lib_rig field 1.0
+00:36 +17: Concept B app audit: lib_rig_edit field 1.0
+00:39 +18: Concept B app audit: lib_target field 1.0
+00:42 +19: Concept B app audit: lib_target_new field 1.0
+00:44 +20: Concept B app audit: lib_site field 1.0
+00:46 +21: Concept B app audit: lib_site_edit field 1.0
+00:49 +22: Concept B app audit: settings_appearance field 1.0
+00:51 +23: Concept B app audit: settings_planning field 1.0
+00:52 +24: Concept B app audit: metadata_read_b field 1.0
+00:54 +25: Concept B app audit: backup_restore field 1.0
+00:57 +26: Concept B app audit: astrobin_preview field 1.0
+00:59 +27: Concept B app audit: restore_wait field 1.0
+01:00 +28: All tests passed!

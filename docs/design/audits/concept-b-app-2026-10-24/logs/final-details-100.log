@@ -1,0 +1,74 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart
+00:00 +0: Concept B app audit: entry_name dark 1.0
+00:04 +1: Concept B app audit: entry_copy dark 1.0
+00:06 +2: Concept B app audit: site_name_consent dark 1.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: StateError:<Bad state: No element>
+site_name_consent route
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart:509:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart line 509
+The test description was:
+  Concept B app audit: site_name_consent dark 1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:11 +2 -1: Concept B app audit: site_name_consent dark 1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Concept B app audit: site_name_consent dark 1.0
+  
+00:11 +2 -1: Concept B app audit: unsupported_confirm dark 1.0
+00:12 +3 -1: Concept B app audit: result_ime dark 1.0
+00:15 +4 -1: Concept B app audit: map_coordinates dark 1.0
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/12.png
+00:17 +5 -1: Concept B app audit: plan_actions dark 1.0
+00:19 +6 -1: Concept B app audit: entry dark 1.0
+00:21 +7 -1: Concept B app audit: lib_rig dark 1.0
+00:23 +8 -1: Concept B app audit: lib_site dark 1.0
+00:25 +9 -1: Concept B app audit: lib_target dark 1.0
+00:28 +10 -1: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart: Concept B app audit: site_name_consent dark 1.0

@@ -3169,3 +3169,303 @@ The [remote-result pre-handoff snapshot](PROGRESS_HISTORY.md#ci-delivery-pre-res
 ## How to update this file
 
 Keep one short current handoff; preserve superseded status verbatim with source/revision in PROGRESS_HISTORY under AI_WORKFLOW. Update only invalidated claims/related registers, retain stable IDs and exact evidence/acceptance boundaries, then stop at the owner's task boundary.
+
+
+## Home-layout pre-task snapshot - 2026-10-24
+
+Preserved verbatim from PROGRESS.md at a4798d667007a83e12de3c94d95bb68c22947748 before the owner-requested Home fixes and concept exploration. Historical permissions are inactive.
+
+# Culmina — current progress
+
+Status: **current operational handoff**, 2026-10-24. Read [AGENTS](../../AGENTS.md); [V1–V8](../VERIFICATION_POLICY.md) alone owns checks. This file records state, not an automatically active queue.
+
+## Current state
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Integration baseline | `develop` at `89c6c4879fb91b002f15caffcdcf3aeda004d58f`, the exact restoration of the original three-shard workflow from `c045898`; remote result #25 success. Final Markdown delivery follows; no application/test/tooling input changes. |
+| Current authorized scope | Owner-authorized warm-cache 2/3-shard benchmark, restoration to three shards and final report are complete. Only final Markdown commit/push and its lightweight CI observation remain within this delivery. No permanent two-shard adoption or further benchmark loop, roadmap/UI/build/device action is authorized. |
+| Actual comparative runs | Two shards: [#24](https://github.com/Buffur/Culmina/actions/runs/40046527390), `9fb503e`, **300s / 799 runner-seconds (13.317 min)**. Three shards: [#25](https://github.com/Buffur/Culmina/actions/runs/40047002928), `89c6c48`, **273s / 966 runner-seconds (16.100 min)**. Every heavy job in both runs had SDK and pub cache hits. Same app/tests/tooling, weights, cache keys, SDK and OS image. |
+| Coverage verification | **PASS in both full runs**: 2509 unit/widget PASS / 6 SKIP across 285 files once per run, plus 3 host PASS. All 13 artifact ZIP digests verified; raw JSONL profiles reconstructed and matched to receipts/remote aggregates. Exact unit and host file/name/outcome multisets equal the reference; unit SHA-256 `3caf5bdd9d52388f030328b5b85b22545ab057128b55aa162a99660dbbe04c44`. Static checks, 8 Python regressions, schema/selection/aggregate safeguards and final scope/links/whitespace checks PASS. No extra local full suite. |
+| Conclusion / limits | In this measured pair, two shards saved **167 runner-seconds (2.783 min, 17.3%)** for **27s more elapsed CI (+9.9%)**. It is a reasonable resource-saving tradeoff if about half a minute longer feedback is acceptable; three remains preferable for minimum latency. No owner tolerance was invented. One pair is not a statistical guarantee; runner provisioner versions differed although OS image matched. Three shards are restored exactly as requested. [Detailed metrics and machine-readable summary](../CI.md#warm-cache-results---2026-10-24). |
+| Acceptance boundary | Hybrid transfer section 9, P-1 through P-6, TD-120/TD-121, identity/geo owner visual acceptance, physical accessibility and F/G/release conditions are unchanged; this CI comparison approves none of those separate criteria. |
+| Preservation | Application/test/tooling/reference/evidence bytes unchanged; common source tree fingerprint `d683acebeb7b5c4c801e520c1d4cb3f4b2213a5303c7cf7279b97c5b001488cc`. Prior handoff preserved at [history](PROGRESS_HISTORY.md#warm-cache-shard-comparison-pre-result-handoff---2026-10-24). Raw reports, verified metrics and originals remain outside Git in temporary `culmina-warm-shards-kyrjn__8/remote24` and `remote25`; Actions artifacts expire 2026-11-07. |
+
+## Next allowed action
+
+**Stop after the final Markdown commit/push, exact remote-SHA check and its documentation-only CI check.** The requested comparison is complete and the default is back to three shards. A permanent two-shard switch is a separate owner decision; neither another full run nor weight/fixture tuning is automatically authorized. Existing owner/device/F/G criteria remain unchanged.
+
+## Open questions and carried criteria
+
+This is a current routing summary, not a newly adjudicated task register. Stable criteria, findings and original evidence remain in their canonical registers and the preserved history. Do not close an item by analogy with a newer passing test.
+
+| IDs / surface | What remains / source for a future specifically authorized task |
+| --- | --- |
+| F01/F06/F10/F24 and review findings | The 2026-10-19 independent review records contradicted criteria and Windows failures at its dated baseline. Reproduce only relevant findings against current code before action; later implementation and passing suites do not prove their exact closure. [Review and criterion matrix](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md). |
+| F03 A5 versus F10 A3; F04 A4 | F03's early sample/resource-recording criterion is distinct from F10's actual real-FITS workflow gate (as the independent review explains). Real metadata/device evidence needs the exact file/workflow and unchanged reader inputs. Private samples stay outside Git. No new real-file run is claimed here. |
+| F02 A2/A3; S13V-01/TD-109; S13V-02/03 | Current launch/identity is integrated and API30/physical observations exist. The old “no SDK anywhere” explanation is obsolete; criterion-specific pre-12/12+, reduced-motion and timing qualification still needs explicit mapping to the final source/artifact/environment. Do not silently close historical device rows. |
+| F15 A4; F22 A1; F23 A2 | Calendar phone timing, Android process death/restoration, resolved Android dependency notices: retain exact criteria and evidence gaps. An available SDK, emulator drive or host PASS alone is insufficient. |
+| F25 A4, U/W; TD-114–TD-121 | Explicit owner visual acceptance, human comprehension, physical 200%/TalkBack and other unexercised rows remain separate from implemented/host/native evidence. Consult the named delivery reports for covered and excluded scenarios. |
+| G1; F26 / D6; G2–G4 | Frozen integration/CI/provider, packaging/measurement, owner signing, physical/human rehearsal, go/no-go and publication conditions remain. The combined debug-signed owner test APK is not F26 release qualification. No gate closure or publication permission is inferred. |
+| S1.5/S1.11, S2V-06, S3V-08, S10V-04, S11.6/S11.7 | Retained carried device/profile/human criteria: [STAGE_11_MATRIX](STAGE_11_MATRIX.md), [device runbook](STAGE_11_DEVICE_RUNBOOK.md) and historical dispositions. S6.E remains an owner-accepted **unverified** independent-participant gap, not a performed test. |
+| TD-072/S3F-01/S3F-02; TD-074; other TD/SI | Use current [TECH_DEBT](../TECH_DEBT.md) / [SCIENTIFIC_INTEGRITY](../SCIENTIFIC_INTEGRITY.md) entries and exact partial-resolution boundaries, not old “open defects not fixed” lists. This cleanup changes no finding dispositions. |
+| RD-02; RG-12; S12.2 | ADK skill / skills-lock / archive retention remains owner housekeeping, licence research remains deferred, trademark check remains optional. Preserve all material; none is deletion authority. [RG/RD registers](POST_ROADMAP_PLAN.md). |
+| Original evidence / external overrides | Private historical backups/device captures were not assumed available or copied into Git. Uninspected managed/cloud overrides remain unknown. Local auto-memory contains dated continuation hints; repository sources take precedence within the applicable instruction hierarchy. |
+
+## Reusable validation evidence
+
+Apply [V3](../VERIFICATION_POLICY.md#v3) per result, relevant inputs and environment. The CI task ran the complete host suite on its final relevant inputs. Device/owner evidence below retains its original scope; passing host tests do not approve those rows.
+
+| Evidence | Input / applicability |
+| --- | --- |
+| [Combined delivery report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) and [verification.json](../design/migration/evidence/consolidated-2026-10-24/verification.json) | Source `8a21e7b`; host suite/E2E plus final 16 regressions and final analysis/format/encoding, API30 seven-frame capture, normal launch/hot reload, scoped canonical-phone inspection. The report preserves the original analyzer failure; it does not label that whole invocation green. Application/native inputs remain unchanged. The current CI task changes test/tooling inputs, so its new host/CI results above supersede this older host-gate result; native evidence retains its original coverage and acceptance limits. |
+| [Hybrid transfer completion](../design/migration/HYBRID_TRANSFER_STATUS.md) | Its committed source, named pairs/Android captures and §9 owner's confirmation; later affected surfaces use their refinement reports. Exclusions stay explicit. |
+| [P-1–P-6 delivery](../design/migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](../design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md) | Scoped host/native/physical observations on their recorded inputs. The consolidation states what remained unchanged; do not generalize to untested settings, owner acceptance or F/G gates. |
+| Historical application CI | Fresh GitHub connector read on 2026-10-24: run [40029616135](https://github.com/Buffur/Culmina/actions/runs/40029616135) completed/success at exact source `8a21e7b`. Historical observed CI at its source; current changed test/tooling inputs are verified by #22 above. This older run is not the new CI result or G1/F26/G2-G4 closure; the original consolidation status remains historical. |
+
+## Historical routing
+
+The [warm-cache pre-result snapshot](PROGRESS_HISTORY.md#warm-cache-shard-comparison-pre-result-handoff---2026-10-24) preserves the benchmark handoff before this measured result. The [remote-result pre-handoff snapshot](PROGRESS_HISTORY.md#ci-delivery-pre-result-handoff---2026-10-24) preserves the completed implementation handoff. The [CI pre-task snapshot](PROGRESS_HISTORY.md#ci-optimization-pre-task-snapshot---2026-10-24) preserves the complete previous operational handoff. The [maintenance pre-fix snapshot](PROGRESS_HISTORY.md#design-skills-maintenance-pre-fix-snapshot--2026-10-24) preserves the previous handoff and its earlier nested records verbatim. Earlier governance/stage history and immutable audits/evidence retain their original bytes. Their old commands/permissions are inactive; [BASELINE](../design/BASELINE.md) maps accepted intent, implementation and evidence limits.
+
+## How to update this file
+
+Keep one short current handoff; preserve superseded status verbatim with source/revision in PROGRESS_HISTORY under AI_WORKFLOW. Update only invalidated claims/related registers, retain stable IDs and exact evidence/acceptance boundaries, then stop at the owner's task boundary.
+
+
+## Concept B suite pre-task snapshot - 2026-10-24
+
+Preserved verbatim before the owner-requested eight-screen image exploration. Same a4798d6 base and preceding dirty fixes; historical permissions are inactive.
+
+# Culmina — current progress
+
+Status: **current operational handoff**, 2026-10-24. Read [AGENTS](../../AGENTS.md); [V1–V8](../VERIFICATION_POLICY.md) alone owns checks. This file records state, not an automatically active queue.
+
+## Current state
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Task / baseline | Owner-requested Home context/timeline/navigation fixes, font inspection and separate Notion-style block concepts, 2026-10-24. Primary worktree `develop`, HEAD/upstream tracking `a4798d667007a83e12de3c94d95bb68c22947748`, initially clean, no commit/push. Local tracking comparison 0/0; no fresh remote fetch. |
+| Implemented | Site/date now follow content with a flexible long-name site; 16 dp before the timeline and 48 dp slider region; legend/encoding explanation behind the existing disclosure; bottom-navigation padding is symmetric. Existing calculations, data and flows retained. |
+| Verified | 85 affected tests PASS under V3/V5; final analysis, changed-file format and encoding PASS. 21 scoped real-font host frames cover Light/Dark/Field and 100%/200%, including long names and the scrolled timeline. Canonical phone update explicitly authorized; exact installed APK hash checked, scoped dark/100% interactions and all four tabs checked; hot reload PASS and no runtime errors. [Report and receipt](../design/explorations/2026-10-24-home-blocks/FIXES_AND_VERIFICATION.md). |
+| Typography / concepts | Geist UI, Source Serif 4 editorial/answer roles and Roboto navigation are existing adopted roles; compact graph Roboto is surfaced in the inspection. Actual generated A/B images, one B refinement, synthetic current render, prompts and comparison are [separate proposals](../design/explorations/2026-10-24-home-blocks/README.md). Recommend B for discussion; no block/control alternative adopted. |
+| Preview / installation | Frozen reference at loopback port 4173; concept comparison at port 4174, both with USB reverse. Installed canonical debug 1.0.0+1 APK SHA-256 `ff2b94cfe327decd290105b6f3d0c55f22bbba895cd602978cc284ab644e84d1`, update without clear/uninstall. Private phone evidence stays outside Git. |
+| Acceptance / preservation | Owner visual acceptance and A/B selection remain separate. No F/G, physical 200%/TalkBack, identity/geo or release gate closed. Three-shard CI result/restoration remain as recorded in the preserved [pre-task snapshot](PROGRESS_HISTORY.md#home-layout-pre-task-snapshot---2026-10-24). Frozen browser reference untouched. |
+
+## Next allowed action
+
+**Stop after delivering the reviewable fixes and A/B comparison.** Leave both requested servers available. Await the owner's concept selection and explicit implementation instruction before adopting blocks or alternative controls. No commit/push, roadmap continuation or further installation/data action is authorized by this handoff.
+
+## Open questions and carried criteria
+
+This is a current routing summary, not a newly adjudicated task register. Stable criteria, findings and original evidence remain in their canonical registers and the preserved history. Do not close an item by analogy with a newer passing test.
+
+| IDs / surface | What remains / source for a future specifically authorized task |
+| --- | --- |
+| F01/F06/F10/F24 and review findings | The 2026-10-19 independent review records contradicted criteria and Windows failures at its dated baseline. Reproduce only relevant findings against current code before action; later implementation and passing suites do not prove their exact closure. [Review and criterion matrix](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md). |
+| F03 A5 versus F10 A3; F04 A4 | F03's early sample/resource-recording criterion is distinct from F10's actual real-FITS workflow gate (as the independent review explains). Real metadata/device evidence needs the exact file/workflow and unchanged reader inputs. Private samples stay outside Git. No new real-file run is claimed here. |
+| F02 A2/A3; S13V-01/TD-109; S13V-02/03 | Current launch/identity is integrated and API30/physical observations exist. The old “no SDK anywhere” explanation is obsolete; criterion-specific pre-12/12+, reduced-motion and timing qualification still needs explicit mapping to the final source/artifact/environment. Do not silently close historical device rows. |
+| F15 A4; F22 A1; F23 A2 | Calendar phone timing, Android process death/restoration, resolved Android dependency notices: retain exact criteria and evidence gaps. An available SDK, emulator drive or host PASS alone is insufficient. |
+| F25 A4, U/W; TD-114–TD-121 | Explicit owner visual acceptance, human comprehension, physical 200%/TalkBack and other unexercised rows remain separate from implemented/host/native evidence. Consult the named delivery reports for covered and excluded scenarios. |
+| G1; F26 / D6; G2–G4 | Frozen integration/CI/provider, packaging/measurement, owner signing, physical/human rehearsal, go/no-go and publication conditions remain. The combined debug-signed owner test APK is not F26 release qualification. No gate closure or publication permission is inferred. |
+| S1.5/S1.11, S2V-06, S3V-08, S10V-04, S11.6/S11.7 | Retained carried device/profile/human criteria: [STAGE_11_MATRIX](STAGE_11_MATRIX.md), [device runbook](STAGE_11_DEVICE_RUNBOOK.md) and historical dispositions. S6.E remains an owner-accepted **unverified** independent-participant gap, not a performed test. |
+| TD-072/S3F-01/S3F-02; TD-074; other TD/SI | Use current [TECH_DEBT](../TECH_DEBT.md) / [SCIENTIFIC_INTEGRITY](../SCIENTIFIC_INTEGRITY.md) entries and exact partial-resolution boundaries, not old “open defects not fixed” lists. This cleanup changes no finding dispositions. |
+| RD-02; RG-12; S12.2 | ADK skill / skills-lock / archive retention remains owner housekeeping, licence research remains deferred, trademark check remains optional. Preserve all material; none is deletion authority. [RG/RD registers](POST_ROADMAP_PLAN.md). |
+| Original evidence / external overrides | Private historical backups/device captures were not assumed available or copied into Git. Uninspected managed/cloud overrides remain unknown. Local auto-memory contains dated continuation hints; repository sources take precedence within the applicable instruction hierarchy. |
+
+## Reusable validation evidence
+
+Apply [V3](../VERIFICATION_POLICY.md#v3) per result, relevant inputs and environment. The CI task ran the complete host suite on its final relevant inputs. Device/owner evidence below retains its original scope; passing host tests do not approve those rows.
+
+| Evidence | Input / applicability |
+| --- | --- |
+| [Combined delivery report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) and [verification.json](../design/migration/evidence/consolidated-2026-10-24/verification.json) | Source `8a21e7b`; host suite/E2E plus final 16 regressions and final analysis/format/encoding, API30 seven-frame capture, normal launch/hot reload, scoped canonical-phone inspection. The report preserves the original analyzer failure; it does not label that whole invocation green. This Home task changes context/timeline/navigation inputs; use its scoped evidence for those surfaces. Older results retain their original source, coverage and acceptance limits; they do not verify the present dirty UI diff. |
+| [Hybrid transfer completion](../design/migration/HYBRID_TRANSFER_STATUS.md) | Its committed source, named pairs/Android captures and §9 owner's confirmation; later affected surfaces use their refinement reports. Exclusions stay explicit. |
+| [P-1–P-6 delivery](../design/migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](../design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md) | Scoped host/native/physical observations on their recorded inputs. The consolidation states what remained unchanged; do not generalize to untested settings, owner acceptance or F/G gates. |
+| Historical application CI | Fresh GitHub connector read on 2026-10-24: run [40029616135](https://github.com/Buffur/Culmina/actions/runs/40029616135) completed/success at exact source `8a21e7b`. Historical observed CI at its source; the later CI-task results remain in the preserved pre-task snapshot; no new CI run is claimed for this dirty UI diff. This older run is not the new CI result or G1/F26/G2-G4 closure; the original consolidation status remains historical. |
+
+## Historical routing
+
+The [Home-layout pre-task snapshot](PROGRESS_HISTORY.md#home-layout-pre-task-snapshot---2026-10-24) preserves the preceding current handoff verbatim. The [warm-cache pre-result snapshot](PROGRESS_HISTORY.md#warm-cache-shard-comparison-pre-result-handoff---2026-10-24) preserves the benchmark handoff before this measured result. The [remote-result pre-handoff snapshot](PROGRESS_HISTORY.md#ci-delivery-pre-result-handoff---2026-10-24) preserves the completed implementation handoff. The [CI pre-task snapshot](PROGRESS_HISTORY.md#ci-optimization-pre-task-snapshot---2026-10-24) preserves the complete previous operational handoff. The [maintenance pre-fix snapshot](PROGRESS_HISTORY.md#design-skills-maintenance-pre-fix-snapshot--2026-10-24) preserves the previous handoff and its earlier nested records verbatim. Earlier governance/stage history and immutable audits/evidence retain their original bytes. Their old commands/permissions are inactive; [BASELINE](../design/BASELINE.md) maps accepted intent, implementation and evidence limits.
+
+## How to update this file
+
+Keep one short current handoff; preserve superseded status verbatim with source/revision in PROGRESS_HISTORY under AI_WORKFLOW. Update only invalidated claims/related registers, retain stable IDs and exact evidence/acceptance boundaries, then stop at the owner's task boundary.
+
+
+## Concept B implementation pre-task snapshot -- 2026-10-24
+
+Verbatim pre-implementation PROGRESS preserved before the current owner-approved task, on develop a4798d6 with existing dirty work. Old next-action lines are historical, not current authorization.
+
+# Culmina — current progress
+
+Status: **current operational handoff**, 2026-10-24. Read [AGENTS](../../AGENTS.md); [V1–V8](../VERIFICATION_POLICY.md) alone owns checks. This file records state, not an automatically active queue.
+
+## Current state
+
+| Item | Current record and evidence boundary |
+| --- | --- |
+| Task / baseline | Owner-requested Concept B image expansion to Plan, Logbook, Moon, Weather, Night, Library, Settings and Record result, 2026-10-24. Primary worktree `develop`, HEAD `a4798d667007a83e12de3c94d95bb68c22947748`; preceding dirty Home fixes/docs preserved. This task changes only exploration artifacts and status/link Markdown/HTML; no native code or device action. No commit/push. |
+| Implemented | Site/date now follow content with a flexible long-name site; 16 dp before the timeline and 48 dp slider region; legend/encoding explanation behind the existing disclosure; bottom-navigation padding is symmetric. Existing calculations, data and flows retained. |
+| Verified | 85 affected tests PASS under V3/V5; final analysis, changed-file format and encoding PASS. 21 scoped real-font host frames cover Light/Dark/Field and 100%/200%, including long names and the scrolled timeline. Canonical phone update explicitly authorized; exact installed APK hash checked, scoped dark/100% interactions and all four tabs checked; hot reload PASS and no runtime errors. [Report and receipt](../design/explorations/2026-10-24-home-blocks/FIXES_AND_VERIFICATION.md). |
+| Typography / concepts | Geist UI, Source Serif 4 editorial/answer roles and Roboto navigation are existing adopted roles; compact graph Roboto is surfaced in the inspection. Actual generated A/B images, one B refinement, synthetic current render, prompts and comparison are [separate proposals](../design/explorations/2026-10-24-home-blocks/README.md). Recommend B for discussion; no block/control alternative adopted. |
+| Concept B suite | Eight real generated PNGs plus five targeted refinements; actual synthetic Flutter source renders, exact prompts, per-screen tradeoffs and image/hash provenance. The [gallery](../design/explorations/2026-10-24-concept-b-suite/index.html) supports screen/mode selection and equal-width comparison. Desktop/375 px browser checks PASS, all images load, no console errors, 48 px control minima; detector clean. Source-render runs PASS; these are concept/source-frame checks, not new app acceptance. The owner selected B as the exploration direction, not as an instruction to implement every generated pixel. |
+| Preview / installation | Frozen reference at loopback port 4173; Home comparison at port 4174 (existing USB reverse), plus the new loopback eight-screen gallery at port 4175. The suite task performs no new device configuration. Installed canonical debug 1.0.0+1 APK SHA-256 `ff2b94cfe327decd290105b6f3d0c55f22bbba895cd602978cc284ab644e84d1`, update without clear/uninstall. Private phone evidence stays outside Git. |
+| Acceptance / preservation | Owner visual acceptance and A/B selection remain separate. No F/G, physical 200%/TalkBack, identity/geo or release gate closed. Three-shard CI result/restoration remain as recorded in the preserved [pre-task snapshot](PROGRESS_HISTORY.md#home-layout-pre-task-snapshot---2026-10-24). Frozen browser reference untouched. |
+
+## Next allowed action
+
+**Stop after delivering the eight-screen Concept B gallery.** Review the selected direction and per-screen grouping with the owner before any native implementation. Existing fixes and their acceptance boundary remain; no commit/push, roadmap continuation, new install or device/data action is authorized by this exploration handoff.
+
+## Open questions and carried criteria
+
+This is a current routing summary, not a newly adjudicated task register. Stable criteria, findings and original evidence remain in their canonical registers and the preserved history. Do not close an item by analogy with a newer passing test.
+
+| IDs / surface | What remains / source for a future specifically authorized task |
+| --- | --- |
+| F01/F06/F10/F24 and review findings | The 2026-10-19 independent review records contradicted criteria and Windows failures at its dated baseline. Reproduce only relevant findings against current code before action; later implementation and passing suites do not prove their exact closure. [Review and criterion matrix](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md). |
+| F03 A5 versus F10 A3; F04 A4 | F03's early sample/resource-recording criterion is distinct from F10's actual real-FITS workflow gate (as the independent review explains). Real metadata/device evidence needs the exact file/workflow and unchanged reader inputs. Private samples stay outside Git. No new real-file run is claimed here. |
+| F02 A2/A3; S13V-01/TD-109; S13V-02/03 | Current launch/identity is integrated and API30/physical observations exist. The old “no SDK anywhere” explanation is obsolete; criterion-specific pre-12/12+, reduced-motion and timing qualification still needs explicit mapping to the final source/artifact/environment. Do not silently close historical device rows. |
+| F15 A4; F22 A1; F23 A2 | Calendar phone timing, Android process death/restoration, resolved Android dependency notices: retain exact criteria and evidence gaps. An available SDK, emulator drive or host PASS alone is insufficient. |
+| F25 A4, U/W; TD-114–TD-121 | Explicit owner visual acceptance, human comprehension, physical 200%/TalkBack and other unexercised rows remain separate from implemented/host/native evidence. Consult the named delivery reports for covered and excluded scenarios. |
+| G1; F26 / D6; G2–G4 | Frozen integration/CI/provider, packaging/measurement, owner signing, physical/human rehearsal, go/no-go and publication conditions remain. The combined debug-signed owner test APK is not F26 release qualification. No gate closure or publication permission is inferred. |
+| S1.5/S1.11, S2V-06, S3V-08, S10V-04, S11.6/S11.7 | Retained carried device/profile/human criteria: [STAGE_11_MATRIX](STAGE_11_MATRIX.md), [device runbook](STAGE_11_DEVICE_RUNBOOK.md) and historical dispositions. S6.E remains an owner-accepted **unverified** independent-participant gap, not a performed test. |
+| TD-072/S3F-01/S3F-02; TD-074; other TD/SI | Use current [TECH_DEBT](../TECH_DEBT.md) / [SCIENTIFIC_INTEGRITY](../SCIENTIFIC_INTEGRITY.md) entries and exact partial-resolution boundaries, not old “open defects not fixed” lists. This cleanup changes no finding dispositions. |
+| RD-02; RG-12; S12.2 | ADK skill / skills-lock / archive retention remains owner housekeeping, licence research remains deferred, trademark check remains optional. Preserve all material; none is deletion authority. [RG/RD registers](POST_ROADMAP_PLAN.md). |
+| Original evidence / external overrides | Private historical backups/device captures were not assumed available or copied into Git. Uninspected managed/cloud overrides remain unknown. Local auto-memory contains dated continuation hints; repository sources take precedence within the applicable instruction hierarchy. |
+
+## Reusable validation evidence
+
+Apply [V3](../VERIFICATION_POLICY.md#v3) per result, relevant inputs and environment. The CI task ran the complete host suite on its final relevant inputs. Device/owner evidence below retains its original scope; passing host tests do not approve those rows.
+
+| Evidence | Input / applicability |
+| --- | --- |
+| [Combined delivery report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) and [verification.json](../design/migration/evidence/consolidated-2026-10-24/verification.json) | Source `8a21e7b`; host suite/E2E plus final 16 regressions and final analysis/format/encoding, API30 seven-frame capture, normal launch/hot reload, scoped canonical-phone inspection. The report preserves the original analyzer failure; it does not label that whole invocation green. This Home task changes context/timeline/navigation inputs; use its scoped evidence for those surfaces. Older results retain their original source, coverage and acceptance limits; they do not verify the present dirty UI diff. |
+| [Hybrid transfer completion](../design/migration/HYBRID_TRANSFER_STATUS.md) | Its committed source, named pairs/Android captures and §9 owner's confirmation; later affected surfaces use their refinement reports. Exclusions stay explicit. |
+| [P-1–P-6 delivery](../design/migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](../design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md) | Scoped host/native/physical observations on their recorded inputs. The consolidation states what remained unchanged; do not generalize to untested settings, owner acceptance or F/G gates. |
+| Historical application CI | Fresh GitHub connector read on 2026-10-24: run [40029616135](https://github.com/Buffur/Culmina/actions/runs/40029616135) completed/success at exact source `8a21e7b`. Historical observed CI at its source; the later CI-task results remain in the preserved pre-task snapshot; no new CI run is claimed for this dirty UI diff. This older run is not the new CI result or G1/F26/G2-G4 closure; the original consolidation status remains historical. |
+
+## Historical routing
+
+The [Concept B suite pre-task snapshot](PROGRESS_HISTORY.md#concept-b-suite-pre-task-snapshot---2026-10-24) preserves the preceding Home-fix handoff verbatim. The [Home-layout pre-task snapshot](PROGRESS_HISTORY.md#home-layout-pre-task-snapshot---2026-10-24) preserves the preceding current handoff verbatim. The [warm-cache pre-result snapshot](PROGRESS_HISTORY.md#warm-cache-shard-comparison-pre-result-handoff---2026-10-24) preserves the benchmark handoff before this measured result. The [remote-result pre-handoff snapshot](PROGRESS_HISTORY.md#ci-delivery-pre-result-handoff---2026-10-24) preserves the completed implementation handoff. The [CI pre-task snapshot](PROGRESS_HISTORY.md#ci-optimization-pre-task-snapshot---2026-10-24) preserves the complete previous operational handoff. The [maintenance pre-fix snapshot](PROGRESS_HISTORY.md#design-skills-maintenance-pre-fix-snapshot--2026-10-24) preserves the previous handoff and its earlier nested records verbatim. Earlier governance/stage history and immutable audits/evidence retain their original bytes. Their old commands/permissions are inactive; [BASELINE](../design/BASELINE.md) maps accepted intent, implementation and evidence limits.
+
+## How to update this file
+
+Keep one short current handoff; preserve superseded status verbatim with source/revision in PROGRESS_HISTORY under AI_WORKFLOW. Update only invalidated claims/related registers, retain stable IDs and exact evidence/acceptance boundaries, then stop at the owner's task boundary.
+
+
+## Concept B whole-app audit pre-task snapshot -- 2026-10-24
+
+Verbatim implementation handoff before the owner-requested whole-app design audit; develop a4798d6 with existing dirty work. Historical permissions and next actions are inactive.
+
+# Culmina — current progress
+
+Status: **current operational handoff**, 2026-10-24. Read [AGENTS](../../AGENTS.md); [V1–V8](../VERIFICATION_POLICY.md) alone owns checks. This file records state, not an automatically active queue.
+
+## Current state
+
+**DONE within the approved implementation scope — Concept B native grouping and unified Geist.** Same `develop` / `a4798d6` base, uncommitted; pre-existing dirty work and concept/reference assets preserved. No commit/push.
+
+[Approved task/specification](../design/CONCEPT_B_IMPLEMENTATION_2026_10_24.md) and [implementation report/receipts](../design/migration/CONCEPT_B_NATIVE_DELIVERY_2026_10_24.md). All nine named existing screens use flat semantic document groups. Production prose, headings, navigation and chart labels use Geist. Data/calculation/persistence implementation is unchanged. Large-text Logbook badges and capture actions reflow without losing their controls.
+
+Affected suite 251/251 PASS; final capture-action/widget regression suite 13/13 PASS, with applicable combined coverage of 252 distinct tests under V3. The intervening 59-pass/one-fixture-failure invocation is recorded honestly in the report. Final analysis/format/encoding PASS. Real-font renders: 27 at 100% and 48 at 200%, Light/Dark/Field; all visible prose declarations are Geist, icon records MaterialIcons.
+
+Authorized canonical-phone update PASS with `install -r`, matching public certificate and installed APK hash, cold launch and read-only inspection of eight screens at 100%. Existing saved content remained accessible; no uninstall/data clear or record edits. Private device captures remain outside Git. Owner visual acceptance, physical 200%/TalkBack and physical Record result checks remain separate. No F/G/CI/release gate is closed.
+
+## Next allowed action
+
+Stop at the completed implementation boundary. Await owner visual review or another explicit task; no roadmap, Git delivery or release follows automatically.
+
+## Open questions and carried criteria
+
+This is a current routing summary, not a newly adjudicated task register. Stable criteria, findings and original evidence remain in their canonical registers and the preserved history. Do not close an item by analogy with a newer passing test.
+
+| IDs / surface | What remains / source for a future specifically authorized task |
+| --- | --- |
+| F01/F06/F10/F24 and review findings | The 2026-10-19 independent review records contradicted criteria and Windows failures at its dated baseline. Reproduce only relevant findings against current code before action; later implementation and passing suites do not prove their exact closure. [Review and criterion matrix](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md). |
+| F03 A5 versus F10 A3; F04 A4 | F03's early sample/resource-recording criterion is distinct from F10's actual real-FITS workflow gate (as the independent review explains). Real metadata/device evidence needs the exact file/workflow and unchanged reader inputs. Private samples stay outside Git. No new real-file run is claimed here. |
+| F02 A2/A3; S13V-01/TD-109; S13V-02/03 | Current launch/identity is integrated and API30/physical observations exist. The old “no SDK anywhere” explanation is obsolete; criterion-specific pre-12/12+, reduced-motion and timing qualification still needs explicit mapping to the final source/artifact/environment. Do not silently close historical device rows. |
+| F15 A4; F22 A1; F23 A2 | Calendar phone timing, Android process death/restoration, resolved Android dependency notices: retain exact criteria and evidence gaps. An available SDK, emulator drive or host PASS alone is insufficient. |
+| F25 A4, U/W; TD-114–TD-121 | Explicit owner visual acceptance, human comprehension, physical 200%/TalkBack and other unexercised rows remain separate from implemented/host/native evidence. Consult the named delivery reports for covered and excluded scenarios. |
+| G1; F26 / D6; G2–G4 | Frozen integration/CI/provider, packaging/measurement, owner signing, physical/human rehearsal, go/no-go and publication conditions remain. The combined debug-signed owner test APK is not F26 release qualification. No gate closure or publication permission is inferred. |
+| S1.5/S1.11, S2V-06, S3V-08, S10V-04, S11.6/S11.7 | Retained carried device/profile/human criteria: [STAGE_11_MATRIX](STAGE_11_MATRIX.md), [device runbook](STAGE_11_DEVICE_RUNBOOK.md) and historical dispositions. S6.E remains an owner-accepted **unverified** independent-participant gap, not a performed test. |
+| TD-072/S3F-01/S3F-02; TD-074; other TD/SI | Use current [TECH_DEBT](../TECH_DEBT.md) / [SCIENTIFIC_INTEGRITY](../SCIENTIFIC_INTEGRITY.md) entries and exact partial-resolution boundaries, not old “open defects not fixed” lists. This cleanup changes no finding dispositions. |
+| RD-02; RG-12; S12.2 | ADK skill / skills-lock / archive retention remains owner housekeeping, licence research remains deferred, trademark check remains optional. Preserve all material; none is deletion authority. [RG/RD registers](POST_ROADMAP_PLAN.md). |
+| Original evidence / external overrides | Private historical backups/device captures were not assumed available or copied into Git. Uninspected managed/cloud overrides remain unknown. Local auto-memory contains dated continuation hints; repository sources take precedence within the applicable instruction hierarchy. |
+
+## Reusable validation evidence
+
+Apply [V3](../VERIFICATION_POLICY.md#v3) per result, relevant inputs and environment. The CI task ran the complete host suite on its final relevant inputs. Device/owner evidence below retains its original scope; passing host tests do not approve those rows.
+
+| Evidence | Input / applicability |
+| --- | --- |
+| [Combined delivery report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) and [verification.json](../design/migration/evidence/consolidated-2026-10-24/verification.json) | Source `8a21e7b`; host suite/E2E plus final 16 regressions and final analysis/format/encoding, API30 seven-frame capture, normal launch/hot reload, scoped canonical-phone inspection. The report preserves the original analyzer failure; it does not label that whole invocation green. This Home task changes context/timeline/navigation inputs; use its scoped evidence for those surfaces. Older results retain their original source, coverage and acceptance limits; they do not verify the present dirty UI diff. |
+| [Hybrid transfer completion](../design/migration/HYBRID_TRANSFER_STATUS.md) | Its committed source, named pairs/Android captures and §9 owner's confirmation; later affected surfaces use their refinement reports. Exclusions stay explicit. |
+| [P-1–P-6 delivery](../design/migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](../design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md) | Scoped host/native/physical observations on their recorded inputs. The consolidation states what remained unchanged; do not generalize to untested settings, owner acceptance or F/G gates. |
+| Historical application CI | Fresh GitHub connector read on 2026-10-24: run [40029616135](https://github.com/Buffur/Culmina/actions/runs/40029616135) completed/success at exact source `8a21e7b`. Historical observed CI at its source; the later CI-task results remain in the preserved pre-task snapshot; no new CI run is claimed for this dirty UI diff. This older run is not the new CI result or G1/F26/G2-G4 closure; the original consolidation status remains historical. |
+
+## Historical routing
+
+The [Concept B implementation pre-task snapshot](PROGRESS_HISTORY.md#concept-b-implementation-pre-task-snapshot----2026-10-24) preserves the preceding exploration handoff verbatim. The [Concept B suite pre-task snapshot](PROGRESS_HISTORY.md#concept-b-suite-pre-task-snapshot---2026-10-24) preserves the preceding Home-fix handoff verbatim. The [Home-layout pre-task snapshot](PROGRESS_HISTORY.md#home-layout-pre-task-snapshot---2026-10-24) preserves the preceding current handoff verbatim. The [warm-cache pre-result snapshot](PROGRESS_HISTORY.md#warm-cache-shard-comparison-pre-result-handoff---2026-10-24) preserves the benchmark handoff before this measured result. The [remote-result pre-handoff snapshot](PROGRESS_HISTORY.md#ci-delivery-pre-result-handoff---2026-10-24) preserves the completed implementation handoff. The [CI pre-task snapshot](PROGRESS_HISTORY.md#ci-optimization-pre-task-snapshot---2026-10-24) preserves the complete previous operational handoff. The [maintenance pre-fix snapshot](PROGRESS_HISTORY.md#design-skills-maintenance-pre-fix-snapshot--2026-10-24) preserves the previous handoff and its earlier nested records verbatim. Earlier governance/stage history and immutable audits/evidence retain their original bytes. Their old commands/permissions are inactive; [BASELINE](../design/BASELINE.md) maps accepted intent, implementation and evidence limits.
+
+## How to update this file
+
+Keep one short current handoff; preserve superseded status verbatim with source/revision in PROGRESS_HISTORY under AI_WORKFLOW. Update only invalidated claims/related registers, retain stable IDs and exact evidence/acceptance boundaries, then stop at the owner's task boundary.
+
+
+## Concept B Git delivery pre-task snapshot -- 2026-10-24
+
+Verbatim handoff before the owner explicitly requested commit/push of the changes and report to develop. Base a4798d6; prior source, concepts, audit and open findings preserved.
+
+# Culmina — current progress
+
+Status: **current operational handoff**, 2026-10-24. Read [AGENTS](../../AGENTS.md); [V1–V8](../VERIFICATION_POLICY.md) alone owns checks. This file records state, not an automatically active queue.
+
+## Current state
+
+**DONE — whole-app Concept B design audit; findings open, no fixes applied.** Same `develop` / `a4798d6` dirty implementation baseline. All pre-existing production and concept/reference inputs are unchanged; only audit evidence/tooling and the current handoff were added/updated. No commit/push or new device/data operation.
+
+[Illustrated report, references and findings](../design/audits/concept-b-app-2026-10-24/README.md), [source coverage](../design/audits/concept-b-app-2026-10-24/coverage.csv), [verification](../design/audits/concept-b-app-2026-10-24/verification.json). The audit maps all 36 screen-source files plus seven shared editor/navigation sources. It retains 321 actual Flutter frame observations, 131 frame names, at 375x812 dp: full-family Dark/100% and Dark/200%, sampled Light/Field at both scales, scrolled views, representative missing/error states and simulated IME insets. All nine generated references were inspected; raster artifacts and the superseded serif exceptions were excluded from requirements.
+
+**CBA-01–06: six reproduced defects.** P1 Field presentation is lost by the standalone restore root. P2 record titles are line-clamped; shared app-bar width estimation clips Appearance at 200%; FactRows fragments words in narrow columns; capture actions touch with no gap; Record result footer buttons differ in height. **CBA-07–10: four P2 extension groups** covering Library child lists/records/editors, Plan choosers/editors/candidates, Logbook detail/Progress and Settings child pages. These are app-wide consistency gaps, distinct from the prior nine-screen task boundary.
+
+Main nine-screen grouping, semantic surfaces, balanced gutters, night-context centring and the unified Geist prose family are confirmed within inspected inputs. Welcome/metadata already have older semantic cards; maps, native dialogs and sparse recovery states do not automatically need document cards. The report preserves evidence limits: no new physical 200%/TalkBack, OS file/share/keyboard, profile, tablet/landscape or owner/release acceptance. Previous implementation checks retain their original scope; this audit adds contradictory visual evidence without changing their historical results.
+
+## Next allowed action
+
+Stop after the audit. Await an explicit corrective package/prioritization. Suggested order: CBA-01, shared typography/layout CBA-02–04, local spacing/footer CBA-05–06, then bounded child-page group specifications CBA-07–10. No automatic fixes, roadmap, Git delivery or release follows.
+
+## Open questions and carried criteria
+
+This is a current routing summary, not a newly adjudicated task register. Stable criteria, findings and original evidence remain in their canonical registers and the preserved history. Do not close an item by analogy with a newer passing test.
+
+| IDs / surface | What remains / source for a future specifically authorized task |
+| --- | --- |
+| F01/F06/F10/F24 and review findings | The 2026-10-19 independent review records contradicted criteria and Windows failures at its dated baseline. Reproduce only relevant findings against current code before action; later implementation and passing suites do not prove their exact closure. [Review and criterion matrix](DEVELOP_IMPLEMENTATION_REVIEW_2026_10_19.md). |
+| F03 A5 versus F10 A3; F04 A4 | F03's early sample/resource-recording criterion is distinct from F10's actual real-FITS workflow gate (as the independent review explains). Real metadata/device evidence needs the exact file/workflow and unchanged reader inputs. Private samples stay outside Git. No new real-file run is claimed here. |
+| F02 A2/A3; S13V-01/TD-109; S13V-02/03 | Current launch/identity is integrated and API30/physical observations exist. The old “no SDK anywhere” explanation is obsolete; criterion-specific pre-12/12+, reduced-motion and timing qualification still needs explicit mapping to the final source/artifact/environment. Do not silently close historical device rows. |
+| F15 A4; F22 A1; F23 A2 | Calendar phone timing, Android process death/restoration, resolved Android dependency notices: retain exact criteria and evidence gaps. An available SDK, emulator drive or host PASS alone is insufficient. |
+| F25 A4, U/W; TD-114–TD-121 | Explicit owner visual acceptance, human comprehension, physical 200%/TalkBack and other unexercised rows remain separate from implemented/host/native evidence. Consult the named delivery reports for covered and excluded scenarios. |
+| G1; F26 / D6; G2–G4 | Frozen integration/CI/provider, packaging/measurement, owner signing, physical/human rehearsal, go/no-go and publication conditions remain. The combined debug-signed owner test APK is not F26 release qualification. No gate closure or publication permission is inferred. |
+| S1.5/S1.11, S2V-06, S3V-08, S10V-04, S11.6/S11.7 | Retained carried device/profile/human criteria: [STAGE_11_MATRIX](STAGE_11_MATRIX.md), [device runbook](STAGE_11_DEVICE_RUNBOOK.md) and historical dispositions. S6.E remains an owner-accepted **unverified** independent-participant gap, not a performed test. |
+| TD-072/S3F-01/S3F-02; TD-074; other TD/SI | Use current [TECH_DEBT](../TECH_DEBT.md) / [SCIENTIFIC_INTEGRITY](../SCIENTIFIC_INTEGRITY.md) entries and exact partial-resolution boundaries, not old “open defects not fixed” lists. This cleanup changes no finding dispositions. |
+| RD-02; RG-12; S12.2 | ADK skill / skills-lock / archive retention remains owner housekeeping, licence research remains deferred, trademark check remains optional. Preserve all material; none is deletion authority. [RG/RD registers](POST_ROADMAP_PLAN.md). |
+| Original evidence / external overrides | Private historical backups/device captures were not assumed available or copied into Git. Uninspected managed/cloud overrides remain unknown. Local auto-memory contains dated continuation hints; repository sources take precedence within the applicable instruction hierarchy. |
+
+## Reusable validation evidence
+
+Apply [V3](../VERIFICATION_POLICY.md#v3) per result, relevant inputs and environment. The CI task ran the complete host suite on its final relevant inputs. Device/owner evidence below retains its original scope; passing host tests do not approve those rows.
+
+| Evidence | Input / applicability |
+| --- | --- |
+| [Combined delivery report](../design/migration/CONSOLIDATED_DELIVERY_2026_10_24.md) and [verification.json](../design/migration/evidence/consolidated-2026-10-24/verification.json) | Source `8a21e7b`; host suite/E2E plus final 16 regressions and final analysis/format/encoding, API30 seven-frame capture, normal launch/hot reload, scoped canonical-phone inspection. The report preserves the original analyzer failure; it does not label that whole invocation green. This Home task changes context/timeline/navigation inputs; use its scoped evidence for those surfaces. Older results retain their original source, coverage and acceptance limits; they do not verify the present dirty UI diff. |
+| [Hybrid transfer completion](../design/migration/HYBRID_TRANSFER_STATUS.md) | Its committed source, named pairs/Android captures and §9 owner's confirmation; later affected surfaces use their refinement reports. Exclusions stay explicit. |
+| [P-1–P-6 delivery](../design/migration/PHONE_QA_FIXES_DELIVERY_2026_10_23.md), [TD-120](../design/migration/TONIGHT_CONTEXT_FIXES_2026_10_23.md), [TD-121](../design/migration/GEO_OWNER_REFINEMENT_2026_10_23.md) | Scoped host/native/physical observations on their recorded inputs. The consolidation states what remained unchanged; do not generalize to untested settings, owner acceptance or F/G gates. |
+| Historical application CI | Fresh GitHub connector read on 2026-10-24: run [40029616135](https://github.com/Buffur/Culmina/actions/runs/40029616135) completed/success at exact source `8a21e7b`. Historical observed CI at its source; the later CI-task results remain in the preserved pre-task snapshot; no new CI run is claimed for this dirty UI diff. This older run is not the new CI result or G1/F26/G2-G4 closure; the original consolidation status remains historical. |
+
+## Historical routing
+
+The [whole-app audit pre-task snapshot](PROGRESS_HISTORY.md#concept-b-whole-app-audit-pre-task-snapshot----2026-10-24) preserves the preceding implementation handoff verbatim. The [Concept B implementation pre-task snapshot](PROGRESS_HISTORY.md#concept-b-implementation-pre-task-snapshot----2026-10-24) preserves the preceding exploration handoff verbatim. The [Concept B suite pre-task snapshot](PROGRESS_HISTORY.md#concept-b-suite-pre-task-snapshot---2026-10-24) preserves the preceding Home-fix handoff verbatim. The [Home-layout pre-task snapshot](PROGRESS_HISTORY.md#home-layout-pre-task-snapshot---2026-10-24) preserves the preceding current handoff verbatim. The [warm-cache pre-result snapshot](PROGRESS_HISTORY.md#warm-cache-shard-comparison-pre-result-handoff---2026-10-24) preserves the benchmark handoff before this measured result. The [remote-result pre-handoff snapshot](PROGRESS_HISTORY.md#ci-delivery-pre-result-handoff---2026-10-24) preserves the completed implementation handoff. The [CI pre-task snapshot](PROGRESS_HISTORY.md#ci-optimization-pre-task-snapshot---2026-10-24) preserves the complete previous operational handoff. The [maintenance pre-fix snapshot](PROGRESS_HISTORY.md#design-skills-maintenance-pre-fix-snapshot--2026-10-24) preserves the previous handoff and its earlier nested records verbatim. Earlier governance/stage history and immutable audits/evidence retain their original bytes. Their old commands/permissions are inactive; [BASELINE](../design/BASELINE.md) maps accepted intent, implementation and evidence limits.
+
+## How to update this file
+
+Keep one short current handoff; preserve superseded status verbatim with source/revision in PROGRESS_HISTORY under AI_WORKFLOW. Update only invalidated claims/related registers, retain stable IDs and exact evidence/acceptance boundaries, then stop at the owner's task boundary.
