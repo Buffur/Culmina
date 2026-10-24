@@ -7,6 +7,7 @@ import '../../domain/models/calendar_date.dart';
 import 'app_words.dart';
 import 'hybrid_icon.dart';
 import 'night_time_formatter.dart';
+import 'night_picker_dialog.dart';
 
 /// "Ljubljana ▾  Fri, Nov 14 ▾" (S5.6; ADR-019 §5, §6; addendum §3.1–§3.2):
 /// the one control that says which site and night a screen describes, for
@@ -242,15 +243,18 @@ Future<CalendarDate?> pickNight(
   TransitionBuilder? builder,
 }) async {
   final now = today ?? DateTime.now();
-  final picked = await showDatePicker(
+  final picked = await showDialog<DateTime>(
     context: context,
-    initialDate: initial == null
-        ? now
-        : DateTime(initial.year, initial.month, initial.day),
-    firstDate: DateTime(now.year - 1, now.month, now.day),
-    lastDate: DateTime(now.year + 5, now.month, now.day),
-    helpText: 'Choose a night',
-    builder: builder,
+    builder: (context) {
+      final dialog = NightPickerDialog(
+        initialDate: initial == null
+            ? DateUtils.dateOnly(now)
+            : DateTime(initial.year, initial.month, initial.day),
+        firstDate: DateTime(now.year - 1, now.month, now.day),
+        lastDate: DateTime(now.year + 5, now.month, now.day),
+      );
+      return builder?.call(context, dialog) ?? dialog;
+    },
   );
   return picked == null ? null : CalendarDate.fromDateTimeFields(picked);
 }

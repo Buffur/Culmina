@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_motion.dart';
+import '../../core/theme/app_spacing.dart';
 
 final _messages = Expando<AppMessageController>();
 
@@ -26,7 +27,7 @@ extension AppMessages on ScaffoldMessengerState {
     void finish(SnackBarClosedReason reason) {
       if (result._closed.isCompleted) return;
       if (mounted && identical(_messages[this], result)) {
-        removeCurrentMaterialBanner();
+        hideCurrentMaterialBanner();
         _messages[this] = null;
       }
       result._closed.complete(reason);
@@ -53,29 +54,28 @@ extension AppMessages on ScaffoldMessengerState {
         contentTextStyle: theme.textTheme.bodySmall,
         backgroundColor: theme.colorScheme.surface,
         dividerColor: theme.dividerColor,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.sm,
+          AppSpacing.sm,
+          AppSpacing.sm,
+        ),
         actions: [
           if (action != null)
             TextButton(
               onPressed: () {
+                if (result._closed.isCompleted) return;
                 action.onPressed();
                 finish(SnackBarClosedReason.action);
               },
               child: Text(action.label),
             ),
-          if (bar.showCloseIcon == true)
-            IconButton(
-              key: const Key('appMessage.dismiss'),
-              tooltip: 'Dismiss',
-              onPressed: () => finish(SnackBarClosedReason.dismiss),
-              icon: const Icon(Icons.close),
-            )
-          else
-            TextButton(
-              key: const Key('appMessage.dismiss'),
-              onPressed: () => finish(SnackBarClosedReason.dismiss),
-              child: const Text('Dismiss'),
-            ),
+          IconButton(
+            key: const Key('appMessage.dismiss'),
+            tooltip: 'Dismiss',
+            onPressed: () => finish(SnackBarClosedReason.dismiss),
+            icon: const Icon(Icons.close),
+          ),
         ],
       ),
     );
@@ -144,8 +144,6 @@ class _InlineMessageBanner extends MaterialBanner {
     padding: padding,
     animation: reduced
         ? const AlwaysStoppedAnimation(1)
-        : newAnimation.drive(
-            CurveTween(curve: const Interval(0, .72, curve: AppMotion.curve)),
-          ),
+        : newAnimation.drive(CurveTween(curve: AppMotion.curve)),
   );
 }

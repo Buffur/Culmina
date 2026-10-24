@@ -109,7 +109,7 @@ class _SitesScreenState extends State<SitesScreen> {
         padding: settingsPagePadding,
         children: [
           DocumentSection(
-            joinNext: showTransient || shown.isNotEmpty,
+            key: const Key('sites.searchGroup'),
             children: [
               LayoutBuilder(
                 builder: (context, box) {
@@ -149,7 +149,6 @@ class _SitesScreenState extends State<SitesScreen> {
                   hint: 'Name, time zone or notes',
                   onChanged: (v) => setState(() => _query = v),
                 ),
-                const SizedBox(height: AppSpacing.sm),
               ],
               if (!showTransient && shown.isEmpty) ...[
                 if (sites.isEmpty && !hasTransient)
@@ -170,19 +169,30 @@ class _SitesScreenState extends State<SitesScreen> {
               ],
             ],
           ),
+          if (showTransient || shown.isNotEmpty)
+            const SizedBox(height: AppSpacing.itemGap),
           if (showTransient)
             DocumentSection(
-              joinPrevious: true,
               joinNext: shown.isNotEmpty,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              children: [_transientRow(siteVm, choosing)],
+              children: [
+                _transientRow(siteVm, choosing, divider: shown.isNotEmpty),
+              ],
             ),
           for (final (i, site) in shown.indexed)
             DocumentSection(
-              joinPrevious: true,
+              joinPrevious: showTransient || i > 0,
               joinNext: i < shown.length - 1,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              children: [_siteRow(site, activeId, choosing, siteVm)],
+              children: [
+                _siteRow(
+                  site,
+                  activeId,
+                  choosing,
+                  siteVm,
+                  divider: i < shown.length - 1,
+                ),
+              ],
             ),
           if (choosing) ...[
             const SizedBox(height: AppSpacing.md),
@@ -206,6 +216,7 @@ class _SitesScreenState extends State<SitesScreen> {
                   key: const Key('sites.pickOnMap'),
                   icon: HybridIcons.map,
                   label: 'Pick on map',
+                  divider: false,
                   onTap: () => context.push(AppRouter.position),
                 ),
               ],
@@ -217,14 +228,20 @@ class _SitesScreenState extends State<SitesScreen> {
   }
 
   /// A temporary position shares the list, with an honest state and explicit save.
-  Widget _transientRow(SiteViewModel vm, bool choosing) {
+  Widget _transientRow(
+    SiteViewModel vm,
+    bool choosing, {
+    required bool divider,
+  }) {
     final p = AppPalette.of(context);
     return Container(
       key: const Key('sites.transient'),
       constraints: const BoxConstraints(minHeight: 72),
-      foregroundDecoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: p.border)),
-      ),
+      foregroundDecoration: !divider
+          ? null
+          : BoxDecoration(
+              border: Border(bottom: BorderSide(color: p.border)),
+            ),
       child: Row(
         children: [
           if (choosing) ...[
@@ -291,8 +308,9 @@ class _SitesScreenState extends State<SitesScreen> {
     LocationProfile site,
     int? activeId,
     bool choosing,
-    SiteViewModel vm,
-  ) {
+    SiteViewModel vm, {
+    required bool divider,
+  }) {
     final p = AppPalette.of(context);
     final caption =
         '${siteDegrees(site.latitude)}, ${siteDegrees(site.longitude)} · ${site.timeZoneId ?? 'zone unknown'}';
@@ -303,9 +321,11 @@ class _SitesScreenState extends State<SitesScreen> {
           ? Container(
               key: ValueKey('site-${site.id}'),
               constraints: const BoxConstraints(minHeight: 72),
-              foregroundDecoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: p.border)),
-              ),
+              foregroundDecoration: !divider
+                  ? null
+                  : BoxDecoration(
+                      border: Border(bottom: BorderSide(color: p.border)),
+                    ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -374,6 +394,7 @@ class _SitesScreenState extends State<SitesScreen> {
               ),
             )
           : LibraryRow(
+              divider: divider,
               key: ValueKey('site-${site.id}'),
               title: site.name,
               caption: caption,

@@ -10,6 +10,128 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets('long actionable warning at 200% keeps a 48 dp close target', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    late BuildContext host;
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              host = context;
+              return const SizedBox.expand();
+            },
+          ),
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(host).showMessage(
+      SnackBar(
+        content: const Text(
+          'This position is already saved. Use the existing site or change the coordinates. Nothing was saved.',
+        ),
+        persist: true,
+        action: SnackBarAction(label: 'Undo', onPressed: () {}),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final close = tester.getSize(find.byKey(const Key('appMessage.dismiss')));
+    expect(close.width, greaterThanOrEqualTo(48));
+    expect(close.height, greaterThanOrEqualTo(48));
+    expect(find.text('Undo'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.byKey(const Key('appMessage.dismiss')));
+    await tester.pumpAndSettle();
+    expect(find.byType(MaterialBanner), findsNothing);
+  });
+
+  testWidgets(
+    'timeout animates out; replacement cannot dismiss the next message',
+    (tester) async {
+      late BuildContext host;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                host = context;
+                return const SizedBox.expand();
+              },
+            ),
+          ),
+        ),
+      );
+      final messenger = ScaffoldMessenger.of(host);
+      final first = messenger.showMessage(
+        const SnackBar(
+          content: Text('QA first'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final animation = tester
+          .widget<MaterialBanner>(find.byType(MaterialBanner))
+          .animation!;
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 20));
+      expect(await first.closed, SnackBarClosedReason.timeout);
+      expect(animation.value, greaterThan(0));
+      expect(animation.value, lessThan(1));
+      final next = messenger.showMessage(
+        const SnackBar(content: Text('QA next'), persist: true),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('QA first'), findsNothing);
+      expect(find.text('QA next'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.text('QA next'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('appMessage.dismiss')));
+      await tester.pumpAndSettle();
+      expect(await next.closed, SnackBarClosedReason.dismiss);
+    },
+  );
+
+  testWidgets(
+    'action and close remain independent and report only one outcome',
+    (tester) async {
+      late BuildContext host;
+      var actions = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                host = context;
+                return const SizedBox.expand();
+              },
+            ),
+          ),
+        ),
+      );
+      final message = ScaffoldMessenger.of(host).showMessage(
+        SnackBar(
+          content: const Text('QA deleted'),
+          persist: true,
+          action: SnackBarAction(label: 'Undo', onPressed: () => actions++),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Dismiss'), findsOneWidget);
+      await tester.tap(find.text('Undo'));
+      await tester.pumpAndSettle();
+      expect(actions, 1);
+      expect(await message.closed, SnackBarClosedReason.action);
+    },
+  );
   testWidgets(
     'feedback reserves layout space and Dismiss closes its outcome at 200%',
     (tester) async {

@@ -100,6 +100,8 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   late final _longitude = TextEditingController(
     text: _coordinate(_original?.longitude ?? widget.args.longitude),
   );
+  late double? _latitudeSource = _original?.latitude ?? widget.args.latitude;
+  late double? _longitudeSource = _original?.longitude ?? widget.args.longitude;
 
   /// F21: elevation is typed in the chosen unit and stored in metres;
   /// an unchanged field keeps the stored value exactly.
@@ -220,6 +222,11 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   bool _builtChanged = false;
 
   static String _coordinate(double? value) => value?.toStringAsFixed(5) ?? '';
+
+  double _preservedCoordinate(TextEditingController field, double? original) =>
+      original != null && field.text == _coordinate(original)
+      ? original
+      : CoordinateInput.parse(field.text)!;
 
   static String _trim(double value) =>
       value == value.roundToDouble() ? value.toInt().toString() : '$value';
@@ -373,6 +380,8 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   }) {
     _nameDebounce?.cancel();
     _applyingCoordinates = true;
+    _latitudeSource = latitude;
+    _longitudeSource = longitude;
     _latitude.text = _coordinate(latitude);
     _longitude.text = _coordinate(longitude);
     _applyingCoordinates = false;
@@ -585,8 +594,8 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       site = LocationProfile.userEdit(
         original: _original,
         name: _name.text.trim(),
-        latitude: CoordinateInput.parse(_latitude.text)!,
-        longitude: CoordinateInput.parse(_longitude.text)!,
+        latitude: _preservedCoordinate(_latitude, _latitudeSource),
+        longitude: _preservedCoordinate(_longitude, _longitudeSource),
         elevation: _elevation.text == _elevationShown
             ? _original?.elevation
             : switch (CoordinateInput.parse(_elevation.text)) {
@@ -647,15 +656,9 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   Widget _form(BuildContext context, TextInputType numberKeyboard) {
     final p = AppPalette.of(context);
     final style = libraryInputStyle(context);
-    final hint = AppTypography.caption.copyWith(
-      height: 1.55,
-      color: p.textSecondary,
-    );
     final stacked =
         MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
-        MediaQuery.sizeOf(context).width -
-                2 * (AppSpacing.gutter + AppSpacing.md) <
-            400;
+        MediaQuery.sizeOf(context).width < 360;
     final latitude = LibraryField(
       label: 'Latitude (°)',
       top: 0,
@@ -736,6 +739,8 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                 DocumentSection(
                   key: const Key('siteEditor.identityGroup'),
                   children: [
+                    const GeoHeading('Site name and time zone'),
+                    const SizedBox(height: AppSpacing.sm),
                     LibraryField(
                       label: 'Name',
                       top: 0,
@@ -769,7 +774,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                     ),
                     LibraryField(
                       label: 'Time zone',
-                      top: AppSpacing.gutter,
+                      top: AppSpacing.itemGap,
                       hint: _zoneFromDevice
                           ? 'From device — check for this site.'
                           : 'Used for local dates and daylight-saving changes.',
@@ -800,6 +805,14 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: AppSpacing.sm),
+                    SettingsCopy(
+                      !_isNew
+                          ? 'Saved plans and Logbook entries keep their recorded site.'
+                          : widget.args.activate
+                          ? 'Save also selects this site for planning.'
+                          : 'Save adds this site to Library without selecting it.',
+                    ),
                   ],
                 ),
                 // RG-08 = E2, RG-09 = S3: optional, without prominence; empty
@@ -812,6 +825,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                       key: const Key('siteEditor.more'),
                       sectionKey: SiteEditorScreen.skyDarknessSection,
                       title: 'More (optional)',
+                      topRule: false,
                       titleStyle: AppTypography.body.copyWith(
                         fontWeight: FontWeight.w600,
                         color: p.textPrimary,
@@ -849,25 +863,10 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                               maxLines: 3,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: AppSpacing.xs),
-                            child: Text(
-                              'Bortle and SQM are never converted into each other.',
-                              style: hint,
-                            ),
-                          ),
                         ],
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: AppSpacing.itemGap),
-                SettingsCopy(
-                  !_isNew
-                      ? 'Changes are saved to this site.'
-                      : widget.args.activate
-                      ? 'Saving here also uses this site for planning.'
-                      : 'Saved to Library; the planning site stays unchanged.',
                 ),
               ],
             ),
@@ -943,6 +942,10 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
           onPressed: link == null ? null : _openMap,
           child: const Text('Look it up on lightpollutionmap.app'),
         ),
+      ),
+      const SettingsCopy(
+        'Bortle and SQM are never converted into each other.',
+        top: AppSpacing.xs,
       ),
     ];
   }

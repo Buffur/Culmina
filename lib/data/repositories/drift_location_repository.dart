@@ -56,8 +56,22 @@ class DriftLocationRepository
       );
 
   @override
-  Future<int> insertLocation(domain.LocationProfile location) {
-    return _db.into(_db.locationProfiles).insert(_companion(location));
+  Future<int> insertLocation(domain.LocationProfile location) =>
+      _db.transaction(() async {
+        await _refuseDuplicate(location);
+        return _db.into(_db.locationProfiles).insert(_companion(location));
+      });
+
+  Future<void> _refuseDuplicate(domain.LocationProfile location) async {
+    final matches =
+        await (_db.select(_db.locationProfiles)..where(
+              (t) =>
+                  t.latitude.equals(location.latitude) &
+                  t.longitude.equals(location.longitude) &
+                  t.id.equals(location.id).not(),
+            ))
+            .get();
+    if (matches.isNotEmpty) throw DuplicateSite(matches.first.name);
   }
 
   @override
@@ -75,11 +89,18 @@ class DriftLocationRepository
   }
 
   @override
-  Future<void> updateLocation(domain.LocationProfile location) {
-    return (_db.update(
-      _db.locationProfiles,
-    )..where((t) => t.id.equals(location.id))).write(_companion(location));
-  }
+  Future<void> updateLocation(domain.LocationProfile location) =>
+      _db.transaction(() async {
+        // Keep legacy duplicate records editable without merging owner data.
+        final original = await getLocationById(location.id);
+        if (original?.latitude != location.latitude ||
+            original?.longitude != location.longitude) {
+          await _refuseDuplicate(location);
+        }
+        await (_db.update(
+          _db.locationProfiles,
+        )..where((t) => t.id.equals(location.id))).write(_companion(location));
+      });
 
   @override
   Future<void> deleteLocation(int id) {

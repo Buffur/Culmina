@@ -4,6 +4,7 @@ import '../../core/diagnostics/app_log.dart';
 import '../../domain/models/session.dart';
 import '../../domain/models/session_result.dart';
 import '../../domain/repositories/storage_failure.dart';
+import '../../domain/repositories/location_repository.dart';
 import 'app_messages.dart';
 
 /// User-facing wording for a failed action (TASK 15.1). The error itself
@@ -11,6 +12,9 @@ import 'app_messages.dart';
 abstract final class FailureText {
   /// [action] is a verb phrase: "save the rig", "load the sessions".
   static String message(String action, Object error) => switch (error) {
+    DuplicateSite(:final existingName) =>
+      'This position is already saved as “$existingName”. '
+          'Use that site or change the coordinates. Nothing was saved.',
     // S6.3: Discard on a changed saved plan was refused; nothing changed.
     SavedPlanUnavailable() =>
       "Couldn't discard the changes: the saved plan can't be restored "

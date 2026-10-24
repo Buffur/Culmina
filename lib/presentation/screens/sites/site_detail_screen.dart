@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/document_section.dart';
+import '../../shared/geo_controls.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -79,6 +80,21 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
       );
     }
     final active = vm.activeSite?.id == site.id;
+    final edit = LibraryPrimaryAction(
+      key: const Key('siteDetail.edit'),
+      icon: HybridIcons.edit,
+      label: 'Edit site',
+      onPressed: () =>
+          context.push(AppRouter.siteEdit, extra: SiteEditorArgs(site: site)),
+    );
+    final delete = LibraryDeleteAction(
+      key: const Key('siteDetail.delete'),
+      label: 'Delete site',
+      onPressed: () async {
+        final navigator = Navigator.of(context);
+        if (await deleteSite(context, site) && mounted) navigator.pop();
+      },
+    );
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -92,19 +108,31 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
           DocumentSection(
             key: const Key('siteDetail.identityGroup'),
             children: [
-              LibraryRecordHeader(
-                caption: active
-                    ? 'Your site · the one used for planning now'
-                    : 'Your site · editable',
-                action: LibraryPrimaryAction(
-                  key: const Key('siteDetail.edit'),
-                  icon: HybridIcons.edit,
-                  label: 'Edit site',
-                  onPressed: () => context.push(
-                    AppRouter.siteEdit,
-                    extra: SiteEditorArgs(site: site),
-                  ),
-                ),
+              GeoHeading(active ? 'Used for planning' : 'Saved site'),
+              const SettingsCopy(
+                'Saved plans and Logbook entries keep their recorded site.',
+                top: AppSpacing.xs,
+              ),
+              const SizedBox(height: AppSpacing.itemGap),
+              LayoutBuilder(
+                builder: (context, box) =>
+                    MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
+                        box.maxWidth < 280
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: AppSpacing.sm,
+                        children: [edit, delete],
+                      )
+                    : IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: AppSpacing.sm,
+                          children: [
+                            Expanded(child: edit),
+                            Expanded(child: delete),
+                          ],
+                        ),
+                      ),
               ),
             ],
           ),
@@ -112,6 +140,8 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
           DocumentSection(
             key: const Key('siteDetail.positionGroup'),
             children: [
+              const GeoHeading('Position and time zone'),
+              const SizedBox(height: AppSpacing.sm),
               FactRows(key: const Key('siteDetail.facts'), [
                 (
                   'Latitude',
@@ -141,6 +171,8 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   key: const Key('siteDetail.details'),
                   sectionKey: 'library.siteDetails',
                   title: 'Site details',
+                  titleStyle: Theme.of(context).textTheme.titleSmall,
+                  topRule: false,
                   summary: 'Elevation, sky darkness and notes',
                   open: _detailsOpen,
                   onToggle: () => setState(() => _detailsOpen = !_detailsOpen),
@@ -189,15 +221,6 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          LibraryDeleteAction(
-            key: const Key('siteDetail.delete'),
-            label: 'Delete site',
-            onPressed: () async {
-              final navigator = Navigator.of(context);
-              if (await deleteSite(context, site) && mounted) navigator.pop();
-            },
           ),
         ],
       ),

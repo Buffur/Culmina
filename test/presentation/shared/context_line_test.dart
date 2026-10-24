@@ -8,6 +8,7 @@ import 'dart:ui' as ui;
 
 import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
+import 'package:astroplan/presentation/shared/night_picker_dialog.dart';
 import 'package:astroplan/presentation/shared/context_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -190,8 +191,92 @@ void main() {
       );
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
-      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byType(NightPickerDialog), findsOneWidget);
     }
+
+    testWidgets(
+      '100% calendar fits its content and retains validated date input',
+      (tester) async {
+        tester.view.physicalSize = const Size(375, 812);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await open(tester);
+        final rect = tester.getRect(
+          find.byKey(const Key('nightPicker.content')),
+        );
+        expect(rect.height, lessThan(500));
+        expect(rect.left, greaterThanOrEqualTo(16));
+        await tester.tap(find.byKey(const Key('nightPicker.inputMode')));
+        await tester.pumpAndSettle();
+        expect(find.byType(InputDatePickerFormField), findsOneWidget);
+        await tester.enterText(find.byType(TextFormField), 'invalid');
+        await tester.tap(find.text('OK'));
+        await tester.pumpAndSettle();
+        expect(find.byType(NightPickerDialog), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      'compact calendar keeps leap days, date bounds and year selection',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: NightPickerDialog(
+              initialDate: DateTime(2028, 2, 29),
+              firstDate: DateTime(2028, 2, 15),
+              lastDate: DateTime(2030, 3, 4),
+            ),
+          ),
+        );
+        expect(find.text('29'), findsOneWidget);
+        final semantics = tester.ensureSemantics();
+        final day = find.bySemanticsLabel('Tuesday, February 29, 2028');
+        expect(day, findsOneWidget);
+        expect(
+          tester
+              .getSemantics(day)
+              .getSemanticsData()
+              .hasAction(ui.SemanticsAction.tap),
+          isTrue,
+        );
+        semantics.dispose();
+        final beforeRange = tester.widget<TextButton>(
+          find.ancestor(of: find.text('14'), matching: find.byType(TextButton)),
+        );
+        expect(beforeRange.onPressed, isNull);
+        final previous = tester.widget<IconButton>(
+          find.byWidgetPredicate(
+            (w) => w is IconButton && w.tooltip == 'Previous month',
+          ),
+        );
+        expect(previous.onPressed, isNull);
+        await tester.tap(find.byKey(const Key('nightPicker.year')));
+        await tester.pumpAndSettle();
+        expect(find.byType(YearPicker), findsOneWidget);
+        await tester.tap(find.text('2030'));
+        await tester.pumpAndSettle();
+        expect(find.text('February 2030'), findsOneWidget);
+        expect(find.text('29'), findsNothing);
+        await tester.tap(find.byTooltip('Next month'));
+        await tester.pumpAndSettle();
+        final afterRange = tester.widget<TextButton>(
+          find.ancestor(of: find.text('5'), matching: find.byType(TextButton)),
+        );
+        expect(afterRange.onPressed, isNull);
+        expect(
+          tester
+              .widget<IconButton>(
+                find.byWidgetPredicate(
+                  (w) => w is IconButton && w.tooltip == 'Next month',
+                ),
+              )
+              .onPressed,
+          isNull,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
 
     testWidgets('returns the chosen evening, and null when cancelled', (
       tester,

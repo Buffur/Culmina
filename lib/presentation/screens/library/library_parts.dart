@@ -172,6 +172,7 @@ class LibraryRow extends StatelessWidget {
     required this.onTap,
     this.note,
     this.titleKey,
+    this.divider = true,
   });
 
   final String title;
@@ -179,6 +180,7 @@ class LibraryRow extends StatelessWidget {
   final String? note;
   final VoidCallback onTap;
   final Key? titleKey;
+  final bool divider;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +192,9 @@ class LibraryRow extends StatelessWidget {
           onTap: onTap,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: p.border)),
+              border: divider
+                  ? Border(bottom: BorderSide(color: p.border))
+                  : null,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.itemGap),

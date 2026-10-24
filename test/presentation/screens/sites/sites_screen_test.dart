@@ -233,6 +233,54 @@ void main() {
     },
   );
 
+  testWidgets(
+    'duplicate save warns, keeps draft and active site; dismissal works',
+    (tester) async {
+      await build(tester, sites: [site('QA existing', 12.3456789, 23.4567891)]);
+      await tester.runAsync(() => vm.selectSite(1));
+      await pump(
+        tester,
+        at: AppRouter.siteEdit,
+        extra: const SiteEditorArgs(
+          latitude: 12.3456789,
+          longitude: 23.4567891,
+          name: 'QA duplicate',
+        ),
+      );
+      await save(tester);
+      expect(vm.sites, hasLength(1));
+      expect(vm.activeSite?.id, 1);
+      expect(find.byType(SiteEditorScreen), findsOneWidget);
+      expect(find.textContaining('already saved as'), findsOneWidget);
+      expect(
+        tester.widget<TextFormField>(fieldLabeled('Name')).controller!.text,
+        'QA duplicate',
+      );
+      await tester.tap(find.byKey(const Key('appMessage.dismiss')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('already saved as'), findsNothing);
+      await tester.ensureVisible(fieldLabeled('Longitude (°)'));
+      await tester.enterText(fieldLabeled('Longitude (°)'), '23.4568');
+      await save(tester);
+      expect(vm.sites, hasLength(2));
+    },
+  );
+
+  testWidgets('unchanged coordinate display preserves stored precision', (
+    tester,
+  ) async {
+    await build(tester, sites: [site('QA precise', 12.3456789, 23.4567891)]);
+    await pump(
+      tester,
+      at: AppRouter.siteEdit,
+      extra: SiteEditorArgs(site: vm.sites.single),
+    );
+    await tester.enterText(fieldLabeled('Name'), 'QA renamed');
+    await save(tester);
+    expect(vm.sites.single.latitude, 12.3456789);
+    expect(vm.sites.single.longitude, 23.4567891);
+  });
+
   testWidgets('Escape leaves a pristine site without a false discard prompt', (
     tester,
   ) async {
@@ -642,7 +690,7 @@ void main() {
     );
     await save(tester);
     expect(vm.sites.single.name, 'Newest');
-    expect(vm.sites.single.latitude, 46.05123);
+    expect(vm.sites.single.latitude, 46.0512345);
   });
 
   testWidgets('deleting the active site keeps its position as unsaved', (

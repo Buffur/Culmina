@@ -30,10 +30,12 @@ class GeoActionRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.divider = true,
   });
   final HybridIconData icon;
   final String label;
   final VoidCallback? onTap;
+  final bool divider;
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +48,11 @@ class GeoActionRow extends StatelessWidget {
         child: Container(
           constraints: const BoxConstraints(minHeight: 56),
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.itemGap),
-          foregroundDecoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: p.border)),
-          ),
+          foregroundDecoration: !divider
+              ? null
+              : BoxDecoration(
+                  border: Border(bottom: BorderSide(color: p.border)),
+                ),
           child: Row(
             children: [
               HybridIcon(icon, size: 20, color: p.textPrimary),
@@ -120,16 +124,19 @@ class GeoPositionActions extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, box) {
         if (MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
-            box.maxWidth < 320) {
+            box.maxWidth < 280) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 8,
             children: commands,
           );
         }
-        return Row(
-          spacing: 12,
-          children: [for (final c in commands) Expanded(child: c)],
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: AppSpacing.itemGap,
+            children: [for (final c in commands) Expanded(child: c)],
+          ),
         );
       },
     );

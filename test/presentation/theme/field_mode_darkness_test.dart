@@ -17,6 +17,8 @@ import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/shared/night_picker_dialog.dart';
+import 'package:astroplan/presentation/shared/app_messages.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -132,7 +134,7 @@ void main() {
     await settle(tester);
     await tester.tap(find.byKey(const Key('planner.copy')));
     await settle(tester);
-    expect(find.byType(DatePickerDialog), findsOneWidget);
+    expect(find.byType(NightPickerDialog), findsOneWidget);
     expect(await colouredPixels(tester), 0, reason: 'date picker');
     await tester.tap(find.text('Cancel'));
     await settle(tester);
@@ -152,7 +154,7 @@ void main() {
     Navigator.of(context).pop();
     await settle(tester);
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showMessage(
       SnackBar(
         content: const Text('Saved'),
         action: SnackBarAction(label: 'Undo', onPressed: () {}),

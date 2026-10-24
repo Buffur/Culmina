@@ -24,6 +24,7 @@ import 'package:astroplan/presentation/shared/status_block.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
+import 'package:astroplan/presentation/shared/night_picker_dialog.dart';
 import 'package:astroplan/domain/models/night_timeline.dart';
 import 'package:astroplan/domain/models/planning_preferences.dart';
 import 'package:astroplan/presentation/shared/app_words.dart';
@@ -641,7 +642,7 @@ void main() {
         await tester.tap(find.byKey(const Key('context.night')));
         await settle(tester);
         final day = find.descendant(
-          of: find.byType(DatePickerDialog),
+          of: find.byType(NightPickerDialog),
           matching: find.text('20'),
         );
         final paragraph = tester.renderObject<RenderParagraph>(day);
@@ -664,7 +665,7 @@ void main() {
       expect(vm.plan.eveningDate, CalendarDate(2026, 12, 15));
       await tester.tap(find.byKey(const Key('context.night')));
       await settle(tester);
-      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byType(NightPickerDialog), findsOneWidget);
       expect(find.byKey(const Key('homeNight.apply')), findsNothing);
       await tester.tap(find.text('20'));
       await tester.tap(find.text('OK'));
@@ -728,7 +729,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('context.night')));
       await settle(tester);
-      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byType(NightPickerDialog), findsOneWidget);
       await tester.tap(find.text('20')); // highlighted, then cancelled
       await tester.tap(find.text('Cancel'));
       await settle(tester);
