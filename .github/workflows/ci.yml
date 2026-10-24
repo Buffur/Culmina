@@ -1,44 +1,148 @@
 name: CI
 
-# The full quality gate. A push or pull request that changes only
-# documentation (CLAUDE.md, "Verification Policy", V1's documentation class)
-# is skipped: the gate's inputs are unchanged. Fail-safe: only known
-# documentation files are excluded, by extension, so any other or unknown file
-# runs the gate; any .dart file is re-included, because `flutter analyze` reads
-# every .dart file in the package. The two
-# path lists must stay identical.
+# Keep the required check present even for documentation-only PRs.
 on:
   push:
     branches: [main, develop]
-    paths:
-      - '**'
-      - '!docs/**.md'
-      - '!docs/**.patch'
-      - '!CLAUDE.md'
-      - '!README.md'
-      - '!.agents/**.md'
-      - '**.dart'
   pull_request:
-    paths:
-      - '**'
-      - '!docs/**.md'
-      - '!docs/**.patch'
-      - '!CLAUDE.md'
-      - '!README.md'
-      - '!.agents/**.md'
-      - '**.dart'
+
+permissions:
+  contents: read
 
 jobs:
-  quality-gate:
-    # Pinned (S12.1): ubuntu-latest moves to Ubuntu 26 from 2026-10-19; a new
-    # image is adopted deliberately, with its own green run.
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      full: ${{ steps.paths.outputs.full }}
+      hosts: ${{ steps.paths.outputs.hosts }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - run: python3 -m unittest discover -s tool -p ci_test.py -v
+      - id: paths
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.sha }}
+        run: |
+          python3 tool/ci.py classify "$BASE" "$HEAD" >> "$GITHUB_OUTPUT"
+          python3 tool/ci.py plan >> "$GITHUB_OUTPUT"
+
+  checks:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
     runs-on: ubuntu-24.04
     steps:
-      # v5 runs on Node 24; v4's Node 20 runtime is deprecated on the runners.
       - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
+        id: flutter
         with:
           flutter-version: '3.47.4'
           channel: stable
+          cache: true
+      - name: "SDK cache ${{ steps.flutter.outputs.CACHE-HIT == 'true' && 'hit' || 'miss' }}; pub cache ${{ steps.flutter.outputs.PUB-CACHE-HIT == 'true' && 'hit' || 'miss' }}"
+        run: echo 'Cache outcomes recorded in this step name.'
       - run: flutter pub get
-      - run: dart run tool/check.dart
+      - run: python3 tool/ci.py run checks --output reports/checks
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ci-checks
+          path: reports/checks
+          if-no-files-found: error
+          retention-days: 14
+
+  unit:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        id: flutter
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+          cache: true
+      - name: "SDK cache ${{ steps.flutter.outputs.CACHE-HIT == 'true' && 'hit' || 'miss' }}; pub cache ${{ steps.flutter.outputs.PUB-CACHE-HIT == 'true' && 'hit' || 'miss' }}"
+        run: echo 'Cache outcomes recorded in this step name.'
+      - run: flutter pub get
+      # No dependency on checks/host: all tests still run after their failures.
+      - run: python3 tool/ci.py run unit --index ${{ matrix.shard }} --output reports/unit-${{ matrix.shard }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ci-unit-${{ matrix.shard }}
+          path: reports/unit-${{ matrix.shard }}
+          if-no-files-found: error
+          retention-days: 14
+
+  host:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJSON(needs.changes.outputs.hosts) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        id: flutter
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+          cache: true
+      - name: "SDK cache ${{ steps.flutter.outputs.CACHE-HIT == 'true' && 'hit' || 'miss' }}; pub cache ${{ steps.flutter.outputs.PUB-CACHE-HIT == 'true' && 'hit' || 'miss' }}"
+        run: echo 'Cache outcomes recorded in this step name.'
+      - run: flutter pub get
+      # Separate runner/process per file preserves S10.2 isolation.
+      - run: python3 tool/ci.py run host --file '${{ matrix.file }}' --output reports/host
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ci-host-${{ strategy.job-index }}
+          path: reports/host
+          if-no-files-found: error
+          retention-days: 14
+
+  quality-gate:
+    # Preserve the existing required-check name. Missing/failed jobs fail closed.
+    if: always()
+    needs: [changes, checks, unit, host]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Require every applicable job
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          FULL: ${{ needs.changes.outputs.full }}
+          CHECKS: ${{ needs.checks.result }}
+          UNIT: ${{ needs.unit.result }}
+          HOST: ${{ needs.host.result }}
+        run: python3 tool/ci.py require-jobs "$CHANGES" "$FULL" "$CHECKS" "$UNIT" "$HOST"
+      - uses: actions/download-artifact@v7
+        if: needs.changes.outputs.full == 'true'
+        with:
+          pattern: ci-*
+          path: reports
+      - id: aggregate
+        run: python3 tool/ci.py aggregate reports
+        if: needs.changes.outputs.full == 'true'
+      - name: 'Unit ${{ steps.aggregate.outputs.unit_pass }} PASS / ${{ steps.aggregate.outputs.unit_skip }} SKIP; host ${{ steps.aggregate.outputs.host_pass }} PASS / ${{ steps.aggregate.outputs.host_skip }} SKIP'
+        if: needs.changes.outputs.full == 'true' && success()
+        run: echo 'All discovered files and completed test streams accounted for.'
+      - name: 'Unit inventory SHA256 ${{ steps.aggregate.outputs.unit_sha }}'
+        if: needs.changes.outputs.full == 'true' && success()
+        run: echo 'Fingerprint covers every file, test name and outcome, including duplicates.'
+      - uses: actions/upload-artifact@v7
+        if: needs.changes.outputs.full == 'true' && success()
+        with:
+          name: ci-summary
+          path: reports/summary.json
+          if-no-files-found: error
+          retention-days: 14

@@ -32,6 +32,9 @@ import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
+import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
+import 'package:astroplan/presentation/viewmodels/session_plan_viewmodel.dart';
 import 'package:astroplan/presentation/screens/library/library_parts.dart';
 import 'package:drift/native.dart';
 import 'package:latlong2/latlong.dart';
@@ -112,11 +115,68 @@ class _NoShare implements AstroBinCsvExporter {
 }
 
 Future<void> _settle(WidgetTester tester) async {
+  // Keep the original twelve frames/600 ms of animation time, but await the
+  // actual IO instead of sleeping 240 ms at every route/dialog transition.
+  // Snapshot futures before runAsync: awaiting them neither repeats queries
+  // nor changes the FutureBuilder's own error presentation.
   for (var i = 0; i < 12; i++) {
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 20)),
-    );
     await tester.pump(const Duration(milliseconds: 50));
+    final futures = tester.allWidgets
+        .whereType<FutureBuilder<dynamic>>()
+        .map((widget) => widget.future)
+        .whereType<Future<dynamic>>()
+        .toSet();
+    final builderFutures = {...futures};
+    final context = tester.element(find.byType(AstroPlanApp));
+    final plan = context.read<SessionPlanViewModel>();
+    final conditions = context.read<NightConditionsViewModel>();
+    final calendar = find.byKey(const Key('nightMoon.calendarLoading'));
+    final browser = calendar.evaluate().isEmpty
+        ? null
+        : tester.element(calendar).read<NightBrowserViewModel>();
+    futures.addAll([
+      plan.idle,
+      conditions.idle,
+      if (browser != null) browser.idle,
+    ]);
+    var pending = futures.length;
+    Object? pendingError;
+    StackTrace? pendingStack;
+    for (final future in futures) {
+      // Register in the test zone, then pump it while IO progresses in the
+      // real zone. Awaiting the chain inside runAsync can deadlock a future
+      // whose intermediate continuations belong to FakeAsync.
+      unawaited(
+        future.then<void>(
+          (_) {
+            pending--;
+          },
+          onError: (Object error, StackTrace stack) {
+            // FutureBuilder owns its own error UI; VM failures must still fail
+            // this fixture rather than becoming successful synchronization.
+            if (!builderFutures.contains(future)) {
+              pendingError = error;
+              pendingStack = stack;
+            }
+            pending--;
+          },
+        ),
+      );
+    }
+    final deadline = Stopwatch()..start();
+    await tester.pump();
+    while (pending > 0) {
+      if (deadline.elapsed > const Duration(seconds: 30)) {
+        fail('Accessibility fixture still has $pending pending IO operations.');
+      }
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 5)),
+      );
+      await tester.pump(const Duration(milliseconds: 5));
+    }
+    if (pendingError != null) {
+      Error.throwWithStackTrace(pendingError!, pendingStack!);
+    }
   }
 }
 

@@ -8,6 +8,11 @@ once in [VERIFICATION_POLICY](VERIFICATION_POLICY.md) (V1–V8; relocated
 platform-sensitive changes also need the Android build and the device rows that
 their own gate names (`docs/RELEASE.md`, § Lifecycle matrix below).
 
+CI scheduling, documentation classification, machine receipts and host/device
+boundaries are described in [CI execution and timing](CI.md). CI preserves the
+local gate's static checks and full unit/widget/host inventory while running
+independent groups in parallel; Android-only capture fixtures remain device work.
+
 ## Unit Tests
 
 Use unit tests for:
