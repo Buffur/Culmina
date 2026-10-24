@@ -152,11 +152,12 @@ by S10.2. The baseline's two skipped Android-only startups cost 50.227s combined
 
 All six SDK/pub restores were misses. The static job successfully saved both
 cache keys; other concurrent jobs' reserve-key warnings are expected and did
-not fail. Thus cache persistence is verified, but warm restore speed and saving
-are **unmeasured**. No extra full run was used to manufacture a warm-cache result.
+not fail. At the #22 delivery, cache persistence was verified but warm restore speed
+and saving were unmeasured. The later owner-authorized warm pair below supplies
+that new measurement; no warm rerun was part of the initial delivery.
 The delivered choice prioritizes latency; its higher cold runner usage is an
-explicit tradeoff. A two-shard runtime/cost comparison remains unmeasured rather
-than an automatically authorized follow-up.
+explicit tradeoff. A two-shard runtime/cost comparison was unmeasured at that delivery; the subsequently owner-authorized
+warm pair is recorded below.
 
 All six downloaded report ZIP digests matched GitHub metadata. Raw JSONL streams
 were reparsed and compared with every receipt; aggregation independently confirmed
@@ -225,10 +226,10 @@ and finalization; runner time sums job start/completion timestamps):
 ## Warm-cache comparison protocol
 
 New owner task, 2026-10-24, from published `c045898`: compare two and three
-unit shards with warm caches. The local candidate changes only the matrix
+unit shards with warm caches. The two-shard candidate changed only the matrix
 indexes and matching `--shards 2` arguments for execution/aggregation. After
-its measured develop push, restore the original three-shard workflow exactly
-and measure the second push. The owner separately authorized these develop commit/push operations,
+its measured develop push, the original three-shard workflow was restored
+exactly and measured in the second push. The owner separately authorized these develop commit/push operations,
 restoration and the final report on 2026-10-24.
 
 Application, test code, SDK, Ubuntu image, pub lockfile, weights and cache keys
@@ -242,6 +243,192 @@ inventing a tolerance for the owner's word "substantial". One pair is a bounded
 observation, not a statistical guarantee; noise or a cache miss is reported.
 The three-shard default is restored after measurement; a permanent switch is a
 separate decision. No new dispatch infrastructure or main-branch changes.
+
+## Warm-cache results - 2026-10-24
+
+The authorized pair completed successfully, with no application/test/tooling,
+weight, dependency, SDK, OS-image or cache-key changes between configurations.
+Two shards were committed/pushed as `9fb503e`, then the original three-shard
+workflow was restored byte-for-byte in canonical Git at `89c6c48`.
+
+| Metric | 2 shards, CI #24 | 3 shards, CI #25 |
+| --- | --- | --- |
+| Source | `9fb503efd99e5e04f626bfcd1858b4af0dafa528` | `89c6c4879fb91b002f15caffcdcf3aeda004d58f` |
+| Workflow elapsed | 300s (5m00s) | 273s (4m33s) |
+| Job span | 296s | 269s |
+| All-job runner-seconds / minutes | 799s / 13.317 | 966s / 16.100 |
+| Sum of rounded per-job minutes | 17 | 21 (rounding estimates, not invoices) |
+| Unit execution window | 223s | 189s |
+| Unit process seconds | 221.698 / 175.067 | 180.448 / 159.126 / 162.376 |
+| Unit job seconds, including setup | 262 / 213 | 232 / 207 / 205 |
+| Common jobs total (static, host, changes, aggregate) | 324s | 322s |
+| SDK + pub cache hits | 5/5 heavy jobs for both caches | 6/6 heavy jobs for both caches |
+| Unit outcomes / files | 2509 PASS / 6 SKIP; 285 files once (142/143) | Same outcomes; 285 files once (95/95/95) |
+| Host outcomes | 3 PASS | 3 PASS |
+
+[CI #24](https://github.com/Buffur/Culmina/actions/runs/40046527390) and
+[CI #25](https://github.com/Buffur/Culmina/actions/runs/40047002928) are both green.
+With two shards, total runner usage decreased by **167s / 2.783 minutes (17.3%)**,
+while workflow latency increased by **27s (9.9%)**. The unit jobs alone saved
+169 runner-seconds; common job variation accounted for the other two seconds.
+This supports two shards as a reasonable resource-saving choice if roughly half
+a minute longer feedback is acceptable. Three shards are faster and remain the
+delivered default as requested. No permanent switch was made and no numerical
+owner tolerance was assumed.
+
+Both configurations used Flutter 3.47.4, Ubuntu 24.04.5 and OS image
+`20261012.334.1`; logged provisioner versions differed (`20261012.601` in the
+two-shard static job, `20261021.618` in the three-shard static job). This one
+sequential pair is an observed tradeoff, not a statistical guarantee or a
+claim of identical underlying cloud hardware. Unit process imbalance was
+46.631s for two shards versus a 21.322s range for three; balanced file counts
+are not equal runtime. No weight tuning or additional full-run loop was used.
+
+All five/two-shard and six/three-shard heavy jobs independently reported SDK
+and pub cache hits; the same primary keys were restored. The 13 downloaded
+artifact ZIP digests (including both aggregate summaries) matched GitHub.
+Raw JSONL streams were reparsed, receipt profiles matched, and independent
+aggregation reproduced both remote summaries. Exact unit and host test
+multisets matched the reference, including duplicate names and skips; both
+unit fingerprints are `3caf5bdd9d52388f030328b5b85b22545ab057128b55aa162a99660dbbe04c44`.
+Canonical app/test/tooling input-tree SHA-256 was
+`d683acebeb7b5c4c801e520c1d4cb3f4b2213a5303c7cf7279b97c5b001488cc` in both sources.
+Static encoding/format/analysis and the Python tooling regressions passed in
+each actual run. Physical-device, owner and release acceptance are unchanged.
+Raw reports and detailed metrics remain in the external temporary
+`culmina-warm-shards-kyrjn__8/remote24` and `remote25` directories; Actions
+artifacts expire 2026-11-07. Compact durable metrics follow.
+
+```json
+{
+  "comparative_pairs": 1,
+  "default_restored_to": 3,
+  "difference_two_minus_three": {
+    "runner_percent": -17.287784679089025,
+    "runner_seconds": -167.0,
+    "workflow_percent": 9.8901098901099,
+    "workflow_seconds": 27.0
+  },
+  "same_source_input_tree_sha256": "d683acebeb7b5c4c801e520c1d4cb3f4b2213a5303c7cf7279b97c5b001488cc",
+  "three_shards": {
+    "all_artifact_digests_match": true,
+    "completed_at_utc": "2026-10-24T00:55:37Z",
+    "conclusion": "success",
+    "created_at_utc": "2026-10-24T00:51:04Z",
+    "exact_unit_and_host_multisets_equal_reference": true,
+    "host_counts": {
+      "success": 3
+    },
+    "job_span_seconds": 269.0,
+    "jobs_seconds": {
+      "changes": 8.0,
+      "checks": 64.0,
+      "host (integration_test/core_loop_test.dart)": 125.0,
+      "host (integration_test/perf_scenarios_test.dart)": 102.0,
+      "quality-gate": 23.0,
+      "unit (0)": 232.0,
+      "unit (1)": 207.0,
+      "unit (2)": 205.0
+    },
+    "pub_cache_hits": 6,
+    "raw_profiles_equal_receipts": true,
+    "rounded_job_minutes": 21,
+    "run_id": 40047002928,
+    "run_number": 25,
+    "runner_minutes": 16.1,
+    "runner_seconds": 966.0,
+    "sdk_cache_hits": 6,
+    "shards": 3,
+    "source": "89c6c4879fb91b002f15caffcdcf3aeda004d58f",
+    "unit_counts": {
+      "skip": 6,
+      "success": 2509
+    },
+    "unit_files_per_shard": {
+      "0": 95,
+      "1": 95,
+      "2": 95
+    },
+    "unit_process_seconds": {
+      "0": 180.448433583,
+      "1": 159.12617935400004,
+      "2": 162.375997147
+    },
+    "unit_test_counts": {
+      "0": {
+        "skip": 4,
+        "success": 1021
+      },
+      "1": {
+        "skip": 1,
+        "success": 696
+      },
+      "2": {
+        "skip": 1,
+        "success": 792
+      }
+    },
+    "unit_tests_sha256": "3caf5bdd9d52388f030328b5b85b22545ab057128b55aa162a99660dbbe04c44",
+    "unit_window_seconds": 189.0,
+    "workflow_seconds": 273.0
+  },
+  "two_shards": {
+    "all_artifact_digests_match": true,
+    "completed_at_utc": "2026-10-24T00:50:17Z",
+    "conclusion": "success",
+    "created_at_utc": "2026-10-24T00:45:17Z",
+    "exact_unit_and_host_multisets_equal_reference": true,
+    "host_counts": {
+      "success": 3
+    },
+    "job_span_seconds": 296.0,
+    "jobs_seconds": {
+      "changes": 12.0,
+      "checks": 70.0,
+      "host (integration_test/core_loop_test.dart)": 119.0,
+      "host (integration_test/perf_scenarios_test.dart)": 106.0,
+      "quality-gate": 17.0,
+      "unit (0)": 262.0,
+      "unit (1)": 213.0
+    },
+    "pub_cache_hits": 5,
+    "raw_profiles_equal_receipts": true,
+    "rounded_job_minutes": 17,
+    "run_id": 40046527390,
+    "run_number": 24,
+    "runner_minutes": 13.316666666666666,
+    "runner_seconds": 799.0,
+    "sdk_cache_hits": 5,
+    "shards": 2,
+    "source": "9fb503efd99e5e04f626bfcd1858b4af0dafa528",
+    "unit_counts": {
+      "skip": 6,
+      "success": 2509
+    },
+    "unit_files_per_shard": {
+      "0": 142,
+      "1": 143
+    },
+    "unit_process_seconds": {
+      "0": 221.69817431700002,
+      "1": 175.067279757
+    },
+    "unit_test_counts": {
+      "0": {
+        "skip": 5,
+        "success": 1383
+      },
+      "1": {
+        "skip": 1,
+        "success": 1126
+      }
+    },
+    "unit_tests_sha256": "3caf5bdd9d52388f030328b5b85b22545ab057128b55aa162a99660dbbe04c44",
+    "unit_window_seconds": 223.0,
+    "workflow_seconds": 300.0
+  }
+}
+```
 
 ## Official references
 
