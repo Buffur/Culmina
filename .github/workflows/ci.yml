@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2]
+        shard: [0, 1]
     steps:
       - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
@@ -72,7 +72,7 @@ jobs:
         run: echo 'Cache outcomes recorded in this step name.'
       - run: flutter pub get
       # No dependency on checks/host: all tests still run after their failures.
-      - run: python3 tool/ci.py run unit --index ${{ matrix.shard }} --output reports/unit-${{ matrix.shard }}
+      - run: python3 tool/ci.py run unit --index ${{ matrix.shard }} --shards 2 --output reports/unit-${{ matrix.shard }}
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -131,7 +131,7 @@ jobs:
           pattern: ci-*
           path: reports
       - id: aggregate
-        run: python3 tool/ci.py aggregate reports
+        run: python3 tool/ci.py aggregate reports --shards 2
         if: needs.changes.outputs.full == 'true'
       - name: 'Unit ${{ steps.aggregate.outputs.unit_pass }} PASS / ${{ steps.aggregate.outputs.unit_skip }} SKIP; host ${{ steps.aggregate.outputs.host_pass }} PASS / ${{ steps.aggregate.outputs.host_skip }} SKIP'
         if: needs.changes.outputs.full == 'true' && success()

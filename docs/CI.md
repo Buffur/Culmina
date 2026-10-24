@@ -222,6 +222,27 @@ and finalization; runner time sums job start/completion timestamps):
 }
 ```
 
+## Warm-cache comparison protocol
+
+New owner task, 2026-10-24, from published `c045898`: compare two and three
+unit shards with warm caches. The local candidate changes only the matrix
+indexes and matching `--shards 2` arguments for execution/aggregation. After
+its measured develop push, restore the original three-shard workflow exactly
+and measure the second push. The owner separately authorized these develop commit/push operations,
+restoration and the final report on 2026-10-24.
+
+Application, test code, SDK, Ubuntu image, pub lockfile, weights and cache keys
+stay identical. Every heavy job must report both SDK and pub cache hits; a miss
+invalidates the warm label. Download and reparse raw streams, compare exact
+file/name/outcome multisets and all 285 unit files once per configuration. Count
+all static/host/changes/aggregate/setup jobs in runner-minutes; distinguish
+workflow elapsed, job span, process time and rounded per-job minute estimates.
+Report latency change in seconds/percent and runner usage change without
+inventing a tolerance for the owner's word "substantial". One pair is a bounded
+observation, not a statistical guarantee; noise or a cache miss is reported.
+The three-shard default is restored after measurement; a permanent switch is a
+separate decision. No new dispatch infrastructure or main-branch changes.
+
 ## Official references
 
 - [Workflow filters and required checks](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
