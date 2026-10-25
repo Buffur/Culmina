@@ -110,6 +110,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ),
                   SettingsRow(
                     key: const Key('library.sites'),
+                    divider: false,
                     icon: HybridIcons.pin,
                     title: AppWords.sites,
                     summary: '$sites · choose the planning site in Plan',

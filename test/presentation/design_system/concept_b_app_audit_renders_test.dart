@@ -18,6 +18,10 @@ import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/presentation/viewmodels/metadata_import_viewmodel.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/startup/unsupported_database_screen.dart';
+import 'package:astroplan/presentation/screens/target/target_detail_screen.dart';
+import 'package:astroplan/presentation/screens/home/plan_rig_screen.dart';
+import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
+import 'package:astroplan/domain/models/target_alias.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -30,6 +34,7 @@ import '../../support/hybrid_transfer_shots.dart';
 import '../../support/sdk_fonts.dart';
 import '../../support/fake_capture_file_access.dart';
 import '../../support/jpeg_fixture.dart';
+import '../../support/held_library_reads.dart';
 
 const _shot = Key('app.audit.render');
 Future<void> _loadFonts() async {
@@ -97,8 +102,76 @@ class _AuditBackup implements BackupService {
   Future<void> clearOutcome() async {}
 }
 
+Future<void> _libraryState(HybridRenderContext c, String name) async {
+  final theme = Theme.of(c.tester.element(find.byType(Scaffold).last));
+  final aliases = HeldAliasReads();
+  final rigs = HeldGearReads();
+  addTearDown(aliases.dispose);
+  addTearDown(rigs.dispose);
+  final target = c.fixture.vm.plan.selectedTarget!;
+  final aliasScreen = name.startsWith('aliases_');
+  await c.tester.pumpWidget(
+    RepaintBoundary(
+      key: _shot,
+      child: MultiProvider(
+        providers: [
+          ...c.fixture.vm.providers,
+          ChangeNotifierProvider<TargetsViewModel>.value(value: aliases),
+          ChangeNotifierProvider<GearViewModel>.value(value: rigs),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          home: aliasScreen
+              ? TargetDetailScreen(target: target, onPlan: (_) async {})
+              : const PlanRigScreen(),
+        ),
+      ),
+    ),
+  );
+  await c.tester.pump();
+  if (name.endsWith('_loading')) return;
+  if (name.endsWith('_error') || name == 'planrig_empty') {
+    if (aliasScreen) {
+      aliases.reads.last.completeError(
+        StateError('Synthetic unavailable read'),
+      );
+    } else {
+      rigs.reads.last.completeError(StateError('Synthetic unavailable read'));
+    }
+    await c.tester.pump();
+    if (name != 'planrig_empty') return;
+    await c.settle();
+    await c.tester.tap(find.text('Retry'));
+    await c.tester.pump();
+  }
+  if (aliasScreen) {
+    aliases.reads.last.complete(
+      name.endsWith('_empty')
+          ? {}
+          : {
+              target.catalogId: [
+                const TargetAlias(
+                  catalogId: 'M31',
+                  alias: 'NGC 224',
+                  kind: TargetAliasKind.designation,
+                ),
+              ],
+            },
+    );
+  } else {
+    rigs.reads.last.complete(
+      name.endsWith('_empty') ? [] : [c.fixture.vm.plan.selectedEquipment!],
+    );
+  }
+  await c.tester.pump();
+}
+
 final _auditShots = <String, HybridStep>{
   ...hybridShots,
+  for (final kind in ['aliases', 'planrig'])
+    for (final state in ['loading', 'error', 'empty', 'populated'])
+      '${kind}_$state': (c) => _libraryState(c, '${kind}_$state'),
   'welcome': (c) => c.push(AppRouter.welcome),
   'metadata': (c) => c.push(AppRouter.metadata),
   'result_notdone': (c) async {
@@ -535,6 +608,25 @@ void main() {
         File('$file.json').writeAsStringSync(
           const JsonEncoder.withIndent('  ').convert({
             'name': name,
+            'captureUtc': DateTime.now().toUtc().toIso8601String(),
+            'captureKind': 'native Flutter host',
+            'sourceHead': Platform.environment['CULMINA_RENDER_HEAD'],
+            'inputManifest':
+                Platform.environment['CULMINA_RENDER_INPUT_MANIFEST'],
+            'proposalOnly': name.startsWith('u4_'),
+            'fixtureSucceeded': routeError == null && exception == null,
+            'devicePixelRatio': tester.view.devicePixelRatio,
+            'visibleScreens': [
+              for (final element
+                  in find
+                      .byWidgetPredicate(
+                        (w) =>
+                            w.runtimeType.toString().endsWith('Screen') ||
+                            w.runtimeType.toString() == 'HybridWeatherView',
+                      )
+                      .evaluate())
+                element.widget.runtimeType.toString(),
+            ],
             'theme': theme,
             'scale': scale,
             'width': width,

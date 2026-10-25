@@ -28,7 +28,12 @@ import '../../support/no_snapshot_weather.dart';
 class _NoWeather with NoSnapshotWeather implements WeatherRepository {}
 
 void main() {
-  Future<void> pumpCard(WidgetTester tester, {int? bortle, double? sqm}) async {
+  Future<PlannerHarness> pumpCard(
+    WidgetTester tester, {
+    int? bortle,
+    double? sqm,
+    bool embedded = false,
+  }) async {
     late AppDatabase database;
     late PlannerHarness vm;
     await tester.runAsync(() async {
@@ -66,14 +71,17 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: vm.providers,
-        child: const MaterialApp(
+        child: MaterialApp(
           home: Scaffold(
-            body: SingleChildScrollView(child: SkyDarknessWidget()),
+            body: SingleChildScrollView(
+              child: SkyDarknessWidget(embedded: embedded),
+            ),
           ),
         ),
       ),
     );
     await tester.pumpAndSettle();
+    return vm;
   }
 
   /// S6.7: the detail is one tap away.
@@ -116,6 +124,35 @@ void main() {
     expect(find.textContaining('2026-0'), findsNothing);
     expect(find.text('Look it up on lightpollutionmap.app'), findsOneWidget);
   });
+
+  testWidgets(
+    'embedded controls preserve independent SQM and saved provenance',
+    (tester) async {
+      final vm = await pumpCard(tester, bortle: 4, sqm: 21.3, embedded: true);
+      await open(tester);
+      expect(find.text('Source: meter · 1 Aug 2026'), findsOneWidget);
+      expect(find.text('Look it up on lightpollutionmap.app'), findsOneWidget);
+      await tester.tap(find.byType(DropdownButton<int?>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Bortle 5').last);
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pumpAndSettle();
+      await tester.runAsync(() => vm.site.selectSite(vm.site.activeSite!.id));
+      await tester.pumpAndSettle();
+      expect(vm.skyDarkness.bortleClass, 5);
+      expect(vm.skyDarkness.sqm, 21.3);
+      expect(vm.skyDarkness.sqmSource, 'meter');
+      expect(vm.skyDarkness.sqmDate, CalendarDate(2026, 8, 1));
+      expect(find.text('Source: meter · 1 Aug 2026'), findsOneWidget);
+      await open(tester);
+      expect(find.byKey(const Key('sky.sqm')), findsNothing);
+      await open(tester);
+      expect(find.byKey(const Key('sky.sqm')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('an SQM reading alone is not turned into a Bortle class', (
     tester,

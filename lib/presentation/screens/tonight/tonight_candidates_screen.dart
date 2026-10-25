@@ -417,44 +417,64 @@ class _CandidateRow extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 56),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: AppTypography.body.copyWith(
-                          height: 1.5,
-                          color: p.textPrimary,
-                        ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final scaler = MediaQuery.textScalerOf(context);
+                final durationStyle = AppTypography.caption.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: p.textPrimary,
+                );
+                final durationWidth = TextPainter(
+                  text: TextSpan(text: usable, style: durationStyle),
+                  textDirection: Directionality.of(context),
+                  textScaler: scaler,
+                )..layout();
+                final iconSize = scaler.scale(18);
+                final below =
+                    durationWidth.width +
+                        AppSpacing.itemGap +
+                        AppSpacing.sm +
+                        iconSize >=
+                    constraints.maxWidth;
+                durationWidth.dispose();
+                final duration = Text(usable, style: durationStyle);
+                return Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: AppTypography.body.copyWith(
+                              height: 1.5,
+                              color: p.textPrimary,
+                            ),
+                          ),
+                          Text(
+                            caption,
+                            style: AppTypography.dense.copyWith(
+                              height: 1.5,
+                              color: p.textSecondary,
+                            ),
+                          ),
+                          if (below) duration,
+                        ],
                       ),
-                      Text(
-                        caption,
-                        style: AppTypography.dense.copyWith(
-                          height: 1.5,
-                          color: p.textSecondary,
-                        ),
-                      ),
+                    ),
+                    if (!below) ...[
+                      const SizedBox(width: AppSpacing.itemGap),
+                      duration,
                     ],
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.itemGap),
-                Text(
-                  usable,
-                  style: AppTypography.caption.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: p.textPrimary,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                HybridIcon(
-                  HybridIcons.chevron,
-                  size: MediaQuery.textScalerOf(context).scale(18),
-                  color: p.textSecondary,
-                ),
-              ],
+                    const SizedBox(width: AppSpacing.sm),
+                    HybridIcon(
+                      HybridIcons.chevron,
+                      size: iconSize,
+                      color: p.textSecondary,
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

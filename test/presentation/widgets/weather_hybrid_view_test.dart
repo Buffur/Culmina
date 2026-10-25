@@ -26,8 +26,11 @@ import '../../support/planner_harness.dart';
 
 import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/presentation/widgets/weather_hybrid_view.dart';
+import 'package:astroplan/presentation/screens/tonight/tonight_home_screen.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,6 +64,7 @@ class _Weather implements WeatherRepository {
   bool empty = false;
   double temperatureC = 10;
   double windSpeedKmh = 8;
+  double? windGustsKmh;
 
   /// Cloud cover per UTC hour; 20 % throughout unless set.
   double Function(DateTime hourUtc)? cloudAt;
@@ -98,6 +102,7 @@ class _Weather implements WeatherRepository {
                     timeUtc: t,
                     cloudCoverPct: cloudAt?.call(t) ?? 20,
                     windSpeedKmh: windSpeedKmh,
+                    windGustsKmh: windGustsKmh,
                     temperatureC: temperatureC,
                     dewPointC: 9,
                   ),
@@ -119,7 +124,11 @@ void main() {
     weather = _Weather(clock);
   });
 
-  Future<void> pump(WidgetTester tester, {ThemeData? theme}) async {
+  Future<void> pump(
+    WidgetTester tester, {
+    ThemeData? theme,
+    bool tonight = false,
+  }) async {
     tester.view.physicalSize = const Size(800, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -160,9 +169,11 @@ void main() {
         providers: vm.providers,
         child: MaterialApp(
           theme: theme,
-          home: Scaffold(
-            body: SingleChildScrollView(child: HybridWeatherView()),
-          ),
+          home: tonight
+              ? const TonightHomeScreen()
+              : Scaffold(
+                  body: SingleChildScrollView(child: HybridWeatherView()),
+                ),
         ),
       ),
     );
@@ -172,6 +183,101 @@ void main() {
   Future<void> run(WidgetTester tester, Future<void> Function() f) async {
     await tester.runAsync(f);
     await tester.pump();
+  }
+
+  testWidgets(
+    'Tonight keeps cached measurements and discloses refresh failure',
+    (tester) async {
+      await pump(tester, tonight: true);
+      final row = find.byKey(const Key('tonight.weather'));
+      await tester.ensureVisible(row);
+      await tester.pump();
+      List<String> rowTexts() => find
+          .descendant(of: row, matching: find.byType(Text))
+          .evaluate()
+          .map((e) => (e.widget as Text).data ?? '')
+          .toList();
+      final before = rowTexts();
+      final measurements = before.firstWhere((s) => s.contains('wind up to'));
+      expect(before.join(' '), isNot(contains('cached forecast')));
+      weather.failWith = WeatherFailure.unavailable;
+      await run(tester, vm.refreshWeather);
+      expect(rowTexts(), contains(measurements));
+      expect(
+        rowTexts().join(' '),
+        contains('Refresh failed · cached forecast.'),
+      );
+      expect(
+        rowTexts().join(' '),
+        contains('Offline or the service did not answer.'),
+      );
+      weather.failWith = WeatherFailure.malformed;
+      await run(tester, vm.refreshWeather);
+      expect(rowTexts(), contains(measurements));
+      expect(rowTexts().join(' '), contains('The forecast could not be read.'));
+      expect(rowTexts().join(' '), isNot(contains('Offline')));
+      clock.now = clock.now.add(const Duration(hours: 15));
+      await run(tester, vm.refreshWeather);
+      expect(rowTexts(), contains(measurements));
+      expect(rowTexts().join(' '), contains('Stale snapshot'));
+      weather.failWith = null;
+      await run(tester, vm.refreshWeather);
+      expect(rowTexts(), contains(measurements));
+      expect(rowTexts().join(' '), isNot(contains('cached forecast')));
+      expect(rowTexts().join(' '), isNot(contains('Stale snapshot')));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  for (final width in [375.0, 412.0]) {
+    for (final theme in [AppTheme.light, AppTheme.dark, AppTheme.fieldTheme]) {
+      testWidgets('complete measurements at $width in ${theme.brightness} '
+          '${theme == AppTheme.fieldTheme ? 'Field' : ''}', (tester) async {
+        await (FontLoader(
+          'Geist',
+        )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+        weather.windSpeedKmh = 123.4;
+        weather.windGustsKmh = 234.5;
+        await pump(tester, theme: theme);
+        tester.view.physicalSize = Size(width, 812);
+        await tester.pump();
+        for (final units in [
+          const DisplayUnits(),
+          const DisplayUnits(
+            temperature: TemperatureUnit.fahrenheit,
+            wind: WindUnit.mph,
+          ),
+        ]) {
+          await run(tester, () => vm.vms.displaySettings.setUnits(units));
+          for (final label in ['Temperature', 'Wind / gusts']) {
+            final value = find.byKey(Key('weather.range.$label'));
+            final text = tester.widget<Text>(value).data!;
+            final paragraph = tester.renderObject<RenderParagraph>(
+              find.descendant(of: value, matching: find.byType(RichText)),
+            );
+            // Each whole measurement (including its unit) stays on one line.
+            for (final chunk in text.split(' · ')) {
+              final start = text.indexOf(chunk);
+              expect(
+                paragraph.getBoxesForSelection(
+                  TextSelection(
+                    baseOffset: start,
+                    extentOffset: start + chunk.length,
+                  ),
+                ),
+                hasLength(1),
+                reason: '$label: $chunk at $width',
+              );
+            }
+            final bounds = tester.getRect(value);
+            expect(bounds.left, greaterThanOrEqualTo(0));
+            expect(bounds.right, lessThanOrEqualTo(width));
+          }
+          expect(find.text('Unknown'), findsWidgets);
+          expect(tester.takeException(), isNull);
+        }
+      });
+    }
   }
 
   // F14 (ADR-022 N6): the dark span at the plan's limit, not sunset to

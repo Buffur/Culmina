@@ -496,9 +496,20 @@ void main() {
     await tester.tap(find.text('Add site'));
     await settle(tester);
     await tester.enterText(fieldLabeled('Name'), 'Hill');
+    await tester.enterText(
+      find.byKey(const Key('siteEditor.latitude')),
+      '46.2',
+    );
+    await tester.enterText(
+      find.byKey(const Key('siteEditor.longitude')),
+      '14.7',
+    );
     await tester.tap(find.byKey(const Key('siteEditor.save')));
     await settle(tester);
     expect(vm.site.sites.map((s) => s.name), contains('Hill'));
+    final hill = vm.site.sites.singleWhere((s) => s.name == 'Hill');
+    expect(hill.latitude, 46.2);
+    expect(hill.longitude, 14.7);
     expect(vm.site.activeSite!.id, homeId, reason: 'the planning site stays');
 
     AppRouter.router.go(AppRouter.selectSite);

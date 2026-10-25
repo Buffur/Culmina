@@ -181,6 +181,34 @@ void main() {
       .controller!
       .text;
 
+  testWidgets('only present result sections contribute a 16 dp gap', (
+    tester,
+  ) async {
+    await open(tester, _Kind.saved, at: _morning);
+    for (final outcome in [null, 'asPlanned', 'partly', 'notDone']) {
+      if (outcome != null) await tap(tester, 'results.outcome.$outcome');
+      final groups = [
+        'outcome',
+        if (outcome == 'partly') 'frames',
+        if (outcome == 'notDone') 'reason',
+        'notes',
+        'conditions',
+      ];
+      for (var i = 1; i < groups.length; i++) {
+        final before = find.byKey(Key('results.${groups[i - 1]}Group'));
+        final after = find.byKey(Key('results.${groups[i]}Group'));
+        await tester.ensureVisible(after);
+        await settle(tester);
+        expect(
+          tester.getTopLeft(after).dy - tester.getBottomLeft(before).dy,
+          closeTo(16, 0.01),
+          reason: '$outcome: ${groups[i - 1]} to ${groups[i]}',
+        );
+      }
+      expect(tester.takeException(), isNull);
+    }
+  });
+
   testWidgets(
     'result actions stay above the IME, and outlined fields have space',
     (tester) async {

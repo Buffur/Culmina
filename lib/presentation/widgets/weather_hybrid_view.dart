@@ -674,8 +674,21 @@ class _Rows extends StatelessWidget {
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       final w = constraints.maxWidth - 14;
+                      final overview = _overview(slots, m, units);
+                      final valueStyle = AppTypography.value.copyWith(
+                        height: 1.5,
+                        color: p.textPrimary,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      );
+                      final valueWidth = TextPainter(
+                        text: TextSpan(text: overview, style: valueStyle),
+                        textDirection: Directionality.of(context),
+                        textScaler: MediaQuery.textScalerOf(context),
+                      )..layout();
                       final stacked =
-                          MediaQuery.textScalerOf(context).scale(1) >= 1.5;
+                          MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
+                          valueWidth.width > w - w / 2.18;
+                      valueWidth.dispose();
                       final name = _MetricName(
                         m,
                         style: AppTypography.caption.copyWith(
@@ -688,14 +701,9 @@ class _Rows extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _overview(slots, m, units),
-                            style: AppTypography.value.copyWith(
-                              height: 1.5,
-                              color: p.textPrimary,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
+                            overview,
+                            key: Key('weather.range.${m.label}'),
+                            style: valueStyle,
                           ),
                           const SizedBox(height: 3),
                           Text(

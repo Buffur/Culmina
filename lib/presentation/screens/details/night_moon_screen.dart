@@ -232,7 +232,7 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                             DocumentSection(
                               key: const Key('nightMoon.readingGroup'),
                               children: [
-                                const _ReadingDisclosure(),
+                                const _ReadingDisclosure(topRule: false),
                                 _ConditionsDisclosure(
                                   id: 'moonIntervals',
                                   title: 'Moon intervals & phase',
@@ -586,14 +586,17 @@ class _MoonAnswer extends StatelessWidget {
 }
 
 class _ReadingDisclosure extends StatelessWidget {
-  const _ReadingDisclosure();
+  const _ReadingDisclosure({this.topRule = true});
+
+  final bool topRule;
 
   @override
-  Widget build(BuildContext context) => const _ConditionsDisclosure(
+  Widget build(BuildContext context) => _ConditionsDisclosure(
     id: 'reading',
     title: 'Read the time browser',
     subtitle: 'Sky, Moon lanes and exact boundaries',
-    child: NightReadingGuide(),
+    topRule: topRule,
+    child: const NightReadingGuide(),
   );
 }
 
@@ -606,6 +609,7 @@ class _ConditionsDisclosure extends StatelessWidget {
     required this.child,
     this.icon,
     this.iconColor,
+    this.topRule = true,
   });
 
   final String id;
@@ -614,6 +618,7 @@ class _ConditionsDisclosure extends StatelessWidget {
   final Widget child;
   final HybridIconData? icon;
   final Color? iconColor;
+  final bool topRule;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -625,6 +630,7 @@ class _ConditionsDisclosure extends StatelessWidget {
       summary: subtitle,
       icon: icon,
       iconColor: iconColor,
+      topRule: topRule,
       child: Padding(
         padding: const EdgeInsets.only(bottom: AppSpacing.sm),
         child: child,

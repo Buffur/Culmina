@@ -12,6 +12,7 @@ import '../../../domain/models/target_alias.dart';
 import '../../../domain/models/target_types.dart';
 import '../../shared/app_words.dart';
 import '../../shared/field_mode_button.dart';
+import '../../shared/failure_feedback.dart';
 import '../../shared/hybrid_app_bar.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../viewmodels/library_viewmodels.dart';
@@ -50,7 +51,7 @@ class TargetDetailScreen extends StatefulWidget {
 
 class _TargetDetailScreenState extends State<TargetDetailScreen> {
   late AstroTarget _t = widget.target;
-  late final Future<Map<String, List<TargetAlias>>> _aliases = context
+  late Future<Map<String, List<TargetAlias>>> _aliases = context
       .read<TargetsViewModel>()
       .aliases();
 
@@ -144,37 +145,68 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                     FutureBuilder<Map<String, List<TargetAlias>>>(
                       future: _aliases,
                       builder: (context, snapshot) {
+                        final pending =
+                            snapshot.connectionState != ConnectionState.done;
+                        final failed = !pending && snapshot.hasError;
                         final also = [
                           for (final a
                               in snapshot.data?[t.catalogId] ?? const [])
                             if (a.alias != name) a.alias,
                         ];
-                        return FactRows(key: const Key('targetDetail.facts'), [
-                          ('Designation', t.catalogId, null),
-                          ('Name', name, null),
-                          (
-                            'Also known as',
-                            also.isEmpty ? 'None recorded' : also.join(', '),
-                            null,
-                          ),
-                          ('Object type', t.type, null),
-                          ...coordinates,
-                          (
-                            'Magnitude (V)',
-                            switch (t.magnitude) {
-                              final m? => _n(m),
-                              null => 'Not recorded',
-                            },
-                            t.magnitude == null
-                                ? 'Not in the catalogue; never estimated.'
-                                : null,
-                          ),
-                          (
-                            'Source',
-                            "OpenNGC, via the app's bundled catalogue",
-                            null,
-                          ),
-                        ]);
+                        return Column(
+                          children: [
+                            FactRows(key: const Key('targetDetail.facts'), [
+                              ('Designation', t.catalogId, null),
+                              ('Name', name, null),
+                              (
+                                'Also known as',
+                                pending
+                                    ? 'Loading aliases…'
+                                    : failed
+                                    ? 'Unavailable'
+                                    : also.isEmpty
+                                    ? 'None recorded'
+                                    : also.join(', '),
+                                failed
+                                    ? FailureText.message(
+                                        'load the aliases',
+                                        snapshot.error!,
+                                      )
+                                    : null,
+                              ),
+                              ('Object type', t.type, null),
+                              ...coordinates,
+                              (
+                                'Magnitude (V)',
+                                switch (t.magnitude) {
+                                  final m? => _n(m),
+                                  null => 'Not recorded',
+                                },
+                                t.magnitude == null
+                                    ? 'Not in the catalogue; never estimated.'
+                                    : null,
+                              ),
+                              (
+                                'Source',
+                                "OpenNGC, via the app's bundled catalogue",
+                                null,
+                              ),
+                            ]),
+                            if (failed)
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: TextButton(
+                                  key: const Key('targetDetail.aliasRetry'),
+                                  onPressed: () => setState(() {
+                                    _aliases = context
+                                        .read<TargetsViewModel>()
+                                        .aliases();
+                                  }),
+                                  child: const Text('Retry'),
+                                ),
+                              ),
+                          ],
+                        );
                       },
                     ),
                   ],

@@ -39,21 +39,27 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
   int? _chosen;
   bool _loading = true;
   Object? _error;
+  int _loadRequest = 0;
 
   @override
   void initState() {
     super.initState();
     _chosen = context.read<SessionPlanViewModel>().selectedEquipment?.id;
-    _load();
+    _load(initial: true);
   }
 
-  Future<void> _load() async {
+  Future<void> _load({bool initial = false}) async {
+    final request = ++_loadRequest;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       final rigs = await context.read<GearViewModel>().all();
-      if (!mounted) return;
+      if (!mounted || request != _loadRequest) return;
       // Nothing to choose yet: straight to adding one (F05 A1), where a rig
       // created from the plan's action becomes its rig (D8 A).
-      if (rigs.isEmpty && _loading) {
+      if (rigs.isEmpty && initial) {
         context.pushReplacement(
           widget.forPlanAction
               ? AppRouter.manageRigsForPlan
@@ -67,7 +73,7 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
         _error = null;
       });
     } catch (e) {
-      if (!mounted) return;
+      if (!mounted || request != _loadRequest) return;
       setState(() {
         _error = e;
         _loading = false;
@@ -132,7 +138,17 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
             joinNext: true,
             children: [
               if (_loading)
-                const SizedBox.shrink()
+                Semantics(
+                  liveRegion: true,
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LinearProgressIndicator(key: Key('planRig.loading')),
+                      SizedBox(height: AppSpacing.sm),
+                      Text('Loading rigs…'),
+                    ],
+                  ),
+                )
               else if (_error != null)
                 LoadFailureView(
                   action: 'load the rigs',
@@ -188,7 +204,7 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
                   key: const Key('planRig.manage'),
                   onPressed: _manage,
                   child: Text(
-                    _rigs.isEmpty && !_loading
+                    _rigs.isEmpty && !_loading && _error == null
                         ? AppWords.addRig
                         : 'Add or manage rigs',
                   ),

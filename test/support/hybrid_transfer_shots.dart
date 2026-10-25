@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/location_profile.dart';
+import 'package:astroplan/domain/models/night_weather.dart';
 import 'package:astroplan/domain/models/weather_snapshot.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/sites/site_editor_screen.dart';
@@ -120,18 +121,24 @@ final Map<String, HybridStep> hybridShots = {
     await c.push(AppRouter.selectSite);
   },
   'home_long': (c) async {
+    final site = c.fixture.vm.site.sites.singleWhere(
+      (site) => site.latitude == 50.4 && site.longitude == 30.6,
+    );
     await c.tester.runAsync(
       () => c.fixture.vm.site.saveSite(
         LocationProfile(
-          id: 0,
+          id: site.id,
           name: '\u0414\u043e\u0432\u0433\u0430 \u043d\u0430\u0437\u0432\u0430 \u043c\u0456\u0441\u0446\u044f \u0434\u043b\u044f \u0430\u0441\u0442\u0440\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u0438\u0445 \u0441\u043f\u043e\u0441\u0442\u0435\u0440\u0435\u0436\u0435\u043d\u044c \u0431\u0456\u043b\u044f \u043c\u0456\u0441\u0442\u0430',
-          latitude: 50.4,
-          longitude: 30.6,
-          timeZoneId: 'Europe/Kyiv',
+          latitude: site.latitude,
+          longitude: site.longitude,
+          timeZoneId: site.timeZoneId,
         ),
       ),
     );
+    await c.tester.runAsync(() => c.fixture.vm.site.selectSite(site.id));
     await c.go(AppRouter.tonight);
+    expect(c.fixture.vm.site.activeSite!.id, site.id);
+    expect(find.text(c.fixture.vm.site.activeSite!.name), findsWidgets);
   },
   'geo_add': (c) async {
     await c.go(AppRouter.tonight);
@@ -177,6 +184,11 @@ final Map<String, HybridStep> hybridShots = {
   },
   'plan_c': (c) async {
     await c.push(AppRouter.session());
+    await c.scrollBy(10000, key: 'planner.scroll');
+  },
+  'plan_sky_open': (c) async {
+    await hybridShots['plan_c']!(c);
+    await c.tapKey('section.planner.sky');
     await c.scrollBy(10000, key: 'planner.scroll');
   },
   'night': (c) => c.push(AppRouter.nightMoon),
@@ -249,11 +261,18 @@ final Map<String, HybridStep> hybridShots = {
   },
   // app.js `unknown`: the forecast failed; Home's Weather row says so.
   'home_wxfail': (c) async {
-    await c.push(AppRouter.weather);
-    c.fixture.forecast.failure = WeatherFailure.unavailable;
-    await c.tapKey('weather.refresh');
-    c.fixture.forecast.failure = null;
     await c.go(AppRouter.tonight);
+    c.fixture.forecast.failure = WeatherFailure.unavailable;
+    await c.tester.runAsync(c.fixture.vm.conditions.refreshWeather);
+    await c.settle();
+    expect(
+      c.fixture.vm.nightWeather,
+      isA<NightWeatherAvailable>().having(
+        (state) => state.refreshFailed,
+        'root refresh failure',
+        WeatherFailure.unavailable,
+      ),
+    );
     await c.scrollBy(1000);
   },
   // conditions.js `stale` / `partial` / `no-dark` (HT-W03).
@@ -339,16 +358,30 @@ final Map<String, HybridStep> hybridShots = {
       await c.settle();
       if (dy > 0) await c.scrollBy(dy);
     },
-  for (final (name, dy) in [('result', 0.0), ('result_b', 650.0)])
+  for (final (name, dy) in [
+    ('result', 0.0),
+    ('result_b', 650.0),
+    ('result_unselected', 0.0),
+    ('result_asPlanned', 0.0),
+    ('result_notDone', 0.0),
+  ])
     name: (c) async {
       await c.tester.runAsync(c.fixture.seedLogbook);
       await c.go(AppRouter.sessions);
       unawaited(
         AppRouter.router.push(
-          AppRouter.results(c.fixture.logbookIds['M31 2026-10-12']!),
+          AppRouter.results(
+            c.fixture.logbookIds[name == 'result_unselected'
+                ? 'M33 2026-10-15'
+                : 'M31 2026-10-12']!,
+          ),
         ),
       );
       await c.settle();
+      expect(find.byKey(const Key('results.outcomeGroup')), findsOneWidget);
+      if (name == 'result_asPlanned' || name == 'result_notDone') {
+        await c.tapKey('results.outcome.${name.substring(7)}');
+      }
       if (dy > 0) await c.scrollBy(dy, key: 'results.scroll');
     },
   'library': (c) async {

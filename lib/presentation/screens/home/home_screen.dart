@@ -288,7 +288,7 @@ class HomeScreen extends StatelessWidget {
                                   '${siteVm.locationNameAttribution == null ? '' : ' · ${siteVm.locationNameAttribution}'}',
                               onTap: () => context.push(AppRouter.selectSite),
                             ),
-                          const SkyDarknessWidget(),
+                          const SkyDarknessWidget(embedded: true),
                         ],
                       ),
                     ],

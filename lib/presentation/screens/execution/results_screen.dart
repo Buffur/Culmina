@@ -426,7 +426,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    if (_outcome == ResultOutcome.partly ||
+                        _outcome == ResultOutcome.notDone)
+                      const SizedBox(height: AppSpacing.md),
                     if (_outcome == ResultOutcome.partly)
                       DocumentSection(
                         key: const Key('results.framesGroup'),

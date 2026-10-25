@@ -640,6 +640,8 @@ class _NightSection extends StatelessWidget {
           [
             'Forecast for the dark hours',
             if (s != null && !s.complete) 'Partial coverage',
+            if (a.refreshFailed case final failure?)
+              'Refresh failed · cached forecast. ${WeatherText.failure(failure)}',
             switch (a.age) {
               WeatherAge.current => null,
               WeatherAge.aging => 'Aging snapshot',

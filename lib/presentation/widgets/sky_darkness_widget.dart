@@ -28,7 +28,10 @@ import '../../domain/services/night_view.dart';
 /// (ADR-019 §7) the Bortle picker, the sources and the light-pollution map
 /// link are one tap away; the summary states the values, or "Unknown".
 class SkyDarknessWidget extends StatelessWidget {
-  const SkyDarknessWidget({super.key});
+  const SkyDarknessWidget({super.key, this.embedded = false});
+
+  /// Whether the containing document group provides the outer frame and inset.
+  final bool embedded;
 
   /// The collapsed summary, a fact: "Bortle 4 · SQM 21.30 mag/arcsec²",
   /// "Unknown", and "not saved" for a transient position's value.
@@ -46,6 +49,34 @@ class SkyDarknessWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final siteVm = context.watch<SiteViewModel>();
 
+    final disclosure = CollapsibleSection(
+      sectionKey: PlannerSections.sky,
+      title: 'Sky darkness',
+      summary: FeatureScope.lightPollutionContext
+          ? summary(siteVm.skyDarkness)
+          : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (FeatureScope.lightPollutionContext) ...[
+            _BortleBadge(
+              bortleClass: siteVm.bortleClass,
+              onChanged: siteVm.setBortleClass,
+            ),
+            _SkyDarknessLine(
+              darkness: siteVm.skyDarkness,
+              hasSite: siteVm.activeSite != null,
+            ),
+            // TASK 7.4 (PD-05 option A): the external map, centred on
+            // the current position. Hidden without one — the London
+            // default is not the user's sky.
+            if (!siteVm.isDefaultLocation)
+              _MapLink(lat: siteVm.latitude, lon: siteVm.longitude),
+          ],
+        ],
+      ),
+    );
+    if (embedded) return disclosure;
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       clipBehavior: Clip.antiAlias,
@@ -54,33 +85,7 @@ class SkyDarknessWidget extends StatelessWidget {
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
         ),
-        child: CollapsibleSection(
-          sectionKey: PlannerSections.sky,
-          title: 'Sky darkness',
-          summary: FeatureScope.lightPollutionContext
-              ? summary(siteVm.skyDarkness)
-              : null,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (FeatureScope.lightPollutionContext) ...[
-                _BortleBadge(
-                  bortleClass: siteVm.bortleClass,
-                  onChanged: siteVm.setBortleClass,
-                ),
-                _SkyDarknessLine(
-                  darkness: siteVm.skyDarkness,
-                  hasSite: siteVm.activeSite != null,
-                ),
-                // TASK 7.4 (PD-05 option A): the external map, centred on
-                // the current position. Hidden without one — the London
-                // default is not the user's sky.
-                if (!siteVm.isDefaultLocation)
-                  _MapLink(lat: siteVm.latitude, lon: siteVm.longitude),
-              ],
-            ],
-          ),
-        ),
+        child: disclosure,
       ),
     );
   }
