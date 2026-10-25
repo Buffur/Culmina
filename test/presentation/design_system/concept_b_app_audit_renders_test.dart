@@ -608,7 +608,8 @@ void main() {
         File('$file.json').writeAsStringSync(
           const JsonEncoder.withIndent('  ').convert({
             'name': name,
-            'captureUtc': DateTime.now().toUtc().toIso8601String(),
+            // The capture runner supplies real provenance; absent stays unknown.
+            'captureUtc': Platform.environment['CULMINA_RENDER_CAPTURE_UTC'],
             'captureKind': 'native Flutter host',
             'sourceHead': Platform.environment['CULMINA_RENDER_HEAD'],
             'inputManifest':

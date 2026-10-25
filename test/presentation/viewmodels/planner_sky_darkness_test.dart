@@ -144,7 +144,6 @@ void main() {
   // are context on the opportunity and never change the windows.
   test('Bortle and SQM are context only: no verdict, same windows', () async {
     final dark = await siteWith(bortle: 2);
-    final bright = await siteWith(bortle: 8, sqm: 17.0);
     final vm = await build();
     await vm.setTarget(
       const model.AstroTarget(
@@ -159,12 +158,29 @@ void main() {
     await vm.selectSite(dark);
     final darkWindows = vm.imagingOpportunity!.visibilityWindows;
     expect(vm.imagingOpportunity!.skyDarkness!.bortleClass, 2);
+    expect(darkWindows, isNotEmpty);
 
-    await vm.selectSite(bright);
+    // Change only sky context at the same saved position: two identical
+    // positions are correctly refused by the repository's duplicate guard.
+    final original = (await locations.getLocationById(dark))!;
+    await locations.updateLocation(
+      domain.LocationProfile.userEdit(
+        original: original,
+        name: original.name,
+        latitude: original.latitude,
+        longitude: original.longitude,
+        elevation: original.elevation,
+        bortleClass: 8,
+        sqm: 17.0,
+        today: CalendarDate(2026, 9, 1),
+      ),
+    );
+    await vm.selectSite(dark);
     final o = vm.imagingOpportunity!;
     expect(o.skyDarkness!.bortleClass, 8);
     expect(o.skyDarkness!.sqm, 17.0);
     expect(o.visibilityWindows, darkWindows);
+    expect(await locations.getLocations(), hasLength(1));
   });
 
   test('Bortle for a transient position is marked as not saved', () async {
