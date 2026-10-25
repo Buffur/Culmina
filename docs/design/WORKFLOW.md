@@ -44,6 +44,18 @@ This is the canonical design-mode routing for the five Culmina design skills and
 
 No mode grants Git delivery, build, installation or device/data permissions. Use the current task's permissions and V1–V8 rather than a recipe's example workflow.
 
+### Systemic review route
+
+For a separately owner-authorized systemic UI/UX task, use **Comprehensive review → Root-cause grouping → Bounded owner decision → Implementation → Native Visual QA** within the modes above. This route prepares future work; reading it or completing infrastructure maintenance does not start an application audit.
+
+1. **Review — comprehensive review:** freeze the requested criteria, scale, themes, screen families and relevant route/inline-child states. Analyze each screen's composition, hierarchy, task/action ownership and information grouping before isolated styling details. Inspect actual Flutter sources, shared-component contracts and their confirmed callers; use actual renders/interactions when required and authorized. Keep implementation bugs, accepted exceptions, optional refinements and unresolved design decisions distinct.
+2. **Review — root-cause grouping:** group repeated findings by their responsible shared component, caller contract or state owner before proposing fixes. Identify affected callers and genuine local exceptions; do not apply a global token/component change to solve one caller. Keep findings, provenance and per-ID dispositions in the existing reference/observation records, with current operational state only in PROGRESS.
+3. **Explore when needed — bounded owner decision:** use only approved or relevant inspected references and retain their evidence limits. Present one concrete package with named IDs/callers, expected behavior, preserved contracts, exclusions, verification and unresolved choices. Significant composition, navigation or visual alternatives require explicit owner approval; research and recommendations do not adopt them. Existing approved corrections need no renewed approval for routine implementation choices.
+4. **Implement/Fix — implementation:** execute the approved package autonomously within its exact boundary. Inspect shared callers, preserve data/science, persistence and accessibility contracts, and update directly invalidated guidance. New material alternatives remain owner decisions while independent approved work continues.
+5. **Implement/Fix verification, then Review — native visual QA:** verify the resulting real Flutter states and relevant Android behavior under V1–V8 and current device permissions. Apply the [comparison provenance checks](#visual-comparisons); reject wrong-route, stale-source, failed-fixture, transition-time or otherwise invalid evidence. Browser references, host renders, emulator/physical observations and owner visual acceptance establish different things. Record exact coverage and remaining criteria; passing tests or an approved implementation package does not grant owner visual acceptance. Stop at the package handoff.
+
+Use [BASELINE](BASELINE.md) to distinguish accepted intent, current native implementation and historical browser parity. Read [the reference library](references/UI_REFERENCE_LIBRARY.md) for the relevant principle/evidence and [OWNER_INBOX](qa/OWNER_INBOX.md) for named finding dispositions, without copying either into a second register. A comprehensive task may need several of the existing skills as its verified findings cross their contracts; an ordinary local fix keeps the selective route below.
+
 ## Five skills, loaded selectively
 
 Start with the task's surface; open one relevant skill and only its applicable references. Load another skill only when the actual change crosses its contract.

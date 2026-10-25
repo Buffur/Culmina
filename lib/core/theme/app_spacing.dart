@@ -1,7 +1,9 @@
 /// The spacing scale, in logical pixels (documented in S5.1; see
-/// `docs/DESIGN_SYSTEM.md`). The rhythm: [md] is a screen's side padding
-/// and a card's inner padding; [lg] separates sections; [sm] separates rows
-/// within a section; [xs] separates a label from its value.
+/// `docs/DESIGN_SYSTEM.md`). Component padding and page gutters are distinct:
+/// [md] is the usual card's inner padding, not a universal page gutter.
+/// Current page callers generally use [gutter], with documented local exceptions.
+/// [lg] separates sections; [sm] separates rows within a section;
+/// [xs] separates a label from its value.
 class AppSpacing {
   static const double xs = 4.0;
   static const double sm = 8.0;

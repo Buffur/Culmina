@@ -31,7 +31,7 @@ with an explanation. Use these steps in the release notes of the first Culmina r
 - Application id `io.github.buffur.culmina`, label "Culmina" (RA.D ID-1 to ID-3; S13.2). Builds
   before S13.2 used `io.github.chacha12.astroplanner` ("Astro Planner"); see "Moving from Astro
   Planner" below.
-- `minSdk` 24 and `targetSdk` 36 come from Flutter 3.47.4's defaults. Google Play requires
+- `minSdk` 24 and `targetSdk` 36 come from Flutter 3.47.8's defaults. Google Play requires
   target API 36 for new apps and updates from 31 August 2026.
 - R8 (code and resource shrinking) is on for release builds, as the Flutter Gradle plugin
   sets it; the mapping file and native debug symbols go into the bundle's

@@ -9088,10 +9088,11 @@ class $$DevicesTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (cameraModulesRefs)
-                    await $_getPrefetchedData<
+                    await $_getPrefetchedDataByColumns<
                       Device,
                       $DevicesTable,
-                      CameraModule
+                      CameraModule,
+                      $CameraModulesTable
                     >(
                       currentTable: table,
                       referencedTable: $$DevicesTableReferences
@@ -9101,8 +9102,8 @@ class $$DevicesTableTableManager
                         table,
                         p0,
                       ).cameraModulesRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.deviceId == item.id),
+                      currentColumn: 'id',
+                      referencedColumn: 'device_id',
                       typedResults: items,
                     ),
                 ];
@@ -9971,10 +9972,11 @@ class $$CameraModulesTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (opticalRigsRefs)
-                    await $_getPrefetchedData<
+                    await $_getPrefetchedDataByColumns<
                       CameraModule,
                       $CameraModulesTable,
-                      OpticalRig
+                      OpticalRig,
+                      $OpticalRigsTable
                     >(
                       currentTable: table,
                       referencedTable: $$CameraModulesTableReferences
@@ -9985,10 +9987,8 @@ class $$CameraModulesTableTableManager
                             table,
                             p0,
                           ).opticalRigsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.cameraModuleId == item.id,
-                          ),
+                      currentColumn: 'id',
+                      referencedColumn: 'camera_module_id',
                       typedResults: items,
                     ),
                 ];
@@ -10584,10 +10584,11 @@ class $$OpticalRigsTableTableManager
                   getPrefetchedDataCallback: (items) async {
                     return [
                       if (sessionLogsRefs)
-                        await $_getPrefetchedData<
+                        await $_getPrefetchedDataByColumns<
                           OpticalRig,
                           $OpticalRigsTable,
-                          SessionLog
+                          SessionLog,
+                          $SessionLogsTable
                         >(
                           currentTable: table,
                           referencedTable: $$OpticalRigsTableReferences
@@ -10598,10 +10599,8 @@ class $$OpticalRigsTableTableManager
                                 table,
                                 p0,
                               ).sessionLogsRefs,
-                          referencedItemsForCurrentItem: (
-                            item,
-                            referencedItems,
-                          ) => referencedItems.where((e) => e.rigId == item.id),
+                          currentColumn: 'id',
+                          referencedColumn: 'rig_id',
                           typedResults: items,
                         ),
                     ];
@@ -11046,10 +11045,11 @@ class $$LocationProfilesTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (sessionLogsRefs)
-                    await $_getPrefetchedData<
+                    await $_getPrefetchedDataByColumns<
                       LocationProfile,
                       $LocationProfilesTable,
-                      SessionLog
+                      SessionLog,
+                      $SessionLogsTable
                     >(
                       currentTable: table,
                       referencedTable: $$LocationProfilesTableReferences
@@ -11060,8 +11060,8 @@ class $$LocationProfilesTableTableManager
                             table,
                             p0,
                           ).sessionLogsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.siteId == item.id),
+                      currentColumn: 'id',
+                      referencedColumn: 'site_id',
                       typedResults: items,
                     ),
                 ];
@@ -11444,10 +11444,11 @@ class $$AstroTargetsTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (sessionLogsRefs)
-                    await $_getPrefetchedData<
+                    await $_getPrefetchedDataByColumns<
                       AstroTarget,
                       $AstroTargetsTable,
-                      SessionLog
+                      SessionLog,
+                      $SessionLogsTable
                     >(
                       currentTable: table,
                       referencedTable: $$AstroTargetsTableReferences
@@ -11458,8 +11459,8 @@ class $$AstroTargetsTableTableManager
                             table,
                             p0,
                           ).sessionLogsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.targetId == item.id),
+                      currentColumn: 'id',
+                      referencedColumn: 'target_id',
                       typedResults: items,
                     ),
                 ];
@@ -12824,10 +12825,11 @@ class $$SessionLogsTableTableManager
                   getPrefetchedDataCallback: (items) async {
                     return [
                       if (captureBlocksRefs)
-                        await $_getPrefetchedData<
+                        await $_getPrefetchedDataByColumns<
                           SessionLog,
                           $SessionLogsTable,
-                          CaptureBlock
+                          CaptureBlock,
+                          $CaptureBlocksTable
                         >(
                           currentTable: table,
                           referencedTable: $$SessionLogsTableReferences
@@ -12838,17 +12840,16 @@ class $$SessionLogsTableTableManager
                                 table,
                                 p0,
                               ).captureBlocksRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.sessionLogId == item.id,
-                              ),
+                          currentColumn: 'id',
+                          referencedColumn: 'session_log_id',
                           typedResults: items,
                         ),
                       if (sessionEventsRefs)
-                        await $_getPrefetchedData<
+                        await $_getPrefetchedDataByColumns<
                           SessionLog,
                           $SessionLogsTable,
-                          SessionEvent
+                          SessionEvent,
+                          $SessionEventsTable
                         >(
                           currentTable: table,
                           referencedTable: $$SessionLogsTableReferences
@@ -12859,10 +12860,8 @@ class $$SessionLogsTableTableManager
                                 table,
                                 p0,
                               ).sessionEventsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.sessionLogId == item.id,
-                              ),
+                          currentColumn: 'id',
+                          referencedColumn: 'session_log_id',
                           typedResults: items,
                         ),
                     ];
@@ -13559,10 +13558,11 @@ class $$CaptureBlocksTableTableManager
                   getPrefetchedDataCallback: (items) async {
                     return [
                       if (sessionEventsRefs)
-                        await $_getPrefetchedData<
+                        await $_getPrefetchedDataByColumns<
                           CaptureBlock,
                           $CaptureBlocksTable,
-                          SessionEvent
+                          SessionEvent,
+                          $SessionEventsTable
                         >(
                           currentTable: table,
                           referencedTable: $$CaptureBlocksTableReferences
@@ -13573,10 +13573,8 @@ class $$CaptureBlocksTableTableManager
                                 table,
                                 p0,
                               ).sessionEventsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.blockId == item.id,
-                              ),
+                          currentColumn: 'id',
+                          referencedColumn: 'block_id',
                           typedResults: items,
                         ),
                     ];

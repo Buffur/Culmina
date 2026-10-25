@@ -53,7 +53,7 @@ sky-navigation or camera/mount-control scope.
 
 ## Development
 
-The repository's CI configuration pins **Flutter 3.47.4**;
+The repository's CI configuration pins **Flutter 3.47.8** (bundled Dart 3.13.7);
 [pubspec.yaml](pubspec.yaml) requires **Dart ^3.13.3**. Use the Android toolchain
 and a connected Android device or emulator to run the application. iOS is deferred.
 
@@ -64,7 +64,7 @@ flutter run -d <device-id>
 ```
 
 The application uses Provider with screen-scoped ViewModels, `go_router`, and
-SQLite through Drift (**schema v25**; see [the data model](docs/DATA_MODEL.md)). Presentation, domain logic and data access
+SQLite through Drift (**schema v27**; see [the data model](docs/DATA_MODEL.md)). Presentation, domain logic and data access
 are separated; astronomy calculations remain independent of Flutter UI code.
 
 Run the full quality gate with:
@@ -77,7 +77,7 @@ It checks encoding, formatting, static analysis, unit/widget tests and host E2E.
 Device validation and opt-in real metadata samples are separate evidence; a host
 pass does not substitute for them. Current results and their limitations live in
 [Refinement Progress](docs/refinement/PROGRESS.md). Verification requirements and
-evidence-reuse rules are defined in [CLAUDE.md](CLAUDE.md).
+evidence-reuse rules are defined in [VERIFICATION_POLICY](docs/VERIFICATION_POLICY.md).
 
 For Android signing, bundles and release checks, follow
 [RELEASE.md](docs/RELEASE.md).

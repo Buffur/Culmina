@@ -26,7 +26,8 @@ Full execution uses three unit/widget jobs and one host job per host-capable
 integration file, plus an independent static-check job for encoding, format
 and analysis through `dart run tool/check.dart --checks-only`. Fail-fast is
 disabled; unit/host jobs do not depend on static success, so tests still run
-after a static failure. SDK 3.47.4 and Ubuntu 24.04 remain pinned. The existing
+after a static failure. Flutter 3.47.8 (bundled Dart 3.13.7) and Ubuntu 24.04 are pinned;
+the dated measurements below retain their original SDK. The existing
 Flutter action now caches both SDK and pub dependencies, with its default
 SDK/OS/architecture and lockfile-aware pub keys. Build/test outputs are not cached.
 

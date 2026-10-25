@@ -294,8 +294,7 @@ still merges over them.
   - info `Icons.info_outline`;
   - expand `Icons.expand_more` / collapse `Icons.expand_less`;
   - open a detail `Icons.chevron_right`.
-- The capture plan's current `drag_handle` and red delete icon (08 §14) change when Stage 6 adopts
-  this set.
+- **Historical Stage 5 adoption note:** the following observation predates later capture-plan implementations: “The capture plan's current `drag_handle` and red delete icon (08 §14) change when Stage 6 adopts this set.” Inspect current capture-plan source/callers and [BASELINE](design/BASELINE.md) for implemented controls; this note is not pending work.
 
 ## 7. Words (S5.3)
 
@@ -488,6 +487,8 @@ from the bootstrap error reloads.
 
 ### Confirmation, feedback and deleting (S5.8; RD-09 = M + S1, DECISIONS E.1)
 
+The interaction contracts below remain applicable. References to “today's” dialogs and adoption in Stages 6/8/9 preserve the original rollout context; they do not describe current unfinished work or override later approved caller-specific presentation. Inspect actual callers and [BASELINE](design/BASELINE.md) for current adoption.
+
 **Which pattern for which action:**
 
 | Action | Pattern |
@@ -536,6 +537,8 @@ from the bootstrap error reloads.
 
 ## 8. Known gaps, for adoption
 
+**Historical Stage 5 snapshot, preserved for provenance.** The counts, colours, missing adopters and future-tense instructions below describe that snapshot, not current unfinished work. Subsequent Stage 6–9 adoption, Hybrid transfer, Concept B and approved corrections supersede it within their scopes. For the current contract, use §§2–7a with actual sources and [BASELINE](design/BASELINE.md); current pending work is only in [PROGRESS](refinement/PROGRESS.md). Do not execute this list as a backlog.
+
 What S5.1 and S5.2 changed app-wide, and what they leave to the Stages that redesign screens:
 - **Changed app-wide by the theme:**
   - default text is the primary role (light `#37352F` instead of black; dark `#EBEBEA` instead of
@@ -575,6 +578,8 @@ What S5.1 and S5.2 changed app-wide, and what they leave to the Stages that rede
     adopt `StatusBlock` and `PlanStateLabel` in P6.1, P6.3, P6.6 and P8.5.
 
 ## 9. Adoption (S5.9)
+
+**Historical adoption map.** P-/S-IDs, task mappings, retired terms and rendered-evidence references below preserve the original Stage 5–9 plan and recorded updates. Future-tense or unmarked rows are not evidence of a current gap, and “today” in a table refers to its original snapshot. [BASELINE](design/BASELINE.md) routes the completed Concept B/Q1–Q6/VQA-030–032 implementation and remaining acceptance limits; [PROGRESS](refinement/PROGRESS.md) owns the next permitted action. Read this section only for adoption provenance, without rewriting its historical tables or restarting those stages.
 
 Stage 5 changed no screen's structure or wording. The theme (§2–§6) already applies everywhere; the
 words, components and patterns below are adopted by the Stage that redesigns each screen. The
