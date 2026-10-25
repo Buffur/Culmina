@@ -126,10 +126,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _close();
   }
 
-  Future<void> _save(SettingsViewModel vm) async {
+  Future<void> _save(SettingsViewModel vm, {bool closeAfterSave = true}) async {
     if (_saving) return;
     if (!_dirty && !vm.planningPreferencesUnsaved) {
-      _close();
+      if (closeAfterSave) _close();
       return;
     }
     setState(() => _saving = true);
@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
     if (saved) {
       showDone(context, 'Planning defaults saved');
-      _close();
+      if (closeAfterSave) _close();
     }
   }
 
@@ -200,6 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     // TASK 16.3 (owner decision): opt-in, off by default.
                     HybridSwitchRow(
                       key: const Key('settings.placeNames'),
+                      divider: false,
                       title: 'Look up place names',
                       description:
                           'Optional: the app sends the chosen coordinates to '
@@ -233,6 +234,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     const CollapsibleSection(
                       key: Key('settings.privacyApp'),
+                      topRule: false,
                       sectionKey: 'settings.privacyApp',
                       title: 'What leaves the device in the app',
                       child: SettingsCopy(SettingsScreen.privacyText),
@@ -345,11 +347,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             'These settings are in use but not saved: after a restart the '
             'last saved ones return. Retry saves them as shown.',
         retryKey: const Key('settings.retry'),
-        onRetry: () => runWithFeedback(
-          context,
-          'save the settings',
-          settingsVm.retryPlanningPreferences,
-        ),
+        onRetry: () => _save(settingsVm, closeAfterSave: false),
       ),
     const SettingsCopy(
       'Plan defaults. Saved snapshots stay unchanged.',
@@ -760,7 +758,7 @@ class _SettingsIndex extends StatelessWidget {
                 summary: units == null
                     ? 'Theme, field mode and display units'
                     : '${fieldMode ? 'Red field mode' : display!.appearance.label}'
-                          ' · text $textSize · ${units.temperature.symbol}, '
+                          ' · text $textSize\n${units.temperature.symbol}, '
                           '${units.wind.symbol}, ${units.elevation.symbol}',
                 onTap: () => open(SettingsSection.appearance),
               ),
@@ -777,6 +775,7 @@ class _SettingsIndex extends StatelessWidget {
               ),
               SettingsRow(
                 key: const Key('settings.open.privacy'),
+                divider: false,
                 icon: HybridIcons.pin,
                 title: 'Privacy',
                 summary: 'Place-name lookup ${placeNames ? 'on' : 'off'}',
@@ -855,7 +854,7 @@ class _AppearancePage extends StatelessWidget {
                 top: AppSpacing.xs,
               ),
             ],
-            const FieldModeTile(),
+            const FieldModeTile(divider: false),
           ],
         ),
         const SizedBox(height: AppSpacing.md),

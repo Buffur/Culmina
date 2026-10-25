@@ -154,6 +154,7 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                             if (a.alias != name) a.alias,
                         ];
                         return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             FactRows(key: const Key('targetDetail.facts'), [
                               ('Designation', t.catalogId, null),
@@ -186,12 +187,14 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                                     ? 'Not in the catalogue; never estimated.'
                                     : null,
                               ),
-                              (
-                                'Source',
-                                "OpenNGC, via the app's bundled catalogue",
-                                null,
-                              ),
                             ]),
+                            const SettingsHint('Source', top: AppSpacing.sm),
+                            const SettingsCopy(
+                              "OpenNGC, via the app's bundled catalogue",
+                              key: Key('targetDetail.source'),
+                              primary: true,
+                              top: AppSpacing.xs,
+                            ),
                             if (failed)
                               Align(
                                 alignment: Alignment.centerLeft,

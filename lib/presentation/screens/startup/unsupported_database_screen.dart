@@ -20,10 +20,14 @@ class UnsupportedDatabaseApp extends StatelessWidget {
     required this.newerThanApp,
     required this.foundVersion,
     required this.onReset,
+    this.isFieldMode = false,
+    this.themeMode = ThemeMode.system,
   });
 
   final bool newerThanApp;
   final int foundVersion;
+  final bool isFieldMode;
+  final ThemeMode themeMode;
 
   /// Starts with fresh data; only offered below the floor.
   final Future<void> Function() onReset;
@@ -31,8 +35,12 @@ class UnsupportedDatabaseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: AppIdentity.appName,
-    theme: AppTheme.light,
-    darkTheme: AppTheme.dark,
+    theme: isFieldMode ? AppTheme.fieldTheme : AppTheme.light,
+    darkTheme: isFieldMode ? AppTheme.fieldTheme : AppTheme.dark,
+    themeMode: themeMode,
+    builder: (context, child) => isFieldMode
+        ? ColorFiltered(colorFilter: AppTheme.fieldFilter, child: child!)
+        : child!,
     debugShowCheckedModeBanner: false,
     home: UnsupportedDatabaseScreen(
       newerThanApp: newerThanApp,

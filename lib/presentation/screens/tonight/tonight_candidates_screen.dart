@@ -411,6 +411,8 @@ class _CandidateRow extends StatelessWidget {
       button: true,
       label: '$title, $caption, $usable usable',
       excludeSemantics: true,
+      enabled: true,
+      onTap: onTap,
       child: InkWell(
         onTap: onTap,
         child: ConstrainedBox(

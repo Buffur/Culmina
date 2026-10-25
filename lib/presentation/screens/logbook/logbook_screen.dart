@@ -102,6 +102,7 @@ class _LogbookScreenState extends State<LogbookScreen> {
 
   /// Every saved entry, unfiltered (the count's whole).
   int? _total;
+  int _readGeneration = 0;
 
   @override
   void initState() {
@@ -121,16 +122,18 @@ class _LogbookScreenState extends State<LogbookScreen> {
 
   void _refresh() {
     final sessions = context.read<SessionsViewModel>();
+    final filter = sessions.filter;
+    final generation = ++_readGeneration;
     setState(() {
-      _sessionsFuture = sessions.saved(sessions.filter).then((list) async {
+      _sessionsFuture = sessions.saved(filter).then((list) async {
         final results = await sessions.reconciliations(list);
         final options = await sessions.filterOptions();
         // "2 of 6 entries": the filters narrow the query, so the whole
         // Logbook is counted apart.
-        final total = sessions.filter.isEmpty
+        final total = filter.isEmpty
             ? list.length
             : (await sessions.saved()).length;
-        if (mounted) {
+        if (mounted && generation == _readGeneration) {
           setState(() {
             _results = results;
             _options = options;
@@ -721,44 +724,39 @@ class _ProgressRow extends StatelessWidget {
         child: InkWell(
           key: const Key('logbook.progress'),
           onTap: onTap,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: p.border)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 2,
-                      children: [
-                        Text(
-                          AppWords.progressByTarget,
-                          style: AppTypography.rowTitle.copyWith(
-                            color: p.textPrimary,
-                          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 2,
+                    children: [
+                      Text(
+                        AppWords.progressByTarget,
+                        style: AppTypography.rowTitle.copyWith(
+                          color: p.textPrimary,
                         ),
-                        Text(
-                          'Integration so far, from your results',
-                          style: AppTypography.body.copyWith(
-                            height: 1.6,
-                            color: p.textSecondary,
-                          ),
+                      ),
+                      Text(
+                        'Integration so far, from your results',
+                        style: AppTypography.body.copyWith(
+                          height: 1.6,
+                          color: p.textSecondary,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: AppSpacing.md),
-                  HybridIcon(
-                    HybridIcons.next,
-                    size: MediaQuery.textScalerOf(context).scale(18),
-                    strokeWidth: 1.7,
-                    color: p.textSecondary,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                HybridIcon(
+                  HybridIcons.next,
+                  size: MediaQuery.textScalerOf(context).scale(18),
+                  strokeWidth: 1.7,
+                  color: p.textSecondary,
+                ),
+              ],
             ),
           ),
         ),

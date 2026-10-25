@@ -282,11 +282,16 @@ class _CoordinateEntryDialogState extends State<_CoordinateEntryDialog> {
     if (!_formKey.currentState!.validate()) return;
     Navigator.of(context).pop(
       LatLng(
-        CoordinateInput.parse(_latitude.text)!,
-        CoordinateInput.parse(_longitude.text)!,
+        _coordinateValue(_latitude, widget.initial?.latitude),
+        _coordinateValue(_longitude, widget.initial?.longitude),
       ),
     );
   }
+
+  double _coordinateValue(TextEditingController field, double? original) =>
+      original != null && field.text == original.toStringAsFixed(5)
+      ? original
+      : CoordinateInput.parse(field.text)!;
 
   @override
   Widget build(BuildContext context) {

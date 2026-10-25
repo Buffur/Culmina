@@ -205,9 +205,10 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
       for (final t in _targets)
         if (t.isCatalogEntry) t,
     ];
-    Widget row(AstroTarget target) {
+    Widget row(AstroTarget target, {required bool last}) {
       final tile = LibraryRow(
         key: Key('targets.row.${target.id}'),
+        divider: !last,
         title: _targetLabel(target),
         caption: TargetTypes.isMoving(target.type)
             ? '${target.type} · ${TargetTypes.movingWarning}'
@@ -304,7 +305,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
                 joinPrevious: true,
                 joinNext: i < own.length - 1,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                children: [row(t)],
+                children: [row(t, last: i == own.length - 1)],
               ),
             const SizedBox(height: AppSpacing.md),
             DocumentSection(
@@ -329,7 +330,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
                 joinPrevious: true,
                 joinNext: i < catalogue.length - 1,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                children: [row(t)],
+                children: [row(t, last: i == catalogue.length - 1)],
               ),
           ],
         ],

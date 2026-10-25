@@ -295,9 +295,11 @@ class _Disclosure extends StatefulWidget {
     required this.child,
     this.summary,
     this.top = AppSpacing.md,
+    this.topRule = true,
   });
 
   final double top;
+  final bool topRule;
   final String id;
   final String title;
   final String? summary;
@@ -315,6 +317,7 @@ class _DisclosureState extends State<_Disclosure> {
     padding: EdgeInsets.only(top: widget.top),
     child: CollapsibleSection(
       sectionKey: widget.id,
+      topRule: widget.topRule,
       title: widget.title,
       summary: widget.summary,
       open: _open,
@@ -577,6 +580,7 @@ class _SnapshotSections extends StatelessWidget {
       return _Disclosure(
         top: 0,
         key: const Key('detail.noSnapshot'),
+        topRule: false,
         id: 'logbook.snapshot',
         title: title,
         summary: 'Unavailable: not saved or unreadable',
@@ -617,6 +621,7 @@ class _SnapshotSections extends StatelessWidget {
     return _Disclosure(
       top: 0,
       key: const Key('detail.snapshot'),
+      topRule: false,
       id: 'logbook.snapshot',
       title: title,
       summary: 'Read-only night, site, target and rig snapshot',
@@ -961,6 +966,7 @@ class _Export extends StatelessWidget {
       child: _Disclosure(
         top: 0,
         key: const Key('detail.exportSection'),
+        topRule: false,
         id: 'logbook.export',
         title: 'Export this entry',
         child: Column(

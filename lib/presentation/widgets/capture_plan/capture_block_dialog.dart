@@ -1212,6 +1212,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                 BlockDisclosure(
                                   key: const Key('blockDialog.details'),
                                   title: 'Details',
+                                  topRule: false,
                                   summary: detailsSummary,
                                   open: _details,
                                   onToggle: () =>
@@ -1235,7 +1236,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                                 'blockDialog.policy',
                                               ),
                                               initialValue: _policy,
-                                              isExpanded: true, // S7.2b: wraps at 200 % text
+                                              isExpanded: true,
+                                              isDense: false,
+                                              itemHeight: null,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyLarge,

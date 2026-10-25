@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -473,77 +474,136 @@ class _BlockListState extends State<_BlockList> {
                               ),
                             ),
                           const SizedBox(height: 8),
-                          // plan.js `.block-actions`: Edit (120), then the
-                          // moves and Remove pushed to the end, 8 apart; on
-                          // a narrow line (large text) the group wraps below.
-                          Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runSpacing: 8,
-                            children: [
-                              ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  minWidth: 120,
-                                ),
-                                child: OutlinedButton(
-                                  key: Key('capture.edit.$index'),
-                                  onPressed: () => _edit(index, block),
-                                  child: Semantics(
-                                    label:
-                                        'Edit block ${index + 1}, ${BlockText.type(block.frameType)}',
-                                    excludeSemantics: true,
-                                    child: const Text('Edit'),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final theme = Theme.of(context);
+                              final direction = Directionality.of(context);
+                              final scaler = MediaQuery.textScalerOf(context);
+                              double labelWidth(String value, TextStyle style) {
+                                final painter = TextPainter(
+                                  text: TextSpan(text: value, style: style),
+                                  textDirection: direction,
+                                  textScaler: scaler,
+                                )..layout();
+                                final width = painter.width;
+                                painter.dispose();
+                                return width;
+                              }
+
+                              final editStyle = theme.outlinedButtonTheme.style;
+                              final editPadding =
+                                  editStyle?.padding
+                                      ?.resolve(const <WidgetState>{})
+                                      ?.resolve(direction)
+                                      .horizontal ??
+                                  32;
+                              final editMinimum = math.max(
+                                48.0,
+                                labelWidth(
+                                      'Edit',
+                                      editStyle?.textStyle?.resolve(
+                                            const <WidgetState>{},
+                                          ) ??
+                                          theme.textTheme.labelLarge!,
+                                    ) +
+                                    editPadding,
+                              );
+                              final trailingWidth =
+                                  2 * 48 +
+                                  2 * 8 +
+                                  math.max(
+                                    48.0,
+                                    labelWidth(
+                                          'Remove',
+                                          theme.textButtonTheme.style?.textStyle
+                                                  ?.resolve(
+                                                    const <WidgetState>{},
+                                                  ) ??
+                                              theme.textTheme.labelLarge!,
+                                        ) +
+                                        24,
+                                  );
+                              final fits =
+                                  constraints.maxWidth >=
+                                  editMinimum + 8 + trailingWidth;
+                              final editWidth = fits
+                                  ? constraints.maxWidth - trailingWidth - 8
+                                  : math.min(
+                                      constraints.maxWidth,
+                                      math.max(120.0, editMinimum),
+                                    );
+                              return Wrap(
+                                alignment: WrapAlignment.spaceBetween,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 8,
+                                runSpacing: 8,
                                 children: [
-                                  _MoveButton(
-                                    key: Key('capture.moveUp.$index'),
-                                    icon: HybridIcons.up,
-                                    tooltip: 'Move block ${index + 1} up',
-                                    onPressed: index == 0
-                                        ? null
-                                        : () => viewModel.reorderCaptureBlocks(
-                                            index,
-                                            index - 1,
-                                          ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  _MoveButton(
-                                    key: Key('capture.moveDown.$index'),
-                                    icon: HybridIcons.downArrow,
-                                    tooltip: 'Move block ${index + 1} down',
-                                    onPressed: index == blocks.length - 1
-                                        ? null
-                                        : () => viewModel.reorderCaptureBlocks(
-                                            index,
-                                            index + 1,
-                                          ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  TextButton(
-                                    key: Key('capture.delete.$index'),
-                                    onPressed: () => _delete(index, block),
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: palette.textSecondary,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 8,
+                                  SizedBox(
+                                    width: editWidth,
+                                    child: OutlinedButton(
+                                      key: Key('capture.edit.$index'),
+                                      onPressed: () => _edit(index, block),
+                                      child: Semantics(
+                                        label:
+                                            'Edit block ${index + 1}, ${BlockText.type(block.frameType)}',
+                                        excludeSemantics: true,
+                                        child: const Text('Edit'),
                                       ),
-                                      minimumSize: const Size(48, 48),
                                     ),
-                                    child: Semantics(
-                                      label:
-                                          'Remove block ${index + 1}, ${BlockText.type(block.frameType)}',
-                                      excludeSemantics: true,
-                                      child: const Text('Remove'),
-                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      _MoveButton(
+                                        key: Key('capture.moveUp.$index'),
+                                        icon: HybridIcons.up,
+                                        tooltip: 'Move block ${index + 1} up',
+                                        onPressed: index == 0
+                                            ? null
+                                            : () => viewModel
+                                                  .reorderCaptureBlocks(
+                                                    index,
+                                                    index - 1,
+                                                  ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      _MoveButton(
+                                        key: Key('capture.moveDown.$index'),
+                                        icon: HybridIcons.downArrow,
+                                        tooltip: 'Move block ${index + 1} down',
+                                        onPressed: index == blocks.length - 1
+                                            ? null
+                                            : () => viewModel
+                                                  .reorderCaptureBlocks(
+                                                    index,
+                                                    index + 1,
+                                                  ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        key: Key('capture.delete.$index'),
+                                        onPressed: () => _delete(index, block),
+                                        style: TextButton.styleFrom(
+                                          foregroundColor:
+                                              palette.textSecondary,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                          minimumSize: const Size(48, 48),
+                                        ),
+                                        child: Semantics(
+                                          label:
+                                              'Remove block ${index + 1}, ${BlockText.type(block.frameType)}',
+                                          excludeSemantics: true,
+                                          child: const Text('Remove'),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ],
                       ),

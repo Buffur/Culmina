@@ -179,145 +179,162 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                       ),
                     ],
                   )
-                : ListView(
-                    key: ValueKey('conditions.page.$page'),
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.gutter,
-                      AppSpacing.md,
-                      AppSpacing.gutter,
-                      AppSpacing.xl,
-                    ),
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      // Keep the month at seven full touch targets. At 375 dp
+                      // this changes only the Moon page gutter, from 20 to 19.5.
+                      final gutter =
+                          page == 1 &&
+                              constraints.maxWidth >=
+                                  MoonCalendarSection.minMonthWidth
+                          ? ((constraints.maxWidth -
+                                        MoonCalendarSection.minMonthWidth) /
+                                    2)
+                                .clamp(0.0, AppSpacing.gutter)
+                          : AppSpacing.gutter;
+                      return ListView(
+                        key: ValueKey('conditions.page.$page'),
+                        padding: EdgeInsets.fromLTRB(
+                          gutter,
+                          AppSpacing.md,
+                          gutter,
+                          AppSpacing.xl,
+                        ),
                         children: [
-                          DocumentSection(
-                            key: const Key('conditions.contextGroup'),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // conditions.js browseHeader: "Kyiv outskirts ·
-                              // Europe/Kyiv"; a screen reader hears the full
-                              // zone rule.
-                              Semantics(
-                                label:
-                                    '${SiteLabel.of(site) ?? 'Observing site'}. '
-                                    '${ContextLine.zoneRule(browser.view.night.startUtc, zoneId: site.displayZoneId)}',
-                                child: ExcludeSemantics(
-                                  child: Text(
-                                    '${SiteLabel.of(site) ?? 'No observing site'} · '
-                                    '${site.displayZoneId ?? 'device time zone'}',
-                                    key: const Key('detail.context'),
-                                    style: AppTypography.caption.copyWith(
-                                      height: 1.6,
-                                      color: p.textSecondary,
+                              DocumentSection(
+                                key: const Key('conditions.contextGroup'),
+                                children: [
+                                  // conditions.js browseHeader: "Kyiv outskirts ·
+                                  // Europe/Kyiv"; a screen reader hears the full
+                                  // zone rule.
+                                  Semantics(
+                                    label:
+                                        '${SiteLabel.of(site) ?? 'Observing site'}. '
+                                        '${ContextLine.zoneRule(browser.view.night.startUtc, zoneId: site.displayZoneId)}',
+                                    child: ExcludeSemantics(
+                                      child: Text(
+                                        '${SiteLabel.of(site) ?? 'No observing site'} · '
+                                        '${site.displayZoneId ?? 'device time zone'}',
+                                        key: const Key('detail.context'),
+                                        style: AppTypography.caption.copyWith(
+                                          height: 1.6,
+                                          color: p.textSecondary,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  const SizedBox(height: 8),
+                                  const _ViewedNightHeader(),
+                                ],
                               ),
-                              const SizedBox(height: 8),
-                              const _ViewedNightHeader(),
+                              const SizedBox(height: 24),
+                              if (page == 0) ...[
+                                const DocumentSection(
+                                  key: Key('nightMoon.answerGroup'),
+                                  children: [_NightAnswer()],
+                                ),
+                                const SizedBox(height: 16),
+                                const DocumentSection(
+                                  key: Key('nightMoon.timelineGroup'),
+                                  children: [NightBarSection(compact: true)],
+                                ),
+                                const SizedBox(height: 12),
+                                DocumentSection(
+                                  key: const Key('nightMoon.readingGroup'),
+                                  children: [
+                                    const _ReadingDisclosure(topRule: false),
+                                    _ConditionsDisclosure(
+                                      id: 'moonIntervals',
+                                      title: 'Moon intervals & phase',
+                                      subtitle: _phaseSummary(browser),
+                                      icon: HybridIcons.lucideMoon,
+                                      child: const _MoonSummary(),
+                                    ),
+                                    _ConditionsDisclosure(
+                                      id: 'sun',
+                                      title: 'Sun & twilight',
+                                      subtitle:
+                                          'Event times and darkness limits',
+                                      icon: HybridIcons.lucideSun,
+                                      iconColor: p.textSecondary,
+                                      child: const _SunEvents(),
+                                    ),
+                                  ],
+                                ),
+                              ] else if (page == 1) ...[
+                                DocumentSection(
+                                  key: const Key('moon.answerGroup'),
+                                  children: [
+                                    _MoonAnswer(
+                                      onPreview: () {
+                                        final target =
+                                            moonTimelineKey.currentContext;
+                                        if (target != null) {
+                                          Scrollable.ensureVisible(
+                                            target,
+                                            duration:
+                                                MediaQuery.disableAnimationsOf(
+                                                  context,
+                                                )
+                                                ? Duration.zero
+                                                : const Duration(
+                                                    milliseconds: 180,
+                                                  ),
+                                          ).then((_) {
+                                            if (mounted) {
+                                              moonTimelineFocus.requestFocus();
+                                            }
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                const DocumentSection(
+                                  key: Key('moon.calendarGroup'),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: AppSpacing.md,
+                                  ),
+                                  children: [
+                                    MoonCalendarSection(insetHeader: true),
+                                  ],
+                                ),
+                                const SizedBox(height: 28),
+                                Focus(
+                                  key: moonTimelineKey,
+                                  focusNode: moonTimelineFocus,
+                                  skipTraversal: true,
+                                  child: const DocumentSection(
+                                    key: Key('moon.timelineGroup'),
+                                    children: [NightBarSection(compact: true)],
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                DocumentSection(
+                                  key: const Key('moon.readingGroup'),
+                                  children: [
+                                    const _ReadingDisclosure(),
+                                    _ConditionsDisclosure(
+                                      id: 'moonDetails',
+                                      title: 'Moon details',
+                                      subtitle: 'Phase, intervals and how to read them',
+                                      icon: HybridIcons.lucideMoon,
+                                      child: const _MoonSummary(),
+                                    ),
+                                  ],
+                                ),
+                              ] else ...[
+                                const HybridWeatherView(),
+                              ],
                             ],
                           ),
-                          const SizedBox(height: 24),
-                          if (page == 0) ...[
-                            const DocumentSection(
-                              key: Key('nightMoon.answerGroup'),
-                              children: [_NightAnswer()],
-                            ),
-                            const SizedBox(height: 16),
-                            const DocumentSection(
-                              key: Key('nightMoon.timelineGroup'),
-                              children: [NightBarSection(compact: true)],
-                            ),
-                            const SizedBox(height: 12),
-                            DocumentSection(
-                              key: const Key('nightMoon.readingGroup'),
-                              children: [
-                                const _ReadingDisclosure(topRule: false),
-                                _ConditionsDisclosure(
-                                  id: 'moonIntervals',
-                                  title: 'Moon intervals & phase',
-                                  subtitle: _phaseSummary(browser),
-                                  icon: HybridIcons.lucideMoon,
-                                  child: const _MoonSummary(),
-                                ),
-                                _ConditionsDisclosure(
-                                  id: 'sun',
-                                  title: 'Sun & twilight',
-                                  subtitle: 'Event times and darkness limits',
-                                  icon: HybridIcons.lucideSun,
-                                  iconColor: p.textSecondary,
-                                  child: const _SunEvents(),
-                                ),
-                              ],
-                            ),
-                          ] else if (page == 1) ...[
-                            DocumentSection(
-                              key: const Key('moon.answerGroup'),
-                              children: [
-                                _MoonAnswer(
-                                  onPreview: () {
-                                    final target =
-                                        moonTimelineKey.currentContext;
-                                    if (target != null) {
-                                      Scrollable.ensureVisible(
-                                        target,
-                                        duration:
-                                            MediaQuery.disableAnimationsOf(
-                                              context,
-                                            )
-                                            ? Duration.zero
-                                            : const Duration(milliseconds: 180),
-                                      ).then((_) {
-                                        if (mounted) {
-                                          moonTimelineFocus.requestFocus();
-                                        }
-                                      });
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            const DocumentSection(
-                              key: Key('moon.calendarGroup'),
-                              padding: EdgeInsets.symmetric(
-                                vertical: AppSpacing.md,
-                              ),
-                              children: [
-                                MoonCalendarSection(insetHeader: true),
-                              ],
-                            ),
-                            const SizedBox(height: 28),
-                            Focus(
-                              key: moonTimelineKey,
-                              focusNode: moonTimelineFocus,
-                              skipTraversal: true,
-                              child: const DocumentSection(
-                                key: Key('moon.timelineGroup'),
-                                children: [NightBarSection(compact: true)],
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            DocumentSection(
-                              key: const Key('moon.readingGroup'),
-                              children: [
-                                const _ReadingDisclosure(),
-                                _ConditionsDisclosure(
-                                  id: 'moonDetails',
-                                  title: 'Moon details',
-                                  subtitle:
-                                      'Phase, intervals and how to read them',
-                                  icon: HybridIcons.lucideMoon,
-                                  child: const _MoonSummary(),
-                                ),
-                              ],
-                            ),
-                          ] else ...[
-                            const HybridWeatherView(),
-                          ],
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
           ),
         ),

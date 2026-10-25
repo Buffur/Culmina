@@ -204,6 +204,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
                 padding: EdgeInsets.zero,
                 child: CollapsibleSection(
                   key: const Key('rigDetail.full'),
+                  topRule: false,
                   sectionKey: 'library.rigRecord',
                   title: 'Full rig record and sources',
                   summary: 'All values, including unknowns',

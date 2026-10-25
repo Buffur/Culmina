@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/main.dart';
+import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/domain/services/astrobin_acquisitions.dart';
@@ -70,6 +71,12 @@ Future<void> _loadFonts() async {
 class _AuditAstroBin implements AstroBinCsvExporter {
   @override
   Future<void> share(AstroBinExport export) async =>
+      throw StateError('Audit must not share');
+}
+
+class _AuditSessionExporter implements SessionExporter {
+  @override
+  Future<void> share(List<ExportedSession> sessions) async =>
       throw StateError('Audit must not share');
 }
 
@@ -167,8 +174,242 @@ Future<void> _libraryState(HybridRenderContext c, String name) async {
   await c.tester.pump();
 }
 
+Future<void> _scrollPage(HybridRenderContext c, double amount) async {
+  final page = find
+      .byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+      )
+      .first;
+  final position = c.tester.state<ScrollableState>(page).position;
+  position.jumpTo(
+    (position.pixels + amount).clamp(
+      position.minScrollExtent,
+      position.maxScrollExtent,
+    ),
+  );
+  await c.settle();
+}
+
 final _auditShots = <String, HybridStep>{
   ...hybridShots,
+
+  'night_reading_body': (c) async {
+    await hybridShots['night_reading_open']!(c);
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('nightMoon.readingNote'))),
+      alignment: .82,
+    );
+    await c.settle();
+  },
+  'night_exact_events': (c) async {
+    await hybridShots['night_exact_open']!(c);
+    await Scrollable.ensureVisible(
+      c.tester.element(find.text('Sun events')),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'night_exact_intervals': (c) async {
+    await hybridShots['night_exact_open']!(c);
+    final last = find
+        .descendant(
+          of: find.byKey(const Key('nightMoon.exactTimes')),
+          matching: find.text('Moon-free dark'),
+        )
+        .last;
+    await Scrollable.ensureVisible(c.tester.element(last), alignment: .72);
+    await c.settle();
+  },
+  'night_sun_tail': (c) async {
+    await hybridShots['night_sun_open']!(c);
+    final note = find.byWidgetPredicate(
+      (w) => w is Text && (w.data?.startsWith('Twilight limits:') ?? false),
+    );
+    await Scrollable.ensureVisible(c.tester.element(note), alignment: .82);
+    await c.settle();
+  },
+  'night_moon_tail': (c) async {
+    await hybridShots['night_moon_open']!(c);
+    final note = find.byWidgetPredicate(
+      (w) =>
+          w is Text &&
+          (w.data?.startsWith('Moon-free means dark time') ?? false),
+    );
+    await Scrollable.ensureVisible(c.tester.element(note), alignment: .85);
+    await c.settle();
+  },
+  'plan_budget_facts': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.budgetDetails');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('budget.timeNeeded'))),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'plan_budget_assumptions': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.budgetDetails');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('capturePlan.assumptionsBody'))),
+      alignment: .08,
+    );
+    await c.settle();
+  },
+  'plan_budget_notes': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.budgetDetails');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('planOverride.edit'))),
+      alignment: .82,
+    );
+    await c.settle();
+  },
+  'plan_gain_open': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.gainHelp');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('capturePlan.gainTable'))),
+      alignment: .1,
+    );
+    await c.settle();
+  },
+  'block_details_light': (c) async {
+    await hybridShots['plan_editor']!(c);
+    await c.tapKey('section.blockEditor.Details');
+    await c.scrollBy(10000, key: 'blockEditor.scroll');
+  },
+  'block_details_calibration': (c) async {
+    await hybridShots['plan_editor']!(c);
+    await c.tapText('Dark');
+    await c.tapKey('section.blockEditor.Details');
+    await c.scrollBy(10000, key: 'blockEditor.scroll');
+  },
+
+  'plan_rig_facts': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.rigDetails');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.text('Camera type')),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'plan_rig_tracking': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.rigDetails');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('planner.tracking'))),
+      alignment: .82,
+    );
+    await c.settle();
+  },
+
+  'logbook_lower': (c) async {
+    await hybridShots['logbook']!(c);
+    await _scrollPage(c, 10000);
+  },
+  'rig_record_lower': (c) async {
+    await hybridShots['lib_rig_full']!(c);
+    await _scrollPage(c, 10000);
+  },
+  'rig_record_sources': (c) async {
+    await hybridShots['lib_rig_full']!(c);
+    final source = find.byWidgetPredicate(
+      (w) => w is Text && (w.data?.startsWith('Camera specs:') ?? false),
+    );
+    await Scrollable.ensureVisible(c.tester.element(source), alignment: .12);
+    await c.settle();
+  },
+  'rig_more_open': (c) async {
+    await hybridShots['lib_rig_edit']!(c);
+    await c.tapText('More (optional)');
+    await c.scrollBy(10000, key: 'rigEditor.scroll');
+  },
+  'site_details_lower': (c) async {
+    await hybridShots['lib_site']!(c);
+    await c.tapKey('siteDetail.details');
+    await _scrollPage(c, 10000);
+  },
+  'progress_guide_open': (c) async {
+    await hybridShots['logbook_progress']!(c);
+    await c.tapKey('progress.guide');
+    await _scrollPage(c, 10000);
+  },
+  'entry_snapshot_open': (c) async {
+    await hybridShots['entry']!(c);
+    await c.tapKey('detail.snapshot');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('detail.night'))),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'entry_snapshot_lower': (c) async {
+    await hybridShots['entry']!(c);
+    await c.tapKey('detail.snapshot');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('detail.weather'))),
+      alignment: .72,
+    );
+    await c.settle();
+  },
+  'entry_export_open': (c) async {
+    await hybridShots['entry']!(c);
+    await c.tapKey('detail.exportSection');
+    await c.scrollBy(10000, key: 'detail.scroll');
+  },
+  'entry_csv_preview': (c) async {
+    await hybridShots['entry']!(c);
+    await c.tapKey('detail.exportSection');
+    await c.tapKey('detail.astrobin');
+  },
+  'weather_hour_open': (c) async {
+    await c.push(AppRouter.weather);
+    await c.tapKey('weather.hourDetails');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('weather.hourDetails'))),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'weather_forecast_open': (c) async {
+    await c.push(AppRouter.weather);
+    await c.tapKey('weather.details');
+    await _scrollPage(c, 700);
+  },
+  'weather_forecast_table': (c) async {
+    await c.push(AppRouter.weather);
+    await c.tapKey('weather.details');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('weather.table'))),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'weather_forecast_lead': (c) async {
+    await c.push(AppRouter.weather);
+    await c.tapKey('weather.details');
+    await Scrollable.ensureVisible(
+      c.tester.element(find.byKey(const Key('weather.partial'))),
+      alignment: .12,
+    );
+    await c.settle();
+  },
+  'weather_table_later': (c) async {
+    await c.push(AppRouter.weather);
+    await c.tapKey('weather.details');
+    final table = find.byKey(const Key('weather.table'));
+    await Scrollable.ensureVisible(c.tester.element(table), alignment: .12);
+    final position = c.tester
+        .state<ScrollableState>(
+          find.descendant(of: table, matching: find.byType(Scrollable)).first,
+        )
+        .position;
+    position.jumpTo(position.maxScrollExtent);
+    await c.settle();
+  },
+
   for (final kind in ['aliases', 'planrig'])
     for (final state in ['loading', 'error', 'empty', 'populated'])
       '${kind}_$state': (c) => _libraryState(c, '${kind}_$state'),
@@ -245,6 +486,13 @@ final _auditShots = <String, HybridStep>{
         child: UnsupportedDatabaseApp(
           newerThanApp: false,
           foundVersion: 1,
+          isFieldMode: c.fixture.vm.theme.isFieldMode,
+          themeMode:
+              Theme.of(c.tester.element(find.byType(Scaffold).last))
+                      .brightness ==
+                  Brightness.dark
+              ? ThemeMode.dark
+              : ThemeMode.light,
           onReset: () async {},
         ),
       ),
@@ -405,6 +653,13 @@ final _auditShots = <String, HybridStep>{
           child: UnsupportedDatabaseApp(
             newerThanApp: newer,
             foundVersion: newer ? 999 : 1,
+            isFieldMode: c.fixture.vm.theme.isFieldMode,
+            themeMode:
+                Theme.of(c.tester.element(find.byType(Scaffold).last))
+                        .brightness ==
+                    Brightness.dark
+                ? ThemeMode.dark
+                : ThemeMode.light,
             onReset: () async {},
           ),
         ),
@@ -499,7 +754,17 @@ void main() {
             child: MultiProvider(
               providers: [
                 ...fixture.vm.providers,
-                if (name == 'astrobin_preview')
+                if (name == 'entry_export_open' || name == 'entry_csv_preview')
+                  ChangeNotifierProvider<SessionsViewModel>(
+                    create: (_) => SessionsViewModel(
+                      fixture.sessions,
+                      exporter: _AuditSessionExporter(),
+                      clock: FixedClock(hybridTransferNow),
+                    ),
+                  ),
+                if (name == 'astrobin_preview' ||
+                    name == 'entry_export_open' ||
+                    name == 'entry_csv_preview')
                   Provider<AstroBinExportViewModel>(
                     create: (_) => AstroBinExportViewModel(
                       DriftSessionRepository(fixture.db),

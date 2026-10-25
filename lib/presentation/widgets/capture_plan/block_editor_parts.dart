@@ -332,6 +332,7 @@ class BlockDisclosure extends StatelessWidget {
     required this.onToggle,
     required this.children,
     this.small = false,
+    this.topRule = true,
   });
 
   final String title;
@@ -342,12 +343,14 @@ class BlockDisclosure extends StatelessWidget {
 
   /// The From a photo summary (18/600) instead of the section title.
   final bool small;
+  final bool topRule;
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.only(top: 8, bottom: small ? 8 : 0),
     child: CollapsibleSection(
       sectionKey: 'blockEditor.$title',
+      topRule: topRule,
       title: title,
       summary: summary,
       open: open,

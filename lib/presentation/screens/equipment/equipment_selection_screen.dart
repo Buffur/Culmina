@@ -297,6 +297,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
                             deleteRig(context, eq, reload: _loadEquipment),
                         child: LibraryRow(
                           key: Key('rigs.row.${eq.id}'),
+                          divider: i < shown.length - 1,
                           title: eq.name,
                           caption: _subtitle(eq),
                           note: [
@@ -344,6 +345,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
                       padding: EdgeInsets.zero,
                       child: CollapsibleSection(
                         key: const Key('rigs.fromPhotoHelp'),
+                        topRule: false,
                         sectionKey: 'library.rigsFromPhoto',
                         title: 'Adding a rig from a photo',
                         open: _helpOpen,

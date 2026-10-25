@@ -266,6 +266,8 @@ class _NoSite extends StatelessWidget {
           button: true,
           label: 'Use current position',
           excludeSemantics: true,
+          enabled: true,
+          onTap: () => useCurrentPositionWithFeedback(context, siteVm),
           child: InkWell(
             key: const Key('tonight.useCurrentPosition'),
             onTap: () => useCurrentPositionWithFeedback(context, siteVm),
@@ -732,6 +734,8 @@ class _ActionRow extends StatelessWidget {
       button: true,
       label: semanticsLabel ?? [title, ?caption].join(', '),
       excludeSemantics: true,
+      enabled: true,
+      onTap: onTap,
       child: InkWell(
         onTap: onTap,
         child: ConstrainedBox(
@@ -860,6 +864,8 @@ class _ConditionRow extends StatelessWidget {
       button: true,
       label: '$label: $value${extra.isEmpty ? '' : '. $extra'}',
       excludeSemantics: true,
+      enabled: true,
+      onTap: onTap,
       child: topRule
           ? DecoratedBox(
               decoration: BoxDecoration(

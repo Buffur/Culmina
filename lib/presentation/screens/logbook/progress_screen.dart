@@ -30,9 +30,13 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
-  late final Future<List<TargetProgress>> _progress = context
+  late Future<List<TargetProgress>> _progress = context
       .read<SessionsViewModel>()
       .targetProgress();
+
+  void _retry() => setState(() {
+    _progress = context.read<SessionsViewModel>().targetProgress();
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +53,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
       body: FutureBuilder<List<TargetProgress>>(
         future: _progress,
         builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final list = snapshot.data;
           if (snapshot.error case final error?) {
-            return LoadFailureView(action: 'load the progress', error: error);
+            return LoadFailureView(
+              action: 'load the progress',
+              error: error,
+              onRetry: _retry,
+            );
           }
           if (list == null) {
             return const Center(child: CircularProgressIndicator());
@@ -98,6 +109,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       padding: EdgeInsets.zero,
                       child: CollapsibleSection(
                         key: const Key('progress.guide'),
+                        topRule: false,
                         sectionKey: 'logbook.progressGuide',
                         title: 'How totals are grouped',
                         titleStyle: AppTypography.body.copyWith(

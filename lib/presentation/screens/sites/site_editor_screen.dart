@@ -332,7 +332,10 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
     final lat = CoordinateInput.parse(_latitude.text);
     final lon = CoordinateInput.parse(_longitude.text);
     final start = (lat != null && lon != null && lat.abs() <= 90)
-        ? LatLng(lat, lon)
+        ? LatLng(
+            _preservedCoordinate(_latitude, _latitudeSource),
+            _preservedCoordinate(_longitude, _longitudeSource),
+          )
         : null;
     final point = await context.push<LatLng>(AppRouter.sitePick, extra: start);
     if (point == null || !mounted) return;

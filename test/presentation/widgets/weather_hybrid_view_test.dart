@@ -381,7 +381,7 @@ void main() {
 
     expect(
       find.text(
-        'Offline · cached forecast. Offline or the service did not answer.',
+        'Refresh failed · cached forecast. Offline or the service did not answer.',
       ),
       findsOneWidget,
     );

@@ -55,7 +55,9 @@ class FieldModeButton extends StatelessWidget {
 
 /// The same switch as a Settings row.
 class FieldModeTile extends StatelessWidget {
-  const FieldModeTile({super.key});
+  const FieldModeTile({super.key, this.divider = true});
+
+  final bool divider;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class FieldModeTile extends StatelessWidget {
     // settings.js appearance: a switch row under the theme.
     return HybridSwitchRow(
       key: const Key('fieldMode.tile'),
+      divider: divider,
       title: 'Red field mode',
       description:
           'Red on black only, to keep your night vision. The same switch as '

@@ -66,6 +66,8 @@ class AppShell extends StatelessWidget {
         button: true,
         label: item.label,
         excludeSemantics: true,
+        enabled: true,
+        onTap: () => select(i),
         child: Material(
           color: selected ? hybrid.surfaceSubtle : HybridTokens.transparent,
           borderRadius: BorderRadius.circular(6),

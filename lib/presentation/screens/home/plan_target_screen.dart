@@ -35,6 +35,7 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
   List<AstroTarget> _found = const [];
   int _bundled = 0;
   int _yours = 0;
+  bool _hasCounts = false;
   Map<String, List<TargetAlias>> _aliases = const {};
 
   /// The chosen target, kept while a search hides it.
@@ -65,6 +66,10 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
     final targets = context.read<TargetsViewModel>();
     final generation = ++_generation;
     final query = _query.text;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       final all = query.trim().isEmpty ? null : await targets.search('');
       final found = await targets.search(query);
@@ -76,6 +81,7 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
         _aliases = aliases;
         _yours = counted.where(_isYours).length;
         _bundled = counted.length - _yours;
+        _hasCounts = true;
         _loading = false;
         _error = null;
       });
@@ -127,7 +133,7 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final selected = context.watch<SessionPlanViewModel>().selectedTarget;
+    final selected = _chosen;
     final note = AppTypography.caption.copyWith(
       height: 1.55,
       color: p.textSecondary,
@@ -168,8 +174,10 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
                 const SizedBox(height: 20),
                 Text(
                   [
-                    '$_bundled bundled targets and $_yours Library targets. Library '
-                        'selections are copied into this plan.',
+                    if (_hasCounts)
+                      '${_loading || _error != null ? 'Last loaded: ' : ''}'
+                          '$_bundled bundled targets and $_yours Library targets.',
+                    'Library selections are copied into this plan.',
                     if (selected != null) 'Selected: ${title(selected)}.',
                   ].join(' '),
                   key: const Key('planTarget.note'),
@@ -181,6 +189,8 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
                   child: Text(
                     _loading
                         ? 'Searching…'
+                        : _error != null
+                        ? 'Results unavailable'
                         : '${_found.length} result${_found.length == 1 ? '' : 's'}',
                     key: const Key('planTarget.count'),
                     style: AppTypography.caption.copyWith(
@@ -194,7 +204,12 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
             DocumentSection(
               joinNext: true,
               children: [
-                if (_error != null)
+                if (_loading)
+                  const SizedBox(
+                    height: 48,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (_error != null)
                   LoadFailureView(
                     action: 'load the targets',
                     error: _error!,
@@ -211,7 +226,7 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
                 ],
               ],
             ),
-            if (_error == null)
+            if (_error == null && !_loading)
               for (final t in _found)
                 DocumentSection(
                   joinPrevious: true,

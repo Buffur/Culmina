@@ -148,9 +148,16 @@ Future<Widget> _initialize() async {
   }
   if (refused case final refused?) {
     AppLog.error('startup', 'Database refused', error: refused);
+    final look = await _launchLook();
     return UnsupportedDatabaseApp(
       newerThanApp: refused.isNewerThanApp,
       foundVersion: refused.foundVersion,
+      isFieldMode: look.fieldMode,
+      themeMode: switch (look.appearance) {
+        Appearance.light => ThemeMode.light,
+        Appearance.dark => ThemeMode.dark,
+        Appearance.system || null => ThemeMode.system,
+      },
       onReset: () async {
         await confirmDatabaseReset(database, await databaseFile(), refused);
         await _start(animate: false);

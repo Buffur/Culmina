@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../domain/models/calendar_date.dart';
+import '../../../domain/models/iana_time_context.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/context_line.dart';
 import '../../shared/failure_feedback.dart';
@@ -61,12 +62,22 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
     if (ok && mounted) Navigator.of(context).pop();
   }
 
+  Future<void> _pickNight() async {
+    final night = _night;
+    if (night == null) return;
+    final picked = await pickNight(context, initial: night);
+    if (picked != null && mounted) setState(() => _night = picked);
+  }
+
   @override
   Widget build(BuildContext context) {
     final site = context.watch<SiteViewModel>();
     final p = AppPalette.of(context);
     final night = _night;
-    final zone = site.displayZoneId;
+    final selectedSite = site.sites.where((s) => s.id == _siteId).firstOrNull;
+    final zone = _siteId == null
+        ? site.displayZoneId
+        : IanaTimeContext.tryCreate(selectedSite?.timeZoneId)?.id;
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -144,20 +155,12 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
                     : 'Night of ${NightTimeFormatter.eveningDate(night)}',
                 hint: 'Choose a night',
                 excludeSemantics: true,
+                enabled: night != null,
+                onTap: night == null ? null : _pickNight,
                 child: InkWell(
                   key: const Key('planContext.night'),
                   borderRadius: BorderRadius.circular(6),
-                  onTap: night == null
-                      ? null
-                      : () async {
-                          final picked = await pickNight(
-                            context,
-                            initial: night,
-                          );
-                          if (picked != null && mounted) {
-                            setState(() => _night = picked);
-                          }
-                        },
+                  onTap: night == null ? null : _pickNight,
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 49),
                     padding: const EdgeInsets.all(12),

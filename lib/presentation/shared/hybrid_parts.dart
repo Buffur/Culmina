@@ -169,6 +169,8 @@ class HybridPlanRow extends StatelessWidget {
       label: [label, value, ?caption].join(', '),
       hint: semanticsHint,
       excludeSemantics: true,
+      enabled: true,
+      onTap: onTap,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -251,6 +253,8 @@ class HybridNightRow extends StatelessWidget {
       button: true,
       label: [label, value, ?extra].join(', '),
       excludeSemantics: true,
+      enabled: true,
+      onTap: onTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: p.border)),
@@ -485,6 +489,8 @@ class HybridChoiceRow extends StatelessWidget {
       button: true,
       label: [title, ?caption].join(', '),
       excludeSemantics: true,
+      enabled: true,
+      onTap: onTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: p.border)),

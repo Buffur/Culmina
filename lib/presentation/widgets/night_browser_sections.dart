@@ -335,6 +335,8 @@ class _JumpButton extends StatelessWidget {
       button: true,
       label: 'Go to $what, ${at(target)}',
       excludeSemantics: true,
+      enabled: true,
+      onTap: onPressed,
       child: OutlinedButton(
         key: Key(end ? 'nightMoon.jumpEnd' : 'nightMoon.jumpStart'),
         onPressed: onPressed,
@@ -1049,6 +1051,9 @@ class MoonCalendarSection extends StatelessWidget {
   /// Large text switches to the week view (SP07).
   static const weekViewScale = 1.5;
 
+  /// Seven separate 48 dp day targets in the month view.
+  static const minMonthWidth = 7 * kMinInteractiveDimension;
+
   /// "Thu 17 Dec: Waxing gibbous, 82 % lit; moon-free dark 3 h 10 min".
   static String dayLabel(MoonCalendarDay d) {
     final phase = d.phase == null
@@ -1069,123 +1074,127 @@ class MoonCalendarSection extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
-    final browser = context.watch<NightBrowserViewModel>();
-    final (year, month) = browser.month;
-    final days = browser.monthDays;
-    final week = MediaQuery.textScalerOf(context).scale(1) >= weekViewScale;
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    final p = AppPalette.of(context);
-    // conditions.js calendar (`.section-actions`): the heading (20/600) and
-    // the month between two 48 px arrows, wrapping as text grows.
-    final heading = Semantics(
-      header: true,
-      child: Text(
-        'Moon calendar',
-        style: AppTypography.sectionHeading.copyWith(color: p.textPrimary),
-      ),
-    );
-    Widget arrow(Key key, String tip, HybridIconData icon, int step) =>
-        IconButton(
-          key: key,
-          tooltip: tip,
-          onPressed: () => browser.showMonth(step),
-          icon: HybridIcon(
-            icon,
-            size: MediaQuery.textScalerOf(context).scale(24),
-            strokeWidth: 1.8,
-            color: p.textPrimary,
-          ),
-        );
-    final monthControls = Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: 4,
-      children: [
-        arrow(
-          const Key('nightMoon.prevMonth'),
-          'Previous month',
-          HybridIcons.previous,
-          -1,
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final browser = context.watch<NightBrowserViewModel>();
+      final (year, month) = browser.month;
+      final days = browser.monthDays;
+      final week =
+          MediaQuery.textScalerOf(context).scale(1) >= weekViewScale ||
+          constraints.maxWidth < minMonthWidth;
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+      final p = AppPalette.of(context);
+      // conditions.js calendar (`.section-actions`): the heading (20/600) and
+      // the month between two 48 px arrows, wrapping as text grows.
+      final heading = Semantics(
+        header: true,
+        child: Text(
+          'Moon calendar',
+          style: AppTypography.sectionHeading.copyWith(color: p.textPrimary),
         ),
-        Semantics(
-          header: true,
-          child: Text(
-            '${months[month - 1]} $year',
-            style: AppTypography.caption.copyWith(
+      );
+      Widget arrow(Key key, String tip, HybridIconData icon, int step) =>
+          IconButton(
+            key: key,
+            tooltip: tip,
+            onPressed: () => browser.showMonth(step),
+            icon: HybridIcon(
+              icon,
+              size: MediaQuery.textScalerOf(context).scale(24),
+              strokeWidth: 1.8,
               color: p.textPrimary,
-              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          );
+      final monthControls = Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 4,
+        children: [
+          arrow(
+            const Key('nightMoon.prevMonth'),
+            'Previous month',
+            HybridIcons.previous,
+            -1,
+          ),
+          Semantics(
+            header: true,
+            child: Text(
+              '${months[month - 1]} $year',
+              style: AppTypography.caption.copyWith(
+                color: p.textPrimary,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
-        ),
-        arrow(
-          const Key('nightMoon.nextMonth'),
-          'Next month',
-          HybridIcons.next,
-          1,
-        ),
-      ],
-    );
-    return Column(
-      key: const Key('nightMoon.calendar'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: insetHeader ? 16 : 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 8,
-                children: [heading, if (!week) monthControls],
-              ),
-              Text(
-                'Tap a night to view it; your plan stays unchanged.',
-                style: AppTypography.caption.copyWith(
-                  height: 1.65,
-                  color: p.textSecondary,
-                ),
-              ),
-            ],
+          arrow(
+            const Key('nightMoon.nextMonth'),
+            'Next month',
+            HybridIcons.next,
+            1,
           ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        if (browser.monthError != null)
-          Column(
-            children: [
-              const Text(
-                'The month could not be computed.',
-                key: Key('nightMoon.calendarError'),
-              ),
-              TextButton(
-                onPressed: () => browser.retryCalendar(year, month),
-                child: const Text('Retry month'),
-              ),
-            ],
-          )
-        else if (days == null)
-          const LinearProgressIndicator(key: Key('nightMoon.calendarLoading'))
-        else if (week)
-          _WeekList(days: days, browser: browser)
-        else
-          _MonthGrid(days: days, browser: browser),
-      ],
-    );
-  }
+        ],
+      );
+      return Column(
+        key: const Key('nightMoon.calendar'),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: insetHeader ? 16 : 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 8,
+                  children: [heading, if (!week) monthControls],
+                ),
+                Text(
+                  'Tap a night to view it; your plan stays unchanged.',
+                  style: AppTypography.caption.copyWith(
+                    height: 1.65,
+                    color: p.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (browser.monthError != null)
+            Column(
+              children: [
+                const Text(
+                  'The month could not be computed.',
+                  key: Key('nightMoon.calendarError'),
+                ),
+                TextButton(
+                  onPressed: () => browser.retryCalendar(year, month),
+                  child: const Text('Retry month'),
+                ),
+              ],
+            )
+          else if (days == null)
+            const LinearProgressIndicator(key: Key('nightMoon.calendarLoading'))
+          else if (week)
+            _WeekList(days: days, browser: browser)
+          else
+            _MonthGrid(days: days, browser: browser),
+        ],
+      );
+    },
+  );
 }
 
 class _MonthGrid extends StatelessWidget {
