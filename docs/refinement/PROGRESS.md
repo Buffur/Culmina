@@ -4,7 +4,7 @@ Status: **current operational handoff**, 2026-10-26. [AGENTS](../../AGENTS.md) o
 
 ## Current state
 
-**UIA-0010 variant 2 ACCEPTED and implemented; local verification COMPLETE, develop delivery authorized, 2026-10-26.** The owner explicitly chose the compact fixed Local time column and requested push to develop. This supersedes the earlier comparison-only stop below. All **18 Wave1-4 production corrections** are now implemented within the approved scope. The original 971 unverified contracts, W1/VQA-029, C1 and unexercised human/TalkBack/release criteria retain their dispositions.
+**UIA-0010 variant 2 ACCEPTED, implemented and delivered to develop; verification COMPLETE, 2026-10-26.** The owner explicitly chose the compact fixed Local time column and requested push to develop. This supersedes the earlier comparison-only stop below. All **18 Wave1-4 production corrections** are now implemented within the approved scope. The original 971 unverified contracts, W1/VQA-029, C1 and unexercised human/TalkBack/release criteria retain their dispositions.
 
 Weather details now pins its actual Local time cells at96dp in one intrinsic Table. The nine existing cell strings, full dates/GMT offsets/DST fold, metric/imperial units, unknowns, partial-hour qualification, provider attribution and draft/snapshot ownership are preserved. One layout owns row heights, paint, hit tests and per-cell semantic bounds; metric reveal reserves the pinned pane. There is no duplicate overlay text or second measurement/layout loop. The accepted composition retains the measured360->558dp table-height tradeoff. Only this Weather caller adopts the component; navigation, dependencies, science, schema, Android sources and global theme are unchanged.
 
@@ -14,7 +14,7 @@ Rejected native adapter attempts and the one-case diagnostic probe remain privat
 
 Current canonical debug APK SHA256 `912f39f50f0319eb0d27010aaf977bc5b27bb89cc65d4a79afe8a1d11c9e87ce`: launch-resource probe5/5 and installed public certificate match PASS, adb install-r preserves data. Ordinary Tonight -> Night & Moon -> Back, cold1383ms and actual DTD hot restart4041ms PASS, with no runtime error or accessibility-transform diagnostic. These are debug observations, not performance/release acceptance. Main remains Tonight/Dark/Field off; QA stopped, task UI dumps removed and original local.properties bytes restored. Stateful fixtures use the separate QA package and synthetic DBs; no personal-record write, uninstall or data clear. Earlier118 physical cases and9 real Gboard/focus scenarios remain evidence for unchanged Wave1-4 inputs.
 
-Private current receipts, accepted originals and exact49-path delivery manifest: `.audit/implementation-20261026/fixed-time-delivery/`; earlier wave/proposal/physical originals and the published audit are preserved. Git baseline is develop `30ee512f8430aec93ed1c62710170e18eb37d56e`; the reviewed45 prior paths plus the component, focused test, existing-test adapter and component reference form the authorized package. Commit/push and matching remote CI are the remaining delivery steps; no remote PASS is claimed yet.
+Private current receipts, accepted originals and exact49-path delivery manifest: `.audit/implementation-20261026/fixed-time-delivery/`; earlier wave/proposal/physical originals and the published audit are preserved. The exact49-path application package is delivered in `3b625c6545789c33009b4ab2f5f614781f73c556` (parent `30ee512f8430aec93ed1c62710170e18eb37d56e`). Approved cached path/blob hashes, remote SHA, clean tree and0/0 verification PASS. Its [matching application CI40331765909](https://github.com/Buffur/Culmina/actions/runs/40331765909) completed **8/8 jobs green**, including checks, all3 unit shards, both host E2E and quality-gate. No skip-ci was used. This documentation receipt reuses those unchanged application inputs under V3; it does not claim another application test run.
 
 ### Earlier receipts at their recorded inputs
 
@@ -90,7 +90,7 @@ The prior locally built release-mode `io.github.buffur.culmina` 1.0.0(2), APK SH
 
 ## Next allowed action
 
-Deliver the exact reviewed49-path Wave1-4/UIA-0010 package to develop under the owner's explicit approval, verify the remote SHA and completed matching CI including quality-gate, then STOP. Do not restart the roadmap or close the original971 unverified contracts. W1/VQA-029, C1, Q1-Q6/VQA-030-032 and unexercised owner/TalkBack/accessibility/release criteria retain their recorded dispositions.
+**STOP.** The approved Wave1-4/UIA-0010 implementation, physical checks and develop application delivery are complete; matching application CI is green. The documentation receipt preserves the same application inputs. Do not restart the roadmap or close the original971 unverified contracts. W1/VQA-029, C1, Q1-Q6/VQA-030-032 and unexercised owner/TalkBack/accessibility/release criteria retain their recorded dispositions.
 
 ## Open questions and carried criteria
 
