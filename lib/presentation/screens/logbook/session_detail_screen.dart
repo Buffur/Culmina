@@ -92,6 +92,12 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
       future: _detail,
       builder: (context, snapshot) {
         final data = snapshot.data;
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Scaffold(
+            appBar: hybridAppBar(context, title: const Text(AppWords.logbook)),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
         if (snapshot.error case final error?) {
           return Scaffold(
             appBar: hybridAppBar(context, title: const Text(AppWords.logbook)),

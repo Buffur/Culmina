@@ -135,8 +135,16 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                       ],
                     )
                   : FutureBuilder<List<TonightCandidate>?>(
+                      key: ValueKey(_rowsNight),
                       future: _rows,
                       builder: (context, snapshot) {
+                        final refreshing =
+                            snapshot.connectionState != ConnectionState.done;
+                        if (refreshing && !snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
                         if (snapshot.error case final error?) {
                           return LoadFailureView(
                             action: "evaluate tonight's targets",
@@ -156,6 +164,7 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                           siteVm,
                           settingsVm,
                           all,
+                          refreshing: refreshing,
                         );
                       },
                     ),
@@ -175,8 +184,9 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     SessionPlanViewModel planVm,
     SiteViewModel siteVm,
     SettingsViewModel settingsVm,
-    List<TonightCandidate> all,
-  ) {
+    List<TonightCandidate> all, {
+    required bool refreshing,
+  }) {
     final p = AppPalette.of(context);
     final night = planVm.sessionNight!;
     final zoneId = siteVm.displayZoneId;
@@ -207,6 +217,17 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         key: const Key('candidates.contextGroup'),
         children: [
           _Title(title),
+          if (refreshing) ...[
+            const LinearProgressIndicator(
+              semanticsLabel: 'Refreshing candidates',
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Refreshing candidates. Previous results shown.',
+              key: const Key('candidates.refreshing'),
+              style: _secondary(context),
+            ),
+          ],
           Text(
             'Night of ${NightTimeFormatter.eveningDate(night.eveningDate)}'
             '${siteVm.locationName == null ? '' : ' at ${siteVm.locationName}'} · '
@@ -293,8 +314,7 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           child: Text(
-            'No target matches: none has an imaging window with these '
-            'filters.',
+            'No targets match these filters. Try changing the filters.',
             key: const Key('tonight.empty'),
             style: _secondary(context),
           ),

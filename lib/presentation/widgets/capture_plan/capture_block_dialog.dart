@@ -22,6 +22,7 @@ import '../../shared/confirmation_patterns.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../shared/hybrid_parts.dart';
+import '../../shared/hybrid_quiet_ink.dart';
 import '../../shared/proposal_text.dart';
 import '../../shared/display_units_of.dart';
 import 'block_editor_parts.dart';
@@ -863,9 +864,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                 ),
                                 if (widget.proposal != null && isLight)
                                   Text(
-                                    'Proposed from your last light block: exposure, '
-                                    '${fixed == GainKind.gain ? 'gain' : 'ISO'} and '
-                                    'binning. Change them if needed.',
+                                    'Proposed from your last light block. Review '
+                                    'the values available for this camera type '
+                                    'and change them if needed.',
                                     key: const Key('blockDialog.proposal'),
                                     style: context13,
                                   ),
@@ -1211,6 +1212,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                               children: [
                                 BlockDisclosure(
                                   key: const Key('blockDialog.details'),
+                                  readableFeedback: true,
                                   title: 'Details',
                                   topRule: false,
                                   summary: detailsSummary,
@@ -1364,6 +1366,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
         alignment: Alignment.centerLeft,
         child: TextButton.icon(
           key: const Key('blockDialog.fromPhoto'),
+          style: HybridQuietInk.buttonStyle(context),
           onPressed: _reading ? null : _takeFromPhoto,
           icon: const Icon(Icons.add_photo_alternate_outlined),
           label: Text(p == null ? 'Take from a photo' : 'Another photo'),

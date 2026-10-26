@@ -4,6 +4,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets('settled keyboard focus does not request perpetual frames', (
+    t,
+  ) async {
+    await t.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => HybridFocusHighlight(child: child!),
+        home: Scaffold(
+          body: TextButton(onPressed: () {}, child: const Text('Action')),
+        ),
+      ),
+    );
+    await t.sendKeyEvent(LogicalKeyboardKey.tab);
+    await t.pumpAndSettle();
+    expect(FocusManager.instance.highlightMode, FocusHighlightMode.traditional);
+    expect(t.binding.hasScheduledFrame, isFalse);
+    await t.pump(const Duration(seconds: 2));
+    await t.pump();
+    expect(t.binding.hasScheduledFrame, isFalse);
+  });
+
   testWidgets('keyboard focus survives editor push/pop and scrolling', (
     tester,
   ) async {

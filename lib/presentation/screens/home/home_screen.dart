@@ -336,7 +336,12 @@ class _SaveBar extends StatelessWidget {
     final missing = PlanStatus.missingInput(plan);
     final blocked = missing != null;
     final session = plan.activeSession;
-    final state = session == null ? null : PlanState.of(session);
+    final state = session == null
+        ? null
+        : PlanState.forWorkingPlan(
+            session,
+            hasUnsavedChanges: plan.hasUnsavedChanges,
+          );
     // plan.js `mainBar`: the plan's persistence in words above Save plan.
     final reason = missing != null
         ? 'To save: ${words(missing.reason)}'
@@ -616,7 +621,13 @@ class _PlanIdentity extends StatelessWidget {
               color: AppPalette.of(context).textSecondary,
             ),
           ),
-          if (session != null) PlanStateLabel(PlanState.of(session)),
+          if (session != null)
+            PlanStateLabel(
+              PlanState.forWorkingPlan(
+                session,
+                hasUnsavedChanges: plan.hasUnsavedChanges,
+              ),
+            ),
         ],
       ),
     );
@@ -705,6 +716,10 @@ String? _weatherExtra(NightConditionsViewModel c) => switch (c.nightWeather) {
   NightWeatherOutOfRange() => 'Beyond the 16-day forecast',
   NightWeatherUnavailable(:final failure) => WeatherText.failure(failure),
   final NightWeatherAvailable a => [
+    if (a.refreshFailed case final failure?)
+      'Refresh failed · cached forecast. ${WeatherText.failure(failure)}'
+    else if (a.fromCache)
+      'Cached forecast',
     if (c.nightWeatherSummary case final s?
         when s.span != NightWeatherSpan.noDark)
       s.complete ? 'Full dark-time coverage' : 'Partial dark-time coverage',

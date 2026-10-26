@@ -83,6 +83,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
   late final List<String> _initial = _values;
   bool _saving = false;
   bool _leaving = false;
+  bool _confirming = false;
 
   List<String> get _values => [
     _name.text,
@@ -113,13 +114,16 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
   /// Back or Cancel (library.js `cancelEdit`): a changed editor asks
   /// Cancel · Discard · Save first.
   Future<void> _leave() async {
+    if (_saving || _leaving || _confirming) return;
     if (_dirty) {
+      _confirming = true;
       final name = _name.text.trim();
       final choice = await askUnsavedChanges(
         context,
         plan: name.isEmpty ? 'this target' : name,
         library: true,
       );
+      _confirming = false;
       if (choice == UnsavedChoice.save && mounted) await _save();
       if (choice != UnsavedChoice.discard || !mounted) return;
     }
@@ -128,7 +132,9 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
   }
 
   Future<void> _save() async {
-    if (_saving || !(_form.currentState?.validate() ?? false)) return;
+    if (_saving || _confirming || !(_form.currentState?.validate() ?? false)) {
+      return;
+    }
     final existing = _existing;
     final target = AstroTarget.userEdit(
       original: existing,
@@ -144,6 +150,9 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
       magnitude: TargetFormInput.optionalNumber(_mag.text),
     );
     final targets = context.read<TargetsViewModel>();
+    final navigator = Navigator.of(context);
+    final route = ModalRoute.of(context)!;
+    FocusScope.of(context).unfocus();
     setState(() => _saving = true);
     var id = target.id;
     final saved = await runWithFeedback(
@@ -159,20 +168,25 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
     // S9.8 (D9-5): a save says so.
     showDone(context, 'Target saved');
     setState(() => _leaving = true);
-    Navigator.of(context).pop(
-      AstroTarget(
-        id: id,
-        catalogId: target.catalogId,
-        commonName: target.commonName,
-        rightAscension: target.rightAscension,
-        declination: target.declination,
-        type: target.type,
-        epoch: target.epoch,
-        source: target.source,
-        angularSizeArcmin: target.angularSizeArcmin,
-        magnitude: target.magnitude,
-      ),
+    final result = AstroTarget(
+      id: id,
+      catalogId: target.catalogId,
+      commonName: target.commonName,
+      rightAscension: target.rightAscension,
+      declination: target.declination,
+      type: target.type,
+      epoch: target.epoch,
+      source: target.source,
+      angularSizeArcmin: target.angularSizeArcmin,
+      magnitude: target.magnitude,
     );
+    // Only this editor owns the target result. An unrelated typed modal
+    // above it must never be popped with an AstroTarget.
+    if (route.isCurrent) {
+      navigator.pop(result);
+    } else {
+      navigator.removeRoute(route, result);
+    }
   }
 
   @override
@@ -181,7 +195,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
     final style = libraryInputStyle(context);
     const decimal = TextInputType.numberWithOptions(decimal: true);
     return PopScope(
-      canPop: _leaving || !_dirty,
+      canPop: _leaving || (!_saving && !_dirty),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _leave();
       },
@@ -221,6 +235,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                         child: TextFormField(
                           key: const Key('targetEditor.name'),
                           controller: _name,
+                          enabled: !_saving,
                           style: style,
                           decoration: const InputDecoration(
                             hintText: 'e.g. Andromeda Galaxy',
@@ -253,9 +268,11 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                                 child: Text(t, overflow: TextOverflow.ellipsis),
                               ),
                           ],
-                          onChanged: (v) {
-                            if (v != null) setState(() => _type = v);
-                          },
+                          onChanged: _saving
+                              ? null
+                              : (v) {
+                                  if (v != null) setState(() => _type = v);
+                                },
                         ),
                       ),
                     ],
@@ -273,6 +290,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                         child: TextFormField(
                           key: const Key('targetEditor.ra'),
                           controller: _ra,
+                          enabled: !_saving,
                           style: style,
                           decoration: const InputDecoration(
                             hintText: '05h35m17s, 5:35:17 or 5.588 h',
@@ -286,6 +304,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                         child: TextFormField(
                           key: const Key('targetEditor.dec'),
                           controller: _dec,
+                          enabled: !_saving,
                           style: style,
                           decoration: const InputDecoration(
                             hintText: '−05°23′28″, -5:23:28 or -5.39',
@@ -306,6 +325,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                         child: TextFormField(
                           key: const Key('targetEditor.size'),
                           controller: _size,
+                          enabled: !_saving,
                           style: style,
                           keyboardType: decimal,
                           validator: TargetFormInput.validateAngularSize,
@@ -317,6 +337,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                         child: TextFormField(
                           key: const Key('targetEditor.magnitude'),
                           controller: _mag,
+                          enabled: !_saving,
                           style: style,
                           keyboardType: const TextInputType.numberWithOptions(
                             decimal: true,

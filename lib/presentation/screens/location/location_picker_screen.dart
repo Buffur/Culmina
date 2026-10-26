@@ -354,19 +354,22 @@ class _OsmAttribution extends StatelessWidget {
           child: InkWell(
             onTap: () =>
                 launchUrl(Uri.parse('https://www.openstreetmap.org/copyright')),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.xs),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('© ', style: Theme.of(context).textTheme.bodySmall),
-                  Flexible(
-                    child: Text(
-                      'OpenStreetMap contributors',
-                      style: Theme.of(context).textTheme.bodySmall,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xs),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('© ', style: Theme.of(context).textTheme.bodySmall),
+                    Flexible(
+                      child: Text(
+                        'OpenStreetMap contributors',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

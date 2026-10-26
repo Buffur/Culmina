@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../shared/hybrid_parts.dart';
+import '../../shared/hybrid_quiet_ink.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../shared/collapsible_section.dart';
 import '../../../domain/models/session.dart';
@@ -580,7 +581,7 @@ class _MoonAnswer extends StatelessWidget {
             key: const Key('nightMoon.previewMoon'),
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            ),
+            ).merge(HybridQuietInk.buttonStyle(context)),
             onPressed: onPreview,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -642,6 +643,7 @@ class _ConditionsDisclosure extends StatelessWidget {
     padding: const EdgeInsets.only(top: AppSpacing.sm),
     child: CollapsibleSection(
       key: PageStorageKey('conditions.$id'),
+      readableFeedback: true,
       sectionKey: 'conditions.$id',
       title: title,
       summary: subtitle,
@@ -669,14 +671,16 @@ class _ViewedNightHeader extends StatelessWidget {
     final date = browser.viewedDate;
     final small = AppTypography.caption.copyWith(color: p.textSecondary);
     Widget arrow(String tip, HybridIconData icon, CalendarDate to) =>
-        IconButton(
-          tooltip: tip,
-          onPressed: () => browser.viewNight(to),
-          icon: HybridIcon(
-            icon,
-            size: MediaQuery.textScalerOf(context).scale(24),
-            strokeWidth: 1.8,
-            color: p.textPrimary,
+        _RevealViewedNightControl(
+          child: IconButton(
+            tooltip: tip,
+            onPressed: () => browser.viewNight(to),
+            icon: HybridIcon(
+              icon,
+              size: MediaQuery.textScalerOf(context).scale(24),
+              strokeWidth: 1.8,
+              color: p.textPrimary,
+            ),
           ),
         );
     return Column(
@@ -690,43 +694,45 @@ class _ViewedNightHeader extends StatelessWidget {
               child: Semantics(
                 button: true,
                 hint: 'Choose a night',
-                child: InkWell(
-                  key: const Key('nightMoon.pickNight'),
-                  borderRadius: BorderRadius.circular(6),
-                  onTap: () async {
-                    final picked = await pickNight(context, initial: date);
-                    if (picked != null && context.mounted) {
-                      browser.viewNight(picked);
-                    }
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // An inline span on the 16/24 line of its block.
-                      Text(
-                        browser.viewingPlanNight
-                            ? 'Your plan’s night'
-                            : 'Viewing',
-                        textAlign: TextAlign.center,
-                        style: small.copyWith(height: 24 / 13),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        'Night of ${NightTimeFormatter.eveningDate(date)}',
-                        textAlign: TextAlign.center,
-                        style: AppTypography.screenTitle.copyWith(
-                          height: 1.35,
-                          letterSpacing: -0.33,
-                          color: p.textPrimary,
+                child: _RevealViewedNightControl(
+                  child: InkWell(
+                    key: const Key('nightMoon.pickNight'),
+                    borderRadius: BorderRadius.circular(6),
+                    onTap: () async {
+                      final picked = await pickNight(context, initial: date);
+                      if (picked != null && context.mounted) {
+                        browser.viewNight(picked);
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // An inline span on the 16/24 line of its block.
+                        Text(
+                          browser.viewingPlanNight
+                              ? 'Your plan’s night'
+                              : 'Viewing',
+                          textAlign: TextAlign.center,
+                          style: small.copyWith(height: 24 / 13),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Ends ${NightTimeFormatter.eveningDate(date.addDays(1))}',
-                        textAlign: TextAlign.center,
-                        style: small,
-                      ),
-                    ],
+                        const SizedBox(height: 3),
+                        Text(
+                          'Night of ${NightTimeFormatter.eveningDate(date)}',
+                          textAlign: TextAlign.center,
+                          style: AppTypography.screenTitle.copyWith(
+                            height: 1.35,
+                            letterSpacing: -0.33,
+                            color: p.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Ends ${NightTimeFormatter.eveningDate(date.addDays(1))}',
+                          textAlign: TextAlign.center,
+                          style: small,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -746,24 +752,73 @@ class _ViewedNightHeader extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.centerLeft,
-            child: TextButton(
-              key: const Key('nightMoon.backToPlan'),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(
-                  0,
-                  AppSpacing.sm,
-                  AppSpacing.itemGap,
-                  AppSpacing.sm,
+            child: _RevealViewedNightControl(
+              child: TextButton(
+                key: const Key('nightMoon.backToPlan'),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.fromLTRB(
+                    0,
+                    AppSpacing.sm,
+                    AppSpacing.itemGap,
+                    AppSpacing.sm,
+                  ),
                 ),
+                onPressed: browser.viewPlanNight,
+                child: const Text('Back to your plan’s night'),
               ),
-              onPressed: browser.viewPlanNight,
-              child: const Text('Back to your plan’s night'),
             ),
           ),
         ],
       ],
     );
   }
+}
+
+/// Reveal only keyboard-focused controls in this browser's scroll owner.
+class _RevealViewedNightControl extends StatelessWidget {
+  const _RevealViewedNightControl({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Focus(
+    canRequestFocus: false,
+    skipTraversal: true,
+    onFocusChange: (hasFocus) {
+      if (!hasFocus ||
+          FocusManager.instance.highlightMode !=
+              FocusHighlightMode.traditional) {
+        return;
+      }
+      final focused = FocusManager.instance.primaryFocus;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted ||
+            focused == null ||
+            !identical(focused, FocusManager.instance.primaryFocus)) {
+          return;
+        }
+        final scrollable = Scrollable.maybeOf(context);
+        final viewport = scrollable?.context.findRenderObject();
+        final control = context.findRenderObject();
+        if (viewport is! RenderBox ||
+            control is! RenderBox ||
+            !viewport.hasSize ||
+            !control.hasSize) {
+          return;
+        }
+        final visible = viewport.localToGlobal(Offset.zero) & viewport.size;
+        final target = control.localToGlobal(Offset.zero) & control.size;
+        if (target.top >= visible.top && target.bottom <= visible.bottom) {
+          return;
+        }
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0.5,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
+        );
+      });
+    },
+    child: child,
+  );
 }
 
 /// "Night of Tue, Nov 10 · Ljubljana" for a detail's header (S6.5).

@@ -9,6 +9,7 @@ import '../../shared/change_mark.dart';
 import '../../shared/collapsible_section.dart';
 import '../../shared/context_line.dart';
 import '../../shared/hybrid_parts.dart';
+import '../../shared/hybrid_quiet_ink.dart';
 import 'capture_assumptions_panel.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../shared/storage_text.dart';
@@ -264,10 +265,29 @@ class CaptureBudgetSummary extends StatelessWidget {
                       '$library block${library == 1 ? '' : 's'}, no time needed',
                       key: const Key('budget.library'),
                     ),
-                  HybridFact(
-                    'File size basis',
-                    storageNote,
+                  MergeSemantics(
                     key: const Key('capturePlan.storageNote'),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'File size basis',
+                          style: AppTypography.caption.copyWith(
+                            color: palette.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          storageNote,
+                          textAlign: TextAlign.start,
+                          style: AppTypography.caption.copyWith(
+                            color: palette.textSecondary,
+                            height: 1.7,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ]),
                 const SizedBox(height: 16),
@@ -289,6 +309,7 @@ class CaptureBudgetSummary extends StatelessWidget {
                       if (context.watch<MetadataImportViewModel?>() != null)
                         TextButton(
                           key: const Key('capturePlan.chooseFile'),
+                          style: HybridQuietInk.buttonStyle(context),
                           onPressed: () => chooseStorageFile(context),
                           child: const Text('Choose one file'),
                         ),

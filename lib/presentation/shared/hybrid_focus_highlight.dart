@@ -14,24 +14,50 @@ class _HybridFocusHighlightState extends State<HybridFocusHighlight>
     with WidgetsBindingObserver {
   final repaint = _FocusRepaint();
   final root = GlobalKey();
+  bool _geometryCheckPending = false;
+  Rect? _lastRect;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    FocusManager.instance.addListener(repaint.refresh);
+    FocusManager.instance.addListener(_refresh);
     FocusManager.instance.addHighlightModeListener(_highlightChanged);
   }
 
-  void _highlightChanged(FocusHighlightMode mode) => repaint.refresh();
+  void _highlightChanged(FocusHighlightMode mode) => _refresh();
 
   @override
-  void didChangeMetrics() => repaint.refresh();
+  void didChangeMetrics() => _refresh();
+
+  void _refresh() {
+    repaint.refresh();
+    _checkGeometryAfterLayout();
+  }
+
+  void _checkGeometryAfterLayout() {
+    if (_geometryCheckPending || !mounted) return;
+    _geometryCheckPending = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _geometryCheckPending = false;
+      if (!mounted) return;
+      final rect = _focusRingRect(root);
+      if (rect != _lastRect) {
+        _lastRect = rect;
+        repaint.refresh();
+      }
+      // Descendant inset/route animations can relayout within their own
+      // boundary without invalidating this sibling painter. Observe frames
+      // while a ring exists, but request paint only when its geometry moves.
+      // addPostFrameCallback does not itself schedule another frame.
+      if (rect != null) _checkGeometryAfterLayout();
+    });
+  }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    FocusManager.instance.removeListener(repaint.refresh);
+    FocusManager.instance.removeListener(_refresh);
     FocusManager.instance.removeHighlightModeListener(_highlightChanged);
     repaint.dispose();
     super.dispose();
@@ -41,7 +67,7 @@ class _HybridFocusHighlightState extends State<HybridFocusHighlight>
   Widget build(BuildContext context) =>
       NotificationListener<ScrollNotification>(
         onNotification: (_) {
-          repaint.refresh();
+          _refresh();
           return false;
         },
         child: Stack(
@@ -79,44 +105,8 @@ class _FocusRingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (FocusManager.instance.highlightMode != FocusHighlightMode.traditional) {
-      return;
-    }
-    final focused = FocusManager.instance.primaryFocus;
-    final focusContext = focused?.context;
-    final rootBox = root.currentContext?.findRenderObject();
-    if (focusContext == null || rootBox is! RenderBox || !rootBox.hasSize) {
-      return;
-    }
-    RenderObject? target = focusContext.findRenderObject();
-    // EditableText's Focus wraps only the text; highlight its whole field.
-    focusContext.visitAncestorElements((element) {
-      final widget = element.widget;
-      if (widget is InputDecorator ||
-          widget is ButtonStyleButton ||
-          widget is Slider ||
-          widget is IconButton) {
-        target = element.findRenderObject();
-        return false;
-      }
-      if (widget is Scaffold || widget is Navigator) return false;
-      return true;
-    });
-    final box = target;
-    if (box is! RenderBox ||
-        !box.attached ||
-        !box.hasSize ||
-        box.size.isEmpty) {
-      return;
-    }
-    // A route can leave between focus notification and paint.
-    RenderObject? ancestor = box;
-    while (ancestor != null && !identical(ancestor, rootBox)) {
-      ancestor = ancestor.parent;
-    }
-    if (ancestor == null) return;
-    final offset = box.localToGlobal(Offset.zero, ancestor: rootBox);
-    final rect = (offset & box.size).inflate(4);
+    final rect = _focusRingRect(root);
+    if (rect == null) return;
     canvas.save();
     canvas.clipRect(Offset.zero & size);
     canvas.drawRRect(
@@ -132,6 +122,44 @@ class _FocusRingPainter extends CustomPainter {
   @override
   bool shouldRepaint(_FocusRingPainter oldDelegate) =>
       oldDelegate.color != color || oldDelegate.root != root;
+}
+
+Rect? _focusRingRect(GlobalKey root) {
+  if (FocusManager.instance.highlightMode != FocusHighlightMode.traditional) {
+    return null;
+  }
+  final focused = FocusManager.instance.primaryFocus;
+  final focusContext = focused?.context;
+  final rootBox = root.currentContext?.findRenderObject();
+  if (focusContext == null || rootBox is! RenderBox || !rootBox.hasSize) {
+    return null;
+  }
+  RenderObject? target = focusContext.findRenderObject();
+  // EditableText's Focus wraps only the text; highlight its whole field.
+  focusContext.visitAncestorElements((element) {
+    final widget = element.widget;
+    if (widget is InputDecorator ||
+        widget is ButtonStyleButton ||
+        widget is Slider ||
+        widget is IconButton) {
+      target = element.findRenderObject();
+      return false;
+    }
+    if (widget is Scaffold || widget is Navigator) return false;
+    return true;
+  });
+  final box = target;
+  if (box is! RenderBox || !box.attached || !box.hasSize || box.size.isEmpty) {
+    return null;
+  }
+  // A route can leave between focus notification and paint.
+  RenderObject? ancestor = box;
+  while (ancestor != null && !identical(ancestor, rootBox)) {
+    ancestor = ancestor.parent;
+  }
+  if (ancestor == null) return null;
+  final offset = box.localToGlobal(Offset.zero, ancestor: rootBox);
+  return (offset & box.size).inflate(4);
 }
 
 class _FocusRepaint extends ChangeNotifier {

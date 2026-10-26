@@ -107,7 +107,32 @@ class _ResultsScreenState extends State<ResultsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ResultsViewModel?>()?.load(widget.sessionId);
+    _load();
+  }
+
+  void _load() {
+    final id = widget.sessionId;
+    // Loading notifies the shared VM; start after the mounting build.
+    Future.microtask(() {
+      if (mounted && widget.sessionId == id) {
+        context.read<ResultsViewModel?>()?.load(id);
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(ResultsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.sessionId == widget.sessionId) return;
+    _filled = false;
+    _fallback = false;
+    _outcome = null;
+    _reason = null;
+    for (final controller in _counts.values) {
+      controller.dispose();
+    }
+    _counts.clear();
+    _load();
   }
 
   @override
@@ -238,10 +263,21 @@ class _ResultsScreenState extends State<ResultsScreen> {
       _fallback = true;
       showDeletedPlanFallback(context);
     }
-    if (vm == null || session == null || session.id != widget.sessionId) {
+    if (vm == null ||
+        vm.requestedId != widget.sessionId ||
+        vm.isLoading ||
+        vm.loadError != null ||
+        session == null ||
+        session.id != widget.sessionId) {
       return Scaffold(
         appBar: hybridAppBar(context, title: const Text('How did it go?')),
-        body: const Center(child: CircularProgressIndicator()),
+        body: vm?.requestedId == widget.sessionId && vm?.loadError != null
+            ? LoadFailureView(
+                action: 'load the result',
+                error: vm!.loadError!,
+                onRetry: () => vm.load(widget.sessionId),
+              )
+            : const Center(child: CircularProgressIndicator()),
       );
     }
     // F19 A5: the form fills from the saved plan once its changes are

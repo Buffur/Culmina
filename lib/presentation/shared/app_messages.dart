@@ -21,7 +21,7 @@ class AppMessageController {
 extension AppMessages on ScaffoldMessengerState {
   void hideCurrentMessage() => _messages[this]?.close();
 
-  AppMessageController showMessage(SnackBar bar) {
+  AppMessageController showMessage(SnackBar bar, {ButtonStyle? actionStyle}) {
     hideCurrentMessage();
     late AppMessageController result;
     void finish(SnackBarClosedReason reason) {
@@ -63,6 +63,7 @@ extension AppMessages on ScaffoldMessengerState {
         actions: [
           if (action != null)
             TextButton(
+              style: actionStyle,
               onPressed: () {
                 if (result._closed.isCompleted) return;
                 action.onPressed();

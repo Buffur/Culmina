@@ -118,7 +118,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ),
                 ],
               ),
-              if (snapshot.hasError) ...[
+              if (snapshot.connectionState != ConnectionState.done) ...[
+                const SizedBox(height: AppSpacing.itemGap),
+                const LinearProgressIndicator(
+                  key: Key('library.countsPending'),
+                  semanticsLabel: 'Loading library counts',
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text('Loading library counts…', style: caption),
+              ] else if (snapshot.hasError) ...[
                 const SizedBox(height: AppSpacing.itemGap),
                 Text(
                   "Couldn't load library counts. Lists remain available.",

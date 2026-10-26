@@ -7,6 +7,7 @@ import '../../../domain/models/equipment_limits.dart';
 import '../../../domain/services/storage_estimate.dart';
 import '../../screens/equipment/equipment_editor.dart';
 import '../../shared/app_messages.dart';
+import '../../shared/hybrid_quiet_ink.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/storage_text.dart';
 import '../../viewmodels/library_viewmodels.dart';
@@ -82,6 +83,7 @@ Future<void> chooseStorageFile(BuildContext context) async {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(dialog, false),
+          style: HybridQuietInk.buttonStyle(dialog),
           child: const Text('Cancel'),
         ),
         FilledButton(

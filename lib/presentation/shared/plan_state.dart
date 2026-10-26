@@ -50,6 +50,16 @@ enum PlanState {
     resultKind: s.resultKind,
   );
 
+  /// Current planner facts can be newer than the stored row while autosave
+  /// is pending or failed. Only explicit Save plan settles those edits.
+  static PlanState forWorkingPlan(
+    Session s, {
+    required bool hasUnsavedChanges,
+  }) {
+    final stored = of(s);
+    return stored == saved && hasUnsavedChanges ? savedChanged : stored;
+  }
+
   String get word => switch (this) {
     notSaved => AppWords.notSaved,
     saved => AppWords.saved,

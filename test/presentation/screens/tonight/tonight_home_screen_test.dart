@@ -469,6 +469,18 @@ void main() {
       await tester.ensureVisible(candidates);
       await tester.tap(candidates);
       await settle(tester);
+      // The real candidates isolate can outlive six event turns under load.
+      // Wait for its loaded header, retaining the exact route/content checks.
+      final loaded = find.byKey(const Key('tonight.header'));
+      final deadline = Stopwatch()..start();
+      while (loaded.evaluate().isEmpty &&
+          deadline.elapsed < const Duration(seconds: 5)) {
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 20)),
+        );
+        await tester.pump(const Duration(milliseconds: 200));
+      }
       // app.js `candidates` detail: the sheet's title is the action.
       expect(find.byKey(const Key('tonight.header')), findsOneWidget);
       expect(find.text('What can I image tonight?'), findsWidgets);

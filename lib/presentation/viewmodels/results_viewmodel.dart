@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../core/diagnostics/app_log.dart';
 import '../../core/time/clock.dart';
 import '../../domain/models/capture_block.dart';
 import '../../domain/models/execution.dart';
@@ -47,6 +48,15 @@ class ResultsViewModel extends ChangeNotifier {
 
   Session? _session;
   ExecutionState? _state;
+  int _loadRevision = 0;
+  bool _disposed = false;
+  int? _requestedId;
+  bool _loading = false;
+  Object? _loadError;
+
+  int? get requestedId => _requestedId;
+  bool get isLoading => _loading;
+  Object? get loadError => _loadError;
 
   Session? get session => _session;
 
@@ -182,20 +192,57 @@ class ResultsViewModel extends ChangeNotifier {
   /// Loads entry [id]; a Saved · changed one whose night has ended is
   /// settled first, so the form reviews and records the saved plan.
   Future<void> load(int id) async {
-    var s = await _sessions.get(id);
-    final settle = _settle;
-    if (s != null &&
-        settle != null &&
-        s.isSavedChanged &&
-        s.planSnapshot != null &&
-        SavedNightEnd.hasEnded(s, _clock.nowUtc())) {
-      await settle(id);
-      s = await _sessions.get(id);
-    }
-    _session = s;
-    _missingId = s == null ? id : null;
-    _state = s == null ? null : await _sessions.execution(id);
+    if (_disposed) return;
+    final revision = ++_loadRevision;
+    bool ownsRequest() => !_disposed && revision == _loadRevision;
+    _requestedId = id;
+    _loading = true;
+    _loadError = null;
+    _missingId = null;
+    _session = null;
+    _state = null;
     notifyListeners();
+    try {
+      var s = await _sessions.get(id);
+      if (!ownsRequest()) return;
+      final settle = _settle;
+      if (s != null &&
+          settle != null &&
+          s.isSavedChanged &&
+          s.planSnapshot != null &&
+          SavedNightEnd.hasEnded(s, _clock.nowUtc())) {
+        await settle(id);
+        if (!ownsRequest()) return;
+        s = await _sessions.get(id);
+        if (!ownsRequest()) return;
+      }
+      final state = s == null ? null : await _sessions.execution(id);
+      if (!ownsRequest()) return;
+      _session = s;
+      _missingId = s == null ? id : null;
+      _state = state;
+    } catch (error, stack) {
+      if (!ownsRequest()) return;
+      _loadError = error;
+      AppLog.error(
+        'results',
+        'Could not load the result',
+        error: error,
+        stackTrace: stack,
+      );
+    } finally {
+      if (ownsRequest()) {
+        _loading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _loadRevision++;
+    super.dispose();
   }
 
   /// Records [report] against the entry as loaded (S4-DEF-08): a changed

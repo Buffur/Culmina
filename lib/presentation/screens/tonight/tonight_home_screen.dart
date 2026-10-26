@@ -354,7 +354,10 @@ class _PlanSection extends StatelessWidget {
               ),
               if (session != null)
                 PlanStateLabel(
-                  PlanState.of(session),
+                  PlanState.forWorkingPlan(
+                    session,
+                    hasUnsavedChanges: planVm.hasUnsavedChanges,
+                  ),
                   key: const Key('tonight.planState'),
                   withIcon: true,
                 ),

@@ -109,6 +109,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       padding: EdgeInsets.zero,
                       child: CollapsibleSection(
                         key: const Key('progress.guide'),
+                        readableFeedback: true,
                         topRule: false,
                         sectionKey: 'logbook.progressGuide',
                         title: 'How totals are grouped',

@@ -15,6 +15,7 @@ import '../../domain/models/visibility_window.dart';
 import '../../domain/services/moon_calendar.dart';
 import '../../domain/services/night_view.dart';
 import '../shared/hybrid_icon.dart';
+import '../shared/hybrid_quiet_ink.dart';
 import '../shared/night_text.dart';
 import '../shared/sky_color_interpolation.dart';
 import '../shared/night_time_formatter.dart';
@@ -1181,6 +1182,7 @@ class MoonCalendarSection extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () => browser.retryCalendar(year, month),
+                  style: HybridQuietInk.buttonStyle(context),
                   child: const Text('Retry month'),
                 ),
               ],
@@ -1305,6 +1307,7 @@ class _DayCell extends StatelessWidget {
           '${MoonCalendarSection.dayLabel(day)}${plan ? '; your plan\'s night' : ''}',
       child: InkWell(
         key: Key('nightMoon.day.${day.date.toIso8601String()}'),
+        overlayColor: HybridQuietInk.overlay(context),
         onTap: () => browser.viewNight(day.date),
         borderRadius: BorderRadius.circular(6),
         child: Container(
@@ -1473,6 +1476,7 @@ class _WeekListState extends State<_WeekList> {
                 key: Key('nightMoon.weekError'),
               ),
               TextButton(
+                style: HybridQuietInk.buttonStyle(context),
                 onPressed: () {
                   for (final (year, month) in months) {
                     if (browser.calendarError(year, month) != null) {
@@ -1496,32 +1500,34 @@ class _WeekListState extends State<_WeekList> {
                   color: d.date == viewed
                       ? selection
                       : HybridTokens.transparent,
-                  child: ListTile(
-                    key: Key('nightMoon.day.${d.date.toIso8601String()}'),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                    selected: d.date == viewed,
-                    selectedColor: p.textPrimary,
-                    leading: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CustomPaint(
-                        painter: MoonPhasePainter.hybrid(
-                          theme,
-                          phaseLongitudeDeg: d.phaseLongitudeDeg,
+                  child: HybridQuietInk(
+                    child: ListTile(
+                      key: Key('nightMoon.day.${d.date.toIso8601String()}'),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      selected: d.date == viewed,
+                      selectedColor: p.textPrimary,
+                      leading: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CustomPaint(
+                          painter: MoonPhasePainter.hybrid(
+                            theme,
+                            phaseLongitudeDeg: d.phaseLongitudeDeg,
+                          ),
                         ),
                       ),
-                    ),
-                    title: Text(
-                      MoonCalendarSection.dayLabel(d),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontSize: 12,
-                        height: 1.5,
+                      title: Text(
+                        MoonCalendarSection.dayLabel(d),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 12,
+                          height: 1.5,
+                        ),
                       ),
+                      subtitle: d.date == browser.planNight
+                          ? const Text("Your plan's night")
+                          : null,
+                      onTap: () => browser.viewNight(d.date),
                     ),
-                    subtitle: d.date == browser.planNight
-                        ? const Text("Your plan's night")
-                        : null,
-                    onTap: () => browser.viewNight(d.date),
                   ),
                 ),
               ),

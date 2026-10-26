@@ -21,6 +21,7 @@ import '../shared/clear_outside_link.dart';
 import '../shared/collapsible_section.dart';
 import '../shared/display_units_of.dart';
 import '../shared/hybrid_icon.dart';
+import '../shared/hybrid_quiet_ink.dart';
 import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../viewmodels/display_settings_viewmodel.dart';
@@ -29,6 +30,7 @@ import '../viewmodels/night_conditions_viewmodel.dart';
 import '../viewmodels/session_plan_viewmodel.dart';
 import '../viewmodels/settings_viewmodel.dart';
 import '../viewmodels/site_viewmodel.dart';
+import 'weather_details_table.dart';
 
 /// One weather variable as the Hybrid reference lists it
 /// (weather-variants.js `metrics`): its label, icon, tone and how its
@@ -1229,6 +1231,7 @@ class _HourDetails extends StatelessWidget {
             expanded: open,
             child: InkWell(
               onTap: onToggle,
+              overlayColor: HybridQuietInk.overlay(context),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: 48),
                 child: Padding(
@@ -1426,18 +1429,58 @@ class _Details extends StatelessWidget {
           style: text,
         ),
         if (s != null && s.slots.isNotEmpty)
-          SingleChildScrollView(
-            key: const Key('weather.table'),
-            scrollDirection: Axis.horizontal,
-            child: Table(
-              defaultColumnWidth: const IntrinsicColumnWidth(),
-              children: [
+          WeatherDetailsTable(
+            background:
+                Theme.of(context).extension<HybridTokens>()?.surfaceSubtle ??
+                Theme.of(context).cardColor,
+            rows: [
+              TableRow(
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: p.border)),
+                ),
+                children: [
+                  for (final c in columns)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        AppSpacing.cellY,
+                        AppSpacing.itemGap,
+                        AppSpacing.cellY,
+                      ),
+                      child: Text(c, style: head),
+                    ),
+                ],
+              ),
+              for (final slot in s.slots)
                 TableRow(
                   decoration: BoxDecoration(
                     border: Border(bottom: BorderSide(color: p.border)),
                   ),
                   children: [
-                    for (final c in columns)
+                    for (final cell in [
+                      _instant(context, slot, zoneId),
+                      slot.instant ? v(slot.hour?.cloudCoverPct) : '—',
+                      slot.instant
+                          ? '${v(slot.hour?.cloudCoverLowPct)} / ${v(slot.hour?.cloudCoverMidPct)} / ${v(slot.hour?.cloudCoverHighPct)}'
+                          : '—',
+                      slot.instant && slot.hour?.temperatureC != null
+                          ? _number(
+                              units.temperatureOf(slot.hour!.temperatureC!),
+                            )
+                          : '—',
+                      slot.instant && slot.hour?.dewPointC != null
+                          ? _number(units.temperatureOf(slot.hour!.dewPointC!))
+                          : '—',
+                      '${slot.instant && slot.hour?.windSpeedKmh != null ? _number(units.windOf(slot.hour!.windSpeedKmh!)) : '—'} / '
+                          '${slot.preceding && slot.hour?.windGustsKmh != null ? _number(units.windOf(slot.hour!.windGustsKmh!)) : '—'}',
+                      slot.preceding
+                          ? v(slot.hour?.precipitationProbabilityPct)
+                          : '—',
+                      slot.instant ? v(slot.hour?.relativeHumidityPct) : '—',
+                      slot.instant && slot.hour?.visibilityM != null
+                          ? _number(slot.hour!.visibilityM! / 1000)
+                          : '—',
+                    ])
                       Padding(
                         padding: const EdgeInsets.fromLTRB(
                           0,
@@ -1445,55 +1488,11 @@ class _Details extends StatelessWidget {
                           AppSpacing.itemGap,
                           AppSpacing.cellY,
                         ),
-                        child: Text(c, style: head),
+                        child: Text(cell, style: dense),
                       ),
                   ],
                 ),
-                for (final slot in s.slots)
-                  TableRow(
-                    decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: p.border)),
-                    ),
-                    children: [
-                      for (final cell in [
-                        _instant(context, slot, zoneId),
-                        slot.instant ? v(slot.hour?.cloudCoverPct) : '—',
-                        slot.instant
-                            ? '${v(slot.hour?.cloudCoverLowPct)} / ${v(slot.hour?.cloudCoverMidPct)} / ${v(slot.hour?.cloudCoverHighPct)}'
-                            : '—',
-                        slot.instant && slot.hour?.temperatureC != null
-                            ? _number(
-                                units.temperatureOf(slot.hour!.temperatureC!),
-                              )
-                            : '—',
-                        slot.instant && slot.hour?.dewPointC != null
-                            ? _number(
-                                units.temperatureOf(slot.hour!.dewPointC!),
-                              )
-                            : '—',
-                        '${slot.instant && slot.hour?.windSpeedKmh != null ? _number(units.windOf(slot.hour!.windSpeedKmh!)) : '—'} / '
-                            '${slot.preceding && slot.hour?.windGustsKmh != null ? _number(units.windOf(slot.hour!.windGustsKmh!)) : '—'}',
-                        slot.preceding
-                            ? v(slot.hour?.precipitationProbabilityPct)
-                            : '—',
-                        slot.instant ? v(slot.hour?.relativeHumidityPct) : '—',
-                        slot.instant && slot.hour?.visibilityM != null
-                            ? _number(slot.hour!.visibilityM! / 1000)
-                            : '—',
-                      ])
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            0,
-                            AppSpacing.cellY,
-                            AppSpacing.itemGap,
-                            AppSpacing.cellY,
-                          ),
-                          child: Text(cell, style: dense),
-                        ),
-                    ],
-                  ),
-              ],
-            ),
+            ],
           ),
         InkWell(
           onTap: () => launchUrl(
@@ -1627,8 +1626,8 @@ class _ComingNights extends StatelessWidget {
                 ),
               if (beyond != null)
                 Text(
-                  'No forecast from ${NightTimeFormatter.eveningDate(beyond)}: '
-                  'beyond the 16-day forecast. Night and Moon browsing remain '
+                  'No forecast in this snapshot from ${NightTimeFormatter.eveningDate(beyond)}. '
+                  'Night and Moon browsing remain '
                   'available.',
                   key: const Key('weather.nights.beyond'),
                   style: AppTypography.caption.copyWith(

@@ -6,6 +6,7 @@ import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import 'hybrid_icon.dart';
+import 'hybrid_quiet_ink.dart';
 import '../viewmodels/disclosure_viewmodel.dart';
 
 /// Detail one tap away (S5.5; ADR-019 §7, RD-06, RG-06): a header with the
@@ -30,12 +31,16 @@ class CollapsibleSection extends StatelessWidget {
     this.titleStyle,
     this.icon,
     this.iconColor,
+    this.readableFeedback = false,
   });
 
   /// A data icon before the title (conditions.css `.condition-data-heading`:
   /// 20 px, 10 before the words), e.g. the Moon or the Sun.
   final HybridIconData? icon;
   final Color? iconColor;
+
+  /// Local opt-in for confirmed quiet-label interaction states.
+  final bool readableFeedback;
 
   /// The Hybrid disclosure's thin rule above it (`.plan-disclosure`).
   final bool topRule;
@@ -90,6 +95,7 @@ class CollapsibleSection extends StatelessWidget {
       excludeSemantics: true,
       label: [title, ?summary].join(', '),
       child: InkWell(
+        overlayColor: readableFeedback ? HybridQuietInk.overlay(context) : null,
         onTap: toggle,
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 48),

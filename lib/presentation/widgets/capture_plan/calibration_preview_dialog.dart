@@ -360,10 +360,15 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
             ),
           ),
         ),
-        bottomNavigationBar: HybridApplyBar(
-          buttonKey: const Key('calibration.confirm'),
-          label: 'Add selected frames',
-          onPressed: kept == 0 ? null : _confirm,
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: HybridApplyBar(
+            buttonKey: const Key('calibration.confirm'),
+            label: 'Add selected frames',
+            onPressed: kept == 0 ? null : _confirm,
+          ),
         ),
       ),
     );

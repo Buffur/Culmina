@@ -12,6 +12,7 @@ import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/plan_overrides.dart';
 import '../../shared/confirmation_patterns.dart';
+import '../../shared/app_messages.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/hybrid_app_bar.dart';
 import '../../shared/hybrid_parts.dart';
@@ -70,6 +71,8 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final value = context.watch<SessionPlanViewModel>().planOverrides;
+    // The submitted buffer owns this Apply until completion.
+    if (_saving) return;
     if (!_initialized || !identical(value, _loaded)) {
       _initialized = true;
       _loaded = value;
@@ -124,15 +127,25 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
             fixedMarginSeconds: value(2, 60),
             bytesPerFrame: value(3, 1e6),
           );
+    FocusScope.of(context).unfocus();
     setState(() => _saving = true);
     final saved = await runWithFeedback(
       context,
       'apply the plan assumptions',
-      () => context.read<SessionPlanViewModel>().setPlanOverrides(next),
+      () async {
+        final plan = context.read<SessionPlanViewModel>();
+        await plan.setPlanOverrides(next);
+        // Autosave retains its failure instead of throwing. Keep the local
+        // editor available for retry when this Apply did not reach storage.
+        if (plan.autosaveFailure case final failure?) throw failure;
+      },
     );
     if (!mounted) return;
     setState(() => _saving = false);
-    if (saved) _close();
+    if (saved) {
+      ScaffoldMessenger.of(context).hideCurrentMessage();
+      _close();
+    }
   }
 
   @override
@@ -264,6 +277,7 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                                     child: TextFormField(
                                       key: Key('planOverride.$i'),
                                       controller: _controllers[i],
+                                      enabled: !_saving,
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                             decimal: true,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../shared/hybrid_parts.dart';
+import '../shared/hybrid_quiet_ink.dart';
 
 import '../../domain/models/tracking_type.dart';
 import '../shared/failure_feedback.dart';
@@ -35,23 +36,25 @@ Future<void> pickPlanTracking(BuildContext context) async {
       title: const Text(PlanTrackingText.title),
       children: [
         for (final option in <TrackingType?>[null, ...TrackingType.overrides])
-          SimpleDialogOption(
-            key: Key('planTracking.${option?.name ?? 'rig'}'),
-            onPressed: () => Navigator.pop(context, (value: option)),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 48),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      option == null
-                          ? PlanTrackingText.rigDefault(rigDefault)
-                          : option.label,
+          HybridQuietInk(
+            child: SimpleDialogOption(
+              key: Key('planTracking.${option?.name ?? 'rig'}'),
+              onPressed: () => Navigator.pop(context, (value: option)),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 48),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        option == null
+                            ? PlanTrackingText.rigDefault(rigDefault)
+                            : option.label,
+                      ),
                     ),
-                  ),
-                  if (option == plan.trackingOverride)
-                    const Icon(Icons.check, semanticLabel: 'Chosen'),
-                ],
+                    if (option == plan.trackingOverride)
+                      const Icon(Icons.check, semanticLabel: 'Chosen'),
+                  ],
+                ),
               ),
             ),
           ),

@@ -219,88 +219,225 @@ class _NightPickerDialogState extends State<NightPickerDialog> {
               }),
             ),
           )
-        else ...[
-          Row(
-            children: [
-              for (var i = 0; i < 7; i++)
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      labels.narrowWeekdays[(labels.firstDayOfWeekIndex + i) %
-                          7],
-                      style: AppTypography.caption,
-                    ),
+        else
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 7 * 48) {
+                return _DateChoiceList(
+                  key: ValueKey(
+                    'nightPicker.list.${_month.year}.${_month.month}',
                   ),
-                ),
-            ],
-          ),
-          GridView.builder(
-            key: ValueKey('nightPicker.month.${_month.year}.${_month.month}'),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              mainAxisExtent: 48,
-            ),
-            itemCount: leading + days,
-            itemBuilder: (context, index) {
-              if (index < leading) return const SizedBox.shrink();
-              final date = DateTime(
-                _month.year,
-                _month.month,
-                index - leading + 1,
-              );
-              final selected = DateUtils.isSameDay(date, _selected);
-              final enabled =
-                  !date.isBefore(widget.firstDate) &&
-                  !date.isAfter(widget.lastDate);
-              void choose() => setState(() => _selected = date);
-              return Semantics(
-                label: labels.formatFullDate(date),
-                selected: selected,
-                button: true,
-                enabled: enabled,
-                onTap: enabled ? choose : null,
-                excludeSemantics: true,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: const CircleBorder(),
-                    foregroundColor: selected
-                        ? scheme.onPrimary
-                        : scheme.onSurface,
-                    textStyle:
-                        Theme.of(context).datePickerTheme.dayStyle ??
-                        AppTypography.body,
-                  ),
-                  onPressed: enabled ? choose : null,
-                  child: ExcludeSemantics(
-                    child: SizedBox.square(
-                      dimension: 40,
-                      child: DecoratedBox(
-                        decoration: ShapeDecoration(
-                          color: selected ? scheme.primary : null,
-                          shape: CircleBorder(
-                            side:
-                                !selected &&
-                                    DateUtils.isSameDay(date, DateTime.now())
-                                ? BorderSide(color: scheme.primary)
-                                : BorderSide.none,
+                  month: _month,
+                  selected: _selected,
+                  firstDate: widget.firstDate,
+                  lastDate: widget.lastDate,
+                  onSelected: (date) => setState(() => _selected = date),
+                );
+              }
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      for (var i = 0; i < 7; i++)
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              labels.narrowWeekdays[(labels
+                                          .firstDayOfWeekIndex +
+                                      i) %
+                                  7],
+                              style: AppTypography.caption,
+                            ),
                           ),
                         ),
-                        child: Center(
-                          child: Text(labels.formatDecimal(date.day)),
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
-                ),
+                  GridView.builder(
+                    key: ValueKey(
+                      'nightPicker.month.${_month.year}.${_month.month}',
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 7,
+                          mainAxisExtent: 48,
+                        ),
+                    itemCount: leading + days,
+                    itemBuilder: (context, index) {
+                      if (index < leading) return const SizedBox.shrink();
+                      final date = DateTime(
+                        _month.year,
+                        _month.month,
+                        index - leading + 1,
+                      );
+                      final selected = DateUtils.isSameDay(date, _selected);
+                      final enabled =
+                          !date.isBefore(widget.firstDate) &&
+                          !date.isAfter(widget.lastDate);
+                      void choose() => setState(() => _selected = date);
+                      return Semantics(
+                        label: labels.formatFullDate(date),
+                        selected: selected,
+                        button: true,
+                        enabled: enabled,
+                        onTap: enabled ? choose : null,
+                        excludeSemantics: true,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: const CircleBorder(),
+                            foregroundColor: selected
+                                ? scheme.onPrimary
+                                : scheme.onSurface,
+                            textStyle:
+                                Theme.of(context).datePickerTheme.dayStyle ??
+                                AppTypography.body,
+                          ),
+                          onPressed: enabled ? choose : null,
+                          child: ExcludeSemantics(
+                            child: SizedBox.square(
+                              dimension: 40,
+                              child: DecoratedBox(
+                                decoration: ShapeDecoration(
+                                  color: selected ? scheme.primary : null,
+                                  shape: CircleBorder(
+                                    side:
+                                        !selected &&
+                                            DateUtils.isSameDay(
+                                              date,
+                                              DateTime.now(),
+                                            )
+                                        ? BorderSide(color: scheme.primary)
+                                        : BorderSide.none,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(labels.formatDecimal(date.day)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               );
             },
           ),
-        ],
       ],
+    );
+  }
+}
+
+/// The approved narrow-width date list; wider calendars retain their grid.
+class _DateChoiceList extends StatefulWidget {
+  const _DateChoiceList({
+    super.key,
+    required this.month,
+    required this.selected,
+    required this.firstDate,
+    required this.lastDate,
+    required this.onSelected,
+  });
+  final DateTime month;
+  final DateTime selected;
+  final DateTime firstDate;
+  final DateTime lastDate;
+  final ValueChanged<DateTime> onSelected;
+
+  @override
+  State<_DateChoiceList> createState() => _DateChoiceListState();
+}
+
+class _DateChoiceListState extends State<_DateChoiceList> {
+  late final ScrollController _scroll;
+
+  @override
+  void initState() {
+    super.initState();
+    final days = DateUtils.getDaysInMonth(
+      widget.month.year,
+      widget.month.month,
+    );
+    final selectedMonth =
+        widget.selected.year == widget.month.year &&
+        widget.selected.month == widget.month.month;
+    _scroll = ScrollController(
+      initialScrollOffset:
+          ((selectedMonth ? widget.selected.day - 1 : 0) * 48.0).clamp(
+            0.0,
+            (days - 6) * 48.0,
+          ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final labels = MaterialLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    return SizedBox(
+      key: const Key('nightPicker.dates'),
+      height: 6 * 48,
+      child: ListView.builder(
+        key: PageStorageKey(
+          'nightPicker.dates.${widget.month.year}.${widget.month.month}',
+        ),
+        controller: _scroll,
+        padding: EdgeInsets.zero,
+        itemExtent: 48,
+        itemCount: DateUtils.getDaysInMonth(
+          widget.month.year,
+          widget.month.month,
+        ),
+        itemBuilder: (context, index) {
+          final date = DateTime(
+            widget.month.year,
+            widget.month.month,
+            index + 1,
+          );
+          final selected = DateUtils.isSameDay(date, widget.selected);
+          final enabled =
+              !date.isBefore(widget.firstDate) &&
+              !date.isAfter(widget.lastDate);
+          void choose() => widget.onSelected(date);
+          return Semantics(
+            label: labels.formatFullDate(date),
+            selected: selected,
+            button: true,
+            enabled: enabled,
+            onTap: enabled ? choose : null,
+            excludeSemantics: true,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                foregroundColor: selected ? scheme.onPrimary : scheme.onSurface,
+                backgroundColor: selected ? scheme.primary : null,
+                textStyle:
+                    Theme.of(context).datePickerTheme.dayStyle ??
+                    AppTypography.body,
+              ),
+              onPressed: enabled ? choose : null,
+              child: Row(
+                children: [
+                  Expanded(child: Text(labels.formatMediumDate(date))),
+                  if (selected) const Icon(Icons.check, size: 20),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -478,7 +478,7 @@ void main() {
     final table = tester.widget<Table>(
       find.descendant(
         of: find.byKey(const Key('weather.table')),
-        matching: find.byType(Table),
+        matching: find.byWidgetPredicate((widget) => widget is Table),
       ),
     );
     List<String> row(int i) => [

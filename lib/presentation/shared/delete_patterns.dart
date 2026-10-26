@@ -7,6 +7,7 @@ import '../../domain/repositories/undoable_deletion.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import 'app_messages.dart';
+import 'hybrid_quiet_ink.dart';
 import 'failure_feedback.dart';
 
 // Deleting (S5.8; RD-09 = M + S1, DECISIONS E.1):
@@ -135,6 +136,7 @@ Future<bool> deleteWithUndoFeedback(
             persist: true,
             action: SnackBarAction(label: 'Undo', onPressed: () {}),
           ),
+          actionStyle: HybridQuietInk.buttonStyle(messenger.context),
         )
         .closed
         .then((reason) async {
