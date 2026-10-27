@@ -8,7 +8,7 @@ metadata:
 
 # Previewing Flutter widgets
 
-Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use only when an isolated preview is part of the requested task. Do not add preview annotations, a preview scaffold, dependencies or conditional-import refactoring merely because a UI component changes. Follow [WORKFLOW modes](../../../docs/design/WORKFLOW.md#work-modes).
+Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use only when an isolated preview is part of the requested task. Do not add preview annotations, a preview scaffold, dependencies or conditional-import refactoring merely because a UI component changes. Follow [AGENTS](../../../AGENTS.md).
 
 ## Preview guidelines
 
@@ -50,4 +50,4 @@ Only for an authorized preview run, use the installed supported IDE route or `fl
 
 ## Finish
 
-Apply [V1–V8](../../../docs/VERIFICATION_POLICY.md) for the actual change class. Report whether existing fixtures sufficed, actual SDK/API, changes made or separately needed, rendered evidence and limits. A browser/widget preview is not Android, physical-device, accessibility certification or owner acceptance; do not close those rows from it.
+Apply [AGENTS](../../../AGENTS.md) for the actual change class. Report whether existing fixtures sufficed, actual SDK/API, changes made or separately needed, rendered evidence and limits. A browser/widget preview is not Android, physical-device, accessibility certification or owner acceptance; do not close those rows from it.

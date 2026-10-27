@@ -5,6 +5,8 @@ description: "How to inject external code examples into Dartdoc using the {@exam
 
 # Using Examples in Dartdoc
 
+Use only for a named Dartdoc example task. The paths and classes below illustrate syntax; they are not existing Culmina fixtures. Inspect the actual source, example files and installed Dartdoc support before applying them. Do not create example scaffolding or migrate unrelated comments as a side effect.
+
 ## Contents
 *   [1. The `{@example}` Directive](#1-the-example-directive)
 *   [2. Using Regions](#2-using-regions)

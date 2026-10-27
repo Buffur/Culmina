@@ -6,7 +6,7 @@ metadata:
   last_modified: Wed, 23 Sep 2026 22:10:00 GMT
 ---
 
-Local Culmina route, 2026-10-27; upstream metadata is retained as provenance. Scope and verification remain in the linked canonical policies.
+Local Culmina guidance; upstream metadata is retained as provenance. Follow [AGENTS](../../../AGENTS.md) for shared scope, source routes and checks.
 
 # Culmina filesystem paths
 
@@ -14,8 +14,8 @@ Use for a named filesystem-path issue. `path` is already declared in `pubspec.ya
 
 1. Inspect the affected file-operation source and its tests. Relevant application areas include `lib/data/backup/`, `lib/data/services/` and `lib/domain/services/`; select the actual caller rather than changing all of them.
 2. Preserve platform-path versus URI meaning and the existing file-access abstraction. Keep owner paths and private samples out of logs and tracked fixtures.
-3. Check unfamiliar `path` API behavior through [AI_WORKFLOW](../../../docs/AI_WORKFLOW.md); inspect the resolved package version before using new API syntax.
-4. Verify the changed behavior under [VERIFICATION_POLICY](../../../docs/VERIFICATION_POLICY.md), including applicable persistence/backup round-trip evidence.
+3. Check unfamiliar `path` API behavior through [AGENTS](../../../AGENTS.md); inspect the resolved package version before using new API syntax.
+4. Verify the changed behavior under [AGENTS](../../../AGENTS.md), including applicable persistence/backup round-trip evidence.
 
 ## Optional upstream examples
 

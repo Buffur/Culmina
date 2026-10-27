@@ -1,6 +1,6 @@
 # Flutter layout and preview source check — 2026-10-24
 
-Dated technical reference for the three local Flutter recipes, not a new policy/status register. [AI_WORKFLOW](../../../docs/AI_WORKFLOW.md) owns documentation research; [VERIFICATION_POLICY](../../../docs/VERIFICATION_POLICY.md) owns checks and [design/WORKFLOW](../../../docs/design/WORKFLOW.md#work-modes) owns task modes. Refresh relevant technical facts when the actual SDK or API changes.
+Dated technical reference for the local Flutter recipes. Follow [AGENTS](../../../AGENTS.md) for current source routes, Context7 research and checks. Refresh relevant facts when the actual SDK or API changes; the historical inspection below is not a current runtime result.
 
 ## Constraints and ParentData
 

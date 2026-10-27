@@ -8,11 +8,11 @@ metadata:
 
 # Resolving Flutter layout errors
 
-Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use for a reported layout failure. Do not invoke adaptive layout or preview infrastructure just because an overflow occurs. Follow the task's [work mode](../../../docs/design/WORKFLOW.md#work-modes); Review stays read-only.
+Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use for a reported layout failure. Do not invoke adaptive layout or preview infrastructure just because an overflow occurs. Follow [AGENTS](../../../AGENTS.md) and the user task; a review reports findings without changing product code.
 
 ## Read and diagnose
 
-Read the relevant Culmina layout/typography contract, affected widget and ancestors. Official sources and the dated SDK check are in [Flutter layout/preview sources](../references/flutter-layout-preview-sources-2026-10-24.md). Refresh technical docs through the AI_WORKFLOW Context7 route when the task needs an API not established there.
+Read the relevant Culmina layout/typography contract, affected widget and ancestors. Official sources and the dated SDK check are in [Flutter layout/preview sources](../references/flutter-layout-preview-sources-2026-10-24.md). Refresh technical docs through the Context7 route in AGENTS.md when the task needs an API not established there.
 
 Find the first causal exception; later "RenderBox was not laid out" messages may be consequences, but inspect them if no earlier cause is found. From available inspector/runtime data or the source, identify:
 
@@ -45,4 +45,4 @@ For Expanded/Flexible, the enclosing layout ancestor is Row, Column or Flex. The
 
 ## Finish
 
-For an authorized implementation, verify the original failing state and affected widths/scales/insets through [V1–V8](../../../docs/VERIFICATION_POLICY.md); use available runtime inspection/hot reload where the task permits it. No recipe grants a build/device operation. For a documentation-only task, validate the explanation/references and do not run the app. Deliver the causal constraints, chosen scrolling owner, bounded correction or review finding, actual checks and remaining limits.
+For an authorized implementation, verify the original failing state and affected widths/scales/insets using the checks in [AGENTS](../../../AGENTS.md); use available runtime inspection/hot reload where the task permits it. For a documentation-only task, validate the explanation/references and do not run the app. Deliver the causal constraints, chosen scrolling owner, bounded correction or review finding, actual checks and remaining limits.

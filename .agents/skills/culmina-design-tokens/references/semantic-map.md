@@ -1,6 +1,6 @@
 # Native semantic role map
 
-Current mapping guidance carried forward from the 2026-10-24 token/source reconciliation, not a new token authority. Read only the roles needed by the task and inspect their definition and actual caller. Repository paths below are relative to the root. [BASELINE](../../../../docs/design/BASELINE.md) maps adoption and evidence limits.
+Current mapping guidance carried forward from the 2026-10-24 token/source reconciliation, not a new token authority. Read only the roles needed by the task and inspect their definition and actual caller. Repository paths below are relative to the root. [AGENTS](../../../../AGENTS.md) describes the shared source routes and evidence limits.
 
 | Semantic role | Production source | When to use |
 | --- | --- | --- |
@@ -23,6 +23,6 @@ Current mapping guidance carried forward from the 2026-10-24 token/source reconc
 | Weather dew caution | `HybridTokens.caution` | `weather_hybrid_view.dart` dew-margin heuristic text, not a condensation forecast or fit verdict. `weatherCaution` is defined but has no presentation callers at this baseline |
 | Weather freshness/gap notices | `HybridTokens.weatherNotice` | `weather_hybrid_view.dart` aging/stale, unknown-gap and offline-cache notices; preserve their text and source/freshness meaning |
 
-Read actual values from `lib/core/theme/app_colors.dart`, `app_palette.dart`, `hybrid_tokens.dart` and `app_theme.dart`; the browser lab's `tokens.json` is an explicitly dated proposal snapshot, not a source of production constants.
+Read actual values from `lib/core/theme/app_colors.dart`, `app_palette.dart`, `hybrid_tokens.dart` and `app_theme.dart`; historical Visual Atlas files under `.audit/atlas/` are reference evidence, not production constants.
 
 Caller map (under `lib/presentation/`): `navigation/app_shell.dart` and `shared/document_section.dart` read `surfaceSubtle`; `widgets/night_browser_sections.dart` reads sunken/sky/Moon roles; `widgets/weather_hybrid_view.dart` reads selected-hour and weather-notice roles; `shared/plan_state.dart` defines both the palette tone helper and Hybrid badges; `shared/night_text.dart` defines `FitText.color`, used by `shared/status_block.dart`; `widgets/altitude_chart_widget.dart` retains AppPalette chart roles. `AppTheme._withTokens` installs both extensions for light/dark/field. Similar values or names do not make these APIs interchangeable or require migrating every AppPalette caller.

@@ -2,28 +2,19 @@
 
 Culmina is a Flutter/Dart astrophotography planner and observing log.
 The Dart package is `astroplan`; `pubspec.yaml` declares version `1.0.0+2`
-and Dart SDK constraint `^3.13.3`.
+and Dart SDK constraint `^3.13.3`. Android is the primary application target.
 
 Choose a site, night, target and rig, build a capture plan, check its fit,
 save it, then record the outcome of imaging performed outside the app.
 Local catalogs, saved plans, calculations and Logbook work offline.
 Forecast retrieval, map tiles and optional place-name lookup need a network.
 
-## Screens and features
-
-- **Tonight:** site/night context, target candidates, Night/Moon/Weather
-  summaries, planner entry and prompts to record results.
-- **Plan:** target/rig selection, visibility and imaging windows,
-  light/dark/flat/bias/dark-flat blocks, calibration policies, time budget,
-  storage estimates, relative stacking gain and fit; save, copy or start a plan.
-- **Night, Moon and Weather:** darkness, target altitude, Moon context,
-  calendar browsing and hourly forecasts with source, freshness and missing data.
-- **Logbook:** saved plans/results, entry details, filters, target progress,
-  text/file sharing and acquisition CSV export for AstroBin.
-- **Library:** rigs, catalog/custom targets and sites; Android metadata-assisted
-  equipment entry from supported DNG, JPEG, HEIF and FITS files.
-- **Settings:** appearance, red field mode, units, planning defaults,
-  place-name lookup consent, local backup/restore and About/licenses.
+The main tabs are **Tonight, Logbook, Library and Settings**. The **Plan**
+opens above the tab shell and combines capture/calibration blocks, usable night
+windows, time budgets, storage estimates and relative stacking gain. Night,
+Moon and Weather detail views explain conditions and forecast freshness.
+Library manages rigs, catalog/custom targets and sites. Settings includes
+Light, Dark and Field Red themes, units, planning defaults and local backups.
 
 The app does not control cameras or mounts. ISO/gain and AF/MF are descriptive;
 unknown measurements stay unknown. Stacking gain is relative, not absolute SNR.
@@ -36,19 +27,30 @@ Android toolchain for Android builds.
 ```sh
 flutter pub get
 flutter run
-flutter analyze
-flutter test
+flutter analyze --no-pub
+flutter test --no-pub
 flutter build apk --debug
 ```
 
 These are development commands, not a statement that checks have passed.
 
-## Documentation
+## Project map
 
-- [Product specification](docs/PRODUCT_SPEC.md) — current screens and behavior.
-- [Architecture and data](docs/ARCHITECTURE.md) — modules, state and persistence.
-- [Design system](docs/DESIGN_SYSTEM.md) — implemented themes and UI tokens.
-- [Agent commands](AGENTS.md) — build/test commands and documentation links.
+`lib/presentation/` contains UI and Provider/ViewModels; `lib/domain/` owns
+models, interfaces and calculations; `lib/data/` implements storage and services;
+`lib/core/` contains time, units, diagnostics and theme tokens. Drift currently
+uses schema v27, with exported snapshots in `drift_schemas/`.
+
+- [Shared agent instructions](AGENTS.md) — architecture, invariants, generation and render commands.
+- [Project skills](.agents/skills/README.md) — 26 focused Dart, Flutter and design recipes.
+- [Visual Atlas](.audit/atlas/index.html) — archived synthetic Flutter host captures;
+  inspect its [manifest](.audit/atlas/manifest.json) before reusing evidence.
+- [Product overview](docs/PRODUCT_SPEC.md), [architecture](docs/ARCHITECTURE.md)
+  and [design system](docs/DESIGN_SYSTEM.md) — supporting documentation; verify against source.
+
+`design/` is currently empty. Browser comparison helpers under `tool/design/`
+retain historical workflows whose lab inputs are absent. The native Flutter
+render harness remains available through the commands in `AGENTS.md`.
 
 ## License
 

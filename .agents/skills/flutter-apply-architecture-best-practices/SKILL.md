@@ -6,11 +6,11 @@ metadata:
   last_modified: Tue, 21 Apr 2026 20:11:20 GMT
 ---
 
-Local Culmina route, 2026-10-27; upstream metadata is retained as provenance. Scope and verification remain in the linked canonical policies.
+Local Culmina guidance; upstream metadata is retained as provenance. Follow [AGENTS](../../../AGENTS.md) for shared scope, source routes and checks.
 
 # Culmina architecture changes
 
-Use within an authorized feature or refactor. [AGENTS](../../../AGENTS.md) owns the architecture constraints; read the relevant section of [ARCHITECTURE](../../../docs/ARCHITECTURE.md) and inspect actual callers.
+Use within an authorized feature or refactor. [AGENTS](../../../AGENTS.md) owns the architecture constraints; inspect the affected source boundaries and actual callers.
 
 ## Existing source routes
 
@@ -21,6 +21,6 @@ Use within an authorized feature or refactor. [AGENTS](../../../AGENTS.md) owns 
 - `lib/main.dart`: inspect existing Provider wiring and application composition.
 
 1. Extend the established presentation -> ViewModel -> repository interface -> implementation/service flow. Follow the actual target boundaries and keep calculations independent of Flutter.
-2. Reuse existing models, dependencies and injection patterns. Do not scaffold a parallel `lib/ui/` tree or install Freezed, built_value or get_it from a generic example.
+2. Reuse existing models, dependencies, source layers and injection patterns. A generic example does not justify a parallel UI tree or new Freezed, built_value or get_it dependencies.
 3. Identify affected callers before changing a shared contract. Preserve lifecycle, persistence and scientific guardrails relevant to that contract.
-4. Apply [VERIFICATION_POLICY](../../../docs/VERIFICATION_POLICY.md) to the bounded cumulative diff and report affected behavior and remaining evidence.
+4. Apply [AGENTS](../../../AGENTS.md) to the bounded cumulative diff and report affected behavior and remaining evidence.

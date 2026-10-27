@@ -1,38 +1,50 @@
-# Culmina agent skills
+# Culmina project skills
 
-Use only guidance relevant to the current approved task. [AGENTS](../../AGENTS.md) owns scope, [PROGRESS](../../docs/refinement/PROGRESS.md) current state, [AI_WORKFLOW](../../docs/AI_WORKFLOW.md) execution and [VERIFICATION_POLICY](../../docs/VERIFICATION_POLICY.md) checks. Skill availability is not a task queue or permission to change architecture, dependencies, navigation or devices. Existing upstream metadata, licences and local amendments remain applicable.
+[AGENTS](../../AGENTS.md) is the shared entrypoint. Read only the skill relevant to the user task, then inspect its source and actual callers. Skill availability does not expand task scope.
 
-## Culmina design routing
+## Active inventory
 
-Read [BASELINE](../../docs/design/BASELINE.md) and select the task surface below; follow [WORKFLOW's section-reading route](../../docs/design/WORKFLOW.md#read-the-needed-contract). Reading DESIGN_SYSTEM means its relevant current section and actual caller, not a whole-file dump of adoption/update history. This also supplies project context requested by generic UI guidance; a Git-only query needs no design route. [WORKFLOW modes](../../docs/design/WORKFLOW.md#work-modes) remain the single Explore / Implement-Fix / Review definition. Open only the skill needed by the surface:
-
-| Task | Entrypoint |
+| Skill | Use when working on |
 | --- | --- |
-| Text roles, wrapping, weights or numeric readability | [Typography](culmina-design-typography/SKILL.md) |
-| Colours/surfaces and light/dark/field mappings | [Tokens](culmina-design-tokens/SKILL.md) |
-| Local density, alignment, padding, shape or motion | [Spacing](culmina-design-spacing/SKILL.md) |
-| An existing control or display | [Components](culmina-design-components/SKILL.md), then only the affected form/navigation/data-display reference |
-| Product meaning, scientific/data invariants or an exception | [Rules](culmina-design-rules/SKILL.md), then only the relevant decision/guardrail |
-| Visual comparison, relevant external patterns or screenshot/source freshness | Read only needed [inspected reference patterns](../../docs/design/references/UI_REFERENCE_LIBRARY.md#local-fig-inspection) or [image-provenance rows](../../docs/design/references/UI_REFERENCE_LIBRARY.md#verification-addendum); follow [visual comparisons](../../docs/design/WORKFLOW.md#visual-comparisons) and the [Figma MCP/local-export route](../../docs/design/WORKFLOW.md#figma-access-and-inspection-depth) when relevant. Local exports prove declared structure, not live rendering/interaction; external examples are inspiration, not approved native rules. |
+| [culmina-design-components](culmina-design-components/SKILL.md) | Choosing existing components and their states |
+| [culmina-design-rules](culmina-design-rules/SKILL.md) | Preserving product, time, science and persistence meaning |
+| [culmina-design-spacing](culmina-design-spacing/SKILL.md) | Local spacing, density, shape and motion |
+| [culmina-design-tokens](culmina-design-tokens/SKILL.md) | Semantic colors across Light, Dark and Field Red |
+| [culmina-design-typography](culmina-design-typography/SKILL.md) | Text roles, wrapping and readable measurements |
+| [dart-add-unit-test](dart-add-unit-test/SKILL.md) | Focused behavior/regression tests with existing fakes |
+| [dart-build-cli-app](dart-build-cli-app/SKILL.md) | Existing Dart utilities under tool/ |
+| [dart-collect-coverage](dart-collect-coverage/SKILL.md) | A scoped test-coverage question |
+| [dart-fix-runtime-errors](dart-fix-runtime-errors/SKILL.md) | Exception diagnosis from stack and reproduction |
+| [dart-generate-test-mocks](dart-generate-test-mocks/SKILL.md) | Existing handwritten dependency fakes |
+| [dart-resolve-package-conflicts](dart-resolve-package-conflicts/SKILL.md) | A solver conflict or named dependency change |
+| [dart-run-static-analysis](dart-run-static-analysis/SKILL.md) | Scoped analyzer diagnostics |
+| [dart-use-doc-examples](dart-use-doc-examples/SKILL.md) | Local external examples in Dart API docs |
+| [dart-use-path-package](dart-use-path-package/SKILL.md) | Filesystem-path behavior with the existing path package |
+| [dart-use-pattern-matching](dart-use-pattern-matching/SKILL.md) | A named behavior-preserving pattern refactor |
+| [dart-use-primary-constructors](dart-use-primary-constructors/SKILL.md) | An explicitly requested constructor-syntax evaluation |
+| [dart-write-documentation](dart-write-documentation/SKILL.md) | Dart API doc comments |
+| [flutter-add-integration-test](flutter-add-integration-test/SKILL.md) | Existing integration_test/ host/device flows |
+| [flutter-add-widget-preview](flutter-add-widget-preview/SKILL.md) | A named isolated preview task after checking render fixtures |
+| [flutter-add-widget-test](flutter-add-widget-test/SKILL.md) | Rendered component state and interactions |
+| [flutter-apply-architecture-best-practices](flutter-apply-architecture-best-practices/SKILL.md) | Existing presentation/domain/data/core boundaries |
+| [flutter-build-responsive-layout](flutter-build-responsive-layout/SKILL.md) | A named adaptive-layout task across specified sizes |
+| [flutter-fix-layout-issues](flutter-fix-layout-issues/SKILL.md) | Concrete overflow, unbounded constraints or ParentData errors |
+| [flutter-implement-json-serialization](flutter-implement-json-serialization/SKILL.md) | Existing model/cache/backup JSON contracts |
+| [flutter-setup-declarative-routing](flutter-setup-declarative-routing/SKILL.md) | Existing router, draft guards and Back/state |
+| [flutter-use-http-package](flutter-use-http-package/SKILL.md) | Existing injected HTTP adapter/cache contracts |
 
-For a separately owner-authorized systemic review, follow [WORKFLOW's systemic route](../../docs/design/WORKFLOW.md#systemic-review-route): comprehensive review → root-cause grouping → bounded owner decision → implementation → native visual QA. Start with composition and shared-component contracts/callers, then load the existing skills as findings cross their surfaces. The [reference library](../../docs/design/references/UI_REFERENCE_LIBRARY.md) connects principles to sources/evidence; [OWNER_INBOX](../../docs/design/qa/OWNER_INBOX.md) owns finding dispositions and PROGRESS remains the sole current handoff. This route introduces no sixth skill, duplicate process, automatic audit or implementation permission.
+## Sources and visual evidence
 
-Historical font/browser comparisons are linked on demand; production fixes do not require the lab history or every component group. Discovery differs by client: read the intended skill explicitly when needed rather than loading this entire directory.
+Read themes in `lib/core/theme/`, shared UI in `lib/presentation/shared/`, screens in `lib/presentation/screens/` and their tests. Native render fixtures are under `test/presentation/design_system/`; executable tooling is under `tool/`.
 
-## Supporting Flutter recipes
+The historical Visual Atlas is under `.audit/atlas/`; inspect actual files and their recorded theme/size/scale/state. Preserve `.audit/` unchanged. The reserved `design/` directory is currently empty; it supplies no live browser prototype or token authority.
 
-- [Layout diagnosis](flutter-fix-layout-issues/SKILL.md): diagnose a concrete constraint/overflow/ParentData problem before selecting flex, wrapping or scrolling.
-- [Adaptive layout](flutter-build-responsive-layout/SKILL.md): only for a named adaptive-layout task; a phone overflow does not authorize a sidebar/grid or orientation/navigation changes.
-- [Widget preview](flutter-add-widget-preview/SKILL.md): only for a named preview task; inspect existing native gallery/render fixtures and actual SDK support first.
+Static concepts, host Flutter renders, Android/device interaction and owner acceptance establish different things. Identify which evidence was actually obtained.
 
-Other Dart/Flutter recipes remain available for their specific task. Their examples never override current contracts or verification requirements.
+## Provenance and optional examples
 
-## Inventory and provenance
+`skills-lock.json` records upstream acquisition provenance for imported active skills. Local amendments mean upstream hashes do not assert current-file checksums; actual SKILL.md files define the installed inventory. The five Culmina design skills are local guidance.
 
-The current installation consists of the SKILL.md files present in this directory. The [cleanup manifest](../../AUDIT_MANIFEST.md) records the per-file audit and [archive index](../../docs/archive/2026-10-27_cleanup/ARCHIVE_INDEX.md) preserves original recipes and pre-refactor metadata. `skills-lock.json` is retained upstream acquisition provenance; local amendments and archived recipes mean it is not an installed-skill census or a claim that local hashes match upstream.
+Generic Dart examples and CLI references are optional templates, not application fixtures. Inspect their imports/dependencies before reuse; their presence does not authorize package installation or a parallel architecture.
 
-ADK, native-asset/ffigen setup, checks-package migration and localization scaffolding were archived intact because their required stack or supporting workflow is absent. They are no longer active discovery entrypoints. Retained generic examples are explicitly optional references; they do not install dependencies or authorize another architecture. The existing integration-test correction and scope safeguards in the two previously dirty Dart recipes remain in force.
-
-<a id="reading-route-examples-before-and-after"></a>
-
-Historical reading-route comparisons: [preserved before/after section](../../docs/archive/2026-10-27_cleanup/navigation/snapshots/.agents/skills/README.md#reading-route-examples-before-and-after). The comparisons are historical evidence; current routing remains above.
+Obsolete checks-package, FFI-assets, ffigen, localization and ADK recipes already reside under `docs/archive/2026-10-27_cleanup/.agents/skills/`. Their empty old directories are not active skills; archived recipes are not current project rules.

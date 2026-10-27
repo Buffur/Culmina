@@ -8,13 +8,13 @@ metadata:
 
 # Implementing adaptive layouts
 
-Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use when the owner task actually calls for adapting composition across named available sizes/form factors. For a local phone overflow, start with [layout diagnosis](../flutter-fix-layout-issues/SKILL.md), not this adaptive recipe. [WORKFLOW](../../../docs/design/WORKFLOW.md#work-modes) determines task mode and boundaries.
+Local Culmina amendment, 2026-10-24; upstream frontmatter metadata is retained. Use when the owner task actually calls for adapting composition across named available sizes/form factors. For a local phone overflow, start with [layout diagnosis](../flutter-fix-layout-issues/SKILL.md), not this adaptive recipe. [AGENTS](../../../AGENTS.md) supplies shared source routes and checks; the user task defines scope.
 
 ## Space measurement guidelines
 
 Read the affected screen contract, constraints and current caller. LayoutBuilder exposes the parent's BoxConstraints for this part of the tree; MediaQuery.sizeOf exposes the app window's logical size. Use the measure that owns the decision. Check whether maxWidth/maxHeight are finite before relying on them. Prefer aspect-specific MediaQuery accessors; hardware labels or portrait/landscape alone do not establish available content space.
 
-Official guidance and source links: [dated Flutter layout sources](../references/flutter-layout-preview-sources-2026-10-24.md). Culmina source authority remains [BASELINE](../../../docs/design/BASELINE.md), [DESIGN_SYSTEM](../../../docs/DESIGN_SYSTEM.md) and the approved task.
+Official guidance and source links: [dated Flutter layout sources](../references/flutter-layout-preview-sources-2026-10-24.md). Culmina source authority remains the affected widgets, `lib/core/theme/` definitions and the user task.
 
 ## Workflow: constructing an adaptive layout
 
@@ -22,7 +22,7 @@ Official guidance and source links: [dated Flutter layout sources](../references
 2. Measure the relevant constraints at that boundary. Choose widths/breakpoints from content needs and the accepted task/reference, not a copied device category.
 3. Select the least composition change that fulfils the requested design: wrapping/reflow or constrained content may be sufficient. Use Expanded/Flexible only with a valid flex ancestor and appropriate finite main-axis space.
 4. Sidebar, grid or additional columns apply only when the approved adaptive task calls for them. A longer list does not automatically become a grid; preserve reading order, semantics, focus and item meaning. Lazy builders suit long/dynamic collections, not a reason to restructure a short form.
-5. Verify the authorized ranges, transition boundaries, text scaling, keyboard/insets, scrolling and reachable actions under [V1–V8](../../../docs/VERIFICATION_POLICY.md). Include other input methods only where the target scope calls for them.
+5. Verify the authorized ranges, transition boundaries, text scaling, keyboard/insets, scrolling and reachable actions under [AGENTS](../../../AGENTS.md). Include other input methods only where the target scope calls for them.
 
 ## Examples
 
@@ -34,4 +34,4 @@ Do not change the application's orientation policy, routing or navigation automa
 
 ## Finish
 
-Return the authorized adaptive behavior, measured constraints, source/caller, justified breakpoints and checks/limits. For Review, report findings without implementation. The recipe grants no SDK/dependency upgrade, preview infrastructure, build or device action.
+Return the authorized adaptive behavior, measured constraints, source/caller, justified breakpoints and checks/limits. For Review, report findings without implementation. Keep SDK/dependency upgrades and preview infrastructure outside a focused layout change unless the task includes them.

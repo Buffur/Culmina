@@ -13,4 +13,4 @@ Paths below are relative to the repository root. Unqualified shared filenames ar
 
 For selection: radio/segments express one of a few mutually exclusive values; searchable select expresses a larger single-choice set; checkboxes express independent selections; switches apply a binary setting. An option count does not change the underlying choice semantics. Error text must name the problem and recovery; colour is additional information.
 
-For an open component decision, compare the concrete alternatives and their input/state behavior. The Notion/Apple research's context picker and action/disclosure comparison is in `docs/design/NOTION_APPLE_STUDY_2026_10_19.md`; it does not authorize importing another product's workflow.
+For a requested component comparison, inspect the existing control/caller and compare concrete input/state behavior using identical content. Historical examples do not replace current source.
