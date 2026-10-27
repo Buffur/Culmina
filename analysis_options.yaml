@@ -11,6 +11,10 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
+    # Historical evidence and standalone snippets are not application sources.
+    # Git ignore rules do not define the analyzer's scope.
+    - docs/archive/**
+    - .audit/**
     - build/**
     - android/**
     - ios/**
