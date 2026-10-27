@@ -1,0 +1,1008 @@
+{
+  "baseline": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+  "fingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+  "count": 40,
+  "newCaptures": 40,
+  "originalsPreserved": true,
+  "scope": "Representative compositions including lower/expanded content; not exhaustive vertical/state/theme coverage. Synthetic data is not owner data.",
+  "captures": [
+    {
+      "id": "AT-01",
+      "name": "home",
+      "surface": "Tonight",
+      "board": "core",
+      "path": "captures/home-dark-1.png",
+      "sha256": "8eadd4bfa4390ff5666bf16d64eb7ac4f5b39fcf2f1463556226319b80fd940b",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; home",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/home-dark-1.json",
+      "visibleScreens": [
+        "TonightHomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-02",
+      "name": "home_timeline",
+      "surface": "Tonight / lower flow",
+      "board": "core",
+      "path": "captures/home_timeline-dark-1.png",
+      "sha256": "0ef4249a774f9f69121a8374015befcd74bdecf1fbba290c44f89d53a24b1eb1",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; home_timeline",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/home_timeline-dark-1.json",
+      "visibleScreens": [
+        "TonightHomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-03",
+      "name": "plan",
+      "surface": "Plan / Capture Plan",
+      "board": "core",
+      "path": "captures/plan-dark-1.png",
+      "sha256": "7663fba3081f10ffd1853c54fa8e4871f2a30a96beb50702ff04e56e06193ab6",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan-dark-1.json",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-04",
+      "name": "plan_b",
+      "surface": "Plan / lower flow",
+      "board": "core",
+      "path": "captures/plan_b-dark-1.png",
+      "sha256": "6d60e5a156e608a07b9e5ef7dd6b43f6df682e4abe7512d890fded54faa49cb4",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_b",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_b-dark-1.json",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-05",
+      "name": "plan_capture",
+      "surface": "Plan / capture blocks",
+      "board": "core",
+      "path": "captures/plan_capture-dark-1.png",
+      "sha256": "266b7b765621336e9f47b48e5bd3162397caf4c5808f9249bc1cb187cdc011be",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_capture",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_capture-dark-1.json",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "captureUtc": "2026-10-26T14:05:06.1095146Z"
+    },
+    {
+      "id": "AT-06",
+      "name": "plan_gain_open",
+      "surface": "Plan / gain explanation",
+      "board": "core",
+      "path": "captures/plan_gain_open-dark-1.png",
+      "sha256": "caaaf047c26a7e2cbb73c0063275e63b8012ad79363a26e42e3367106021abfe",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_gain_open",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_gain_open-dark-1.json",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-07",
+      "name": "plan_budget_assumptions",
+      "surface": "Plan / budget assumptions",
+      "board": "core",
+      "path": "captures/plan_budget_assumptions-dark-1.png",
+      "sha256": "5b3d98e895927af87d781cb7ee9b5d593b4fd12d40641815a7566048fb58667e",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_budget_assumptions",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_budget_assumptions-dark-1.json",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-08",
+      "name": "weather",
+      "surface": "Weather / overview",
+      "board": "core",
+      "path": "captures/weather-dark-1.png",
+      "sha256": "26dfe03a70f1fb810cfbd8961c79dfa26a21e107f36f45a1fc5fcfcb7d10a1fd",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; weather",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/weather-dark-1.json",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-09",
+      "name": "weather_charts_b",
+      "surface": "Weather / lower charts",
+      "board": "core",
+      "path": "captures/weather_charts_b-dark-1.png",
+      "sha256": "d2af0d42cd3cb196eaac6dcc56823d333ea10916e31efd91cd7f3217894278dd",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; weather_charts_b",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/weather_charts_b-dark-1.json",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-10",
+      "name": "weather_forecast_table",
+      "surface": "Weather / forecast table",
+      "board": "core",
+      "path": "captures/weather_forecast_table-dark-1.png",
+      "sha256": "9de715a54623e7ee3d633fe6fedd58826a400ad4e71fc7843db3c0f10c088e30",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; weather_forecast_table",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/weather_forecast_table-dark-1.json",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-11",
+      "name": "night",
+      "surface": "Night / overview",
+      "board": "core",
+      "path": "captures/night-dark-1.png",
+      "sha256": "d99eb7e32160e9092a1641fc82a7a0007b30a4da9fe1263120c8c54f62587638",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; night",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/night-dark-1.json",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-12",
+      "name": "night_reading_body",
+      "surface": "Night / reading the night",
+      "board": "core",
+      "path": "captures/night_reading_body-dark-1.png",
+      "sha256": "d341d0b208b59101fee79419b57d4d1921367f01a3cacb35fefbdba8c6a6fccb",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; night_reading_body",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/night_reading_body-dark-1.json",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-13",
+      "name": "night_exact_intervals",
+      "surface": "Night / exact intervals",
+      "board": "core",
+      "path": "captures/night_exact_intervals-dark-1.png",
+      "sha256": "6352037a31c452a654ccb8c91a00aac98fed4d0ae78edb3245c51c0635a25e43",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; night_exact_intervals",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/night_exact_intervals-dark-1.json",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-14",
+      "name": "moon",
+      "surface": "Moon / overview",
+      "board": "core",
+      "path": "captures/moon-dark-1.png",
+      "sha256": "64d76344b86452e73555d978fa389d42b78835ad90d9a02f6bfd021e3a34663a",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; moon",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/moon-dark-1.json",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-15",
+      "name": "moon_b",
+      "surface": "Moon / lower calendar",
+      "board": "core",
+      "path": "captures/moon_b-dark-1.png",
+      "sha256": "21c7bf89469a4a10b16677fb7c0c216b705be6056b4eda658519dce8444a6fc8",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; moon_b",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/moon_b-dark-1.json",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-16",
+      "name": "plan_editor",
+      "surface": "Capture block / editor",
+      "board": "planning",
+      "path": "captures/plan_editor-dark-1.png",
+      "sha256": "595a7c6519d2b76642dae36ff6ed48d94f5a185e5eea9476f0d4b5ff0a111339",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_editor",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_editor-dark-1.json",
+      "visibleScreens": [],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-17",
+      "name": "plan_editor_bottom",
+      "surface": "Capture block / lower",
+      "board": "planning",
+      "path": "captures/plan_editor_bottom-dark-1.png",
+      "sha256": "e53f5896be08f12ef4610b917bdb7afe77a380a494682ebded53f0ee29fe29f7",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_editor_bottom",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_editor_bottom-dark-1.json",
+      "visibleScreens": [],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-18",
+      "name": "plan_cal",
+      "surface": "Calibration / preview",
+      "board": "planning",
+      "path": "captures/plan_cal-dark-1.png",
+      "sha256": "e0f36f81c5f522417c1fe5a10bd6a5425b61927f875413c3322fff2e6abcbef3",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_cal",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_cal-dark-1.json",
+      "visibleScreens": [],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-19",
+      "name": "plan_cal_b",
+      "surface": "Calibration / lower",
+      "board": "planning",
+      "path": "captures/plan_cal_b-dark-1.png",
+      "sha256": "3c1fffe7b50d56973992561c0507d000acbfc8619cf86add220acc547d32eec4",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_cal_b",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_cal_b-dark-1.json",
+      "visibleScreens": [],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-20",
+      "name": "plan_asm",
+      "surface": "Plan assumptions / editor",
+      "board": "planning",
+      "path": "captures/plan_asm-dark-1.png",
+      "sha256": "760001ef6adc625320504ac55b970c27384596e922cb75be55dffa0b956344e3",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_asm",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_asm-dark-1.json",
+      "visibleScreens": [],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-21",
+      "name": "plan_target",
+      "surface": "Target / selection",
+      "board": "planning",
+      "path": "captures/plan_target-dark-1.png",
+      "sha256": "ae98eb03bfda265181f8ffebb8a9ca317d7b4ffc3df934f7c6bce6a08c2c1980",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; plan_target",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/plan_target-dark-1.json",
+      "visibleScreens": [
+        "PlanTargetScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-22",
+      "name": "lib_target",
+      "surface": "Target / detail",
+      "board": "planning",
+      "path": "captures/lib_target-dark-1.png",
+      "sha256": "be4be3a275ae780ca6136e0bc5c4d7669f0c0bc4d20726d27ba1a2795605c02e",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; lib_target",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/lib_target-dark-1.json",
+      "visibleScreens": [
+        "TargetDetailScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-23",
+      "name": "lib_rig",
+      "surface": "Rig / detail",
+      "board": "planning",
+      "path": "captures/lib_rig-dark-1.png",
+      "sha256": "065236f7967b96ac12a23789a2bef6cfa75ffd228a8e39d7455d4b4ef4cdee0a",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; lib_rig",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/lib_rig-dark-1.json",
+      "visibleScreens": [
+        "RigDetailScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-24",
+      "name": "lib_rig_full",
+      "surface": "Rig / full record",
+      "board": "planning",
+      "path": "captures/lib_rig_full-dark-1.png",
+      "sha256": "5ee027393ca89f9b90d409af5bd2f03334999114548649469e9e1782b1c36deb",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; lib_rig_full",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/lib_rig_full-dark-1.json",
+      "visibleScreens": [
+        "RigDetailScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-25",
+      "name": "lib_site",
+      "surface": "Site / detail",
+      "board": "planning",
+      "path": "captures/lib_site-dark-1.png",
+      "sha256": "26d8e38db79ebab963aa96935515069aebd9a0220043812814b4347506ada95d",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; lib_site",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/lib_site-dark-1.json",
+      "visibleScreens": [
+        "SiteDetailScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-26",
+      "name": "geo_add",
+      "surface": "Site / editor",
+      "board": "planning",
+      "path": "captures/geo_add-dark-1.png",
+      "sha256": "04d4c0d17c21690986f3c941ad3b296d6876bbd129c07cc11a2745df4397982b",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; geo_add",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/geo_add-dark-1.json",
+      "visibleScreens": [
+        "SiteEditorScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-27",
+      "name": "library",
+      "surface": "Library",
+      "board": "library",
+      "path": "captures/library-dark-1.png",
+      "sha256": "323e54bdfd3250cae3ce0b1cb930dfcf234c75269a6201e79482274bdf683a52",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; library",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/library-dark-1.json",
+      "visibleScreens": [
+        "LibraryScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-28",
+      "name": "logbook",
+      "surface": "Logbook / populated",
+      "board": "library",
+      "path": "captures/logbook-dark-1.png",
+      "sha256": "7dd32359fd54f155c4f794d6cac0e91bf6d67efcc44e634706b6f0b06560d3d1",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; logbook",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/logbook-dark-1.json",
+      "visibleScreens": [
+        "LogbookScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-29",
+      "name": "entry",
+      "surface": "Logbook entry / top",
+      "board": "library",
+      "path": "captures/entry-dark-1.png",
+      "sha256": "8274d79e2d3a41584f79b841b4d1d8afc9e1efd0ba10314095cacc18a301c682",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; entry",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/entry-dark-1.json",
+      "visibleScreens": [
+        "SessionDetailScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-30",
+      "name": "entry_b",
+      "surface": "Logbook entry / lower",
+      "board": "library",
+      "path": "captures/entry_b-dark-1.png",
+      "sha256": "0d4b070a1225c66bc348363b970a5827c4d8929fafaf50335becd554d605c78f",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; entry_b",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/entry_b-dark-1.json",
+      "visibleScreens": [
+        "SessionDetailScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-31",
+      "name": "result",
+      "surface": "Record results",
+      "board": "library",
+      "path": "captures/result-dark-1.png",
+      "sha256": "05b60cbc0dc1d83800473aa7b5ea22c8d91853486427758720fa9811bb4ef629",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; result",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/result-dark-1.json",
+      "visibleScreens": [
+        "ResultsScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-32",
+      "name": "logbook_progress",
+      "surface": "Progress",
+      "board": "library",
+      "path": "captures/logbook_progress-dark-1.png",
+      "sha256": "67610d89719ec51237cfa7305b945c2a6a022da5629e00808c6ec31e782fce25",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; logbook_progress",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/logbook_progress-dark-1.json",
+      "visibleScreens": [
+        "ProgressScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-33",
+      "name": "progress_guide_open",
+      "surface": "Progress / explanation",
+      "board": "library",
+      "path": "captures/progress_guide_open-dark-1.png",
+      "sha256": "8961e2af8b7eb1067e9ee8f4b7e4ae3033329c1d8fb220084258397c95f4f5a4",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; progress_guide_open",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/progress_guide_open-dark-1.json",
+      "visibleScreens": [
+        "ProgressScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-34",
+      "name": "settings",
+      "surface": "Settings",
+      "board": "system",
+      "path": "captures/settings-dark-1.png",
+      "sha256": "966ae968486b83404173ae9c0cb80f3c4148bff577c5c90c382a93abee623945",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; settings",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/settings-dark-1.json",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-35",
+      "name": "settings_appearance",
+      "surface": "Appearance",
+      "board": "system",
+      "path": "captures/settings_appearance-dark-1.png",
+      "sha256": "635e796bdfe7b074aaaa52b462e4f7aa53e87b6568386072aebfb3d8613da90d",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; settings_appearance",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/settings_appearance-dark-1.json",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-36",
+      "name": "settings_planning",
+      "surface": "Planning defaults",
+      "board": "system",
+      "path": "captures/settings_planning-dark-1.png",
+      "sha256": "f5ff228c16ed01f7bb82103d98077bbafe405a1e7f283b10108f4d40533620bf",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; settings_planning",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/settings_planning-dark-1.json",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-37",
+      "name": "welcome",
+      "surface": "Welcome / top",
+      "board": "system",
+      "path": "captures/welcome-dark-1.png",
+      "sha256": "9f7f06fae84d3359167dea1e9a2b5902c06eefe6966e97df72206ad74bfebb42",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; welcome",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/welcome-dark-1.json",
+      "visibleScreens": [
+        "WelcomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-38",
+      "name": "welcome_b",
+      "surface": "Welcome / lower",
+      "board": "system",
+      "path": "captures/welcome_b-dark-1.png",
+      "sha256": "b74cda9dedf172496fe146249dbeafb61aecdd9f11e67f90173160ca639902c1",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; welcome_b",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/welcome_b-dark-1.json",
+      "visibleScreens": [
+        "WelcomeScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-39",
+      "name": "weather_offline",
+      "surface": "Weather / cached refresh failure",
+      "board": "system",
+      "path": "captures/weather_offline-dark-1.png",
+      "sha256": "8a11beffa47fbc2c992854bca19eb58cd9b7b5849ac2cb402bf1572199bfe289",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; weather_offline",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/weather_offline-dark-1.json",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    },
+    {
+      "id": "AT-40",
+      "name": "lib_rig_unsaved",
+      "surface": "Unsaved changes / dialog",
+      "board": "system",
+      "path": "captures/lib_rig_unsaved-dark-1.png",
+      "sha256": "184eed593f0d983abf710680e3efb539b0f1c2bd0117d0b8d8c521d9d06972f4",
+      "source": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+      "inputFingerprint": "da6c15a7ee914b6b7e73ec563ddb3534c6d0cfd47dcf9dbf18d6cb7f48b8f0ca",
+      "state": "Existing hybrid transfer synthetic in-memory fixture; lib_rig_unsaved",
+      "fixtureClock": "2026-10-18T15:00:00Z (injected)",
+      "theme": "dark",
+      "textScale": 1,
+      "viewport": [
+        375,
+        812
+      ],
+      "dpr": 1,
+      "provenance": "Actual production Flutter widgets / host renderer / Geist real fonts / current existing opt-in harness",
+      "metadata": "captures/lib_rig_unsaved-dark-1.json",
+      "visibleScreens": [
+        "DisplayFeatureSubScreen"
+      ],
+      "captureUtc": "2026-10-26T13:59:20.9045578Z"
+    }
+  ]
+}

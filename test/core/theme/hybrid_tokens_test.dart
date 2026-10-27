@@ -11,17 +11,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final json = jsonDecode(
-    File('design/home-lab/tokens.json').readAsStringSync(),
+    File('test/fixtures/theme/hybrid_tokens.json').readAsStringSync(),
   ) as Map<String, dynamic>;
   // The colour roles come from the reference's final computed cascade
   // (hybrid-transfer evidence, plan.html at 86873ce), not tokens.json's
   // first declarations: WQA-01's field action #FF0000 overrides the JSON's
   // #AA0000 there.
   final computed = jsonDecode(
-    File(
-      'docs/design/migration/evidence/hybrid-transfer-2026-10-22/web/'
-      'computed-theme-vars.json',
-    ).readAsStringSync(),
+    File('test/fixtures/theme/computed_theme_vars.json').readAsStringSync(),
   ) as Map<String, dynamic>;
   final themes = {
     'light': AppTheme.light,

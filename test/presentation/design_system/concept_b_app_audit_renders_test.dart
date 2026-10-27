@@ -193,6 +193,12 @@ Future<void> _scrollPage(HybridRenderContext c, double amount) async {
 final _auditShots = <String, HybridStep>{
   ...hybridShots,
 
+  'plan_capture': (c) async {
+    await c.push(AppRouter.session());
+    // Match the archived 375 x 812 capture-block viewport (title at y=105).
+    await c.scrollBy(610, key: 'planner.scroll');
+  },
+
   'night_reading_body': (c) async {
     await hybridShots['night_reading_open']!(c);
     await Scrollable.ensureVisible(

@@ -1,0 +1,4 @@
+Frozen independent theme reference fixtures recovered unchanged from Git commit 8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a.
+hybrid_tokens.json: design/home-lab/tokens.json
+computed_theme_vars.json: docs/design/migration/evidence/hybrid-transfer-2026-10-22/web/computed-theme-vars.json
+Keep these expected values independent of production token definitions.

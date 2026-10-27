@@ -1,0 +1,608 @@
+{
+  "name": "progress_guide_open",
+  "captureUtc": "2026-10-26T13:59:20.9045578Z",
+  "captureKind": "native Flutter host",
+  "sourceHead": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+  "inputManifest": "C:\\Users\\zalub\\OneDrive\\Desktop\\Astro Planner\\Astro-Planner\\.audit\\product-design-refinement-20261026/baseline.json",
+  "proposalOnly": false,
+  "fixtureSucceeded": true,
+  "devicePixelRatio": 1.0,
+  "visibleScreens": [
+    "ProgressScreen"
+  ],
+  "theme": "dark",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/sessions",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Broadband",
+      "x": 36.0,
+      "y": -20.0,
+      "w": 73.34599304199219,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "4 h 36 min",
+      "x": 269.79795837402344,
+      "y": -20.0,
+      "w": 69.20204162597656,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "60 s · ISO 800 · DSLR · 135 mm lens",
+      "x": 36.0,
+      "y": 27.0,
+      "w": 303.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "196 frames · 3 h 16 min · 2 nights",
+      "x": 36.0,
+      "y": 52.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "30 s · ISO not recorded · DSLR · 135 mm lens",
+      "x": 36.0,
+      "y": 97.0,
+      "w": 303.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "40 frames · 20 min · 1 night",
+      "x": 36.0,
+      "y": 122.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Sensitivity not recorded: kept separate, never combined with another group.",
+      "x": 36.0,
+      "y": 146.0,
+      "w": 303.0,
+      "h": 40.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "120 s · ISO 800 · DSLR · 135 mm lens",
+      "x": 36.0,
+      "y": 211.0,
+      "w": 303.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "30 frames · 1 h · 1 night",
+      "x": 36.0,
+      "y": 236.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "North America Nebula",
+      "x": 36.0,
+      "y": 304.0,
+      "w": 168.65919494628906,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "4 h",
+      "x": 315.62400817871094,
+      "y": 304.0,
+      "w": 23.375991821289062,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.4
+    },
+    {
+      "text": "1 result · Last imaged Thu 8 Oct",
+      "x": 36.0,
+      "y": 330.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.55
+    },
+    {
+      "text": "Dual-band",
+      "x": 36.0,
+      "y": 366.0,
+      "w": 69.9580078125,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "4 h",
+      "x": 318.5459899902344,
+      "y": 366.0,
+      "w": 20.454010009765625,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "300 s · Gain 100 · Astro camera · refractor",
+      "x": 36.0,
+      "y": 413.0,
+      "w": 303.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "36 frames · 3 h · 1 night",
+      "x": 36.0,
+      "y": 438.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "300 s · Gain 200 · Astro camera · refractor",
+      "x": 36.0,
+      "y": 483.0,
+      "w": 303.0,
+      "h": 21.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "12 frames · 1 h · 1 night",
+      "x": 36.0,
+      "y": 508.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "How totals are grouped",
+      "x": 36.0,
+      "y": 589.0,
+      "w": 153.1095733642578,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.55
+    },
+    {
+      "text": "Totals per filter add every recorded frame. Beneath each filter, frames are grouped only when exposure, ISO or gain, binning and rig all match; \"reported as planned\" counts are your report, not counted files. This is integration time, not a measure of signal or image quality.",
+      "x": 36.0,
+      "y": 624.0,
+      "w": 303.0,
+      "h": 132.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Progress by target",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 190.5903778076172,
+      "h": 27.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": -114.0,
+      "w": 335.0,
+      "h": 386.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 0.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": -98.0,
+      "w": 335.0,
+      "h": 370.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": -98.0,
+      "w": 335.0,
+      "h": 370.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": -82.0,
+      "w": 303.0,
+      "h": 338.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": -82.0,
+      "w": 303.0,
+      "h": 338.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 2.0,
+      "w": 303.0,
+      "h": 70.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 14.0,
+      "w": 303.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(0.0, 13.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 72.0,
+      "w": 303.0,
+      "h": 114.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 84.0,
+      "w": 303.0,
+      "h": 102.0,
+      "padding": "EdgeInsets(0.0, 13.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 186.0,
+      "w": 303.0,
+      "h": 70.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 198.0,
+      "w": 303.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(0.0, 13.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 272.0,
+      "w": 335.0,
+      "h": 272.0,
+      "padding": "EdgeInsets(0.0, 16.0, 0.0, 0.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 288.0,
+      "w": 335.0,
+      "h": 256.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 288.0,
+      "w": 335.0,
+      "h": 256.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 304.0,
+      "w": 303.0,
+      "h": 224.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 304.0,
+      "w": 303.0,
+      "h": 224.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 388.0,
+      "w": 303.0,
+      "h": 70.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 400.0,
+      "w": 303.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(0.0, 13.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 458.0,
+      "w": 303.0,
+      "h": 70.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 470.0,
+      "w": 303.0,
+      "h": 58.0,
+      "padding": "EdgeInsets(0.0, 13.0, 0.0, 0.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'progress.guideGroup'>]",
+      "x": 20.0,
+      "y": 560.0,
+      "w": 335.0,
+      "h": 220.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 560.0,
+      "w": 335.0,
+      "h": 220.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 576.0,
+      "w": 303.0,
+      "h": 188.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 576.0,
+      "w": 303.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 6.0, 0.0, 6.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 624.0,
+      "w": 303.0,
+      "h": 140.0,
+      "padding": "EdgeInsets(0.0, 0.0, 0.0, 8.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    }
+  ]
+}
