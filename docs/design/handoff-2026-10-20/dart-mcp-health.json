@@ -1,6 +1,0 @@
-{
-  "initialize": {
-    "error": "timeout",
-    "exit_code": 255
-  }
-}

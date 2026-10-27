@@ -1,3 +1,0 @@
-claude --print --permission-mode manual --permission-prompts none --tools Read,Grep,Glob --allowedTools Read,Grep,Glob --strict-mcp-config --no-session-persistence --output-format text < docs/design/migration/evidence/FINAL_CLAUDE_REVIEW_PROMPT.md > docs/design/migration/evidence/final-claude-original-report.txt
-started 2026-10-21T06:36:54Z at 02f5cdb547a1ee12e8aa29ed10de7f1c474bd247
-EXIT_CODE=0 finished 2026-10-21T06:47:32Z

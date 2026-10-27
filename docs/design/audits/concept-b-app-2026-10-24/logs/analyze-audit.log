@@ -1,8 +1,0 @@
-Analyzing concept_b_app_audit_renders_test.dart...              
-
-   info - The import of 'dart:async' is unnecessary because all of the used elements are also provided by the import of 'package:flutter_test/flutter_test.dart'. Try removing the import directive - test\presentation\design_system\concept_b_app_audit_renders_test.dart:3:8 - unnecessary_import
-warning - The operand can't be 'null', so the condition is always 'false'. Try removing the condition, an enclosing condition, or the whole conditional statement - test\presentation\design_system\concept_b_app_audit_renders_test.dart:333:19 - unnecessary_null_comparison
-   info - Statements in an if should be enclosed in a block. Try wrapping the statement in a block - test\presentation\design_system\concept_b_app_audit_renders_test.dart:377:17 - curly_braces_in_flow_control_structures
-   info - Statements in an if should be enclosed in a block. Try wrapping the statement in a block - test\presentation\design_system\concept_b_app_audit_renders_test.dart:443:15 - curly_braces_in_flow_control_structures
-
-4 issues found. (ran in 27.2s)

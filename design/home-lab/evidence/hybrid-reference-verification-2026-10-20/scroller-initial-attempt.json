@@ -1,7 +1,0 @@
-{
-  "status": "harness_timeout",
-  "exitCode": 1,
-  "completedCases": 0,
-  "error": "locator.click: Timeout 30000ms exceeded waiting for locator('[data-disclosure=gain]>summary')",
-  "followUp": "A separate isolated browser navigation found the element and complete Plan content. The bounded rerun explicitly waits for Plan content before opening gain details. Do not count this initial attempt as a passing check."
-}

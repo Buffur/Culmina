@@ -57,3 +57,6 @@ key.properties
 __pycache__/
 *-stream.jsonl
 docs/design/tooling-update-2026-10-20/codex-health-stderr.txt
+
+# Archive
+/docs/archive/

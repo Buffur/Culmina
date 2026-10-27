@@ -1,8 +1,0 @@
-Normal target: lib/main.dart
-Emulator: emulator-5582
-APK SHA256: f0338ed111488877a5b46dd8f763d9aced0ce779471a589e73557d9fc6b4447e
-Hot reload: Reloaded 0 libraries in 383ms.
-Manual test: density 420 dpi, about 411 logical px; actual Android IME visible, Save site fully above it.
-Back keyevent 4: first hides IME, second opens Unsaved changes. Cancel keeps QA-site-draft (XML evidence). Discard exits without saving.
-Previous density override 320 restored. System font scale unchanged (unset/default).
-Physical phone not modified.

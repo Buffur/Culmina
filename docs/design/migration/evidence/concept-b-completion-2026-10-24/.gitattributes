@@ -1,4 +1,0 @@
-# Hash-bound QA artifacts retain their original bytes on every platform.
-* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-# Raw CLI output includes significant capture whitespace; retain it as data.
-logs/*.txt -diff

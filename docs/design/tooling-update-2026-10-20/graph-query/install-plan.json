@@ -1,9 +1,0 @@
-{
-  "toolPath": "C:/Users/zalub/.codex/tools/graph-query-mcp",
-  "previouslyExisted": false,
-  "dependencies": [
-    "fastmcp==4.1.2",
-    "networkx==3.7"
-  ],
-  "python": "C:/Python314/python.exe"
-}

@@ -1,2 +1,0 @@
-claude --print --permission-mode manual --permission-prompts none --tools Read,Grep,Glob --allowedTools Read,Grep,Glob --strict-mcp-config --no-session-persistence --output-format text < claude-prompt.txt
-EXIT_CODE=0

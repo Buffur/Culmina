@@ -1,9 +1,0 @@
-00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/widgets/capture_assumptions_test.dart
-00:00 +0: A1: the effective values, written exactly, with how often this plan counts each
-00:01 +1: A1: off reads Not included; an included overhead the plan never reaches says so
-00:01 +2: A1: the Moon and cloud gates, when on, with the thresholds the window uses
-00:01 +3: A1: gates that are off are not listed
-00:01 +4: A3: the focus reminder is words only; the scope is said
-00:01 +5: explicit plan overrides apply together, validate and reset
-00:02 +6: A3: an AF or MF record (and white balance) changes no budget, group or fit
-00:02 +7: All tests passed!

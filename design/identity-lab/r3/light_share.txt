@@ -1,4 +1,0 @@
-control=18 %
-light=82 %
-blue=35 %
-dark=18 %

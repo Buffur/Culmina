@@ -1,7 +1,0 @@
-Analyzing plan_overrides.dart, session.dart, capture_budget_calculator.dart, fit_analyzer.dart, storage_estimate.dart, session_snapshot_builder.dart, saved_plan_reader.dart, session_plan_viewmodel.dart, plan_lifecycle_viewmodel.dart, capture_analysis_viewmodel.dart, storage_text.dart, capture_assumptions_panel.dart, plan_overrides_editor.dart, app_database.dart, drift_session_repository.dart, session_manifest_codec.dart, plan_overrides_test.dart...
-
-   info - lib\domain\services\fit_analyzer.dart:239:34 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
-   info - lib\domain\services\session_snapshot_builder.dart:66:7 - Use the null-aware marker '?' rather than a null check via an 'if'. Try using '?'. - use_null_aware_elements
-   info - lib\domain\services\session_snapshot_builder.dart:70:7 - Use the null-aware marker '?' rather than a null check via an 'if'. Try using '?'. - use_null_aware_elements
-
-3 issues found.

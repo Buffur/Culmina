@@ -1,4 +1,0 @@
-Analyzing Astro-Planner...                                      
-No issues found! (ran in 109.6s)
-
-EXIT_CODE=0

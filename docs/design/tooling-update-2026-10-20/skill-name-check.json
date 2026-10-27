@@ -1,9 +1,0 @@
-{
-  "project_skill_count": 31,
-  "duplicate_names": [],
-  "impeccable_canonical_version": "4.7.0",
-  "claude_disabled_overlaps": [
-    "dart-flutter@synced",
-    "flutter@synced"
-  ]
-}

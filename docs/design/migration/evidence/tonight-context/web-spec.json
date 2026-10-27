@@ -1,1 +1,0 @@
-{"base": "http://127.0.0.1:4173/", "shots": [{"id": "reference-home-dark", "file": "index.html", "query": {"view": "wide"}, "theme": "dark", "width": 375, "height": 808, "frame": ".concept.variant-blend .app-frame", "dump": true}]}
