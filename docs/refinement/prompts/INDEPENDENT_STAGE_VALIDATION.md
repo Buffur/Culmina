@@ -31,8 +31,7 @@ validation reports unless a criterion references them.
 
 ## 3. Evidence (V2, V3)
 
-- Reuse the recorded gate result if its inputs are unchanged since it ran: check with
-  `git diff --stat <commit> HEAD -- . ':!docs' ':!CLAUDE.md'`. Record the one-line reuse note.
+- Reuse a recorded result only after comparing its relevant V3 inputs with the actual validation state: committed changes, staged/unstaged changes and relevant untracked files. A commit-to-HEAD diff alone omits dirty inputs. Record source revision, dirty fingerprint where applicable, environment and the one-line reuse reason under AI_WORKFLOW.
 - Rerun a check only if an input changed since the last pass, the last run is invalid or
   incomplete, or the Stage's own criteria require a fresh run. A fresh session is not a reason.
 - Write a probe test only to establish evidence for a specific criterion; do not commit probes to
@@ -56,11 +55,11 @@ Once every frozen item is judged, stop looking. Do not continue open-ended explo
 ## 5. Outcome (V7)
 
 - **No blockers:** the Stage closes. Record the result in the Stage's validation report and
-  `PROGRESS.md`, and set the Next allowed action to the next Stage's planning.
+  `PROGRESS.md`, and record the next action permitted by the current owner scope. A successful validation does not launch the next Stage.
 - **Blockers:** name each one against the exact criterion, decision or invariant, with evidence,
   and propose one focused corrective Task per blocker. Do not implement them.
 - **The second consecutive failure on interpretation or scope** (not on new contradictory
   evidence): stop, record the disagreement, and ask the owner to resolve the scope. No further
   automatic revalidation.
 
-Commit the report and the `PROGRESS.md` update as one documentation commit, then STOP.
+Record the report and `PROGRESS.md` update. If the current owner has authorized a commit, keep those documentation changes coherent; otherwise leave them reviewable without committing. STOP at the validation boundary.

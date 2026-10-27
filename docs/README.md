@@ -40,6 +40,8 @@ Status: active navigation and responsibility map. Current state belongs only to 
 
 ## Procedures and historical material
 
+[2026-10-27 cleanup manifest](../AUDIT_MANIFEST.md) lists one status per inventoried file. [Carried audit findings](BACKLOG_FROM_AUDITS.md) route unresolved work; [archive index](archive/2026-10-27_cleanup/ARCHIVE_INDEX.md) maps preserved originals and current successors. Old report paths are small redirects for immutable inbound references, not active instructions.
+
 | Location | Responsibility / successor |
 | --- | --- |
 | [Reusable prompts](refinement/prompts/README.md) | Procedures activated only by current owner scope; no implicit full-plan launch |

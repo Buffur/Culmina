@@ -27,12 +27,12 @@ Historical font/browser comparisons are linked on demand; production fixes do no
 
 Other Dart/Flutter recipes remain available for their specific task. Their examples never override current contracts or verification requirements.
 
-## Reading-route examples: before and after
+## Inventory and provenance
 
-Common preflight (AGENTS, PROGRESS, applicable overrides, relevant AI_WORKFLOW/verification and BASELINE) applies to both columns. These are source-based routing walkthroughs, not measured token savings or runtime client-loading tests.
+The current installation consists of the SKILL.md files present in this directory. The [cleanup manifest](../../AUDIT_MANIFEST.md) records the per-file audit and [archive index](../../docs/archive/2026-10-27_cleanup/ARCHIVE_INDEX.md) preserves original recipes and pre-refactor metadata. `skills-lock.json` is retained upstream acquisition provenance; local amendments and archived recipes mean it is not an installed-skill census or a claim that local hashes match upstream.
 
-| Request | Before this routing change | Current route |
-| --- | --- | --- |
-| Focused typography correction | WORKFLOW mixed production routing with the full lab chronology; typography entrypoint included candidate/font/specimen history | WORKFLOW mode → typography skill → DESIGN_SYSTEM §3 + AppTypography + affected text caller. No font research unless that decision is explicitly open. |
-| Local phone layout error | Spacing entrypoint mixed native rhythm with browser variants; the generic layout recipe prescribed Expanded by error signature | WORKFLOW mode → spacing/affected contract → layout diagnostic recipe → causal ancestors/constraints/scroll owner. Read typography only if text roles are affected; no adaptive navigation or preview requirement. |
-| Explicitly authorized new-variant study | WORKFLOW and skills interleaved current contracts with dated concepts and comparison instructions | WORKFLOW Explore → named open decision + BASELINE constraints → relevant skill(s) → only relevant lab/research references. Record proposal/evidence/owner choice; production adoption stays separate. |
+ADK, native-asset/ffigen setup, checks-package migration and localization scaffolding were archived intact because their required stack or supporting workflow is absent. They are no longer active discovery entrypoints. Retained generic examples are explicitly optional references; they do not install dependencies or authorize another architecture. The existing integration-test correction and scope safeguards in the two previously dirty Dart recipes remain in force.
+
+<a id="reading-route-examples-before-and-after"></a>
+
+Historical reading-route comparisons: [preserved before/after section](../../docs/archive/2026-10-27_cleanup/navigation/snapshots/.agents/skills/README.md#reading-route-examples-before-and-after). The comparisons are historical evidence; current routing remains above.

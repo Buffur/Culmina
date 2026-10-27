@@ -13,9 +13,9 @@
 >   (2026-10-18), maps them to F-tasks (its §4, "Debt accounting"); `refinement/POST_ROADMAP_PLAN.md` §5
 >   ("Open technical-debt items") holds the earlier S-Task aliases. The dated notes that opened this file until 2026-10-18 are at the end ("Appendix — Update log").
 
-## Open items: index
+## Carried items: historical index
 
-38 open (or partly open) items; 78 resolved items in the second part, plus TD-040 under "Recorded / resolved".
+The former “38 open / 78 resolved” counts are historical accounting, not verified current totals: this carried index also contains subsequently resolved entries. Read each row's newest disposition and partial remainder; IDs and row bodies are preserved. [Audit backlog](BACKLOG_FROM_AUDITS.md) routes current rechecks without reclassifying or closing them.
 
 | ID | Severity | Item | Approved destination (plan §5) | Proposed task (FINAL roadmap) |
 | --- | --- | --- | --- | --- |

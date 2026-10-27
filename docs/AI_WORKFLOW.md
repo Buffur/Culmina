@@ -20,7 +20,7 @@ During authorized native implementation, discover existing SDK tools beyond PATH
 
 Before integrating, recheck branch/HEAD, upstream and dirty state against the recorded base. Integrate the intentional diff, inspect conflicts and adjacent progress, and verify the cumulative changed inputs. Never copy a whole old checkout over a newer one. Reconcile status in the one PROGRESS file; client-specific “current” files must not compete with it.
 
-The owner may launch an explicitly named finite task group with stop conditions. Within that run, complete dependency-ready work under V7 and record genuinely unavailable items with their IDs, reason, dependencies and resumption condition. A later narrow task does not renew an earlier broad authorization. Closing a task and documenting a next action does not start that action.
+For a finite owner-authorized task group, apply V7: record unavailable items with IDs, dependencies and resumption conditions; continue dependency-ready work within that group.
 
 ## Research, tools and context
 
@@ -67,7 +67,7 @@ Update only documents invalidated by the task: relevant FEATURE_STATUS/TECH_DEBT
 
 ## Git, privacy and builds
 
-Keep commits coherent when authorized. No `reset --hard`, force push, automatic stash/pop, branch/worktree deletion or unknown-file deletion from an agent recipe. Commit, push, merge, publication, installation and data operations follow the current owner's permissions, never a historical handoff. The governance cleanup itself authorizes no commit/push or device action.
+For Git delivery and device operations, follow the current permissions and constraints in [AGENTS](../AGENTS.md). Keep authorized commits coherent; historical handoffs are not delivery permissions.
 
 Signing keys/passwords are owner-managed: never create, read, print, request or commit them. Keep private metadata/photos and signing material outside public Git. Adding data that leaves the device requires the relevant privacy/compliance updates and approved provider scope. Release procedures remain in [RELEASE](RELEASE.md) and relevant guardrails; this document is not release authorization.
 
@@ -75,4 +75,4 @@ For a future authorized build, keep a receipt with: source commit; dirty-input p
 
 Before device validation, confirm the actually installed **and opened** package, its artifact hash/version where available, source/receipt and target device. `io.github.buffur.culmina` and `io.github.buffur.culmina.s2check` are separate apps: an old test app showing old screens does not prove canonical source rolled back. Preserve owner data; never repair a package mix-up by automatic uninstall, clearing data or replacing an APK. Visual differentiation of test apps is a separate possible task.
 
-Finish the named work, report what passed and what remains, and stop. No automatic roadmap continuation or redesign follows a handoff.
+Scope, permissions, preservation of owner work and the stop boundary are defined once in [AGENTS](../AGENTS.md).

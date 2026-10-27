@@ -4,7 +4,7 @@
 > SI-015; the Index lists open and closed issues separately), Part B the calculation register (CALC-##),
 > Part C the working rules for any scientific change. Planned scientific work: SI-013 (storage, PD-06) and
 > SI-015 (one Moon-up definition, MF-c) in `refinement/POST_ROADMAP_PLAN.md` §5 (S14.7, S15.1–S15.2; the
-> **PROPOSED** `refinement/FINAL_COMPLETION_ROADMAP.md` F07, F13). Status changes made by this cleanup:
+> approved frozen `refinement/FINAL_COMPLETION_ROADMAP.md` F07, F13). Status changes made by this cleanup:
 > SI-005's index row aligned with its section (Resolved, TASK 8.4) and SI-008 resolved after a code check
 > (elevation can be unknown since S7.5). The dated update notes that opened this file until 2026-10-18 are
 > at the end ("Appendix — Update log").

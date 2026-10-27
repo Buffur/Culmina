@@ -5,7 +5,7 @@
 > The **Summary** table is the quick view; each `F-##` section holds the evidence. Features not "Implemented"
 > in the table: F-02, F-05, F-06, F-08, F-10, F-12, F-13, F-17, F-18, F-21, F-23, F-27, F-28, F-32, F-36, F-38, F-39, F-43, F-47, F-48, F-49, F-50. Several of those rows date from the 2026-09-21 takeover audit and were updated
 > only where a Task touched them; re-verify a row against the code before relying on it. Planned changes are
-> in `refinement/POST_ROADMAP_PLAN.md` §5 (and the **PROPOSED** `refinement/FINAL_COMPLETION_ROADMAP.md`).
+> in `refinement/POST_ROADMAP_PLAN.md` §5 (and the **approved frozen criteria** in `refinement/FINAL_COMPLETION_ROADMAP.md`; current work still requires the owner's explicit task).
 > The dated update notes that opened this file until 2026-10-18 are at the end ("Appendix — Update log");
 > they record actual-state changes Task by Task and remain part of the record.
 
