@@ -1,0 +1,174 @@
+{
+  "name": "metadata_ready",
+  "captureUtc": "2026-10-28T14:39:56.9593931Z",
+  "captureKind": "native Flutter host",
+  "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "inputManifest": null,
+  "proposalOnly": false,
+  "fixtureSucceeded": true,
+  "devicePixelRatio": 1.0,
+  "visibleScreens": [
+    "MetadataImportScreen"
+  ],
+  "theme": "dark",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/tonight",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Reads a few kilobytes of a DNG, JPEG, HEIC or FITS file's header, on this device, and proposes a rig from it. Other RAW files are recognized but not read. Nothing is saved until you press Save in the rig editor, and nothing leaves this device.",
+      "x": 16.0,
+      "y": 80.0,
+      "w": 343.0,
+      "h": 144.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "󰗹",
+      "x": 93.01519775390625,
+      "y": 251.0,
+      "w": 18.0,
+      "h": 18.0,
+      "family": "MaterialIcons",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 18.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Choose a capture file",
+      "x": 119.01519775390625,
+      "y": 248.0,
+      "w": 162.9696044921875,
+      "h": 24.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 600,
+      "height": 1.5
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Add from a photo",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 177.94039916992188,
+      "h": 27.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "FilledButton",
+      "key": "[<'metadata.pick'>]",
+      "x": 16.0,
+      "y": 236.0,
+      "w": 343.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 16.0,
+      "y": 236.0,
+      "w": 343.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(16.0, 8.0, 16.0, 8.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    }
+  ]
+}

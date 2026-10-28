@@ -1,0 +1,92 @@
+<!doctype html><meta charset="utf-8"><title>research</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>research</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\plugins\cache\openai-curated-remote\product-design\0.1.56\skills\research\SKILL.md</p><pre>   1  ---
+   2  name: research
+   3  description: &quot;Run fast, source-grounded UX research on the highest-signal problems users are experiencing with a user-specified digital product. Use when the user asks to research user pain, UX friction, onboarding issues, docs/help problems, developer experience friction, support pain, product workflow issues, or current user complaints for a named product.&quot;
+   4  ---
+   5  
+   6  # Research
+   7  
+   8  Run a fresh UX research scan for the product the user specifies.
+   9  
+  10  Focus on current, evidence-backed user problems. Prioritize logged-in product experience, self-serve flows, onboarding, docs/help, developer experience, support friction, and product workflows.
+  11  
+  12  ## Critical Overrides
+  13  
+  14  - Refer to the Plugin router [$index](../index/SKILL.md) before proceeding.
+  15  - Follow [$critical-overrides](../../references/critical-overrides.md).
+  16  
+  17  ## User Context
+  18  
+  19  Before starting, load [$user-context](../user-context/SKILL.md) and run its preflight script when local shell access is available.
+  20  
+  21  Use saved product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, component refs, browser preferences, and share targets as grounding material when relevant.
+  22  
+  23  Do not inspect every saved reference. Inspect only what the current task needs.
+  24  
+  25  ## Contract
+  26  
+  27  - Restate the product, audience, time horizon, and research scope before scanning.
+  28  - Use public sources by default. Use internal sources when the connectors are available and the user request allows it.
+  29  - Cite sources wherever available.
+  30  - Separate observed evidence from inference.
+  31  - Do not overclaim from anecdotes.
+  32  - Do not return a dump of complaints. Tell a clear product story.
+  33  - Say clearly when source access is missing or weak.
+  34  
+  35  ## Workflow
+  36  
+  37  1. Restate the research scope.
+  38  
+  39  2. Search public sources:
+  40  
+  41  - Reddit
+  42  - X/Twitter
+  43  - Hacker News
+  44  - Stack Overflow
+  45  - GitHub issues/discussions
+  46  - forums, blogs, reviews, YouTube comments, and developer communities where relevant
+  47  
+  48  3. Search internal sources when available:
+  49  
+  50  - Slack
+  51  - Gong
+  52  - Notion
+  53  - Google Drive/docs
+  54  - Linear/Jira/GitHub
+  55  - support or CRM notes if available
+  56  
+  57  4. Cluster evidence into the highest-signal UX problems.
+  58  
+  59  5. Separate:
+  60  
+  61  - product UI/workflow friction
+  62  - docs/help friction
+  63  - onboarding friction
+  64  - account, billing, permissions, or setup friction
+  65  - developer/API/SDK friction
+  66  - reliability/performance issues
+  67  - feature requests
+  68  
+  69  6. Rank problems by severity, frequency, confidence, and product leverage.
+  70  
+  71  7. Tell a clear product story.
+  72  
+  73  ## Output
+  74  
+  75  Default to an in-chat research brief unless the user asks for another format.
+  76  
+  77  Include:
+  78  
+  79  - Executive read: the core story in 5-7 sentences.
+  80  - Ranked UX problems: for each problem, include the problem, user goal, surface, what breaks, evidence, severity, frequency signal, confidence, and recommended product move.
+  81  - Source map: what was searched, what each source contributed, and where signal was weak.
+  82  - Opportunity map: group recommendations into fix this week, fix this quarter, and needs deeper research.
+  83  
+  84  ## Rules
+  85  
+  86  - Use citations wherever available.
+  87  - Do not overclaim from anecdotes.
+  88  - Separate loud complaints from frequent problems.
+  89  - Separate UX friction from missing features.
+  90  - Separate reliability/performance issues from UX workflow issues.
+  91  - Mark internal-only evidence separately from public evidence.
+  92  - Keep the brief sharp, specific, and easy to consume.</pre>

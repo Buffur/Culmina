@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/config/app_identity.dart';
 import '../../../core/units/display_units.dart';
@@ -275,9 +275,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ? 'Applied · not saved'
                               : 'No changes',
                           key: const Key('settings.draftState'),
-                          style: AppTypography.caption.copyWith(
-                            color: palette.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context).caption
+                              .copyWith(color: palette.textSecondary),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Row(
@@ -1071,10 +1070,12 @@ class _Unsaved extends StatelessWidget {
         children: [
           Text(
             text,
-            style: AppTypography.caption.copyWith(
-              height: 1.6,
-              color: hybrid.errorText,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).caption,
+                  AppTextGeometry.reading,
+                )
+                .copyWith(color: hybrid.errorText),
           ),
           const SizedBox(height: AppSpacing.sm),
           OutlinedButton(

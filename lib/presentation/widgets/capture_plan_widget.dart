@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_palette.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import '../../core/utils/quantity_text.dart';
 import '../shared/hybrid_icon.dart';
 import '../../domain/models/camera_class.dart';
@@ -266,10 +266,12 @@ class _BlockListState extends State<_BlockList> {
                   'No frames planned yet. You can still save this plan and '
                   'add frames later; the calibration frames can be built '
                   'from your lights afterwards.',
-                  style: AppTypography.body.copyWith(
-                    height: 1.6,
-                    color: palette.textSecondary,
-                  ),
+                  style: AppTextTheme.of(context)
+                      .resolve(
+                        AppTextTheme.of(context).body,
+                        AppTextGeometry.reading,
+                      )
+                      .copyWith(color: palette.textSecondary),
                 ),
                 const SizedBox(height: 12),
                 Wrap(
@@ -348,8 +350,12 @@ class _BlockListState extends State<_BlockList> {
                   capability != null &&
                   capability.exceedsRecommendation(block.exposureTimeSeconds);
               final source = _source(block);
-              TextStyle small(Color c) =>
-                  AppTypography.caption.copyWith(height: 1.55, color: c);
+              TextStyle small(Color c) => AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).caption,
+                    AppTextGeometry.supporting,
+                  )
+                  .copyWith(color: c);
               return _ChangeMark(
                 // TD-010/TD-012: ObjectKey tracks this block instance
                 // regardless of position, and stays stable across a drag.
@@ -381,19 +387,22 @@ class _BlockListState extends State<_BlockList> {
                             child: Text(
                               BlockText.title(block),
                               key: Key('capture.title.$index'),
-                              style: AppTypography.itemTitle.copyWith(
-                                color: palette.textPrimary,
-                              ),
+                              style: AppTextTheme.of(context).itemTitle
+                                  .copyWith(color: palette.textPrimary),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             BlockText.math(block),
-                            style: AppTypography.value.copyWith(
-                              fontWeight: FontWeight.w500,
-                              height: 1.55,
-                              color: palette.textPrimary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).value,
+                                  AppTextGeometry.supporting,
+                                )
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: palette.textPrimary,
+                                ),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -681,10 +690,12 @@ class _BlockListState extends State<_BlockList> {
                 withBinning: _cameraClass.offersLightBinning,
               ),
               key: const Key('capture.flatsMissing'),
-              style: AppTypography.caption.copyWith(
-                height: 1.55,
-                color: palette.statusTight,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).caption,
+                    AppTextGeometry.supporting,
+                  )
+                  .copyWith(color: palette.statusTight),
             ),
           ),
       ],

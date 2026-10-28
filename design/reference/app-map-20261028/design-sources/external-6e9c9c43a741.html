@@ -1,0 +1,341 @@
+<!doctype html><meta charset="utf-8"><title>figma-generate-design</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>figma-generate-design</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\skills\figma-generate-design\SKILL.md</p><pre>   1  ---
+   2  name: figma-generate-design
+   3  description: &quot;Use this skill alongside figma-use when the task involves translating an application page, view, or multi-section layout into Figma. Triggers: &#x27;write to Figma&#x27;, &#x27;create in Figma from code&#x27;, &#x27;push page to Figma&#x27;, &#x27;take this app/page and build it in Figma&#x27;, &#x27;create a screen&#x27;, &#x27;build a landing page in Figma&#x27;, &#x27;update the Figma screen to match code&#x27;. This is the preferred workflow skill whenever the user wants to build or update a full page, screen, or view in Figma from code or a description. Discovers design system components, variables, and styles via search_design_system, imports them, and assembles screens incrementally section-by-section using design system tokens instead of hardcoded values.&quot;
+   4  ---
+   5  
+   6  # Build / Update Screens from Design System
+   7  
+   8  Use this skill to create or update full-page screens in Figma by **reusing the published design system** — components, variables, and styles — rather than drawing primitives with hardcoded values. The key insight: the Figma file likely has a published design system with components, color/spacing variables, and text/effect styles that correspond to the codebase&#x27;s UI components and tokens. Find and use those instead of drawing boxes with hex colors.
+   9  
+  10  **MANDATORY**: You MUST also load [figma-use](../figma-use/SKILL.md) before any `use_figma` call. That skill contains critical rules (color ranges, font loading, etc.) that apply to every script you write.
+  11  
+  12  **Always pass `skillNames: &quot;figma-generate-design&quot;` when calling `use_figma` as part of this skill.** This is a logging parameter — it does not affect execution.
+  13  
+  14  ## Skill Boundaries
+  15  
+  16  - Use this skill when the deliverable is a **Figma screen** (new or updated) composed of design system component instances.
+  17  - If the user wants to generate **code from a Figma design**, switch to [figma-implement-design](../figma-implement-design/SKILL.md).
+  18  - If the user wants to create **new reusable components or variants**, use [figma-use](../figma-use/SKILL.md) directly.
+  19  - If the user wants to write **Code Connect mappings**, switch to [figma-code-connect-components](../figma-code-connect-components/SKILL.md).
+  20  
+  21  ## Prerequisites
+  22  
+  23  - Figma MCP server must be connected
+  24  - The target Figma file must have a published design system with components (or access to a team library)
+  25  - User should provide either:
+  26    - A Figma file URL / file key to work in
+  27    - Or context about which file to target (the agent can discover pages)
+  28  - Source code or description of the screen to build/update
+  29  
+  30  ## Parallel Workflow with generate_figma_design (Web Apps Only)
+  31  
+  32  When building a screen from a **web app** that can be rendered in a browser, the best results come from running both approaches in parallel:
+  33  
+  34  1. **In parallel:**
+  35     - Start building the screen using this skill&#x27;s workflow (use_figma + design system components)
+  36     - Run `generate_figma_design` to capture a pixel-perfect screenshot of the running web app
+  37  2. **Once both complete:** Update the use_figma output to match the pixel-perfect layout from the `generate_figma_design` capture. The capture provides the exact spacing, sizing, and visual treatment to aim for, while your use_figma output has proper component instances linked to the design system.
+  38  3. **Once confirmed looking good:** Delete the `generate_figma_design` output — it was only used as a visual reference.
+  39  
+  40  This combines the best of both: `generate_figma_design` gives pixel-perfect layout accuracy, while use_figma gives proper design system component instances that stay linked and updatable.
+  41  
+  42  **This workflow only applies to web apps** where `generate_figma_design` can capture the running page. For non-web apps (iOS, Android, etc.) or when updating existing screens, use the standard workflow below.
+  43  
+  44  ## Required Workflow
+  45  
+  46  **Follow these steps in order. Do not skip steps.**
+  47  
+  48  ### Step 1: Understand the Screen
+  49  
+  50  Before touching Figma, understand what you&#x27;re building:
+  51  
+  52  1. If building from code, read the relevant source files to understand the page structure, sections, and which components are used.
+  53  2. Identify the major sections of the screen (e.g., Header, Hero, Content Panels, Pricing Grid, FAQ Accordion, Footer).
+  54  3. For each section, list the UI components involved (buttons, inputs, cards, navigation pills, accordions, etc.).
+  55  
+  56  ### Step 2: Discover Design System — Components, Variables, and Styles
+  57  
+  58  You need three things from the design system: **components** (buttons, cards, etc.), **variables** (colors, spacing, radii), and **styles** (text styles, effect styles like shadows). Don&#x27;t hardcode hex colors or pixel values when design system tokens exist.
+  59  
+  60  #### 2a: Discover components
+  61  
+  62  **Preferred: inspect existing screens first.** If the target file already contains screens using the same design system, skip `search_design_system` and inspect existing instances directly. A single `use_figma` call that walks an existing frame&#x27;s instances gives you an exact, authoritative component map:
+  63  
+  64  ```js
+  65  const frame = figma.currentPage.findOne(n =&gt; n.name === &quot;Existing Screen&quot;);
+  66  const uniqueSets = new Map();
+  67  frame.findAll(n =&gt; n.type === &quot;INSTANCE&quot;).forEach(inst =&gt; {
+  68    const mc = inst.mainComponent;
+  69    const cs = mc?.parent?.type === &quot;COMPONENT_SET&quot; ? mc.parent : null;
+  70    const key = cs ? cs.key : mc?.key;
+  71    const name = cs ? cs.name : mc?.name;
+  72    if (key &amp;&amp; !uniqueSets.has(key)) {
+  73      uniqueSets.set(key, { name, key, isSet: !!cs, sampleVariant: mc.name });
+  74    }
+  75  });
+  76  return [...uniqueSets.values()];
+  77  ```
+  78  
+  79  Only fall back to `search_design_system` when the file has no existing screens to reference. When using it, **search broadly** — try multiple terms and synonyms (e.g., &quot;button&quot;, &quot;input&quot;, &quot;nav&quot;, &quot;card&quot;, &quot;accordion&quot;, &quot;header&quot;, &quot;footer&quot;, &quot;tag&quot;, &quot;avatar&quot;, &quot;toggle&quot;, &quot;icon&quot;, etc.). Use `includeComponents: true` to focus on components.
+  80  
+  81  **Include component properties** in your map — you need to know which TEXT properties each component exposes for text overrides. Create a temporary instance, read its `componentProperties` (and those of nested instances), then remove the temp instance.
+  82  
+  83  Example component map with property info:
+  84  
+  85  ```
+  86  Component Map:
+  87  - Button → key: &quot;abc123&quot;, type: COMPONENT_SET
+  88    Properties: { &quot;Label#2:0&quot;: TEXT, &quot;Has Icon#4:64&quot;: BOOLEAN }
+  89  - PricingCard → key: &quot;ghi789&quot;, type: COMPONENT_SET
+  90    Properties: { &quot;Device&quot;: VARIANT, &quot;Variant&quot;: VARIANT }
+  91    Nested &quot;Text Heading&quot; has: { &quot;Text#2104:5&quot;: TEXT }
+  92    Nested &quot;Button&quot; has: { &quot;Label#2:0&quot;: TEXT }
+  93  ```
+  94  
+  95  #### 2b: Discover variables (colors, spacing, radii)
+  96  
+  97  **Inspect existing screens first** (same as components). Or use `search_design_system` with `includeVariables: true`.
+  98  
+  99  &gt; **WARNING: Two different variable discovery methods — do not confuse them.**
+ 100  &gt;
+ 101  &gt; - `use_figma` with `figma.variables.getLocalVariableCollectionsAsync()` — returns **only local variables defined in the current file**. If this returns empty, it does **not** mean no variables exist. Remote/published library variables are invisible to this API.
+ 102  &gt; - `search_design_system` with `includeVariables: true` — searches across **all linked libraries**, including remote and published ones. This is the correct tool for discovering design system variables.
+ 103  &gt;
+ 104  &gt; **Never conclude &quot;no variables exist&quot; based solely on `getLocalVariableCollectionsAsync()` returning empty.** Always also run `search_design_system` with `includeVariables: true` to check for library variables before deciding to create your own.
+ 105  
+ 106  **Query strategy:** `search_design_system` matches against **variable names** (e.g., &quot;Gray/gray-9&quot;, &quot;core/gray/100&quot;, &quot;space/400&quot;), not categories. Run multiple short, simple queries in parallel rather than one compound query:
+ 107  
+ 108  - **Primitive colors:** &quot;gray&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;white&quot;, &quot;brand&quot;
+ 109  - **Semantic colors:** &quot;background&quot;, &quot;foreground&quot;, &quot;border&quot;, &quot;surface&quot;, &quot;text&quot;
+ 110  - **Spacing/sizing:** &quot;space&quot;, &quot;radius&quot;, &quot;gap&quot;, &quot;padding&quot;
+ 111  
+ 112  If initial searches return empty, try shorter fragments or different naming conventions — libraries vary widely (&quot;grey&quot; vs &quot;gray&quot;, &quot;spacing&quot; vs &quot;space&quot;, &quot;color/bg&quot; vs &quot;background&quot;).
+ 113  
+ 114  Inspect an existing screen&#x27;s bound variables for the most authoritative results:
+ 115  
+ 116  ```js
+ 117  const frame = figma.currentPage.findOne(n =&gt; n.name === &quot;Existing Screen&quot;);
+ 118  const varMap = new Map();
+ 119  frame.findAll(() =&gt; true).forEach(node =&gt; {
+ 120    const bv = node.boundVariables;
+ 121    if (!bv) return;
+ 122    for (const [prop, binding] of Object.entries(bv)) {
+ 123      const bindings = Array.isArray(binding) ? binding : [binding];
+ 124      for (const b of bindings) {
+ 125        if (b?.id &amp;&amp; !varMap.has(b.id)) {
+ 126          const v = await figma.variables.getVariableByIdAsync(b.id);
+ 127          if (v) varMap.set(b.id, { name: v.name, id: v.id, key: v.key, type: v.resolvedType, remote: v.remote });
+ 128        }
+ 129      }
+ 130    }
+ 131  });
+ 132  return [...varMap.values()];
+ 133  ```
+ 134  
+ 135  For library variables (remote = true), import them by key with `figma.variables.importVariableByKeyAsync(key)`. For local variables, use `figma.variables.getVariableByIdAsync(id)` directly.
+ 136  
+ 137  See [variable-patterns.md](../figma-use/references/variable-patterns.md) for binding patterns.
+ 138  
+ 139  #### 2c: Discover styles (text styles, effect styles)
+ 140  
+ 141  Search for styles using `search_design_system` with `includeStyles: true` and terms like &quot;heading&quot;, &quot;body&quot;, &quot;shadow&quot;, &quot;elevation&quot;. Or inspect what an existing screen uses:
+ 142  
+ 143  ```js
+ 144  const frame = figma.currentPage.findOne(n =&gt; n.name === &quot;Existing Screen&quot;);
+ 145  const styles = { text: new Map(), effect: new Map() };
+ 146  frame.findAll(() =&gt; true).forEach(node =&gt; {
+ 147    if (&#x27;textStyleId&#x27; in node &amp;&amp; node.textStyleId) {
+ 148      const s = figma.getStyleById(node.textStyleId);
+ 149      if (s) styles.text.set(s.id, { name: s.name, id: s.id, key: s.key });
+ 150    }
+ 151    if (&#x27;effectStyleId&#x27; in node &amp;&amp; node.effectStyleId) {
+ 152      const s = figma.getStyleById(node.effectStyleId);
+ 153      if (s) styles.effect.set(s.id, { name: s.name, id: s.id, key: s.key });
+ 154    }
+ 155  });
+ 156  return {
+ 157    textStyles: [...styles.text.values()],
+ 158    effectStyles: [...styles.effect.values()]
+ 159  };
+ 160  ```
+ 161  
+ 162  Import library styles with `figma.importStyleByKeyAsync(key)`, then apply with `node.textStyleId = style.id` or `node.effectStyleId = style.id`.
+ 163  
+ 164  See [text-style-patterns.md](../figma-use/references/text-style-patterns.md) and [effect-style-patterns.md](../figma-use/references/effect-style-patterns.md) for details.
+ 165  
+ 166  ### Step 3: Create the Page Wrapper Frame First
+ 167  
+ 168  **Do NOT build sections as top-level page children and reparent them later** — moving nodes across `use_figma` calls with `appendChild()` silently fails and produces orphaned frames. Instead, create the wrapper first, then build each section directly inside it.
+ 169  
+ 170  Create the page wrapper in its own `use_figma` call. Position it away from existing content and return its ID:
+ 171  
+ 172  ```js
+ 173  // Find clear space
+ 174  let maxX = 0;
+ 175  for (const child of figma.currentPage.children) {
+ 176    maxX = Math.max(maxX, child.x + child.width);
+ 177  }
+ 178  
+ 179  const wrapper = figma.createFrame();
+ 180  wrapper.name = &quot;Homepage&quot;;
+ 181  wrapper.layoutMode = &quot;VERTICAL&quot;;
+ 182  wrapper.primaryAxisAlignItems = &quot;CENTER&quot;;
+ 183  wrapper.counterAxisAlignItems = &quot;CENTER&quot;;
+ 184  wrapper.resize(1440, 100);
+ 185  wrapper.layoutSizingHorizontal = &quot;FIXED&quot;;
+ 186  wrapper.layoutSizingVertical = &quot;HUG&quot;;
+ 187  wrapper.x = maxX + 200;
+ 188  wrapper.y = 0;
+ 189  
+ 190  return { success: true, wrapperId: wrapper.id };
+ 191  ```
+ 192  
+ 193  ### Step 4: Build Each Section Inside the Wrapper
+ 194  
+ 195  **This is the most important step.** Build one section at a time, each in its own `use_figma` call. At the start of each script, fetch the wrapper by ID and append new content directly to it.
+ 196  
+ 197  ```js
+ 198  const createdNodeIds = [];
+ 199  const wrapper = await figma.getNodeByIdAsync(&quot;WRAPPER_ID_FROM_STEP_3&quot;);
+ 200  
+ 201  // Import design system components by key
+ 202  const buttonSet = await figma.importComponentSetByKeyAsync(&quot;BUTTON_SET_KEY&quot;);
+ 203  const primaryButton = buttonSet.children.find(c =&gt;
+ 204    c.type === &quot;COMPONENT&quot; &amp;&amp; c.name.includes(&quot;variant=primary&quot;)
+ 205  ) || buttonSet.defaultVariant;
+ 206  
+ 207  // Import design system variables for colors and spacing
+ 208  const bgColorVar = await figma.variables.importVariableByKeyAsync(&quot;BG_COLOR_VAR_KEY&quot;);
+ 209  const spacingVar = await figma.variables.importVariableByKeyAsync(&quot;SPACING_VAR_KEY&quot;);
+ 210  
+ 211  // Build section frame with variable bindings (not hardcoded values)
+ 212  const section = figma.createFrame();
+ 213  section.name = &quot;Header&quot;;
+ 214  section.layoutMode = &quot;HORIZONTAL&quot;;
+ 215  section.setBoundVariable(&quot;paddingLeft&quot;, spacingVar);
+ 216  section.setBoundVariable(&quot;paddingRight&quot;, spacingVar);
+ 217  const bgPaint = figma.variables.setBoundVariableForPaint(
+ 218    { type: &#x27;SOLID&#x27;, color: { r: 0, g: 0, b: 0 } }, &#x27;color&#x27;, bgColorVar
+ 219  );
+ 220  section.fills = [bgPaint];
+ 221  
+ 222  // Import and apply text/effect styles
+ 223  const shadowStyle = await figma.importStyleByKeyAsync(&quot;SHADOW_STYLE_KEY&quot;);
+ 224  section.effectStyleId = shadowStyle.id;
+ 225  
+ 226  // Create component instances inside the section
+ 227  const btnInstance = primaryButton.createInstance();
+ 228  section.appendChild(btnInstance);
+ 229  createdNodeIds.push(btnInstance.id);
+ 230  
+ 231  // Append section to wrapper
+ 232  wrapper.appendChild(section);
+ 233  section.layoutSizingHorizontal = &quot;FILL&quot;; // AFTER appending
+ 234  
+ 235  createdNodeIds.push(section.id);
+ 236  return { success: true, createdNodeIds };
+ 237  ```
+ 238  
+ 239  After each section, validate with `get_screenshot` before moving on. Look closely for cropped/clipped text (line heights cutting off content) and overlapping elements — these are the most common issues and easy to miss at a glance.
+ 240  
+ 241  #### Override instance text with setProperties()
+ 242  
+ 243  Component instances ship with placeholder text (&quot;Title&quot;, &quot;Heading&quot;, &quot;Button&quot;). Use the component property keys you discovered in Step 2 to override them with `setProperties()` — this is more reliable than direct `node.characters` manipulation. See [component-patterns.md](../figma-use/references/component-patterns.md#overriding-text-in-a-component-instance) for the full pattern.
+ 244  
+ 245  For nested instances that expose their own TEXT properties, call `setProperties()` on the nested instance:
+ 246  
+ 247  ```js
+ 248  const nestedHeading = cardInstance.findOne(n =&gt; n.type === &quot;INSTANCE&quot; &amp;&amp; n.name === &quot;Text Heading&quot;);
+ 249  if (nestedHeading) {
+ 250    nestedHeading.setProperties({ &quot;Text#2104:5&quot;: &quot;Actual heading from source code&quot; });
+ 251  }
+ 252  ```
+ 253  
+ 254  Only fall back to direct `node.characters` for text that is NOT managed by any component property.
+ 255  
+ 256  #### Read source code defaults carefully
+ 257  
+ 258  When translating code components to Figma instances, check the component&#x27;s default prop values in the source code, not just what&#x27;s explicitly passed. For example, `&lt;Button size=&quot;small&quot;&gt;Register&lt;/Button&gt;` with no variant prop — check the component definition to find `variant = &quot;primary&quot;` as the default. Selecting the wrong variant (e.g., Neutral instead of Primary) produces a visually incorrect result that&#x27;s easy to miss.
+ 259  
+ 260  #### What to build manually vs. import from design system
+ 261  
+ 262  | Build manually | Import from design system |
+ 263  |----------------|--------------------------|
+ 264  | Page wrapper frame | **Components**: buttons, cards, inputs, nav, etc. |
+ 265  | Section container frames | **Variables**: colors (fills, strokes), spacing (padding, gap), radii |
+ 266  | Layout grids (rows, columns) | **Text styles**: heading, body, caption, etc. |
+ 267  | | **Effect styles**: shadows, blurs, etc. |
+ 268  
+ 269  **Never hardcode hex colors or pixel spacing** when a design system variable exists. Use `setBoundVariable` for spacing/radii and `setBoundVariableForPaint` for colors. Apply text styles with `node.textStyleId` and effect styles with `node.effectStyleId`.
+ 270  
+ 271  ### Step 5: Validate the Full Screen
+ 272  
+ 273  After composing all sections, call `get_screenshot` on the full page frame and compare against the source. Fix any issues with targeted `use_figma` calls — don&#x27;t rebuild the entire screen.
+ 274  
+ 275  **Screenshot individual sections, not just the full page.** A full-page screenshot at reduced resolution hides text truncation, wrong colors, and placeholder text that hasn&#x27;t been overridden. Take a screenshot of each section by node ID to catch:
+ 276  - **Cropped/clipped text** — line heights or frame sizing cutting off descenders, ascenders, or entire lines
+ 277  - **Overlapping content** — elements stacking on top of each other due to incorrect sizing or missing auto-layout
+ 278  - Placeholder text still showing (&quot;Title&quot;, &quot;Heading&quot;, &quot;Button&quot;)
+ 279  - Truncated content from layout sizing bugs
+ 280  - Wrong component variants (e.g., Neutral vs Primary button)
+ 281  
+ 282  ### Step 6: Updating an Existing Screen
+ 283  
+ 284  When updating rather than creating from scratch:
+ 285  
+ 286  1. Use `get_metadata` to inspect the existing screen structure.
+ 287  2. Identify which sections need updating and which can stay.
+ 288  3. For each section that needs changes:
+ 289     - Locate the existing nodes by ID or name
+ 290     - Swap component instances if the design system component changed
+ 291     - Update text content, variant properties, or layout as needed
+ 292     - Remove deprecated sections
+ 293     - Add new sections
+ 294  4. Validate with `get_screenshot` after each modification.
+ 295  
+ 296  ```js
+ 297  // Example: Swap a button variant in an existing screen
+ 298  const existingButton = await figma.getNodeByIdAsync(&quot;EXISTING_BUTTON_INSTANCE_ID&quot;);
+ 299  if (existingButton &amp;&amp; existingButton.type === &quot;INSTANCE&quot;) {
+ 300    // Import the updated component
+ 301    const buttonSet = await figma.importComponentSetByKeyAsync(&quot;BUTTON_SET_KEY&quot;);
+ 302    const newVariant = buttonSet.children.find(c =&gt;
+ 303      c.name.includes(&quot;variant=primary&quot;) &amp;&amp; c.name.includes(&quot;size=lg&quot;)
+ 304    ) || buttonSet.defaultVariant;
+ 305    existingButton.swapComponent(newVariant);
+ 306  }
+ 307  return { success: true, mutatedNodeIds: [existingButton.id] };
+ 308  ```
+ 309  
+ 310  ## Reference Docs
+ 311  
+ 312  For detailed API patterns and gotchas, load these from the [figma-use](../figma-use/SKILL.md) references as needed:
+ 313  
+ 314  - [component-patterns.md](../figma-use/references/component-patterns.md) — importing by key, finding variants, setProperties, text overrides, working with instances
+ 315  - [variable-patterns.md](../figma-use/references/variable-patterns.md) — creating/binding variables, importing library variables, scopes, aliasing, discovering existing variables
+ 316  - [text-style-patterns.md](../figma-use/references/text-style-patterns.md) — creating/applying text styles, importing library text styles, type ramps
+ 317  - [effect-style-patterns.md](../figma-use/references/effect-style-patterns.md) — creating/applying effect styles (shadows), importing library effect styles
+ 318  - [gotchas.md](../figma-use/references/gotchas.md) — layout pitfalls (HUG/FILL interactions, counterAxisAlignItems, sizing order), paint/color issues, page context resets
+ 319  
+ 320  ## Error Recovery
+ 321  
+ 322  Follow the error recovery process from [figma-use](../figma-use/SKILL.md#6-error-recovery--self-correction):
+ 323  
+ 324  1. **STOP** on error — do not retry immediately.
+ 325  2. **Read the error message carefully** to understand what went wrong.
+ 326  3. If the error is unclear, call `get_metadata` or `get_screenshot` to inspect the current file state.
+ 327  4. **Fix the script** based on the error message.
+ 328  5. **Retry** the corrected script — this is safe because failed scripts are atomic (nothing is created if a script errors).
+ 329  
+ 330  Because this skill works incrementally (one section per call), errors are naturally scoped to a single section. Previous sections from successful calls remain intact.
+ 331  
+ 332  ## Best Practices
+ 333  
+ 334  - **Always search before building.** The design system likely has the component, variable, or style you need. Manual construction and hardcoded values should be the exception, not the rule.
+ 335  - **Search broadly.** Try synonyms and partial terms. A &quot;NavigationPill&quot; might be found under &quot;pill&quot;, &quot;nav&quot;, &quot;tab&quot;, or &quot;chip&quot;. For variables, search &quot;color&quot;, &quot;spacing&quot;, &quot;radius&quot;, etc.
+ 336  - **Prefer design system tokens over hardcoded values.** Use variable bindings for colors, spacing, and radii. Use text styles for typography. Use effect styles for shadows. This keeps the screen linked to the design system.
+ 337  - **Prefer component instances over manual builds.** Instances stay linked to the source component and update automatically when the design system evolves.
+ 338  - **Work section by section.** Never build more than one major section per `use_figma` call.
+ 339  - **Return node IDs from every call.** You&#x27;ll need them to compose sections and for error recovery.
+ 340  - **Validate visually after each section.** Use `get_screenshot` to catch issues early.
+ 341  - **Match existing conventions.** If the file already has screens, match their naming, sizing, and layout patterns.</pre>

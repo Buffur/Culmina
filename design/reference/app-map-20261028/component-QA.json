@@ -1,0 +1,32 @@
+{
+  "head": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "nativeImages": 255,
+  "scientificImages": 16,
+  "coveredComponents": 61,
+  "missingComponents": [],
+  "invalidImages": [],
+  "tests": {
+    "componentSpecimens": "PASS",
+    "scientificRenders": "16/16 PASS"
+  },
+  "browser": {
+    "siteLightDark": "PASS; persisted across reload",
+    "componentThemeSwitch": "PASS Light/Dark/Field; separate native PNGs",
+    "search": "PASS",
+    "modal": "PASS",
+    "skillCount": 5,
+    "codeReview": {
+      "confirmed": 2,
+      "risks": 2,
+      "strengths": 8
+    },
+    "narrowViewportHorizontalOverflow": false,
+    "consoleWarningsOrErrors": []
+  },
+  "limits": [
+    "Flutter host synthetic fixtures; no new Android/device acceptance",
+    "Scientific context renders only Light and Dark",
+    "Coverage inventory is public shared widgets plus Library/Settings parts, with additional scientific views; not every private screen subwidget"
+  ],
+  "productionModified": false
+}

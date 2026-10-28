@@ -1,0 +1,258 @@
+<!doctype html><meta charset="utf-8"><title>figma-implement-design</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>figma-implement-design</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\skills\figma-implement-design\SKILL.md</p><pre>   1  ---
+   2  name: figma-implement-design
+   3  description: Translates Figma designs into production-ready application code with 1:1 visual fidelity. Use when implementing UI code from Figma files, when user mentions &quot;implement design&quot;, &quot;generate code&quot;, &quot;implement component&quot;, provides Figma URLs, or asks to build components matching Figma specs. For Figma canvas writes via `use_figma`, use `figma-use`.
+   4  ---
+   5  
+   6  # Implement Design
+   7  
+   8  ## Overview
+   9  
+  10  This skill provides a structured workflow for translating Figma designs into production-ready code with pixel-perfect accuracy. It ensures consistent integration with the Figma MCP server, proper use of design tokens, and 1:1 visual parity with designs.
+  11  
+  12  ## Skill Boundaries
+  13  
+  14  - Use this skill when the deliverable is code in the user&#x27;s repository.
+  15  - If the user asks to create/edit/delete nodes inside Figma itself, switch to [figma-use](../figma-use/SKILL.md).
+  16  - If the user asks to build or update a full-page screen in Figma from code or a description, switch to [figma-generate-design](../figma-generate-design/SKILL.md).
+  17  - If the user asks only for Code Connect mappings, switch to [figma-code-connect-components](../figma-code-connect-components/SKILL.md).
+  18  - If the user asks to author reusable agent rules (`CLAUDE.md`/`AGENTS.md`), switch to [figma-create-design-system-rules](../figma-create-design-system-rules/SKILL.md).
+  19  
+  20  ## Prerequisites
+  21  
+  22  - Figma MCP server must be connected and accessible
+  23  - User must provide a Figma URL in the format: `https://figma.com/design/:fileKey/:fileName?node-id=1-2`
+  24    - `:fileKey` is the file key
+  25    - `1-2` is the node ID (the specific component or frame to implement)
+  26  - **OR** when using `figma-desktop` MCP: User can select a node directly in the Figma desktop app (no URL required)
+  27  - Project should have an established design system or component library (preferred)
+  28  
+  29  ## Required Workflow
+  30  
+  31  **Follow these steps in order. Do not skip steps.**
+  32  
+  33  ### Step 1: Get Node ID
+  34  
+  35  #### Option A: Parse from Figma URL
+  36  
+  37  When the user provides a Figma URL, extract the file key and node ID to pass as arguments to MCP tools.
+  38  
+  39  **URL format:** `https://figma.com/design/:fileKey/:fileName?node-id=1-2`
+  40  
+  41  **Extract:**
+  42  
+  43  - **File key:** `:fileKey` (the segment after `/design/`)
+  44  - **Node ID:** `1-2` (the value of the `node-id` query parameter)
+  45  
+  46  **Note:** When using the local desktop MCP (`figma-desktop`), `fileKey` is not passed as a parameter to tool calls. The server automatically uses the currently open file, so only `nodeId` is needed.
+  47  
+  48  **Example:**
+  49  
+  50  - URL: `https://figma.com/design/kL9xQn2VwM8pYrTb4ZcHjF/DesignSystem?node-id=42-15`
+  51  - File key: `kL9xQn2VwM8pYrTb4ZcHjF`
+  52  - Node ID: `42-15`
+  53  
+  54  #### Option B: Use Current Selection from Figma Desktop App (figma-desktop MCP only)
+  55  
+  56  When using the `figma-desktop` MCP and the user has NOT provided a URL, the tools automatically use the currently selected node from the open Figma file in the desktop app.
+  57  
+  58  **Note:** Selection-based prompting only works with the `figma-desktop` MCP server. The remote server requires a link to a frame or layer to extract context. The user must have the Figma desktop app open with a node selected.
+  59  
+  60  ### Step 2: Fetch Design Context
+  61  
+  62  Run `get_design_context` with the extracted file key and node ID.
+  63  
+  64  ```
+  65  get_design_context(fileKey=&quot;:fileKey&quot;, nodeId=&quot;1-2&quot;)
+  66  ```
+  67  
+  68  This provides the structured data including:
+  69  
+  70  - Layout properties (Auto Layout, constraints, sizing)
+  71  - Typography specifications
+  72  - Color values and design tokens
+  73  - Component structure and variants
+  74  - Spacing and padding values
+  75  
+  76  **If the response is too large or truncated:**
+  77  
+  78  1. Run `get_metadata(fileKey=&quot;:fileKey&quot;, nodeId=&quot;1-2&quot;)` to get the high-level node map
+  79  2. Identify the specific child nodes needed from the metadata
+  80  3. Fetch individual child nodes with `get_design_context(fileKey=&quot;:fileKey&quot;, nodeId=&quot;:childNodeId&quot;)`
+  81  
+  82  ### Step 3: Capture Visual Reference
+  83  
+  84  Run `get_screenshot` with the same file key and node ID for a visual reference.
+  85  
+  86  ```
+  87  get_screenshot(fileKey=&quot;:fileKey&quot;, nodeId=&quot;1-2&quot;)
+  88  ```
+  89  
+  90  This screenshot serves as the source of truth for visual validation. Keep it accessible throughout implementation.
+  91  
+  92  ### Step 4: Download Required Assets
+  93  
+  94  Download any assets (images, icons, SVGs) returned by the Figma MCP server.
+  95  
+  96  **IMPORTANT:** Follow these asset rules:
+  97  
+  98  - If the Figma MCP server returns a `localhost` source for an image or SVG, use that source directly
+  99  - DO NOT import or add new icon packages - all assets should come from the Figma payload
+ 100  - DO NOT use or create placeholders if a `localhost` source is provided
+ 101  - Assets are served through the Figma MCP server&#x27;s built-in assets endpoint
+ 102  
+ 103  ### Step 5: Translate to Project Conventions
+ 104  
+ 105  Translate the Figma output into this project&#x27;s framework, styles, and conventions.
+ 106  
+ 107  **Key principles:**
+ 108  
+ 109  - Treat the Figma MCP output (typically React + Tailwind) as a representation of design and behavior, not as final code style
+ 110  - Replace Tailwind utility classes with the project&#x27;s preferred utilities or design system tokens
+ 111  - Reuse existing components (buttons, inputs, typography, icon wrappers) instead of duplicating functionality
+ 112  - Use the project&#x27;s color system, typography scale, and spacing tokens consistently
+ 113  - Respect existing routing, state management, and data-fetch patterns
+ 114  
+ 115  ### Step 6: Achieve 1:1 Visual Parity
+ 116  
+ 117  Strive for pixel-perfect visual parity with the Figma design.
+ 118  
+ 119  **Guidelines:**
+ 120  
+ 121  - Prioritize Figma fidelity to match designs exactly
+ 122  - Avoid hardcoded values - use design tokens from Figma where available
+ 123  - When conflicts arise between design system tokens and Figma specs, prefer design system tokens but adjust spacing or sizes minimally to match visuals
+ 124  - Follow WCAG requirements for accessibility
+ 125  - Add component documentation as needed
+ 126  
+ 127  ### Step 7: Validate Against Figma
+ 128  
+ 129  Before marking complete, validate the final UI against the Figma screenshot.
+ 130  
+ 131  **Validation checklist:**
+ 132  
+ 133  - [ ] Layout matches (spacing, alignment, sizing)
+ 134  - [ ] Typography matches (font, size, weight, line height)
+ 135  - [ ] Colors match exactly
+ 136  - [ ] Interactive states work as designed (hover, active, disabled)
+ 137  - [ ] Responsive behavior follows Figma constraints
+ 138  - [ ] Assets render correctly
+ 139  - [ ] Accessibility standards met
+ 140  
+ 141  ## Implementation Rules
+ 142  
+ 143  ### Component Organization
+ 144  
+ 145  - Place UI components in the project&#x27;s designated design system directory
+ 146  - Follow the project&#x27;s component naming conventions
+ 147  - Avoid inline styles unless truly necessary for dynamic values
+ 148  
+ 149  ### Design System Integration
+ 150  
+ 151  - ALWAYS use components from the project&#x27;s design system when possible
+ 152  - Map Figma design tokens to project design tokens
+ 153  - When a matching component exists, extend it rather than creating a new one
+ 154  - Document any new components added to the design system
+ 155  
+ 156  ### Code Quality
+ 157  
+ 158  - Avoid hardcoded values - extract to constants or design tokens
+ 159  - Keep components composable and reusable
+ 160  - Add TypeScript types for component props
+ 161  - Include JSDoc comments for exported components
+ 162  
+ 163  ## Examples
+ 164  
+ 165  ### Example 1: Implementing a Button Component
+ 166  
+ 167  User says: &quot;Implement this Figma button component: https://figma.com/design/kL9xQn2VwM8pYrTb4ZcHjF/DesignSystem?node-id=42-15&quot;
+ 168  
+ 169  **Actions:**
+ 170  
+ 171  1. Parse URL to extract fileKey=`kL9xQn2VwM8pYrTb4ZcHjF` and nodeId=`42-15`
+ 172  2. Run `get_design_context(fileKey=&quot;kL9xQn2VwM8pYrTb4ZcHjF&quot;, nodeId=&quot;42-15&quot;)`
+ 173  3. Run `get_screenshot(fileKey=&quot;kL9xQn2VwM8pYrTb4ZcHjF&quot;, nodeId=&quot;42-15&quot;)` for visual reference
+ 174  4. Download any button icons from the assets endpoint
+ 175  5. Check if project has existing button component
+ 176  6. If yes, extend it with new variant; if no, create new component using project conventions
+ 177  7. Map Figma colors to project design tokens (e.g., `primary-500`, `primary-hover`)
+ 178  8. Validate against screenshot for padding, border radius, typography
+ 179  
+ 180  **Result:** Button component matching Figma design, integrated with project design system.
+ 181  
+ 182  ### Example 2: Building a Dashboard Layout
+ 183  
+ 184  User says: &quot;Build this dashboard: https://figma.com/design/pR8mNv5KqXzGwY2JtCfL4D/Dashboard?node-id=10-5&quot;
+ 185  
+ 186  **Actions:**
+ 187  
+ 188  1. Parse URL to extract fileKey=`pR8mNv5KqXzGwY2JtCfL4D` and nodeId=`10-5`
+ 189  2. Run `get_metadata(fileKey=&quot;pR8mNv5KqXzGwY2JtCfL4D&quot;, nodeId=&quot;10-5&quot;)` to understand the page structure
+ 190  3. Identify main sections from metadata (header, sidebar, content area, cards) and their child node IDs
+ 191  4. Run `get_design_context(fileKey=&quot;pR8mNv5KqXzGwY2JtCfL4D&quot;, nodeId=&quot;:childNodeId&quot;)` for each major section
+ 192  5. Run `get_screenshot(fileKey=&quot;pR8mNv5KqXzGwY2JtCfL4D&quot;, nodeId=&quot;10-5&quot;)` for the full page
+ 193  6. Download all assets (logos, icons, charts)
+ 194  7. Build layout using project&#x27;s layout primitives
+ 195  8. Implement each section using existing components where possible
+ 196  9. Validate responsive behavior against Figma constraints
+ 197  
+ 198  **Result:** Complete dashboard matching Figma design with responsive layout.
+ 199  
+ 200  ## Best Practices
+ 201  
+ 202  ### Always Start with Context
+ 203  
+ 204  Never implement based on assumptions. Always fetch `get_design_context` and `get_screenshot` first.
+ 205  
+ 206  ### Incremental Validation
+ 207  
+ 208  Validate frequently during implementation, not just at the end. This catches issues early.
+ 209  
+ 210  ### Document Deviations
+ 211  
+ 212  If you must deviate from the Figma design (e.g., for accessibility or technical constraints), document why in code comments.
+ 213  
+ 214  ### Reuse Over Recreation
+ 215  
+ 216  Always check for existing components before creating new ones. Consistency across the codebase is more important than exact Figma replication.
+ 217  
+ 218  ### Design System First
+ 219  
+ 220  When in doubt, prefer the project&#x27;s design system patterns over literal Figma translation.
+ 221  
+ 222  ## Common Issues and Solutions
+ 223  
+ 224  ### Issue: Figma output is truncated
+ 225  
+ 226  **Cause:** The design is too complex or has too many nested layers to return in a single response.
+ 227  **Solution:** Use `get_metadata` to get the node structure, then fetch specific nodes individually with `get_design_context`.
+ 228  
+ 229  ### Issue: Design doesn&#x27;t match after implementation
+ 230  
+ 231  **Cause:** Visual discrepancies between the implemented code and the original Figma design.
+ 232  **Solution:** Compare side-by-side with the screenshot from Step 3. Check spacing, colors, and typography values in the design context data.
+ 233  
+ 234  ### Issue: Assets not loading
+ 235  
+ 236  **Cause:** The Figma MCP server&#x27;s assets endpoint is not accessible or the URLs are being modified.
+ 237  **Solution:** Verify the Figma MCP server&#x27;s assets endpoint is accessible. The server serves assets at `localhost` URLs. Use these directly without modification.
+ 238  
+ 239  ### Issue: Design token values differ from Figma
+ 240  
+ 241  **Cause:** The project&#x27;s design system tokens have different values than those specified in the Figma design.
+ 242  **Solution:** When project tokens differ from Figma values, prefer project tokens for consistency but adjust spacing/sizing to maintain visual fidelity.
+ 243  
+ 244  ## Understanding Design Implementation
+ 245  
+ 246  The Figma implementation workflow establishes a reliable process for translating designs to code:
+ 247  
+ 248  **For designers:** Confidence that implementations will match their designs with pixel-perfect accuracy.
+ 249  **For developers:** A structured approach that eliminates guesswork and reduces back-and-forth revisions.
+ 250  **For teams:** Consistent, high-quality implementations that maintain design system integrity.
+ 251  
+ 252  By following this workflow, you ensure that every Figma design is implemented with the same level of care and attention to detail.
+ 253  
+ 254  ## Additional Resources
+ 255  
+ 256  - [Figma MCP Server Documentation](https://developers.figma.com/docs/figma-mcp-server/)
+ 257  - [Figma MCP Server Tools and Prompts](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/)
+ 258  - [Figma Variables and Design Tokens](https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma)</pre>

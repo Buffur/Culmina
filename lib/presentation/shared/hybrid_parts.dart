@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import 'hybrid_icon.dart';
 
@@ -24,7 +24,8 @@ class HybridSectionTitle extends StatelessWidget {
       header: true,
       child: Text(
         text,
-        style: AppTypography.sectionHeading.copyWith(color: p.textPrimary),
+        style: AppTextTheme.of(context).sectionHeading
+            .copyWith(color: p.textPrimary),
       ),
     );
     if (trailing == null) return title;
@@ -39,7 +40,8 @@ class HybridSectionTitle extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 3),
           child: Text(
             trailing!,
-            style: AppTypography.caption.copyWith(color: p.textSecondary),
+            style: AppTextTheme.of(context).caption
+                .copyWith(color: p.textSecondary),
           ),
         ),
       ],
@@ -69,7 +71,7 @@ class HybridFact extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              style: AppTypography.caption.copyWith(
+              style: AppTextTheme.of(context).caption.copyWith(
                 color: emphasis ? p.textPrimary : p.textSecondary,
                 fontWeight: emphasis ? FontWeight.w600 : FontWeight.w400,
               ),
@@ -80,7 +82,7 @@ class HybridFact extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: AppTypography.caption.copyWith(
+              style: AppTextTheme.of(context).caption.copyWith(
                 color: p.textPrimary,
                 fontWeight: emphasis ? FontWeight.w600 : FontWeight.w500,
               ),
@@ -134,10 +136,9 @@ class HybridNote extends StatelessWidget {
     final p = AppPalette.of(context);
     return Text(
       text,
-      style: AppTypography.caption.copyWith(
-        height: 22.1 / 13,
-        color: tertiary ? p.textTertiary : p.textSecondary,
-      ),
+      style: AppTextTheme.of(context)
+          .resolve(AppTextTheme.of(context).caption, AppTextGeometry.emptyState)
+          .copyWith(color: tertiary ? p.textTertiary : p.textSecondary),
     );
   }
 }
@@ -183,27 +184,33 @@ class HybridPlanRow extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: AppTypography.itemTitle.copyWith(
-                        height: 1.55,
-                        color: p.textPrimary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).itemTitle,
+                            AppTextGeometry.supporting,
+                          )
+                          .copyWith(color: p.textPrimary),
                     ),
                     const SizedBox(height: 1),
                     Text(
                       value,
-                      style: AppTypography.value.copyWith(
-                        height: 1.5,
-                        color: p.textPrimary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).value,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(color: p.textPrimary),
                     ),
                     if (caption != null) ...[
                       const SizedBox(height: 1),
                       Text(
                         caption!,
-                        style: AppTypography.caption.copyWith(
-                          height: 1.55,
-                          color: p.textTertiary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).caption,
+                              AppTextGeometry.supporting,
+                            )
+                            .copyWith(color: p.textTertiary),
                       ),
                     ],
                   ],
@@ -282,10 +289,12 @@ class HybridNightRow extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 label,
-                                style: AppTypography.itemTitle.copyWith(
-                                  height: 1.5,
-                                  color: p.textPrimary,
-                                ),
+                                style: AppTextTheme.of(context)
+                                    .resolve(
+                                      AppTextTheme.of(context).itemTitle,
+                                      AppTextGeometry.standard,
+                                    )
+                                    .copyWith(color: p.textPrimary),
                               ),
                             ),
                           ],
@@ -293,19 +302,24 @@ class HybridNightRow extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           value,
-                          style: AppTypography.value.copyWith(
-                            height: 1.6,
-                            color: p.textPrimary,
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).value,
+                                AppTextGeometry.reading,
+                              )
+                              .copyWith(
+                                color: p.textPrimary,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                              ),
                         ),
                         if (extra != null) ...[
                           const SizedBox(height: 2),
                           Text(
                             extra!,
-                            style: AppTypography.caption.copyWith(
-                              color: p.textTertiary,
-                            ),
+                            style: AppTextTheme.of(context).caption
+                                .copyWith(color: p.textTertiary),
                           ),
                         ],
                       ],
@@ -364,10 +378,12 @@ class HybridApplyBar extends StatelessWidget {
                 Text(
                   note!,
                   key: noteKey,
-                  style: AppTypography.caption.copyWith(
-                    height: 1.55,
-                    color: p.textSecondary,
-                  ),
+                  style: AppTextTheme.of(context)
+                      .resolve(
+                        AppTextTheme.of(context).caption,
+                        AppTextGeometry.supporting,
+                      )
+                      .copyWith(color: p.textSecondary),
                 ),
                 const SizedBox(height: 8),
               ],
@@ -380,7 +396,10 @@ class HybridApplyBar extends StatelessWidget {
                     horizontal: 20,
                     vertical: 12,
                   ),
-                  textStyle: AppTypography.itemTitle.copyWith(height: 1.5),
+                  textStyle: AppTextTheme.of(context).resolve(
+                    AppTextTheme.of(context).itemTitle,
+                    AppTextGeometry.standard,
+                  ),
                 ),
                 child: Text(label),
               ),
@@ -511,20 +530,23 @@ class HybridChoiceRow extends StatelessWidget {
                       children: [
                         Text(
                           title,
-                          style: AppTypography.body.copyWith(
-                            height: 1.5,
-                            fontWeight: selected
-                                ? FontWeight.w600
-                                : FontWeight.w400,
-                            color: p.textPrimary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).body,
+                                AppTextGeometry.standard,
+                              )
+                              .copyWith(
+                                fontWeight: selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: p.textPrimary,
+                              ),
                         ),
                         if (caption != null)
                           Text(
                             caption!,
-                            style: AppTypography.caption.copyWith(
-                              color: p.textSecondary,
-                            ),
+                            style: AppTextTheme.of(context).caption
+                                .copyWith(color: p.textSecondary),
                           ),
                       ],
                     ),
@@ -550,9 +572,8 @@ class HybridFieldLabel extends StatelessWidget {
     header: true,
     child: Text(
       text,
-      style: AppTypography.caption.copyWith(
-        color: AppPalette.of(context).textSecondary,
-      ),
+      style: AppTextTheme.of(context).caption
+          .copyWith(color: AppPalette.of(context).textSecondary),
     ),
   );
 }
@@ -720,18 +741,22 @@ class HybridSwitchRow extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: AppTypography.value.copyWith(
-                          height: 1.5,
-                          color: p.textPrimary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).value,
+                              AppTextGeometry.standard,
+                            )
+                            .copyWith(color: p.textPrimary),
                       ),
                       if (description case final d?)
                         Text(
                           d,
-                          style: AppTypography.caption.copyWith(
-                            height: 1.55,
-                            color: p.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).caption,
+                                AppTextGeometry.supporting,
+                              )
+                              .copyWith(color: p.textSecondary),
                         ),
                     ],
                   ),
@@ -828,10 +853,12 @@ class HybridCheckRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: AppTypography.body.copyWith(
-                    height: 1.5,
-                    color: AppPalette.of(context).textPrimary,
-                  ),
+                  style: AppTextTheme.of(context)
+                      .resolve(
+                        AppTextTheme.of(context).body,
+                        AppTextGeometry.standard,
+                      )
+                      .copyWith(color: AppPalette.of(context).textPrimary),
                 ),
               ),
             ],

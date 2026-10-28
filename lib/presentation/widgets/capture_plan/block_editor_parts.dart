@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/collapsible_section.dart';
 import '../../shared/hybrid_parts.dart';
@@ -41,7 +41,7 @@ class BlockField extends StatelessWidget {
         ExcludeSemantics(
           child: Text(
             label,
-            style: AppTypography.caption.copyWith(color: secondary),
+            style: AppTextTheme.of(context).caption.copyWith(color: secondary),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -52,10 +52,12 @@ class BlockField extends StatelessWidget {
             child: ExcludeSemantics(
               child: Text(
                 hint!,
-                style: AppTypography.caption.copyWith(
-                  height: 1.55,
-                  color: secondary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      AppTextGeometry.supporting,
+                    )
+                    .copyWith(color: secondary),
               ),
             ),
           ),
@@ -65,7 +67,8 @@ class BlockField extends StatelessWidget {
             child: Text(
               note!,
               key: noteKey,
-              style: AppTypography.caption.copyWith(color: secondary),
+              style: AppTextTheme.of(context).caption
+                  .copyWith(color: secondary),
             ),
           ),
       ],
@@ -141,7 +144,8 @@ class HybridSegmented<T> extends StatelessWidget {
     final selection =
         theme.extension<HybridTokens>()?.selection ??
         theme.colorScheme.surfaceContainerHighest;
-    final labelStyle = theme.textTheme.bodyMedium?.copyWith(fontSize: 14);
+    final labelStyle = AppTextTheme.of(context)
+        .resolve(theme.textTheme.bodyMedium, AppTextGeometry.formLabel);
     final scaler = MediaQuery.textScalerOf(context);
     return Semantics(
       container: true,
@@ -156,10 +160,12 @@ class HybridSegmented<T> extends StatelessWidget {
                 legend,
                 style:
                     legendStyle ??
-                    theme.textTheme.bodySmall?.copyWith(
-                      fontSize: 13,
-                      color: palette.textSecondary,
-                    ),
+                    AppTextTheme.of(context)
+                        .resolve(
+                          theme.textTheme.bodySmall,
+                          AppTextGeometry.contextCaption,
+                        )
+                        .copyWith(color: palette.textSecondary),
               ),
             ),
             SizedBox(height: legendStyle == null ? _gap : 4),
@@ -177,7 +183,7 @@ class HybridSegmented<T> extends StatelessWidget {
                     final painter = TextPainter(
                       text: TextSpan(
                         text: label,
-                        style: labelStyle?.copyWith(
+                        style: labelStyle.copyWith(
                           fontWeight: option == value ? FontWeight.w600 : null,
                         ),
                       ),
@@ -359,10 +365,12 @@ class BlockDisclosure extends StatelessWidget {
       open: open,
       onToggle: onToggle,
       titleStyle: small
-          ? AppTypography.sectionSubject.copyWith(
-              fontWeight: FontWeight.w600,
-              height: 1.4,
-            )
+          ? AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).sectionSubject,
+                  AppTextGeometry.compact,
+                )
+                .copyWith(fontWeight: FontWeight.w600)
           : null,
       child: Padding(
         padding: const EdgeInsets.only(bottom: AppSpacing.sm),

@@ -1,0 +1,216 @@
+<!doctype html><meta charset="utf-8"><title>lib\core\theme\app_text_theme.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\core\theme\app_text_theme.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/material.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> import &#x27;app_typography.dart&#x27;;</div>
+<div id="L4"><a href="#L4">4</a> import &#x27;hybrid_tokens.dart&#x27;;</div>
+<div id="L5"><a href="#L5">5</a> </div>
+<div id="L6"><a href="#L6">6</a> /// Central geometry presets retained from the adopted production composition.</div>
+<div id="L7"><a href="#L7">7</a> /// Widgets choose a preset; they never specify numeric text geometry.</div>
+<div id="L8"><a href="#L8">8</a> enum AppTextGeometry {</div>
+<div id="L9"><a href="#L9">9</a>   compact,</div>
+<div id="L10"><a href="#L10">10</a>   badge,</div>
+<div id="L11"><a href="#L11">11</a>   standard,</div>
+<div id="L12"><a href="#L12">12</a>   supporting,</div>
+<div id="L13"><a href="#L13">13</a>   reading,</div>
+<div id="L14"><a href="#L14">14</a>   emptyState,</div>
+<div id="L15"><a href="#L15">15</a>   launchFailure,</div>
+<div id="L16"><a href="#L16">16</a>   spacedLabel,</div>
+<div id="L17"><a href="#L17">17</a>   fitValue,</div>
+<div id="L18"><a href="#L18">18</a>   fitMeasure,</div>
+<div id="L19"><a href="#L19">19</a>   fitVerdict,</div>
+<div id="L20"><a href="#L20">20</a>   fitExplanation,</div>
+<div id="L21"><a href="#L21">21</a>   calendarCell,</div>
+<div id="L22"><a href="#L22">22</a>   calendarCaption,</div>
+<div id="L23"><a href="#L23">23</a>   explanatory,</div>
+<div id="L24"><a href="#L24">24</a>   tableValue,</div>
+<div id="L25"><a href="#L25">25</a>   timelineDate,</div>
+<div id="L26"><a href="#L26">26</a>   summaryTitle,</div>
+<div id="L27"><a href="#L27">27</a>   compactHeading,</div>
+<div id="L28"><a href="#L28">28</a>   weatherDescription,</div>
+<div id="L29"><a href="#L29">29</a>   answer,</div>
+<div id="L30"><a href="#L30">30</a>   contextCaption,</div>
+<div id="L31"><a href="#L31">31</a>   formLabel,</div>
+<div id="L32"><a href="#L32">32</a>   answerNeutralTracking,</div>
+<div id="L33"><a href="#L33">33</a>   chartLabel,</div>
+<div id="L34"><a href="#L34">34</a>   calendarHeading,</div>
+<div id="L35"><a href="#L35">35</a>   calendarInstruction,</div>
+<div id="L36"><a href="#L36">36</a>   moonTotal,</div>
+<div id="L37"><a href="#L37">37</a>   resultNotes,</div>
+<div id="L38"><a href="#L38">38</a>   tightTracking,</div>
+<div id="L39"><a href="#L39">39</a>   recoveryBody,</div>
+<div id="L40"><a href="#L40">40</a>   chartCaption,</div>
+<div id="L41"><a href="#L41">41</a>   candidateTitle,</div>
+<div id="L42"><a href="#L42">42</a>   dialogTitle,</div>
+<div id="L43"><a href="#L43">43</a> }</div>
+<div id="L44"><a href="#L44">44</a> </div>
+<div id="L45"><a href="#L45">45</a> /// Typed typography roles and inherited-style geometry installed in ThemeData.</div>
+<div id="L46"><a href="#L46">46</a> /// Base definitions stay in AppTypography; this extension is the runtime reader.</div>
+<div id="L47"><a href="#L47">47</a> @immutable</div>
+<div id="L48"><a href="#L48">48</a> class AppTextTheme extends ThemeExtension&lt;AppTextTheme&gt; {</div>
+<div id="L49"><a href="#L49">49</a>   const AppTextTheme._(this._roles, this._geometry);</div>
+<div id="L50"><a href="#L50">50</a>   final Map&lt;String, TextStyle&gt; _roles;</div>
+<div id="L51"><a href="#L51">51</a>   final Map&lt;AppTextGeometry, TextStyle&gt; _geometry;</div>
+<div id="L52"><a href="#L52">52</a> </div>
+<div id="L53"><a href="#L53">53</a>   static AppTextTheme of(BuildContext context) =&gt;</div>
+<div id="L54"><a href="#L54">54</a>       Theme.of(context).extension&lt;AppTextTheme&gt;() ?? standard;</div>
+<div id="L55"><a href="#L55">55</a> </div>
+<div id="L56"><a href="#L56">56</a>   static final standard = AppTextTheme._(</div>
+<div id="L57"><a href="#L57">57</a>     {</div>
+<div id="L58"><a href="#L58">58</a>       &quot;support&quot;: AppTypography.support,</div>
+<div id="L59"><a href="#L59">59</a>       &quot;nightHeading&quot;: AppTypography.nightHeading,</div>
+<div id="L60"><a href="#L60">60</a>       &quot;answerHeading&quot;: AppTypography.answerHeading,</div>
+<div id="L61"><a href="#L61">61</a>       &quot;screenTitle&quot;: AppTypography.screenTitle,</div>
+<div id="L62"><a href="#L62">62</a>       &quot;sectionHeading&quot;: AppTypography.sectionHeading,</div>
+<div id="L63"><a href="#L63">63</a>       &quot;sectionSubject&quot;: AppTypography.sectionSubject,</div>
+<div id="L64"><a href="#L64">64</a>       &quot;itemTitle&quot;: AppTypography.itemTitle,</div>
+<div id="L65"><a href="#L65">65</a>       &quot;rowTitle&quot;: AppTypography.rowTitle,</div>
+<div id="L66"><a href="#L66">66</a>       &quot;value&quot;: AppTypography.value,</div>
+<div id="L67"><a href="#L67">67</a>       &quot;body&quot;: AppTypography.body,</div>
+<div id="L68"><a href="#L68">68</a>       &quot;caption&quot;: AppTypography.caption,</div>
+<div id="L69"><a href="#L69">69</a>       &quot;dense&quot;: AppTypography.dense,</div>
+<div id="L70"><a href="#L70">70</a>       &quot;navigationLabel&quot;: AppTypography.navigationLabel,</div>
+<div id="L71"><a href="#L71">71</a>       &quot;homeHeading&quot;: AppTypography.homeHeading,</div>
+<div id="L72"><a href="#L72">72</a>       &quot;homePlanHeading&quot;: AppTypography.homePlanHeading,</div>
+<div id="L73"><a href="#L73">73</a>       &quot;homeTarget&quot;: AppTypography.homeTarget,</div>
+<div id="L74"><a href="#L74">74</a>       &quot;homeWordmark&quot;: AppTypography.homeWordmark,</div>
+<div id="L75"><a href="#L75">75</a>       &quot;homeWelcome&quot;: AppTypography.homeWelcome,</div>
+<div id="L76"><a href="#L76">76</a>       &quot;inherited&quot;: const TextStyle(),</div>
+<div id="L77"><a href="#L77">77</a>     },</div>
+<div id="L78"><a href="#L78">78</a>     {</div>
+<div id="L79"><a href="#L79">79</a>       AppTextGeometry.compact: TextStyle(height: 1.4),</div>
+<div id="L80"><a href="#L80">80</a>       AppTextGeometry.badge: TextStyle(height: 1.4, letterSpacing: 0),</div>
+<div id="L81"><a href="#L81">81</a>       AppTextGeometry.standard: TextStyle(height: 1.5),</div>
+<div id="L82"><a href="#L82">82</a>       AppTextGeometry.supporting: TextStyle(height: 1.55),</div>
+<div id="L83"><a href="#L83">83</a>       AppTextGeometry.reading: TextStyle(height: 1.6),</div>
+<div id="L84"><a href="#L84">84</a>       AppTextGeometry.emptyState: TextStyle(height: 22.1 / 13),</div>
+<div id="L85"><a href="#L85">85</a>       AppTextGeometry.launchFailure: TextStyle(fontSize: 16, height: 1.4),</div>
+<div id="L86"><a href="#L86">86</a>       AppTextGeometry.spacedLabel: TextStyle(letterSpacing: 0.5),</div>
+<div id="L87"><a href="#L87">87</a>       AppTextGeometry.fitValue: TextStyle(fontSize: 15, height: 19 / 15),</div>
+<div id="L88"><a href="#L88">88</a>       AppTextGeometry.fitMeasure: TextStyle(fontSize: 13, height: 17 / 13),</div>
+<div id="L89"><a href="#L89">89</a>       AppTextGeometry.fitVerdict: TextStyle(fontSize: 13, height: 1.5),</div>
+<div id="L90"><a href="#L90">90</a>       AppTextGeometry.fitExplanation: TextStyle(fontSize: 14, height: 1.55),</div>
+<div id="L91"><a href="#L91">91</a>       AppTextGeometry.calendarCell: TextStyle(fontSize: 12, height: 1.5),</div>
+<div id="L92"><a href="#L92">92</a>       AppTextGeometry.calendarCaption: TextStyle(</div>
+<div id="L93"><a href="#L93">93</a>         fontSize: HybridTokens.calendarCaptionSize,</div>
+<div id="L94"><a href="#L94">94</a>       ),</div>
+<div id="L95"><a href="#L95">95</a>       AppTextGeometry.explanatory: TextStyle(height: 1.65),</div>
+<div id="L96"><a href="#L96">96</a>       AppTextGeometry.tableValue: TextStyle(height: 1.45),</div>
+<div id="L97"><a href="#L97">97</a>       AppTextGeometry.timelineDate: TextStyle(height: 17 / 13),</div>
+<div id="L98"><a href="#L98">98</a>       AppTextGeometry.summaryTitle: TextStyle(fontSize: 18),</div>
+<div id="L99"><a href="#L99">99</a>       AppTextGeometry.compactHeading: TextStyle(</div>
+<div id="L100"><a href="#L100">100</a>         height: 1.4,</div>
+<div id="L101"><a href="#L101">101</a>         letterSpacing: -0.33,</div>
+<div id="L102"><a href="#L102">102</a>       ),</div>
+<div id="L103"><a href="#L103">103</a>       AppTextGeometry.weatherDescription: TextStyle(height: 1.7),</div>
+<div id="L104"><a href="#L104">104</a>       AppTextGeometry.answer: TextStyle(height: 1.3),</div>
+<div id="L105"><a href="#L105">105</a>       AppTextGeometry.contextCaption: TextStyle(fontSize: 13),</div>
+<div id="L106"><a href="#L106">106</a>       AppTextGeometry.formLabel: TextStyle(fontSize: 14),</div>
+<div id="L107"><a href="#L107">107</a>       AppTextGeometry.answerNeutralTracking: TextStyle(</div>
+<div id="L108"><a href="#L108">108</a>         height: 1.3,</div>
+<div id="L109"><a href="#L109">109</a>         letterSpacing: 0,</div>
+<div id="L110"><a href="#L110">110</a>       ),</div>
+<div id="L111"><a href="#L111">111</a>       AppTextGeometry.chartLabel: TextStyle(</div>
+<div id="L112"><a href="#L112">112</a>         fontFamily: HybridTokens.fontFamily,</div>
+<div id="L113"><a href="#L113">113</a>         fontSize: HybridTokens.chartLabelSize,</div>
+<div id="L114"><a href="#L114">114</a>       ),</div>
+<div id="L115"><a href="#L115">115</a>       AppTextGeometry.calendarHeading: TextStyle(</div>
+<div id="L116"><a href="#L116">116</a>         height: 1.35,</div>
+<div id="L117"><a href="#L117">117</a>         letterSpacing: -0.33,</div>
+<div id="L118"><a href="#L118">118</a>       ),</div>
+<div id="L119"><a href="#L119">119</a>       AppTextGeometry.calendarInstruction: TextStyle(height: 24 / 13),</div>
+<div id="L120"><a href="#L120">120</a>       AppTextGeometry.moonTotal: TextStyle(fontSize: 24, height: 1.3),</div>
+<div id="L121"><a href="#L121">121</a>       AppTextGeometry.resultNotes: TextStyle(fontSize: 16, height: 1.5),</div>
+<div id="L122"><a href="#L122">122</a>       AppTextGeometry.tightTracking: TextStyle(letterSpacing: -0.25),</div>
+<div id="L123"><a href="#L123">123</a>       AppTextGeometry.recoveryBody: TextStyle(fontSize: 16),</div>
+<div id="L124"><a href="#L124">124</a>       AppTextGeometry.chartCaption: TextStyle(height: 16 / 12),</div>
+<div id="L125"><a href="#L125">125</a>       AppTextGeometry.candidateTitle: TextStyle(fontSize: 23, height: 1.3),</div>
+<div id="L126"><a href="#L126">126</a>       AppTextGeometry.dialogTitle: TextStyle(height: 21 / 16),</div>
+<div id="L127"><a href="#L127">127</a>     },</div>
+<div id="L128"><a href="#L128">128</a>   );</div>
+<div id="L129"><a href="#L129">129</a> </div>
+<div id="L130"><a href="#L130">130</a>   TextStyle get support =&gt; _roles[&quot;support&quot;]!;</div>
+<div id="L131"><a href="#L131">131</a>   TextStyle get nightHeading =&gt; _roles[&quot;nightHeading&quot;]!;</div>
+<div id="L132"><a href="#L132">132</a>   TextStyle get answerHeading =&gt; _roles[&quot;answerHeading&quot;]!;</div>
+<div id="L133"><a href="#L133">133</a>   TextStyle get screenTitle =&gt; _roles[&quot;screenTitle&quot;]!;</div>
+<div id="L134"><a href="#L134">134</a>   TextStyle get sectionHeading =&gt; _roles[&quot;sectionHeading&quot;]!;</div>
+<div id="L135"><a href="#L135">135</a>   TextStyle get sectionSubject =&gt; _roles[&quot;sectionSubject&quot;]!;</div>
+<div id="L136"><a href="#L136">136</a>   TextStyle get itemTitle =&gt; _roles[&quot;itemTitle&quot;]!;</div>
+<div id="L137"><a href="#L137">137</a>   TextStyle get rowTitle =&gt; _roles[&quot;rowTitle&quot;]!;</div>
+<div id="L138"><a href="#L138">138</a>   TextStyle get value =&gt; _roles[&quot;value&quot;]!;</div>
+<div id="L139"><a href="#L139">139</a>   TextStyle get body =&gt; _roles[&quot;body&quot;]!;</div>
+<div id="L140"><a href="#L140">140</a>   TextStyle get caption =&gt; _roles[&quot;caption&quot;]!;</div>
+<div id="L141"><a href="#L141">141</a>   TextStyle get dense =&gt; _roles[&quot;dense&quot;]!;</div>
+<div id="L142"><a href="#L142">142</a>   TextStyle get navigationLabel =&gt; _roles[&quot;navigationLabel&quot;]!;</div>
+<div id="L143"><a href="#L143">143</a>   TextStyle get homeHeading =&gt; _roles[&quot;homeHeading&quot;]!;</div>
+<div id="L144"><a href="#L144">144</a>   TextStyle get homePlanHeading =&gt; _roles[&quot;homePlanHeading&quot;]!;</div>
+<div id="L145"><a href="#L145">145</a>   TextStyle get homeTarget =&gt; _roles[&quot;homeTarget&quot;]!;</div>
+<div id="L146"><a href="#L146">146</a>   TextStyle get homeWordmark =&gt; _roles[&quot;homeWordmark&quot;]!;</div>
+<div id="L147"><a href="#L147">147</a>   TextStyle get homeWelcome =&gt; _roles[&quot;homeWelcome&quot;]!;</div>
+<div id="L148"><a href="#L148">148</a>   TextStyle get inherited =&gt; _roles[&quot;inherited&quot;]!;</div>
+<div id="L149"><a href="#L149">149</a> </div>
+<div id="L150"><a href="#L150">150</a>   /// Retains the caller&#x27;s inherited family/color/weight and replaces only the</div>
+<div id="L151"><a href="#L151">151</a>   /// centrally declared geometry. A null Material role stays inherited.</div>
+<div id="L152"><a href="#L152">152</a>   TextStyle resolve(TextStyle? base, AppTextGeometry geometry) =&gt;</div>
+<div id="L153"><a href="#L153">153</a>       (base ?? inherited).merge(_geometry[geometry]);</div>
+<div id="L154"><a href="#L154">154</a> </div>
+<div id="L155"><a href="#L155">155</a>   @override</div>
+<div id="L156"><a href="#L156">156</a>   AppTextTheme copyWith({</div>
+<div id="L157"><a href="#L157">157</a>     TextStyle? support,</div>
+<div id="L158"><a href="#L158">158</a>     TextStyle? nightHeading,</div>
+<div id="L159"><a href="#L159">159</a>     TextStyle? answerHeading,</div>
+<div id="L160"><a href="#L160">160</a>     TextStyle? screenTitle,</div>
+<div id="L161"><a href="#L161">161</a>     TextStyle? sectionHeading,</div>
+<div id="L162"><a href="#L162">162</a>     TextStyle? sectionSubject,</div>
+<div id="L163"><a href="#L163">163</a>     TextStyle? itemTitle,</div>
+<div id="L164"><a href="#L164">164</a>     TextStyle? rowTitle,</div>
+<div id="L165"><a href="#L165">165</a>     TextStyle? value,</div>
+<div id="L166"><a href="#L166">166</a>     TextStyle? body,</div>
+<div id="L167"><a href="#L167">167</a>     TextStyle? caption,</div>
+<div id="L168"><a href="#L168">168</a>     TextStyle? dense,</div>
+<div id="L169"><a href="#L169">169</a>     TextStyle? navigationLabel,</div>
+<div id="L170"><a href="#L170">170</a>     TextStyle? homeHeading,</div>
+<div id="L171"><a href="#L171">171</a>     TextStyle? homePlanHeading,</div>
+<div id="L172"><a href="#L172">172</a>     TextStyle? homeTarget,</div>
+<div id="L173"><a href="#L173">173</a>     TextStyle? homeWordmark,</div>
+<div id="L174"><a href="#L174">174</a>     TextStyle? homeWelcome,</div>
+<div id="L175"><a href="#L175">175</a>     TextStyle? inherited,</div>
+<div id="L176"><a href="#L176">176</a>     Map&lt;AppTextGeometry, TextStyle&gt;? geometry,</div>
+<div id="L177"><a href="#L177">177</a>   }) =&gt; AppTextTheme._(</div>
+<div id="L178"><a href="#L178">178</a>     {</div>
+<div id="L179"><a href="#L179">179</a>       &#x27;support&#x27;: support ?? this.support,</div>
+<div id="L180"><a href="#L180">180</a>       &#x27;nightHeading&#x27;: nightHeading ?? this.nightHeading,</div>
+<div id="L181"><a href="#L181">181</a>       &#x27;answerHeading&#x27;: answerHeading ?? this.answerHeading,</div>
+<div id="L182"><a href="#L182">182</a>       &#x27;screenTitle&#x27;: screenTitle ?? this.screenTitle,</div>
+<div id="L183"><a href="#L183">183</a>       &#x27;sectionHeading&#x27;: sectionHeading ?? this.sectionHeading,</div>
+<div id="L184"><a href="#L184">184</a>       &#x27;sectionSubject&#x27;: sectionSubject ?? this.sectionSubject,</div>
+<div id="L185"><a href="#L185">185</a>       &#x27;itemTitle&#x27;: itemTitle ?? this.itemTitle,</div>
+<div id="L186"><a href="#L186">186</a>       &#x27;rowTitle&#x27;: rowTitle ?? this.rowTitle,</div>
+<div id="L187"><a href="#L187">187</a>       &#x27;value&#x27;: value ?? this.value,</div>
+<div id="L188"><a href="#L188">188</a>       &#x27;body&#x27;: body ?? this.body,</div>
+<div id="L189"><a href="#L189">189</a>       &#x27;caption&#x27;: caption ?? this.caption,</div>
+<div id="L190"><a href="#L190">190</a>       &#x27;dense&#x27;: dense ?? this.dense,</div>
+<div id="L191"><a href="#L191">191</a>       &#x27;navigationLabel&#x27;: navigationLabel ?? this.navigationLabel,</div>
+<div id="L192"><a href="#L192">192</a>       &#x27;homeHeading&#x27;: homeHeading ?? this.homeHeading,</div>
+<div id="L193"><a href="#L193">193</a>       &#x27;homePlanHeading&#x27;: homePlanHeading ?? this.homePlanHeading,</div>
+<div id="L194"><a href="#L194">194</a>       &#x27;homeTarget&#x27;: homeTarget ?? this.homeTarget,</div>
+<div id="L195"><a href="#L195">195</a>       &#x27;homeWordmark&#x27;: homeWordmark ?? this.homeWordmark,</div>
+<div id="L196"><a href="#L196">196</a>       &#x27;homeWelcome&#x27;: homeWelcome ?? this.homeWelcome,</div>
+<div id="L197"><a href="#L197">197</a>       &#x27;inherited&#x27;: inherited ?? this.inherited,</div>
+<div id="L198"><a href="#L198">198</a>     },</div>
+<div id="L199"><a href="#L199">199</a>     {..._geometry, ...?geometry},</div>
+<div id="L200"><a href="#L200">200</a>   );</div>
+<div id="L201"><a href="#L201">201</a> </div>
+<div id="L202"><a href="#L202">202</a>   @override</div>
+<div id="L203"><a href="#L203">203</a>   AppTextTheme lerp(covariant AppTextTheme? other, double t) {</div>
+<div id="L204"><a href="#L204">204</a>     if (other == null) return this;</div>
+<div id="L205"><a href="#L205">205</a>     return AppTextTheme._(</div>
+<div id="L206"><a href="#L206">206</a>       {</div>
+<div id="L207"><a href="#L207">207</a>         for (final key in _roles.keys)</div>
+<div id="L208"><a href="#L208">208</a>           key: TextStyle.lerp(_roles[key], other._roles[key], t)!,</div>
+<div id="L209"><a href="#L209">209</a>       },</div>
+<div id="L210"><a href="#L210">210</a>       {</div>
+<div id="L211"><a href="#L211">211</a>         for (final key in _geometry.keys)</div>
+<div id="L212"><a href="#L212">212</a>           key: TextStyle.lerp(_geometry[key], other._geometry[key], t)!,</div>
+<div id="L213"><a href="#L213">213</a>       },</div>
+<div id="L214"><a href="#L214">214</a>     );</div>
+<div id="L215"><a href="#L215">215</a>   }</div>
+<div id="L216"><a href="#L216">216</a> }</div>

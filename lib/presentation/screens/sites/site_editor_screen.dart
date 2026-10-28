@@ -4,7 +4,7 @@ import '../../shared/night_time_formatter.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../shared/hybrid_parts.dart';
 import '../library/library_parts.dart';
 import '../settings/settings_parts.dart';
@@ -829,7 +829,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                       sectionKey: SiteEditorScreen.skyDarknessSection,
                       title: 'More (optional)',
                       topRule: false,
-                      titleStyle: AppTypography.body.copyWith(
+                      titleStyle: AppTextTheme.of(context).body.copyWith(
                         fontWeight: FontWeight.w600,
                         color: p.textPrimary,
                       ),

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 
 import 'app_colors.dart';
 import 'app_palette.dart';
+import 'app_text_theme.dart';
+import 'culmina_mark_colors.dart';
 import 'app_radius.dart';
 import 'app_spacing.dart';
 import 'app_typography.dart';
@@ -276,7 +278,16 @@ class AppTheme {
 
     return _withControls(
       base.copyWith(
-        extensions: [palette, hybrid],
+        extensions: [
+          palette,
+          hybrid,
+          AppTextTheme.standard,
+          field
+              ? CulminaMarkColors.field
+              : base.brightness == Brightness.dark
+              ? CulminaMarkColors.dark
+              : CulminaMarkColors.light,
+        ],
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
             TargetPlatform.android: HybridPageTransitionsBuilder(),

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import '../../domain/models/calendar_date.dart';
 import '../../core/utils/quantity_text.dart';
 import '../../domain/services/fit_analyzer.dart';
@@ -105,7 +105,8 @@ class PlanStatus extends StatelessWidget {
     final end = fit.endUtc;
     final action = missing?.action;
     final palette = AppPalette.of(context);
-    final body = AppTypography.body.copyWith(height: 1.6);
+    final body = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading);
     final verdict = StatusBlock.headline(state, missing: missing?.headline);
     final zoneId = site.displayZoneId;
     String captureEnd(DateTime utc) {
@@ -140,15 +141,18 @@ class PlanStatus extends StatelessWidget {
               child: Text(
                 verdict,
                 key: const Key('status.headline'),
-                style: AppTypography.screenTitle.copyWith(
-                  height: 1.4,
-                  letterSpacing: -0.33,
-                  color: FitText.color(
-                    state,
-                    Theme.of(context).colorScheme,
-                    palette,
-                  ),
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).screenTitle,
+                      AppTextGeometry.compactHeading,
+                    )
+                    .copyWith(
+                      color: FitText.color(
+                        state,
+                        Theme.of(context).colorScheme,
+                        palette,
+                      ),
+                    ),
               ),
             ),
             if (measured) ...[

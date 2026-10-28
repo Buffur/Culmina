@@ -1,0 +1,294 @@
+{
+  "kind": "Existing synthetic Flutter host captures from the earlier source audit; copied without rerendering",
+  "previous": "build/source-audit-20261028",
+  "files": [
+    {
+      "file": "renders/home-dark-1.json",
+      "sha256": "a3125de6319c8a6889980b3e641b305b3bd1fd3552547fd573bca905d3bd380b"
+    },
+    {
+      "file": "renders/home-dark-1.png",
+      "sha256": "8eadd4bfa4390ff5666bf16d64eb7ac4f5b39fcf2f1463556226319b80fd940b"
+    },
+    {
+      "file": "renders/home-dark-2.json",
+      "sha256": "21ec2bca4437a71c56958973ea1aed63b91f134f2d810abc3857d87b442f7fa6"
+    },
+    {
+      "file": "renders/home-dark-2.png",
+      "sha256": "7d973f43710cde2ef050dee2890dab78b29e03a9c68e65f342676e5a9f91fa40"
+    },
+    {
+      "file": "renders/home-field-1.json",
+      "sha256": "021ebb45c61d08b79cfb0da4534e55beb77256f04fb55515c937a1b83c7bc882"
+    },
+    {
+      "file": "renders/home-field-1.png",
+      "sha256": "0c511bc3b4d5e3edb607c1b275a2d96c0340e310b3923c72741652633c4be434"
+    },
+    {
+      "file": "renders/home-field-2.json",
+      "sha256": "9845f1ac313fcc59cca074070c9af0d24574b568f33be91e4dac7b4260e515d9"
+    },
+    {
+      "file": "renders/home-field-2.png",
+      "sha256": "006efb7b6e35beeb7ff5b1606fd724119fef0d52c5db19d598e18e01c17281fd"
+    },
+    {
+      "file": "renders/home-light-1.json",
+      "sha256": "d5abb058f6dc66de2b058ec4eb8935d57f2a4578dd3f7b9a35e0400e63cabcd4"
+    },
+    {
+      "file": "renders/home-light-1.png",
+      "sha256": "c00ef22cc390549cad560a3694d299633bcb9977d0f6903a3165c0fd34c60d8b"
+    },
+    {
+      "file": "renders/home-light-2.json",
+      "sha256": "aa403c796d244570d1f8e23a0bac7ebe54e639c6facb12a973fe8efc864251e1"
+    },
+    {
+      "file": "renders/home-light-2.png",
+      "sha256": "b90a8cfdff658a4d890543491b4a55e3bdc4d378f2a1eb2df5578516c20fb10c"
+    },
+    {
+      "file": "renders/logbook-dark-1.json",
+      "sha256": "7dfa6e04b5c3d431d070b4eba7711ff5e3bee3cc3d713742803f7308fb9729ef"
+    },
+    {
+      "file": "renders/logbook-dark-1.png",
+      "sha256": "7dd32359fd54f155c4f794d6cac0e91bf6d67efcc44e634706b6f0b06560d3d1"
+    },
+    {
+      "file": "renders/logbook-dark-2.json",
+      "sha256": "ea259405092a3887f159ba1fc47efee330fbbd8c38b9b483d4f3c0522ed31543"
+    },
+    {
+      "file": "renders/logbook-dark-2.png",
+      "sha256": "772588107cbddce38bc5bcda35d2658cce5fbd7d32fb6ebcfeb2e4828ae2870f"
+    },
+    {
+      "file": "renders/logbook-field-1.json",
+      "sha256": "9802f8af9797b05cc406f0746558804b3a2068f3bad3db205af600f4d4c877c7"
+    },
+    {
+      "file": "renders/logbook-field-1.png",
+      "sha256": "5080149ca69c5e604d111c970e729fadf639bdf4c4179d1d8a7d2a1af6a63a91"
+    },
+    {
+      "file": "renders/logbook-field-2.json",
+      "sha256": "ec2fd93d5811d9d0e222683ebd6e3d93b1655b0f1cd3cded5f1840e0b4faa941"
+    },
+    {
+      "file": "renders/logbook-field-2.png",
+      "sha256": "d228a9854da7bbe83a6131cf3028423ff67c6649f2a145ba04f2ab501ae8e870"
+    },
+    {
+      "file": "renders/logbook-light-1.json",
+      "sha256": "e00bf1de40c44e6aff874dfed02c4a4513aebfbbdd98a11c74f698f956a145a4"
+    },
+    {
+      "file": "renders/logbook-light-1.png",
+      "sha256": "019f73a11bd5845b0a95a87f4ea81e89030b553927372e64624832e2a6698abb"
+    },
+    {
+      "file": "renders/logbook-light-2.json",
+      "sha256": "ed0bc4c0953658fc7a1b45ad740f5947429e334578f0e25a9aafd725a7a90c01"
+    },
+    {
+      "file": "renders/logbook-light-2.png",
+      "sha256": "2368d44b4222a2bc061b8a2d08310dc02865a3db907f74a9fbe73c75e6f81e5f"
+    },
+    {
+      "file": "renders/plan-dark-1.json",
+      "sha256": "fcbf6b150a0688067d849f61077115a4c99d2832bad70d94d2b8ce14ecb7b8fc"
+    },
+    {
+      "file": "renders/plan-dark-1.png",
+      "sha256": "7663fba3081f10ffd1853c54fa8e4871f2a30a96beb50702ff04e56e06193ab6"
+    },
+    {
+      "file": "renders/plan-dark-2.json",
+      "sha256": "7c2b5eaf1cb767461737d2deeffdfecfec492a68776a16444f3be5d02816ad99"
+    },
+    {
+      "file": "renders/plan-dark-2.png",
+      "sha256": "3e58e3f2b2bde37584d64488f63745b5d6c01a0bc4683210e43e1e90cca77ac3"
+    },
+    {
+      "file": "renders/plan-field-1.json",
+      "sha256": "336d39f6d9cbf36ebb7c4bf74c78314fa87b65a66522b6b78c878c0d11c912fe"
+    },
+    {
+      "file": "renders/plan-field-1.png",
+      "sha256": "c1f015eac893b4b4eabb7abb604af0c72f88c3f9d89e34dd9c054a92402c9263"
+    },
+    {
+      "file": "renders/plan-field-2.json",
+      "sha256": "ba0b13a36d510b6a0ea8c974d25a423be7b8b0fa3330d0ae3415db0e06ffc189"
+    },
+    {
+      "file": "renders/plan-field-2.png",
+      "sha256": "7b549735bf4bf93de740fbc546ff98bd92aa0b1f8b618caea9f953cf17c844ea"
+    },
+    {
+      "file": "renders/plan-light-1.json",
+      "sha256": "4326616f6109fd0bd943c133e739def894e61a4ef7c8dbaaf2960ed9051b9bd8"
+    },
+    {
+      "file": "renders/plan-light-1.png",
+      "sha256": "0e5161d516a68ab0b6e07edf18457b311ed9814cdfcd269493cb1afb08220a34"
+    },
+    {
+      "file": "renders/plan-light-2.json",
+      "sha256": "1075dc67917c2cc097aef7d10dd2826c31a9dff212a04fd01a10c77a0651cf2c"
+    },
+    {
+      "file": "renders/plan-light-2.png",
+      "sha256": "a5e9679b40fffc85abdafec22cc0894a56a2d67c822b6d2870a6c1eb0304b9d2"
+    },
+    {
+      "file": "renders/plan_b-dark-1.json",
+      "sha256": "fde865b34e8bce7f8801f35550aa107bc64aeab900ee193dfa7584e7d2b4eb02"
+    },
+    {
+      "file": "renders/plan_b-dark-1.png",
+      "sha256": "6d60e5a156e608a07b9e5ef7dd6b43f6df682e4abe7512d890fded54faa49cb4"
+    },
+    {
+      "file": "renders/plan_b-dark-2.json",
+      "sha256": "bc10f96b20a56a2b45259a0dd7d86d6c32c44c84c6d7be86545f58ffea0145ee"
+    },
+    {
+      "file": "renders/plan_b-dark-2.png",
+      "sha256": "b4cad9a104b29efe8fc6d8c3624867e703e6efcb9bce559f5aa70b4e679850a0"
+    },
+    {
+      "file": "renders/plan_b-field-1.json",
+      "sha256": "3da78055785b8b045ea3c800933043ecdc9790418fffa750365207752e8f8b3c"
+    },
+    {
+      "file": "renders/plan_b-field-1.png",
+      "sha256": "78ffe09f37b6ccf49ab774053b964a68bdb34870917066c799eb62d0f97d5c44"
+    },
+    {
+      "file": "renders/plan_b-field-2.json",
+      "sha256": "f708c8f38f943d3f46804a11c792923e0454b521f07f1e7fd92d914ce4f6abf9"
+    },
+    {
+      "file": "renders/plan_b-field-2.png",
+      "sha256": "6dc81d0dec5186c06b84c555543cb2cadfa5c7ca1a0fc10c42a185087dcca694"
+    },
+    {
+      "file": "renders/plan_b-light-1.json",
+      "sha256": "8ed90c61c0be7a873404380532a51bd9cb61701b0d69bc2745e1aec7b3aa1fc8"
+    },
+    {
+      "file": "renders/plan_b-light-1.png",
+      "sha256": "cf5fbc8804df2a7222bd75cb5198ca4f0c4e6275003a3fd4c3d68a17dd99ae7c"
+    },
+    {
+      "file": "renders/plan_b-light-2.json",
+      "sha256": "4511a8492a7405bcdd3bfdde084849ccccb01482f132c784ac96ba4dc44eb24e"
+    },
+    {
+      "file": "renders/plan_b-light-2.png",
+      "sha256": "ab2024888bcff5b3c076c50a7b72a9646c9215370b57448a50386440956dbc65"
+    },
+    {
+      "file": "renders/plan_capture-dark-1.json",
+      "sha256": "3da7172f25b3cabe18742da428c250bc1d6ebf5ea9ac3ba26216b8f9200c2bc0"
+    },
+    {
+      "file": "renders/plan_capture-dark-1.png",
+      "sha256": "266b7b765621336e9f47b48e5bd3162397caf4c5808f9249bc1cb187cdc011be"
+    },
+    {
+      "file": "renders/plan_capture-dark-2.json",
+      "sha256": "ae8ae31989638f2670220e7b9a070e67762f00c0731cc00271f6f51344cf9903"
+    },
+    {
+      "file": "renders/plan_capture-dark-2.png",
+      "sha256": "43019bcda0351f2a1d2ce45b264e1fff8052807e6b4230486de8bc020a7ca441"
+    },
+    {
+      "file": "renders/plan_capture-field-1.json",
+      "sha256": "b08805ef258d36ce0539c7ce9be68e81586f57db22e834f4ee7733250218d919"
+    },
+    {
+      "file": "renders/plan_capture-field-1.png",
+      "sha256": "7f5c4a3419b4690efff7952de33b6a7d7119a5380b7562eef59d32c643af947c"
+    },
+    {
+      "file": "renders/plan_capture-field-2.json",
+      "sha256": "ffadd88803b2a35465770028d0d49240eff4c9f726c46c40aa8f7d2787e6aed4"
+    },
+    {
+      "file": "renders/plan_capture-field-2.png",
+      "sha256": "82236cf05987ae0c5916c4e833bd468d042f637611771e74cd2ac72fdff28ab4"
+    },
+    {
+      "file": "renders/plan_capture-light-1.json",
+      "sha256": "0b094e7807baf8a5d02dbffeb52330a7744d799f5466b794020b8794407b00ff"
+    },
+    {
+      "file": "renders/plan_capture-light-1.png",
+      "sha256": "38cbd01fef92bcccdaf196a5b0bea990b016fe7deae1611066ea73330df5eed6"
+    },
+    {
+      "file": "renders/plan_capture-light-2.json",
+      "sha256": "89f1d70b82449b7fa9d802d9800715ded75393b82b1270012f052048b7009bf4"
+    },
+    {
+      "file": "renders/plan_capture-light-2.png",
+      "sha256": "89e054e75640999fc3ffd9ebdc8177642fab18db059a54110ba8f3de8cbfb2cc"
+    },
+    {
+      "file": "renders/result_completed-dark-1.json",
+      "sha256": "21825e1f4b54ce962bf4fcb1814573011cbb7636b14b88de20bfa16b2b812086"
+    },
+    {
+      "file": "renders/result_completed-dark-1.png",
+      "sha256": "22749cb9a82532f302d8ede9d6c72119613a45a5fb7fa61c91685bdfcd7e27d8"
+    },
+    {
+      "file": "renders/result_completed-dark-2.json",
+      "sha256": "9ffe5de411213ffac89fd1383453b45323e47d1bcf75e02ee99488e6998fbe01"
+    },
+    {
+      "file": "renders/result_completed-dark-2.png",
+      "sha256": "b05a0a0112d4d3df5f8d19ab7ee65fd091b3e7f314950a442525c111df4eede4"
+    },
+    {
+      "file": "renders/result_completed-field-1.json",
+      "sha256": "8e69306724bdf3b9fcb129159e83f2bc6b48f1450c030901ca869daf3656ee3c"
+    },
+    {
+      "file": "renders/result_completed-field-1.png",
+      "sha256": "7a7f2467d587b1e114e2056cae69a33bfb085908dd978d528ebf71af6eab8b5c"
+    },
+    {
+      "file": "renders/result_completed-field-2.json",
+      "sha256": "94199f919e8ba91d4c4eed335ca5657fe67465eaf4081b1b1dcf801c107630da"
+    },
+    {
+      "file": "renders/result_completed-field-2.png",
+      "sha256": "8dca246bd6d99d5ca51455ab11333b72c1b7d6f1790fca549ff4316073ef7978"
+    },
+    {
+      "file": "renders/result_completed-light-1.json",
+      "sha256": "732c80424c53c19136f30e86cf9ddd9487b4182f3c9385499508890c62bdd659"
+    },
+    {
+      "file": "renders/result_completed-light-1.png",
+      "sha256": "c6bc89ebdfe489c07c4deebccdf42815dfff29b5670dddef6d498f4846f5dde1"
+    },
+    {
+      "file": "renders/result_completed-light-2.json",
+      "sha256": "72676d0a17a86455827102144acb0dec2a65f14c1aa340bb73c32bc513261477"
+    },
+    {
+      "file": "renders/result_completed-light-2.png",
+      "sha256": "1dca0c643d4305ce0867fc1a10c19f0ad9becd5cab3b4804b4607108b9211a4b"
+    }
+  ]
+}

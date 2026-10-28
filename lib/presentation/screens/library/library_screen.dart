@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../shared/hybrid_icon.dart';
 import '../settings/settings_parts.dart';
 import '../../navigation/app_router.dart';
@@ -77,10 +77,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
           final sites = startup.isLoading || startup.hasBootstrapError
               ? 'Count unavailable'
               : '${siteVm.sites.length} saved';
-          final caption = AppTypography.caption.copyWith(
-            height: 1.55,
-            color: p.textSecondary,
-          );
+          final caption = AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.supporting,
+              )
+              .copyWith(color: p.textSecondary);
           // library.js `rootView`.
           return ListView(
             padding: settingsPagePadding,

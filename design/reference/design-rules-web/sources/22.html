@@ -1,0 +1,47 @@
+<!doctype html><meta charset="utf-8"><title>lib\presentation\shared\document_section.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\presentation\shared\document_section.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/material.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> import &#x27;../../core/theme/app_radius.dart&#x27;;</div>
+<div id="L4"><a href="#L4">4</a> import &#x27;../../core/theme/app_spacing.dart&#x27;;</div>
+<div id="L5"><a href="#L5">5</a> import &#x27;../../core/theme/hybrid_tokens.dart&#x27;;</div>
+<div id="L6"><a href="#L6">6</a> </div>
+<div id="L7"><a href="#L7">7</a> /// A quiet, non-interactive group of existing document content.</div>
+<div id="L8"><a href="#L8">8</a> ///</div>
+<div id="L9"><a href="#L9">9</a> /// Does not clip, merge semantics, impose a height or change focus order.</div>
+<div id="L10"><a href="#L10">10</a> /// Joined pieces let a lazy list draw one continuous group without laying out</div>
+<div id="L11"><a href="#L11">11</a> /// all its rows at once (the Logbook&#x27;s month groups).</div>
+<div id="L12"><a href="#L12">12</a> class DocumentSection extends StatelessWidget {</div>
+<div id="L13"><a href="#L13">13</a>   const DocumentSection({</div>
+<div id="L14"><a href="#L14">14</a>     super.key,</div>
+<div id="L15"><a href="#L15">15</a>     required this.children,</div>
+<div id="L16"><a href="#L16">16</a>     this.padding = const EdgeInsets.all(AppSpacing.md),</div>
+<div id="L17"><a href="#L17">17</a>     this.joinPrevious = false,</div>
+<div id="L18"><a href="#L18">18</a>     this.joinNext = false,</div>
+<div id="L19"><a href="#L19">19</a>   });</div>
+<div id="L20"><a href="#L20">20</a> </div>
+<div id="L21"><a href="#L21">21</a>   final List&lt;Widget&gt; children;</div>
+<div id="L22"><a href="#L22">22</a>   final EdgeInsetsGeometry padding;</div>
+<div id="L23"><a href="#L23">23</a>   final bool joinPrevious;</div>
+<div id="L24"><a href="#L24">24</a>   final bool joinNext;</div>
+<div id="L25"><a href="#L25">25</a> </div>
+<div id="L26"><a href="#L26">26</a>   @override</div>
+<div id="L27"><a href="#L27">27</a>   Widget build(BuildContext context) {</div>
+<div id="L28"><a href="#L28">28</a>     const corner = Radius.circular(AppRadius.menu);</div>
+<div id="L29"><a href="#L29">29</a>     return Material(</div>
+<div id="L30"><a href="#L30">30</a>       color:</div>
+<div id="L31"><a href="#L31">31</a>           Theme.of(context).extension&lt;HybridTokens&gt;()?.surfaceSubtle ??</div>
+<div id="L32"><a href="#L32">32</a>           Theme.of(context).cardColor,</div>
+<div id="L33"><a href="#L33">33</a>       borderRadius: BorderRadius.vertical(</div>
+<div id="L34"><a href="#L34">34</a>         top: joinPrevious ? Radius.zero : corner,</div>
+<div id="L35"><a href="#L35">35</a>         bottom: joinNext ? Radius.zero : corner,</div>
+<div id="L36"><a href="#L36">36</a>       ),</div>
+<div id="L37"><a href="#L37">37</a>       child: Padding(</div>
+<div id="L38"><a href="#L38">38</a>         padding: padding,</div>
+<div id="L39"><a href="#L39">39</a>         child: Column(</div>
+<div id="L40"><a href="#L40">40</a>           crossAxisAlignment: CrossAxisAlignment.stretch,</div>
+<div id="L41"><a href="#L41">41</a>           mainAxisSize: MainAxisSize.min,</div>
+<div id="L42"><a href="#L42">42</a>           children: children,</div>
+<div id="L43"><a href="#L43">43</a>         ),</div>
+<div id="L44"><a href="#L44">44</a>       ),</div>
+<div id="L45"><a href="#L45">45</a>     );</div>
+<div id="L46"><a href="#L46">46</a>   }</div>
+<div id="L47"><a href="#L47">47</a> }</div>

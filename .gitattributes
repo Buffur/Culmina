@@ -1,0 +1,7 @@
+# Reference captures, manifests and source snapshots have byte-level provenance.
+# Keep their hashes stable across Windows and Linux checkouts.
+design/reference/** -text whitespace=cr-at-eol
+# Line-numbered source views and recorded terminal output retain intentional
+# trailing spaces from the historical inputs; they are data, not source edits.
+design/reference/app-map-20261028/design-sources/** whitespace=-blank-at-eol,cr-at-eol
+design/reference/**/*.log whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol

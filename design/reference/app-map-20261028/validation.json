@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "atlas_40_refreshed": true,
+    "all_42_surfaces_have_fresh_capture": true,
+    "all_63_captures_successful": true,
+    "source_anchors_matched": true,
+    "capture_hashes_valid": true,
+    "all_edges_reference_known_nodes": true,
+    "all_27_router_patterns_mapped": true,
+    "source_hashes_valid": true,
+    "historical_atlas_unchanged": true,
+    "all_dark_100_375_812": true
+  },
+  "passed": true,
+  "counts": {
+    "surfaces": 42,
+    "transitions": 73,
+    "captures": 63
+  },
+  "browserChecks": [
+    "screen selection updates connected screens",
+    "Atlas search AT-03 yields one result",
+    "capture dialog shows source/head/hash/image",
+    "coverage route selection returns to Screen map",
+    "screen search weather yields one surface",
+    "no console warnings/errors observed"
+  ],
+  "limits": "Browser checks use the default in-app viewport; this does not verify Culmina Android behavior."
+}

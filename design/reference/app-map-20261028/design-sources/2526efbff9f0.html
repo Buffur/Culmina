@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>font_licenses.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>font_licenses.dart</h1><p>lib\core\theme\font_licenses.dart</p><p>SHA-256: 48da1e9cdb9194c976e6d94dec2e861f2bdf3e3614a7b07884c85779a392f2c9</p><pre>   1  import &#x27;package:flutter/foundation.dart&#x27;;
+   2  import &#x27;package:flutter/services.dart&#x27;;
+   3  
+   4  /// Registers the bundled typefaces and icon geometry for the application&#x27;s licence page.
+   5  /// Call once after binding initialization; the text loads when requested.
+   6  abstract final class AppFontLicenses {
+   7    static bool _registered = false;
+   8  
+   9    static void register() {
+  10      if (_registered) return;
+  11      _registered = true;
+  12      LicenseRegistry.addLicense(() async* {
+  13        final text = await rootBundle.loadString(&#x27;assets/fonts/OFL-Geist.txt&#x27;);
+  14        yield LicenseEntryWithLineBreaks(const [&#x27;Geist&#x27;], text);
+  15      });
+  16      LicenseRegistry.addLicense(() async* {
+  17        final text = await rootBundle.loadString(
+  18          &#x27;assets/fonts/OFL-SourceSerif4.txt&#x27;,
+  19        );
+  20        yield LicenseEntryWithLineBreaks(const [&#x27;Source Serif 4&#x27;], text);
+  21      });
+  22      // The Weather rows&#x27; data icons (HybridIcons) are Lucide geometry.
+  23      LicenseRegistry.addLicense(() async* {
+  24        final text = await rootBundle.loadString(
+  25          &#x27;assets/fonts/LICENSE-Lucide.txt&#x27;,
+  26        );
+  27        yield LicenseEntryWithLineBreaks(const [&#x27;Lucide icons&#x27;], text);
+  28      });
+  29    }
+  30  }</pre>

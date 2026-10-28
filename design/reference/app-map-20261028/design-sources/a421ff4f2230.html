@@ -1,0 +1,40 @@
+<!doctype html><meta charset="utf-8"><title>app_spacing.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>app_spacing.dart</h1><p>lib\core\theme\app_spacing.dart</p><p>SHA-256: 5269c9e205ceef61d4de7bf259e28556ed02b6a6229673b39a0d2d69009f0ea7</p><pre>   1  /// The spacing scale, in logical pixels (documented in S5.1; see
+   2  /// `docs/DESIGN_SYSTEM.md`). Component padding and page gutters are distinct:
+   3  /// [md] is the usual card&#x27;s inner padding, not a universal page gutter.
+   4  /// Current page callers generally use [gutter], with documented local exceptions.
+   5  /// [lg] separates sections; [sm] separates rows within a section;
+   6  /// [xs] separates a label from its value.
+   7  class AppSpacing {
+   8    static const double xs = 4.0;
+   9    static const double sm = 8.0;
+  10    static const double md = 16.0;
+  11    static const double lg = 24.0;
+  12    static const double xl = 32.0;
+  13    static const double xxl = 48.0;
+  14  
+  15    // Hybrid reference steps (notion-hybrid.css / conditions.css, CSS px as
+  16    // logical px) used where the transferred screens follow the reference.
+  17    /// A caption tucked under its line.
+  18    static const double hair = 2.0;
+  19  
+  20    /// A secondary line under a value.
+  21    static const double nudge = 3.0;
+  22  
+  23    /// A dense table cell&#x27;s vertical padding.
+  24    static const double cellY = 6.0;
+  25  
+  26    /// A note under a chart or list.
+  27    static const double notes = 10.0;
+  28  
+  29    /// Between related items in a group.
+  30    static const double itemGap = 12.0;
+  31  
+  32    /// A list row&#x27;s vertical padding.
+  33    static const double rowY = 14.0;
+  34  
+  35    /// A Hybrid page&#x27;s side padding.
+  36    static const double gutter = 20.0;
+  37  
+  38    /// Between sections of a Hybrid page.
+  39    static const double section = 28.0;
+  40  }</pre>

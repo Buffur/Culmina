@@ -43,13 +43,15 @@ uses schema v27, with exported snapshots in `drift_schemas/`.
 
 - [Shared agent instructions](AGENTS.md) — architecture, invariants, generation and render commands.
 - [Project skills](.agents/skills/README.md) — 26 focused Dart, Flutter and design recipes.
-- [Visual Atlas](.audit/atlas/index.html) — archived synthetic Flutter host captures;
-  inspect its [manifest](.audit/atlas/manifest.json) before reusing evidence.
+- [Design reference](design/reference/index.html) — design rules studio, application map and atlases.
+- [Visual Atlas](design/reference/atlas/index.html) — archived synthetic Flutter host captures;
+  inspect its [manifest](design/reference/atlas/manifest.json) before reusing evidence.
 - [Product overview](docs/PRODUCT_SPEC.md), [architecture](docs/ARCHITECTURE.md)
   and [design system](docs/DESIGN_SYSTEM.md) — supporting documentation; verify against source.
 
-`design/` is currently empty. Browser comparison helpers under `tool/design/`
-retain historical workflows whose lab inputs are absent. The native Flutter
+`design/reference/` consolidates the local reference website, captures and render
+evidence. Older browser comparison helpers under `tool/design/` retain historical
+workflows whose lab inputs are absent. The native Flutter
 render harness remains available through the commands in `AGENTS.md`.
 
 ## License

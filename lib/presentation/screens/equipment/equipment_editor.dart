@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_evidence.dart';
@@ -128,7 +128,8 @@ class _EquipmentEditor {
         'f/${_trim(eq.focalRatio)}, above f/32. It may be an aperture '
         'diameter typed into the f/ field. Enter the focal ratio, or the '
         'diameter in mm.',
-        style: TextStyle(color: scheme.onErrorContainer),
+        style: AppTextTheme.of(context).inherited
+            .copyWith(color: scheme.onErrorContainer),
       ),
     );
   }
@@ -193,10 +194,12 @@ class _EquipmentEditor {
       child: Text(
         RigInputText.reason(spec),
         key: Key('rigEditor.reason.${spec.name}'),
-        style: AppTypography.caption.copyWith(
-          height: 1.55,
-          color: AppPalette.of(context).textSecondary,
-        ),
+        style: AppTextTheme.of(context)
+            .resolve(
+              AppTextTheme.of(context).caption,
+              AppTextGeometry.supporting,
+            )
+            .copyWith(color: AppPalette.of(context).textSecondary),
       ),
     );
 
@@ -209,10 +212,12 @@ class _EquipmentEditor {
         child: Text(
           PrefillText.note(p),
           key: Key('editor.prefill.${spec.name}'),
-          style: AppTypography.caption.copyWith(
-            height: 1.55,
-            color: AppPalette.of(context).textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.supporting,
+              )
+              .copyWith(color: AppPalette.of(context).textSecondary),
         ),
       );
     }
@@ -366,16 +371,17 @@ class _EquipmentEditor {
               header: true,
               child: Text(
                 text,
-                style: AppTypography.sectionHeading.copyWith(
-                  color: p.textPrimary,
-                ),
+                style: AppTextTheme.of(context).sectionHeading
+                    .copyWith(color: p.textPrimary),
               ),
             ),
           );
-          final hint = AppTypography.caption.copyWith(
-            height: 1.55,
-            color: p.textSecondary,
-          );
+          final hint = AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.supporting,
+              )
+              .copyWith(color: p.textSecondary);
           final sensor =
               sensorWCtrl.text.trim().isEmpty || sensorHCtrl.text.trim().isEmpty
               ? null
@@ -543,13 +549,21 @@ class _EquipmentEditor {
                                                     children: [
                                                       Text(
                                                         'In-camera noise reduction',
-                                                        style: AppTypography
-                                                            .body
-                                                            .copyWith(
-                                                              height: 1.5,
-                                                              color:
-                                                                  p.textPrimary,
-                                                            ),
+                                                        style:
+                                                            AppTextTheme.of(
+                                                                  context,
+                                                                )
+                                                                .resolve(
+                                                                  AppTextTheme.of(
+                                                                    context,
+                                                                  ).body,
+                                                                  AppTextGeometry
+                                                                      .standard,
+                                                                )
+                                                                .copyWith(
+                                                                  color: p
+                                                                      .textPrimary,
+                                                                ),
                                                       ),
                                                       Text(
                                                         'Long-exposure noise reduction: '
@@ -675,10 +689,12 @@ class _EquipmentEditor {
                                       children: [
                                         Text(
                                           'Sensor size (mm)',
-                                          style: AppTypography.value.copyWith(
-                                            height: 1.5,
-                                            color: p.textSecondary,
-                                          ),
+                                          style: AppTextTheme.of(context)
+                                              .resolve(
+                                                AppTextTheme.of(context).value,
+                                                AppTextGeometry.standard,
+                                              )
+                                              .copyWith(color: p.textSecondary),
                                         ),
                                         const SizedBox(height: AppSpacing.xs),
                                         Text(
@@ -688,15 +704,19 @@ class _EquipmentEditor {
                                           key: const Key(
                                             'rigEditor.sensorSizeValue',
                                           ),
-                                          style: AppTypography.value.copyWith(
-                                            height: 1.5,
-                                            color: sensor == null
-                                                ? p.textSecondary
-                                                : p.textPrimary,
-                                            fontFeatures: const [
-                                              FontFeature.tabularFigures(),
-                                            ],
-                                          ),
+                                          style: AppTextTheme.of(context)
+                                              .resolve(
+                                                AppTextTheme.of(context).value,
+                                                AppTextGeometry.standard,
+                                              )
+                                              .copyWith(
+                                                color: sensor == null
+                                                    ? p.textSecondary
+                                                    : p.textPrimary,
+                                                fontFeatures: const [
+                                                  FontFeature.tabularFigures(),
+                                                ],
+                                              ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(

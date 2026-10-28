@@ -1,0 +1,68 @@
+<!doctype html><meta charset="utf-8"><title>figma-create-new-file</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>figma-create-new-file</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\skills\figma-create-new-file\SKILL.md</p><pre>   1  ---
+   2  name: figma-create-new-file
+   3  description: Create a new blank Figma file. Use when the user wants to create a new Figma design or FigJam file, or when you need a new file before calling use_figma. Handles plan resolution via whoami if needed. Usage — /figma-create-new-file [editorType] [fileName] (e.g. /figma-create-new-file figjam My Whiteboard)
+   4  ---
+   5  
+   6  # create_new_file — Create a New Figma File
+   7  
+   8  Use the `create_new_file` MCP tool to create a new blank Figma file in the user&#x27;s drafts folder. This is typically used before `use_figma` when you need a fresh file to work with.
+   9  
+  10  ## Skill Arguments
+  11  
+  12  This skill accepts optional arguments: `/figma-create-new-file [editorType] [fileName]`
+  13  
+  14  - **editorType**: `design` (default) or `figjam`
+  15  - **fileName**: Name for the new file (defaults to &quot;Untitled&quot;)
+  16  
+  17  Examples:
+  18  - `/figma-create-new-file` — creates a design file named &quot;Untitled&quot;
+  19  - `/figma-create-new-file figjam My Whiteboard` — creates a FigJam file named &quot;My Whiteboard&quot;
+  20  - `/figma-create-new-file design My New Design` — creates a design file named &quot;My New Design&quot;
+  21  
+  22  Parse the arguments from the skill invocation. If editorType is not provided, default to `&quot;design&quot;`. If fileName is not provided, default to `&quot;Untitled&quot;`.
+  23  
+  24  ## Workflow
+  25  
+  26  ### Step 1: Resolve the planKey
+  27  
+  28  The `create_new_file` tool requires a `planKey` parameter. Follow this decision tree:
+  29  
+  30  1. **User already provided a planKey** (e.g. from a previous `whoami` call or in their prompt) → use it directly, skip to Step 2.
+  31  
+  32  2. **No planKey available** → call the `whoami` tool. The response contains a `plans` array. Each plan has a `key`, `name`, `seat`, and `tier`.
+  33  
+  34     - **Single plan**: use its `key` field automatically.
+  35     - **Multiple plans**: ask the user which team or organization they want to create the file in, then use the corresponding plan&#x27;s `key`.
+  36  
+  37  ### Step 2: Call create_new_file
+  38  
+  39  Call the `create_new_file` tool with:
+  40  
+  41  | Parameter    | Required | Description |
+  42  |-------------|----------|-------------|
+  43  | `planKey`   | Yes      | The plan key from Step 1 |
+  44  | `fileName`  | Yes      | Name for the new file |
+  45  | `editorType`| Yes      | `&quot;design&quot;` or `&quot;figjam&quot;` |
+  46  
+  47  Example:
+  48  ```json
+  49  {
+  50    &quot;planKey&quot;: &quot;team:123456&quot;,
+  51    &quot;fileName&quot;: &quot;My New Design&quot;,
+  52    &quot;editorType&quot;: &quot;design&quot;
+  53  }
+  54  ```
+  55  
+  56  ### Step 3: Use the result
+  57  
+  58  The tool returns:
+  59  - `file_key` — the key of the newly created file
+  60  - `file_url` — a direct URL to open the file in Figma
+  61  
+  62  Use the `file_key` for subsequent tool calls like `use_figma`.
+  63  
+  64  ## Important Notes
+  65  
+  66  - The file is created in the user&#x27;s **drafts folder** for the selected plan.
+  67  - Only `&quot;design&quot;` and `&quot;figjam&quot;` editor types are supported.
+  68  - If `use_figma` is your next step, load the `figma-use` skill before calling it.</pre>

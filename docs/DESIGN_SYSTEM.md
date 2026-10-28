@@ -3,6 +3,31 @@
 This is a reference to the implemented Flutter UI in `lib/`.
 It does not assert visual or accessibility acceptance.
 
+## Design guidance structure
+
+The five local Culmina design skills are the only project design authorities.
+They cover all UI code, including screens, composed widgets, scientific displays,
+dialogs, states and all themes; the gallery is only a scoped visual inventory.
+Use the relevant skills during implementation. Supporting references and
+implementation files are not additional rule sets. Extend the relevant Culmina
+skill when guidance is missing. Technical and artifact helpers remain available
+as described in [agent tooling](AGENT_TOOLING.md).
+Shared product invariants remain in [AGENTS.md](../AGENTS.md).
+
+| Local skill | Owns |
+| --- | --- |
+| [Components](../.agents/skills/culmina-design-components/SKILL.md) | Existing components, states, callbacks and actual adopters |
+| [Product rules](../.agents/skills/culmina-design-rules/SKILL.md) | Scientific meaning, time, missing data and persistence distinctions |
+| [Spacing](../.agents/skills/culmina-design-spacing/SKILL.md) | Local geometry, shape, density and reduced motion |
+| [Tokens](../.agents/skills/culmina-design-tokens/SKILL.md) | Semantic colors and surfaces across all three themes |
+| [Typography](../.agents/skills/culmina-design-typography/SKILL.md) | Adopted text roles, wrapping, scaling and numeric readability |
+
+This document indexes the implementation. The skills' supporting references route
+to current definitions and callers. Compatibility files in `.agents/rules/` point
+back to shared guidance; external design playbooks and archived recipes are not
+automatically adopted Culmina policy. A component specimen demonstrates appearance
+in its captured state, not production adoption or device acceptance.
+
 ## Theme sources
 
 - `core/theme/app_theme.dart`: Light, Dark and red Field `ThemeData`.

@@ -18,4 +18,4 @@ Paths are relative to the repository root. Keep existing routing authoritative.
 
 Callbacks and slots are the Flutter equivalents of editable properties and nested instances. Keep icon/text geometry stable when changing state, allow wrapping variants to wrap, retain compact variants' full-label semantics/tooltips and preserve separate accessible action names. Browser analogues do not establish actual routing or Material semantics.
 
-The reserved `design/` directory currently has no browser prototype. Use actual Flutter routes and tests; historical Visual Atlas evidence lives under `.audit/atlas/` and does not establish current router behavior.
+The `design/reference/` website contains reference specimens and an application map. Use actual Flutter routes and tests; historical Visual Atlas evidence lives under `design/reference/atlas/` and does not establish current router behavior.

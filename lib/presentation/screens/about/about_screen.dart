@@ -8,7 +8,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import '../../../core/config/app_identity.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/collapsible_section.dart';
 import '../settings/settings_parts.dart';
@@ -35,14 +35,12 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final small = AppTypography.caption.copyWith(
-      height: 1.6,
-      color: p.textSecondary,
-    );
-    final quiet = AppTypography.body.copyWith(
-      height: 1.6,
-      color: p.textSecondary,
-    );
+    final small = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.reading)
+        .copyWith(color: p.textSecondary);
+    final quiet = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
+        .copyWith(color: p.textSecondary);
     // settings.js `aboutView`: the app and its author, the data sources,
     // then the licence; the privacy summary stays here too (TASK 16.3).
     return Scaffold(
@@ -265,10 +263,9 @@ class _Source extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = AppTypography.body.copyWith(
-      height: 1.5,
-      color: AppPalette.of(context).textPrimary,
-    );
+    final style = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+        .copyWith(color: AppPalette.of(context).textPrimary);
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm),
       child: Row(

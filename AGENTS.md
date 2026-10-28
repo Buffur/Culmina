@@ -32,8 +32,8 @@ The app does not control cameras or mounts.
 - `test/`: core/data/domain/presentation regressions; `test/support/` contains shared fakes.
 - `integration_test/` and `test_driver/`: host flows and separate Android capture routes.
 - `tool/`: verification, CI partitioning, catalog generation and design helper scripts.
-- `design/`: currently empty; historical browser helpers require missing lab inputs.
-- `.audit/atlas/index.html`: Visual Atlas; manifest, boards and captures accompany it.
+- `design/reference/`: consolidated design rules website, current application map, historical Atlas, shared assets and render evidence. Start at `design/reference/index.html`.
+- `design/reference/atlas/index.html`: historical Visual Atlas; manifest, boards and captures accompany it. `.audit/atlas/index.html` redirects here.
 - `.audit/` and `docs/archive/`: historical evidence; inspect as needed, preserve contents.
 - `.agents/skills/`: active project recipes; `.agents/rules/` holds compatibility pointers.
 
@@ -84,6 +84,16 @@ flutter build apk --debug
 - Run host integration files separately; Android-only capture tests need an Android device.
 - For instruction-only edits, validate paths, frontmatter and diffs; app checks are optional.
 
+Instruction tooling uses Python with `tool/requirements-instructions.txt`:
+`python -m pip install -r tool/requirements-instructions.txt`, then
+`python tool/check_instructions.py` and
+`python -m unittest discover -s tool -p check_instructions_test.py -v`.
+CI runs these in the changes job, including documentation-only changes.
+The validator checks active skill YAML and local Markdown file references in
+the root entrypoints, `.agents/` and `.claude/`; it does not check remote URLs,
+heading anchors, code-span paths or agent behavior. Behavioral review cases and
+their evidence requirements are in [skill evals](tool/skill_evals/README.md).
+
 Native UI renders in PowerShell (synthetic fixtures; fresh evidence goes to build):
 
 ```powershell
@@ -101,7 +111,32 @@ The archived Atlas has 40 Dark/100%/375×812 captures with dated source provenan
 Check its manifest before reusing frames; archive presence does not prove current behavior.
 Keep browser, Flutter host, Android/device, accessibility and owner acceptance evidence distinct.
 
+For meaningful product-design refinement, use a brief
+[decision record](.agents/skills/references/refinement-decision.md) in the existing
+task or review: user problem, intended benefit, observable success, matched
+before/after evidence, actual checks and the accept/revise/reject decision.
+Scale the record to the change; this adds no separate approval gate.
+
 ## Active project skills
+
+### Design authority and supporting tools
+
+The five `culmina-design-*` skills below are the only project design authorities
+for all UI code: screens, shared and composed widgets, scientific displays,
+dialogs, states and all three themes. Use the relevant skills during implementation;
+their scope is not limited to the component gallery. AGENTS supplies shared
+invariants; current source/callers and tests establish actual behavior.
+References and `docs/DESIGN_SYSTEM.md` support these skills, not parallel policy.
+Fill a design-guidance gap in the relevant Culmina skill instead of adopting an
+external playbook or inventing another design authority.
+
+Dart/Flutter skills remain technical helpers for architecture, routing, layout
+diagnosis, previews and tests. Context7 supplies external API documentation.
+Figma, image generation, visualization, browser/computer use and Sites remain
+optional execution tools for a requested artifact, not sources of Culmina style.
+Generic design/audit, brand and palette playbooks are archived for this project.
+See [agent tooling](docs/AGENT_TOOLING.md) for retained helpers, archive and plugin evidence.
+Installed or enabled plugins do not prove authentication, invocation or acceptance.
 
 Entrypoints are `.agents/skills/<name>/SKILL.md`; the [skill index](.agents/skills/README.md) links them.
 Upstream metadata and lock hashes describe acquisition provenance, not current local hashes.

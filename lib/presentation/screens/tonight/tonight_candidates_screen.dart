@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/session_night.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../shared/hybrid_parts.dart';
@@ -175,8 +175,10 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
     );
   }
 
-  static TextStyle _secondary(BuildContext context) => AppTypography.body
-      .copyWith(height: 1.5, color: AppPalette.of(context).textSecondary);
+  static TextStyle _secondary(BuildContext context) =>
+      AppTextTheme.of(context)
+          .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+          .copyWith(color: AppPalette.of(context).textSecondary);
 
   Widget _buildList(
     BuildContext context,
@@ -207,10 +209,9 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
       zoneId: zoneId,
     );
     final prefs = settingsVm.planningPreferences;
-    final select = AppTypography.body.copyWith(
-      height: 1.5,
-      color: p.textPrimary,
-    );
+    final select = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+        .copyWith(color: p.textPrimary);
 
     final header = <Widget>[
       DocumentSection(
@@ -325,10 +326,12 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
       child: Text(
         'Times in ${NightTimeFormatter.zoneCaption(night.startUtc, zoneId: zoneId)}. '
         "Tap a target to make it the plan's target.",
-        style: AppTypography.caption.copyWith(
-          height: 1.55,
-          color: p.textSecondary,
-        ),
+        style: AppTextTheme.of(context)
+            .resolve(
+              AppTextTheme.of(context).caption,
+              AppTextGeometry.supporting,
+            )
+            .copyWith(color: p.textSecondary),
       ),
     );
 
@@ -397,11 +400,12 @@ class _Title extends StatelessWidget {
       header: true,
       child: Text(
         text,
-        style: AppTypography.homeTarget.copyWith(
-          fontSize: 23,
-          height: 1.3,
-          color: AppPalette.of(context).textPrimary,
-        ),
+        style: AppTextTheme.of(context)
+            .resolve(
+              AppTextTheme.of(context).homeTarget,
+              AppTextGeometry.candidateTitle,
+            )
+            .copyWith(color: AppPalette.of(context).textPrimary),
       ),
     ),
   );
@@ -442,7 +446,7 @@ class _CandidateRow extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final scaler = MediaQuery.textScalerOf(context);
-                final durationStyle = AppTypography.caption.copyWith(
+                final durationStyle = AppTextTheme.of(context).caption.copyWith(
                   fontWeight: FontWeight.w500,
                   color: p.textPrimary,
                 );
@@ -468,17 +472,21 @@ class _CandidateRow extends StatelessWidget {
                         children: [
                           Text(
                             title,
-                            style: AppTypography.body.copyWith(
-                              height: 1.5,
-                              color: p.textPrimary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).body,
+                                  AppTextGeometry.standard,
+                                )
+                                .copyWith(color: p.textPrimary),
                           ),
                           Text(
                             caption,
-                            style: AppTypography.dense.copyWith(
-                              height: 1.5,
-                              color: p.textSecondary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).dense,
+                                  AppTextGeometry.standard,
+                                )
+                                .copyWith(color: p.textSecondary),
                           ),
                           if (below) duration,
                         ],

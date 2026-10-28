@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import '../../domain/models/session.dart';
 import '../../domain/models/session_result.dart';
@@ -140,11 +140,17 @@ class PlanStateLabel extends StatelessWidget {
             Flexible(
               child: Text(
                 state.word,
-                style: AppTypography.caption.copyWith(
-                  color: fg,
-                  fontWeight: withIcon ? FontWeight.w400 : FontWeight.w500,
-                  height: withIcon ? 17 / 13 : 1.5,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      (withIcon
+                          ? AppTextGeometry.timelineDate
+                          : AppTextGeometry.standard),
+                    )
+                    .copyWith(
+                      color: fg,
+                      fontWeight: withIcon ? FontWeight.w400 : FontWeight.w500,
+                    ),
               ),
             ),
           ],
@@ -228,16 +234,17 @@ class EntryStateBadge extends StatelessWidget {
               child: Text(
                 due ? 'Not recorded' : word ?? state.word,
                 semanticsLabel: due ? AppWords.resultNotRecorded : null,
-                style:
-                    (large
-                            ? AppTypography.sectionHeading
-                            : AppTypography.caption)
-                        .copyWith(
-                          color: fg,
-                          letterSpacing: 0,
-                          fontWeight: due ? FontWeight.w400 : FontWeight.w500,
-                          height: 1.4,
-                        ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      (large
+                          ? AppTextTheme.of(context).sectionHeading
+                          : AppTextTheme.of(context).caption),
+                      AppTextGeometry.badge,
+                    )
+                    .copyWith(
+                      color: fg,
+                      fontWeight: due ? FontWeight.w400 : FontWeight.w500,
+                    ),
               ),
             ),
           ],

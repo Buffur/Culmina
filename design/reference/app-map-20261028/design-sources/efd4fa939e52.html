@@ -1,0 +1,87 @@
+<!doctype html><meta charset="utf-8"><title>PRODUCT_SPEC.md</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>PRODUCT_SPEC.md</h1><p>docs\PRODUCT_SPEC.md</p><p>SHA-256: 372656bb0a2e68e310b58abe7f6edb7d9c79e3cd1a3c7001c9008ad7336c0cdf</p><pre>   1  # Product specification
+   2  
+   3  Culmina plans astrophotography sessions and records their outcomes.
+   4  This document describes implemented behavior in `lib/`, not a release plan.
+   5  
+   6  ## Main flow
+   7  
+   8  Choose site and evening date → choose target and rig → inspect the night →
+   9  edit capture blocks → review budget/fit → save → image outside the app →
+  10  record a result and review it in Logbook.
+  11  
+  12  ## Screens
+  13  
+  14  | Screen | Current behavior |
+  15  | --- | --- |
+  16  | Welcome | First-run setup and entry into planning. |
+  17  | Tonight | Site/night context, Night/Moon/Weather summaries, target selection/candidates, planner access and results due for recording. |
+  18  | Plan | Site/night, target and rig selection, capture blocks, opportunity/fit analysis, save, new plan and copy to another night. |
+  19  | Target candidates | Evaluates catalog targets against the selected night&#x27;s conditions and preferences. |
+  20  | Night / Moon | Night timeline, darkness and altitude context, Moon information and calendar/night browsing. |
+  21  | Weather | Hourly forecast in compact rows or charts, details, local time, provenance, freshness and unavailable/partial data states. |
+  22  | Logbook | Saved sessions/results, filters, entry details, result recording, sharing/export and target progress. |
+  23  | Progress | Integration and session totals by target/filter from completed non-legacy sessions with recorded block counts. |
+  24  | Library | Manage rigs, targets and sites; detail/edit screens and scoped selection flows. |
+  25  | Metadata import | Android file selection, metadata review and equipment matching/confirmation before saving a rig. |
+  26  | Settings | Appearance, units, planning defaults, privacy, backup/data and About/licenses. |
+  27  | Database recovery | Reports unsupported database versions and offers an explicit reset flow. |
+  28  
+  29  Bottom navigation contains Tonight, Logbook, Library and Settings.
+  30  Plan and detail/selection flows open separately above those tabs.
+  31  
+  32  ## Capture planning
+  33  
+  34  - Ordered light, dark, flat, bias and dark-flat blocks with exposure/count,
+  35    filter and contextual ISO/gain/binning settings.
+  36  - Calibration timing policies: in-window, outside-window or reused library.
+  37    Helpers expose inherited settings and mismatch warnings.
+  38  - Budget includes integration, frame overheads and applicable optional
+  39    setup, dither, refocus, filter-change and meridian-flip times.
+  40  - Camera class, tracking choice/override and applicable in-camera noise
+  41    reduction affect the relevant planning calculations.
+  42  - Visibility/darkness/Moon and optional cloud gates determine usable windows.
+  43    Fit compares plan load with opportunity and configured margins.
+  44  - Storage distinguishes file evidence, declared/measured sizes and theoretical
+  45    estimates. Relative stacking gain does not claim absolute physical SNR.
+  46  - White balance, AF/MF and field provenance can be recorded.
+  47    ISO/gain and AF/MF remain descriptive.
+  48  - Draft edits, saved snapshots and changed saved plans are distinct;
+  49    leaving a changed plan offers Save/Discard/Cancel.
+  50  
+  51  ## Catalogs, sites and rigs
+  52  
+  53  Targets support designation/common-name/alias search and custom entries.
+  54  Coordinates are J2000; unknown size and magnitude stay absent.
+  55  Rigs store camera/sensor/optics data, tracking, limits and provenance.
+  56  Sites store coordinates, optional elevation/time zone and manual Bortle/SQM.
+  57  GPS and a map can select a position; place-name lookup is optional.
+  58  
+  59  Metadata readers cover DNG, JPEG, HEIF still images and FITS.
+  60  Recognition of a format does not imply a reader exists for it; unsupported
+  61  formats and unreadable files return explicit outcomes. Metadata is reviewed
+  62  before it creates or changes equipment.
+  63  
+  64  ## Results and data portability
+  65  
+  66  Users report completed-as-planned, partial frame counts, or not done with an
+  67  optional reason; notes and observed conditions are optional.
+  68  Session snapshots retain saved context for history. Legacy logs remain readable.
+  69  There is no dedicated live-tracker screen.
+  70  
+  71  Logbook supports text sharing, portable session-file export and AstroBin
+  72  acquisition CSV preview/sharing. AstroBin export is a file workflow.
+  73  Settings provides local backup and confirmed restore through a staged restart.
+  74  
+  75  ## Offline and presentation
+  76  
+  77  Saved data, bundled catalogs and astronomy/planning calculations work offline.
+  78  Forecast retrieval, map tiles and optional place-name lookup use the network.
+  79  Weather retains source/fetch-time/cache information and missing-data states.
+  80  Night calculations use UTC; local display respects the site&#x27;s time context.
+  81  
+  82  Appearance supports System/Light/Dark plus a separate red field mode.
+  83  Display units and weather presentation are configurable.
+  84  The app plans and records; it does not acquire images or control hardware.
+  85  
+  86  See [Architecture](ARCHITECTURE.md) for models/storage and
+  87  [Design system](DESIGN_SYSTEM.md) for the implemented visual system.</pre>

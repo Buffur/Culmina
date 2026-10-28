@@ -1,3 +1,5 @@
+import '../../core/theme/app_text_theme.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_spacing.dart';
@@ -29,11 +31,12 @@ class SectionHeader extends StatelessWidget {
           Flexible(
             child: Text(
               title,
-              style: textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.primary,
-                letterSpacing: 0.5,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(textTheme.titleSmall, AppTextGeometry.spacedLabel)
+                  .copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.primary,
+                  ),
             ),
           ),
           if (onAction != null && actionLabel != null)

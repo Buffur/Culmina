@@ -1,0 +1,314 @@
+<!doctype html><meta charset="utf-8"><title>figma-generate-library</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>figma-generate-library</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\skills\figma-generate-library\SKILL.md</p><pre>   1  ---
+   2  name: figma-generate-library
+   3  description: &quot;Build or update a professional-grade design system in Figma from a codebase. Use when the user wants to create variables/tokens, build component libraries, set up theming (light/dark modes), document foundations, or reconcile gaps between code and Figma. This skill teaches WHAT to build and in WHAT ORDER — it complements the `figma-use` skill which teaches HOW to call the Plugin API. Both skills should be loaded together.&quot;
+   4  ---
+   5  
+   6  # Design System Builder — Figma MCP Skill
+   7  
+   8  Build professional-grade design systems in Figma that match code. This skill orchestrates multi-phase workflows across 20–100+ `use_figma` calls, enforcing quality patterns from real-world design systems (Material 3, Polaris, Figma UI3, Simple DS).
+   9  
+  10  **Prerequisites**: The `figma-use` skill MUST also be loaded for every `use_figma` call. It provides Plugin API syntax rules (return pattern, page reset, ID return, font loading, color range). This skill provides design system domain knowledge and workflow orchestration.
+  11  
+  12  **Always pass `skillNames: &quot;figma-generate-library&quot;` when calling `use_figma` as part of this skill.** This is a logging parameter — it does not affect execution.
+  13  
+  14  ---
+  15  
+  16  ## 1. The One Rule That Matters Most
+  17  
+  18  **This is NEVER a one-shot task.** Building a design system requires 20–100+ `use_figma` calls across multiple phases, with mandatory user checkpoints between them. Any attempt to create everything in one call WILL produce broken, incomplete, or unrecoverable results. Break every operation to the smallest useful unit, validate, get feedback, proceed.
+  19  
+  20  ---
+  21  
+  22  ## 2. Mandatory Workflow
+  23  
+  24  Every design system build follows this phase order. Skipping or reordering phases causes structural failures that are expensive to undo.
+  25  
+  26  ```
+  27  Phase 0: DISCOVERY (always first — no use_figma writes yet)
+  28    0a. Analyze codebase → extract tokens, components, naming conventions
+  29    0b. Inspect Figma file → pages, variables, components, styles, existing conventions
+  30    0c. Search subscribed libraries → use search_design_system for reusable assets
+  31    0d. Lock v1 scope → agree on exact token set + component list before any creation
+  32    0e. Map code → Figma → resolve conflicts (code and Figma disagree = ask user)
+  33    ✋ USER CHECKPOINT: present full plan, await explicit approval
+  34  
+  35  Phase 1: FOUNDATIONS (tokens first — always before components)
+  36    1a. Create variable collections and modes
+  37    1b. Create primitive variables (raw values, 1 mode)
+  38    1c. Create semantic variables (aliased to primitives, mode-aware)
+  39    1d. Set scopes on ALL variables
+  40    1e. Set code syntax on ALL variables
+  41    1f. Create effect styles (shadows) and text styles (typography)
+  42    → Exit criteria: every token from the agreed plan exists, all scopes set, all code syntax set
+  43    ✋ USER CHECKPOINT: show variable summary, await approval
+  44  
+  45  Phase 2: FILE STRUCTURE (before components)
+  46    2a. Create page skeleton: Cover → Getting Started → Foundations → --- → Components → --- → Utilities
+  47    2b. Create foundations documentation pages (color swatches, type specimens, spacing bars)
+  48    → Exit criteria: all planned pages exist, foundations docs are navigable
+  49    ✋ USER CHECKPOINT: show page list + screenshot, await approval
+  50  
+  51  Phase 3: COMPONENTS (one at a time — never batch)
+  52    For EACH component (in dependency order: atoms before molecules):
+  53      3a. Create dedicated page
+  54      3b. Build base component with auto-layout + full variable bindings
+  55      3c. Create all variant combinations (combineAsVariants + grid layout)
+  56      3d. Add component properties (TEXT, BOOLEAN, INSTANCE_SWAP)
+  57      3e. Link properties to child nodes
+  58      3f. Add page documentation (title, description, usage notes)
+  59      3g. Validate: get_metadata (structure) + get_screenshot (visual)
+  60      3h. Optional: lightweight Code Connect mapping while context is fresh
+  61      → Exit criteria: variant count correct, all bindings verified, screenshot looks right
+  62      ✋ USER CHECKPOINT per component: show screenshot, await approval before next component
+  63  
+  64  Phase 4: INTEGRATION + QA (final pass)
+  65    4a. Finalize all Code Connect mappings
+  66    4b. Accessibility audit (contrast, min touch targets, focus visibility)
+  67    4c. Naming audit (no duplicates, no unnamed nodes, consistent casing)
+  68    4d. Unresolved bindings audit (no hardcoded fills/strokes remaining)
+  69    4e. Final review screenshots of every page
+  70    ✋ USER CHECKPOINT: complete sign-off
+  71  ```
+  72  
+  73  ---
+  74  
+  75  ## 3. Critical Rules
+  76  
+  77  **Plugin API basics** (from use_figma skill — enforced here too):
+  78  - Use `return` to send data back (auto-serialized). Do NOT wrap in IIFE or call closePlugin.
+  79  - Return ALL created/mutated node IDs in every return value
+  80  - Page context resets each call — always `await figma.setCurrentPageAsync(page)` at start
+  81  - `figma.notify()` throws — never use it
+  82  - Colors are 0–1 range, not 0–255
+  83  - Font MUST be loaded before any text write: `await figma.loadFontAsync({family, style})`
+  84  
+  85  **Design system rules**:
+  86  1. **Variables BEFORE components** — components bind to variables. No token = no component.
+  87  2. **Inspect before creating** — run read-only `use_figma` to discover existing conventions. Match them.
+  88  3. **One page per component** *(default)* — exception: tightly related families (e.g., Input + helpers) may share a page with clear section separation.
+  89  4. **Bind visual properties to variables** *(default)* — fills, strokes, padding, radius, gap. Exceptions: intentionally fixed geometry (icon pixel-grid sizes, static dividers).
+  90  5. **Scopes on every variable** — NEVER leave as `ALL_SCOPES`. Background: `FRAME_FILL, SHAPE_FILL`. Text: `TEXT_FILL`. Border: `STROKE_COLOR`. Spacing: `GAP`. Radii: `CORNER_RADIUS`. Primitives: `[]` (hidden).
+  91  6. **Code syntax on every variable** — WEB syntax MUST use the `var()` wrapper: `var(--color-bg-primary)`, not `--color-bg-primary`. Use the actual CSS variable name from the codebase. ANDROID/iOS do NOT use a wrapper.
+  92  7. **Alias semantics to primitives** — `{ type: &#x27;VARIABLE_ALIAS&#x27;, id: primitiveVar.id }`. Never duplicate raw values in semantic layer.
+  93  8. **Position variants after combineAsVariants** — they stack at (0,0). Manually grid-layout + resize.
+  94  9. **INSTANCE_SWAP for icons** — never create a variant per icon. Cap variant matrices: if Size × Style × State &gt; 30 combinations, split into sub-component.
+  95  10. **Deterministic naming** — use consistent, unique node names for idempotent cleanup and resumability. Track created node IDs via return values and the state ledger.
+  96  11. **No destructive cleanup** — cleanup scripts identify nodes by name convention or returned IDs, not by guessing.
+  97  12. **Validate before proceeding** — never build on unvalidated work. `get_metadata` after every create, `get_screenshot` after each component.
+  98  13. **NEVER parallelize `use_figma` calls** — Figma state mutations must be strictly sequential. Even if your tool supports parallel calls, never run two use_figma calls simultaneously.
+  99  14. **Never hallucinate Node IDs** — always read IDs from the state ledger returned by previous calls. Never reconstruct or guess an ID from memory.
+ 100  15. **Use the helper scripts** — embed scripts from `scripts/` into your use_figma calls. Don&#x27;t write 200-line inline scripts from scratch.
+ 101  16. **Explicit phase approval** — at each checkpoint, name the next phase explicitly. &quot;looks good&quot; is not approval to proceed to Phase 3 if you asked about Phase 1.
+ 102  
+ 103  ---
+ 104  
+ 105  ## 4. State Management (Required for Long Workflows)
+ 106  
+ 107  &gt; **`getPluginData()` / `setPluginData()` are NOT supported in `use_figma`.** Use `getSharedPluginData()` / `setSharedPluginData()` instead (these ARE supported), or use name-based lookups and the state ledger (returned IDs).
+ 108  
+ 109  | Entity type | Idempotency key | How to check existence |
+ 110  |-------------|----------------|----------------------|
+ 111  | Scene nodes (pages, frames, components) | `setSharedPluginData(&#x27;dsb&#x27;, &#x27;key&#x27;, value)` or unique name | `node.getSharedPluginData(&#x27;dsb&#x27;, &#x27;key&#x27;)` or `page.findOne(n =&gt; n.name === &#x27;Button&#x27;)` |
+ 112  | Variables | Name within collection | `(await figma.variables.getLocalVariablesAsync()).find(v =&gt; v.name === name &amp;&amp; v.variableCollectionId === collId)` |
+ 113  | Styles | Name | `getLocalTextStyles().find(s =&gt; s.name === name)` |
+ 114  
+ 115  Tag every created **scene node** immediately after creation:
+ 116  ```javascript
+ 117  node.setSharedPluginData(&#x27;dsb&#x27;, &#x27;run_id&#x27;, RUN_ID);        // identifies this build run
+ 118  node.setSharedPluginData(&#x27;dsb&#x27;, &#x27;phase&#x27;, &#x27;phase3&#x27;);        // which phase created it
+ 119  node.setSharedPluginData(&#x27;dsb&#x27;, &#x27;key&#x27;, &#x27;component/button&#x27;);// unique logical key
+ 120  ```
+ 121  
+ 122  **State persistence**: Do NOT rely solely on conversation context for the state ledger. Write it to disk:
+ 123  ```
+ 124  /tmp/dsb-state-{RUN_ID}.json
+ 125  ```
+ 126  Re-read this file at the start of every turn. In long workflows, conversation context will be truncated — the file is the source of truth.
+ 127  
+ 128  Maintain a state ledger tracking:
+ 129  ```json
+ 130  {
+ 131    &quot;runId&quot;: &quot;ds-build-2024-001&quot;,
+ 132    &quot;phase&quot;: &quot;phase3&quot;,
+ 133    &quot;step&quot;: &quot;component-button&quot;,
+ 134    &quot;entities&quot;: {
+ 135      &quot;collections&quot;: { &quot;primitives&quot;: &quot;id:...&quot;, &quot;color&quot;: &quot;id:...&quot; },
+ 136      &quot;variables&quot;: { &quot;color/bg/primary&quot;: &quot;id:...&quot;, &quot;spacing/sm&quot;: &quot;id:...&quot; },
+ 137      &quot;pages&quot;: { &quot;Cover&quot;: &quot;id:...&quot;, &quot;Button&quot;: &quot;id:...&quot; },
+ 138      &quot;components&quot;: { &quot;Button&quot;: &quot;id:...&quot; }
+ 139    },
+ 140    &quot;pendingValidations&quot;: [&quot;Button:screenshot&quot;],
+ 141    &quot;completedSteps&quot;: [&quot;phase0&quot;, &quot;phase1&quot;, &quot;phase2&quot;, &quot;component-avatar&quot;]
+ 142  }
+ 143  ```
+ 144  
+ 145  **Idempotency check** before every create: query by name + state ledger ID. If exists, skip or update — never duplicate.
+ 146  
+ 147  **Resume protocol**: at session start or after context truncation, run a read-only `use_figma` to scan all pages, components, variables, and styles by name to reconstruct the `{key → id}` map. Then re-read the state file from disk if available.
+ 148  
+ 149  **Continuation prompt** (give this to the user when resuming in a new chat):
+ 150  &gt; &quot;I&#x27;m continuing a design system build. Run ID: {RUN_ID}. Load the figma-generate-library skill and resume from the last completed step.&quot;
+ 151  
+ 152  ---
+ 153  
+ 154  ## 5. search_design_system — Reuse Decision Matrix
+ 155  
+ 156  Search FIRST in Phase 0, then again immediately before each component creation.
+ 157  
+ 158  ```
+ 159  search_design_system({ query, fileKey, includeComponents: true, includeVariables: true, includeStyles: true })
+ 160  ```
+ 161  
+ 162  **Reuse if** all of these are true:
+ 163  - Component property API matches your needs (same variant axes, compatible types)
+ 164  - Token binding model is compatible (uses same or aliasable variables)
+ 165  - Naming conventions match the target file
+ 166  - Component is editable (not locked in a remote library you don&#x27;t own)
+ 167  
+ 168  **Rebuild if** any of these:
+ 169  - API incompatibility (different property names, wrong variant model)
+ 170  - Token model incompatible (hardcoded values, different variable schema)
+ 171  - Ownership issue (can&#x27;t modify the library)
+ 172  
+ 173  **Wrap if** visual match but API incompatible:
+ 174  - Import the library component as a nested instance inside a new wrapper component
+ 175  - Expose a clean API on the wrapper
+ 176  
+ 177  **Three-way priority**: local existing → subscribed library import → create new.
+ 178  
+ 179  ---
+ 180  
+ 181  ## 6. User Checkpoints
+ 182  
+ 183  Mandatory. Design decisions require human judgment.
+ 184  
+ 185  | After | Required artifacts | Ask |
+ 186  |-------|-------------------|-----|
+ 187  | Discovery + scope lock | Token list, component list, gap analysis | &quot;Here&#x27;s my plan. Approve before I create anything?&quot; |
+ 188  | Foundations | Variable summary (N collections, M vars, K modes), style list | &quot;All tokens created. Review before file structure?&quot; |
+ 189  | File structure | Page list + screenshot | &quot;Pages set up. Review before components?&quot; |
+ 190  | Each component | get_screenshot of component page | &quot;Here&#x27;s [Component] with N variants. Correct?&quot; |
+ 191  | Each conflict (code ≠ Figma) | Show both versions | &quot;Code says X, Figma has Y. Which wins?&quot; |
+ 192  | Final QA | Per-page screenshots + audit report | &quot;Complete. Sign off?&quot; |
+ 193  
+ 194  **If user rejects**: fix before moving on. Never build on rejected work.
+ 195  
+ 196  ---
+ 197  
+ 198  ## 7. Naming Conventions
+ 199  
+ 200  Match existing file conventions. If starting fresh:
+ 201  
+ 202  **Variables** (slash-separated):
+ 203  ```
+ 204  color/bg/primary     color/text/secondary    color/border/default
+ 205  spacing/xs  spacing/sm  spacing/md  spacing/lg  spacing/xl  spacing/2xl
+ 206  radius/none  radius/sm  radius/md  radius/lg  radius/full
+ 207  typography/body/font-size    typography/heading/line-height
+ 208  ```
+ 209  
+ 210  **Primitives**: `blue/50` → `blue/900`, `gray/50` → `gray/900`
+ 211  
+ 212  **Component names**: `Button`, `Input`, `Card`, `Avatar`, `Badge`, `Checkbox`, `Toggle`
+ 213  
+ 214  **Variant names**: `Property=Value, Property=Value` — e.g., `Size=Medium, Style=Primary, State=Default`
+ 215  
+ 216  **Page separators**: `---` (most common) or `——— COMPONENTS ———`
+ 217  
+ 218  &gt; Full naming reference: [naming-conventions.md](references/naming-conventions.md)
+ 219  
+ 220  ---
+ 221  
+ 222  ## 8. Token Architecture
+ 223  
+ 224  | Complexity | Pattern |
+ 225  |-----------|---------|
+ 226  | &lt; 50 tokens | Single collection, 2 modes (Light/Dark) |
+ 227  | 50–200 tokens | **Standard**: Primitives (1 mode) + Color semantic (Light/Dark) + Spacing (1 mode) + Typography (1 mode) |
+ 228  | 200+ tokens | **Advanced**: Multiple semantic collections, 4–8 modes (Light/Dark × Contrast × Brand). See M3 pattern in [token-creation.md](references/token-creation.md) |
+ 229  
+ 230  Standard pattern (recommended starting point):
+ 231  ```
+ 232  Collection: &quot;Primitives&quot;    modes: [&quot;Value&quot;]
+ 233    blue/500 = #3B82F6, gray/900 = #111827, ...
+ 234  
+ 235  Collection: &quot;Color&quot;         modes: [&quot;Light&quot;, &quot;Dark&quot;]
+ 236    color/bg/primary → Light: alias Primitives/white, Dark: alias Primitives/gray-900
+ 237    color/text/primary → Light: alias Primitives/gray-900, Dark: alias Primitives/white
+ 238  
+ 239  Collection: &quot;Spacing&quot;       modes: [&quot;Value&quot;]
+ 240    spacing/xs = 4, spacing/sm = 8, spacing/md = 16, ...
+ 241  ```
+ 242  
+ 243  ---
+ 244  
+ 245  ## 9. Per-Phase Anti-Patterns
+ 246  
+ 247  **Phase 0 anti-patterns:**
+ 248  - ❌ Starting to create anything before scope is locked with user
+ 249  - ❌ Ignoring existing file conventions and imposing new ones
+ 250  - ❌ Skipping `search_design_system` before planning component creation
+ 251  
+ 252  **Phase 1 anti-patterns:**
+ 253  - ❌ Using `ALL_SCOPES` on any variable
+ 254  - ❌ Duplicating raw values in semantic layer instead of aliasing
+ 255  - ❌ Not setting code syntax (breaks Dev Mode and round-tripping)
+ 256  - ❌ Creating component tokens before agreeing on token taxonomy
+ 257  
+ 258  **Phase 2 anti-patterns:**
+ 259  - ❌ Skipping the cover page or foundations docs
+ 260  - ❌ Putting multiple unrelated components on one page
+ 261  
+ 262  **Phase 3 anti-patterns:**
+ 263  - ❌ Creating components before foundations exist
+ 264  - ❌ Hardcoding any fill/stroke/spacing/radius value in a component
+ 265  - ❌ Creating a variant per icon (use INSTANCE_SWAP instead)
+ 266  - ❌ Not positioning variants after combineAsVariants (they all stack at 0,0)
+ 267  - ❌ Building variant matrix &gt; 30 without splitting (variant explosion)
+ 268  - ❌ Importing remote components then immediately detaching them
+ 269  
+ 270  **General anti-patterns:**
+ 271  - ❌ Retrying a failed script without understanding the error first
+ 272  - ❌ Using name-prefix matching for cleanup (deletes user-owned nodes)
+ 273  - ❌ Building on unvalidated work from the previous step
+ 274  - ❌ Skipping user checkpoints to &quot;save time&quot;
+ 275  - ❌ Parallelizing use_figma calls (always sequential)
+ 276  - ❌ Guessing/hallucinating node IDs from memory (always read from state ledger)
+ 277  - ❌ Writing massive inline scripts instead of using the provided helper scripts
+ 278  - ❌ Starting Phase 3 because the user said &quot;build the button&quot; without completing Phases 0-2
+ 279  
+ 280  ---
+ 281  
+ 282  ## 10. Reference Docs
+ 283  
+ 284  Load on demand — each reference is authoritative for its phase:
+ 285  
+ 286  Use your file reading tool to read these docs when needed. Do not assume their contents from the filename.
+ 287  
+ 288  | Doc | Phase | Required / Optional | Load when |
+ 289  |-----|-------|---------------------|-----------|
+ 290  | [discovery-phase.md](references/discovery-phase.md) | 0 | **Required** | Starting any build — codebase analysis + Figma inspection |
+ 291  | [token-creation.md](references/token-creation.md) | 1 | **Required** | Creating variables, collections, modes, styles |
+ 292  | [documentation-creation.md](references/documentation-creation.md) | 2 | Required | Creating cover page, foundations docs, swatches |
+ 293  | [component-creation.md](references/component-creation.md) | 3 | **Required** | Creating any component or variant |
+ 294  | [code-connect-setup.md](references/code-connect-setup.md) | 3–4 | Required | Setting up Code Connect or variable code syntax |
+ 295  | [naming-conventions.md](references/naming-conventions.md) | Any | Optional | Naming anything — variables, pages, variants, styles |
+ 296  | [error-recovery.md](references/error-recovery.md) | Any | **Required on error** | Script fails, multi-step workflow recovery, cleanup of abandoned workflow state |
+ 297  
+ 298  ---
+ 299  
+ 300  ## 11. Scripts
+ 301  
+ 302  Reusable Plugin API helper functions. Embed in `use_figma` calls:
+ 303  
+ 304  | Script | Purpose |
+ 305  |--------|---------|
+ 306  | [inspectFileStructure.js](scripts/inspectFileStructure.js) | Discover all pages, components, variables, styles; returns full inventory |
+ 307  | [createVariableCollection.js](scripts/createVariableCollection.js) | Create a named collection with modes; returns `{collectionId, modeIds}` |
+ 308  | [createSemanticTokens.js](scripts/createSemanticTokens.js) | Create aliased semantic variables from a token map |
+ 309  | [createComponentWithVariants.js](scripts/createComponentWithVariants.js) | Build a component set from a variant matrix; handles grid layout |
+ 310  | [bindVariablesToComponent.js](scripts/bindVariablesToComponent.js) | Bind design tokens to all component visual properties |
+ 311  | [createDocumentationPage.js](scripts/createDocumentationPage.js) | Create a page with title + description + section structure |
+ 312  | [validateCreation.js](scripts/validateCreation.js) | Verify created nodes match expected counts, names, structure |
+ 313  | [cleanupOrphans.js](scripts/cleanupOrphans.js) | Remove orphaned nodes by name convention or state ledger IDs |
+ 314  | [rehydrateState.js](scripts/rehydrateState.js) | Scan file for all pages, components, variables by name; returns full `{key → nodeId}` map for state reconstruction |</pre>

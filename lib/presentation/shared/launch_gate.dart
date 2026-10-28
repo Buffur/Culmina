@@ -1,8 +1,11 @@
+import '../../core/theme/app_text_theme.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 import '../../core/diagnostics/app_log.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/units/display_units.dart';
 import 'culmina_mark_geometry.dart';
 import 'startup_mark.dart';
@@ -17,17 +20,18 @@ class LaunchLook {
   final bool fieldMode;
   final Appearance? appearance;
 
-  CulminaMarkColors colours(Brightness platform) {
-    if (fieldMode) return CulminaMarkColors.field;
+  ThemeData theme(Brightness platform) {
+    if (fieldMode) return AppTheme.fieldTheme;
     return switch (appearance) {
-      Appearance.light => CulminaMarkColors.light,
-      Appearance.dark => CulminaMarkColors.dark,
-      Appearance.system || null =>
-        platform == Brightness.dark
-            ? CulminaMarkColors.dark
-            : CulminaMarkColors.light,
+      Appearance.light => AppTheme.light,
+      Appearance.dark => AppTheme.dark,
+      Appearance.system ||
+      null => platform == Brightness.dark ? AppTheme.dark : AppTheme.light,
     };
   }
+
+  CulminaMarkColors colours(Brightness platform) =>
+      theme(platform).extension<CulminaMarkColors>()!;
 }
 
 /// The whole launch, in one place (owner, 2026-10-23): the full gesture is
@@ -87,7 +91,12 @@ class LaunchGate extends StatelessWidget {
       view: View.of(context),
       child: Directionality(
         textDirection: TextDirection.ltr,
-        child: _LaunchStage(gate: this),
+        child: Theme(
+          data: look.theme(
+            View.of(context).platformDispatcher.platformBrightness,
+          ),
+          child: _LaunchStage(gate: this),
+        ),
       ),
     );
   }
@@ -384,7 +393,12 @@ class _Failure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = TextStyle(color: colours.orbit, fontSize: 16, height: 1.4);
+    final text = AppTextTheme.of(context)
+        .resolve(
+          AppTextTheme.of(context).inherited,
+          AppTextGeometry.launchFailure,
+        )
+        .copyWith(color: colours.orbit);
     return Align(
       alignment: const Alignment(0, 0.55),
       child: Padding(

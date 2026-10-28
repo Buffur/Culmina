@@ -1,0 +1,107 @@
+<!doctype html><meta charset="utf-8"><title>ARCHITECTURE.md</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>ARCHITECTURE.md</h1><p>docs\ARCHITECTURE.md</p><p>SHA-256: 12327c9f4fddb9b8eb83626a9e6566a64e3e87a2bf1847350daeea92dd79be30</p><pre>   1  # Architecture and data
+   2  
+   3  This describes the current `lib/` implementation and `pubspec.yaml`.
+   4  
+   5  ## Modules
+   6  
+   7  - `lib/main.dart`: initializes licenses, staged restore, database and catalog
+   8    seeding; constructs concrete repositories/services and the widget root.
+   9  - `lib/presentation/`: screens, shared UI, widgets, navigation and ViewModels.
+  10  - `lib/domain/models/`: targets, rigs, sites, nights, plans, weather and results.
+  11  - `lib/domain/repositories/`: storage and preferences interfaces.
+  12  - `lib/domain/services/`: astronomy, visibility, Moon, candidates, imaging
+  13    opportunities, budgets, fit, calibration, storage and session logic.
+  14  - `lib/domain/metadata/`: bounded file readers and metadata result types.
+  15  - `lib/domain/equipment_import/`: equipment matching and specification estimates.
+  16  - `lib/data/`: Drift persistence, SharedPreferences repositories, network/device
+  17    adapters, metadata file access, export and backup implementations.
+  18  - `lib/core/`: math, clock, units, configuration, diagnostics and theme tokens.
+  19  
+  20  UI calls ViewModels; ViewModels use domain interfaces and services.
+  21  Data adapters implement those interfaces. Astronomy/math calculations are
+  22  separate from Flutter presentation.
+  23  
+  24  ## State and navigation
+  25  
+  26  `AppViewModels` constructs dependencies in `presentation/app_view_models.dart`.
+  27  Provider exposes shared ViewModel instances, predominantly through
+  28  `ChangeNotifierProvider`; lifecycle and candidate coordinators use `Provider`.
+  29  Widgets consume state through Provider reads and watches.
+  30  
+  31  - `SiteViewModel`: active site, position and local-time context.
+  32  - `SessionPlanViewModel`: editable target, rig, night and capture blocks.
+  33  - `PlanLifecycleViewModel` / `CurrentSession`: restore, open, new, copy,
+  34    save and discard of the current plan.
+  35  - `NightConditionsViewModel`, `CandidatesViewModel`,
+  36    `CaptureAnalysisViewModel`: forecast/astronomy, candidates and plan analysis.
+  37  - `StartupViewModel` / `TonightViewModel`: loading and first-run/home state.
+  38  - `GearViewModel`, `TargetsViewModel`, `SessionsViewModel`: library/logbook state.
+  39  - `ResultsViewModel`, `MetadataImportViewModel`, `BackupViewModel` and
+  40    `AstroBinExportViewModel`: their respective workflows.
+  41  - Settings, display, theme and disclosure ViewModels persist user choices.
+  42  
+  43  `go_router` defines a stateful indexed shell for Tonight, Logbook, Library
+  44  and Settings. Plan, results, choosers and Night/Moon/Weather open above the tabs.
+  45  Router restoration returns to the appropriate list when object arguments
+  46  cannot be restored. The plan flow prompts for unsaved changes.
+  47  
+  48  ## Domain data
+  49  
+  50  | Model | Contents |
+  51  | --- | --- |
+  52  | `AstroTarget` / `TargetAlias` | Catalog/custom identity, J2000 RA/Dec in degrees, type, optional size/magnitude, source and searchable aliases. |
+  53  | `EquipmentProfile` | Flattened rig/camera view: sensor dimensions, resolution, pixel pitch, focal length/ratio, camera class, tracking, exposure limit and provenance. |
+  54  | `LocationProfile` | Coordinates, optional elevation, IANA zone, manual Bortle/SQM context, sources/dates and notes. |
+  55  | `CalendarDate` / `SessionNight` | Evening date and a half-open 24-hour UTC window beginning at site mean solar noon. |
+  56  | `CaptureBlock` | Frame type, exposure seconds, count, filter, binning, typed ISO/gain, calibration policy, white balance, AF/MF, origins and file evidence. |
+  57  | `SessionPlan` / `PlanOverrides` | Site/target/rig references, night, ordered blocks, labels, tracking override and optional per-plan budget/storage values. |
+  58  | `Session` / `SessionLog` | Lifecycle, references, timestamps, snapshots, blocks, counts, results and notes; legacy records remain readable. |
+  59  | `SessionSnapshot` | Versioned JSON of saved context, preferences, budget, opportunity and weather. |
+  60  | `ResultReport` | Completed as planned, partial per-block counts, or not done with optional reason and observed conditions. |
+  61  | `WeatherSnapshot` / `NightWeather` | Provider/model, fetch time, coordinates, hourly values, freshness, cache/failure/out-of-range state. |
+  62  
+  63  `SessionStatus` includes `draft`, `planned`, `inProgress`, `completed` and
+  64  `abandoned`. Repository methods enforce lifecycle transitions. Execution
+  65  models, events and `ExecutionMachine` remain in the code; the router has no
+  66  dedicated live-tracker screen. Results are user reports of acquisition.
+  67  
+  68  Night identity uses the site&#x27;s evening date. Time contexts display an IANA
+  69  zone or mean solar time; DST changes local labels, not the UTC night window.
+  70  Unknown optional values are null. Units and provenance are explicit;
+  71  ISO/gain does not model photon collection.
+  72  
+  73  ## Persistence
+  74  
+  75  `data/database/app_database.dart` defines Drift schema **27** in
+  76  `astroplan.sqlite` under the application documents directory.
+  77  The supported migration floor is version 8; unsupported older/newer databases
+  78  take the recovery path rather than being silently reinterpreted.
+  79  
+  80  | Tables | Stored data |
+  81  | --- | --- |
+  82  | `Devices` → `CameraModules` → `OpticalRigs` | Device/camera/optics chain, specifications, provenance and capture-format evidence. |
+  83  | `LocationProfiles` | Saved sites and optional sky-quality context. |
+  84  | `AstroTargets`, `TargetAliases` | Targets and catalog-designation/name aliases. |
+  85  | `SessionLogs` | Session aggregate, status, references, timestamps, snapshots, overrides, result kind and notes. |
+  86  | `CaptureBlocks` | Ordered blocks, settings, calibration policy, evidence and completed/rejected counters. |
+  87  | `SessionEvents` | Ordered event history used to reconstruct execution state. |
+  88  
+  89  SQLite foreign keys are enabled; blocks/events cascade with session deletion,
+  90  while camera/device references restrict deletion.
+  91  SharedPreferences stores planning/display/privacy/first-run preferences,
+  92  planner selection state and weather snapshots.
+  93  `FileBackupService` and `BackupStaging` validate and stage local restore;
+  94  startup applies it before opening the live database.
+  95  
+  96  ## External adapters and dependencies
+  97  
+  98  - Open-Meteo weather through `http`, with cached snapshots.
+  99  - GPS through `geolocator`; device zone through `flutter_timezone`/`timezone`.
+ 100  - OpenStreetMap tiles through `flutter_map`/`latlong2`; opt-in Nominatim lookup.
+ 101  - Android file picker/range reads through a custom metadata platform channel.
+ 102  - DNG, JPEG, HEIF still-image and FITS metadata readers in the domain.
+ 103  - Backup uses `file_picker` and `archive`; export uses `share_plus`;
+ 104    external links use `url_launcher`.
+ 105  - Drift code generation uses `drift_dev` and `build_runner`.
+ 106  
+ 107  See [Product specification](PRODUCT_SPEC.md) and [Design system](DESIGN_SYSTEM.md).</pre>

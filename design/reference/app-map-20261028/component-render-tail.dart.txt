@@ -1,0 +1,100 @@
+
+List<Widget> extras() => [
+ const HybridSectionTitle('Capture plan',trailing:'1 block · 120 frames'),
+ const HybridFact('Integration','2 h',emphasis:true),
+ const HybridFacts([('Storage','Unknown'),('Setup','Not included')]),
+ const HybridFactList([HybridFact('Window','9 h 55 min')]),
+ const HybridNote('Relative stacking gain is not absolute SNR.'),
+ HybridPlanRow(label:'Target',value:'M31 · Andromeda Galaxy',caption:'Galaxy',onTap:(){}),
+ HybridNightRow(icon:HybridIcons.moon,label:'Night & Moon',value:'9 h 55 min dark',onTap:(){}),
+ HybridApplyBar(label:'Apply changes',onPressed:(){}),
+ const Row(children:[HybridRadio(checked:true),SizedBox(width:20),HybridRadio(checked:false)]),
+ HybridChoiceRow(title:'Kyiv outskirts',caption:'Europe/Kyiv',selected:true,onTap:(){}),
+ const HybridFieldLabel('Exposure (seconds)'),
+ HybridCloseButton(onPressed:(){}),
+ const HybridPlanInputs(child:TextField(decoration:InputDecoration(hintText:'Name, M31 or NGC 224'))),
+ Row(children:[HybridSwitch(value:true,onChanged:(_){}),HybridSwitch(value:false,onChanged:(_){}),const HybridSwitch(value:false)]),
+ HybridSwitchRow(title:'Red field mode',description:'Red on black only',value:true,onChanged:(_){}),
+ const Row(children:[HybridCheckbox(checked:true),SizedBox(width:20),HybridCheckbox(checked:false)]),
+ HybridCheckRow(label:'Show targets without a window',checked:true,onChanged:(_){}),
+ HybridCheckRow.plan(label:'Add dark frames',checked:false,onChanged:(_){}),
+ const DocumentSection(children:[HybridSectionTitle('Estimate'),HybridFact('Storage','Unknown')]),
+ LoadFailureView(action:'load the plan',error:StateError('Synthetic'),onRetry:(){}),
+ const GeoHeading('Position'),
+ GeoActionRow(icon:HybridIcons.moon,label:'Use current position',onTap:(){}),
+ GeoPositionActions(locating:false,onLocate:(){},onMap:(){}),
+ const InfoRow(label:'Integration',value:'2 h'),
+ SectionHeader(title:'Targets',actionLabel:'Add',onAction:(){}),
+ const StartupMark(),
+ const SizedBox(height:180,child:StartupCover(loading:true)),
+ const ChangeMark(value:1,child:HybridNote('Changed value · static state')),
+ SizedBox(height:80,child:HybridFocusHighlight(child:OutlinedButton(onPressed:(){},child:const Text('Focusable action')))),
+ HybridQuietInk(child:TextButton(onPressed:(){},child:const Text('Quiet action'))),
+ const FieldModeButton(),const FieldModeTile(),
+ const EntryStateBadge(PlanState.saved,large:true),
+ const Align(alignment:Alignment.centerLeft,child:HybridIcon(HybridIcons.moon)),
+ NightPickerDialog(initialDate:DateTime(2026,10,19),firstDate:DateTime(2020),lastDate:DateTime(2030)),
+ LibrarySearchField(controller:TextEditingController(),hint:'Search rigs',onChanged:(_){}),
+ LibraryPrimaryAction(icon:HybridIcons.moon,label:'Add rig',onPressed:(){}),
+ LibraryDeleteAction(label:'Delete rig',onPressed:(){}),
+ LibraryRow(title:'DSLR · 135 mm lens',caption:'Tracking unknown',onTap:(){}),
+ LibraryRecordHeader(caption:'Your rig · editable',action:OutlinedButton(onPressed:(){},child:const Text('Edit rig'))),
+ const LibraryField(label:'Focal length (mm)',hint:'As recorded',child:TextField()),
+ LibrarySaveBar(saveLabel:'Save rig',onCancel:(){},onSave:(){}),
+ LibraryChoiceGrid<int>(legend:'Camera type',options:const[(1,'DSLR','dslr'),(2,'Astro camera','astro')],value:1,onChanged:(_){},keyPrefix:'sample'),
+ const SettingsHeading('Planning'),const SettingsCopy('Applies to every plan'),const SettingsHint('Unknown is not zero'),
+ SettingsRow(icon:HybridIcons.moon,title:'Appearance',summary:'System',onTap:(){}),
+ SettingsSlider(title:'Margin',help:'Configured assumption',value:15,range:(0,100),divisions:20,label:'15%',format:(v)=>'$v%',onChanged:(_){}),
+ HybridSlider(slider:Slider(value:.5,onChanged:(_){})),
+ SettingsStepper(label:'Frames',value:120,range:(1,500),step:1,format:(v)=>'${v.toInt()}',onChanged:(_){}),
+ const SettingsLink(label:'Data source',url:'https://example.com'),
+ SettingsAction(label:'Back up now',onPressed:(){}),
+ const FactRows([('Storage','Unknown','Not measured')]),
+ SizedBox(height:360,child:LaunchGate(look:const LaunchLook(),initialize:()=>Completer<Widget>().future,animate:false)),
+ const SizedBox(height:650,child:LaunchPreview(look:LaunchLook())),
+];
+void main(){
+ testWidgets('current component specimens', (tester)async{
+ await tester.runAsync(_loadFonts);
+ tester.view.devicePixelRatio=1;tester.view.physicalSize=const Size(412,12000);
+ addTearDown(tester.view.reset);
+ final out=Directory('build/components-20261028/renders')..createSync(recursive:true);
+ final manifest=<Map<String,Object?>>[];
+ for(final theme in GalleryTheme.values){
+ final samples=[...galleryEntries().where((w)=>w is! SizedBox).map((w){
+ // The legacy gallery reused a Fits sentence in every verdict specimen.
+ // Keep these isolated examples semantically consistent with their state.
+ if(w is Card && w.child is Padding && (w.child as Padding).child is StatusBlock){
+ final old=(w.child as Padding).child as StatusBlock;
+ final state=old.state;
+ final measured=state==FitState.fits||state==FitState.tight||state==FitState.doesNotFit;
+ final reason=switch(state){FitState.fits=>'Time fits this illustrative window.',FitState.tight=>'Little time remains in this illustrative window.',FitState.doesNotFit=>'The planned time exceeds this illustrative window.',FitState.noWindow=>'No imaging window in this example.',FitState.needsInput=>'Choose a target before calculating fit.',FitState.nothingToFit=>'No light frames in this example.'};
+ return Card(child:Padding(padding:const EdgeInsets.all(16),child:StatusBlock(state:state,needed:measured?Duration(minutes:state==FitState.doesNotFit?300:state==FitState.tight?250:125):null,usable:measured?const Duration(minutes:260):null,reason:reason)));
+ }
+ return w;
+ }),...extras()];
+ for(final (i,w) in samples.indexed){
+ await tester.pumpWidget(const SizedBox());
+ final data=galleryThemeData(theme);
+ Widget content=ColoredBox(color:data.scaffoldBackgroundColor,child:Padding(padding:const EdgeInsets.all(16),child:Column(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.stretch,children:[w])));
+ if(theme==GalleryTheme.field)content=ColorFiltered(colorFilter:AppTheme.fieldFilter,child:content);
+ await tester.pumpWidget(_app(theme,Scaffold(body:SingleChildScrollView(child:RepaintBoundary(key:_shot,child:content)))));
+ await tester.pumpAndSettle();
+ final error=tester.takeException();
+ final types=find.byWidgetPredicate((_)=>true).evaluate().map((e)=>e.widget.runtimeType.toString()).toSet().toList();
+ final name='component_${i.toString().padLeft(3,'0')}_${theme.name}';
+ await _write(tester,'${out.path}/$name.png');
+ manifest.add({'id':i,'theme':theme.name,'label':w.runtimeType.toString(),'file':'$name.png','types':types,'texts':find.byType(Text).evaluate().map((e)=>(e.widget as Text).data).whereType<String>().take(20).toList(),'error':error?.toString()});
+ }
+ }
+ for(final theme in GalleryTheme.values){
+ for(final kind in ['detail','confirm','unsaved','undo']){
+ final name='${kind}_${theme.name}';
+ await _screen(tester,theme,'${out.path}/$name.png',overlay:kind=='confirm'?(c){confirmDestructive(c,title:'Delete rig?',message:'Saved plans keep their values.');}:kind=='unsaved'?(c){askUnsavedChanges(c,plan:'M31');}:kind=='undo'?(c){showUndo(c,message:'Block removed',onUndo:(){});}:null);
+ manifest.add({'id':kind,'theme':theme.name,'label':kind,'file':'$name.png','types':find.byWidgetPredicate((_)=>true).evaluate().map((e)=>e.widget.runtimeType.toString()).toSet().toList(),'texts':find.byType(Text).evaluate().map((e)=>(e.widget as Text).data).whereType<String>().take(20).toList(),'error':tester.takeException()?.toString()});
+ }
+ }
+ File('${out.path}/manifest.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
+ expect(manifest.where((m)=>m['error']!=null),isEmpty);
+ });
+}

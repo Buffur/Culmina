@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>culmina-design-tokens</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>culmina-design-tokens</h1><p>.agents\skills\culmina-design-tokens\SKILL.md</p><p>SHA-256: def38d3a66aac001c761187365f5b301cbaf79e6772471542f60dbd72d5e7156</p><pre>   1  ---
+   2  name: culmina-design-tokens
+   3  description: Map Culmina semantic colors and surfaces to native roles/callers for focused Light, Dark and Field Red fixes or review.
+   4  ---
+   5  
+   6  # Culmina semantic colors and surfaces
+   7  
+   8  Use for theme/surface meaning, Field Red behavior and token drift. Read [AGENTS](../../../AGENTS.md), the needed rows of the [semantic map](references/semantic-map.md), and affected definitions/callers in `lib/core/theme/app_colors.dart`, `app_palette.dart`, `hybrid_tokens.dart` and `app_theme.dart`.
+   9  
+  10  1. Identify the role: page/group/overlay surface, text, control boundary, science display, fit or persistence/result state. Follow the actual caller to its theme owner; a token declaration is not proof of use.
+  11  2. Reuse the existing semantic role before adding an alias. Similar names/values in AppPalette and HybridTokens do not require migrating every caller.
+  12  3. Preserve words, icons and geometry alongside functional colors. Unknown, freshness, fit and saved/result meanings remain distinct.
+  13  4. Inspect affected foreground/background pairs in Light, Dark and Field Red. Keep red/black field presentation and the production filter in `lib/main.dart`; evaluate accessibility against actual rendered uses rather than assuming all themes meet a threshold.
+  14  5. For an explicitly requested palette exploration, compare identical content/state and record the proposal separately from implementation. `.audit/atlas/` is historical visual evidence; `design/` currently supplies no browser token authority.
+  15  
+  16  Report the semantic role, definition/caller, affected theme pairings, changes or findings, checks and limits. Browser specimens and host renders do not establish Android/device or owner acceptance.</pre>

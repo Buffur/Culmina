@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>.agents\skills\culmina-design-typography\SKILL.md</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>.agents\skills\culmina-design-typography\SKILL.md</h1><div id="L1"><a href="#L1">1</a> ---</div>
+<div id="L2"><a href="#L2">2</a> name: culmina-design-typography</div>
+<div id="L3"><a href="#L3">3</a> description: Apply adopted Culmina text roles, weight, wrapping and numeric typography. Use for focused typography fixes or review; font-family research applies only to an explicitly open design decision.</div>
+<div id="L4"><a href="#L4">4</a> ---</div>
+<div id="L5"><a href="#L5">5</a> </div>
+<div id="L6"><a href="#L6">6</a> # Culmina typography</div>
+<div id="L7"><a href="#L7">7</a> </div>
+<div id="L8"><a href="#L8">8</a> Use for text hierarchy, roles, weight, line height, wrapping and readable measurements. Read [AGENTS](../../../AGENTS.md), `lib/core/theme/app_typography.dart`, relevant compact roles in `hybrid_tokens.dart`, bundled assets in `pubspec.yaml` and affected text callers.</div>
+<div id="L9"><a href="#L9">9</a> </div>
+<div id="L10"><a href="#L10">10</a> - Production text roles use Geist. Source Serif 4 remains bundled; its availability is not evidence of current role adoption. Preserve MaterialIcons and the separate line-icon rendering path.</div>
+<div id="L11"><a href="#L11">11</a> - Read Material roles through `Theme.of(context).textTheme` and Culmina-specific roles through `AppTextTheme.of(context)`. `AppTypography` defines the central base scale; presentation does not read its static styles. Named roles and the Material TextTheme have distinct purposes.</div>
+<div id="L12"><a href="#L12">12</a> - Keep font sizes, line heights, tracking and family declarations in the theme layer. Reuse the named role or a central `AppTextGeometry` preset through `AppTextTheme.resolve`; local `copyWith` may change semantic color, weight or numeric features, not geometry. Preserve existing dimensions when consolidating a role rather than silently normalizing screens.</div>
+<div id="L13"><a href="#L13">13</a> - Diagnose available width, wrapping and padding before shrinking text. Preserve the user&#x27;s text scaler and full accessible labels. Compact chart/calendar/navigation roles are explicit exceptions in current source, not a global size prescription.</div>
+<div id="L14"><a href="#L14">14</a> - Check long names, errors, units and signs, ambiguous digits, and relevant Ukrainian glyphs (І і Ї ї Є є Ґ ґ). Use actual bundled fonts for visual evidence and tabular numerals where comparative measurements need them.</div>
+<div id="L15"><a href="#L15">15</a> - Font-family selection applies only to a named family/design task. Compare identical content/composition, retain license/provenance and verify fallback; do not download or refresh assets as a side effect of a wrapping fix.</div>
+<div id="L16"><a href="#L16">16</a> </div>
+<div id="L17"><a href="#L17">17</a> Report the role/caller, bounded correction or finding, checks and remaining limits. CSS specimens do not prove Flutter scaling, and static renders do not establish device or owner acceptance.</div>

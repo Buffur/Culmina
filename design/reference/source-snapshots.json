@@ -1,0 +1,20 @@
+{
+  "kind": "Historical source inputs, not standalone Dart compilation units",
+  "snapshots": [
+    {
+      "previous": "app-map-20261028/component-render-tail.dart",
+      "current": "app-map-20261028/component-render-tail.dart.txt",
+      "sha256": "c9cc19af94bf859265979c6c628074f16d0f3f910b0ae55ddb98a1298bf8c7f1"
+    },
+    {
+      "previous": "evidence/components-20261028/native_components_test.dart",
+      "current": "evidence/components-20261028/native_components_test.dart.txt",
+      "sha256": "47bc53a6b87acd2accee4e8c830c5452b609294fcc07434a92302f285734fb48"
+    },
+    {
+      "previous": "evidence/components-20261028/science_test.dart",
+      "current": "evidence/components-20261028/science_test.dart.txt",
+      "sha256": "a600fc91aeccfc4cf29f2c81e457b7b4a2c79fa84854776c0820f50df3034ce6"
+    }
+  ]
+}

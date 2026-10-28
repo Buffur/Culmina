@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/plan_overrides.dart';
@@ -239,10 +239,12 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                             : 'Overrides for this plan only. Leave a field '
                                   'empty to use its default.',
                         key: const Key('planOverride.intro'),
-                        style: AppTypography.body.copyWith(
-                          height: 1.6,
-                          color: p.textSecondary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).body,
+                              AppTextGeometry.reading,
+                            )
+                            .copyWith(color: p.textSecondary),
                       ),
                       for (final indices in const [
                         [0, 1, 2],
@@ -256,9 +258,8 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                                 header: true,
                                 child: Text(
                                   indices.first == 0 ? 'Timing' : 'Storage',
-                                  style: AppTypography.sectionHeading.copyWith(
-                                    color: p.textPrimary,
-                                  ),
+                                  style: AppTextTheme.of(context).sectionHeading
+                                      .copyWith(color: p.textPrimary),
                                 ),
                               ),
                               for (final i in indices)
@@ -327,9 +328,8 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                               horizontal: AppSpacing.itemGap,
                               vertical: AppSpacing.sm,
                             ),
-                            textStyle: AppTypography.body.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
+                            textStyle: AppTextTheme.of(context).body
+                                .copyWith(fontWeight: FontWeight.w500),
                           ),
                           onPressed: _saving
                               ? null

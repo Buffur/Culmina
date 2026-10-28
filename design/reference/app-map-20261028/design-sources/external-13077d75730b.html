@@ -1,0 +1,537 @@
+<!doctype html><meta charset="utf-8"><title>figma-create-design-system-rules</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>figma-create-design-system-rules</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\skills\figma-create-design-system-rules\SKILL.md</p><pre>   1  ---
+   2  name: figma-create-design-system-rules
+   3  description: Generates custom design system rules for the user&#x27;s codebase. Use when user says &quot;create design system rules&quot;, &quot;generate rules for my project&quot;, &quot;set up design rules&quot;, &quot;customize design system guidelines&quot;, or wants to establish project-specific conventions for Figma-to-code workflows. Requires Figma MCP server connection.
+   4  ---
+   5  
+   6  # Create Design System Rules
+   7  
+   8  ## Overview
+   9  
+  10  This skill helps you generate custom design system rules tailored to your project&#x27;s specific needs. These rules guide AI coding agents to produce consistent, high-quality code when implementing Figma designs, ensuring that your team&#x27;s conventions, component patterns, and architectural decisions are followed automatically.
+  11  
+  12  ### Supported Rule Files
+  13  
+  14  | Agent | Rule File |
+  15  |-------|-----------|
+  16  | Claude Code | `CLAUDE.md` |
+  17  | Codex CLI | `AGENTS.md` |
+  18  | Cursor | `.cursor/rules/figma-design-system.mdc` |
+  19  
+  20  ## What Are Design System Rules?
+  21  
+  22  Design system rules are project-level instructions that encode the &quot;unwritten knowledge&quot; of your codebase - the kind of expertise that experienced developers know and would pass on to new team members:
+  23  
+  24  - Which layout primitives and components to use
+  25  - Where component files should be located
+  26  - How components should be named and structured
+  27  - What should never be hardcoded
+  28  - How to handle design tokens and styling
+  29  - Project-specific architectural patterns
+  30  
+  31  Once defined, these rules dramatically reduce repetitive prompting and ensure consistent output across all Figma implementation tasks.
+  32  
+  33  ## Prerequisites
+  34  
+  35  - Figma MCP server must be connected and accessible
+  36  - Access to the project codebase for analysis
+  37  - Understanding of your team&#x27;s component conventions (or willingness to establish them)
+  38  
+  39  ## When to Use This Skill
+  40  
+  41  Use this skill when:
+  42  
+  43  - Starting a new project that will use Figma designs
+  44  - Onboarding an AI coding agent to an existing project with established patterns
+  45  - Standardizing Figma-to-code workflows across your team
+  46  - Updating or refining existing design system conventions
+  47  - Users explicitly request: &quot;create design system rules&quot;, &quot;set up Figma guidelines&quot;, &quot;customize rules for my project&quot;
+  48  
+  49  ## Required Workflow
+  50  
+  51  **Follow these steps in order. Do not skip steps.**
+  52  
+  53  ### Step 1: Run the Create Design System Rules Tool
+  54  
+  55  Call the Figma MCP server&#x27;s `create_design_system_rules` tool to get the foundational prompt and template.
+  56  
+  57  **Parameters:**
+  58  
+  59  - `clientLanguages`: Comma-separated list of languages used in the project (e.g., &quot;typescript,javascript&quot;, &quot;python&quot;, &quot;javascript&quot;)
+  60  - `clientFrameworks`: Framework being used (e.g., &quot;react&quot;, &quot;vue&quot;, &quot;svelte&quot;, &quot;angular&quot;, &quot;unknown&quot;)
+  61  
+  62  This tool returns guidance and a template for creating design system rules.
+  63  
+  64  Structure your design system rules following the template format provided in the tool&#x27;s response.
+  65  
+  66  ### Step 2: Analyze the Codebase
+  67  
+  68  Before finalizing rules, analyze the project to understand existing patterns:
+  69  
+  70  **Component Organization:**
+  71  
+  72  - Where are UI components located? (e.g., `src/components/`, `app/ui/`, `lib/components/`)
+  73  - Is there a dedicated design system directory?
+  74  - How are components organized? (by feature, by type, flat structure)
+  75  
+  76  **Styling Approach:**
+  77  
+  78  - What CSS framework or approach is used? (Tailwind, CSS Modules, styled-components, etc.)
+  79  - Where are design tokens defined? (CSS variables, theme files, config files)
+  80  - Are there existing color, typography, or spacing tokens?
+  81  
+  82  **Component Patterns:**
+  83  
+  84  - What naming conventions are used? (PascalCase, kebab-case, prefixes)
+  85  - How are component props typically structured?
+  86  - Are there common composition patterns?
+  87  
+  88  **Architecture Decisions:**
+  89  
+  90  - How is state management handled?
+  91  - What routing system is used?
+  92  - Are there specific import patterns or path aliases?
+  93  
+  94  ### Step 3: Generate Project-Specific Rules
+  95  
+  96  Based on your codebase analysis, create a comprehensive set of rules. Include:
+  97  
+  98  #### General Component Rules
+  99  
+ 100  ```markdown
+ 101  - IMPORTANT: Always use components from `[YOUR_PATH]` when possible
+ 102  - Place new UI components in `[COMPONENT_DIRECTORY]`
+ 103  - Follow `[NAMING_CONVENTION]` for component names
+ 104  - Components must export as `[EXPORT_PATTERN]`
+ 105  ```
+ 106  
+ 107  #### Styling Rules
+ 108  
+ 109  ```markdown
+ 110  - Use `[CSS_FRAMEWORK/APPROACH]` for styling
+ 111  - Design tokens are defined in `[TOKEN_LOCATION]`
+ 112  - IMPORTANT: Never hardcode colors - always use tokens from `[TOKEN_FILE]`
+ 113  - Spacing values must use the `[SPACING_SYSTEM]` scale
+ 114  - Typography follows the scale defined in `[TYPOGRAPHY_LOCATION]`
+ 115  ```
+ 116  
+ 117  #### Figma MCP Integration Rules
+ 118  
+ 119  ```markdown
+ 120  ## Figma MCP Integration Rules
+ 121  
+ 122  These rules define how to translate Figma inputs into code for this project and must be followed for every Figma-driven change.
+ 123  
+ 124  ### Required Flow (do not skip)
+ 125  
+ 126  1. Run get_design_context first to fetch the structured representation for the exact node(s)
+ 127  2. If the response is too large or truncated, run get_metadata to get the high-level node map, then re-fetch only the required node(s) with get_design_context
+ 128  3. Run get_screenshot for a visual reference of the node variant being implemented
+ 129  4. Only after you have both get_design_context and get_screenshot, download any assets needed and start implementation
+ 130  5. Translate the output (usually React + Tailwind) into this project&#x27;s conventions, styles, and framework
+ 131  6. Validate against Figma for 1:1 look and behavior before marking complete
+ 132  
+ 133  ### Implementation Rules
+ 134  
+ 135  - Treat the Figma MCP output (React + Tailwind) as a representation of design and behavior, not as final code style
+ 136  - Replace Tailwind utility classes with `[YOUR_STYLING_APPROACH]` when applicable
+ 137  - Reuse existing components from `[COMPONENT_PATH]` instead of duplicating functionality
+ 138  - Use the project&#x27;s color system, typography scale, and spacing tokens consistently
+ 139  - Respect existing routing, state management, and data-fetch patterns
+ 140  - Strive for 1:1 visual parity with the Figma design
+ 141  - Validate the final UI against the Figma screenshot for both look and behavior
+ 142  ```
+ 143  
+ 144  #### Asset Handling Rules
+ 145  
+ 146  ```markdown
+ 147  ## Asset Handling
+ 148  
+ 149  - The Figma MCP server provides an assets endpoint which can serve image and SVG assets
+ 150  - IMPORTANT: If the Figma MCP server returns a localhost source for an image or SVG, use that source directly
+ 151  - IMPORTANT: DO NOT import/add new icon packages - all assets should be in the Figma payload
+ 152  - IMPORTANT: DO NOT use or create placeholders if a localhost source is provided
+ 153  - Store downloaded assets in `[ASSET_DIRECTORY]`
+ 154  ```
+ 155  
+ 156  #### Project-Specific Conventions
+ 157  
+ 158  ```markdown
+ 159  ## Project-Specific Conventions
+ 160  
+ 161  - [Add any unique architectural patterns]
+ 162  - [Add any special import requirements]
+ 163  - [Add any testing requirements]
+ 164  - [Add any accessibility standards]
+ 165  - [Add any performance considerations]
+ 166  ```
+ 167  
+ 168  ### Step 4: Save Rules to the Appropriate Rule File
+ 169  
+ 170  Detect which AI coding agent the user is working with and save the generated rules to the corresponding file:
+ 171  
+ 172  | Agent | Rule File | Notes |
+ 173  |-------|-----------|-------|
+ 174  | Claude Code | `CLAUDE.md` in project root | Markdown format. Can also use `.claude/rules/figma-design-system.md` for modular organization. |
+ 175  | Codex CLI | `AGENTS.md` in project root | Markdown format. Append as a new section if file already exists. 32 KiB combined size limit. |
+ 176  | Cursor | `.cursor/rules/figma-design-system.mdc` | Markdown with YAML frontmatter (`description`, `globs`, `alwaysApply`). |
+ 177  
+ 178  If unsure which agent the user is working with, check for existing rule files in the project or ask the user.
+ 179  
+ 180  For Cursor, wrap the rules with YAML frontmatter:
+ 181  
+ 182  ```markdown
+ 183  ---
+ 184  description: Rules for implementing Figma designs using the Figma MCP server. Covers component organization, styling conventions, design tokens, asset handling, and the required Figma-to-code workflow.
+ 185  globs: &quot;src/components/**&quot;
+ 186  alwaysApply: false
+ 187  ---
+ 188  
+ 189  [Generated rules here]
+ 190  ```
+ 191  
+ 192  Customize the `globs` pattern to match the directories where Figma-derived code will live in the project (e.g., `&quot;src/**/*.tsx&quot;` or `[&quot;src/components/**&quot;, &quot;src/pages/**&quot;]`).
+ 193  
+ 194  After saving, the rules will be automatically loaded by the agent and applied to all Figma implementation tasks.
+ 195  
+ 196  ### Step 5: Validate and Iterate
+ 197  
+ 198  After creating rules:
+ 199  
+ 200  1. Test with a simple Figma component implementation
+ 201  2. Verify the agent follows the rules correctly
+ 202  3. Refine any rules that aren&#x27;t working as expected
+ 203  4. Share with team members for feedback
+ 204  5. Update rules as the project evolves
+ 205  
+ 206  ## Rule Categories and Examples
+ 207  
+ 208  ### Essential Rules (Always Include)
+ 209  
+ 210  **Component Discovery:**
+ 211  
+ 212  ```markdown
+ 213  - UI components are located in `src/components/ui/`
+ 214  - Feature components are in `src/components/features/`
+ 215  - Layout primitives are in `src/components/layout/`
+ 216  ```
+ 217  
+ 218  **Design Token Usage:**
+ 219  
+ 220  ```markdown
+ 221  - Colors are defined as CSS variables in `src/styles/tokens.css`
+ 222  - Never hardcode hex colors - use `var(--color-*)` tokens
+ 223  - Spacing uses the 4px base scale: `--space-1` (4px), `--space-2` (8px), etc.
+ 224  ```
+ 225  
+ 226  **Styling Approach:**
+ 227  
+ 228  ```markdown
+ 229  - Use Tailwind utility classes for styling
+ 230  - Custom styles go in component-level CSS modules
+ 231  - Theme customization is in `tailwind.config.js`
+ 232  ```
+ 233  
+ 234  ### Recommended Rules (Highly Valuable)
+ 235  
+ 236  **Component Patterns:**
+ 237  
+ 238  ```markdown
+ 239  - All components must accept a `className` prop for composition
+ 240  - Variant props should use union types: `variant: &#x27;primary&#x27; | &#x27;secondary&#x27;`
+ 241  - Icon components should accept `size` and `color` props
+ 242  ```
+ 243  
+ 244  **Import Conventions:**
+ 245  
+ 246  ```markdown
+ 247  - Use path aliases: `@/components`, `@/styles`, `@/utils`
+ 248  - Group imports: React, third-party, internal, types
+ 249  - No relative imports beyond parent directory
+ 250  ```
+ 251  
+ 252  **Code Quality:**
+ 253  
+ 254  ```markdown
+ 255  - Add JSDoc comments for exported components
+ 256  - Include PropTypes or TypeScript types for all props
+ 257  - Extract magic numbers to named constants
+ 258  ```
+ 259  
+ 260  ### Optional Rules (Project-Specific)
+ 261  
+ 262  **Accessibility:**
+ 263  
+ 264  ```markdown
+ 265  - All interactive elements must have aria-labels
+ 266  - Color contrast must meet WCAG AA standards
+ 267  - Keyboard navigation required for all interactions
+ 268  ```
+ 269  
+ 270  **Performance:**
+ 271  
+ 272  ```markdown
+ 273  - Lazy load images with the `Image` component from `@/components/Image`
+ 274  - Use React.memo for components that receive complex props
+ 275  - Icons should be SVG components, not icon fonts
+ 276  ```
+ 277  
+ 278  **Testing:**
+ 279  
+ 280  ```markdown
+ 281  - Include unit tests for new components in `__tests__/` directory
+ 282  - Use Testing Library queries (getByRole, getByLabelText)
+ 283  - Test all interactive states and variants
+ 284  ```
+ 285  
+ 286  ## Examples
+ 287  
+ 288  ### Example 1: React + Tailwind Project
+ 289  
+ 290  User says: &quot;Create design system rules for my React project&quot;
+ 291  
+ 292  **Actions:**
+ 293  
+ 294  1. Run `create_design_system_rules(clientLanguages=&quot;typescript,javascript&quot;, clientFrameworks=&quot;react&quot;)`
+ 295  2. Analyze codebase structure
+ 296  3. Generate rules:
+ 297  
+ 298  ```markdown
+ 299  # Figma MCP Integration Rules
+ 300  
+ 301  ## Component Organization
+ 302  
+ 303  - UI components are in `src/components/ui/`
+ 304  - Page components are in `src/app/`
+ 305  - Use Tailwind for styling
+ 306  
+ 307  ## Figma Implementation Flow
+ 308  
+ 309  1. Run get_design_context for the node
+ 310  2. Run get_screenshot for visual reference
+ 311  3. Map Figma colors to Tailwind colors defined in `tailwind.config.js`
+ 312  4. Reuse components from `src/components/ui/` when possible
+ 313  5. Validate against screenshot before completing
+ 314  
+ 315  ## Styling Rules
+ 316  
+ 317  - IMPORTANT: Use Tailwind utility classes, not inline styles
+ 318  - Colors are defined in `tailwind.config.js` theme.colors
+ 319  - Spacing uses Tailwind&#x27;s default scale
+ 320  - Custom components go in `src/components/ui/`
+ 321  
+ 322  ## Asset Rules
+ 323  
+ 324  - IMPORTANT: Use localhost sources from Figma MCP server directly
+ 325  - Store static assets in `public/assets/`
+ 326  - DO NOT install new icon libraries
+ 327  ```
+ 328  
+ 329  4. Save to the appropriate rule file for the user&#x27;s agent
+ 330  5. Test with a simple button implementation
+ 331  
+ 332  **Result:** The agent now consistently follows the project&#x27;s conventions when implementing Figma designs.
+ 333  
+ 334  ### Example 2: Vue + Custom CSS Project
+ 335  
+ 336  User says: &quot;Set up Figma rules for my Vue app&quot;
+ 337  
+ 338  **Actions:**
+ 339  
+ 340  1. Run `create_design_system_rules(clientLanguages=&quot;typescript,javascript&quot;, clientFrameworks=&quot;vue&quot;)`
+ 341  2. Discover that project uses CSS modules and a custom design token system
+ 342  3. Generate rules:
+ 343  
+ 344  ```markdown
+ 345  # Figma MCP Integration Rules
+ 346  
+ 347  ## Component Organization
+ 348  
+ 349  - Components are in `src/components/`
+ 350  - Composables are in `src/composables/`
+ 351  - Vue SFC structure: &lt;script setup&gt;, &lt;template&gt;, &lt;style scoped&gt;
+ 352  
+ 353  ## Design Tokens
+ 354  
+ 355  - IMPORTANT: All colors defined in `src/styles/tokens.css` as CSS variables
+ 356  - Use `var(--color-primary)`, `var(--color-secondary)`, etc.
+ 357  - Spacing: `var(--space-xs)` through `var(--space-xl)`
+ 358  - Typography: `var(--text-sm)` through `var(--text-2xl)`
+ 359  
+ 360  ## Figma Implementation Flow
+ 361  
+ 362  1. Run get_design_context and get_screenshot
+ 363  2. Translate React output to Vue 3 Composition API
+ 364  3. Map Figma colors to CSS variables in `src/styles/tokens.css`
+ 365  4. Use CSS Modules for component styles
+ 366  5. Check for existing components in `src/components/` before creating new ones
+ 367  
+ 368  ## Styling Rules
+ 369  
+ 370  - Use CSS Modules (`.module.css` files)
+ 371  - IMPORTANT: Reference design tokens, never hardcode values
+ 372  - Scoped styles with CSS modules
+ 373  ```
+ 374  
+ 375  4. Save to the appropriate rule file for the user&#x27;s agent
+ 376  5. Validate with a card component
+ 377  
+ 378  **Result:** The agent now correctly translates Figma designs to Vue components using the project&#x27;s design token system.
+ 379  
+ 380  ### Example 3: Design System Team
+ 381  
+ 382  User says: &quot;Generate rules for our design system library&quot;
+ 383  
+ 384  **Actions:**
+ 385  
+ 386  1. Run `create_design_system_rules(clientLanguages=&quot;typescript&quot;, clientFrameworks=&quot;react&quot;)`
+ 387  2. Analyze the monorepo structure with design system package
+ 388  3. Generate comprehensive rules:
+ 389  
+ 390  ```markdown
+ 391  # Design System Rules
+ 392  
+ 393  ## Repository Structure
+ 394  
+ 395  - Design system components: `packages/design-system/src/components/`
+ 396  - Documentation: `packages/docs/`
+ 397  - Design tokens: `packages/tokens/src/`
+ 398  
+ 399  ## Component Development
+ 400  
+ 401  - IMPORTANT: All components must be in `packages/design-system/src/components/`
+ 402  - Component file structure: `ComponentName/index.tsx`, `ComponentName.stories.tsx`, `ComponentName.test.tsx`
+ 403  - Export all components from `packages/design-system/src/index.ts`
+ 404  
+ 405  ## Design Tokens
+ 406  
+ 407  - Colors: `packages/tokens/src/colors.ts`
+ 408  - Typography: `packages/tokens/src/typography.ts`
+ 409  - Spacing: `packages/tokens/src/spacing.ts`
+ 410  - IMPORTANT: Never hardcode values - import from tokens package
+ 411  
+ 412  ## Documentation Requirements
+ 413  
+ 414  - Add Storybook story for every component
+ 415  - Include JSDoc with @example
+ 416  - Document all props with descriptions
+ 417  - Add accessibility notes
+ 418  
+ 419  ## Figma Integration
+ 420  
+ 421  1. Get design context and screenshot from Figma
+ 422  2. Map Figma tokens to design system tokens
+ 423  3. Create or extend component in design system package
+ 424  4. Add Storybook stories showing all variants
+ 425  5. Validate against Figma screenshot
+ 426  6. Update documentation
+ 427  ```
+ 428  
+ 429  4. Save to the appropriate rule file and share with team
+ 430  5. Add to team documentation
+ 431  
+ 432  **Result:** Entire team follows consistent patterns when adding components from Figma to the design system.
+ 433  
+ 434  ## Best Practices
+ 435  
+ 436  ### Start Simple, Iterate
+ 437  
+ 438  Don&#x27;t try to capture every rule upfront. Start with the most important conventions and add rules as you encounter inconsistencies.
+ 439  
+ 440  ### Be Specific
+ 441  
+ 442  Instead of: &quot;Use the design system&quot;
+ 443  Write: &quot;Always use Button components from `src/components/ui/Button.tsx` with variant prop (&#x27;primary&#x27; | &#x27;secondary&#x27; | &#x27;ghost&#x27;)&quot;
+ 444  
+ 445  ### Make Rules Actionable
+ 446  
+ 447  Each rule should tell the agent exactly what to do, not just what to avoid.
+ 448  
+ 449  Good: &quot;Colors are defined in `src/theme/colors.ts` - import and use these constants&quot;
+ 450  Bad: &quot;Don&#x27;t hardcode colors&quot;
+ 451  
+ 452  ### Use IMPORTANT for Critical Rules
+ 453  
+ 454  Prefix rules that must never be violated with &quot;IMPORTANT:&quot; to ensure the agent prioritizes them.
+ 455  
+ 456  ```markdown
+ 457  - IMPORTANT: Never expose API keys in client-side code
+ 458  - IMPORTANT: Always sanitize user input before rendering
+ 459  ```
+ 460  
+ 461  ### Document the Why
+ 462  
+ 463  When rules seem arbitrary, explain the reasoning:
+ 464  
+ 465  ```markdown
+ 466  - Place all data-fetching in server components (reduces client bundle size and improves performance)
+ 467  - Use absolute imports with `@/` alias (makes refactoring easier and prevents broken relative paths)
+ 468  ```
+ 469  
+ 470  ## Common Issues and Solutions
+ 471  
+ 472  ### Issue: The agent isn&#x27;t following the rules
+ 473  
+ 474  **Cause:** Rules may be too vague or not properly loaded by the agent.
+ 475  **Solution:**
+ 476  
+ 477  - Make rules more specific and actionable
+ 478  - Verify rules are saved in the correct configuration file
+ 479  - Restart your agent or IDE to reload rules
+ 480  - Add &quot;IMPORTANT:&quot; prefix to critical rules
+ 481  
+ 482  ### Issue: Rules conflict with each other
+ 483  
+ 484  **Cause:** Contradictory or overlapping rules.
+ 485  **Solution:**
+ 486  
+ 487  - Review all rules for conflicts
+ 488  - Establish a clear priority hierarchy
+ 489  - Remove redundant rules
+ 490  - Consolidate related rules into single, clear statements
+ 491  
+ 492  ### Issue: Too many rules increase latency
+ 493  
+ 494  **Cause:** Excessive rules increase context size and processing time.
+ 495  **Solution:**
+ 496  
+ 497  - Focus on the 20% of rules that solve 80% of consistency issues
+ 498  - Remove overly specific rules that rarely apply
+ 499  - Combine related rules
+ 500  - Use progressive disclosure (basic rules first, advanced rules in linked files)
+ 501  
+ 502  ### Issue: Rules become outdated as project evolves
+ 503  
+ 504  **Cause:** Codebase changes but rules don&#x27;t.
+ 505  **Solution:**
+ 506  
+ 507  - Schedule periodic rule reviews (monthly or quarterly)
+ 508  - Update rules when architectural decisions change
+ 509  - Version control your rule files
+ 510  - Document rule changes in commit messages
+ 511  
+ 512  ## Understanding Design System Rules
+ 513  
+ 514  Design system rules transform how AI coding agents work with your Figma designs:
+ 515  
+ 516  **Before rules:**
+ 517  
+ 518  - The agent makes assumptions about component structure
+ 519  - Inconsistent styling approaches across implementations
+ 520  - Hardcoded values that don&#x27;t match design tokens
+ 521  - Components created in random locations
+ 522  - Repetitive explanations of project conventions
+ 523  
+ 524  **After rules:**
+ 525  
+ 526  - The agent automatically follows your conventions
+ 527  - Consistent component structure and styling
+ 528  - Proper use of design tokens from the start
+ 529  - Components organized correctly
+ 530  - Zero repetitive prompting
+ 531  
+ 532  The time invested in creating good rules pays off exponentially across every Figma implementation task.
+ 533  
+ 534  ## Additional Resources
+ 535  
+ 536  - [Figma MCP Server Documentation](https://developers.figma.com/docs/figma-mcp-server/)
+ 537  - [Figma Variables and Design Tokens](https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma)</pre>

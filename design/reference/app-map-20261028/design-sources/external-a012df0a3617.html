@@ -1,0 +1,144 @@
+<!doctype html><meta charset="utf-8"><title>url-to-code</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>url-to-code</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\plugins\cache\openai-curated-remote\product-design\0.1.56\skills\url-to-code\SKILL.md</p><pre>   1  ---
+   2  name: url-to-code
+   3  description: &quot;Clone a live URL as a runnable frontend-only local app.&quot;
+   4  ---
+   5  
+   6  # URL To Code
+   7  
+   8  If the user explicitly invokes this skill, continue.
+   9  
+  10  Only continue when the user asks to clone or recreate the current site.
+  11  
+  12  If the user says `like`, `better`, `redesign`, or `improve`, return to [$index](../index/SKILL.md).
+  13  
+  14  Clone `&lt;target-url&gt;` as a real interactive, frontend-only local app or website. The clone should look and interact like the source.
+  15  
+  16  ## Critical Overrides
+  17  
+  18  - Refer to the Plugin router [$index](../index/SKILL.md) before proceeding.
+  19  - Follow [$critical-overrides](../../references/critical-overrides.md).
+  20  
+  21  ## User Context
+  22  
+  23  Before starting, load [$user-context](../user-context/SKILL.md) and run its preflight script when local shell access is available.
+  24  
+  25  Use saved product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, component refs, browser preferences, and share targets as grounding material when relevant.
+  26  
+  27  Do not inspect every saved reference. Inspect only what the current task needs.
+  28  
+  29  ## Workflow
+  30  
+  31  1. CRITICAL STEP: Warn the user that they must follow the target website&#x27;s terms before proceeding. This workflow is only for apps and websites the user owns, or has permission to recreate.
+  32  
+  33  2. Open the source URL using the Browser Choice rule in [$index](../index/SKILL.md#browser-choice).
+  34  
+  35  3. Check that the page is correct.
+  36  
+  37  - Do not continue if it shows the wrong page, a blocked page, a login page, a promo page, a loading screen, an error page, an app-install page, or an unrelated redirect.
+  38  - If the page is wrong, try again with another available browser.
+  39  - If every browser shows the wrong page, stop and tell the user what you can see.
+  40  
+  41  4. Capture the source page carefully.
+  42  
+  43  - Start at the top of the page.
+  44  - Scroll down in small steps.
+  45  - At each step, capture what is visible.
+  46  - Note any new sections, controls, sticky elements, animations, or lazy-loaded assets.
+  47  - Continue until the full page has been seen.
+  48  - Scroll back to the top and check whether anything changed.
+  49  - Repeat on mobile at `390 x 844`.
+  50  
+  51  5. Use the browser DOM tools to gather everything needed to recreate the source.
+  52  
+  53  - Elements
+  54  - Components
+  55  - Text
+  56  - Links
+  57  - Buttons and controls
+  58  - States
+  59  - Images
+  60  - Icons
+  61  - Fonts
+  62  - Videos
+  63  - SVGs
+  64  - Style sheets
+  65  - Colors
+  66  - Spacing
+  67  - Layout sizes
+  68  - Responsive behavior
+  69  
+  70  6. Find and test the page interactions.
+  71  
+  72  - Use the screenshots and browser DOM tools to find visible controls.
+  73  - Include navigation, buttons, links, inputs, menus, drawers, modals, tabs, carousels, hover states, sticky elements, and anything else the user can interact with.
+  74  - Test one control at a time.
+  75  - Return to the starting state before testing the next control.
+  76  - Save the result when the page visibly changes or the browser tools show a state change.
+  77  
+  78  7. Copy the real assets from the source page.
+  79  
+  80  - If the page loads the asset, treat it as available unless the browser cannot access or save it.
+  81  - If an image, logo, icon, font, video, SVG, sprite, mask, cursor, or background image is used by the page, copy it locally.
+  82  - If an image asset cannot be copied, generate a replacement with ImageGen using a screenshot of the original.
+  83  - If a font file cannot be copied, use the closest open source font match.
+  84  - If an icon or glyph cannot be copied, use the closest matching open source icon set. Do not default to Lucide unless it is the closest match.
+  85  - Briefly note any asset, font, or icon you replaced and why.
+  86  
+  87  8. Create the local app with [local-prototype-preflight](../../references/local-prototype-preflight.md).
+  88  
+  89  9. Build only from what you captured, copied, or gathered from the source.
+  90  
+  91  - Do not add new visual ideas.
+  92  - Do not use hotlinked source assets.
+  93  - Do not guess when source proof is available.
+  94  
+  95  10. Run the local app.
+  96  
+  97  ### Previewing prototypes in ChatGPT Work Mode
+  98  
+  99  Starting `sites-preview` is not verification. Verification requires opening `http://terminal.local:4173/` in the cloud browser, inspecting the rendered page, testing primary interactions, checking browser console errors, and passing design QA.
+ 100  
+ 101  Do not substitute HTTP health, build success, preview-service status, or deployment success for browser verification. If the cloud browser cannot be used, report verification as blocked.
+ 102  
+ 103  For local prototype verification in ChatGPT Work Mode:
+ 104  
+ 105  1. Install dependencies if needed. The project must have an npm `dev` script.
+ 106  2. `sites-preview` runs `npm run dev -- --host 0.0.0.0 --port 4173 --strictPort`. The `dev` script must accept those flags.
+ 107  3. For Product Design Vite starters, use `&quot;dev&quot;: &quot;vite&quot;`. Configure Vite with `server.host: &quot;0.0.0.0&quot;` and `server.allowedHosts: [&quot;terminal.local&quot;]`. Preserve an existing Sites project&#x27;s supported dev script; do not replace its runtime.
+ 108  4. From the site root, run `sites-preview start &quot;$PWD&quot;`.
+ 109  5. Open `http://terminal.local:4173/` in the cloud browser. Do not use `localhost`, `127.0.0.1`, `0.0.0.0`, HTTPS, or another port.
+ 110  6. Verify the rendered site and its primary interactions before reporting completion.
+ 111  7. Keep the local preview open for the user. Do not deploy to Sites unless the user explicitly asks to share, publish, or deploy.
+ 112  
+ 113  11. Compare the local app against the original.
+ 114  
+ 115  - Check desktop.
+ 116  - Check mobile.
+ 117  - Check every interaction you captured.
+ 118  - Fix any obvious mismatch before running final QA.
+ 119  
+ 120  12. Run [design-qa](../design-qa/SKILL.md) as the blocking build gate.
+ 121  
+ 122  - Save the QA report as `design-qa.md` in the project root.
+ 123  - Fix P0/P1/P2 issues, capture the app again, and repeat until the QA report says `final result: passed`.
+ 124  - Do not keep looping on P3 polish. Include any remaining P3s as follow-up iteration notes.
+ 125  - If source capture, prototype capture, or visual comparison is blocked, stop. `design-qa.md` must say `final result: blocked`.
+ 126  - Do not hand off unless `design-qa.md` exists and says `final result: passed`.
+ 127  
+ 128  13. Handoff the app or website
+ 129  
+ 130  - Only hand off after [design-qa](../design-qa/SKILL.md) passes.
+ 131  - Keep the prototype running locally.
+ 132  - Keep the local preview open for the user. In ChatGPT Work Mode, tell the user to inspect the prototype in the cloud browser; do not provide a clickable local URL. In Codex Desktop, provide the clickable local URL. Do not deploy to Sites unless the user explicitly asks to share, publish, or deploy.
+ 133  - After the preview handoff, use the shared build handoff from `critical-overrides.md`. Do not add a different completion message.
+ 134  - Include the post-build iteration and share nudge from [critical-overrides](../../references/critical-overrides.md#build-handoff).
+ 135  
+ 136  ## Hard Rules
+ 137  
+ 138  - Capture source evidence first. Do not scaffold, write app code, start a server, or create the local prototype until desktop capture, mobile capture, key states, and every required asset, icon, control mark, and font is captured or replaced.
+ 139  - Do not hand off until every single interaction and state is captured from the target.
+ 140  - Do not build from memory, screenshots alone, guessed CSS, generic assets, or prior chats.
+ 141  - Do not implement a saved state without source screenshot plus the available DOM/style/layout evidence for that state.
+ 142  - Do not use hotlinked source assets in the final app.
+ 143  - Do not create temporary CSS icons, text glyphs, emoji marks, placeholder blocks, or handmade SVGs while &quot;waiting&quot; to resolve assets. Resolve assets first, then build.
+ 144  - If no approved browser can capture valid source and prototype evidence, stop and report the design-qa blocker.</pre>

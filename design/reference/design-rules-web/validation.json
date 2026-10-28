@@ -1,0 +1,19 @@
+{
+  "sourceSnapshots": 29,
+  "indexedGuidance": 96,
+  "themes": [
+    "light",
+    "dark",
+    "field"
+  ],
+  "namedTypographyRoles": 18,
+  "materialRoles": 15,
+  "nativeSamples": 255,
+  "scientificNativeExamples": 16,
+  "missingLinks": [],
+  "preservedImagesAndManifests": 751,
+  "preservedSourceSnapshots": 3,
+  "preservedAuditFiles": 72,
+  "status": "pass",
+  "boundary": "Filesystem/source checks only. Browser checks are recorded in ../REVIEW.md. Native files were reused, not rerendered."
+}

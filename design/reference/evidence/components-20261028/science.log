@@ -1,0 +1,18 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/build/components-20261028/science_test.dart
+00:00 +0: Concept B app audit: component_altitude light 1.0
+00:02 +1: Concept B app audit: plan_gain_open light 1.0
+00:06 +2: Concept B app audit: weather_forecast_table light 1.0
+00:08 +3: Concept B app audit: home_timeline light 1.0
+00:10 +4: Concept B app audit: plan_sky_open light 1.0
+00:13 +5: Concept B app audit: night light 1.0
+00:15 +6: Concept B app audit: moon light 1.0
+00:17 +7: Concept B app audit: weather_charts_b light 1.0
+00:19 +8: Concept B app audit: component_altitude dark 1.0
+00:20 +9: Concept B app audit: plan_gain_open dark 1.0
+00:23 +10: Concept B app audit: weather_forecast_table dark 1.0
+00:25 +11: Concept B app audit: home_timeline dark 1.0
+00:27 +12: Concept B app audit: plan_sky_open dark 1.0
+00:30 +13: Concept B app audit: night dark 1.0
+00:31 +14: Concept B app audit: moon dark 1.0
+00:33 +15: Concept B app audit: weather_charts_b dark 1.0
+00:35 +16: All tests passed!

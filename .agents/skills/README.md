@@ -2,7 +2,13 @@
 
 [AGENTS](../../AGENTS.md) is the shared entrypoint. Read only the skill relevant to the user task, then inspect its source and actual callers. Skill availability does not expand task scope.
 
-## Active inventory
+## Primary design authorities
+
+These five skills own design guidance for all Culmina UI code, including composed
+widgets, scientific displays, dialogs and screen-specific states. The visual
+gallery does not limit their scope. During implementation, use the relevant
+Culmina skills; supporting references and optional plugins do not add style policy.
+Extend the relevant skill if guidance is missing.
 
 | Skill | Use when working on |
 | --- | --- |
@@ -11,6 +17,15 @@
 | [culmina-design-spacing](culmina-design-spacing/SKILL.md) | Local spacing, density, shape and motion |
 | [culmina-design-tokens](culmina-design-tokens/SKILL.md) | Semantic colors across Light, Dark and Field Red |
 | [culmina-design-typography](culmina-design-typography/SKILL.md) | Text roles, wrapping and readable measurements |
+
+## Retained technical helpers
+
+These skills explain implementation and verification mechanics under the five
+design authorities. Optional artifact helpers and archived external playbooks
+are documented in [agent tooling](../../docs/AGENT_TOOLING.md).
+
+| Skill | Use when working on |
+| --- | --- |
 | [dart-add-unit-test](dart-add-unit-test/SKILL.md) | Focused behavior/regression tests with existing fakes |
 | [dart-build-cli-app](dart-build-cli-app/SKILL.md) | Existing Dart utilities under tool/ |
 | [dart-collect-coverage](dart-collect-coverage/SKILL.md) | A scoped test-coverage question |
@@ -37,9 +52,14 @@
 
 Read themes in `lib/core/theme/`, shared UI in `lib/presentation/shared/`, screens in `lib/presentation/screens/` and their tests. Native render fixtures are under `test/presentation/design_system/`; executable tooling is under `tool/`.
 
-The historical Visual Atlas is under `.audit/atlas/`; inspect actual files and their recorded theme/size/scale/state. Preserve `.audit/` unchanged. The reserved `design/` directory is currently empty; it supplies no live browser prototype or token authority.
+The historical Visual Atlas is under `design/reference/atlas/`; inspect actual files and their recorded theme/size/scale/state. Preserve historical captures and provenance. `design/reference/` consolidates the design rules website, current application map and historical Atlas; its browser specimens are references, not another design authority.
 
 Static concepts, host Flutter renders, Android/device interaction and owner acceptance establish different things. Identify which evidence was actually obtained.
+
+For meaningful refinement, use the [decision record](references/refinement-decision.md)
+within the current task or review. [Skill behavior cases](../../tool/skill_evals/README.md)
+evaluate agent routing and scope separately from Flutter UI tests. Run instruction
+structure checks using the commands in AGENTS; neither check proves owner acceptance.
 
 ## Provenance and optional examples
 

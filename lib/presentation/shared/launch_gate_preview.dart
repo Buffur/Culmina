@@ -4,7 +4,7 @@ import 'package:flutter/widget_previews.dart';
 
 import '../../core/units/display_units.dart';
 import '../../core/theme/app_palette.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import 'launch_gate.dart';
 
 // Widget previews of the launch (owner, 2026-10-23): the production
@@ -88,7 +88,7 @@ class _LaunchPreviewState extends State<LaunchPreview> {
                     onPressed: () => _replay(ready: i),
                     child: Text(
                       'Ready ${_readyAfter[i].inMilliseconds} ms',
-                      style: TextStyle(
+                      style: AppTextTheme.of(context).inherited.copyWith(
                         color: i == _ready
                             ? AppPalette.of(context).textPrimary
                             : AppPalette.of(context).textSecondary,
@@ -99,7 +99,8 @@ class _LaunchPreviewState extends State<LaunchPreview> {
                   onPressed: () => _replay(slow: !_slow),
                   child: Text(
                     _slow ? 'Normal speed' : 'Slow ×4',
-                    style: TextStyle(color: AppPalette.of(context).textPrimary),
+                    style: AppTextTheme.of(context).inherited
+                        .copyWith(color: AppPalette.of(context).textPrimary),
                   ),
                 ),
               ],
@@ -121,9 +122,8 @@ class _StandInApp extends StatelessWidget {
       child: Text(
         'The app',
         textDirection: TextDirection.ltr,
-        style: AppTypography.sectionHeading.copyWith(
-          color: AppPalette.of(context).textPrimary,
-        ),
+        style: AppTextTheme.of(context).sectionHeading
+            .copyWith(color: AppPalette.of(context).textPrimary),
       ),
     ),
   );

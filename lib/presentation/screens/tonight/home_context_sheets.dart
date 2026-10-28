@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/context_line.dart';
 import '../../shared/failure_feedback.dart';
@@ -29,7 +29,7 @@ Future<void> showHomeNightSheet(BuildContext context) async {
           // The seven-column grid needs the compact data role at large
           // text sizes. Keep the user's scaler and the theme's colours.
           datePickerTheme: theme.datePickerTheme.copyWith(
-            dayStyle: AppTypography.body,
+            dayStyle: AppTextTheme.of(context).body,
           ),
         ),
         child: child!,
@@ -71,7 +71,8 @@ class HomeSheetHeader extends StatelessWidget {
             Expanded(
               child: Text(
                 'Culmina',
-                style: AppTypography.dense.copyWith(color: p.textTertiary),
+                style: AppTextTheme.of(context).dense
+                    .copyWith(color: p.textTertiary),
               ),
             ),
             ...actions,

@@ -1,0 +1,192 @@
+<!doctype html><meta charset="utf-8"><title>confirmation_patterns.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>confirmation_patterns.dart</h1><p>lib\presentation\shared\confirmation_patterns.dart</p><p>SHA-256: 5df999727dd4a60fbb5164d3d0ca23deafadcfe008294ce281220ced57c06d60</p><pre>   1  import &#x27;package:flutter/material.dart&#x27;;
+   2  
+   3  import &#x27;../../core/theme/app_spacing.dart&#x27;;
+   4  import &#x27;../../core/theme/hybrid_tokens.dart&#x27;;
+   5  
+   6  /// What the user chose when unsaved changes would be left behind.
+   7  enum UnsavedChoice { save, discard, cancel }
+   8  
+   9  /// The three-way prompt (S5.8; ADR-019 §3, addendum §3.3): &quot;[plan] has
+  10  /// changes that are not saved.&quot; with Cancel · Discard · Save. Dismissing
+  11  /// it (back, a tap outside) is Cancel, so nothing is lost by accident.
+  12  /// What Save and Discard then do belongs to the caller (P6.1); this is the
+  13  /// prompt only. Discard is styled as destructive.
+  14  ///
+  15  /// [library]: a Library editor&#x27;s prompt (library.js `cancelEdit`): &quot;Your
+  16  /// changes to “[plan]” are not saved.&quot;, Cancel and Discard side by side,
+  17  /// then Save the full width.
+  18  Future&lt;UnsavedChoice&gt; askUnsavedChanges(
+  19    BuildContext context, {
+  20    required String plan,
+  21    String message = &#x27;&#x27;,
+  22    String saveLabel = &#x27;Save and leave&#x27;,
+  23    bool library = false,
+  24  }) async {
+  25    Widget cancel(BuildContext context) =&gt; OutlinedButton(
+  26      key: const Key(&#x27;unsaved.cancel&#x27;),
+  27      onPressed: () =&gt; Navigator.pop(context, UnsavedChoice.cancel),
+  28      child: const Text(&#x27;Cancel&#x27;),
+  29    );
+  30    Widget discard(BuildContext context) =&gt; OutlinedButton(
+  31      key: const Key(&#x27;unsaved.discard&#x27;),
+  32      onPressed: () =&gt; Navigator.pop(context, UnsavedChoice.discard),
+  33      child: const Text(&#x27;Discard&#x27;),
+  34    );
+  35    Widget save(BuildContext context, String label) =&gt; FilledButton(
+  36      key: const Key(&#x27;unsaved.save&#x27;),
+  37      onPressed: () =&gt; Navigator.pop(context, UnsavedChoice.save),
+  38      child: Text(label),
+  39    );
+  40    final choice = await showDialog&lt;UnsavedChoice&gt;(
+  41      context: context,
+  42      builder: (context) =&gt; AlertDialog(
+  43        title: const Text(&#x27;Unsaved changes&#x27;),
+  44        content: Text(
+  45          message.isNotEmpty
+  46              ? message
+  47              : library
+  48              ? &#x27;Your changes to “$plan” are not saved.&#x27;
+  49              : &#x27;&quot;$plan&quot; has changes that are not saved.&#x27;,
+  50        ),
+  51        // plan.html `#leave-plan`: Cancel and Discard outlined, the save
+  52        // filled, in one row that wraps from the end, 8 apart
+  53        // (`.leave-actions`): at a phone&#x27;s width the save goes below (QA-05;
+  54        // the dialog&#x27;s own overflow bar stacked all three).
+  55        actions: library
+  56            ? [
+  57                _WideActions(
+  58                  children: [
+  59                    Row(
+  60                      spacing: AppSpacing.sm,
+  61                      children: [
+  62                        Expanded(child: cancel(context)),
+  63                        Expanded(child: discard(context)),
+  64                      ],
+  65                    ),
+  66                    save(context, &#x27;Save&#x27;),
+  67                  ],
+  68                ),
+  69              ]
+  70            : [
+  71                SizedBox(
+  72                  width: double.infinity,
+  73                  child: Wrap(
+  74                    alignment: WrapAlignment.end,
+  75                    spacing: AppSpacing.sm,
+  76                    runSpacing: AppSpacing.sm,
+  77                    children: [
+  78                      cancel(context),
+  79                      discard(context),
+  80                      save(context, saveLabel),
+  81                    ],
+  82                  ),
+  83                ),
+  84              ],
+  85      ),
+  86    );
+  87    return choice ?? UnsavedChoice.cancel;
+  88  }
+  89  
+  90  /// A dialog&#x27;s actions the full width of the dialog, stacked 8 apart
+  91  /// (hybrid-refinement.css `.workspace-actions` in a dialog).
+  92  class _WideActions extends StatelessWidget {
+  93    const _WideActions({required this.children});
+  94  
+  95    final List&lt;Widget&gt; children;
+  96  
+  97    @override
+  98    Widget build(BuildContext context) =&gt; SizedBox(
+  99      width: double.infinity,
+ 100      child: Column(
+ 101        crossAxisAlignment: CrossAxisAlignment.stretch,
+ 102        spacing: AppSpacing.sm,
+ 103        children: children,
+ 104      ),
+ 105    );
+ 106  }
+ 107  
+ 108  /// &quot;Discard this edit?&quot; (plan.html `#discard-edit`): an editor&#x27;s unapplied
+ 109  /// fields; the draft keeps what was already applied. True only for
+ 110  /// Discard edit; Keep editing, Back and a tap outside keep the editor.
+ 111  Future&lt;bool&gt; askDiscardEdit(BuildContext context) async {
+ 112    final discard = await showDialog&lt;bool&gt;(
+ 113      context: context,
+ 114      builder: (context) =&gt; AlertDialog(
+ 115        title: const Text(&#x27;Discard this edit?&#x27;),
+ 116        content: const Text(
+ 117          &#x27;Unapplied fields in this editor will be discarded. Changes you &#x27;
+ 118          &#x27;already applied to the draft remain.&#x27;,
+ 119        ),
+ 120        actions: [
+ 121          OutlinedButton(
+ 122            key: const Key(&#x27;discardEdit.keep&#x27;),
+ 123            onPressed: () =&gt; Navigator.pop(context, false),
+ 124            child: const Text(&#x27;Keep editing&#x27;),
+ 125          ),
+ 126          FilledButton(
+ 127            key: const Key(&#x27;discardEdit.discard&#x27;),
+ 128            onPressed: () =&gt; Navigator.pop(context, true),
+ 129            child: const Text(&#x27;Discard edit&#x27;),
+ 130          ),
+ 131        ],
+ 132      ),
+ 133    );
+ 134    return discard ?? false;
+ 135  }
+ 136  
+ 137  /// The one confirmation for a destructive action on something stored
+ 138  /// (S5.8; RD-09 = M): deleting a rig, a target, a site or a Logbook entry,
+ 139  /// Abandon, Restore. [title] names the item (&quot;Delete rig &quot;Refractor
+ 140  /// 400&quot;?&quot;), [message] says the consequence (&quot;Plans that use it keep their
+ 141  /// saved values.&quot;), [action] is the verb on the destructive button
+ 142  /// (&quot;Delete&quot;). True only when the user taps [action]: Cancel, back and a
+ 143  /// tap outside all keep the item. Edits inside a plan use the undo message
+ 144  /// instead (`showUndo`).
+ 145  Future&lt;bool&gt; confirmDestructive(
+ 146    BuildContext context, {
+ 147    required String title,
+ 148    required String message,
+ 149    String action = &#x27;Delete&#x27;,
+ 150  }) async {
+ 151    final confirmed = await showDialog&lt;bool&gt;(
+ 152      context: context,
+ 153      builder: (context) =&gt; AlertDialog(
+ 154        title: Text(title),
+ 155        content: Text(message),
+ 156        // library.js / logbook.js `choiceDialog`: Cancel and the destructive
+ 157        // action side by side, the action outlined in the error colour.
+ 158        actions: [
+ 159          _WideActions(
+ 160            children: [
+ 161              Row(
+ 162                spacing: AppSpacing.sm,
+ 163                children: [
+ 164                  Expanded(
+ 165                    child: OutlinedButton(
+ 166                      key: const Key(&#x27;confirm.cancel&#x27;),
+ 167                      onPressed: () =&gt; Navigator.pop(context, false),
+ 168                      child: const Text(&#x27;Cancel&#x27;),
+ 169                    ),
+ 170                  ),
+ 171                  Expanded(
+ 172                    child: OutlinedButton(
+ 173                      key: const Key(&#x27;confirm.action&#x27;),
+ 174                      onPressed: () =&gt; Navigator.pop(context, true),
+ 175                      style: OutlinedButton.styleFrom(
+ 176                        foregroundColor:
+ 177                            (Theme.of(context).extension&lt;HybridTokens&gt;() ??
+ 178                                    HybridTokens.light)
+ 179                                .errorText,
+ 180                      ),
+ 181                      child: Text(action),
+ 182                    ),
+ 183                  ),
+ 184                ],
+ 185              ),
+ 186            ],
+ 187          ),
+ 188        ],
+ 189      ),
+ 190    );
+ 191    return confirmed ?? false;
+ 192  }</pre>

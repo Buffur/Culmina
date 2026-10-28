@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import 'hybrid_icon.dart';
 
 /// A compact geo group heading, sharing the form's content edge.
@@ -15,7 +15,7 @@ class GeoHeading extends StatelessWidget {
     header: true,
     child: Text(
       label,
-      style: AppTypography.body.copyWith(
+      style: AppTextTheme.of(context).body.copyWith(
         fontWeight: FontWeight.w600,
         color: AppPalette.of(context).textPrimary,
       ),
@@ -60,7 +60,8 @@ class GeoActionRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: AppTypography.body.copyWith(color: p.textPrimary),
+                  style: AppTextTheme.of(context).body
+                      .copyWith(color: p.textPrimary),
                 ),
               ),
               const SizedBox(width: AppSpacing.itemGap),

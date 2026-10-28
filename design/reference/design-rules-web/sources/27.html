@@ -1,0 +1,192 @@
+<!doctype html><meta charset="utf-8"><title>lib\presentation\shared\confirmation_patterns.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\presentation\shared\confirmation_patterns.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/material.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> import &#x27;../../core/theme/app_spacing.dart&#x27;;</div>
+<div id="L4"><a href="#L4">4</a> import &#x27;../../core/theme/hybrid_tokens.dart&#x27;;</div>
+<div id="L5"><a href="#L5">5</a> </div>
+<div id="L6"><a href="#L6">6</a> /// What the user chose when unsaved changes would be left behind.</div>
+<div id="L7"><a href="#L7">7</a> enum UnsavedChoice { save, discard, cancel }</div>
+<div id="L8"><a href="#L8">8</a> </div>
+<div id="L9"><a href="#L9">9</a> /// The three-way prompt (S5.8; ADR-019 §3, addendum §3.3): &quot;[plan] has</div>
+<div id="L10"><a href="#L10">10</a> /// changes that are not saved.&quot; with Cancel · Discard · Save. Dismissing</div>
+<div id="L11"><a href="#L11">11</a> /// it (back, a tap outside) is Cancel, so nothing is lost by accident.</div>
+<div id="L12"><a href="#L12">12</a> /// What Save and Discard then do belongs to the caller (P6.1); this is the</div>
+<div id="L13"><a href="#L13">13</a> /// prompt only. Discard is styled as destructive.</div>
+<div id="L14"><a href="#L14">14</a> ///</div>
+<div id="L15"><a href="#L15">15</a> /// [library]: a Library editor&#x27;s prompt (library.js `cancelEdit`): &quot;Your</div>
+<div id="L16"><a href="#L16">16</a> /// changes to “[plan]” are not saved.&quot;, Cancel and Discard side by side,</div>
+<div id="L17"><a href="#L17">17</a> /// then Save the full width.</div>
+<div id="L18"><a href="#L18">18</a> Future&lt;UnsavedChoice&gt; askUnsavedChanges(</div>
+<div id="L19"><a href="#L19">19</a>   BuildContext context, {</div>
+<div id="L20"><a href="#L20">20</a>   required String plan,</div>
+<div id="L21"><a href="#L21">21</a>   String message = &#x27;&#x27;,</div>
+<div id="L22"><a href="#L22">22</a>   String saveLabel = &#x27;Save and leave&#x27;,</div>
+<div id="L23"><a href="#L23">23</a>   bool library = false,</div>
+<div id="L24"><a href="#L24">24</a> }) async {</div>
+<div id="L25"><a href="#L25">25</a>   Widget cancel(BuildContext context) =&gt; OutlinedButton(</div>
+<div id="L26"><a href="#L26">26</a>     key: const Key(&#x27;unsaved.cancel&#x27;),</div>
+<div id="L27"><a href="#L27">27</a>     onPressed: () =&gt; Navigator.pop(context, UnsavedChoice.cancel),</div>
+<div id="L28"><a href="#L28">28</a>     child: const Text(&#x27;Cancel&#x27;),</div>
+<div id="L29"><a href="#L29">29</a>   );</div>
+<div id="L30"><a href="#L30">30</a>   Widget discard(BuildContext context) =&gt; OutlinedButton(</div>
+<div id="L31"><a href="#L31">31</a>     key: const Key(&#x27;unsaved.discard&#x27;),</div>
+<div id="L32"><a href="#L32">32</a>     onPressed: () =&gt; Navigator.pop(context, UnsavedChoice.discard),</div>
+<div id="L33"><a href="#L33">33</a>     child: const Text(&#x27;Discard&#x27;),</div>
+<div id="L34"><a href="#L34">34</a>   );</div>
+<div id="L35"><a href="#L35">35</a>   Widget save(BuildContext context, String label) =&gt; FilledButton(</div>
+<div id="L36"><a href="#L36">36</a>     key: const Key(&#x27;unsaved.save&#x27;),</div>
+<div id="L37"><a href="#L37">37</a>     onPressed: () =&gt; Navigator.pop(context, UnsavedChoice.save),</div>
+<div id="L38"><a href="#L38">38</a>     child: Text(label),</div>
+<div id="L39"><a href="#L39">39</a>   );</div>
+<div id="L40"><a href="#L40">40</a>   final choice = await showDialog&lt;UnsavedChoice&gt;(</div>
+<div id="L41"><a href="#L41">41</a>     context: context,</div>
+<div id="L42"><a href="#L42">42</a>     builder: (context) =&gt; AlertDialog(</div>
+<div id="L43"><a href="#L43">43</a>       title: const Text(&#x27;Unsaved changes&#x27;),</div>
+<div id="L44"><a href="#L44">44</a>       content: Text(</div>
+<div id="L45"><a href="#L45">45</a>         message.isNotEmpty</div>
+<div id="L46"><a href="#L46">46</a>             ? message</div>
+<div id="L47"><a href="#L47">47</a>             : library</div>
+<div id="L48"><a href="#L48">48</a>             ? &#x27;Your changes to “$plan” are not saved.&#x27;</div>
+<div id="L49"><a href="#L49">49</a>             : &#x27;&quot;$plan&quot; has changes that are not saved.&#x27;,</div>
+<div id="L50"><a href="#L50">50</a>       ),</div>
+<div id="L51"><a href="#L51">51</a>       // plan.html `#leave-plan`: Cancel and Discard outlined, the save</div>
+<div id="L52"><a href="#L52">52</a>       // filled, in one row that wraps from the end, 8 apart</div>
+<div id="L53"><a href="#L53">53</a>       // (`.leave-actions`): at a phone&#x27;s width the save goes below (QA-05;</div>
+<div id="L54"><a href="#L54">54</a>       // the dialog&#x27;s own overflow bar stacked all three).</div>
+<div id="L55"><a href="#L55">55</a>       actions: library</div>
+<div id="L56"><a href="#L56">56</a>           ? [</div>
+<div id="L57"><a href="#L57">57</a>               _WideActions(</div>
+<div id="L58"><a href="#L58">58</a>                 children: [</div>
+<div id="L59"><a href="#L59">59</a>                   Row(</div>
+<div id="L60"><a href="#L60">60</a>                     spacing: AppSpacing.sm,</div>
+<div id="L61"><a href="#L61">61</a>                     children: [</div>
+<div id="L62"><a href="#L62">62</a>                       Expanded(child: cancel(context)),</div>
+<div id="L63"><a href="#L63">63</a>                       Expanded(child: discard(context)),</div>
+<div id="L64"><a href="#L64">64</a>                     ],</div>
+<div id="L65"><a href="#L65">65</a>                   ),</div>
+<div id="L66"><a href="#L66">66</a>                   save(context, &#x27;Save&#x27;),</div>
+<div id="L67"><a href="#L67">67</a>                 ],</div>
+<div id="L68"><a href="#L68">68</a>               ),</div>
+<div id="L69"><a href="#L69">69</a>             ]</div>
+<div id="L70"><a href="#L70">70</a>           : [</div>
+<div id="L71"><a href="#L71">71</a>               SizedBox(</div>
+<div id="L72"><a href="#L72">72</a>                 width: double.infinity,</div>
+<div id="L73"><a href="#L73">73</a>                 child: Wrap(</div>
+<div id="L74"><a href="#L74">74</a>                   alignment: WrapAlignment.end,</div>
+<div id="L75"><a href="#L75">75</a>                   spacing: AppSpacing.sm,</div>
+<div id="L76"><a href="#L76">76</a>                   runSpacing: AppSpacing.sm,</div>
+<div id="L77"><a href="#L77">77</a>                   children: [</div>
+<div id="L78"><a href="#L78">78</a>                     cancel(context),</div>
+<div id="L79"><a href="#L79">79</a>                     discard(context),</div>
+<div id="L80"><a href="#L80">80</a>                     save(context, saveLabel),</div>
+<div id="L81"><a href="#L81">81</a>                   ],</div>
+<div id="L82"><a href="#L82">82</a>                 ),</div>
+<div id="L83"><a href="#L83">83</a>               ),</div>
+<div id="L84"><a href="#L84">84</a>             ],</div>
+<div id="L85"><a href="#L85">85</a>     ),</div>
+<div id="L86"><a href="#L86">86</a>   );</div>
+<div id="L87"><a href="#L87">87</a>   return choice ?? UnsavedChoice.cancel;</div>
+<div id="L88"><a href="#L88">88</a> }</div>
+<div id="L89"><a href="#L89">89</a> </div>
+<div id="L90"><a href="#L90">90</a> /// A dialog&#x27;s actions the full width of the dialog, stacked 8 apart</div>
+<div id="L91"><a href="#L91">91</a> /// (hybrid-refinement.css `.workspace-actions` in a dialog).</div>
+<div id="L92"><a href="#L92">92</a> class _WideActions extends StatelessWidget {</div>
+<div id="L93"><a href="#L93">93</a>   const _WideActions({required this.children});</div>
+<div id="L94"><a href="#L94">94</a> </div>
+<div id="L95"><a href="#L95">95</a>   final List&lt;Widget&gt; children;</div>
+<div id="L96"><a href="#L96">96</a> </div>
+<div id="L97"><a href="#L97">97</a>   @override</div>
+<div id="L98"><a href="#L98">98</a>   Widget build(BuildContext context) =&gt; SizedBox(</div>
+<div id="L99"><a href="#L99">99</a>     width: double.infinity,</div>
+<div id="L100"><a href="#L100">100</a>     child: Column(</div>
+<div id="L101"><a href="#L101">101</a>       crossAxisAlignment: CrossAxisAlignment.stretch,</div>
+<div id="L102"><a href="#L102">102</a>       spacing: AppSpacing.sm,</div>
+<div id="L103"><a href="#L103">103</a>       children: children,</div>
+<div id="L104"><a href="#L104">104</a>     ),</div>
+<div id="L105"><a href="#L105">105</a>   );</div>
+<div id="L106"><a href="#L106">106</a> }</div>
+<div id="L107"><a href="#L107">107</a> </div>
+<div id="L108"><a href="#L108">108</a> /// &quot;Discard this edit?&quot; (plan.html `#discard-edit`): an editor&#x27;s unapplied</div>
+<div id="L109"><a href="#L109">109</a> /// fields; the draft keeps what was already applied. True only for</div>
+<div id="L110"><a href="#L110">110</a> /// Discard edit; Keep editing, Back and a tap outside keep the editor.</div>
+<div id="L111"><a href="#L111">111</a> Future&lt;bool&gt; askDiscardEdit(BuildContext context) async {</div>
+<div id="L112"><a href="#L112">112</a>   final discard = await showDialog&lt;bool&gt;(</div>
+<div id="L113"><a href="#L113">113</a>     context: context,</div>
+<div id="L114"><a href="#L114">114</a>     builder: (context) =&gt; AlertDialog(</div>
+<div id="L115"><a href="#L115">115</a>       title: const Text(&#x27;Discard this edit?&#x27;),</div>
+<div id="L116"><a href="#L116">116</a>       content: const Text(</div>
+<div id="L117"><a href="#L117">117</a>         &#x27;Unapplied fields in this editor will be discarded. Changes you &#x27;</div>
+<div id="L118"><a href="#L118">118</a>         &#x27;already applied to the draft remain.&#x27;,</div>
+<div id="L119"><a href="#L119">119</a>       ),</div>
+<div id="L120"><a href="#L120">120</a>       actions: [</div>
+<div id="L121"><a href="#L121">121</a>         OutlinedButton(</div>
+<div id="L122"><a href="#L122">122</a>           key: const Key(&#x27;discardEdit.keep&#x27;),</div>
+<div id="L123"><a href="#L123">123</a>           onPressed: () =&gt; Navigator.pop(context, false),</div>
+<div id="L124"><a href="#L124">124</a>           child: const Text(&#x27;Keep editing&#x27;),</div>
+<div id="L125"><a href="#L125">125</a>         ),</div>
+<div id="L126"><a href="#L126">126</a>         FilledButton(</div>
+<div id="L127"><a href="#L127">127</a>           key: const Key(&#x27;discardEdit.discard&#x27;),</div>
+<div id="L128"><a href="#L128">128</a>           onPressed: () =&gt; Navigator.pop(context, true),</div>
+<div id="L129"><a href="#L129">129</a>           child: const Text(&#x27;Discard edit&#x27;),</div>
+<div id="L130"><a href="#L130">130</a>         ),</div>
+<div id="L131"><a href="#L131">131</a>       ],</div>
+<div id="L132"><a href="#L132">132</a>     ),</div>
+<div id="L133"><a href="#L133">133</a>   );</div>
+<div id="L134"><a href="#L134">134</a>   return discard ?? false;</div>
+<div id="L135"><a href="#L135">135</a> }</div>
+<div id="L136"><a href="#L136">136</a> </div>
+<div id="L137"><a href="#L137">137</a> /// The one confirmation for a destructive action on something stored</div>
+<div id="L138"><a href="#L138">138</a> /// (S5.8; RD-09 = M): deleting a rig, a target, a site or a Logbook entry,</div>
+<div id="L139"><a href="#L139">139</a> /// Abandon, Restore. [title] names the item (&quot;Delete rig &quot;Refractor</div>
+<div id="L140"><a href="#L140">140</a> /// 400&quot;?&quot;), [message] says the consequence (&quot;Plans that use it keep their</div>
+<div id="L141"><a href="#L141">141</a> /// saved values.&quot;), [action] is the verb on the destructive button</div>
+<div id="L142"><a href="#L142">142</a> /// (&quot;Delete&quot;). True only when the user taps [action]: Cancel, back and a</div>
+<div id="L143"><a href="#L143">143</a> /// tap outside all keep the item. Edits inside a plan use the undo message</div>
+<div id="L144"><a href="#L144">144</a> /// instead (`showUndo`).</div>
+<div id="L145"><a href="#L145">145</a> Future&lt;bool&gt; confirmDestructive(</div>
+<div id="L146"><a href="#L146">146</a>   BuildContext context, {</div>
+<div id="L147"><a href="#L147">147</a>   required String title,</div>
+<div id="L148"><a href="#L148">148</a>   required String message,</div>
+<div id="L149"><a href="#L149">149</a>   String action = &#x27;Delete&#x27;,</div>
+<div id="L150"><a href="#L150">150</a> }) async {</div>
+<div id="L151"><a href="#L151">151</a>   final confirmed = await showDialog&lt;bool&gt;(</div>
+<div id="L152"><a href="#L152">152</a>     context: context,</div>
+<div id="L153"><a href="#L153">153</a>     builder: (context) =&gt; AlertDialog(</div>
+<div id="L154"><a href="#L154">154</a>       title: Text(title),</div>
+<div id="L155"><a href="#L155">155</a>       content: Text(message),</div>
+<div id="L156"><a href="#L156">156</a>       // library.js / logbook.js `choiceDialog`: Cancel and the destructive</div>
+<div id="L157"><a href="#L157">157</a>       // action side by side, the action outlined in the error colour.</div>
+<div id="L158"><a href="#L158">158</a>       actions: [</div>
+<div id="L159"><a href="#L159">159</a>         _WideActions(</div>
+<div id="L160"><a href="#L160">160</a>           children: [</div>
+<div id="L161"><a href="#L161">161</a>             Row(</div>
+<div id="L162"><a href="#L162">162</a>               spacing: AppSpacing.sm,</div>
+<div id="L163"><a href="#L163">163</a>               children: [</div>
+<div id="L164"><a href="#L164">164</a>                 Expanded(</div>
+<div id="L165"><a href="#L165">165</a>                   child: OutlinedButton(</div>
+<div id="L166"><a href="#L166">166</a>                     key: const Key(&#x27;confirm.cancel&#x27;),</div>
+<div id="L167"><a href="#L167">167</a>                     onPressed: () =&gt; Navigator.pop(context, false),</div>
+<div id="L168"><a href="#L168">168</a>                     child: const Text(&#x27;Cancel&#x27;),</div>
+<div id="L169"><a href="#L169">169</a>                   ),</div>
+<div id="L170"><a href="#L170">170</a>                 ),</div>
+<div id="L171"><a href="#L171">171</a>                 Expanded(</div>
+<div id="L172"><a href="#L172">172</a>                   child: OutlinedButton(</div>
+<div id="L173"><a href="#L173">173</a>                     key: const Key(&#x27;confirm.action&#x27;),</div>
+<div id="L174"><a href="#L174">174</a>                     onPressed: () =&gt; Navigator.pop(context, true),</div>
+<div id="L175"><a href="#L175">175</a>                     style: OutlinedButton.styleFrom(</div>
+<div id="L176"><a href="#L176">176</a>                       foregroundColor:</div>
+<div id="L177"><a href="#L177">177</a>                           (Theme.of(context).extension&lt;HybridTokens&gt;() ??</div>
+<div id="L178"><a href="#L178">178</a>                                   HybridTokens.light)</div>
+<div id="L179"><a href="#L179">179</a>                               .errorText,</div>
+<div id="L180"><a href="#L180">180</a>                     ),</div>
+<div id="L181"><a href="#L181">181</a>                     child: Text(action),</div>
+<div id="L182"><a href="#L182">182</a>                   ),</div>
+<div id="L183"><a href="#L183">183</a>                 ),</div>
+<div id="L184"><a href="#L184">184</a>               ],</div>
+<div id="L185"><a href="#L185">185</a>             ),</div>
+<div id="L186"><a href="#L186">186</a>           ],</div>
+<div id="L187"><a href="#L187">187</a>         ),</div>
+<div id="L188"><a href="#L188">188</a>       ],</div>
+<div id="L189"><a href="#L189">189</a>     ),</div>
+<div id="L190"><a href="#L190">190</a>   );</div>
+<div id="L191"><a href="#L191">191</a>   return confirmed ?? false;</div>
+<div id="L192"><a href="#L192">192</a> }</div>

@@ -20,6 +20,10 @@ jobs:
         with:
           fetch-depth: 0
       - run: python3 -m unittest discover -s tool -p ci_test.py -v
+      # Runs before classification, including documentation-only changes.
+      - run: python3 -m pip install -r tool/requirements-instructions.txt
+      - run: python3 -m unittest discover -s tool -p check_instructions_test.py -v
+      - run: python3 tool/check_instructions.py
       - id: paths
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}

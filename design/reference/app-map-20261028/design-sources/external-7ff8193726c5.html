@@ -1,0 +1,233 @@
+<!doctype html><meta charset="utf-8"><title>figma-use</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>figma-use</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\skills\figma-use\SKILL.md</p><pre>   1  ---
+   2  name: figma-use
+   3  description: &quot;**MANDATORY prerequisite** — you MUST invoke this skill BEFORE every `use_figma` tool call. NEVER call `use_figma` directly without loading this skill first. Skipping it causes common, hard-to-debug failures. Trigger whenever the user wants to perform a write action or a unique read action that requires JavaScript execution in the Figma file context — e.g. create/edit/delete nodes, set up variables or tokens, build components and variants, modify auto-layout or fills, bind variables to properties, or inspect file structure programmatically.&quot;
+   4  ---
+   5  
+   6  # use_figma — Figma Plugin API Skill
+   7  
+   8  Use `use_figma` MCP to execute JavaScript in Figma files via the Plugin API. All detailed reference docs live in `references/`.
+   9  
+  10  **Always pass `skillNames: &quot;figma-use&quot;` when calling `use_figma`.** This is a logging parameter used to track skill usage — it does not affect execution.
+  11  
+  12  **If the task involves building or updating a full page, screen, or multi-section layout in Figma from code**, also load [figma-generate-design](../figma-generate-design/SKILL.md). It provides the workflow for discovering design system components via `search_design_system`, importing them, and assembling screens incrementally. Both skills work together: this one for the API rules, that one for the screen-building workflow.
+  13  
+  14  Before anything, load [plugin-api-standalone.index.md](references/plugin-api-standalone.index.md) to understand what is possible. When you are asked to write plugin API code, use this context to grep [plugin-api-standalone.d.ts](references/plugin-api-standalone.d.ts) for relevant types, methods, and properties. This is the definitive source of truth for the API surface. It is a large typings file, so do not load it all at once, grep for relevant sections as needed.
+  15  
+  16  IMPORTANT: Whenever you work with design systems, start with [working-with-design-systems/wwds.md](references/working-with-design-systems/wwds.md) to understand the key concepts, processes, and guidelines for working with design systems in Figma. Then load the more specific references for components, variables, text styles, and effect styles as needed.
+  17  
+  18  ## 1. Critical Rules
+  19  
+  20  1.  **Use `return` to send data back.** The return value is JSON-serialized automatically (objects, arrays, strings, numbers). Do NOT call `figma.closePlugin()` or wrap code in an async IIFE — this is handled for you.
+  21  2.  **Write plain JavaScript with top-level `await` and `return`.** Code is automatically wrapped in an async context. Do NOT wrap in `(async () =&gt; { ... })()`.
+  22  3.  `figma.notify()` **throws &quot;not implemented&quot;** — never use it
+  23  3a. `getPluginData()` / `setPluginData()` are **not supported** in `use_figma` — do not use them. Use `getSharedPluginData()` / `setSharedPluginData()` instead (these ARE supported), or track node IDs by returning them and passing them to subsequent calls.
+  24  4.  `console.log()` is NOT returned — use `return` for output
+  25  5.  **Work incrementally in small steps.** Break large operations into multiple `use_figma` calls. Validate after each step. This is the single most important practice for avoiding bugs.
+  26  6.  Colors are **0–1 range** (not 0–255): `{r: 1, g: 0, b: 0}` = red
+  27  7.  Fills/strokes are **read-only arrays** — clone, modify, reassign
+  28  8.  Font **MUST** be loaded before any text operation: `await figma.loadFontAsync({family, style})`
+  29  9.  **Pages load incrementally** — use `await figma.setCurrentPageAsync(page)` to switch pages and load their content (see Page Rules below)
+  30  10. `setBoundVariableForPaint` returns a **NEW** paint — must capture and reassign
+  31  11. `createVariable` accepts collection **object or ID string** (object preferred)
+  32  12. **`layoutSizingHorizontal/Vertical = &#x27;FILL&#x27;` MUST be set AFTER `parent.appendChild(child)`** — setting before append throws. Same applies to `&#x27;HUG&#x27;` on non-auto-layout nodes.
+  33  13. **Position new top-level nodes away from (0,0).** Nodes appended directly to the page default to (0,0). Scan `figma.currentPage.children` to find a clear position (e.g., to the right of the rightmost node). This only applies to page-level nodes — nodes nested inside other frames or auto-layout containers are positioned by their parent. See [Gotchas](references/gotchas.md).
+  34  14. **On `use_figma` error, STOP. Do NOT immediately retry.** Failed scripts are **atomic** — if a script errors, it is not executed at all and no changes are made to the file. Read the error message carefully, fix the script, then retry. See [Error Recovery](#6-error-recovery--self-correction).
+  35  15. **MUST `return` ALL created/mutated node IDs.** Whenever a script creates new nodes or mutates existing ones on the canvas, collect every affected node ID and return them in a structured object (e.g. `return { createdNodeIds: [...], mutatedNodeIds: [...] }`). This is essential for subsequent calls to reference, validate, or clean up those nodes.
+  36  16. **Always set `variable.scopes` explicitly when creating variables.** The default `ALL_SCOPES` pollutes every property picker — almost never what you want. Use specific scopes like `[&quot;FRAME_FILL&quot;, &quot;SHAPE_FILL&quot;]` for backgrounds, `[&quot;TEXT_FILL&quot;]` for text colors, `[&quot;GAP&quot;]` for spacing, etc. See [variable-patterns.md](references/variable-patterns.md) for the full list.
+  37  17. **`await` every Promise.** Never leave a Promise unawaited — unawaited async calls (e.g. `figma.loadFontAsync(...)` without `await`, or `figma.setCurrentPageAsync(page)` without `await`) will fire-and-forget, causing silent failures or race conditions. The script may return before the async operation completes, leading to missing data or half-applied changes.
+  38  
+  39  &gt; For detailed WRONG/CORRECT examples of each rule, see [Gotchas &amp; Common Mistakes](references/gotchas.md).
+  40  
+  41  ## 2. Page Rules (Critical)
+  42  
+  43  **Page context resets between `use_figma` calls** — `figma.currentPage` starts on the first page each time.
+  44  
+  45  ### Switching pages
+  46  
+  47  Use `await figma.setCurrentPageAsync(page)` to switch pages and load their content. The sync setter `figma.currentPage = page` **throws an error** in `use_figma` runtimes.
+  48  
+  49  ```js
+  50  // Switch to a specific page (loads its content)
+  51  const targetPage = figma.root.children.find((p) =&gt; p.name === &quot;My Page&quot;);
+  52  await figma.setCurrentPageAsync(targetPage);
+  53  // targetPage.children is now populated
+  54  
+  55  // Iterate over all pages
+  56  for (const page of figma.root.children) {
+  57    await figma.setCurrentPageAsync(page);
+  58    // page.children is now loaded — read or modify them here
+  59  }
+  60  ```
+  61  
+  62  ### Across script runs
+  63  
+  64  `figma.currentPage` resets to the **first page** at the start of each `use_figma` call. If your workflow spans multiple calls and targets a non-default page, call `await figma.setCurrentPageAsync(page)` at the start of each invocation.
+  65  
+  66  You can call `use_figma` multiple times to incrementally build on the file state, or to retrieve information before writing another script. For example, write a script to get metadata about existing nodes, `return` that data, then use it in a subsequent script to modify those nodes.
+  67  
+  68  ## 3. `return` Is Your Output Channel
+  69  
+  70  The agent sees **ONLY** the value you `return`. Everything else is invisible.
+  71  
+  72  - **Returning IDs (CRITICAL)**: Every script that creates or mutates canvas nodes **MUST** return all affected node IDs — e.g. `return { createdNodeIds: [...], mutatedNodeIds: [...] }`. This is a hard requirement, not optional.
+  73  - **Progress reporting**: `return { createdNodeIds: [...], count: 5, errors: [] }`
+  74  - **Error info**: Thrown errors are automatically captured and returned — just let them propagate or `throw` explicitly.
+  75  - `console.log()` output is **never** returned to the agent
+  76  - Always return actionable data (IDs, counts, status) so subsequent calls can reference created objects
+  77  
+  78  ## 4. Editor Mode
+  79  
+  80  `use_figma` works in **design mode** (editorType `&quot;figma&quot;`, the default). FigJam (`&quot;figjam&quot;`) has a different set of available node types — most design nodes are blocked there.
+  81  
+  82  Available in design mode: Rectangle, Frame, Component, Text, Ellipse, Star, Line, Vector, Polygon, BooleanOperation, Slice, Page, Section, TextPath.
+  83  
+  84  **Blocked** in design mode: Sticky, Connector, ShapeWithText, CodeBlock, Slide, SlideRow, Webpage.
+  85  
+  86  ## 5. Incremental Workflow (How to Avoid Bugs)
+  87  
+  88  The most common cause of bugs is trying to do too much in a single `use_figma` call. **Work in small steps and validate after each one.**
+  89  
+  90  ### The pattern
+  91  
+  92  1. **Inspect first.** Before creating anything, run a read-only `use_figma` to discover what already exists in the file — pages, components, variables, naming conventions. Match what&#x27;s there.
+  93  2. **Do one thing per call.** Create variables in one call, create components in the next, compose layouts in another. Don&#x27;t try to build an entire screen in one script.
+  94  3. **Return IDs from every call.** Always `return` created node IDs, variable IDs, collection IDs as objects (e.g. `return { createdNodeIds: [...] }`). You&#x27;ll need these as inputs to subsequent calls.
+  95  4. **Validate after each step.** Use `get_metadata` to verify structure (counts, names, hierarchy, positions). Use `get_screenshot` after major milestones to catch visual issues.
+  96  5. **Fix before moving on.** If validation reveals a problem, fix it before proceeding to the next step. Don&#x27;t build on a broken foundation.
+  97  
+  98  ### Suggested step order for complex tasks
+  99  
+ 100  ```
+ 101  Step 1: Inspect file — discover existing pages, components, variables, conventions
+ 102  Step 2: Create tokens/variables (if needed)
+ 103         → validate with get_metadata
+ 104  Step 3: Create individual components
+ 105         → validate with get_metadata + get_screenshot
+ 106  Step 4: Compose layouts from component instances
+ 107         → validate with get_screenshot
+ 108  Step 5: Final verification
+ 109  ```
+ 110  
+ 111  ### What to validate at each step
+ 112  
+ 113  | After... | Check with `get_metadata` | Check with `get_screenshot` |
+ 114  |---|---|---|
+ 115  | Creating variables | Collection count, variable count, mode names | — |
+ 116  | Creating components | Child count, variant names, property definitions | Variants visible, not collapsed, grid readable |
+ 117  | Binding variables | Node properties reflect bindings | Colors/tokens resolved correctly |
+ 118  | Composing layouts | Instance nodes have mainComponent, hierarchy correct | No cropped/clipped text, no overlapping elements, correct spacing |
+ 119  
+ 120  ## 6. Error Recovery &amp; Self-Correction
+ 121  
+ 122  **`use_figma` is atomic — failed scripts do not execute.** If a script errors, no changes are made to the file. The file remains in the same state as before the call. This means there are no partial nodes, no orphaned elements from the failed script, and retrying after a fix is safe.
+ 123  
+ 124  ### When `use_figma` returns an error
+ 125  
+ 126  1. **STOP.** Do not immediately fix the code and retry.
+ 127  2. **Read the error message carefully.** Understand exactly what went wrong — wrong API usage, missing font, invalid property value, etc.
+ 128  3. **If the error is unclear**, call `get_metadata` or `get_screenshot` to understand the current file state.
+ 129  4. **Fix the script** based on the error message.
+ 130  5. **Retry** the corrected script.
+ 131  
+ 132  ### Common self-correction patterns
+ 133  
+ 134  | Error message | Likely cause | How to fix |
+ 135  |---|---|---|
+ 136  | `&quot;not implemented&quot;` | Used `figma.notify()` | Remove it — use `return` for output |
+ 137  | `&quot;node must be an auto-layout frame...&quot;` | Set `FILL`/`HUG` before appending to auto-layout parent | Move `appendChild` before `layoutSizingX = &#x27;FILL&#x27;` |
+ 138  | `&quot;Setting figma.currentPage is not supported&quot;` | Used sync page setter | Use `await figma.setCurrentPageAsync(page)` |
+ 139  | Property value out of range | Color channel &gt; 1 (used 0–255 instead of 0–1) | Divide by 255 |
+ 140  | `&quot;Cannot read properties of null&quot;` | Node doesn&#x27;t exist (wrong ID, wrong page) | Check page context, verify ID |
+ 141  | Script hangs / no response | Infinite loop or unresolved promise | Check for `while(true)` or missing `await`; ensure code terminates |
+ 142  | `&quot;The node with id X does not exist&quot;` | Parent instance was implicitly detached by a child `detachInstance()`, changing IDs | Re-discover nodes by traversal from a stable (non-instance) parent frame |
+ 143  
+ 144  ### When the script succeeds but the result looks wrong
+ 145  
+ 146  1. Call `get_metadata` to check structural correctness (hierarchy, counts, positions).
+ 147  2. Call `get_screenshot` to check visual correctness. Look closely for cropped/clipped text (line heights cutting off content) and overlapping elements — these are common and easy to miss.
+ 148  3. Identify the discrepancy — is it structural (wrong hierarchy, missing nodes) or visual (wrong colors, broken layout, clipped content)?
+ 149  4. Write a targeted fix script that modifies only the broken parts — don&#x27;t recreate everything.
+ 150  
+ 151  &gt; For the full validation workflow, see [Validation &amp; Error Recovery](references/validation-and-recovery.md).
+ 152  
+ 153  ## 7. Pre-Flight Checklist
+ 154  
+ 155  Before submitting ANY `use_figma` call, verify:
+ 156  
+ 157  - [ ] Code uses `return` to send data back (NOT `figma.closePlugin()`)
+ 158  - [ ] Code is NOT wrapped in an async IIFE (auto-wrapped for you)
+ 159  - [ ] `return` value includes structured data with actionable info (IDs, counts)
+ 160  - [ ] NO usage of `figma.notify()` anywhere
+ 161  - [ ] NO usage of `console.log()` as output (use `return` instead)
+ 162  - [ ] All colors use 0–1 range (not 0–255)
+ 163  - [ ] Fills/strokes are reassigned as new arrays (not mutated in place)
+ 164  - [ ] Page switches use `await figma.setCurrentPageAsync(page)` (sync setter throws)
+ 165  - [ ] `layoutSizingVertical/Horizontal = &#x27;FILL&#x27;` is set AFTER `parent.appendChild(child)`
+ 166  - [ ] `loadFontAsync()` called BEFORE any text property changes
+ 167  - [ ] `lineHeight`/`letterSpacing` use `{unit, value}` format (not bare numbers)
+ 168  - [ ] `resize()` is called BEFORE setting sizing modes (resize resets them to FIXED)
+ 169  - [ ] For multi-step workflows: IDs from previous calls are passed as string literals (not variables)
+ 170  - [ ] New top-level nodes are positioned away from (0,0) to avoid overlapping existing content
+ 171  - [ ] ALL created/mutated node IDs are collected and included in the `return` value
+ 172  - [ ] Every async call (`loadFontAsync`, `setCurrentPageAsync`, `importComponentByKeyAsync`, etc.) is `await`ed — no fire-and-forget Promises
+ 173  
+ 174  ## 8. Discover Conventions Before Creating
+ 175  
+ 176  **Always inspect the Figma file before creating anything.** Different files use different naming conventions, variable structures, and component patterns. Your code should match what&#x27;s already there, not impose new conventions.
+ 177  
+ 178  When in doubt about any convention (naming, scoping, structure), check the Figma file first, then the user&#x27;s codebase. Only fall back to common patterns when neither exists.
+ 179  
+ 180  ### Quick inspection scripts
+ 181  
+ 182  **List all pages and top-level nodes:**
+ 183  ```js
+ 184  const pages = figma.root.children.map(p =&gt; `${p.name} id=${p.id} children=${p.children.length}`);
+ 185  return pages.join(&#x27;\n&#x27;);
+ 186  ```
+ 187  
+ 188  **List existing components across all pages:**
+ 189  ```js
+ 190  const results = [];
+ 191  for (const page of figma.root.children) {
+ 192    await figma.setCurrentPageAsync(page);
+ 193    page.findAll(n =&gt; {
+ 194      if (n.type === &#x27;COMPONENT&#x27; || n.type === &#x27;COMPONENT_SET&#x27;)
+ 195        results.push(`[${page.name}] ${n.name} (${n.type}) id=${n.id}`);
+ 196      return false;
+ 197    });
+ 198  }
+ 199  return results.join(&#x27;\n&#x27;);
+ 200  ```
+ 201  
+ 202  **List existing variable collections and their conventions:**
+ 203  ```js
+ 204  const collections = await figma.variables.getLocalVariableCollectionsAsync();
+ 205  const results = collections.map(c =&gt; ({
+ 206    name: c.name, id: c.id,
+ 207    varCount: c.variableIds.length,
+ 208    modes: c.modes.map(m =&gt; m.name)
+ 209  }));
+ 210  return results;
+ 211  ```
+ 212  
+ 213  ## 9. Reference Docs
+ 214  
+ 215  Load these as needed based on what your task involves:
+ 216  
+ 217  | Doc | When to load | What it covers |
+ 218  |-----|-------------|----------------|
+ 219  | [gotchas.md](references/gotchas.md) | Before any `use_figma` | Every known pitfall with WRONG/CORRECT code examples |
+ 220  | [common-patterns.md](references/common-patterns.md) | Need working code examples | Script scaffolds: shapes, text, auto-layout, variables, components, multi-step workflows |
+ 221  | [plugin-api-patterns.md](references/plugin-api-patterns.md) | Creating/editing nodes | Fills, strokes, Auto Layout, effects, grouping, cloning, styles |
+ 222  | [api-reference.md](references/api-reference.md) | Need exact API surface | Node creation, variables API, core properties, what works and what doesn&#x27;t |
+ 223  | [validation-and-recovery.md](references/validation-and-recovery.md) | Multi-step writes or error recovery | `get_metadata` vs `get_screenshot` workflow, mandatory error recovery steps |
+ 224  | [component-patterns.md](references/component-patterns.md) | Creating components/variants | combineAsVariants, component properties, INSTANCE_SWAP, variant layout, discovering existing components, metadata traversal |
+ 225  | [variable-patterns.md](references/variable-patterns.md) | Creating/binding variables | Collections, modes, scopes, aliasing, binding patterns, discovering existing variables |
+ 226  | [text-style-patterns.md](references/text-style-patterns.md) | Creating/applying text styles | Type ramps, font probing, listing styles, applying styles to nodes |
+ 227  | [effect-style-patterns.md](references/effect-style-patterns.md) | Creating/applying effect styles | Drop shadows, listing styles, applying styles to nodes |
+ 228  | [plugin-api-standalone.index.md](references/plugin-api-standalone.index.md) | Need to understand the full API surface | Index of all types, methods, and properties in the Plugin API |
+ 229  | [plugin-api-standalone.d.ts](references/plugin-api-standalone.d.ts) | Need exact type signatures | Full typings file — grep for specific symbols, don&#x27;t load all at once |
+ 230  
+ 231  ## 10. Snippet examples
+ 232  
+ 233  You will see snippets throughout documentation here. These snippets contain useful plugin API code that can be repurposed. Use them as is, or as starter code as you go. If there are key concepts that are best documented as generic snippets, call them out and write to disk so you can reuse in the future.</pre>

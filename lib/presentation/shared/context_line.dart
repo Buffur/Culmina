@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import '../../domain/models/calendar_date.dart';
 import 'app_words.dart';
 import 'hybrid_icon.dart';
@@ -215,9 +215,8 @@ class _Choice extends StatelessWidget {
                       text,
                       maxLines: singleLine ? 1 : null,
                       overflow: singleLine ? TextOverflow.ellipsis : null,
-                      style: AppTypography.caption.copyWith(
-                        color: p.textPrimary,
-                      ),
+                      style: AppTextTheme.of(context).caption
+                          .copyWith(color: p.textPrimary),
                     ),
                   ),
                   const SizedBox(width: 5),

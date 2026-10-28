@@ -1,0 +1,259 @@
+<!doctype html><meta charset="utf-8"><title>lib\presentation\shared\context_line.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\presentation\shared\context_line.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/material.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> import &#x27;../../core/theme/app_palette.dart&#x27;;</div>
+<div id="L4"><a href="#L4">4</a> import &#x27;../../core/theme/app_spacing.dart&#x27;;</div>
+<div id="L5"><a href="#L5">5</a> import &#x27;../../core/theme/app_text_theme.dart&#x27;;</div>
+<div id="L6"><a href="#L6">6</a> import &#x27;../../domain/models/calendar_date.dart&#x27;;</div>
+<div id="L7"><a href="#L7">7</a> import &#x27;app_words.dart&#x27;;</div>
+<div id="L8"><a href="#L8">8</a> import &#x27;hybrid_icon.dart&#x27;;</div>
+<div id="L9"><a href="#L9">9</a> import &#x27;night_time_formatter.dart&#x27;;</div>
+<div id="L10"><a href="#L10">10</a> import &#x27;night_picker_dialog.dart&#x27;;</div>
+<div id="L11"><a href="#L11">11</a> </div>
+<div id="L12"><a href="#L12">12</a> /// &quot;Ljubljana ▾  Fri, Nov 14 ▾&quot; (S5.6; ADR-019 §5, §6; addendum §3.1–§3.2):</div>
+<div id="L13"><a href="#L13">13</a> /// the one control that says which site and night a screen describes, for</div>
+<div id="L14"><a href="#L14">14</a> /// Tonight and the planner. Each part is its own 48 dp target that reports</div>
+<div id="L15"><a href="#L15">15</a> /// a tap; what choosing does (the site picker, or changing the plan&#x27;s</div>
+<div id="L16"><a href="#L16">16</a> /// night, UX-11) is the adopting screen&#x27;s (P6.3, P6.6).</div>
+<div id="L17"><a href="#L17">17</a> ///</div>
+<div id="L18"><a href="#L18">18</a> /// Below it, once, the zone rule (trap 2): times are in the site&#x27;s zone, or</div>
+<div id="L19"><a href="#L19">19</a> /// labelled as the device zone when the site has none. Without a site there</div>
+<div id="L20"><a href="#L20">20</a> /// is no night (ADR-007 §9), so only the site part shows.</div>
+<div id="L21"><a href="#L21">21</a> ///</div>
+<div id="L22"><a href="#L22">22</a> /// S6.16: [framed] sets it on a card, so the site and night read as one</div>
+<div id="L23"><a href="#L23">23</a> /// deliberate context area (Tonight and the planner); each part leads with</div>
+<div id="L24"><a href="#L24">24</a> /// its icon (a place, a date).</div>
+<div id="L25"><a href="#L25">25</a> class ContextLine extends StatelessWidget {</div>
+<div id="L26"><a href="#L26">26</a>   const ContextLine({</div>
+<div id="L27"><a href="#L27">27</a>     super.key,</div>
+<div id="L28"><a href="#L28">28</a>     required this.siteName,</div>
+<div id="L29"><a href="#L29">29</a>     this.noSiteLabel = noSite,</div>
+<div id="L30"><a href="#L30">30</a>     required this.night,</div>
+<div id="L31"><a href="#L31">31</a>     required this.onSite,</div>
+<div id="L32"><a href="#L32">32</a>     required this.onNight,</div>
+<div id="L33"><a href="#L33">33</a>     this.zoneId,</div>
+<div id="L34"><a href="#L34">34</a>     this.nightStartUtc,</div>
+<div id="L35"><a href="#L35">35</a>     this.framed = false,</div>
+<div id="L36"><a href="#L36">36</a>     this.compact = false,</div>
+<div id="L37"><a href="#L37">37</a>     this.siteDescription,</div>
+<div id="L38"><a href="#L38">38</a>   });</div>
+<div id="L39"><a href="#L39">39</a> </div>
+<div id="L40"><a href="#L40">40</a>   /// Null when no site is set.</div>
+<div id="L41"><a href="#L41">41</a>   final String? siteName;</div>
+<div id="L42"><a href="#L42">42</a> </div>
+<div id="L43"><a href="#L43">43</a>   /// What the site chip says without a site.</div>
+<div id="L44"><a href="#L44">44</a>   final String noSiteLabel;</div>
+<div id="L45"><a href="#L45">45</a> </div>
+<div id="L46"><a href="#L46">46</a>   /// The night&#x27;s evening date; null without a site.</div>
+<div id="L47"><a href="#L47">47</a>   final CalendarDate? night;</div>
+<div id="L48"><a href="#L48">48</a> </div>
+<div id="L49"><a href="#L49">49</a>   final VoidCallback onSite;</div>
+<div id="L50"><a href="#L50">50</a>   final VoidCallback onNight;</div>
+<div id="L51"><a href="#L51">51</a> </div>
+<div id="L52"><a href="#L52">52</a>   /// The site&#x27;s IANA zone, if it has one.</div>
+<div id="L53"><a href="#L53">53</a>   final String? zoneId;</div>
+<div id="L54"><a href="#L54">54</a> </div>
+<div id="L55"><a href="#L55">55</a>   /// When the night starts, for the zone caption&#x27;s offset; no caption</div>
+<div id="L56"><a href="#L56">56</a>   /// without it.</div>
+<div id="L57"><a href="#L57">57</a>   final DateTime? nightStartUtc;</div>
+<div id="L58"><a href="#L58">58</a> </div>
+<div id="L59"><a href="#L59">59</a>   /// On a card (S6.16).</div>
+<div id="L60"><a href="#L60">60</a>   final bool framed;</div>
+<div id="L61"><a href="#L61">61</a> </div>
+<div id="L62"><a href="#L62">62</a>   /// Tonight keeps place and date on one line; full values remain accessible.</div>
+<div id="L63"><a href="#L63">63</a>   final bool compact;</div>
+<div id="L64"><a href="#L64">64</a>   final String? siteDescription;</div>
+<div id="L65"><a href="#L65">65</a> </div>
+<div id="L66"><a href="#L66">66</a>   /// Shown instead of a site name when none is set.</div>
+<div id="L67"><a href="#L67">67</a>   static const noSite = &#x27;No site set&#x27;;</div>
+<div id="L68"><a href="#L68">68</a> </div>
+<div id="L69"><a href="#L69">69</a>   /// Home&#x27;s site chip without a site (app.js `app-context`): the action.</div>
+<div id="L70"><a href="#L70">70</a>   static const setSite = &#x27;Set site&#x27;;</div>
+<div id="L71"><a href="#L71">71</a> </div>
+<div id="L72"><a href="#L72">72</a>   /// &quot;Times in site zone Europe/Ljubljana, CET, UTC+01:00&quot;, or the device</div>
+<div id="L73"><a href="#L73">73</a>   /// zone&#x27;s caption when the site has no zone. Pure formatting.</div>
+<div id="L74"><a href="#L74">74</a>   static String zoneRule(DateTime nightStartUtc, {String? zoneId}) =&gt;</div>
+<div id="L75"><a href="#L75">75</a>       &#x27;Times in ${NightTimeFormatter.zoneCaption(nightStartUtc, zoneId: zoneId)}&#x27;;</div>
+<div id="L76"><a href="#L76">76</a> </div>
+<div id="L77"><a href="#L77">77</a>   @override</div>
+<div id="L78"><a href="#L78">78</a>   Widget build(BuildContext context) {</div>
+<div id="L79"><a href="#L79">79</a>     final p = AppPalette.of(context);</div>
+<div id="L80"><a href="#L80">80</a>     final text = Theme.of(context).textTheme;</div>
+<div id="L81"><a href="#L81">81</a>     final nightText = night == null</div>
+<div id="L82"><a href="#L82">82</a>         ? null</div>
+<div id="L83"><a href="#L83">83</a>         : &#x27;Night of ${NightTimeFormatter.eveningDate(night!)}&#x27;;</div>
+<div id="L84"><a href="#L84">84</a>     final line = Column(</div>
+<div id="L85"><a href="#L85">85</a>       crossAxisAlignment: CrossAxisAlignment.start,</div>
+<div id="L86"><a href="#L86">86</a>       children: [</div>
+<div id="L87"><a href="#L87">87</a>         if (compact)</div>
+<div id="L88"><a href="#L88">88</a>           Row(</div>
+<div id="L89"><a href="#L89">89</a>             children: [</div>
+<div id="L90"><a href="#L90">90</a>               Flexible(</div>
+<div id="L91"><a href="#L91">91</a>                 child: _Choice(</div>
+<div id="L92"><a href="#L92">92</a>                   key: const Key(&#x27;context.site&#x27;),</div>
+<div id="L93"><a href="#L93">93</a>                   icon: HybridIcons.homePin,</div>
+<div id="L94"><a href="#L94">94</a>                   text: siteName ?? noSiteLabel,</div>
+<div id="L95"><a href="#L95">95</a>                   semanticsLabel:</div>
+<div id="L96"><a href="#L96">96</a>                       &#x27;${AppWords.site}: ${siteDescription ?? siteName ?? noSite}&#x27;,</div>
+<div id="L97"><a href="#L97">97</a>                   hint: &#x27;Choose a site&#x27;,</div>
+<div id="L98"><a href="#L98">98</a>                   singleLine: true,</div>
+<div id="L99"><a href="#L99">99</a>                   onTap: onSite,</div>
+<div id="L100"><a href="#L100">100</a>                 ),</div>
+<div id="L101"><a href="#L101">101</a>               ),</div>
+<div id="L102"><a href="#L102">102</a>               if (night != null) ...[</div>
+<div id="L103"><a href="#L103">103</a>                 const SizedBox(width: AppSpacing.xs),</div>
+<div id="L104"><a href="#L104">104</a>                 _Choice(</div>
+<div id="L105"><a href="#L105">105</a>                   key: const Key(&#x27;context.night&#x27;),</div>
+<div id="L106"><a href="#L106">106</a>                   icon: HybridIcons.planner,</div>
+<div id="L107"><a href="#L107">107</a>                   text: NightTimeFormatter.eveningDate(night!),</div>
+<div id="L108"><a href="#L108">108</a>                   semanticsLabel: nightText!,</div>
+<div id="L109"><a href="#L109">109</a>                   hint: &#x27;Choose a night&#x27;,</div>
+<div id="L110"><a href="#L110">110</a>                   singleLine: true,</div>
+<div id="L111"><a href="#L111">111</a>                   onTap: onNight,</div>
+<div id="L112"><a href="#L112">112</a>                 ),</div>
+<div id="L113"><a href="#L113">113</a>               ],</div>
+<div id="L114"><a href="#L114">114</a>             ],</div>
+<div id="L115"><a href="#L115">115</a>           )</div>
+<div id="L116"><a href="#L116">116</a>         else</div>
+<div id="L117"><a href="#L117">117</a>           Wrap(</div>
+<div id="L118"><a href="#L118">118</a>             spacing: AppSpacing.xs,</div>
+<div id="L119"><a href="#L119">119</a>             crossAxisAlignment: WrapCrossAlignment.center,</div>
+<div id="L120"><a href="#L120">120</a>             children: [</div>
+<div id="L121"><a href="#L121">121</a>               _Choice(</div>
+<div id="L122"><a href="#L122">122</a>                 key: const Key(&#x27;context.site&#x27;),</div>
+<div id="L123"><a href="#L123">123</a>                 icon: HybridIcons.homePin,</div>
+<div id="L124"><a href="#L124">124</a>                 text: siteName ?? noSiteLabel,</div>
+<div id="L125"><a href="#L125">125</a>                 semanticsLabel: &#x27;${AppWords.site}: ${siteName ?? noSite}&#x27;,</div>
+<div id="L126"><a href="#L126">126</a>                 hint: &#x27;Choose a site&#x27;,</div>
+<div id="L127"><a href="#L127">127</a>                 onTap: onSite,</div>
+<div id="L128"><a href="#L128">128</a>               ),</div>
+<div id="L129"><a href="#L129">129</a>               if (nightText != null)</div>
+<div id="L130"><a href="#L130">130</a>                 _Choice(</div>
+<div id="L131"><a href="#L131">131</a>                   key: const Key(&#x27;context.night&#x27;),</div>
+<div id="L132"><a href="#L132">132</a>                   icon: HybridIcons.planner,</div>
+<div id="L133"><a href="#L133">133</a>                   text: nightText,</div>
+<div id="L134"><a href="#L134">134</a>                   semanticsLabel: nightText,</div>
+<div id="L135"><a href="#L135">135</a>                   hint: &#x27;Choose a night&#x27;,</div>
+<div id="L136"><a href="#L136">136</a>                   onTap: onNight,</div>
+<div id="L137"><a href="#L137">137</a>                 ),</div>
+<div id="L138"><a href="#L138">138</a>             ],</div>
+<div id="L139"><a href="#L139">139</a>           ),</div>
+<div id="L140"><a href="#L140">140</a>         if (night != null &amp;&amp; nightStartUtc != null)</div>
+<div id="L141"><a href="#L141">141</a>           Padding(</div>
+<div id="L142"><a href="#L142">142</a>             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),</div>
+<div id="L143"><a href="#L143">143</a>             child: Text(</div>
+<div id="L144"><a href="#L144">144</a>               zoneRule(nightStartUtc!, zoneId: zoneId),</div>
+<div id="L145"><a href="#L145">145</a>               key: const Key(&#x27;context.zone&#x27;),</div>
+<div id="L146"><a href="#L146">146</a>               style: text.bodySmall?.copyWith(color: p.textTertiary),</div>
+<div id="L147"><a href="#L147">147</a>             ),</div>
+<div id="L148"><a href="#L148">148</a>           ),</div>
+<div id="L149"><a href="#L149">149</a>       ],</div>
+<div id="L150"><a href="#L150">150</a>     );</div>
+<div id="L151"><a href="#L151">151</a>     if (!framed) return line;</div>
+<div id="L152"><a href="#L152">152</a>     return Card(</div>
+<div id="L153"><a href="#L153">153</a>       key: const Key(&#x27;context.card&#x27;),</div>
+<div id="L154"><a href="#L154">154</a>       margin: const EdgeInsets.only(bottom: AppSpacing.md),</div>
+<div id="L155"><a href="#L155">155</a>       child: Padding(</div>
+<div id="L156"><a href="#L156">156</a>         padding: const EdgeInsets.fromLTRB(</div>
+<div id="L157"><a href="#L157">157</a>           AppSpacing.sm,</div>
+<div id="L158"><a href="#L158">158</a>           AppSpacing.xs,</div>
+<div id="L159"><a href="#L159">159</a>           AppSpacing.md,</div>
+<div id="L160"><a href="#L160">160</a>           AppSpacing.sm,</div>
+<div id="L161"><a href="#L161">161</a>         ),</div>
+<div id="L162"><a href="#L162">162</a>         child: line,</div>
+<div id="L163"><a href="#L163">163</a>       ),</div>
+<div id="L164"><a href="#L164">164</a>     );</div>
+<div id="L165"><a href="#L165">165</a>   }</div>
+<div id="L166"><a href="#L166">166</a> }</div>
+<div id="L167"><a href="#L167">167</a> </div>
+<div id="L168"><a href="#L168">168</a> /// One part of the line: its value and a ▾, a 48 dp button.</div>
+<div id="L169"><a href="#L169">169</a> class _Choice extends StatelessWidget {</div>
+<div id="L170"><a href="#L170">170</a>   const _Choice({</div>
+<div id="L171"><a href="#L171">171</a>     super.key,</div>
+<div id="L172"><a href="#L172">172</a>     required this.icon,</div>
+<div id="L173"><a href="#L173">173</a>     required this.text,</div>
+<div id="L174"><a href="#L174">174</a>     required this.semanticsLabel,</div>
+<div id="L175"><a href="#L175">175</a>     required this.hint,</div>
+<div id="L176"><a href="#L176">176</a>     required this.onTap,</div>
+<div id="L177"><a href="#L177">177</a>     this.singleLine = false,</div>
+<div id="L178"><a href="#L178">178</a>   });</div>
+<div id="L179"><a href="#L179">179</a> </div>
+<div id="L180"><a href="#L180">180</a>   final bool singleLine;</div>
+<div id="L181"><a href="#L181">181</a>   final HybridIconData icon;</div>
+<div id="L182"><a href="#L182">182</a>   final String text;</div>
+<div id="L183"><a href="#L183">183</a>   final String semanticsLabel;</div>
+<div id="L184"><a href="#L184">184</a>   final String hint;</div>
+<div id="L185"><a href="#L185">185</a>   final VoidCallback onTap;</div>
+<div id="L186"><a href="#L186">186</a> </div>
+<div id="L187"><a href="#L187">187</a>   @override</div>
+<div id="L188"><a href="#L188">188</a>   Widget build(BuildContext context) {</div>
+<div id="L189"><a href="#L189">189</a>     final p = AppPalette.of(context);</div>
+<div id="L190"><a href="#L190">190</a>     return Semantics(</div>
+<div id="L191"><a href="#L191">191</a>       button: true,</div>
+<div id="L192"><a href="#L192">192</a>       enabled: true,</div>
+<div id="L193"><a href="#L193">193</a>       onTap: onTap,</div>
+<div id="L194"><a href="#L194">194</a>       label: semanticsLabel,</div>
+<div id="L195"><a href="#L195">195</a>       hint: hint,</div>
+<div id="L196"><a href="#L196">196</a>       excludeSemantics: true,</div>
+<div id="L197"><a href="#L197">197</a>       child: Tooltip(</div>
+<div id="L198"><a href="#L198">198</a>         message: semanticsLabel,</div>
+<div id="L199"><a href="#L199">199</a>         excludeFromSemantics: true,</div>
+<div id="L200"><a href="#L200">200</a>         child: InkWell(</div>
+<div id="L201"><a href="#L201">201</a>           onTap: onTap,</div>
+<div id="L202"><a href="#L202">202</a>           child: ConstrainedBox(</div>
+<div id="L203"><a href="#L203">203</a>             constraints: const BoxConstraints(minHeight: 48, minWidth: 48),</div>
+<div id="L204"><a href="#L204">204</a>             child: Padding(</div>
+<div id="L205"><a href="#L205">205</a>               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),</div>
+<div id="L206"><a href="#L206">206</a>               // styles.css `.app-context button`: a 13 px mark, 5 apart, the</div>
+<div id="L207"><a href="#L207">207</a>               // 13 px value and a 13 px down chevron, all in the text colour.</div>
+<div id="L208"><a href="#L208">208</a>               child: Row(</div>
+<div id="L209"><a href="#L209">209</a>                 mainAxisSize: MainAxisSize.min,</div>
+<div id="L210"><a href="#L210">210</a>                 children: [</div>
+<div id="L211"><a href="#L211">211</a>                   HybridIcon(icon, size: 13, color: p.textPrimary),</div>
+<div id="L212"><a href="#L212">212</a>                   const SizedBox(width: 5),</div>
+<div id="L213"><a href="#L213">213</a>                   Flexible(</div>
+<div id="L214"><a href="#L214">214</a>                     child: Text(</div>
+<div id="L215"><a href="#L215">215</a>                       text,</div>
+<div id="L216"><a href="#L216">216</a>                       maxLines: singleLine ? 1 : null,</div>
+<div id="L217"><a href="#L217">217</a>                       overflow: singleLine ? TextOverflow.ellipsis : null,</div>
+<div id="L218"><a href="#L218">218</a>                       style: AppTextTheme.of(context).caption</div>
+<div id="L219"><a href="#L219">219</a>                           .copyWith(color: p.textPrimary),</div>
+<div id="L220"><a href="#L220">220</a>                     ),</div>
+<div id="L221"><a href="#L221">221</a>                   ),</div>
+<div id="L222"><a href="#L222">222</a>                   const SizedBox(width: 5),</div>
+<div id="L223"><a href="#L223">223</a>                   HybridIcon(HybridIcons.down, size: 13, color: p.textPrimary),</div>
+<div id="L224"><a href="#L224">224</a>                 ],</div>
+<div id="L225"><a href="#L225">225</a>               ),</div>
+<div id="L226"><a href="#L226">226</a>             ),</div>
+<div id="L227"><a href="#L227">227</a>           ),</div>
+<div id="L228"><a href="#L228">228</a>         ),</div>
+<div id="L229"><a href="#L229">229</a>       ),</div>
+<div id="L230"><a href="#L230">230</a>     );</div>
+<div id="L231"><a href="#L231">231</a>   }</div>
+<div id="L232"><a href="#L232">232</a> }</div>
+<div id="L233"><a href="#L233">233</a> </div>
+<div id="L234"><a href="#L234">234</a> /// The shared night picker (S5.6): the date picker in the app&#x27;s theme (red</div>
+<div id="L235"><a href="#L235">235</a> /// in field mode), from a year ago to five years ahead as the planner&#x27;s</div>
+<div id="L236"><a href="#L236">236</a> /// picker allows, starting at [initial] (else [today]). Returns the chosen</div>
+<div id="L237"><a href="#L237">237</a> /// evening, or null when cancelled.</div>
+<div id="L238"><a href="#L238">238</a> Future&lt;CalendarDate?&gt; pickNight(</div>
+<div id="L239"><a href="#L239">239</a>   BuildContext context, {</div>
+<div id="L240"><a href="#L240">240</a>   CalendarDate? initial,</div>
+<div id="L241"><a href="#L241">241</a>   DateTime? today,</div>
+<div id="L242"><a href="#L242">242</a>   TransitionBuilder? builder,</div>
+<div id="L243"><a href="#L243">243</a> }) async {</div>
+<div id="L244"><a href="#L244">244</a>   final now = today ?? DateTime.now();</div>
+<div id="L245"><a href="#L245">245</a>   final picked = await showDialog&lt;DateTime&gt;(</div>
+<div id="L246"><a href="#L246">246</a>     context: context,</div>
+<div id="L247"><a href="#L247">247</a>     builder: (context) {</div>
+<div id="L248"><a href="#L248">248</a>       final dialog = NightPickerDialog(</div>
+<div id="L249"><a href="#L249">249</a>         initialDate: initial == null</div>
+<div id="L250"><a href="#L250">250</a>             ? DateUtils.dateOnly(now)</div>
+<div id="L251"><a href="#L251">251</a>             : DateTime(initial.year, initial.month, initial.day),</div>
+<div id="L252"><a href="#L252">252</a>         firstDate: DateTime(now.year - 1, now.month, now.day),</div>
+<div id="L253"><a href="#L253">253</a>         lastDate: DateTime(now.year + 5, now.month, now.day),</div>
+<div id="L254"><a href="#L254">254</a>       );</div>
+<div id="L255"><a href="#L255">255</a>       return builder?.call(context, dialog) ?? dialog;</div>
+<div id="L256"><a href="#L256">256</a>     },</div>
+<div id="L257"><a href="#L257">257</a>   );</div>
+<div id="L258"><a href="#L258">258</a>   return picked == null ? null : CalendarDate.fromDateTimeFields(picked);</div>
+<div id="L259"><a href="#L259">259</a> }</div>

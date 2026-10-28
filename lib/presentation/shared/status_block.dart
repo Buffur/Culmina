@@ -1,3 +1,5 @@
+import '../../core/theme/app_text_theme.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
@@ -102,20 +104,16 @@ class StatusBlock extends StatelessWidget {
     final explanation = Text(
       reason ?? '',
       style: fitLine
-          ? text.bodySmall?.copyWith(
-              fontSize: 14,
-              height: 1.55,
-              color: p.textSecondary,
-            )
+          ? AppTextTheme.of(context)
+                .resolve(text.bodySmall, AppTextGeometry.fitExplanation)
+                .copyWith(color: p.textSecondary)
           : text.bodyMedium?.copyWith(color: p.textSecondary),
     );
     final verdictStyle =
         (fitLine
-                ? text.bodySmall?.copyWith(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    height: 1.5,
-                  )
+                ? AppTextTheme.of(context)
+                      .resolve(text.bodySmall, AppTextGeometry.fitVerdict)
+                      .copyWith(fontWeight: FontWeight.w500)
                 : (headingStyle ?? text.titleMedium))
             ?.copyWith(color: FitText.color(state, theme.colorScheme, p));
     final verdict = Text(
@@ -179,25 +177,31 @@ class StatusBlock extends StatelessWidget {
                       Text(
                         label,
                         // Hybrid `.plan-measures dt`: 13 at normal leading.
-                        style: text.bodySmall?.copyWith(
-                          color: p.textTertiary,
-                          fontSize: fitLine ? 13 : null,
-                          height: fitLine ? 17 / 13 : null,
-                        ),
+                        style:
+                            (fitLine
+                                    ? AppTextTheme.of(context).resolve(
+                                        text.bodySmall,
+                                        AppTextGeometry.fitMeasure,
+                                      )
+                                    : text.bodySmall)
+                                ?.copyWith(color: p.textTertiary),
                       ),
                       if (fitLine) const SizedBox(height: AppSpacing.xs),
                       Text(
                         value,
                         style: fitLine
-                            ? text.bodyMedium?.copyWith(
-                                color: p.textPrimary,
-                                fontSize: 15,
-                                height: 19 / 15,
-                                fontWeight: FontWeight.w500,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                              )
+                            ? AppTextTheme.of(context)
+                                  .resolve(
+                                    text.bodyMedium,
+                                    AppTextGeometry.fitValue,
+                                  )
+                                  .copyWith(
+                                    color: p.textPrimary,
+                                    fontWeight: FontWeight.w500,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  )
                             : text.titleSmall?.copyWith(color: p.textPrimary),
                       ),
                     ],

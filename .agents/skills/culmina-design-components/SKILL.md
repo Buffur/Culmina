@@ -18,3 +18,5 @@ Read only the relevant group. Reuse the current component before adding an abstr
 For a changed contract, describe its purpose, inputs, states, interactions, semantics and real adopter. Preserve full labels, reachable actions, natural text growth and existing theme roles. A local component fix does not imply a routing redesign.
 
 Report the source/caller, changed behavior, actual checks and limits. Native host renders, Android/device interaction and owner acceptance are separate evidence.
+
+For meaningful product-design refinement, use the shared [decision record](../references/refinement-decision.md) to make the intended benefit and acceptance evidence explicit; keep small corrections proportional.

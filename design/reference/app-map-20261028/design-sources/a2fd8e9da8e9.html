@@ -1,0 +1,589 @@
+<!doctype html><meta charset="utf-8"><title>app_theme.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>app_theme.dart</h1><p>lib\core\theme\app_theme.dart</p><p>SHA-256: f75e7f7b65557dbcdee1c74bed6bb1c027de994df6a62387c1986cbaf87f42bf</p><pre>   1  import &#x27;package:flutter/material.dart&#x27;;
+   2  import &#x27;package:flutter/cupertino.dart&#x27; show CupertinoPageTransitionsBuilder;
+   3  
+   4  import &#x27;app_colors.dart&#x27;;
+   5  import &#x27;app_palette.dart&#x27;;
+   6  import &#x27;app_radius.dart&#x27;;
+   7  import &#x27;app_spacing.dart&#x27;;
+   8  import &#x27;app_typography.dart&#x27;;
+   9  import &#x27;app_motion.dart&#x27;;
+  10  import &#x27;hybrid_tokens.dart&#x27;;
+  11  import &#x27;hybrid_view_entrance.dart&#x27;;
+  12  
+  13  /// The app&#x27;s three themes (TASK 12.4): light, dark and red field mode.
+  14  /// Colours come from [AppColors] and [AppPalette] tokens; text is never
+  15  /// smaller than 12 sp in the base scale (HybridTokens names the compact
+  16  /// navigation/calendar exceptions). Since S5.1 text roles drive the colour scheme
+  17  /// (`onSurface` is the primary text, `onSurfaceVariant` and `secondary`
+  18  /// the secondary text), `surfaceContainerHigh` is the raised surface, and
+  19  /// [AppTypography.scale] sets every style&#x27;s size and weight.
+  20  class AppTheme {
+  21    /// The family of the styles the theme builds by hand (F25).
+  22    static const _family = HybridTokens.fontFamily;
+  23  
+  24    static final ThemeData light = _withTokens(
+  25      ThemeData(
+  26        fontFamily: _family,
+  27        brightness: Brightness.light,
+  28        primaryColor: AppColors.lightTextPrimary,
+  29        scaffoldBackgroundColor: AppColors.lightBackground,
+  30        appBarTheme: const AppBarTheme(
+  31          backgroundColor: AppColors.lightBackground,
+  32          foregroundColor: AppColors.lightTextPrimary,
+  33          elevation: 0,
+  34          scrolledUnderElevation: 0,
+  35          centerTitle: false,
+  36          toolbarHeight: HybridTokens.appBarHeight,
+  37          titleTextStyle: TextStyle(
+  38            // Owner-selected bundled family, including Ukrainian glyphs.
+  39            fontFamily: _family,
+  40            color: AppColors.lightTextPrimary,
+  41            fontSize: 22,
+  42            height: 1.25,
+  43            fontWeight: FontWeight.w500,
+  44          ),
+  45        ),
+  46        colorScheme: const ColorScheme.light(
+  47          primary: AppColors.lightTextPrimary,
+  48          onPrimary: AppColors.lightBackground,
+  49          secondary: AppColors.lightTextSecondary,
+  50          // Selected segments and the navigation indicator: a light fill
+  51          // with primary text (Material would derive them from secondary).
+  52          secondaryContainer: AppColors.lightBorder,
+  53          onSecondaryContainer: AppColors.lightTextPrimary,
+  54          surface: AppColors.lightSurface,
+  55          onSurface: AppColors.lightTextPrimary,
+  56          onSurfaceVariant: AppColors.lightTextSecondary,
+  57          surfaceContainerHigh: AppColors.lightSurfaceRaised,
+  58          // S5.2: Material falls back to black for both (the prominent
+  59          // field underline of 08 §6).
+  60          outline: AppColors.lightControlBorder,
+  61          outlineVariant: AppColors.lightBorder,
+  62          error: AppColors.lightError,
+  63        ),
+  64        dividerTheme: const DividerThemeData(
+  65          color: AppColors.lightBorder,
+  66          thickness: 1,
+  67          space: 1,
+  68        ),
+  69        cardTheme: CardThemeData(
+  70          color: AppColors.lightSurface,
+  71          elevation: 0,
+  72          shape: RoundedRectangleBorder(
+  73            borderRadius: BorderRadius.circular(AppRadius.small),
+  74            side: const BorderSide(color: AppColors.lightBorder),
+  75          ),
+  76          margin: EdgeInsets.zero,
+  77        ),
+  78      ),
+  79      AppPalette.light,
+  80    );
+  81  
+  82    static final ThemeData dark = _withTokens(
+  83      ThemeData(
+  84        fontFamily: _family,
+  85        brightness: Brightness.dark,
+  86        primaryColor: AppColors.darkTextPrimary,
+  87        scaffoldBackgroundColor: AppColors.darkBackground,
+  88        appBarTheme: const AppBarTheme(
+  89          backgroundColor: AppColors.darkBackground,
+  90          foregroundColor: AppColors.darkTextPrimary,
+  91          elevation: 0,
+  92          scrolledUnderElevation: 0,
+  93          centerTitle: false,
+  94          toolbarHeight: HybridTokens.appBarHeight,
+  95          titleTextStyle: TextStyle(
+  96            // Owner-selected bundled family, including Ukrainian glyphs.
+  97            fontFamily: _family,
+  98            color: AppColors.darkTextPrimary,
+  99            fontSize: 22,
+ 100            height: 1.25,
+ 101            fontWeight: FontWeight.w500,
+ 102          ),
+ 103        ),
+ 104        colorScheme: const ColorScheme.dark(
+ 105          primary: AppColors.darkTextPrimary,
+ 106          onPrimary: AppColors.darkBackground,
+ 107          secondaryContainer: AppColors.darkSelection,
+ 108          onSecondaryContainer: AppColors.darkTextPrimary,
+ 109          secondary: AppColors.darkTextSecondary,
+ 110          surface: AppColors.darkSurface,
+ 111          onSurface: AppColors.darkTextPrimary,
+ 112          onSurfaceVariant: AppColors.darkTextSecondary,
+ 113          surfaceContainerHigh: AppColors.darkSurfaceRaised,
+ 114          // S5.2: Material falls back to white for both.
+ 115          outline: AppColors.darkControlBorder,
+ 116          outlineVariant: AppColors.darkBorder,
+ 117          error: AppColors.darkError,
+ 118          onError: AppColors.darkBackground,
+ 119        ),
+ 120        dividerTheme: const DividerThemeData(
+ 121          color: AppColors.darkBorder,
+ 122          thickness: 1,
+ 123          space: 1,
+ 124        ),
+ 125        cardTheme: CardThemeData(
+ 126          color: AppColors.darkSurface,
+ 127          elevation: 0,
+ 128          shape: RoundedRectangleBorder(
+ 129            borderRadius: BorderRadius.circular(AppRadius.small),
+ 130            side: const BorderSide(color: AppColors.darkBorder),
+ 131          ),
+ 132          margin: EdgeInsets.zero,
+ 133        ),
+ 134      ),
+ 135      AppPalette.dark,
+ 136    );
+ 137  
+ 138    /// Every colour role is red or black (TASK 12.4), so dialogs, date
+ 139    /// pickers, snackbars, menus and the navigation bar stay red too.
+ 140    static const ColorScheme fieldColorScheme = ColorScheme(
+ 141      brightness: Brightness.dark,
+ 142      primary: AppColors.fieldTextPrimary,
+ 143      onPrimary: AppColors.fieldBackground,
+ 144      primaryContainer: AppColors.fieldBorder,
+ 145      onPrimaryContainer: AppColors.fieldTextPrimary,
+ 146      secondary: AppColors.fieldTextSecondary,
+ 147      onSecondary: AppColors.fieldBackground,
+ 148      secondaryContainer: AppColors.fieldBorder,
+ 149      onSecondaryContainer: AppColors.fieldTextPrimary,
+ 150      tertiary: AppColors.fieldTextSecondary,
+ 151      onTertiary: AppColors.fieldBackground,
+ 152      tertiaryContainer: AppColors.fieldBorder,
+ 153      onTertiaryContainer: AppColors.fieldTextPrimary,
+ 154      error: AppColors.fieldTextPrimary,
+ 155      onError: AppColors.fieldBackground,
+ 156      errorContainer: AppColors.fieldBorder,
+ 157      onErrorContainer: AppColors.fieldTextPrimary,
+ 158      surface: AppColors.fieldBackground,
+ 159      onSurface: AppColors.fieldTextPrimary,
+ 160      onSurfaceVariant: AppColors.fieldTextSecondary,
+ 161      surfaceDim: AppColors.fieldBackground,
+ 162      surfaceBright: AppColors.fieldBorder,
+ 163      surfaceContainerLowest: AppColors.fieldBackground,
+ 164      surfaceContainerLow: AppColors.fieldSurface,
+ 165      surfaceContainer: AppColors.fieldSurface,
+ 166      surfaceContainerHigh: AppColors.fieldSurfaceRaised,
+ 167      surfaceContainerHighest: Color(0xFF220000),
+ 168      outline: AppColors.fieldControlBorder,
+ 169      outlineVariant: AppColors.fieldBorder,
+ 170      shadow: AppColors.fieldBackground,
+ 171      scrim: AppColors.fieldBackground,
+ 172      inverseSurface: AppColors.fieldTextSecondary,
+ 173      onInverseSurface: AppColors.fieldBackground,
+ 174      inversePrimary: AppColors.fieldBackground,
+ 175      surfaceTint: AppColors.fieldBackground,
+ 176    );
+ 177  
+ 178    static final ThemeData fieldTheme = _withTokens(
+ 179      ThemeData(
+ 180        fontFamily: _family,
+ 181        colorScheme: fieldColorScheme,
+ 182        primaryColor: AppColors.fieldTextPrimary,
+ 183        scaffoldBackgroundColor: AppColors.fieldBackground,
+ 184        canvasColor: AppColors.fieldBackground,
+ 185        cardColor: AppColors.fieldSurface,
+ 186        dividerColor: AppColors.fieldBorder,
+ 187        hintColor: AppColors.fieldTextSecondary,
+ 188        disabledColor: AppColors.fieldTextDisabled,
+ 189        unselectedWidgetColor: AppColors.fieldTextSecondary,
+ 190        hoverColor: const Color(0x1FFF0000),
+ 191        focusColor: const Color(0x1FFF0000),
+ 192        highlightColor: const Color(0x1FFF0000),
+ 193        splashColor: const Color(0x33FF0000),
+ 194        shadowColor: AppColors.fieldBackground,
+ 195        secondaryHeaderColor: AppColors.fieldSurface,
+ 196        appBarTheme: const AppBarTheme(
+ 197          backgroundColor: AppColors.fieldBackground,
+ 198          foregroundColor: AppColors.fieldTextPrimary,
+ 199          elevation: 0,
+ 200          scrolledUnderElevation: 0,
+ 201          centerTitle: false,
+ 202          toolbarHeight: HybridTokens.appBarHeight,
+ 203          titleTextStyle: TextStyle(
+ 204            // Owner-selected bundled family, including Ukrainian glyphs.
+ 205            fontFamily: _family,
+ 206            color: AppColors.fieldTextPrimary,
+ 207            fontSize: 22,
+ 208            height: 1.25,
+ 209            fontWeight: FontWeight.w500,
+ 210          ),
+ 211        ),
+ 212        dividerTheme: const DividerThemeData(
+ 213          color: AppColors.fieldBorder,
+ 214          thickness: 1,
+ 215          space: 1,
+ 216        ),
+ 217        cardTheme: CardThemeData(
+ 218          color: AppColors.fieldSurface,
+ 219          elevation: 0,
+ 220          shape: RoundedRectangleBorder(
+ 221            borderRadius: BorderRadius.circular(AppRadius.small),
+ 222            side: const BorderSide(color: AppColors.fieldBorder),
+ 223          ),
+ 224          margin: EdgeInsets.zero,
+ 225        ),
+ 226        iconTheme: const IconThemeData(color: AppColors.fieldTextPrimary),
+ 227        snackBarTheme: const SnackBarThemeData(
+ 228          backgroundColor: AppColors.fieldBorder,
+ 229          contentTextStyle: TextStyle(
+ 230            fontFamily: _family,
+ 231            color: AppColors.fieldTextPrimary,
+ 232          ),
+ 233          actionTextColor: AppColors.fieldTextPrimary,
+ 234        ),
+ 235      ),
+ 236      AppPalette.field,
+ 237      textColor: AppColors.fieldTextPrimary,
+ 238      field: true,
+ 239    );
+ 240  
+ 241    /// Red field mode&#x27;s safety net (owner decision, TASK 12.4): applied over
+ 242    /// the whole app, it maps every pixel to red by brightness — R&#x27; = R +
+ 243    /// 0.7152 G + 0.0722 B (Rec. 709 luma weights for G and B), G&#x27; = B&#x27; = 0 —
+ 244    /// so map tiles and anything a token misses stay red. Pure red is
+ 245    /// unchanged.
+ 246    static const ColorFilter fieldFilter = ColorFilter.matrix(fieldFilterMatrix);
+ 247  
+ 248    /// The 4×5 RGBA matrix of [fieldFilter], row by row.
+ 249    static const List&lt;double&gt; fieldFilterMatrix = &lt;double&gt;[
+ 250      1, 0.7152, 0.0722, 0, 0, //
+ 251      0, 0, 0, 0, 0, //
+ 252      0, 0, 0, 0, 0, //
+ 253      0, 0, 0, 1, 0, //
+ 254    ];
+ 255  
+ 256    /// Adds the palette and the shared type scale (no text under 12 sp).
+ 257    /// The scale&#x27;s sizes and weights override Material&#x27;s geometry; the
+ 258    /// colours stay the theme&#x27;s.
+ 259    static ThemeData _withTokens(
+ 260      ThemeData base,
+ 261      AppPalette palette, {
+ 262      Color? textColor,
+ 263      bool field = false,
+ 264    }) {
+ 265      final hybrid = field
+ 266          ? HybridTokens.field
+ 267          : base.brightness == Brightness.dark
+ 268          ? HybridTokens.dark
+ 269          : HybridTokens.light;
+ 270      TextTheme readable(TextTheme t) {
+ 271        final scaled = t.merge(AppTypography.scale);
+ 272        return textColor == null
+ 273            ? scaled
+ 274            : scaled.apply(bodyColor: textColor, displayColor: textColor);
+ 275      }
+ 276  
+ 277      return _withControls(
+ 278        base.copyWith(
+ 279          extensions: [palette, hybrid],
+ 280          pageTransitionsTheme: const PageTransitionsTheme(
+ 281            builders: {
+ 282              TargetPlatform.android: HybridPageTransitionsBuilder(),
+ 283              TargetPlatform.windows: HybridPageTransitionsBuilder(),
+ 284              TargetPlatform.linux: HybridPageTransitionsBuilder(),
+ 285              TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+ 286              TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+ 287            },
+ 288          ),
+ 289          textTheme: readable(base.textTheme),
+ 290          primaryTextTheme: readable(base.primaryTextTheme),
+ 291        ),
+ 292        palette,
+ 293        field: field,
+ 294      );
+ 295    }
+ 296  
+ 297    /// The controls&#x27; look (S5.2; `docs/DESIGN_SYSTEM.md`): the button roles,
+ 298    /// text fields, dialogs, sheets, menus and messages, from the tokens
+ 299    /// only, so field mode stays red or black.
+ 300    static ThemeData _withControls(
+ 301      ThemeData t,
+ 302      AppPalette p, {
+ 303      required bool field,
+ 304    }) {
+ 305      final s = t.colorScheme;
+ 306      final hybrid = t.extension&lt;HybridTokens&gt;()!;
+ 307      final text = t.textTheme;
+ 308      final shape = WidgetStatePropertyAll(
+ 309        RoundedRectangleBorder(
+ 310          borderRadius: BorderRadius.circular(AppRadius.small),
+ 311        ),
+ 312      );
+ 313      final label = WidgetStatePropertyAll(text.labelLarge);
+ 314      const tall = WidgetStatePropertyAll(Size(64, 48));
+ 315  
+ 316      // Pressed feedback stronger than Material&#x27;s 10 % (08 §5, §8).
+ 317      WidgetStateProperty&lt;Color?&gt; overlay(Color c) =&gt;
+ 318          WidgetStateProperty.resolveWith((states) {
+ 319            if (states.contains(WidgetState.pressed)) {
+ 320              return c.withValues(alpha: pressedOverlay);
+ 321            }
+ 322            if (states.contains(WidgetState.focused)) {
+ 323              return c.withValues(alpha: 0.12);
+ 324            }
+ 325            if (states.contains(WidgetState.hovered)) {
+ 326              return c.withValues(alpha: 0.08);
+ 327            }
+ 328            return null;
+ 329          });
+ 330      WidgetStateProperty&lt;Color&gt; onOff(Color on) =&gt;
+ 331          WidgetStateProperty.resolveWith(
+ 332            (states) =&gt;
+ 333                states.contains(WidgetState.disabled) ? p.textDisabled : on,
+ 334          );
+ 335      final secondary = ButtonStyle(
+ 336        minimumSize: tall,
+ 337        animationDuration: AppMotion.short,
+ 338        padding: const WidgetStatePropertyAll(
+ 339          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+ 340        ),
+ 341        shape: shape,
+ 342        textStyle: label,
+ 343        foregroundColor: onOff(p.textPrimary),
+ 344        iconColor: onOff(p.textPrimary),
+ 345        backgroundColor: WidgetStateProperty.resolveWith(
+ 346          (states) =&gt;
+ 347              states.contains(WidgetState.pressed) ? hybrid.selection : null,
+ 348        ),
+ 349        // The selection fill is the pressed feedback; no extra overlay.
+ 350        overlayColor: WidgetStateProperty.resolveWith(
+ 351          (states) =&gt; states.contains(WidgetState.pressed)
+ 352              ? HybridTokens.transparent
+ 353              : overlay(p.textPrimary).resolve(states),
+ 354        ),
+ 355        side: WidgetStateProperty.resolveWith(
+ 356          (states) =&gt; BorderSide(
+ 357            color: states.contains(WidgetState.disabled)
+ 358                ? p.border
+ 359                : p.controlBorder,
+ 360          ),
+ 361        ),
+ 362      );
+ 363  
+ 364      // Primary action (styles.css, hybrid-refinement.css): the action fill
+ 365      // with its on-action text in every theme. WQA-01 (owner-accepted web
+ 366      // reference 86873ce): field mode&#x27;s action is the bright red role with
+ 367      // black text (5.25:1), replacing the D-06 red outline; hover underlines
+ 368      // instead of darkening. Pressed: every Hybrid button takes the selection
+ 369      // fill with primary text (`button:active`). Disabled: opacity .55.
+ 370      // The label is `.primary-button`&#x27;s 16/600 (QA-04).
+ 371      final field = identical(hybrid, HybridTokens.field);
+ 372      Color disabled(Color c) =&gt; c.withValues(alpha: c.a * 0.55);
+ 373      return t.copyWith(
+ 374        filledButtonTheme: FilledButtonThemeData(
+ 375          style: ButtonStyle(
+ 376            minimumSize: tall,
+ 377            shape: shape,
+ 378            textStyle: WidgetStateProperty.resolveWith(
+ 379              (states) =&gt; text.bodyLarge?.copyWith(
+ 380                fontWeight: FontWeight.w600,
+ 381                height: 1.5,
+ 382                decoration: field &amp;&amp; states.contains(WidgetState.hovered)
+ 383                    ? TextDecoration.underline
+ 384                    : TextDecoration.none,
+ 385              ),
+ 386            ),
+ 387            padding: const WidgetStatePropertyAll(
+ 388              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+ 389            ),
+ 390            animationDuration: AppMotion.short,
+ 391            backgroundColor: WidgetStateProperty.resolveWith((states) {
+ 392              if (states.contains(WidgetState.disabled)) {
+ 393                return disabled(hybrid.action);
+ 394              }
+ 395              if (states.contains(WidgetState.pressed)) return hybrid.selection;
+ 396              if (!field &amp;&amp; states.contains(WidgetState.hovered)) {
+ 397                return Color.lerp(hybrid.action, const Color(0xFF000000), 0.13);
+ 398              }
+ 399              return hybrid.action;
+ 400            }),
+ 401            foregroundColor: WidgetStateProperty.resolveWith((states) {
+ 402              if (states.contains(WidgetState.disabled)) {
+ 403                return disabled(hybrid.onAction);
+ 404              }
+ 405              if (states.contains(WidgetState.pressed)) return p.textPrimary;
+ 406              return hybrid.onAction;
+ 407            }),
+ 408            iconColor: WidgetStateProperty.resolveWith((states) {
+ 409              if (states.contains(WidgetState.disabled)) {
+ 410                return disabled(hybrid.onAction);
+ 411              }
+ 412              if (states.contains(WidgetState.pressed)) return p.textPrimary;
+ 413              return hybrid.onAction;
+ 414            }),
+ 415            overlayColor: const WidgetStatePropertyAll(HybridTokens.transparent),
+ 416          ),
+ 417        ),
+ 418        outlinedButtonTheme: OutlinedButtonThemeData(style: secondary),
+ 419        // The flat design has no elevation: an elevated button is the
+ 420        // secondary role, on the surface.
+ 421        elevatedButtonTheme: ElevatedButtonThemeData(
+ 422          style: secondary.copyWith(
+ 423            backgroundColor: WidgetStateProperty.resolveWith(
+ 424              (states) =&gt; states.contains(WidgetState.disabled)
+ 425                  ? t.scaffoldBackgroundColor
+ 426                  : states.contains(WidgetState.pressed)
+ 427                  ? hybrid.selection
+ 428                  : s.surface,
+ 429            ),
+ 430            elevation: const WidgetStatePropertyAll(0),
+ 431          ),
+ 432        ),
+ 433        // plan.css `.quiet-button`: 14/500 secondary text, padding 8 12,
+ 434        // at least 48 × 48.
+ 435        textButtonTheme: TextButtonThemeData(
+ 436          style: ButtonStyle(
+ 437            minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+ 438            padding: const WidgetStatePropertyAll(
+ 439              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+ 440            ),
+ 441            animationDuration: AppMotion.short,
+ 442            shape: shape,
+ 443            textStyle: label,
+ 444            foregroundColor: onOff(p.textSecondary),
+ 445            iconColor: onOff(p.textSecondary),
+ 446            overlayColor: overlay(p.textPrimary),
+ 447          ),
+ 448        ),
+ 449        iconButtonTheme: IconButtonThemeData(
+ 450          style: ButtonStyle(
+ 451            minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+ 452            overlayColor: overlay(p.textPrimary),
+ 453          ),
+ 454        ),
+ 455        segmentedButtonTheme: SegmentedButtonThemeData(
+ 456          style: ButtonStyle(
+ 457            shape: shape,
+ 458            minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+ 459            textStyle: label,
+ 460            side: WidgetStatePropertyAll(BorderSide(color: p.controlBorder)),
+ 461            foregroundColor: onOff(p.textPrimary),
+ 462            backgroundColor: WidgetStateProperty.resolveWith(
+ 463              (states) =&gt; states.contains(WidgetState.selected)
+ 464                  ? hybrid.selection
+ 465                  : t.scaffoldBackgroundColor,
+ 466            ),
+ 467          ),
+ 468        ),
+ 469        // A quiet underline (08 §6): the enabled line is the control border
+ 470        // (colorScheme.outline, which Material reads); focus draws it 2 px in
+ 471        // the primary colour. Labels and hints are text roles (AA).
+ 472        // plan.css `.block-input input`: a 1 px border and 12 padding round
+ 473        // a 24 px line, 50 tall (Flutter paints the border inside the
+ 474        // content padding, so 13).
+ 475        inputDecorationTheme: InputDecorationThemeData(
+ 476          contentPadding: const EdgeInsets.all(13),
+ 477          constraints: const BoxConstraints(minHeight: 48),
+ 478          border: OutlineInputBorder(
+ 479            borderRadius: BorderRadius.circular(AppRadius.small),
+ 480          ),
+ 481          enabledBorder: OutlineInputBorder(
+ 482            borderRadius: BorderRadius.circular(AppRadius.small),
+ 483            borderSide: BorderSide(color: p.controlBorder),
+ 484          ),
+ 485          focusedBorder: OutlineInputBorder(
+ 486            borderRadius: BorderRadius.circular(AppRadius.small),
+ 487            borderSide: BorderSide(color: p.textPrimary, width: 2),
+ 488          ),
+ 489          errorBorder: OutlineInputBorder(
+ 490            borderRadius: BorderRadius.circular(AppRadius.small),
+ 491            borderSide: BorderSide(color: s.error),
+ 492          ),
+ 493          focusedErrorBorder: OutlineInputBorder(
+ 494            borderRadius: BorderRadius.circular(AppRadius.small),
+ 495            borderSide: BorderSide(color: s.error, width: 2),
+ 496          ),
+ 497          labelStyle: TextStyle(color: p.textSecondary),
+ 498          floatingLabelStyle: WidgetStateTextStyle.resolveWith(
+ 499            (states) =&gt; TextStyle(
+ 500              color: states.contains(WidgetState.error)
+ 501                  ? s.error
+ 502                  : states.contains(WidgetState.focused)
+ 503                  ? s.primary
+ 504                  : p.textSecondary,
+ 505            ),
+ 506          ),
+ 507          // `input::placeholder`: the secondary text (italic on plan pages,
+ 508          // HybridPlanInputs).
+ 509          hintStyle: TextStyle(color: p.textSecondary),
+ 510          helperStyle: TextStyle(color: p.textTertiary),
+ 511          errorStyle: TextStyle(color: s.error),
+ 512          prefixIconColor: p.textSecondary,
+ 513          suffixIconColor: p.textSecondary,
+ 514          fillColor: s.surface,
+ 515        ),
+ 516        // plan.css `.planner-page dialog` (WQA-04): 20 from the app&#x27;s edges
+ 517        // (so 335 wide at 375 and 372 at 412), radius 12, a control-border
+ 518        // outline, no shadow, 24 padding; the title 22/500, the message
+ 519        // 14 secondary 16 below it, the actions 24 below, 8 apart, at the end.
+ 520        dialogTheme: DialogThemeData(
+ 521          backgroundColor: p.surfaceRaised,
+ 522          surfaceTintColor: HybridTokens.transparent,
+ 523          elevation: 0,
+ 524          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+ 525          barrierColor: const Color(0x55000000),
+ 526          shape: RoundedRectangleBorder(
+ 527            borderRadius: BorderRadius.circular(AppRadius.large),
+ 528            side: BorderSide(color: p.controlBorder),
+ 529          ),
+ 530          titleTextStyle: text.titleLarge?.copyWith(
+ 531            fontSize: 22,
+ 532            height: 1.25,
+ 533            fontWeight: FontWeight.w500,
+ 534            color: p.textPrimary,
+ 535          ),
+ 536          contentTextStyle: text.bodyMedium?.copyWith(
+ 537            fontSize: 14,
+ 538            height: 1.5,
+ 539            color: p.textSecondary,
+ 540          ),
+ 541          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+ 542        ),
+ 543        bottomSheetTheme: BottomSheetThemeData(
+ 544          backgroundColor: p.surfaceRaised,
+ 545          modalBackgroundColor: p.surfaceRaised,
+ 546          shape: const RoundedRectangleBorder(
+ 547            borderRadius: BorderRadius.vertical(
+ 548              top: Radius.circular(AppRadius.large),
+ 549            ),
+ 550          ),
+ 551        ),
+ 552        // Hybrid&#x27;s menu (plan.css `.plan-menu`): flat, under its button, a
+ 553        // control-border outline at radius 8, 4 above and below, 48 px items
+ 554        // of 14 px text.
+ 555        popupMenuTheme: PopupMenuThemeData(
+ 556          color: p.surfaceRaised,
+ 557          surfaceTintColor: Colors.transparent,
+ 558          elevation: 0,
+ 559          position: PopupMenuPosition.under,
+ 560          menuPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+ 561          shape: RoundedRectangleBorder(
+ 562            borderRadius: BorderRadius.circular(AppRadius.menu),
+ 563            side: BorderSide(color: p.controlBorder),
+ 564          ),
+ 565          labelTextStyle: WidgetStatePropertyAll(
+ 566            AppTypography.body.copyWith(height: 1.5, color: p.textPrimary),
+ 567          ),
+ 568        ),
+ 569        menuTheme: MenuThemeData(
+ 570          style: MenuStyle(
+ 571            backgroundColor: WidgetStatePropertyAll(p.surfaceRaised),
+ 572          ),
+ 573        ),
+ 574        // Field mode keeps its dim red message; light and dark invert.
+ 575        snackBarTheme: field
+ 576            ? t.snackBarTheme
+ 577            : SnackBarThemeData(
+ 578                backgroundColor: p.textPrimary,
+ 579                contentTextStyle: text.bodyMedium?.copyWith(
+ 580                  color: t.scaffoldBackgroundColor,
+ 581                ),
+ 582                actionTextColor: t.scaffoldBackgroundColor,
+ 583              ),
+ 584      );
+ 585    }
+ 586  
+ 587    /// The pressed overlay&#x27;s opacity on every button (S5.2).
+ 588    static const double pressedOverlay = 0.16;
+ 589  }</pre>

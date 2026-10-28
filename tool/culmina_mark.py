@@ -376,12 +376,23 @@ def dart_geometry():
             + timeline +
             '/// The mark\'s colours on one of the app\'s surfaces; [glint] and\n'
             '/// [starPeak] are the launch gesture\'s accents.\n'
-            'final class CulminaMarkColors {\n'
+            'final class CulminaMarkColors extends ThemeExtension<CulminaMarkColors> {\n'
             '  const CulminaMarkColors({\n    required this.background,\n    required this.orbit,\n'
             '    required this.inner,\n    required this.star,\n    required this.glint,\n'
             '    required this.starPeak,\n  });\n\n'
             '  final Color background;\n  final Color orbit;\n  final Color inner;\n  final Color star;\n'
             '  final Color glint;\n  final Color starPeak;\n\n'
+            '  static CulminaMarkColors of(BuildContext context) =>\n'
+            '      Theme.of(context).extension<CulminaMarkColors>() ??\n'
+            '      (Theme.of(context).brightness == Brightness.dark ? dark : light);\n\n'
+            '  @override\n  CulminaMarkColors copyWith({Color? background, Color? orbit, Color? inner, Color? star, Color? glint, Color? starPeak}) => CulminaMarkColors(\n'
+            '    background: background ?? this.background, orbit: orbit ?? this.orbit, inner: inner ?? this.inner,\n'
+            '    star: star ?? this.star, glint: glint ?? this.glint, starPeak: starPeak ?? this.starPeak);\n\n'
+            '  @override\n  CulminaMarkColors lerp(CulminaMarkColors? other, double t) {\n'
+            '    if (other == null || t == 0) return this;\n    if (t == 1) return other;\n'
+            '    return CulminaMarkColors(background: Color.lerp(background, other.background, t)!,\n'
+            '      orbit: Color.lerp(orbit, other.orbit, t)!, inner: Color.lerp(inner, other.inner, t)!,\n'
+            '      star: Color.lerp(star, other.star, t)!, glint: Color.lerp(glint, other.glint, t)!, starPeak: Color.lerp(starPeak, other.starPeak, t)!);\n  }\n\n'
             f'{surfaces.rstrip()}\n'
             '}\n')
 
@@ -424,7 +435,7 @@ def main():
                                 "export '../../core/theme/culmina_mark_colors.dart';")
     write(ROOT / 'lib/presentation/shared/culmina_mark_geometry.dart', geometry.rstrip() + '\n')
     write(ROOT / 'lib/core/theme/culmina_mark_colors.dart',
-          f'// {GENERATED}\n' + "import 'dart:ui';\n\n/// The mark's colours" + colours)
+          f'// {GENERATED}\n' + "import 'package:flutter/material.dart';\n\n/// The mark's colours" + colours)
     if DEMO:
         write(ROOT / 'design/identity-lab/launch-demo.html', demo_html())
     for folder, size in [('mipmap-mdpi', 48), ('mipmap-hdpi', 72), ('mipmap-xhdpi', 96),

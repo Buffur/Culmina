@@ -18,9 +18,7 @@ class StartupMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colours = Theme.of(context).brightness == Brightness.dark
-        ? CulminaMarkColors.dark
-        : CulminaMarkColors.light;
+    final colours = CulminaMarkColors.of(context);
     return Semantics(
       label: 'Loading',
       liveRegion: true,

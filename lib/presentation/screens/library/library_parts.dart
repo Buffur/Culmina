@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../shared/hybrid_parts.dart';
@@ -42,13 +42,12 @@ class LibrarySearchField extends StatelessWidget {
         child: TextField(
           controller: controller,
           textInputAction: TextInputAction.search,
-          style: AppTypography.caption.copyWith(color: p.textPrimary),
+          style: AppTextTheme.of(context).caption
+              .copyWith(color: p.textPrimary),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppTypography.caption.copyWith(
-              color: p.textSecondary,
-              fontStyle: FontStyle.italic,
-            ),
+            hintStyle: AppTextTheme.of(context).caption
+                .copyWith(color: p.textSecondary, fontStyle: FontStyle.italic),
             contentPadding: const EdgeInsets.fromLTRB(12, 14, 0, 14),
             suffixIcon: controller.text.isEmpty
                 ? Padding(
@@ -205,23 +204,23 @@ class LibraryRow extends StatelessWidget {
                   Text(
                     title,
                     key: titleKey,
-                    style: AppTypography.rowTitle.copyWith(
-                      color: p.textPrimary,
-                    ),
+                    style: AppTextTheme.of(context).rowTitle
+                        .copyWith(color: p.textPrimary),
                   ),
                   Text(
                     caption,
-                    style: AppTypography.body.copyWith(
-                      height: 1.6,
-                      color: p.textSecondary,
-                    ),
+                    style: AppTextTheme.of(context)
+                        .resolve(
+                          AppTextTheme.of(context).body,
+                          AppTextGeometry.reading,
+                        )
+                        .copyWith(color: p.textSecondary),
                   ),
                   if (note case final n?)
                     Text(
                       n,
-                      style: AppTypography.caption.copyWith(
-                        color: p.textSecondary,
-                      ),
+                      style: AppTextTheme.of(context).caption
+                          .copyWith(color: p.textSecondary),
                     ),
                 ],
               ),
@@ -262,7 +261,7 @@ class LibraryRecordHeader extends StatelessWidget {
               header: true,
               child: Text(
                 t,
-                style: AppTypography.sectionSubject.copyWith(
+                style: AppTextTheme.of(context).sectionSubject.copyWith(
                   fontWeight: FontWeight.w600,
                   color: p.textPrimary,
                 ),
@@ -271,18 +270,16 @@ class LibraryRecordHeader extends StatelessWidget {
           ),
         Text(
           caption,
-          style: AppTypography.body.copyWith(
-            height: 1.5,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+              .copyWith(color: p.textSecondary),
         ),
         const SizedBox(height: 2),
         Text(
           librarySnapshotNote,
-          style: AppTypography.body.copyWith(
-            height: 1.6,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
+              .copyWith(color: p.textSecondary),
         ),
         const SizedBox(height: AppSpacing.itemGap),
         action,
@@ -317,10 +314,12 @@ class LibraryField extends StatelessWidget {
         children: [
           Text(
             label,
-            style: AppTypography.value.copyWith(
-              height: 1.5,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).value,
+                  AppTextGeometry.standard,
+                )
+                .copyWith(color: p.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xs),
           child,
@@ -329,10 +328,12 @@ class LibraryField extends StatelessWidget {
               padding: const EdgeInsets.only(top: AppSpacing.xs),
               child: Text(
                 h,
-                style: AppTypography.caption.copyWith(
-                  height: 1.55,
-                  color: p.textSecondary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      AppTextGeometry.supporting,
+                    )
+                    .copyWith(color: p.textSecondary),
               ),
             ),
         ],
@@ -342,8 +343,10 @@ class LibraryField extends StatelessWidget {
 }
 
 /// The input text of a Library form (`.library-form input`): 15 px.
-TextStyle libraryInputStyle(BuildContext context) => AppTypography.value
-    .copyWith(height: 1.5, color: AppPalette.of(context).textPrimary);
+TextStyle libraryInputStyle(BuildContext context) =>
+    AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).value, AppTextGeometry.standard)
+        .copyWith(color: AppPalette.of(context).textPrimary);
 
 /// A Library editor's actions (`.library-form-actions`): Cancel and the
 /// save, side by side, 8 0 4 at the bottom of the page.
@@ -464,11 +467,15 @@ class LibraryChoiceGrid<T> extends StatelessWidget {
                       Expanded(
                         child: Text(
                           o.$2,
-                          style: AppTypography.body.copyWith(
-                            height: 1.5,
-                            fontWeight: selected ? FontWeight.w600 : null,
-                            color: p.textPrimary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).body,
+                                AppTextGeometry.standard,
+                              )
+                              .copyWith(
+                                fontWeight: selected ? FontWeight.w600 : null,
+                                color: p.textPrimary,
+                              ),
                         ),
                       ),
                     ],

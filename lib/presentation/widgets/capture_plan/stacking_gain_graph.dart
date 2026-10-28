@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/services/capture_budget_calculator.dart';
@@ -97,10 +97,9 @@ class StackingGainGraph extends StatelessWidget {
     final palette = AppPalette.of(context);
     final hybrid =
         Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
-    final note = AppTypography.caption.copyWith(
-      height: 1.6,
-      color: palette.textSecondary,
-    );
+    final note = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.reading)
+        .copyWith(color: palette.textSecondary);
     // plan.js `curvePanel` (Hybrid): caption, y title, the 320 × 150 plot,
     // x title and the legend; 12 above and below the panel.
     return Semantics(
@@ -114,11 +113,15 @@ class StackingGainGraph extends StatelessWidget {
             if (caption != null) ...[
               Text(
                 caption!,
-                style: AppTypography.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                  height: 1.5,
-                  color: palette.textPrimary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).body,
+                      AppTextGeometry.standard,
+                    )
+                    .copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: palette.textPrimary,
+                    ),
               ),
               const SizedBox(height: 10),
             ],
@@ -129,6 +132,7 @@ class StackingGainGraph extends StatelessWidget {
                   StackingGainPainter.width / StackingGainPainter.height,
               child: CustomPaint(
                 painter: StackingGainPainter(
+                  typography: AppTextTheme.of(context),
                   curve,
                   palette,
                   hybrid: hybrid,
@@ -291,12 +295,14 @@ class StackingGainPainter extends CustomPainter {
     this.curve,
     this.palette, {
     this.hybrid,
+    this.typography,
     this.surface,
     this.recorded,
   });
 
   final StackingGainCurve curve;
   final AppPalette palette;
+  final AppTextTheme? typography;
   final HybridTokens? hybrid;
   final Color? surface;
 
@@ -321,11 +327,12 @@ class StackingGainPainter extends CustomPainter {
       final tp = TextPainter(
         text: TextSpan(
           text: text,
-          style: TextStyle(
-            fontFamily: HybridTokens.fontFamily,
-            fontSize: HybridTokens.chartLabelSize,
-            color: palette.textSecondary,
-          ),
+          style: (typography ?? AppTextTheme.standard)
+              .resolve(
+                (typography ?? AppTextTheme.standard).inherited,
+                AppTextGeometry.chartLabel,
+              )
+              .copyWith(color: palette.textSecondary),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
@@ -486,6 +493,7 @@ class StackingGainPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(StackingGainPainter old) =>
+      old.typography != typography ||
       old.curve.frames != curve.frames ||
       old.curve.exposureMs != curve.exposureMs ||
       old.palette != palette ||

@@ -1,0 +1,1245 @@
+{
+  "head": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "generatedUtc": "2026-10-28T15:53:18.976281+00:00",
+  "sources": [
+    {
+      "name": "culmina-design-components",
+      "title": "Culmina components",
+      "path": ".agents\\skills\\culmina-design-components\\SKILL.md",
+      "category": "Culmina skill",
+      "sha256": "58fe5ea9dd13274f088de6136355976f5ebe2c53f7725362623729c25c0c2ca5",
+      "lines": 20,
+      "rules": [],
+      "text": "---\nname: culmina-design-components\ndescription: Choose or document existing Culmina Flutter components and their states; inspect the relevant source/caller and component reference.\n---\n\n# Culmina components\n\nUse for composing, correcting or documenting existing Flutter controls and displays. Read [AGENTS](../../../AGENTS.md) and inspect the affected source/caller before choosing a component.\n\n| Task | Reference | Preserve |\n| --- | --- | --- |\n| Field, action, choice, confirmation or deletion | [Forms](references/forms.md) | Units, validation, edited drafts and Save/Discard/Cancel |\n| Context actions, detail template or destination | [Navigation](references/navigation.md) | Actual route adoption, Back/state and no-site semantics |\n| Fit/state, disclosure, measurement or science graphic | [Data display](references/data-display.md) | Unknown, fit versus persistence/result state and source-owned calculations |\n\nRead only the relevant group. Reuse the current component before adding an abstraction; inspect loading, missing-input, disabled, error and saved/changed states. Component availability or a gallery example does not prove production adoption.\n\nFor a changed contract, describe its purpose, inputs, states, interactions, semantics and real adopter. Preserve full labels, reachable actions, natural text growth and existing theme roles. A local component fix does not imply a routing redesign.\n\nReport the source/caller, changed behavior, actual checks and limits. Native host renders, Android/device interaction and owner acceptance are separate evidence.\n",
+      "href": "design-sources/7158750642d5.html"
+    },
+    {
+      "name": "culmina-design-rules",
+      "title": "Culmina product and data rules",
+      "path": ".agents\\skills\\culmina-design-rules\\SKILL.md",
+      "category": "Culmina skill",
+      "sha256": "f1427e1311a1c4ba2a2e3e5795a1e373fc9125f9471ea02c36bcce8ddbe73d5f",
+      "lines": 20,
+      "rules": [
+        {
+          "line": 10,
+          "text": "Culmina plans astrophotography and records outcomes; it does not control cameras or mounts. Preserve that boundary and avoid invented quality scores."
+        },
+        {
+          "line": 11,
+          "text": "Trace nightly calculations through `lib/domain/services/` and time models through `lib/domain/models/`. Keep UTC instants separate from civil evening dates and site-zone/DST presentation. A placeholder location is not a chosen observing site."
+        },
+        {
+          "line": 12,
+          "text": "Unknown is not zero. Retain units, source/freshness and theoretical versus empirical storage meaning. Relative stacking gain is not absolute SNR; AF/MF describes focusing and supplies no numeric focus measurement."
+        },
+        {
+          "line": 13,
+          "text": "Preserve Capture Plan assumptions, calibration policies, exposure/filter groups and fit reasons. Follow actual camera-class validation rather than hiding inconvenient inputs."
+        },
+        {
+          "line": 14,
+          "text": "Fit, working draft, explicitly saved plan and recorded result are distinct. Trace state through `lib/presentation/viewmodels/` and actual confirmation/caller behavior; keep Save/Discard/Cancel and failure recovery."
+        },
+        {
+          "line": 15,
+          "text": "Core planning, catalog and local records must remain usable offline. Preserve cache timestamps and missing/stale weather distinctions. Label illustrative fixtures as examples."
+        },
+        {
+          "line": 16,
+          "text": "Support Light, Dark and Field Red using `lib/core/theme/` and the field filter in `lib/main.dart`. Inspect pairing/readability in the intended theme; source colors alone do not establish accessibility acceptance."
+        }
+      ],
+      "text": "---\nname: culmina-design-rules\ndescription: Preserve code-backed Culmina product, time, scientific-data and persistence meaning during a focused design task or review.\n---\n\n# Culmina product and data rules\n\nUse when a UI task affects product meaning, scientific inputs, missing data or persistence. Start from [AGENTS](../../../AGENTS.md), the affected screen/ViewModel and domain service; current code supplies behavior, while the user supplies task scope.\n\n- Culmina plans astrophotography and records outcomes; it does not control cameras or mounts. Preserve that boundary and avoid invented quality scores.\n- Trace nightly calculations through `lib/domain/services/` and time models through `lib/domain/models/`. Keep UTC instants separate from civil evening dates and site-zone/DST presentation. A placeholder location is not a chosen observing site.\n- Unknown is not zero. Retain units, source/freshness and theoretical versus empirical storage meaning. Relative stacking gain is not absolute SNR; AF/MF describes focusing and supplies no numeric focus measurement.\n- Preserve Capture Plan assumptions, calibration policies, exposure/filter groups and fit reasons. Follow actual camera-class validation rather than hiding inconvenient inputs.\n- Fit, working draft, explicitly saved plan and recorded result are distinct. Trace state through `lib/presentation/viewmodels/` and actual confirmation/caller behavior; keep Save/Discard/Cancel and failure recovery.\n- Core planning, catalog and local records must remain usable offline. Preserve cache timestamps and missing/stale weather distinctions. Label illustrative fixtures as examples.\n- Support Light, Dark and Field Red using `lib/core/theme/` and the field filter in `lib/main.dart`. Inspect pairing/readability in the intended theme; source colors alone do not establish accessibility acceptance.\n\nUse `.audit/atlas/` only as historical visual evidence and identify its captured state. It supplies neither current implementation requirements nor approval for a new direction. The reserved `design/` directory currently contains no browser prototype.\n\nReport the affected invariant, owning source/caller, change or review finding, checks and remaining limits. Keep unrelated findings separate from the requested implementation.\n",
+      "href": "design-sources/1a2a6d29d6f5.html"
+    },
+    {
+      "name": "culmina-design-spacing",
+      "title": "Culmina spacing, shape and motion",
+      "path": ".agents\\skills\\culmina-design-spacing\\SKILL.md",
+      "category": "Culmina skill",
+      "sha256": "8b598be4c304854a4db9a06f4f21d46215e70b6a1f14e098da4ab552f974474b",
+      "lines": 19,
+      "rules": [
+        {
+          "line": 10,
+          "text": "Distinguish scale values, component padding and screen gutters. `md=16`, `gutter=20` and `section=28` are available values, not instructions to normalize every screen."
+        },
+        {
+          "line": 11,
+          "text": "Inspect actual screen padding and chart/calendar width constraints before adjusting a gap. `DocumentSection` in `lib/presentation/shared/document_section.dart` supplies flat grouping, default 16 dp padding and 8 dp corners; preserve child actions, focus and natural text height."
+        },
+        {
+          "line": 12,
+          "text": "Improve grouping before shrinking text. Diagnose width/height and scrolling ownership before adding flex or wrapping; use [layout diagnosis](../flutter-fix-layout-issues/SKILL.md) for an actual constraint error."
+        },
+        {
+          "line": 13,
+          "text": "Preserve reachable controls, full labels, text scaling and large-content scrolling. Avoid clipping, fixed text-card heights or a smaller user scaler as overflow repairs."
+        },
+        {
+          "line": 14,
+          "text": "Read shape values from AppRadius: small 6, menu 8, large 12, pill 999. Inspect the caller's current role before changing it."
+        },
+        {
+          "line": 15,
+          "text": "Use AppMotion and its reduced-motion handling. Source-owned scientific sky ramps and stacking-gain gradients are functional data presentation, not permission to add decorative effects."
+        }
+      ],
+      "text": "---\nname: culmina-design-spacing\ndescription: Apply Culmina spacing, shape and motion to focused density, alignment or layout corrections within the accepted composition. Adaptive navigation or alternative visual studies require their named task.\n---\n\n# Culmina spacing, shape and motion\n\nUse for local spacing, alignment, density, radius, border and functional-motion work. Read [AGENTS](../../../AGENTS.md), the affected widget/callers and the relevant definitions in `lib/core/theme/app_spacing.dart`, `app_radius.dart` and `app_motion.dart`.\n\n- Distinguish scale values, component padding and screen gutters. `md=16`, `gutter=20` and `section=28` are available values, not instructions to normalize every screen.\n- Inspect actual screen padding and chart/calendar width constraints before adjusting a gap. `DocumentSection` in `lib/presentation/shared/document_section.dart` supplies flat grouping, default 16 dp padding and 8 dp corners; preserve child actions, focus and natural text height.\n- Improve grouping before shrinking text. Diagnose width/height and scrolling ownership before adding flex or wrapping; use [layout diagnosis](../flutter-fix-layout-issues/SKILL.md) for an actual constraint error.\n- Preserve reachable controls, full labels, text scaling and large-content scrolling. Avoid clipping, fixed text-card heights or a smaller user scaler as overflow repairs.\n- Read shape values from AppRadius: small 6, menu 8, large 12, pill 999. Inspect the caller's current role before changing it.\n- Use AppMotion and its reduced-motion handling. Source-owned scientific sky ramps and stacking-gain gradients are functional data presentation, not permission to add decorative effects.\n\nA phone overflow does not call for new navigation or an adaptive shell. Use the named adaptive-layout skill only for that task.\n\nReport the geometry/source/caller, chosen correction, actual checks and limits. A static render establishes only its captured theme, size, scale and state.\n",
+      "href": "design-sources/243d61d9fa8e.html"
+    },
+    {
+      "name": "culmina-design-tokens",
+      "title": "Culmina semantic colors and surfaces",
+      "path": ".agents\\skills\\culmina-design-tokens\\SKILL.md",
+      "category": "Culmina skill",
+      "sha256": "def38d3a66aac001c761187365f5b301cbaf79e6772471542f60dbd72d5e7156",
+      "lines": 16,
+      "rules": [
+        {
+          "line": 10,
+          "text": "1. Identify the role: page/group/overlay surface, text, control boundary, science display, fit or persistence/result state. Follow the actual caller to its theme owner; a token declaration is not proof of use."
+        },
+        {
+          "line": 11,
+          "text": "2. Reuse the existing semantic role before adding an alias. Similar names/values in AppPalette and HybridTokens do not require migrating every caller."
+        },
+        {
+          "line": 12,
+          "text": "3. Preserve words, icons and geometry alongside functional colors. Unknown, freshness, fit and saved/result meanings remain distinct."
+        },
+        {
+          "line": 13,
+          "text": "4. Inspect affected foreground/background pairs in Light, Dark and Field Red. Keep red/black field presentation and the production filter in `lib/main.dart`; evaluate accessibility against actual rendered uses rather than assuming all themes meet a threshold."
+        },
+        {
+          "line": 14,
+          "text": "5. For an explicitly requested palette exploration, compare identical content/state and record the proposal separately from implementation. `.audit/atlas/` is historical visual evidence; `design/` currently supplies no browser token authority."
+        }
+      ],
+      "text": "---\nname: culmina-design-tokens\ndescription: Map Culmina semantic colors and surfaces to native roles/callers for focused Light, Dark and Field Red fixes or review.\n---\n\n# Culmina semantic colors and surfaces\n\nUse for theme/surface meaning, Field Red behavior and token drift. Read [AGENTS](../../../AGENTS.md), the needed rows of the [semantic map](references/semantic-map.md), and affected definitions/callers in `lib/core/theme/app_colors.dart`, `app_palette.dart`, `hybrid_tokens.dart` and `app_theme.dart`.\n\n1. Identify the role: page/group/overlay surface, text, control boundary, science display, fit or persistence/result state. Follow the actual caller to its theme owner; a token declaration is not proof of use.\n2. Reuse the existing semantic role before adding an alias. Similar names/values in AppPalette and HybridTokens do not require migrating every caller.\n3. Preserve words, icons and geometry alongside functional colors. Unknown, freshness, fit and saved/result meanings remain distinct.\n4. Inspect affected foreground/background pairs in Light, Dark and Field Red. Keep red/black field presentation and the production filter in `lib/main.dart`; evaluate accessibility against actual rendered uses rather than assuming all themes meet a threshold.\n5. For an explicitly requested palette exploration, compare identical content/state and record the proposal separately from implementation. `.audit/atlas/` is historical visual evidence; `design/` currently supplies no browser token authority.\n\nReport the semantic role, definition/caller, affected theme pairings, changes or findings, checks and limits. Browser specimens and host renders do not establish Android/device or owner acceptance.\n",
+      "href": "design-sources/108c54254ed8.html"
+    },
+    {
+      "name": "culmina-design-typography",
+      "title": "Culmina typography",
+      "path": ".agents\\skills\\culmina-design-typography\\SKILL.md",
+      "category": "Culmina skill",
+      "sha256": "c817d6fb86f205895a68ff3d0017288079c5c0940141877d2a9476eea18878d3",
+      "lines": 16,
+      "rules": [
+        {
+          "line": 10,
+          "text": "Production text roles use Geist. Source Serif 4 remains bundled; its availability is not evidence of current role adoption. Preserve MaterialIcons and the separate line-icon rendering path."
+        },
+        {
+          "line": 11,
+          "text": "Select the existing named or Material role before changing size/weight/height/tracking. Named screen roles and AppTypography.scale's Material TextTheme have different purposes; inspect their actual definitions."
+        },
+        {
+          "line": 12,
+          "text": "Diagnose available width, wrapping and padding before shrinking text. Preserve the user's text scaler and full accessible labels. Compact chart/calendar/navigation roles are explicit exceptions in current source, not a global size prescription."
+        },
+        {
+          "line": 13,
+          "text": "Check long names, errors, units and signs, ambiguous digits, and relevant Ukrainian glyphs (І і Ї ї Є є Ґ ґ). Use actual bundled fonts for visual evidence and tabular numerals where comparative measurements need them."
+        },
+        {
+          "line": 14,
+          "text": "Font-family selection applies only to a named family/design task. Compare identical content/composition, retain license/provenance and verify fallback; do not download or refresh assets as a side effect of a wrapping fix."
+        }
+      ],
+      "text": "---\nname: culmina-design-typography\ndescription: Apply adopted Culmina text roles, weight, wrapping and numeric typography. Use for focused typography fixes or review; font-family research applies only to an explicitly open design decision.\n---\n\n# Culmina typography\n\nUse for text hierarchy, roles, weight, line height, wrapping and readable measurements. Read [AGENTS](../../../AGENTS.md), `lib/core/theme/app_typography.dart`, relevant compact roles in `hybrid_tokens.dart`, bundled assets in `pubspec.yaml` and affected text callers.\n\n- Production text roles use Geist. Source Serif 4 remains bundled; its availability is not evidence of current role adoption. Preserve MaterialIcons and the separate line-icon rendering path.\n- Select the existing named or Material role before changing size/weight/height/tracking. Named screen roles and AppTypography.scale's Material TextTheme have different purposes; inspect their actual definitions.\n- Diagnose available width, wrapping and padding before shrinking text. Preserve the user's text scaler and full accessible labels. Compact chart/calendar/navigation roles are explicit exceptions in current source, not a global size prescription.\n- Check long names, errors, units and signs, ambiguous digits, and relevant Ukrainian glyphs (І і Ї ї Є є Ґ ґ). Use actual bundled fonts for visual evidence and tabular numerals where comparative measurements need them.\n- Font-family selection applies only to a named family/design task. Compare identical content/composition, retain license/provenance and verify fallback; do not download or refresh assets as a side effect of a wrapping fix.\n\nReport the role/caller, bounded correction or finding, checks and remaining limits. CSS specimens do not prove Flutter scaling, and static renders do not establish device or owner acceptance.\n",
+      "href": "design-sources/f43eba0831ce.html"
+    },
+    {
+      "name": "data-display.md",
+      "title": "Data display: API and state map",
+      "path": ".agents\\skills\\culmina-design-components\\references\\data-display.md",
+      "category": "Culmina reference",
+      "sha256": "666c7fc2f4b38c49e6598eec3508b42601564857d88ce484c64e7d02e3aabeff",
+      "lines": 19,
+      "rules": [],
+      "text": "# Data display: API and state map\n\nPaths are relative to the repository root. Unqualified shared filenames are under `lib/presentation/shared/`; `widgets/` means `lib/presentation/widgets/`. Values come from existing domain/ViewModel contracts.\n\n| API/source | Inputs, variants and slots | State and interaction contract | Adopter/check |\n| --- | --- | --- | --- |\n| `DocumentSection` in `document_section.dart` | Required existing `children`; optional padding (16 dp), joinPrevious/joinNext for lazy month slices | Flat surfaceSubtle, radius 8 dp, zero elevation. No new callback, clipping, semantic merging or fixed text height. Local Material preserves child ink/focus feedback. Keep source-owned chart/calendar widths and all existing actions | Tonight, Plan, Logbook, Night, Moon, Weather, Library, Settings, Record result; `test/presentation/shared/document_section_test.dart` |\n| `SkyDarknessWidget` in `widgets/sky_darkness_widget.dart` | `embedded:false` keeps standalone framing; `embedded:true` uses the containing document group's frame/inset | Same remembered disclosure key, top sibling rule, Bortle/SQM/Unknown, independent provenance, picker and external-map action in both variants | Planner `home_screen.dart` uses embedded; `sky_darkness_context_test.dart` covers standalone facts and embedded control/persistence behavior |\n| `StatusBlock` in `lib/presentation/shared/status_block.dart` | Required `state:FitState`; optional `needed/usable:Duration?`, `reason`, `missing`, `keyNumbers:List<(String,String)>`, `action:Widget?` | Only show measured headline when both durations exist. Missing input uses its word, never fabricated zero. Action slot is caller-owned; the widget calculates nothing | `test/presentation/shared/status_block_test.dart`; Tonight instance; planner `plan_status.dart` uses `StatusBlock.headline` only; isolated trial |\n| `PlanStateLabel(PlanState)` in `plan_state.dart` | States: notSaved, saved, savedChanged, tracking, completed, partly, notDone, oldLog. `PlanState.from` consumes status/savedBefore/legacy and optional resultKind | Persistence/result state is distinct from fit; do not infer “Saved” from “Fits”. Result states have existing icons. Current code supports partly; historical adoption text predates that implementation | Native gallery and `test/presentation/shared/plan_state_test.dart`; Logbook/planner |\n| `CollapsibleSection` in `collapsible_section.dart` | Required sectionKey/title/child; optional summary/initiallyOpen; remembered form or controlled pair `open` **and** `onToggle` | Supply both controlled properties together; otherwise retain DisclosureViewModel. Closed child is not built. Summary remains visible; header has expanded semantics and 48 dp target. Reduced motion omits AnimatedSize | `test/presentation/shared/collapsible_section_test.dart`; isolated trial |\n| `ChangeMark` in `change_mark.dart` | Required value and child; value change triggers the existing transient cue | Does not persist or compute domain state. Preserve the original value/change boundary and reduced-motion behavior | `test/presentation/widgets/capture_outputs_test.dart` and actual planner callers |\n| `AltitudeChartWidget` in `widgets/altitude_chart_widget.dart` | Required opportunity; optional moonAltitudesDeg, zoneId, nowUtc, captureEndUtc; `TimelineDensity.full/compact` | Full has grid/legend; compact retains timing information. Existing painter/timeline data owns scientific geometry. Use chart tokens, not approximate CSS astronomy | `test/presentation/design_system/u_renders_test.dart`; `widgets/tonight_opportunity_widget.dart` contains a call, but that wrapper has no production instantiation at this snapshot; current night-browser timeline is separate |\n| `StackingGainGraph` in `widgets/capture_plan/stacking_gain_graph.dart` | Required curve and groupLabel; optional caption and recorded frame count | Graph is relative improvement over integration time normalized to the plan (1.00×), with plan/comparison and optional recorded marks. Preserve the existing curve and per-group exposure/filter meaning; no absolute SNR or universal score. Hybrid functional gradients are presentation, not new science | `widgets/capture_plan/capture_budget_summary.dart`; existing graph/curve checks and planner |\n| `NightBarSection` in `widgets/night_browser_sections.dart` | Existing browser ViewModel/site providers; `compact`, `home` presentation flags | Two exact-boundary jump actions, 16 dp before the 48 dp slider region. Current instant/state stays visible. Legend, encoding warning and exact intervals are behind the initially closed `Exact times & reading key` action; opening it changes no preview/plan data. Preserve sky/Moon lanes and five-minute browse semantics | Tonight and Night & Moon detail; `night_moon_browse_test.dart`, actual screen callers and corresponding render fixtures |\n\n`WeatherDetailsTable(rows:, background:)` in `widgets/weather_details_table.dart` implements the current Forecast details composition. It accepts the caller's nine existing cell widgets/row decorations and document surface color. One intrinsic `Table` fixes its leading Local time column at 96 dp; its actual render children keep painting, hit tests and semantic bounds synchronized during horizontal scroll. Row heights follow full text and the user's scaler without a second layout/measurement loop. Per-cell semantics retain reading order and expose metric cells beside time when accessibility requests reveal. Only the Weather details caller adopts it; loading/unavailable/no-dark branches, model/provenance, units, dated offsets/DST, unknowns and partial-hour qualifications remain caller-owned. `weather_fixed_time_test.dart` covers three themes/phone widths, scaling/direction/update smoke, reveal, exact metric/imperial DST readouts and snapshot integrity. The widget test does not establish physical-device, owner or TalkBack acceptance.\n\nUse `NightTimeFormatter` / `QuantityText` and the existing word helpers for dates, units and labels. For every touched component record the needed variant, state, slots, input provenance and relevant check; do not analyse every category for an unrelated change.\n",
+      "href": "design-sources/0da06dfe54cd.html"
+    },
+    {
+      "name": "forms.md",
+      "title": "Form elements: API and state map",
+      "path": ".agents\\skills\\culmina-design-components\\references\\forms.md",
+      "category": "Culmina reference",
+      "sha256": "c0a467a1b3eb8e25025cda4af54f79277ebeb48567306b9f60e1239a68eede81",
+      "lines": 16,
+      "rules": [],
+      "text": "# Form elements: API and state map\n\nPaths below are relative to the repository root. Unqualified shared filenames are under `lib/presentation/shared/`; `app_button_styles.dart` is under `lib/core/theme/`. Inspect the named API before editing; this index routes to source and does not replace it.\n\n| API/source | Inputs, variants and slots | State and interaction contract | Adopter/check |\n| --- | --- | --- | --- |\n| Material FilledButton / OutlinedButton / TextButton; `lib/core/theme/app_theme.dart`, `app_button_styles.dart` | `onPressed`, child text/icon; filled primary, outlined secondary, text tertiary; destructive styles are explicit | `onPressed: null` disables; maintain visible action words and 48 dp targets. Do not swap a spinner in a way that changes control geometry or removes its accessible name | `test/core/theme/controls_theme_test.dart`; native `test/presentation/design_system/gallery_entries.dart` |\n| TextFormField; `coordinate_input.dart` | `CoordinateInput.parse`, `validateLatitude`, `validateLongitude`; optional string input, nullable parsed result, nullable validation message | Decimal comma is accepted; non-finite/out-of-range/empty values are errors. A validator is not a generated replacement field widget | `test/presentation/shared/location_input_test.dart`; site editor |\n| `site_form_input.dart`, `target_form_input.dart`, `rig_input_text.dart` | Existing domain validators and field copy; inspect the relevant methods rather than inventing another API | Keep units, range errors, camera-class requirements and edited drafts. Field loading/error/disabled presentation belongs to the adopting form | Existing site/target/rig editor tests; search by class name |\n| `askUnsavedChanges(context, plan: ...)` in `confirmation_patterns.dart` | Returns `UnsavedChoice.save/discard/cancel`; `plan` required | Cancel/back/outside = cancel. Caller performs Save/Discard and handles failure; prompt itself does not persist | `test/presentation/design_system/design_system_gallery_test.dart`; planner leaving flow |\n| `confirmDestructive(context, title:, message:, action:)` in same source | Required item-specific title and consequence; action defaults to Delete | True only for explicit confirmation; false on cancellation/dismissal. No destructive work inside the prompt | Native gallery overlay checks |\n| `DeleteButton`, `SwipeToDelete`, `showUndo` in `delete_patterns.dart` | Button: tooltip/onPressed; swipe: itemKey/onDelete/child; undo: message/onUndo | Swipe/button delegate to the adopter. Stored-record confirmation differs from an editable-plan Undo. Respect existing stale-recovery guards in the actual caller | Native gallery and existing delete/Undo task tests |\n\nFor selection: radio/segments express one of a few mutually exclusive values; searchable select expresses a larger single-choice set; checkboxes express independent selections; switches apply a binary setting. An option count does not change the underlying choice semantics. Error text must name the problem and recovery; colour is additional information.\n\nFor a requested component comparison, inspect the existing control/caller and compare concrete input/state behavior using identical content. Historical examples do not replace current source.\n",
+      "href": "design-sources/77d945b1865b.html"
+    },
+    {
+      "name": "navigation.md",
+      "title": "Navigation: API and state map",
+      "path": ".agents\\skills\\culmina-design-components\\references\\navigation.md",
+      "category": "Culmina reference",
+      "sha256": "35dae5bf13f3189e0e5535233e3df943a65d3ee7e34ec4481ef45e4b647e20cf",
+      "lines": 21,
+      "rules": [
+        {
+          "line": 14,
+          "text": "**Tonight:** `lib/presentation/screens/tonight/tonight_home_screen.dart` (`_Context`) passes `compact:true`, `noSiteLabel:ContextLine.setSite` (\"Set site\"), the compact `SiteLabel` display and full `siteDescription:SiteLabel.of(siteVm)`. It leaves `framed:false` at its default, passes `planVm.eveningDate` and `zoneId`, and omits `nightStartUtc`, so no inline zone caption appears. `onSite/onNight` call `showHomeSiteSheet/showHomeNightSheet` in `home_context_sheets.dart`: Manage sites and the direct calendar respectively (TD-120)."
+        },
+        {
+          "line": 15,
+          "text": "**Planner:** `lib/presentation/screens/home/home_screen.dart` no longer constructs `ContextLine`. Its `HybridPlanRow` (`planner.context`, \"Site and night\") opens `PlanContextScreen` in `plan_context_screen.dart` via `openPlanContext`; site/night draft choices use Apply changes, while Close discards unapplied choices. The planner still uses `ContextLine.noSite` and `pickNight` for its copy action. Do not apply Tonight's compact/direct-calendar behavior to this flow."
+        },
+        {
+          "line": 16,
+          "text": "**No site:** callers must supply `night:null` and no night instant; the component does not infer those from a null name. Tonight obtains the null date from `SessionPlanViewModel.eveningDate` / `sessionNight` when `SiteViewModel.isDefaultLocation` is true. The site action remains available as \"Set site\"; default component wording remains \"No site set\". Never compute a night for the placeholder location."
+        },
+        {
+          "line": 17,
+          "text": "**Accessibility and layout:** each choice retains a 48 × 48 logical px minimum, an enabled button semantics action, its own Choose a site/night hint and a full-label tooltip. Compact choices follow their content with a 4 dp gap; the site flexes/ellipsizes when needed and the date keeps its natural width. Compact site semantics use `siteDescription ?? siteName ?? ContextLine.noSite`, while the default wrapping variant uses `siteName ?? ContextLine.noSite`. `noSiteLabel` changes visible wording, not the semantic fallback. Both variants expose the full \"Night of …\" label; `siteDescription` affects only compact site semantics/tooltip. `framed:true` remains an optional `context.card` wrapper for either variant, not a requirement for a screen."
+        }
+      ],
+      "text": "# Navigation: API and state map\n\nPaths are relative to the repository root. Keep existing routing authoritative.\n\n| API/source | Inputs, variants and slots | State and interaction contract | Adopter/check |\n| --- | --- | --- | --- |\n| `lib/presentation/navigation/app_shell.dart` | Tonight, Logbook, Library, Settings; inspect current router integration | Preserve branch state and Back behavior. Tonight remains the tab name while the page title can name a different selected night | Existing navigation tests; actual Tonight screen |\n| `ContextLine` in `lib/presentation/shared/context_line.dart` | Required nullable `siteName:String?`, `night:CalendarDate?`, callbacks `onSite/onNight`; defaults `noSiteLabel=ContextLine.noSite` (\"No site set\"), `framed=false`, `compact=false`; optional nullable `siteDescription`, `zoneId`, `nightStartUtc` | Default wrapping layout or compact single-line choices; optional card framing. Site and night are independent actions; night visibility follows `night != null`, zone caption requires both `night` and `nightStartUtc`. The widget does not enforce consistency from `siteName` alone | `test/presentation/shared/context_line_test.dart` and actual Tonight caller; gallery/isolated trial exercise component capabilities, not current screen adoption |\n| `pickNight` in the same file | Existing calendar picker returning `CalendarDate?`; inspect the current signature | Null means cancelled. Selecting a civil evening date must not shift through UTC conversion or implicitly save a draft | ContextLine tests and current caller |\n| `DetailScaffold` in `lib/presentation/shared/detail_scaffold.dart` | Required `title`, `summary:Widget`; optional textual `context`, `zoneRule`, `sections:List<Widget>`, `actions:List<Widget>?` | Title wraps in body with header semantics; app bar retains Back/actions. Summary reports facts. One zone caption, discoverable disclosure for long sections | Native gallery detail-template checks; no production `DetailScaffold(...)` instantiation under `lib/` at this snapshot. Current detail screens have their own Hybrid composition |\n\n## Current context adopters and states\n\n- **Tonight:** `lib/presentation/screens/tonight/tonight_home_screen.dart` (`_Context`) passes `compact:true`, `noSiteLabel:ContextLine.setSite` (\"Set site\"), the compact `SiteLabel` display and full `siteDescription:SiteLabel.of(siteVm)`. It leaves `framed:false` at its default, passes `planVm.eveningDate` and `zoneId`, and omits `nightStartUtc`, so no inline zone caption appears. `onSite/onNight` call `showHomeSiteSheet/showHomeNightSheet` in `home_context_sheets.dart`: Manage sites and the direct calendar respectively (TD-120).\n- **Planner:** `lib/presentation/screens/home/home_screen.dart` no longer constructs `ContextLine`. Its `HybridPlanRow` (`planner.context`, \"Site and night\") opens `PlanContextScreen` in `plan_context_screen.dart` via `openPlanContext`; site/night draft choices use Apply changes, while Close discards unapplied choices. The planner still uses `ContextLine.noSite` and `pickNight` for its copy action. Do not apply Tonight's compact/direct-calendar behavior to this flow.\n- **No site:** callers must supply `night:null` and no night instant; the component does not infer those from a null name. Tonight obtains the null date from `SessionPlanViewModel.eveningDate` / `sessionNight` when `SiteViewModel.isDefaultLocation` is true. The site action remains available as \"Set site\"; default component wording remains \"No site set\". Never compute a night for the placeholder location.\n- **Accessibility and layout:** each choice retains a 48 × 48 logical px minimum, an enabled button semantics action, its own Choose a site/night hint and a full-label tooltip. Compact choices follow their content with a 4 dp gap; the site flexes/ellipsizes when needed and the date keeps its natural width. Compact site semantics use `siteDescription ?? siteName ?? ContextLine.noSite`, while the default wrapping variant uses `siteName ?? ContextLine.noSite`. `noSiteLabel` changes visible wording, not the semantic fallback. Both variants expose the full \"Night of …\" label; `siteDescription` affects only compact site semantics/tooltip. `framed:true` remains an optional `context.card` wrapper for either variant, not a requirement for a screen.\n\nCallbacks and slots are the Flutter equivalents of editable properties and nested instances. Keep icon/text geometry stable when changing state, allow wrapping variants to wrap, retain compact variants' full-label semantics/tooltips and preserve separate accessible action names. Browser analogues do not establish actual routing or Material semantics.\n\nThe reserved `design/` directory currently has no browser prototype. Use actual Flutter routes and tests; historical Visual Atlas evidence lives under `.audit/atlas/` and does not establish current router behavior.\n",
+      "href": "design-sources/d1a846378431.html"
+    },
+    {
+      "name": "semantic-map.md",
+      "title": "Native semantic role map",
+      "path": ".agents\\skills\\culmina-design-tokens\\references\\semantic-map.md",
+      "category": "Culmina reference",
+      "sha256": "618d4d73fdc50e4c7dfe3838932ae4a1680eed7d0242435069a5d577445e76fe",
+      "lines": 28,
+      "rules": [],
+      "text": "# Native semantic role map\n\nCurrent mapping guidance carried forward from the 2026-10-24 token/source reconciliation, not a new token authority. Read only the roles needed by the task and inspect their definition and actual caller. Repository paths below are relative to the root. [AGENTS](../../../../AGENTS.md) describes the shared source routes and evidence limits.\n\n| Semantic role | Production source | When to use |\n| --- | --- | --- |\n| `surface-default` | `Theme.of(context).scaffoldBackgroundColor` (`ThemeData`) | The page canvas |\n| `surface-subtle` | `HybridTokens.surfaceSubtle`; generic theme surfaces remain `ColorScheme.surface` and field `cardColor` | Quiet Hybrid grouping; selected root navigation and Concept B `DocumentSection` use this role. Field `ColorScheme.surface` is black, while `surfaceSubtle` and `cardColor` use the dark-red grouping surface |\n| `surface-raised` | `AppPalette.surfaceRaised`, `surfaceContainerHigh` | Dialogs, menus and sheets above the page |\n| `surface-sunken` | `HybridTokens.surfaceSunken` | Recessed Moon-lane tracks and the Moon-up legend well in `night_browser_sections.dart`; distinct from raised overlays |\n| `text-primary` | `AppPalette.textPrimary` | Answers, values and meaningful headings |\n| `text-secondary` | `AppPalette.textSecondary` | Labels and supporting explanations |\n| `text-tertiary` | `AppPalette.textTertiary` | Provenance, time zone and freshness; never hide necessary instructions here |\n| `text-disabled` | `AppPalette.textDisabled` | Disabled controls only, not normal metadata |\n| `border-subtle` | `AppPalette.border` | Decorative dividers and group outlines |\n| `border-control` | `AppPalette.controlBorder`, `ColorScheme.outline` | A boundary needed to recognise a control |\n| `status-*` | `AppPalette.statusFits/Tight/DoesNotFit/NoWindow/Neutral` via `FitText.color` | Fit verdicts in `StatusBlock`; retain the status word and reason |\n| `state-*` | `AppPalette.stateUnsaved/Settled/Quiet` for `PlanState.tone`; compact badges use the Hybrid pairs below | Persistence/result state, distinct from fit; a tone helper is not the badge's current colour map |\n| Compact persistence/result badges | `HybridTokens.success/successWash`, `caution/cautionWash`, `selection` with `AppPalette.textPrimary` | `PlanStateLabel` and `EntryStateBadge`: Saved/Tracking/Completed use success; Not saved/Saved · changed/Partly use caution; Not done/Old log use neutral selection. Not recorded (`EntryStateBadge.due`) uses caution. These are state words, not fit or image-quality verdicts |\n| Selected weather hour | `HybridTokens.selectedHourFill/selectedHourText/selectedHourRule` | `weather_hybrid_view.dart` hour axis: fill, text and bottom rule, with selected semantics. `hourBackground/hourText` exist but have no presentation callers at this baseline; do not substitute them |\n| `sky-day/civil/nautical/astro/dark` | `HybridTokens.skyDay/skyCivil/skyNautical/skyAstronomical/skyDark` | Native night-browser timeline and legend in `night_browser_sections.dart`; existing sky intervals own the geometry. `AppPalette.chartDay/chartTwilight/chartDark` still serve the altitude chart, not this five-role ramp |\n| `moon-up`, `moon-free` | `HybridTokens.moonUp/moonFree` | Native night-browser lanes and legend; preserve position, thickness and text cues. `AppPalette.chartMoon` remains the altitude chart's Moon line; it is not the Moon-up lane token |\n| Weather dew caution | `HybridTokens.caution` | `weather_hybrid_view.dart` dew-margin heuristic text, not a condensation forecast or fit verdict. `weatherCaution` is defined but has no presentation callers at this baseline |\n| Weather freshness/gap notices | `HybridTokens.weatherNotice` | `weather_hybrid_view.dart` aging/stale, unknown-gap and offline-cache notices; preserve their text and source/freshness meaning |\n\nRead actual values from `lib/core/theme/app_colors.dart`, `app_palette.dart`, `hybrid_tokens.dart` and `app_theme.dart`; historical Visual Atlas files under `.audit/atlas/` are reference evidence, not production constants.\n\nCaller map (under `lib/presentation/`): `navigation/app_shell.dart` and `shared/document_section.dart` read `surfaceSubtle`; `widgets/night_browser_sections.dart` reads sunken/sky/Moon roles; `widgets/weather_hybrid_view.dart` reads selected-hour and weather-notice roles; `shared/plan_state.dart` defines both the palette tone helper and Hybrid badges; `shared/night_text.dart` defines `FitText.color`, used by `shared/status_block.dart`; `widgets/altitude_chart_widget.dart` retains AppPalette chart roles. `AppTheme._withTokens` installs both extensions for light/dark/field. Similar values or names do not make these APIs interchangeable or require migrating every AppPalette caller.\n",
+      "href": "design-sources/0067d9473768.html"
+    },
+    {
+      "name": "AGENTS.md",
+      "title": "Culmina — shared agent instructions",
+      "path": "AGENTS.md",
+      "category": "Project authority",
+      "sha256": "830c16e7a50cd7d39dc77f55925f55de223a4bd02e99ed47343c628c169aef3a",
+      "lines": 144,
+      "rules": [
+        {
+          "line": 10,
+          "text": "This file is the shared instruction source for Codex, Claude and Gemini."
+        },
+        {
+          "line": 11,
+          "text": "Follow the current user task; skills and archived findings are not a task queue."
+        },
+        {
+          "line": 12,
+          "text": "Establish behavior from current source and tests before editing docs or code."
+        },
+        {
+          "line": 13,
+          "text": "Read only the relevant skill and supporting reference for the requested work."
+        },
+        {
+          "line": 14,
+          "text": "Keep new or substantially revised project documentation in English."
+        },
+        {
+          "line": 15,
+          "text": "Preserve unrelated local changes and historical evidence; report checks actually performed."
+        },
+        {
+          "line": 19,
+          "text": "`lib/main.dart`: startup, catalog seeding and concrete dependency composition."
+        },
+        {
+          "line": 20,
+          "text": "`lib/presentation/app_view_models.dart`: injected interfaces, services and ViewModels."
+        },
+        {
+          "line": 21,
+          "text": "`lib/presentation/`: screens, shared UI, widgets and screen-scoped Provider/ViewModels."
+        },
+        {
+          "line": 22,
+          "text": "`lib/presentation/navigation/app_router.dart`: go_router shell and root overlay routes."
+        },
+        {
+          "line": 23,
+          "text": "Bottom tabs: Tonight, Logbook, Library and Settings; Plan opens above the shell."
+        },
+        {
+          "line": 24,
+          "text": "Library contains rigs, targets and sites; Night, Moon and Weather have detail views."
+        },
+        {
+          "line": 25,
+          "text": "`lib/domain/`: models, repository interfaces and astronomical/capture calculations."
+        },
+        {
+          "line": 26,
+          "text": "`lib/data/`: Drift repositories, preferences, HTTP, backup and platform adapters."
+        },
+        {
+          "line": 27,
+          "text": "`lib/core/`: clocks/time, units, diagnostics, configuration and theme tokens."
+        },
+        {
+          "line": 28,
+          "text": "`lib/data/database/app_database.dart`: native SQLite database, currently schema v27."
+        },
+        {
+          "line": 29,
+          "text": "`lib/data/database/schema_versions.dart` and `lib/data/database/generated_migrations/`: migrations."
+        },
+        {
+          "line": 30,
+          "text": "`drift_schemas/`: exported JSON snapshots; `build.yaml` configures Drift generation."
+        },
+        {
+          "line": 31,
+          "text": "`assets/catalog/catalog_v2.json`: bundled OpenNGC subset; filename is not catalog version."
+        },
+        {
+          "line": 32,
+          "text": "`test/`: core/data/domain/presentation regressions; `test/support/` contains shared fakes."
+        },
+        {
+          "line": 33,
+          "text": "`integration_test/` and `test_driver/`: host flows and separate Android capture routes."
+        },
+        {
+          "line": 34,
+          "text": "`tool/`: verification, CI partitioning, catalog generation and design helper scripts."
+        },
+        {
+          "line": 35,
+          "text": "`design/`: currently empty; historical browser helpers require missing lab inputs."
+        },
+        {
+          "line": 36,
+          "text": "`.audit/atlas/index.html`: Visual Atlas; manifest, boards and captures accompany it."
+        },
+        {
+          "line": 37,
+          "text": "`.audit/` and `docs/archive/`: historical evidence; inspect as needed, preserve contents."
+        },
+        {
+          "line": 38,
+          "text": "`.agents/skills/`: active project recipes; `.agents/rules/` holds compatibility pointers."
+        },
+        {
+          "line": 42,
+          "text": "Keep UI, ViewModels, domain interfaces/calculations and data implementations separated."
+        },
+        {
+          "line": 43,
+          "text": "Reuse Provider, repository injection and existing router/draft guards for focused changes."
+        },
+        {
+          "line": 44,
+          "text": "Keep catalogs, saved plans, calculations and Logbook useful offline."
+        },
+        {
+          "line": 45,
+          "text": "Forecast retrieval, map tiles and optional place-name lookup need network access."
+        },
+        {
+          "line": 46,
+          "text": "Preserve weather cache/freshness/error states and opt-in reverse-geocoding consent."
+        },
+        {
+          "line": 47,
+          "text": "Unknown is not zero: preserve missing values, units, provenance and partial observations."
+        },
+        {
+          "line": 48,
+          "text": "Never invent sensor specifications, catalog values, measurements or a quality score."
+        },
+        {
+          "line": 49,
+          "text": "Relative stacking gain is not absolute SNR; storage estimates retain their evidence kind."
+        },
+        {
+          "line": 50,
+          "text": "AF/MF and white balance are descriptive; do not invent numeric focus measurements."
+        },
+        {
+          "line": 51,
+          "text": "SessionNight is 24 hours from site mean solar noon in UTC; retain zone/DST display semantics."
+        },
+        {
+          "line": 52,
+          "text": "A placeholder location is not a selected site; preserve no-site and missing-input states."
+        },
+        {
+          "line": 53,
+          "text": "CaptureBudgetCalculator and FitAnalyzer share atomic events; keep timing assumptions aligned."
+        },
+        {
+          "line": 54,
+          "text": "Preserve draft, explicit Save plan, fit verdict and recorded-result distinctions."
+        },
+        {
+          "line": 55,
+          "text": "Preserve local records, supported migrations and backup/restore compatibility."
+        },
+        {
+          "line": 56,
+          "text": "Maintain Light, Dark and Field Red, including the root field color filter."
+        },
+        {
+          "line": 57,
+          "text": "Theme definitions live in `lib/core/theme/`; inspect semantic roles and actual callers."
+        },
+        {
+          "line": 58,
+          "text": "Use existing Geist typography, spacing, radii and reduced-motion handling for local UI fixes."
+        },
+        {
+          "line": 59,
+          "text": "Keep meaningful words, accessible actions, text scaling and reachable controls."
+        },
+        {
+          "line": 78,
+          "text": "Code generation changes files: run for changed database inputs and inspect the diff."
+        },
+        {
+          "line": 79,
+          "text": "Preserve older schema snapshots; test migrations against supported stored databases."
+        },
+        {
+          "line": 80,
+          "text": "Format changed Dart files; select tests from changed behavior and its callers."
+        },
+        {
+          "line": 81,
+          "text": "`dart run tool/check.dart --checks-only` runs encoding, formatting and analysis checks."
+        },
+        {
+          "line": 82,
+          "text": "`dart run tool/check.dart` also runs unit tests and each host-capable integration file."
+        },
+        {
+          "line": 83,
+          "text": "CI implementation/job selection live in `tool/ci.py` and `.github/workflows/ci.yml`."
+        },
+        {
+          "line": 84,
+          "text": "Run host integration files separately; Android-only capture tests need an Android device."
+        },
+        {
+          "line": 85,
+          "text": "For instruction-only edits, validate paths, frontmatter and diffs; app checks are optional."
+        }
+      ],
+      "text": "# Culmina — shared agent instructions\n\nCulmina is a Flutter/Dart Android astrophotography planner and observing log.\nThe technical Dart package is `astroplan`; keep existing imports and identifiers.\nPlan a night, site, target and rig; save a Capture Plan; record imaging results.\nThe app does not control cameras or mounts.\n\n## Source and scope\n\n- This file is the shared instruction source for Codex, Claude and Gemini.\n- Follow the current user task; skills and archived findings are not a task queue.\n- Establish behavior from current source and tests before editing docs or code.\n- Read only the relevant skill and supporting reference for the requested work.\n- Keep new or substantially revised project documentation in English.\n- Preserve unrelated local changes and historical evidence; report checks actually performed.\n\n## Architecture map\n\n- `lib/main.dart`: startup, catalog seeding and concrete dependency composition.\n- `lib/presentation/app_view_models.dart`: injected interfaces, services and ViewModels.\n- `lib/presentation/`: screens, shared UI, widgets and screen-scoped Provider/ViewModels.\n- `lib/presentation/navigation/app_router.dart`: go_router shell and root overlay routes.\n- Bottom tabs: Tonight, Logbook, Library and Settings; Plan opens above the shell.\n- Library contains rigs, targets and sites; Night, Moon and Weather have detail views.\n- `lib/domain/`: models, repository interfaces and astronomical/capture calculations.\n- `lib/data/`: Drift repositories, preferences, HTTP, backup and platform adapters.\n- `lib/core/`: clocks/time, units, diagnostics, configuration and theme tokens.\n- `lib/data/database/app_database.dart`: native SQLite database, currently schema v27.\n- `lib/data/database/schema_versions.dart` and `lib/data/database/generated_migrations/`: migrations.\n- `drift_schemas/`: exported JSON snapshots; `build.yaml` configures Drift generation.\n- `assets/catalog/catalog_v2.json`: bundled OpenNGC subset; filename is not catalog version.\n- `test/`: core/data/domain/presentation regressions; `test/support/` contains shared fakes.\n- `integration_test/` and `test_driver/`: host flows and separate Android capture routes.\n- `tool/`: verification, CI partitioning, catalog generation and design helper scripts.\n- `design/`: currently empty; historical browser helpers require missing lab inputs.\n- `.audit/atlas/index.html`: Visual Atlas; manifest, boards and captures accompany it.\n- `.audit/` and `docs/archive/`: historical evidence; inspect as needed, preserve contents.\n- `.agents/skills/`: active project recipes; `.agents/rules/` holds compatibility pointers.\n\n## Technical invariants\n\n- Keep UI, ViewModels, domain interfaces/calculations and data implementations separated.\n- Reuse Provider, repository injection and existing router/draft guards for focused changes.\n- Keep catalogs, saved plans, calculations and Logbook useful offline.\n- Forecast retrieval, map tiles and optional place-name lookup need network access.\n- Preserve weather cache/freshness/error states and opt-in reverse-geocoding consent.\n- Unknown is not zero: preserve missing values, units, provenance and partial observations.\n- Never invent sensor specifications, catalog values, measurements or a quality score.\n- Relative stacking gain is not absolute SNR; storage estimates retain their evidence kind.\n- AF/MF and white balance are descriptive; do not invent numeric focus measurements.\n- SessionNight is 24 hours from site mean solar noon in UTC; retain zone/DST display semantics.\n- A placeholder location is not a selected site; preserve no-site and missing-input states.\n- CaptureBudgetCalculator and FitAnalyzer share atomic events; keep timing assumptions aligned.\n- Preserve draft, explicit Save plan, fit verdict and recorded-result distinctions.\n- Preserve local records, supported migrations and backup/restore compatibility.\n- Maintain Light, Dark and Field Red, including the root field color filter.\n- Theme definitions live in `lib/core/theme/`; inspect semantic roles and actual callers.\n- Use existing Geist typography, spacing, radii and reduced-motion handling for local UI fixes.\n- Keep meaningful words, accessible actions, text scaling and reachable controls.\n\n## Commands and verification\n\nRun from the repository root with Flutter/Dart on PATH and resolved dependencies.\n`pubspec.yaml` requires Dart `^3.13.3`; CI pins its SDK in `.github/workflows/ci.yml`.\nInspect the installed SDK and lockfile; do not upgrade dependencies as a bootstrap step.\n\n```sh\nflutter pub get\nflutter run\nflutter analyze --no-pub\nflutter test --no-pub\nflutter test --no-pub test/data/database/schema_migration_test.dart\ndart run build_runner build\ndart run drift_dev schema steps drift_schemas/ lib/data/database/schema_versions.dart\nflutter build apk --debug\n```\n\n- Code generation changes files: run for changed database inputs and inspect the diff.\n- Preserve older schema snapshots; test migrations against supported stored databases.\n- Format changed Dart files; select tests from changed behavior and its callers.\n- `dart run tool/check.dart --checks-only` runs encoding, formatting and analysis checks.\n- `dart run tool/check.dart` also runs unit tests and each host-capable integration file.\n- CI implementation/job selection live in `tool/ci.py` and `.github/workflows/ci.yml`.\n- Run host integration files separately; Android-only capture tests need an Android device.\n- For instruction-only edits, validate paths, frontmatter and diffs; app checks are optional.\n\nNative UI renders in PowerShell (synthetic fixtures; fresh evidence goes to build):\n\n```powershell\nNew-Item -ItemType Directory -Path build/ui-renders -Force | Out-Null\n$env:CULMINA_AUDIT_RENDERS = 'build/ui-renders'\n$env:CULMINA_AUDIT_SHOTS = 'home,plan'\n$env:CULMINA_AUDIT_THEMES = 'light,dark,field'\n$env:CULMINA_AUDIT_SCALE = '1'\nflutter test --no-pub test/presentation/design_system/concept_b_app_audit_renders_test.dart\nRemove-Item Env:CULMINA_AUDIT_RENDERS, Env:CULMINA_AUDIT_SHOTS, Env:CULMINA_AUDIT_THEMES, Env:CULMINA_AUDIT_SCALE\n```\n\nThe harness loads real fonts and uses in-memory state; inspect supported shot names.\nThe archived Atlas has 40 Dark/100%/375×812 captures with dated source provenance.\nCheck its manifest before reusing frames; archive presence does not prove current behavior.\nKeep browser, Flutter host, Android/device, accessibility and owner acceptance evidence distinct.\n\n## Active project skills\n\nEntrypoints are `.agents/skills/<name>/SKILL.md`; the [skill index](.agents/skills/README.md) links them.\nUpstream metadata and lock hashes describe acquisition provenance, not current local hashes.\n\n| Skill | Invoke for |\n| --- | --- |\n| culmina-design-components | Existing components, variants, callbacks and adopters |\n| culmina-design-rules | Product meaning, missing data and scientific invariants |\n| culmina-design-spacing | Local density, alignment, shape and motion |\n| culmina-design-tokens | Semantic colors/surfaces across all three themes |\n| culmina-design-typography | Text roles, weight, wrapping and numeric readability |\n| dart-add-unit-test | Focused domain/data regressions with existing fakes |\n| dart-build-cli-app | Existing Dart utilities under tool/ |\n| dart-collect-coverage | A specifically scoped coverage question |\n| dart-fix-runtime-errors | A reproduced exception and stack trace |\n| dart-generate-test-mocks | Handwritten fakes; generated mocks only if adopted |\n| dart-resolve-package-conflicts | A concrete dependency resolution conflict |\n| dart-run-static-analysis | Scoped analyzer diagnostics and corrections |\n| dart-use-doc-examples | External Dartdoc examples for a documentation task |\n| dart-use-path-package | Existing path-package callers and file-path behavior |\n| dart-use-pattern-matching | A named refactor preserving cases and null semantics |\n| dart-use-primary-constructors | Explicit syntax evaluation after SDK verification |\n| dart-write-documentation | Dart API documentation and doc comments |\n| flutter-add-integration-test | Existing host/device integration flows |\n| flutter-add-widget-preview | A specifically requested isolated widget preview |\n| flutter-add-widget-test | Component rendering and interaction regressions |\n| flutter-apply-architecture-best-practices | Existing layer/ViewModel boundaries |\n| flutter-build-responsive-layout | A named adaptive layout task and its sizes |\n| flutter-fix-layout-issues | A specific overflow, constraint or ParentData failure |\n| flutter-implement-json-serialization | Model/backup JSON contracts and round trips |\n| flutter-setup-declarative-routing | Routes, shell, Back behavior and draft guards |\n| flutter-use-http-package | Injected HTTP services and provider contracts |\n\n## Current external documentation\n\nUse Context7 for library/framework/SDK/API/CLI questions, including unfamiliar flags.\nResolve the library ID first unless the user supplies an exact `/org/project` ID.\nChoose an authoritative/version-matched result, then query one concept per call.\nUse fetched docs with the installed SDK and actual callers; disclose failed lookups.\nGeneral code reasoning and source-only refactors need no library-documentation lookup.\n",
+      "href": "design-sources/f24778f56a02.html"
+    },
+    {
+      "name": "DESIGN_SYSTEM.md",
+      "title": "Design system",
+      "path": "docs\\DESIGN_SYSTEM.md",
+      "category": "Implementation reference",
+      "sha256": "ae720ee67715d5133409ae5733ab394c4bf4a36c79d40ebe690f668330b29303",
+      "lines": 104,
+      "rules": [
+        {
+          "line": 28,
+          "text": "`core/theme/app_theme.dart`: Light, Dark and red Field `ThemeData`."
+        },
+        {
+          "line": 29,
+          "text": "`app_colors.dart`: raw colors; `app_palette.dart`: semantic theme extension."
+        },
+        {
+          "line": 30,
+          "text": "`hybrid_tokens.dart`: additional surfaces, selection, feedback, chart colors,"
+        },
+        {
+          "line": 32,
+          "text": "`app_typography.dart`, `app_spacing.dart`, `app_radius.dart`,"
+        },
+        {
+          "line": 34,
+          "text": "`app_button_styles.dart`: shared button styling."
+        },
+        {
+          "line": 80,
+          "text": "`AppSpacing`: 4, 8, 16, 24, 32, 48; page gutter 20 and section gap 28."
+        },
+        {
+          "line": 82,
+          "text": "`AppRadius`: small 6, menu 8, large 12 and pill 999."
+        },
+        {
+          "line": 83,
+          "text": "`HybridTokens`: minimum target 48; app bar height 64."
+        },
+        {
+          "line": 84,
+          "text": "`AppMotion`: short 120 ms, medium 180 ms, highlight 1500 ms;"
+        },
+        {
+          "line": 87,
+          "text": "`AppShell`: four navigation items with minimum height 56;"
+        }
+      ],
+      "text": "# Design system\n\nThis is a reference to the implemented Flutter UI in `lib/`.\nIt does not assert visual or accessibility acceptance.\n\n## Design guidance structure\n\nUse the relevant one of the five local Culmina design skills. They have distinct\nscopes; supporting references and implementation files are not additional rule sets.\nShared product invariants remain in [AGENTS.md](../AGENTS.md).\n\n| Local skill | Owns |\n| --- | --- |\n| [Components](../.agents/skills/culmina-design-components/SKILL.md) | Existing components, states, callbacks and actual adopters |\n| [Product rules](../.agents/skills/culmina-design-rules/SKILL.md) | Scientific meaning, time, missing data and persistence distinctions |\n| [Spacing](../.agents/skills/culmina-design-spacing/SKILL.md) | Local geometry, shape, density and reduced motion |\n| [Tokens](../.agents/skills/culmina-design-tokens/SKILL.md) | Semantic colors and surfaces across all three themes |\n| [Typography](../.agents/skills/culmina-design-typography/SKILL.md) | Adopted text roles, wrapping, scaling and numeric readability |\n\nThis document indexes the implementation. The skills' supporting references route\nto current definitions and callers. Compatibility files in `.agents/rules/` point\nback to shared guidance; external design playbooks and archived recipes are not\nautomatically adopted Culmina policy. A component specimen demonstrates appearance\nin its captured state, not production adoption or device acceptance.\n\n## Theme sources\n\n- `core/theme/app_theme.dart`: Light, Dark and red Field `ThemeData`.\n- `app_colors.dart`: raw colors; `app_palette.dart`: semantic theme extension.\n- `hybrid_tokens.dart`: additional surfaces, selection, feedback, chart colors,\n  compact type sizes, minimum target and app-bar height.\n- `app_typography.dart`, `app_spacing.dart`, `app_radius.dart`,\n  `app_motion.dart`: type, spacing, shape and transition values.\n- `app_button_styles.dart`: shared button styling.\n\n`DisplaySettingsViewModel` stores System/Light/Dark appearance and display\nchoices. `ThemeViewModel` stores field mode separately. `main.dart` selects\nthe theme and applies `AppTheme.fieldFilter` around app content in field mode.\n\n## Base colors\n\n| Role | Light | Dark | Field |\n| --- | --- | --- | --- |\n| Background | `#FFFFFF` | `#191919` | `#000000` |\n| Surface | `#F7F7F5` | `#202020` | `#110000` |\n| Raised surface | `#FFFFFF` | `#252525` | `#1A0000` |\n| Primary text | `#37352F` | `#EBEBEA` | `#FF0000` |\n| Secondary text | `#5A5955` | `#A5A5A3` | `#AA0000` |\n| Border | `#E9E9E7` | `#2F2F2F` | `#330000` |\n\n`AppPalette` adds semantic event/chart roles. `HybridTokens` supplies action,\naccent, success/caution/error and selected-hour roles. These are separate\nfrom base surfaces; component callers resolve the relevant token set.\n\n## Typography\n\nProduction text roles use the bundled **Geist** family.\nSource Serif 4 is bundled in `pubspec.yaml` but is not the production role family.\n\n| `AppTypography` role | Size / line height | Weight |\n| --- | --- | --- |\n| `screenTitle` | 22 / 27.5 | 500 |\n| `sectionHeading` | 20 / 28 | 600 |\n| `sectionSubject` | 18 / 23.4 | 500 |\n| `itemTitle` | 16 / 22.4 | 600 |\n| `rowTitle` | 16 / 24 | 500 |\n| `value` | 15 / 21.75 | 400 |\n| `body` | 14 / 21.7 | 400 |\n| `caption` | 13 / 19.5 | 400 |\n| `dense` | 12 / 18 | 400 |\n| `navigationLabel` | 11 / 16.5 | Caller selects 400/600 |\n\nAdditional heading roles are `homeHeading` (29), `nightHeading` (25)\nand `answerHeading` (28). `AppTypography.scale` also defines the Material\n`TextTheme`; it is distinct from the named screen roles.\nCompact calendar/chart token sizes are 10/11 logical pixels.\n\n## Layout, shape and motion\n\n- `AppSpacing`: 4, 8, 16, 24, 32, 48; page gutter 20 and section gap 28.\n  Additional compact steps are 2, 3, 6, 10, 12 and 14.\n- `AppRadius`: small 6, menu 8, large 12 and pill 999.\n- `HybridTokens`: minimum target 48; app bar height 64.\n- `AppMotion`: short 120 ms, medium 180 ms, highlight 1500 ms;\n  curve `Cubic(0.16, 1, 0.3, 1)`.\n  Its duration helper returns zero when platform animations are disabled.\n- `AppShell`: four navigation items with minimum height 56;\n  at text scale 1.5 or greater it lays them out two per row.\n\n## Shared UI\n\n`presentation/shared/` contains the app bar, line icons, section headers,\ncollapsible sections, detail scaffold, status/failure feedback, confirmation\nand deletion patterns, field-mode control and form-input helpers.\n`presentation/widgets/` contains altitude/night/weather visualizations,\ncapture planning, budgets, fit/status and storage/gain presentation.\nScreen-specific layouts live under `presentation/screens/`.\n\nThe current composition is Tonight → separate Plan/detail flows, with\nLogbook, Library and Settings as other root destinations.\nLabels, unknown-data messages and draft/result distinctions come from\nshared text helpers and the relevant screen/ViewModel state.\n\nSee [Product specification](PRODUCT_SPEC.md) and [Architecture](ARCHITECTURE.md).\n",
+      "href": "design-sources/adbfce7cb8cf.html"
+    },
+    {
+      "name": "PRODUCT_SPEC.md",
+      "title": "Product specification",
+      "path": "docs\\PRODUCT_SPEC.md",
+      "category": "Implementation reference",
+      "sha256": "372656bb0a2e68e310b58abe7f6edb7d9c79e3cd1a3c7001c9008ad7336c0cdf",
+      "lines": 87,
+      "rules": [
+        {
+          "line": 34,
+          "text": "Ordered light, dark, flat, bias and dark-flat blocks with exposure/count,"
+        },
+        {
+          "line": 36,
+          "text": "Calibration timing policies: in-window, outside-window or reused library."
+        },
+        {
+          "line": 38,
+          "text": "Budget includes integration, frame overheads and applicable optional"
+        },
+        {
+          "line": 40,
+          "text": "Camera class, tracking choice/override and applicable in-camera noise"
+        },
+        {
+          "line": 42,
+          "text": "Visibility/darkness/Moon and optional cloud gates determine usable windows."
+        },
+        {
+          "line": 44,
+          "text": "Storage distinguishes file evidence, declared/measured sizes and theoretical"
+        },
+        {
+          "line": 46,
+          "text": "White balance, AF/MF and field provenance can be recorded."
+        },
+        {
+          "line": 48,
+          "text": "Draft edits, saved snapshots and changed saved plans are distinct;"
+        }
+      ],
+      "text": "# Product specification\n\nCulmina plans astrophotography sessions and records their outcomes.\nThis document describes implemented behavior in `lib/`, not a release plan.\n\n## Main flow\n\nChoose site and evening date → choose target and rig → inspect the night →\nedit capture blocks → review budget/fit → save → image outside the app →\nrecord a result and review it in Logbook.\n\n## Screens\n\n| Screen | Current behavior |\n| --- | --- |\n| Welcome | First-run setup and entry into planning. |\n| Tonight | Site/night context, Night/Moon/Weather summaries, target selection/candidates, planner access and results due for recording. |\n| Plan | Site/night, target and rig selection, capture blocks, opportunity/fit analysis, save, new plan and copy to another night. |\n| Target candidates | Evaluates catalog targets against the selected night's conditions and preferences. |\n| Night / Moon | Night timeline, darkness and altitude context, Moon information and calendar/night browsing. |\n| Weather | Hourly forecast in compact rows or charts, details, local time, provenance, freshness and unavailable/partial data states. |\n| Logbook | Saved sessions/results, filters, entry details, result recording, sharing/export and target progress. |\n| Progress | Integration and session totals by target/filter from completed non-legacy sessions with recorded block counts. |\n| Library | Manage rigs, targets and sites; detail/edit screens and scoped selection flows. |\n| Metadata import | Android file selection, metadata review and equipment matching/confirmation before saving a rig. |\n| Settings | Appearance, units, planning defaults, privacy, backup/data and About/licenses. |\n| Database recovery | Reports unsupported database versions and offers an explicit reset flow. |\n\nBottom navigation contains Tonight, Logbook, Library and Settings.\nPlan and detail/selection flows open separately above those tabs.\n\n## Capture planning\n\n- Ordered light, dark, flat, bias and dark-flat blocks with exposure/count,\n  filter and contextual ISO/gain/binning settings.\n- Calibration timing policies: in-window, outside-window or reused library.\n  Helpers expose inherited settings and mismatch warnings.\n- Budget includes integration, frame overheads and applicable optional\n  setup, dither, refocus, filter-change and meridian-flip times.\n- Camera class, tracking choice/override and applicable in-camera noise\n  reduction affect the relevant planning calculations.\n- Visibility/darkness/Moon and optional cloud gates determine usable windows.\n  Fit compares plan load with opportunity and configured margins.\n- Storage distinguishes file evidence, declared/measured sizes and theoretical\n  estimates. Relative stacking gain does not claim absolute physical SNR.\n- White balance, AF/MF and field provenance can be recorded.\n  ISO/gain and AF/MF remain descriptive.\n- Draft edits, saved snapshots and changed saved plans are distinct;\n  leaving a changed plan offers Save/Discard/Cancel.\n\n## Catalogs, sites and rigs\n\nTargets support designation/common-name/alias search and custom entries.\nCoordinates are J2000; unknown size and magnitude stay absent.\nRigs store camera/sensor/optics data, tracking, limits and provenance.\nSites store coordinates, optional elevation/time zone and manual Bortle/SQM.\nGPS and a map can select a position; place-name lookup is optional.\n\nMetadata readers cover DNG, JPEG, HEIF still images and FITS.\nRecognition of a format does not imply a reader exists for it; unsupported\nformats and unreadable files return explicit outcomes. Metadata is reviewed\nbefore it creates or changes equipment.\n\n## Results and data portability\n\nUsers report completed-as-planned, partial frame counts, or not done with an\noptional reason; notes and observed conditions are optional.\nSession snapshots retain saved context for history. Legacy logs remain readable.\nThere is no dedicated live-tracker screen.\n\nLogbook supports text sharing, portable session-file export and AstroBin\nacquisition CSV preview/sharing. AstroBin export is a file workflow.\nSettings provides local backup and confirmed restore through a staged restart.\n\n## Offline and presentation\n\nSaved data, bundled catalogs and astronomy/planning calculations work offline.\nForecast retrieval, map tiles and optional place-name lookup use the network.\nWeather retains source/fetch-time/cache information and missing-data states.\nNight calculations use UTC; local display respects the site's time context.\n\nAppearance supports System/Light/Dark plus a separate red field mode.\nDisplay units and weather presentation are configurable.\nThe app plans and records; it does not acquire images or control hardware.\n\nSee [Architecture](ARCHITECTURE.md) for models/storage and\n[Design system](DESIGN_SYSTEM.md) for the implemented visual system.\n",
+      "href": "design-sources/efd4fa939e52.html"
+    },
+    {
+      "name": "ARCHITECTURE.md",
+      "title": "Architecture and data",
+      "path": "docs\\ARCHITECTURE.md",
+      "category": "Implementation reference",
+      "sha256": "12327c9f4fddb9b8eb83626a9e6566a64e3e87a2bf1847350daeea92dd79be30",
+      "lines": 107,
+      "rules": [
+        {
+          "line": 7,
+          "text": "`lib/main.dart`: initializes licenses, staged restore, database and catalog"
+        },
+        {
+          "line": 9,
+          "text": "`lib/presentation/`: screens, shared UI, widgets, navigation and ViewModels."
+        },
+        {
+          "line": 10,
+          "text": "`lib/domain/models/`: targets, rigs, sites, nights, plans, weather and results."
+        },
+        {
+          "line": 11,
+          "text": "`lib/domain/repositories/`: storage and preferences interfaces."
+        },
+        {
+          "line": 12,
+          "text": "`lib/domain/services/`: astronomy, visibility, Moon, candidates, imaging"
+        },
+        {
+          "line": 14,
+          "text": "`lib/domain/metadata/`: bounded file readers and metadata result types."
+        },
+        {
+          "line": 15,
+          "text": "`lib/domain/equipment_import/`: equipment matching and specification estimates."
+        },
+        {
+          "line": 16,
+          "text": "`lib/data/`: Drift persistence, SharedPreferences repositories, network/device"
+        },
+        {
+          "line": 18,
+          "text": "`lib/core/`: math, clock, units, configuration, diagnostics and theme tokens."
+        },
+        {
+          "line": 31,
+          "text": "`SiteViewModel`: active site, position and local-time context."
+        },
+        {
+          "line": 32,
+          "text": "`SessionPlanViewModel`: editable target, rig, night and capture blocks."
+        },
+        {
+          "line": 33,
+          "text": "`PlanLifecycleViewModel` / `CurrentSession`: restore, open, new, copy,"
+        },
+        {
+          "line": 35,
+          "text": "`NightConditionsViewModel`, `CandidatesViewModel`,"
+        },
+        {
+          "line": 37,
+          "text": "`StartupViewModel` / `TonightViewModel`: loading and first-run/home state."
+        },
+        {
+          "line": 38,
+          "text": "`GearViewModel`, `TargetsViewModel`, `SessionsViewModel`: library/logbook state."
+        },
+        {
+          "line": 39,
+          "text": "`ResultsViewModel`, `MetadataImportViewModel`, `BackupViewModel` and"
+        },
+        {
+          "line": 41,
+          "text": "Settings, display, theme and disclosure ViewModels persist user choices."
+        },
+        {
+          "line": 98,
+          "text": "Open-Meteo weather through `http`, with cached snapshots."
+        },
+        {
+          "line": 99,
+          "text": "GPS through `geolocator`; device zone through `flutter_timezone`/`timezone`."
+        },
+        {
+          "line": 100,
+          "text": "OpenStreetMap tiles through `flutter_map`/`latlong2`; opt-in Nominatim lookup."
+        },
+        {
+          "line": 101,
+          "text": "Android file picker/range reads through a custom metadata platform channel."
+        },
+        {
+          "line": 102,
+          "text": "DNG, JPEG, HEIF still-image and FITS metadata readers in the domain."
+        },
+        {
+          "line": 103,
+          "text": "Backup uses `file_picker` and `archive`; export uses `share_plus`;"
+        },
+        {
+          "line": 105,
+          "text": "Drift code generation uses `drift_dev` and `build_runner`."
+        }
+      ],
+      "text": "# Architecture and data\n\nThis describes the current `lib/` implementation and `pubspec.yaml`.\n\n## Modules\n\n- `lib/main.dart`: initializes licenses, staged restore, database and catalog\n  seeding; constructs concrete repositories/services and the widget root.\n- `lib/presentation/`: screens, shared UI, widgets, navigation and ViewModels.\n- `lib/domain/models/`: targets, rigs, sites, nights, plans, weather and results.\n- `lib/domain/repositories/`: storage and preferences interfaces.\n- `lib/domain/services/`: astronomy, visibility, Moon, candidates, imaging\n  opportunities, budgets, fit, calibration, storage and session logic.\n- `lib/domain/metadata/`: bounded file readers and metadata result types.\n- `lib/domain/equipment_import/`: equipment matching and specification estimates.\n- `lib/data/`: Drift persistence, SharedPreferences repositories, network/device\n  adapters, metadata file access, export and backup implementations.\n- `lib/core/`: math, clock, units, configuration, diagnostics and theme tokens.\n\nUI calls ViewModels; ViewModels use domain interfaces and services.\nData adapters implement those interfaces. Astronomy/math calculations are\nseparate from Flutter presentation.\n\n## State and navigation\n\n`AppViewModels` constructs dependencies in `presentation/app_view_models.dart`.\nProvider exposes shared ViewModel instances, predominantly through\n`ChangeNotifierProvider`; lifecycle and candidate coordinators use `Provider`.\nWidgets consume state through Provider reads and watches.\n\n- `SiteViewModel`: active site, position and local-time context.\n- `SessionPlanViewModel`: editable target, rig, night and capture blocks.\n- `PlanLifecycleViewModel` / `CurrentSession`: restore, open, new, copy,\n  save and discard of the current plan.\n- `NightConditionsViewModel`, `CandidatesViewModel`,\n  `CaptureAnalysisViewModel`: forecast/astronomy, candidates and plan analysis.\n- `StartupViewModel` / `TonightViewModel`: loading and first-run/home state.\n- `GearViewModel`, `TargetsViewModel`, `SessionsViewModel`: library/logbook state.\n- `ResultsViewModel`, `MetadataImportViewModel`, `BackupViewModel` and\n  `AstroBinExportViewModel`: their respective workflows.\n- Settings, display, theme and disclosure ViewModels persist user choices.\n\n`go_router` defines a stateful indexed shell for Tonight, Logbook, Library\nand Settings. Plan, results, choosers and Night/Moon/Weather open above the tabs.\nRouter restoration returns to the appropriate list when object arguments\ncannot be restored. The plan flow prompts for unsaved changes.\n\n## Domain data\n\n| Model | Contents |\n| --- | --- |\n| `AstroTarget` / `TargetAlias` | Catalog/custom identity, J2000 RA/Dec in degrees, type, optional size/magnitude, source and searchable aliases. |\n| `EquipmentProfile` | Flattened rig/camera view: sensor dimensions, resolution, pixel pitch, focal length/ratio, camera class, tracking, exposure limit and provenance. |\n| `LocationProfile` | Coordinates, optional elevation, IANA zone, manual Bortle/SQM context, sources/dates and notes. |\n| `CalendarDate` / `SessionNight` | Evening date and a half-open 24-hour UTC window beginning at site mean solar noon. |\n| `CaptureBlock` | Frame type, exposure seconds, count, filter, binning, typed ISO/gain, calibration policy, white balance, AF/MF, origins and file evidence. |\n| `SessionPlan` / `PlanOverrides` | Site/target/rig references, night, ordered blocks, labels, tracking override and optional per-plan budget/storage values. |\n| `Session` / `SessionLog` | Lifecycle, references, timestamps, snapshots, blocks, counts, results and notes; legacy records remain readable. |\n| `SessionSnapshot` | Versioned JSON of saved context, preferences, budget, opportunity and weather. |\n| `ResultReport` | Completed as planned, partial per-block counts, or not done with optional reason and observed conditions. |\n| `WeatherSnapshot` / `NightWeather` | Provider/model, fetch time, coordinates, hourly values, freshness, cache/failure/out-of-range state. |\n\n`SessionStatus` includes `draft`, `planned`, `inProgress`, `completed` and\n`abandoned`. Repository methods enforce lifecycle transitions. Execution\nmodels, events and `ExecutionMachine` remain in the code; the router has no\ndedicated live-tracker screen. Results are user reports of acquisition.\n\nNight identity uses the site's evening date. Time contexts display an IANA\nzone or mean solar time; DST changes local labels, not the UTC night window.\nUnknown optional values are null. Units and provenance are explicit;\nISO/gain does not model photon collection.\n\n## Persistence\n\n`data/database/app_database.dart` defines Drift schema **27** in\n`astroplan.sqlite` under the application documents directory.\nThe supported migration floor is version 8; unsupported older/newer databases\ntake the recovery path rather than being silently reinterpreted.\n\n| Tables | Stored data |\n| --- | --- |\n| `Devices` → `CameraModules` → `OpticalRigs` | Device/camera/optics chain, specifications, provenance and capture-format evidence. |\n| `LocationProfiles` | Saved sites and optional sky-quality context. |\n| `AstroTargets`, `TargetAliases` | Targets and catalog-designation/name aliases. |\n| `SessionLogs` | Session aggregate, status, references, timestamps, snapshots, overrides, result kind and notes. |\n| `CaptureBlocks` | Ordered blocks, settings, calibration policy, evidence and completed/rejected counters. |\n| `SessionEvents` | Ordered event history used to reconstruct execution state. |\n\nSQLite foreign keys are enabled; blocks/events cascade with session deletion,\nwhile camera/device references restrict deletion.\nSharedPreferences stores planning/display/privacy/first-run preferences,\nplanner selection state and weather snapshots.\n`FileBackupService` and `BackupStaging` validate and stage local restore;\nstartup applies it before opening the live database.\n\n## External adapters and dependencies\n\n- Open-Meteo weather through `http`, with cached snapshots.\n- GPS through `geolocator`; device zone through `flutter_timezone`/`timezone`.\n- OpenStreetMap tiles through `flutter_map`/`latlong2`; opt-in Nominatim lookup.\n- Android file picker/range reads through a custom metadata platform channel.\n- DNG, JPEG, HEIF still-image and FITS metadata readers in the domain.\n- Backup uses `file_picker` and `archive`; export uses `share_plus`;\n  external links use `url_launcher`.\n- Drift code generation uses `drift_dev` and `build_runner`.\n\nSee [Product specification](PRODUCT_SPEC.md) and [Design system](DESIGN_SYSTEM.md).\n",
+      "href": "design-sources/3a030fb70981.html"
+    },
+    {
+      "name": "00-project-governance.md",
+      "title": "Shared project instructions",
+      "path": ".agents\\rules\\00-project-governance.md",
+      "category": "Compatibility pointer",
+      "sha256": "5f968eb2a554b769e4ba6d709d6429cb13f87e3973e2c393da0f700cc0ae7a4b",
+      "lines": 3,
+      "rules": [],
+      "text": "# Shared project instructions\n\nRead [AGENTS.md](../../AGENTS.md). This compatibility pointer adds no separate rules.\n",
+      "href": "design-sources/08199cb2a3e9.html"
+    },
+    {
+      "name": "01-architecture.md",
+      "title": "Architecture",
+      "path": ".agents\\rules\\01-architecture.md",
+      "category": "Compatibility pointer",
+      "sha256": "68e3835f9279eefe41256e859ecebbd9fbb5ea6be86b0468749411780362a223",
+      "lines": 3,
+      "rules": [],
+      "text": "# Architecture\n\nRead the [architecture map and technical invariants](../../AGENTS.md#architecture-map).\n",
+      "href": "design-sources/9774a347cccc.html"
+    },
+    {
+      "name": "02-code-quality.md",
+      "title": "Code quality",
+      "path": ".agents\\rules\\02-code-quality.md",
+      "category": "Compatibility pointer",
+      "sha256": "367b6da061102a827ca754de766cf3d40fb485d29aadddc0e009de27c66f0dae",
+      "lines": 3,
+      "rules": [],
+      "text": "# Code quality\n\nRead the [shared technical invariants](../../AGENTS.md#technical-invariants) and inspect actual callers.\n",
+      "href": "design-sources/414ca3d9ee83.html"
+    },
+    {
+      "name": "03-testing.md",
+      "title": "Verification",
+      "path": ".agents\\rules\\03-testing.md",
+      "category": "Compatibility pointer",
+      "sha256": "f2749e1dd0bf5db6a4647f05cd8bcf76d18eba7e56cf5e6618c632aff4ec2687",
+      "lines": 3,
+      "rules": [],
+      "text": "# Verification\n\nRead [commands and verification](../../AGENTS.md#commands-and-verification).\n",
+      "href": "design-sources/ba35da0fc689.html"
+    },
+    {
+      "name": "04-scientific-calculations.md",
+      "title": "Scientific calculations",
+      "path": ".agents\\rules\\04-scientific-calculations.md",
+      "category": "Compatibility pointer",
+      "sha256": "982181afaee0afab465011d03660c5ae504e8fb0aed2e7d9594fe105953dea30",
+      "lines": 3,
+      "rules": [],
+      "text": "# Scientific calculations\n\nRead the [shared technical invariants](../../AGENTS.md#technical-invariants).\n",
+      "href": "design-sources/e7023c2476bc.html"
+    },
+    {
+      "name": "05-ui-design.md",
+      "title": "UI work",
+      "path": ".agents\\rules\\05-ui-design.md",
+      "category": "Compatibility pointer",
+      "sha256": "c3ef3c063b87f9a2048fe6d26e48788df710087104d640491f56332052bcf3fd",
+      "lines": 3,
+      "rules": [],
+      "text": "# UI work\n\nRead [AGENTS.md](../../AGENTS.md) and choose only the relevant [project skill](../skills/README.md).\n",
+      "href": "design-sources/bca506fe7c8d.html"
+    },
+    {
+      "name": "app_button_styles.dart",
+      "title": "app_button_styles.dart",
+      "path": "lib\\core\\theme\\app_button_styles.dart",
+      "category": "Implementation owner",
+      "sha256": "9e5c2458be612d11d1b8239cd53db5761a66fabe14b846b1d1c54d9c69348288",
+      "lines": 17,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\n/// The destructive button role (S5.2). The primary (filled), secondary\n/// (outlined) and tertiary (text) roles come from the theme's button\n/// themes; a destructive action adds one of these styles. See\n/// `docs/DESIGN_SYSTEM.md`, \"Buttons\".\nabstract final class AppButtonStyles {\n  /// A destructive action that is the screen's main action.\n  static ButtonStyle destructive(ColorScheme scheme) => FilledButton.styleFrom(\n    backgroundColor: scheme.error,\n    foregroundColor: scheme.onError,\n  );\n\n  /// A destructive action beside Cancel in a dialog.\n  static ButtonStyle destructiveText(ColorScheme scheme) =>\n      TextButton.styleFrom(foregroundColor: scheme.error);\n}\n",
+      "href": "design-sources/250900b5ad84.html"
+    },
+    {
+      "name": "app_colors.dart",
+      "title": "app_colors.dart",
+      "path": "lib\\core\\theme\\app_colors.dart",
+      "category": "Implementation owner",
+      "sha256": "3c14f3856b23d6b05887807124d243f87bb1cd06bd53a30d29676a5fbca0aff1",
+      "lines": 50,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\n/// The raw colours behind the three themes. Widgets never read these\n/// directly: they use `Theme.of(context).colorScheme` or [AppPalette]\n/// (TASK 12.4). The text roles (S5.1) are documented in\n/// `docs/DESIGN_SYSTEM.md`: in light and dark every role is WCAG AA\n/// (4.5:1) on the background, the surface and the raised surface, and each\n/// is at least 1.3 times the next one's contrast. Control borders (S5.2)\n/// are at least 3:1 (WCAG 1.4.11); the error colour is AA as text.\nclass AppColors {\n  // The Culmina mark's colours are generated with its geometry\n  // (lib/presentation/shared/culmina_mark_geometry.dart, tool/culmina_mark.py).\n\n  // Light Theme\n  static const Color lightBackground = Color(0xFFFFFFFF);\n  static const Color lightSurface = Color(0xFFF7F7F5);\n  static const Color lightSurfaceRaised = Color(0xFFFFFFFF);\n  static const Color lightTextPrimary = Color(0xFF37352F); // 11.4:1\n  static const Color lightTextSecondary = Color(0xFF5A5955); // 6.5:1\n  static const Color lightTextTertiary = Color(0xFF6E6D69); // 4.8:1\n  static const Color lightTextDisabled = Color(0xFFA3A29F);\n  static const Color lightBorder = Color(0xFFE9E9E7);\n  static const Color lightControlBorder = Color(0xFF8F8E8A); // 3.1:1\n  static const Color lightError = Color(0xFFB00020); // 6.8:1\n\n  // Dark Theme\n  static const Color darkBackground = Color(0xFF191919);\n  static const Color darkSurface = Color(0xFF202020);\n  static const Color darkSurfaceRaised = Color(0xFF252525);\n  static const Color darkTextPrimary = Color(0xFFEBEBEA); // 12.8:1\n  static const Color darkTextSecondary = Color(0xFFA5A5A3); // 6.2:1\n  static const Color darkTextTertiary = Color(0xFF8F8F8D); // 4.7:1\n  static const Color darkTextDisabled = Color(0xFF6B6B69);\n  static const Color darkSelection = Color(0xFF343432);\n  static const Color darkBorder = Color(0xFF2F2F2F);\n  static const Color darkControlBorder = Color(0xFF6F6F6D); // 3.0:1\n  static const Color darkError = Color(0xFFF28B82); // 6.4:1\n\n  // Field Mode (Red): brightness, not hue, separates the roles.\n  static const Color fieldBackground = Color(0xFF000000);\n  static const Color fieldSurface = Color(0xFF110000);\n  static const Color fieldSurfaceRaised = Color(0xFF1A0000);\n  static const Color fieldTextPrimary = Color(0xFFFF0000);\n  static const Color fieldTextSecondary = Color(0xFFAA0000);\n  static const Color fieldTextTertiary = Color(0xFF880000);\n  static const Color fieldTextDisabled = Color(0xFF660000);\n  static const Color fieldBorder = Color(0xFF330000);\n  // Brighter than a card border so controls stay visible (UX-39).\n  static const Color fieldControlBorder = Color(0xFF880000);\n}\n",
+      "href": "design-sources/f5b80d5fbb3c.html"
+    },
+    {
+      "name": "app_motion.dart",
+      "title": "app_motion.dart",
+      "path": "lib\\core\\theme\\app_motion.dart",
+      "category": "Implementation owner",
+      "sha256": "47e3bec4caa93d17f250767931ba128fb644cabb43130f2432d9637e0fdb5147",
+      "lines": 26,
+      "rules": [],
+      "text": "import 'package:flutter/widgets.dart';\n\n/// The motion scale (S5.2): short, subtle transitions only\n/// (`.agents/rules/05-ui-design.md`). Every animated component asks\n/// [duration] for its length, so the platform's reduced-motion setting\n/// turns motion off. See `docs/DESIGN_SYSTEM.md`.\nabstract final class AppMotion {\n  /// A state change in place: a pressed control, a chevron turning.\n  static const Duration short = Duration(milliseconds: 120);\n\n  /// Content appearing or collapsing: a section opening, a row leaving.\n  static const Duration medium = Duration(milliseconds: 180);\n\n  /// A brief mark on what an edit changed, fading out (S6.9: a capture\n  /// block just added or edited). Long enough to be seen, never repeated.\n  static const Duration highlight = Duration(milliseconds: 1500);\n\n  /// The one curve: fast out, gentle in.\n  static const Curve curve = Cubic(0.16, 1, 0.3, 1);\n\n  /// [base], or zero when the user asked the platform for less motion.\n  static Duration duration(BuildContext context, Duration base) =>\n      MediaQuery.maybeDisableAnimationsOf(context) ?? false\n      ? Duration.zero\n      : base;\n}\n",
+      "href": "design-sources/1b5585737871.html"
+    },
+    {
+      "name": "app_palette.dart",
+      "title": "app_palette.dart",
+      "path": "lib\\core\\theme\\app_palette.dart",
+      "category": "Implementation owner",
+      "sha256": "62015cbef94e3a18bd561e9221b5091acb39d353985472340bc650b885e15d6f",
+      "lines": 342,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\nimport 'app_colors.dart';\n\n/// Semantic colour tokens that the Material [ColorScheme] has no role for\n/// (TASK 12.4): muted text, the night's events, the altitude chart and the\n/// Bortle scale. Widgets read them with [AppPalette.of]; `lib/presentation`\n/// never names a colour itself (a test enforces it). Field mode's tokens\n/// are red or black only.\n@immutable\nclass AppPalette extends ThemeExtension<AppPalette> {\n  const AppPalette({\n    required this.textPrimary,\n    required this.textSecondary,\n    required this.textTertiary,\n    required this.textDisabled,\n    required this.surfaceRaised,\n    required this.border,\n    required this.controlBorder,\n    required this.statusFits,\n    required this.statusTight,\n    required this.statusDoesNotFit,\n    required this.statusNoWindow,\n    required this.statusNeutral,\n    required this.stateUnsaved,\n    required this.stateSettled,\n    required this.stateQuiet,\n    required this.muted,\n    required this.caution,\n    required this.sunEvent,\n    required this.twilightEvent,\n    required this.moon,\n    required this.selected,\n    required this.chartDay,\n    required this.chartTwilight,\n    required this.chartDark,\n    required this.chartWindow,\n    required this.chartTarget,\n    required this.chartMoon,\n    required this.chartMinAltitude,\n    required this.chartNow,\n    required this.chartNowCentre,\n    required this.chartGrid,\n    required this.chartLabel,\n    required this.swatchBorder,\n    required this.bortle,\n    required this.onBortle,\n  });\n\n  /// The text roles (S5.1; `docs/DESIGN_SYSTEM.md`): primary for the\n  /// answer and values, secondary for labels and supporting text, tertiary\n  /// for captions and metadata. In light and dark each is WCAG AA on the\n  /// background, the surface and [surfaceRaised]; disabled is exempt (WCAG\n  /// 1.4.3 excludes inactive controls).\n  final Color textPrimary;\n  final Color textSecondary;\n  final Color textTertiary;\n  final Color textDisabled;\n\n  /// Dialogs, menus and sheets: one level above the card surface.\n  final Color surfaceRaised;\n\n  /// Card and section outlines; dividers (decorative).\n  final Color border;\n\n  /// The boundary of a control (S5.2): a text field's underline or\n  /// outline, an outlined button. At least 3:1 in light and dark (WCAG\n  /// 1.4.11); in field mode brighter than [border] (UX-39).\n  final Color controlBorder;\n\n  /// The verdict's colours (S5.4; UX-16): each `FitState` has one. A real\n  /// verdict is coloured; a missing input ([statusNeutral]) is not. \"Tight\"\n  /// is a caution at least as prominent as \"Fits\" (S1.9); in field mode all\n  /// are red and the word carries the difference.\n  final Color statusFits;\n  final Color statusTight;\n  final Color statusDoesNotFit;\n  final Color statusNoWindow;\n  final Color statusNeutral;\n\n  /// The plan-state label's tones (S5.4; ADR-019 §3): unsaved work draws\n  /// attention (Not saved, Saved · changed); a settled plan reads as\n  /// primary text (Saved, Tracking, Completed); the rest is quiet (Partly,\n  /// Not done, Old log). Tones, never verdicts.\n  final Color stateUnsaved;\n  final Color stateSettled;\n  final Color stateQuiet;\n\n  /// Secondary text and icons for empty or unknown states.\n  final Color muted;\n\n  /// A caution that is not an error, such as a \"Tight\" fit (S1.9): at least\n  /// as prominent as body text.\n  final Color caution;\n\n  /// Sunset/sunrise and astronomical dusk/dawn icons.\n  final Color sunEvent;\n  final Color twilightEvent;\n\n  /// The Moon icon.\n  final Color moon;\n\n  /// The check mark on the selected rig or target.\n  final Color selected;\n\n  /// Altitude chart: darkness bands, imaging windows, lines and labels.\n  final Color chartDay;\n  final Color chartTwilight;\n  final Color chartDark;\n  final Color chartWindow;\n  final Color chartTarget;\n  final Color chartMoon;\n  final Color chartMinAltitude;\n  final Color chartNow;\n  final Color chartNowCentre;\n  final Color chartGrid;\n  final Color chartLabel;\n\n  /// The outline of the chart legend's swatches and of the Bortle badge.\n  final Color swatchBorder;\n\n  /// Bortle badge background and text: index 0 is \"unknown\", 1–9 the class.\n  final List<Color> bortle;\n  final List<Color> onBortle;\n\n  static AppPalette of(BuildContext context) =>\n      Theme.of(context).extension<AppPalette>() ?? light;\n\n  // The accepted web cascade's caution role (notion-hybrid.css, 86873ce).\n  static const _lightCaution = Color(0xFF754600); // 8.0:1 on white\n  static const _darkCaution = Color(0xFFFFCA70); // 11.7:1 on #191919\n\n  static const light = AppPalette(\n    statusFits: AppColors.lightTextPrimary,\n    statusTight: _lightCaution,\n    statusDoesNotFit: AppColors.lightError,\n    statusNoWindow: AppColors.lightError,\n    statusNeutral: AppColors.lightTextSecondary,\n    stateUnsaved: _lightCaution,\n    stateSettled: AppColors.lightTextPrimary,\n    stateQuiet: AppColors.lightTextSecondary,\n    textPrimary: AppColors.lightTextPrimary,\n    textSecondary: AppColors.lightTextSecondary,\n    textTertiary: AppColors.lightTextTertiary,\n    textDisabled: AppColors.lightTextDisabled,\n    surfaceRaised: AppColors.lightSurfaceRaised,\n    border: AppColors.lightBorder,\n    controlBorder: AppColors.lightControlBorder,\n    muted: Colors.grey,\n    caution: _lightCaution, // 5.4:1 on white, 5.0:1 on the surface (AA)\n    sunEvent: Colors.orange,\n    twilightEvent: Colors.indigo,\n    moon: Colors.blueGrey,\n    selected: Colors.blue,\n    chartDay: Color(0xFFB3E5FC), // lightBlue.shade100\n    chartTwilight: Color(0xFF7986CB), // indigo.shade300\n    chartDark: Colors.black87,\n    chartWindow: Color(0x6600C853),\n    chartTarget: Colors.amber,\n    chartMoon: Color(0xFFB0BEC5), // blueGrey.shade200\n    chartMinAltitude: Colors.redAccent,\n    chartNow: Colors.redAccent,\n    chartNowCentre: Colors.white,\n    chartGrid: Colors.white60,\n    chartLabel: Colors.white,\n    swatchBorder: Color(0xFFBDBDBD), // grey.shade400\n    bortle: _bortleColours,\n    onBortle: _onBortleColours,\n  );\n\n  static const dark = AppPalette(\n    statusFits: AppColors.darkTextPrimary,\n    statusTight: _darkCaution,\n    statusDoesNotFit: AppColors.darkError,\n    statusNoWindow: AppColors.darkError,\n    statusNeutral: AppColors.darkTextSecondary,\n    stateUnsaved: _darkCaution,\n    stateSettled: AppColors.darkTextPrimary,\n    stateQuiet: AppColors.darkTextSecondary,\n    textPrimary: AppColors.darkTextPrimary,\n    textSecondary: AppColors.darkTextSecondary,\n    textTertiary: AppColors.darkTextTertiary,\n    textDisabled: AppColors.darkTextDisabled,\n    surfaceRaised: AppColors.darkSurfaceRaised,\n    border: AppColors.darkBorder,\n    controlBorder: AppColors.darkControlBorder,\n    muted: Colors.grey,\n    caution: _darkCaution,\n    sunEvent: Colors.orange,\n    twilightEvent: Colors.indigo,\n    moon: Colors.blueGrey,\n    selected: Colors.blue,\n    chartDay: Color(0xFF37474F), // blueGrey.shade800\n    chartTwilight: Color(0xFF1A237E), // indigo.shade900\n    chartDark: Colors.black,\n    chartWindow: Color(0x6600C853),\n    chartTarget: Colors.amber,\n    chartMoon: Color(0xFFB0BEC5),\n    chartMinAltitude: Colors.redAccent,\n    chartNow: Colors.redAccent,\n    chartNowCentre: Colors.white,\n    chartGrid: Colors.white30,\n    chartLabel: Colors.white70,\n    swatchBorder: Color(0xFFBDBDBD),\n    bortle: _bortleColours,\n    onBortle: _onBortleColours,\n  );\n\n  /// Red on black only: brightness, not hue, tells elements apart.\n  static const field = AppPalette(\n    statusFits: AppColors.fieldTextPrimary,\n    statusTight: AppColors.fieldTextPrimary,\n    statusDoesNotFit: AppColors.fieldTextPrimary,\n    statusNoWindow: AppColors.fieldTextPrimary,\n    statusNeutral: AppColors.fieldTextSecondary,\n    stateUnsaved: AppColors.fieldTextPrimary,\n    stateSettled: AppColors.fieldTextPrimary,\n    stateQuiet: AppColors.fieldTextSecondary,\n    textPrimary: AppColors.fieldTextPrimary,\n    textSecondary: AppColors.fieldTextSecondary,\n    textTertiary: AppColors.fieldTextTertiary,\n    textDisabled: AppColors.fieldTextDisabled,\n    surfaceRaised: AppColors.fieldSurfaceRaised,\n    border: AppColors.fieldBorder,\n    controlBorder: AppColors.fieldControlBorder,\n    muted: AppColors.fieldTextSecondary,\n    // As bright as \"Fits\": in red mode the word carries the caution.\n    caution: AppColors.fieldTextPrimary,\n    sunEvent: AppColors.fieldTextPrimary,\n    twilightEvent: AppColors.fieldTextSecondary,\n    moon: AppColors.fieldTextSecondary,\n    selected: AppColors.fieldTextPrimary,\n    chartDay: Color(0xFF3A0000),\n    chartTwilight: Color(0xFF1C0000),\n    chartDark: AppColors.fieldBackground,\n    chartWindow: Color(0x55FF0000),\n    chartTarget: AppColors.fieldTextPrimary,\n    chartMoon: Color(0xFF990000),\n    chartMinAltitude: Color(0xFFCC0000),\n    chartNow: AppColors.fieldTextPrimary,\n    chartNowCentre: AppColors.fieldBackground,\n    chartGrid: Color(0x66FF0000),\n    chartLabel: Color(0xFFCC0000),\n    swatchBorder: AppColors.fieldBorder,\n    bortle: [\n      Color(0xFF330000),\n      Color(0xFF110000),\n      Color(0xFF220000),\n      Color(0xFF330000),\n      Color(0xFF440000),\n      Color(0xFF660000),\n      Color(0xFF880000),\n      Color(0xFFAA0000),\n      Color(0xFFCC0000),\n      Color(0xFFFF0000),\n    ],\n    onBortle: [\n      AppColors.fieldTextPrimary,\n      AppColors.fieldTextPrimary,\n      AppColors.fieldTextPrimary,\n      AppColors.fieldTextPrimary,\n      AppColors.fieldTextPrimary,\n      AppColors.fieldTextPrimary,\n      AppColors.fieldBackground,\n      AppColors.fieldBackground,\n      AppColors.fieldBackground,\n      AppColors.fieldBackground,\n    ],\n  );\n\n  /// The conventional Bortle map colours (unchanged from before TASK 12.4).\n  static const _bortleColours = [\n    Colors.grey,\n    Colors.black,\n    Color(0xFF263238), // blueGrey.shade900\n    Color(0xFF0D47A1), // blue.shade900\n    Color(0xFF388E3C), // green.shade700\n    Color(0xFFFBC02D), // yellow.shade700\n    Colors.orange,\n    Colors.deepOrange,\n    Colors.red,\n    Colors.white,\n  ];\n  static const _onBortleColours = [\n    Colors.white,\n    Colors.white,\n    Colors.white,\n    Colors.white,\n    Colors.white,\n    Colors.black,\n    Colors.white,\n    Colors.white,\n    Colors.white,\n    Colors.red,\n  ];\n\n  /// Every token, for tests.\n  List<Color> get all => [\n    textPrimary,\n    textSecondary,\n    textTertiary,\n    textDisabled,\n    surfaceRaised,\n    border,\n    controlBorder,\n    statusFits,\n    statusTight,\n    statusDoesNotFit,\n    statusNoWindow,\n    statusNeutral,\n    stateUnsaved,\n    stateSettled,\n    stateQuiet,\n    muted,\n    caution,\n    sunEvent,\n    twilightEvent,\n    moon,\n    selected,\n    chartDay,\n    chartTwilight,\n    chartDark,\n    chartWindow,\n    chartTarget,\n    chartMoon,\n    chartMinAltitude,\n    chartNow,\n    chartNowCentre,\n    chartGrid,\n    chartLabel,\n    swatchBorder,\n    ...bortle,\n    ...onBortle,\n  ];\n\n  @override\n  AppPalette copyWith() => this;\n\n  @override\n  AppPalette lerp(AppPalette? other, double t) =>\n      other == null || t < 0.5 ? this : other;\n}\n",
+      "href": "design-sources/b6f945ae70e7.html"
+    },
+    {
+      "name": "app_radius.dart",
+      "title": "app_radius.dart",
+      "path": "lib\\core\\theme\\app_radius.dart",
+      "category": "Implementation owner",
+      "sha256": "b0223a8bed5eff7213b4fa87531f40941e184cfdfd974ce0a39d4125ef67a91b",
+      "lines": 15,
+      "rules": [],
+      "text": "/// Corner radii (S5.1), in logical pixels. One scale for the whole app;\n/// see `docs/DESIGN_SYSTEM.md`.\nabstract final class AppRadius {\n  /// Cards, sections, text fields and buttons.\n  static const double small = 6;\n\n  /// Menus (plan.css `.plan-menu`).\n  static const double menu = 8;\n\n  /// Dialogs, bottom sheets and a swiped row's background.\n  static const double large = 12;\n\n  /// Pills and chips.\n  static const double pill = 999;\n}\n",
+      "href": "design-sources/834b98dfb878.html"
+    },
+    {
+      "name": "app_spacing.dart",
+      "title": "app_spacing.dart",
+      "path": "lib\\core\\theme\\app_spacing.dart",
+      "category": "Implementation owner",
+      "sha256": "5269c9e205ceef61d4de7bf259e28556ed02b6a6229673b39a0d2d69009f0ea7",
+      "lines": 40,
+      "rules": [],
+      "text": "/// The spacing scale, in logical pixels (documented in S5.1; see\n/// `docs/DESIGN_SYSTEM.md`). Component padding and page gutters are distinct:\n/// [md] is the usual card's inner padding, not a universal page gutter.\n/// Current page callers generally use [gutter], with documented local exceptions.\n/// [lg] separates sections; [sm] separates rows within a section;\n/// [xs] separates a label from its value.\nclass AppSpacing {\n  static const double xs = 4.0;\n  static const double sm = 8.0;\n  static const double md = 16.0;\n  static const double lg = 24.0;\n  static const double xl = 32.0;\n  static const double xxl = 48.0;\n\n  // Hybrid reference steps (notion-hybrid.css / conditions.css, CSS px as\n  // logical px) used where the transferred screens follow the reference.\n  /// A caption tucked under its line.\n  static const double hair = 2.0;\n\n  /// A secondary line under a value.\n  static const double nudge = 3.0;\n\n  /// A dense table cell's vertical padding.\n  static const double cellY = 6.0;\n\n  /// A note under a chart or list.\n  static const double notes = 10.0;\n\n  /// Between related items in a group.\n  static const double itemGap = 12.0;\n\n  /// A list row's vertical padding.\n  static const double rowY = 14.0;\n\n  /// A Hybrid page's side padding.\n  static const double gutter = 20.0;\n\n  /// Between sections of a Hybrid page.\n  static const double section = 28.0;\n}\n",
+      "href": "design-sources/a421ff4f2230.html"
+    },
+    {
+      "name": "app_theme.dart",
+      "title": "app_theme.dart",
+      "path": "lib\\core\\theme\\app_theme.dart",
+      "category": "Implementation owner",
+      "sha256": "f75e7f7b65557dbcdee1c74bed6bb1c027de994df6a62387c1986cbaf87f42bf",
+      "lines": 589,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\nimport 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;\n\nimport 'app_colors.dart';\nimport 'app_palette.dart';\nimport 'app_radius.dart';\nimport 'app_spacing.dart';\nimport 'app_typography.dart';\nimport 'app_motion.dart';\nimport 'hybrid_tokens.dart';\nimport 'hybrid_view_entrance.dart';\n\n/// The app's three themes (TASK 12.4): light, dark and red field mode.\n/// Colours come from [AppColors] and [AppPalette] tokens; text is never\n/// smaller than 12 sp in the base scale (HybridTokens names the compact\n/// navigation/calendar exceptions). Since S5.1 text roles drive the colour scheme\n/// (`onSurface` is the primary text, `onSurfaceVariant` and `secondary`\n/// the secondary text), `surfaceContainerHigh` is the raised surface, and\n/// [AppTypography.scale] sets every style's size and weight.\nclass AppTheme {\n  /// The family of the styles the theme builds by hand (F25).\n  static const _family = HybridTokens.fontFamily;\n\n  static final ThemeData light = _withTokens(\n    ThemeData(\n      fontFamily: _family,\n      brightness: Brightness.light,\n      primaryColor: AppColors.lightTextPrimary,\n      scaffoldBackgroundColor: AppColors.lightBackground,\n      appBarTheme: const AppBarTheme(\n        backgroundColor: AppColors.lightBackground,\n        foregroundColor: AppColors.lightTextPrimary,\n        elevation: 0,\n        scrolledUnderElevation: 0,\n        centerTitle: false,\n        toolbarHeight: HybridTokens.appBarHeight,\n        titleTextStyle: TextStyle(\n          // Owner-selected bundled family, including Ukrainian glyphs.\n          fontFamily: _family,\n          color: AppColors.lightTextPrimary,\n          fontSize: 22,\n          height: 1.25,\n          fontWeight: FontWeight.w500,\n        ),\n      ),\n      colorScheme: const ColorScheme.light(\n        primary: AppColors.lightTextPrimary,\n        onPrimary: AppColors.lightBackground,\n        secondary: AppColors.lightTextSecondary,\n        // Selected segments and the navigation indicator: a light fill\n        // with primary text (Material would derive them from secondary).\n        secondaryContainer: AppColors.lightBorder,\n        onSecondaryContainer: AppColors.lightTextPrimary,\n        surface: AppColors.lightSurface,\n        onSurface: AppColors.lightTextPrimary,\n        onSurfaceVariant: AppColors.lightTextSecondary,\n        surfaceContainerHigh: AppColors.lightSurfaceRaised,\n        // S5.2: Material falls back to black for both (the prominent\n        // field underline of 08 §6).\n        outline: AppColors.lightControlBorder,\n        outlineVariant: AppColors.lightBorder,\n        error: AppColors.lightError,\n      ),\n      dividerTheme: const DividerThemeData(\n        color: AppColors.lightBorder,\n        thickness: 1,\n        space: 1,\n      ),\n      cardTheme: CardThemeData(\n        color: AppColors.lightSurface,\n        elevation: 0,\n        shape: RoundedRectangleBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          side: const BorderSide(color: AppColors.lightBorder),\n        ),\n        margin: EdgeInsets.zero,\n      ),\n    ),\n    AppPalette.light,\n  );\n\n  static final ThemeData dark = _withTokens(\n    ThemeData(\n      fontFamily: _family,\n      brightness: Brightness.dark,\n      primaryColor: AppColors.darkTextPrimary,\n      scaffoldBackgroundColor: AppColors.darkBackground,\n      appBarTheme: const AppBarTheme(\n        backgroundColor: AppColors.darkBackground,\n        foregroundColor: AppColors.darkTextPrimary,\n        elevation: 0,\n        scrolledUnderElevation: 0,\n        centerTitle: false,\n        toolbarHeight: HybridTokens.appBarHeight,\n        titleTextStyle: TextStyle(\n          // Owner-selected bundled family, including Ukrainian glyphs.\n          fontFamily: _family,\n          color: AppColors.darkTextPrimary,\n          fontSize: 22,\n          height: 1.25,\n          fontWeight: FontWeight.w500,\n        ),\n      ),\n      colorScheme: const ColorScheme.dark(\n        primary: AppColors.darkTextPrimary,\n        onPrimary: AppColors.darkBackground,\n        secondaryContainer: AppColors.darkSelection,\n        onSecondaryContainer: AppColors.darkTextPrimary,\n        secondary: AppColors.darkTextSecondary,\n        surface: AppColors.darkSurface,\n        onSurface: AppColors.darkTextPrimary,\n        onSurfaceVariant: AppColors.darkTextSecondary,\n        surfaceContainerHigh: AppColors.darkSurfaceRaised,\n        // S5.2: Material falls back to white for both.\n        outline: AppColors.darkControlBorder,\n        outlineVariant: AppColors.darkBorder,\n        error: AppColors.darkError,\n        onError: AppColors.darkBackground,\n      ),\n      dividerTheme: const DividerThemeData(\n        color: AppColors.darkBorder,\n        thickness: 1,\n        space: 1,\n      ),\n      cardTheme: CardThemeData(\n        color: AppColors.darkSurface,\n        elevation: 0,\n        shape: RoundedRectangleBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          side: const BorderSide(color: AppColors.darkBorder),\n        ),\n        margin: EdgeInsets.zero,\n      ),\n    ),\n    AppPalette.dark,\n  );\n\n  /// Every colour role is red or black (TASK 12.4), so dialogs, date\n  /// pickers, snackbars, menus and the navigation bar stay red too.\n  static const ColorScheme fieldColorScheme = ColorScheme(\n    brightness: Brightness.dark,\n    primary: AppColors.fieldTextPrimary,\n    onPrimary: AppColors.fieldBackground,\n    primaryContainer: AppColors.fieldBorder,\n    onPrimaryContainer: AppColors.fieldTextPrimary,\n    secondary: AppColors.fieldTextSecondary,\n    onSecondary: AppColors.fieldBackground,\n    secondaryContainer: AppColors.fieldBorder,\n    onSecondaryContainer: AppColors.fieldTextPrimary,\n    tertiary: AppColors.fieldTextSecondary,\n    onTertiary: AppColors.fieldBackground,\n    tertiaryContainer: AppColors.fieldBorder,\n    onTertiaryContainer: AppColors.fieldTextPrimary,\n    error: AppColors.fieldTextPrimary,\n    onError: AppColors.fieldBackground,\n    errorContainer: AppColors.fieldBorder,\n    onErrorContainer: AppColors.fieldTextPrimary,\n    surface: AppColors.fieldBackground,\n    onSurface: AppColors.fieldTextPrimary,\n    onSurfaceVariant: AppColors.fieldTextSecondary,\n    surfaceDim: AppColors.fieldBackground,\n    surfaceBright: AppColors.fieldBorder,\n    surfaceContainerLowest: AppColors.fieldBackground,\n    surfaceContainerLow: AppColors.fieldSurface,\n    surfaceContainer: AppColors.fieldSurface,\n    surfaceContainerHigh: AppColors.fieldSurfaceRaised,\n    surfaceContainerHighest: Color(0xFF220000),\n    outline: AppColors.fieldControlBorder,\n    outlineVariant: AppColors.fieldBorder,\n    shadow: AppColors.fieldBackground,\n    scrim: AppColors.fieldBackground,\n    inverseSurface: AppColors.fieldTextSecondary,\n    onInverseSurface: AppColors.fieldBackground,\n    inversePrimary: AppColors.fieldBackground,\n    surfaceTint: AppColors.fieldBackground,\n  );\n\n  static final ThemeData fieldTheme = _withTokens(\n    ThemeData(\n      fontFamily: _family,\n      colorScheme: fieldColorScheme,\n      primaryColor: AppColors.fieldTextPrimary,\n      scaffoldBackgroundColor: AppColors.fieldBackground,\n      canvasColor: AppColors.fieldBackground,\n      cardColor: AppColors.fieldSurface,\n      dividerColor: AppColors.fieldBorder,\n      hintColor: AppColors.fieldTextSecondary,\n      disabledColor: AppColors.fieldTextDisabled,\n      unselectedWidgetColor: AppColors.fieldTextSecondary,\n      hoverColor: const Color(0x1FFF0000),\n      focusColor: const Color(0x1FFF0000),\n      highlightColor: const Color(0x1FFF0000),\n      splashColor: const Color(0x33FF0000),\n      shadowColor: AppColors.fieldBackground,\n      secondaryHeaderColor: AppColors.fieldSurface,\n      appBarTheme: const AppBarTheme(\n        backgroundColor: AppColors.fieldBackground,\n        foregroundColor: AppColors.fieldTextPrimary,\n        elevation: 0,\n        scrolledUnderElevation: 0,\n        centerTitle: false,\n        toolbarHeight: HybridTokens.appBarHeight,\n        titleTextStyle: TextStyle(\n          // Owner-selected bundled family, including Ukrainian glyphs.\n          fontFamily: _family,\n          color: AppColors.fieldTextPrimary,\n          fontSize: 22,\n          height: 1.25,\n          fontWeight: FontWeight.w500,\n        ),\n      ),\n      dividerTheme: const DividerThemeData(\n        color: AppColors.fieldBorder,\n        thickness: 1,\n        space: 1,\n      ),\n      cardTheme: CardThemeData(\n        color: AppColors.fieldSurface,\n        elevation: 0,\n        shape: RoundedRectangleBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          side: const BorderSide(color: AppColors.fieldBorder),\n        ),\n        margin: EdgeInsets.zero,\n      ),\n      iconTheme: const IconThemeData(color: AppColors.fieldTextPrimary),\n      snackBarTheme: const SnackBarThemeData(\n        backgroundColor: AppColors.fieldBorder,\n        contentTextStyle: TextStyle(\n          fontFamily: _family,\n          color: AppColors.fieldTextPrimary,\n        ),\n        actionTextColor: AppColors.fieldTextPrimary,\n      ),\n    ),\n    AppPalette.field,\n    textColor: AppColors.fieldTextPrimary,\n    field: true,\n  );\n\n  /// Red field mode's safety net (owner decision, TASK 12.4): applied over\n  /// the whole app, it maps every pixel to red by brightness — R' = R +\n  /// 0.7152 G + 0.0722 B (Rec. 709 luma weights for G and B), G' = B' = 0 —\n  /// so map tiles and anything a token misses stay red. Pure red is\n  /// unchanged.\n  static const ColorFilter fieldFilter = ColorFilter.matrix(fieldFilterMatrix);\n\n  /// The 4×5 RGBA matrix of [fieldFilter], row by row.\n  static const List<double> fieldFilterMatrix = <double>[\n    1, 0.7152, 0.0722, 0, 0, //\n    0, 0, 0, 0, 0, //\n    0, 0, 0, 0, 0, //\n    0, 0, 0, 1, 0, //\n  ];\n\n  /// Adds the palette and the shared type scale (no text under 12 sp).\n  /// The scale's sizes and weights override Material's geometry; the\n  /// colours stay the theme's.\n  static ThemeData _withTokens(\n    ThemeData base,\n    AppPalette palette, {\n    Color? textColor,\n    bool field = false,\n  }) {\n    final hybrid = field\n        ? HybridTokens.field\n        : base.brightness == Brightness.dark\n        ? HybridTokens.dark\n        : HybridTokens.light;\n    TextTheme readable(TextTheme t) {\n      final scaled = t.merge(AppTypography.scale);\n      return textColor == null\n          ? scaled\n          : scaled.apply(bodyColor: textColor, displayColor: textColor);\n    }\n\n    return _withControls(\n      base.copyWith(\n        extensions: [palette, hybrid],\n        pageTransitionsTheme: const PageTransitionsTheme(\n          builders: {\n            TargetPlatform.android: HybridPageTransitionsBuilder(),\n            TargetPlatform.windows: HybridPageTransitionsBuilder(),\n            TargetPlatform.linux: HybridPageTransitionsBuilder(),\n            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),\n            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),\n          },\n        ),\n        textTheme: readable(base.textTheme),\n        primaryTextTheme: readable(base.primaryTextTheme),\n      ),\n      palette,\n      field: field,\n    );\n  }\n\n  /// The controls' look (S5.2; `docs/DESIGN_SYSTEM.md`): the button roles,\n  /// text fields, dialogs, sheets, menus and messages, from the tokens\n  /// only, so field mode stays red or black.\n  static ThemeData _withControls(\n    ThemeData t,\n    AppPalette p, {\n    required bool field,\n  }) {\n    final s = t.colorScheme;\n    final hybrid = t.extension<HybridTokens>()!;\n    final text = t.textTheme;\n    final shape = WidgetStatePropertyAll(\n      RoundedRectangleBorder(\n        borderRadius: BorderRadius.circular(AppRadius.small),\n      ),\n    );\n    final label = WidgetStatePropertyAll(text.labelLarge);\n    const tall = WidgetStatePropertyAll(Size(64, 48));\n\n    // Pressed feedback stronger than Material's 10 % (08 §5, §8).\n    WidgetStateProperty<Color?> overlay(Color c) =>\n        WidgetStateProperty.resolveWith((states) {\n          if (states.contains(WidgetState.pressed)) {\n            return c.withValues(alpha: pressedOverlay);\n          }\n          if (states.contains(WidgetState.focused)) {\n            return c.withValues(alpha: 0.12);\n          }\n          if (states.contains(WidgetState.hovered)) {\n            return c.withValues(alpha: 0.08);\n          }\n          return null;\n        });\n    WidgetStateProperty<Color> onOff(Color on) =>\n        WidgetStateProperty.resolveWith(\n          (states) =>\n              states.contains(WidgetState.disabled) ? p.textDisabled : on,\n        );\n    final secondary = ButtonStyle(\n      minimumSize: tall,\n      animationDuration: AppMotion.short,\n      padding: const WidgetStatePropertyAll(\n        EdgeInsets.symmetric(horizontal: 16, vertical: 8),\n      ),\n      shape: shape,\n      textStyle: label,\n      foregroundColor: onOff(p.textPrimary),\n      iconColor: onOff(p.textPrimary),\n      backgroundColor: WidgetStateProperty.resolveWith(\n        (states) =>\n            states.contains(WidgetState.pressed) ? hybrid.selection : null,\n      ),\n      // The selection fill is the pressed feedback; no extra overlay.\n      overlayColor: WidgetStateProperty.resolveWith(\n        (states) => states.contains(WidgetState.pressed)\n            ? HybridTokens.transparent\n            : overlay(p.textPrimary).resolve(states),\n      ),\n      side: WidgetStateProperty.resolveWith(\n        (states) => BorderSide(\n          color: states.contains(WidgetState.disabled)\n              ? p.border\n              : p.controlBorder,\n        ),\n      ),\n    );\n\n    // Primary action (styles.css, hybrid-refinement.css): the action fill\n    // with its on-action text in every theme. WQA-01 (owner-accepted web\n    // reference 86873ce): field mode's action is the bright red role with\n    // black text (5.25:1), replacing the D-06 red outline; hover underlines\n    // instead of darkening. Pressed: every Hybrid button takes the selection\n    // fill with primary text (`button:active`). Disabled: opacity .55.\n    // The label is `.primary-button`'s 16/600 (QA-04).\n    final field = identical(hybrid, HybridTokens.field);\n    Color disabled(Color c) => c.withValues(alpha: c.a * 0.55);\n    return t.copyWith(\n      filledButtonTheme: FilledButtonThemeData(\n        style: ButtonStyle(\n          minimumSize: tall,\n          shape: shape,\n          textStyle: WidgetStateProperty.resolveWith(\n            (states) => text.bodyLarge?.copyWith(\n              fontWeight: FontWeight.w600,\n              height: 1.5,\n              decoration: field && states.contains(WidgetState.hovered)\n                  ? TextDecoration.underline\n                  : TextDecoration.none,\n            ),\n          ),\n          padding: const WidgetStatePropertyAll(\n            EdgeInsets.symmetric(horizontal: 16, vertical: 8),\n          ),\n          animationDuration: AppMotion.short,\n          backgroundColor: WidgetStateProperty.resolveWith((states) {\n            if (states.contains(WidgetState.disabled)) {\n              return disabled(hybrid.action);\n            }\n            if (states.contains(WidgetState.pressed)) return hybrid.selection;\n            if (!field && states.contains(WidgetState.hovered)) {\n              return Color.lerp(hybrid.action, const Color(0xFF000000), 0.13);\n            }\n            return hybrid.action;\n          }),\n          foregroundColor: WidgetStateProperty.resolveWith((states) {\n            if (states.contains(WidgetState.disabled)) {\n              return disabled(hybrid.onAction);\n            }\n            if (states.contains(WidgetState.pressed)) return p.textPrimary;\n            return hybrid.onAction;\n          }),\n          iconColor: WidgetStateProperty.resolveWith((states) {\n            if (states.contains(WidgetState.disabled)) {\n              return disabled(hybrid.onAction);\n            }\n            if (states.contains(WidgetState.pressed)) return p.textPrimary;\n            return hybrid.onAction;\n          }),\n          overlayColor: const WidgetStatePropertyAll(HybridTokens.transparent),\n        ),\n      ),\n      outlinedButtonTheme: OutlinedButtonThemeData(style: secondary),\n      // The flat design has no elevation: an elevated button is the\n      // secondary role, on the surface.\n      elevatedButtonTheme: ElevatedButtonThemeData(\n        style: secondary.copyWith(\n          backgroundColor: WidgetStateProperty.resolveWith(\n            (states) => states.contains(WidgetState.disabled)\n                ? t.scaffoldBackgroundColor\n                : states.contains(WidgetState.pressed)\n                ? hybrid.selection\n                : s.surface,\n          ),\n          elevation: const WidgetStatePropertyAll(0),\n        ),\n      ),\n      // plan.css `.quiet-button`: 14/500 secondary text, padding 8 12,\n      // at least 48 × 48.\n      textButtonTheme: TextButtonThemeData(\n        style: ButtonStyle(\n          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),\n          padding: const WidgetStatePropertyAll(\n            EdgeInsets.symmetric(horizontal: 12, vertical: 8),\n          ),\n          animationDuration: AppMotion.short,\n          shape: shape,\n          textStyle: label,\n          foregroundColor: onOff(p.textSecondary),\n          iconColor: onOff(p.textSecondary),\n          overlayColor: overlay(p.textPrimary),\n        ),\n      ),\n      iconButtonTheme: IconButtonThemeData(\n        style: ButtonStyle(\n          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),\n          overlayColor: overlay(p.textPrimary),\n        ),\n      ),\n      segmentedButtonTheme: SegmentedButtonThemeData(\n        style: ButtonStyle(\n          shape: shape,\n          minimumSize: const WidgetStatePropertyAll(Size(48, 48)),\n          textStyle: label,\n          side: WidgetStatePropertyAll(BorderSide(color: p.controlBorder)),\n          foregroundColor: onOff(p.textPrimary),\n          backgroundColor: WidgetStateProperty.resolveWith(\n            (states) => states.contains(WidgetState.selected)\n                ? hybrid.selection\n                : t.scaffoldBackgroundColor,\n          ),\n        ),\n      ),\n      // A quiet underline (08 §6): the enabled line is the control border\n      // (colorScheme.outline, which Material reads); focus draws it 2 px in\n      // the primary colour. Labels and hints are text roles (AA).\n      // plan.css `.block-input input`: a 1 px border and 12 padding round\n      // a 24 px line, 50 tall (Flutter paints the border inside the\n      // content padding, so 13).\n      inputDecorationTheme: InputDecorationThemeData(\n        contentPadding: const EdgeInsets.all(13),\n        constraints: const BoxConstraints(minHeight: 48),\n        border: OutlineInputBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n        ),\n        enabledBorder: OutlineInputBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          borderSide: BorderSide(color: p.controlBorder),\n        ),\n        focusedBorder: OutlineInputBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          borderSide: BorderSide(color: p.textPrimary, width: 2),\n        ),\n        errorBorder: OutlineInputBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          borderSide: BorderSide(color: s.error),\n        ),\n        focusedErrorBorder: OutlineInputBorder(\n          borderRadius: BorderRadius.circular(AppRadius.small),\n          borderSide: BorderSide(color: s.error, width: 2),\n        ),\n        labelStyle: TextStyle(color: p.textSecondary),\n        floatingLabelStyle: WidgetStateTextStyle.resolveWith(\n          (states) => TextStyle(\n            color: states.contains(WidgetState.error)\n                ? s.error\n                : states.contains(WidgetState.focused)\n                ? s.primary\n                : p.textSecondary,\n          ),\n        ),\n        // `input::placeholder`: the secondary text (italic on plan pages,\n        // HybridPlanInputs).\n        hintStyle: TextStyle(color: p.textSecondary),\n        helperStyle: TextStyle(color: p.textTertiary),\n        errorStyle: TextStyle(color: s.error),\n        prefixIconColor: p.textSecondary,\n        suffixIconColor: p.textSecondary,\n        fillColor: s.surface,\n      ),\n      // plan.css `.planner-page dialog` (WQA-04): 20 from the app's edges\n      // (so 335 wide at 375 and 372 at 412), radius 12, a control-border\n      // outline, no shadow, 24 padding; the title 22/500, the message\n      // 14 secondary 16 below it, the actions 24 below, 8 apart, at the end.\n      dialogTheme: DialogThemeData(\n        backgroundColor: p.surfaceRaised,\n        surfaceTintColor: HybridTokens.transparent,\n        elevation: 0,\n        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),\n        barrierColor: const Color(0x55000000),\n        shape: RoundedRectangleBorder(\n          borderRadius: BorderRadius.circular(AppRadius.large),\n          side: BorderSide(color: p.controlBorder),\n        ),\n        titleTextStyle: text.titleLarge?.copyWith(\n          fontSize: 22,\n          height: 1.25,\n          fontWeight: FontWeight.w500,\n          color: p.textPrimary,\n        ),\n        contentTextStyle: text.bodyMedium?.copyWith(\n          fontSize: 14,\n          height: 1.5,\n          color: p.textSecondary,\n        ),\n        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),\n      ),\n      bottomSheetTheme: BottomSheetThemeData(\n        backgroundColor: p.surfaceRaised,\n        modalBackgroundColor: p.surfaceRaised,\n        shape: const RoundedRectangleBorder(\n          borderRadius: BorderRadius.vertical(\n            top: Radius.circular(AppRadius.large),\n          ),\n        ),\n      ),\n      // Hybrid's menu (plan.css `.plan-menu`): flat, under its button, a\n      // control-border outline at radius 8, 4 above and below, 48 px items\n      // of 14 px text.\n      popupMenuTheme: PopupMenuThemeData(\n        color: p.surfaceRaised,\n        surfaceTintColor: Colors.transparent,\n        elevation: 0,\n        position: PopupMenuPosition.under,\n        menuPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),\n        shape: RoundedRectangleBorder(\n          borderRadius: BorderRadius.circular(AppRadius.menu),\n          side: BorderSide(color: p.controlBorder),\n        ),\n        labelTextStyle: WidgetStatePropertyAll(\n          AppTypography.body.copyWith(height: 1.5, color: p.textPrimary),\n        ),\n      ),\n      menuTheme: MenuThemeData(\n        style: MenuStyle(\n          backgroundColor: WidgetStatePropertyAll(p.surfaceRaised),\n        ),\n      ),\n      // Field mode keeps its dim red message; light and dark invert.\n      snackBarTheme: field\n          ? t.snackBarTheme\n          : SnackBarThemeData(\n              backgroundColor: p.textPrimary,\n              contentTextStyle: text.bodyMedium?.copyWith(\n                color: t.scaffoldBackgroundColor,\n              ),\n              actionTextColor: t.scaffoldBackgroundColor,\n            ),\n    );\n  }\n\n  /// The pressed overlay's opacity on every button (S5.2).\n  static const double pressedOverlay = 0.16;\n}\n",
+      "href": "design-sources/a2fd8e9da8e9.html"
+    },
+    {
+      "name": "app_typography.dart",
+      "title": "app_typography.dart",
+      "path": "lib\\core\\theme\\app_typography.dart",
+      "category": "Implementation owner",
+      "sha256": "aaf856134a50fbb638437896f37c6d8692ddd3ee5c2030fc0918bfd11be41e98",
+      "lines": 119,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\nimport 'hybrid_tokens.dart';\n\n/// The type scale (S5.1): size, line height and weight for every style,\n/// shared by the three themes. Colours come from the theme (the text roles\n/// in [AppPalette]); the owner-selected Geist family uses neutral tracking. Nothing is under\n/// 12 sp in this base scale. Compact web navigation/calendar exceptions live\n/// in HybridTokens. Roles are documented in `docs/DESIGN_SYSTEM.md`.\nabstract final class AppTypography {\n  static TextStyle _style(double size, double lineHeight, FontWeight weight) =>\n      TextStyle(\n        fontFamily: HybridTokens.fontFamily,\n        fontSize: size,\n        height: lineHeight / size,\n        fontWeight: weight,\n        letterSpacing: 0,\n      );\n\n  /// Supporting copy, distinct from the 16 sp data/body role.\n  static final TextStyle support = _style(14, 22, FontWeight.w400);\n\n  /// Night section heading; the same Geist family as every other UI role.\n  static final TextStyle nightHeading = _style(\n    25,\n    32.5,\n    FontWeight.w500,\n  ).copyWith(letterSpacing: -0.5);\n\n  /// Night, Moon and Weather answers retain their size in the unified family.\n  static final TextStyle answerHeading = _style(\n    28,\n    36.4,\n    FontWeight.w500,\n  ).copyWith(letterSpacing: -0.56);\n\n  // The Hybrid role scale (owner-accepted 2026-10-22, a594837/93e0eb6):\n  // a label never reads smaller than the content it introduces.\n  /// Screen title and screen answer: 22/500.\n  static final TextStyle screenTitle = _style(22, 27.5, FontWeight.w500);\n\n  /// Section heading, disclosures included: 20/600.\n  static final TextStyle sectionHeading = _style(\n    20,\n    28,\n    FontWeight.w600,\n  ).copyWith(letterSpacing: -0.3);\n\n  /// Section subject (Home target): 18/500.\n  static final TextStyle sectionSubject = _style(18, 23.4, FontWeight.w500);\n\n  /// Item title and sub-heading: 16/600.\n  static final TextStyle itemTitle = _style(16, 22.4, FontWeight.w600);\n\n  /// List-row title (Settings, Library, Logbook rows): 16/500.\n  static final TextStyle rowTitle = _style(16, 24, FontWeight.w500);\n\n  /// Primary value: 15/400.\n  static final TextStyle value = _style(15, 21.75, FontWeight.w400);\n\n  /// Body: 14/400.\n  static final TextStyle body = _style(14, 21.7, FontWeight.w400);\n\n  /// Caption, hint and note: 13/400.\n  static final TextStyle caption = _style(13, 19.5, FontWeight.w400);\n\n  /// Dense data only (tables, hourly strip, calendar, chart axes): 12/400.\n  static final TextStyle dense = _style(12, 18, FontWeight.w400);\n\n  /// Root navigation labels use the shared family, at the compact 11 sp role.\n  static const TextStyle navigationLabel = TextStyle(\n    fontFamily: HybridTokens.fontFamily,\n    fontSize: 11,\n    height: 1.5,\n    letterSpacing: 0,\n  );\n\n  static final TextStyle homeHeading = _style(\n    29,\n    34.8,\n    FontWeight.w500,\n  ).copyWith(letterSpacing: -0.87);\n\n  /// Hybrid Home roles from styles.css and hybrid-refinement.css.\n  static final TextStyle homePlanHeading = _style(\n    20,\n    28,\n    FontWeight.w600,\n  ).copyWith(letterSpacing: -0.15);\n\n  static final TextStyle homeTarget = _style(18, 23.4, FontWeight.w500);\n\n  static final TextStyle homeWordmark = _style(\n    13,\n    17.55,\n    FontWeight.w600,\n  ).copyWith(letterSpacing: -0.4);\n\n  static final TextStyle homeWelcome = _style(13, 17.55, FontWeight.w400);\n\n  static final TextTheme scale = TextTheme(\n    displayLarge: _style(57, 64, FontWeight.w400),\n    displayMedium: _style(45, 52, FontWeight.w400),\n    displaySmall: _style(36, 44, FontWeight.w400),\n    headlineLarge: _style(32, 40, FontWeight.w400),\n    headlineMedium: _style(28, 36, FontWeight.w400),\n    headlineSmall: _style(24, 32, FontWeight.w400),\n    // Titles carry the hierarchy: heavier than Material's defaults.\n    titleLarge: _style(20, 28, FontWeight.w600),\n    titleMedium: _style(16, 24, FontWeight.w600),\n    titleSmall: _style(14, 20, FontWeight.w600),\n    bodyLarge: _style(16, 24, FontWeight.w400),\n    bodyMedium: _style(16, 24, FontWeight.w400),\n    bodySmall: _style(13, 20, FontWeight.w400),\n    labelLarge: _style(14, 20, FontWeight.w500),\n    labelMedium: _style(14, 21, FontWeight.w500),\n    labelSmall: _style(13, 20, FontWeight.w500),\n  );\n}\n",
+      "href": "design-sources/79a4508ed8d3.html"
+    },
+    {
+      "name": "culmina_mark_colors.dart",
+      "title": "culmina_mark_colors.dart",
+      "path": "lib\\core\\theme\\culmina_mark_colors.dart",
+      "category": "Implementation owner",
+      "sha256": "a023d00d0a23a1bee8146f406b8d85abc029804e89aeddbf731e1b3d90bc4aa1",
+      "lines": 49,
+      "rules": [],
+      "text": "// Generated by tool/culmina_mark.py; edit the tool, not this file.\nimport 'dart:ui';\n\n/// The mark's colours on one of the app's surfaces; [glint] and\n/// [starPeak] are the launch gesture's accents.\nfinal class CulminaMarkColors {\n  const CulminaMarkColors({\n    required this.background,\n    required this.orbit,\n    required this.inner,\n    required this.star,\n    required this.glint,\n    required this.starPeak,\n  });\n\n  final Color background;\n  final Color orbit;\n  final Color inner;\n  final Color star;\n  final Color glint;\n  final Color starPeak;\n\n  static const light = CulminaMarkColors(\n    background: Color(0xFFFFFFFF),\n    orbit: Color(0xFF0F1C4D),\n    inner: Color(0xFF6C7FB8),\n    star: Color(0xFF1F7FE5),\n    glint: Color(0xFF1F7FE5),\n    starPeak: Color(0xFF0B5CBF),\n  );\n\n  static const dark = CulminaMarkColors(\n    background: Color(0xFF191919),\n    orbit: Color(0xFFF5F7FD),\n    inner: Color(0xFFA4B2E2),\n    star: Color(0xFFA3D8FF),\n    glint: Color(0xFFD7ECFF),\n    starPeak: Color(0xFFE2F3FF),\n  );\n\n  static const field = CulminaMarkColors(\n    background: Color(0xFF000000),\n    orbit: Color(0xFF990000),\n    inner: Color(0xFF5C0000),\n    star: Color(0xFF850000),\n    glint: Color(0xFF850000),\n    starPeak: Color(0xFFA80000),\n  );\n}\n",
+      "href": "design-sources/362bbdd4ab66.html"
+    },
+    {
+      "name": "font_licenses.dart",
+      "title": "font_licenses.dart",
+      "path": "lib\\core\\theme\\font_licenses.dart",
+      "category": "Implementation owner",
+      "sha256": "48da1e9cdb9194c976e6d94dec2e861f2bdf3e3614a7b07884c85779a392f2c9",
+      "lines": 30,
+      "rules": [],
+      "text": "import 'package:flutter/foundation.dart';\nimport 'package:flutter/services.dart';\n\n/// Registers the bundled typefaces and icon geometry for the application's licence page.\n/// Call once after binding initialization; the text loads when requested.\nabstract final class AppFontLicenses {\n  static bool _registered = false;\n\n  static void register() {\n    if (_registered) return;\n    _registered = true;\n    LicenseRegistry.addLicense(() async* {\n      final text = await rootBundle.loadString('assets/fonts/OFL-Geist.txt');\n      yield LicenseEntryWithLineBreaks(const ['Geist'], text);\n    });\n    LicenseRegistry.addLicense(() async* {\n      final text = await rootBundle.loadString(\n        'assets/fonts/OFL-SourceSerif4.txt',\n      );\n      yield LicenseEntryWithLineBreaks(const ['Source Serif 4'], text);\n    });\n    // The Weather rows' data icons (HybridIcons) are Lucide geometry.\n    LicenseRegistry.addLicense(() async* {\n      final text = await rootBundle.loadString(\n        'assets/fonts/LICENSE-Lucide.txt',\n      );\n      yield LicenseEntryWithLineBreaks(const ['Lucide icons'], text);\n    });\n  }\n}\n",
+      "href": "design-sources/2526efbff9f0.html"
+    },
+    {
+      "name": "hybrid_tokens.dart",
+      "title": "hybrid_tokens.dart",
+      "path": "lib\\core\\theme\\hybrid_tokens.dart",
+      "category": "Implementation owner",
+      "sha256": "47ce6c5483c70fa36cf94e36cf2c6069de618631a1e5d601bf9f392933fd6293",
+      "lines": 346,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\n/// Approved original Hybrid presentation roles absent from AppPalette.\n/// Values: the final computed cascade of the accepted web reference\n/// (`design/home-lab` at 86873ce: notion-hybrid.css, hybrid-data-tokens.css,\n/// hybrid-refinement.css), Light / Dark / Field. These colours do not supply\n/// astronomical intervals or change data semantics.\n@immutable\nclass HybridTokens extends ThemeExtension<HybridTokens> {\n  const HybridTokens({\n    required this.action,\n    required this.onAction,\n    required this.selection,\n    required this.selectedHourFill,\n    required this.selectedHourText,\n    required this.selectedHourRule,\n    required this.surfaceSubtle,\n    required this.surfaceSunken,\n    required this.accent,\n    required this.success,\n    required this.successWash,\n    required this.caution,\n    required this.cautionWash,\n    required this.errorText,\n    required this.errorWash,\n    required this.hourBackground,\n    required this.hourText,\n    required this.gainStart,\n    required this.gainEnd,\n    required this.skyDay,\n    required this.skyCivil,\n    required this.skyNautical,\n    required this.skyAstronomical,\n    required this.skyDark,\n    required this.moonUp,\n    required this.moonFree,\n    required this.weatherCaution,\n    required this.weatherNotice,\n  });\n\n  static const sourceRevision = '86873ce';\n  static const fontFamily = 'Geist';\n  static const transparent = Color(0x00000000);\n  // Exact compact roles in the approved source. Large text uses full week rows.\n  static const calendarCaptionSize = 10.0;\n  static const navigationLabelSize = 11.0;\n\n  /// Chart tick labels (plan.css `.gain-graph text`, 11 px).\n  static const chartLabelSize = 11.0;\n  static const minTarget = 48.0;\n  static const appBarHeight = 64.0;\n\n  /// Primary action fill (WQA-01: Field `#FF0000` with black text).\n  final Color action;\n\n  /// Text on [action].\n  final Color onAction;\n\n  /// Selected rows, segments and pressed fills.\n  final Color selection;\n\n  /// Weather B hour-axis selection fill (weather-radix.css blue5).\n  final Color selectedHourFill;\n\n  /// Text on [selectedHourFill] (blue12; Field retains primary red).\n  final Color selectedHourText;\n\n  /// Bottom rule of the selected Weather B hour (blue11).\n  final Color selectedHourRule;\n\n  /// Subtle surface: selected navigation, quiet panels.\n  final Color surfaceSubtle;\n\n  /// Sunken surface behind raised panels.\n  final Color surfaceSunken;\n\n  /// Notion blue: weather icons, main chart lines, links.\n  final Color accent;\n\n  /// Saved / Completed text.\n  final Color success;\n\n  /// Saved / Completed compact background.\n  final Color successWash;\n\n  /// Not saved / Saved · changed / Partly / stale text.\n  final Color caution;\n\n  /// Caution compact background.\n  final Color cautionWash;\n\n  /// Data error text.\n  final Color errorText;\n\n  /// Error compact background.\n  final Color errorWash;\n\n  /// Selected weather hour fill.\n  final Color hourBackground;\n\n  /// Selected weather hour text.\n  final Color hourText;\n\n  /// Stacking-gain gradient start.\n  final Color gainStart;\n\n  /// Stacking-gain gradient end.\n  final Color gainEnd;\n\n  /// Timeline daylight.\n  final Color skyDay;\n\n  /// Timeline civil twilight.\n  final Color skyCivil;\n\n  /// Timeline nautical twilight.\n  final Color skyNautical;\n\n  /// Timeline astronomical twilight.\n  final Color skyAstronomical;\n\n  /// Timeline dark time: black in every theme (owner).\n  final Color skyDark;\n\n  /// Moon-above-horizon lane.\n  final Color moonUp;\n\n  /// Moon-free dark lane.\n  final Color moonFree;\n\n  /// Weather caution (dew, stale).\n  final Color weatherCaution;\n\n  /// The Weather page's freshness and gap notices (conditions.css\n  /// `--wx-caution`).\n  final Color weatherNotice;\n\n  List<Color> get sky => [\n    skyDay,\n    skyCivil,\n    skyNautical,\n    skyAstronomical,\n    skyDark,\n  ];\n\n  static const light = HybridTokens(\n    action: Color(0xFF37352F),\n    onAction: Color(0xFFFFFFFF),\n    selection: Color(0xFFE9E9E7),\n    selectedHourFill: Color(0xFFC2E5FF),\n    selectedHourText: Color(0xFF113264),\n    selectedHourRule: Color(0xFF0D74CE),\n    surfaceSubtle: Color(0xFFF7F7F5),\n    surfaceSunken: Color(0xFFF0F0ED),\n    accent: Color(0xFF0075DE),\n    success: Color(0xFF27633D),\n    successWash: Color(0xFFE4EEE7),\n    caution: Color(0xFF754600),\n    cautionWash: Color(0xFFF4ECDF),\n    errorText: Color(0xFFB00020),\n    errorWash: Color(0xFFF7E7E9),\n    hourBackground: Color(0xFFE6F3FE),\n    hourText: Color(0xFF005BAB),\n    gainStart: Color(0xFF0075DE),\n    gainEnd: Color(0xFF005BAB),\n    skyDay: Color(0xFFE6F3FE),\n    skyCivil: Color(0xFFA6D2F3),\n    skyNautical: Color(0xFF599FD5),\n    skyAstronomical: Color(0xFF285B90),\n    skyDark: Color(0xFF000000),\n    moonUp: Color(0xFF607D8B),\n    moonFree: Color(0xFF37352F),\n    weatherCaution: Color(0xFF754600),\n    weatherNotice: Color(0xFF9A5B00),\n  );\n\n  static const dark = HybridTokens(\n    action: Color(0xFFEBEBEA),\n    onAction: Color(0xFF191919),\n    selection: Color(0xFF343432),\n    selectedHourFill: Color(0xFF004074),\n    selectedHourText: Color(0xFFC2E6FF),\n    selectedHourRule: Color(0xFF70B8FF),\n    surfaceSubtle: Color(0xFF202020),\n    surfaceSunken: Color(0xFF141414),\n    accent: Color(0xFF62AFF3),\n    success: Color(0xFF99C5A6),\n    successWash: Color(0xFF2B352E),\n    caution: Color(0xFFFFCA70),\n    cautionWash: Color(0xFF3B3222),\n    errorText: Color(0xFFFF9592),\n    errorWash: Color(0xFF3C2929),\n    hourBackground: Color(0xFF152D40),\n    hourText: Color(0xFFA6D2F3),\n    gainStart: Color(0xFF62AFF3),\n    gainEnd: Color(0xFFA6D2F3),\n    skyDay: Color(0xFFA6D2F3),\n    skyCivil: Color(0xFF78B5E5),\n    skyNautical: Color(0xFF4388BD),\n    skyAstronomical: Color(0xFF244F7A),\n    skyDark: Color(0xFF000000),\n    moonUp: Color(0xFFB0BEC5),\n    moonFree: Color(0xFFEBEBEA),\n    weatherCaution: Color(0xFFFFCA70),\n    weatherNotice: Color(0xFFFFB74D),\n  );\n\n  static const field = HybridTokens(\n    action: Color(0xFFFF0000),\n    onAction: Color(0xFF000000),\n    selection: Color(0xFF330000),\n    selectedHourFill: Color(0xFF330000),\n    selectedHourText: Color(0xFFFF0000),\n    selectedHourRule: Color(0xFFFF0000),\n    surfaceSubtle: Color(0xFF110000),\n    surfaceSunken: Color(0xFF000000),\n    accent: Color(0xFFFF0000),\n    success: Color(0xFFFF0000),\n    successWash: Color(0xFF110000),\n    caution: Color(0xFFFF0000),\n    cautionWash: Color(0xFF1A0000),\n    errorText: Color(0xFFFF0000),\n    errorWash: Color(0xFF1A0000),\n    hourBackground: Color(0xFF330000),\n    hourText: Color(0xFFFF0000),\n    gainStart: Color(0xFF990000),\n    gainEnd: Color(0xFFFF0000),\n    skyDay: Color(0xFF800000),\n    skyCivil: Color(0xFF650000),\n    skyNautical: Color(0xFF4D0000),\n    skyAstronomical: Color(0xFF340000),\n    skyDark: Color(0xFF000000),\n    moonUp: Color(0xFFB00000),\n    moonFree: Color(0xFFFF0000),\n    weatherCaution: Color(0xFFFF0000),\n    weatherNotice: Color(0xFFFF0000),\n  );\n\n  @override\n  HybridTokens copyWith({\n    Color? action,\n    Color? onAction,\n    Color? selection,\n    Color? selectedHourFill,\n    Color? selectedHourText,\n    Color? selectedHourRule,\n    Color? surfaceSubtle,\n    Color? surfaceSunken,\n    Color? accent,\n    Color? success,\n    Color? successWash,\n    Color? caution,\n    Color? cautionWash,\n    Color? errorText,\n    Color? errorWash,\n    Color? hourBackground,\n    Color? hourText,\n    Color? gainStart,\n    Color? gainEnd,\n    Color? skyDay,\n    Color? skyCivil,\n    Color? skyNautical,\n    Color? skyAstronomical,\n    Color? skyDark,\n    Color? moonUp,\n    Color? moonFree,\n    Color? weatherCaution,\n    Color? weatherNotice,\n  }) => HybridTokens(\n    action: action ?? this.action,\n    onAction: onAction ?? this.onAction,\n    selection: selection ?? this.selection,\n    selectedHourFill: selectedHourFill ?? this.selectedHourFill,\n    selectedHourText: selectedHourText ?? this.selectedHourText,\n    selectedHourRule: selectedHourRule ?? this.selectedHourRule,\n    surfaceSubtle: surfaceSubtle ?? this.surfaceSubtle,\n    surfaceSunken: surfaceSunken ?? this.surfaceSunken,\n    accent: accent ?? this.accent,\n    success: success ?? this.success,\n    successWash: successWash ?? this.successWash,\n    caution: caution ?? this.caution,\n    cautionWash: cautionWash ?? this.cautionWash,\n    errorText: errorText ?? this.errorText,\n    errorWash: errorWash ?? this.errorWash,\n    hourBackground: hourBackground ?? this.hourBackground,\n    hourText: hourText ?? this.hourText,\n    gainStart: gainStart ?? this.gainStart,\n    gainEnd: gainEnd ?? this.gainEnd,\n    skyDay: skyDay ?? this.skyDay,\n    skyCivil: skyCivil ?? this.skyCivil,\n    skyNautical: skyNautical ?? this.skyNautical,\n    skyAstronomical: skyAstronomical ?? this.skyAstronomical,\n    skyDark: skyDark ?? this.skyDark,\n    moonUp: moonUp ?? this.moonUp,\n    moonFree: moonFree ?? this.moonFree,\n    weatherCaution: weatherCaution ?? this.weatherCaution,\n    weatherNotice: weatherNotice ?? this.weatherNotice,\n  );\n\n  @override\n  HybridTokens lerp(covariant HybridTokens? other, double t) {\n    if (other == null) return this;\n    return HybridTokens(\n      action: Color.lerp(action, other.action, t)!,\n      onAction: Color.lerp(onAction, other.onAction, t)!,\n      selection: Color.lerp(selection, other.selection, t)!,\n      selectedHourFill: Color.lerp(\n        selectedHourFill,\n        other.selectedHourFill,\n        t,\n      )!,\n      selectedHourText: Color.lerp(\n        selectedHourText,\n        other.selectedHourText,\n        t,\n      )!,\n      selectedHourRule: Color.lerp(\n        selectedHourRule,\n        other.selectedHourRule,\n        t,\n      )!,\n      surfaceSubtle: Color.lerp(surfaceSubtle, other.surfaceSubtle, t)!,\n      surfaceSunken: Color.lerp(surfaceSunken, other.surfaceSunken, t)!,\n      accent: Color.lerp(accent, other.accent, t)!,\n      success: Color.lerp(success, other.success, t)!,\n      successWash: Color.lerp(successWash, other.successWash, t)!,\n      caution: Color.lerp(caution, other.caution, t)!,\n      cautionWash: Color.lerp(cautionWash, other.cautionWash, t)!,\n      errorText: Color.lerp(errorText, other.errorText, t)!,\n      errorWash: Color.lerp(errorWash, other.errorWash, t)!,\n      hourBackground: Color.lerp(hourBackground, other.hourBackground, t)!,\n      hourText: Color.lerp(hourText, other.hourText, t)!,\n      gainStart: Color.lerp(gainStart, other.gainStart, t)!,\n      gainEnd: Color.lerp(gainEnd, other.gainEnd, t)!,\n      skyDay: Color.lerp(skyDay, other.skyDay, t)!,\n      skyCivil: Color.lerp(skyCivil, other.skyCivil, t)!,\n      skyNautical: Color.lerp(skyNautical, other.skyNautical, t)!,\n      skyAstronomical: Color.lerp(skyAstronomical, other.skyAstronomical, t)!,\n      skyDark: Color.lerp(skyDark, other.skyDark, t)!,\n      moonUp: Color.lerp(moonUp, other.moonUp, t)!,\n      moonFree: Color.lerp(moonFree, other.moonFree, t)!,\n      weatherCaution: Color.lerp(weatherCaution, other.weatherCaution, t)!,\n      weatherNotice: Color.lerp(weatherNotice, other.weatherNotice, t)!,\n    );\n  }\n}\n",
+      "href": "design-sources/02ff13e6df2c.html"
+    },
+    {
+      "name": "hybrid_view_entrance.dart",
+      "title": "hybrid_view_entrance.dart",
+      "path": "lib\\core\\theme\\hybrid_view_entrance.dart",
+      "category": "Implementation owner",
+      "sha256": "a9dbfcbfd4a2de1a5d5bfe5d9217310db9cfd50ace074de4733f427d6550a304",
+      "lines": 81,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\nimport 'app_motion.dart';\n\n/// Hybrid's one-shot view entrance. Input changes do not restart it.\nclass HybridViewEntrance extends StatefulWidget {\n  const HybridViewEntrance({\n    super.key,\n    required this.trigger,\n    required this.child,\n  });\n\n  final Object trigger;\n  final Widget child;\n\n  @override\n  State<HybridViewEntrance> createState() => _HybridViewEntranceState();\n}\n\nclass _HybridViewEntranceState extends State<HybridViewEntrance>\n    with SingleTickerProviderStateMixin {\n  late final controller = AnimationController(\n    vsync: this,\n    duration: AppMotion.medium,\n  )..forward();\n\n  @override\n  void didUpdateWidget(HybridViewEntrance oldWidget) {\n    super.didUpdateWidget(oldWidget);\n    if (oldWidget.trigger != widget.trigger) controller.forward(from: 0);\n  }\n\n  @override\n  void dispose() {\n    controller.dispose();\n    super.dispose();\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {\n      return widget.child;\n    }\n    return _entrance(controller, widget.child);\n  }\n}\n\nWidget _entrance(Animation<double> animation, Widget child) => AnimatedBuilder(\n  animation: animation,\n  child: child,\n  builder: (context, child) {\n    final progress = AppMotion.curve.transform(animation.value);\n    return Opacity(\n      opacity: .72 + .28 * progress,\n      child: Transform.translate(\n        offset: Offset(0, 4 * (1 - progress)),\n        child: child,\n      ),\n    );\n  },\n);\n\n/// Material routes use the same logical-pixel entrance as the root views.\n/// Cupertino's interactive edge-back transition is retained by the theme.\nclass HybridPageTransitionsBuilder extends PageTransitionsBuilder {\n  const HybridPageTransitionsBuilder();\n\n  @override\n  Duration get transitionDuration => AppMotion.medium;\n\n  @override\n  Widget buildTransitions<T>(\n    PageRoute<T> route,\n    BuildContext context,\n    Animation<double> animation,\n    Animation<double> secondaryAnimation,\n    Widget child,\n  ) => (MediaQuery.maybeDisableAnimationsOf(context) ?? false)\n      ? child\n      : _entrance(animation, child);\n}\n",
+      "href": "design-sources/de92cfced932.html"
+    },
+    {
+      "name": "document_section.dart",
+      "title": "document_section.dart",
+      "path": "lib\\presentation\\shared\\document_section.dart",
+      "category": "Implementation owner",
+      "sha256": "c8697cdf500a6ca029a66ad21f101e738000fde4472647c34f53b74f80040ae8",
+      "lines": 47,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\nimport '../../core/theme/app_radius.dart';\nimport '../../core/theme/app_spacing.dart';\nimport '../../core/theme/hybrid_tokens.dart';\n\n/// A quiet, non-interactive group of existing document content.\n///\n/// Does not clip, merge semantics, impose a height or change focus order.\n/// Joined pieces let a lazy list draw one continuous group without laying out\n/// all its rows at once (the Logbook's month groups).\nclass DocumentSection extends StatelessWidget {\n  const DocumentSection({\n    super.key,\n    required this.children,\n    this.padding = const EdgeInsets.all(AppSpacing.md),\n    this.joinPrevious = false,\n    this.joinNext = false,\n  });\n\n  final List<Widget> children;\n  final EdgeInsetsGeometry padding;\n  final bool joinPrevious;\n  final bool joinNext;\n\n  @override\n  Widget build(BuildContext context) {\n    const corner = Radius.circular(AppRadius.menu);\n    return Material(\n      color:\n          Theme.of(context).extension<HybridTokens>()?.surfaceSubtle ??\n          Theme.of(context).cardColor,\n      borderRadius: BorderRadius.vertical(\n        top: joinPrevious ? Radius.zero : corner,\n        bottom: joinNext ? Radius.zero : corner,\n      ),\n      child: Padding(\n        padding: padding,\n        child: Column(\n          crossAxisAlignment: CrossAxisAlignment.stretch,\n          mainAxisSize: MainAxisSize.min,\n          children: children,\n        ),\n      ),\n    );\n  }\n}\n",
+      "href": "design-sources/b8f3f0bf35da.html"
+    },
+    {
+      "name": "confirmation_patterns.dart",
+      "title": "confirmation_patterns.dart",
+      "path": "lib\\presentation\\shared\\confirmation_patterns.dart",
+      "category": "Implementation owner",
+      "sha256": "5df999727dd4a60fbb5164d3d0ca23deafadcfe008294ce281220ced57c06d60",
+      "lines": 192,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\n\nimport '../../core/theme/app_spacing.dart';\nimport '../../core/theme/hybrid_tokens.dart';\n\n/// What the user chose when unsaved changes would be left behind.\nenum UnsavedChoice { save, discard, cancel }\n\n/// The three-way prompt (S5.8; ADR-019 §3, addendum §3.3): \"[plan] has\n/// changes that are not saved.\" with Cancel · Discard · Save. Dismissing\n/// it (back, a tap outside) is Cancel, so nothing is lost by accident.\n/// What Save and Discard then do belongs to the caller (P6.1); this is the\n/// prompt only. Discard is styled as destructive.\n///\n/// [library]: a Library editor's prompt (library.js `cancelEdit`): \"Your\n/// changes to “[plan]” are not saved.\", Cancel and Discard side by side,\n/// then Save the full width.\nFuture<UnsavedChoice> askUnsavedChanges(\n  BuildContext context, {\n  required String plan,\n  String message = '',\n  String saveLabel = 'Save and leave',\n  bool library = false,\n}) async {\n  Widget cancel(BuildContext context) => OutlinedButton(\n    key: const Key('unsaved.cancel'),\n    onPressed: () => Navigator.pop(context, UnsavedChoice.cancel),\n    child: const Text('Cancel'),\n  );\n  Widget discard(BuildContext context) => OutlinedButton(\n    key: const Key('unsaved.discard'),\n    onPressed: () => Navigator.pop(context, UnsavedChoice.discard),\n    child: const Text('Discard'),\n  );\n  Widget save(BuildContext context, String label) => FilledButton(\n    key: const Key('unsaved.save'),\n    onPressed: () => Navigator.pop(context, UnsavedChoice.save),\n    child: Text(label),\n  );\n  final choice = await showDialog<UnsavedChoice>(\n    context: context,\n    builder: (context) => AlertDialog(\n      title: const Text('Unsaved changes'),\n      content: Text(\n        message.isNotEmpty\n            ? message\n            : library\n            ? 'Your changes to “$plan” are not saved.'\n            : '\"$plan\" has changes that are not saved.',\n      ),\n      // plan.html `#leave-plan`: Cancel and Discard outlined, the save\n      // filled, in one row that wraps from the end, 8 apart\n      // (`.leave-actions`): at a phone's width the save goes below (QA-05;\n      // the dialog's own overflow bar stacked all three).\n      actions: library\n          ? [\n              _WideActions(\n                children: [\n                  Row(\n                    spacing: AppSpacing.sm,\n                    children: [\n                      Expanded(child: cancel(context)),\n                      Expanded(child: discard(context)),\n                    ],\n                  ),\n                  save(context, 'Save'),\n                ],\n              ),\n            ]\n          : [\n              SizedBox(\n                width: double.infinity,\n                child: Wrap(\n                  alignment: WrapAlignment.end,\n                  spacing: AppSpacing.sm,\n                  runSpacing: AppSpacing.sm,\n                  children: [\n                    cancel(context),\n                    discard(context),\n                    save(context, saveLabel),\n                  ],\n                ),\n              ),\n            ],\n    ),\n  );\n  return choice ?? UnsavedChoice.cancel;\n}\n\n/// A dialog's actions the full width of the dialog, stacked 8 apart\n/// (hybrid-refinement.css `.workspace-actions` in a dialog).\nclass _WideActions extends StatelessWidget {\n  const _WideActions({required this.children});\n\n  final List<Widget> children;\n\n  @override\n  Widget build(BuildContext context) => SizedBox(\n    width: double.infinity,\n    child: Column(\n      crossAxisAlignment: CrossAxisAlignment.stretch,\n      spacing: AppSpacing.sm,\n      children: children,\n    ),\n  );\n}\n\n/// \"Discard this edit?\" (plan.html `#discard-edit`): an editor's unapplied\n/// fields; the draft keeps what was already applied. True only for\n/// Discard edit; Keep editing, Back and a tap outside keep the editor.\nFuture<bool> askDiscardEdit(BuildContext context) async {\n  final discard = await showDialog<bool>(\n    context: context,\n    builder: (context) => AlertDialog(\n      title: const Text('Discard this edit?'),\n      content: const Text(\n        'Unapplied fields in this editor will be discarded. Changes you '\n        'already applied to the draft remain.',\n      ),\n      actions: [\n        OutlinedButton(\n          key: const Key('discardEdit.keep'),\n          onPressed: () => Navigator.pop(context, false),\n          child: const Text('Keep editing'),\n        ),\n        FilledButton(\n          key: const Key('discardEdit.discard'),\n          onPressed: () => Navigator.pop(context, true),\n          child: const Text('Discard edit'),\n        ),\n      ],\n    ),\n  );\n  return discard ?? false;\n}\n\n/// The one confirmation for a destructive action on something stored\n/// (S5.8; RD-09 = M): deleting a rig, a target, a site or a Logbook entry,\n/// Abandon, Restore. [title] names the item (\"Delete rig \"Refractor\n/// 400\"?\"), [message] says the consequence (\"Plans that use it keep their\n/// saved values.\"), [action] is the verb on the destructive button\n/// (\"Delete\"). True only when the user taps [action]: Cancel, back and a\n/// tap outside all keep the item. Edits inside a plan use the undo message\n/// instead (`showUndo`).\nFuture<bool> confirmDestructive(\n  BuildContext context, {\n  required String title,\n  required String message,\n  String action = 'Delete',\n}) async {\n  final confirmed = await showDialog<bool>(\n    context: context,\n    builder: (context) => AlertDialog(\n      title: Text(title),\n      content: Text(message),\n      // library.js / logbook.js `choiceDialog`: Cancel and the destructive\n      // action side by side, the action outlined in the error colour.\n      actions: [\n        _WideActions(\n          children: [\n            Row(\n              spacing: AppSpacing.sm,\n              children: [\n                Expanded(\n                  child: OutlinedButton(\n                    key: const Key('confirm.cancel'),\n                    onPressed: () => Navigator.pop(context, false),\n                    child: const Text('Cancel'),\n                  ),\n                ),\n                Expanded(\n                  child: OutlinedButton(\n                    key: const Key('confirm.action'),\n                    onPressed: () => Navigator.pop(context, true),\n                    style: OutlinedButton.styleFrom(\n                      foregroundColor:\n                          (Theme.of(context).extension<HybridTokens>() ??\n                                  HybridTokens.light)\n                              .errorText,\n                    ),\n                    child: Text(action),\n                  ),\n                ),\n              ],\n            ),\n          ],\n        ),\n      ],\n    ),\n  );\n  return confirmed ?? false;\n}\n",
+      "href": "design-sources/63bd31b80b5d.html"
+    },
+    {
+      "name": "unsaved_plan_prompt.dart",
+      "title": "unsaved_plan_prompt.dart",
+      "path": "lib\\presentation\\shared\\unsaved_plan_prompt.dart",
+      "category": "Implementation owner",
+      "sha256": "9a7503e64edb1695caaf19808931cde0268af82e69543ecce2bbe79c7c1b699c",
+      "lines": 49,
+      "rules": [],
+      "text": "import 'package:flutter/material.dart';\nimport 'package:provider/provider.dart';\n\nimport '../viewmodels/capture_analysis_viewmodel.dart';\nimport '../viewmodels/session_plan_viewmodel.dart';\nimport 'confirmation_patterns.dart';\nimport 'failure_feedback.dart';\n\n/// What an action that replaces the current plan does with the plan it\n/// leaves (S6.3; U1, ADR-019 §3).\nenum LeavingPlan {\n  /// Nothing to discard: the plan has no unsaved changes, or was just saved.\n  /// An untouched plan that was never saved is still deleted by the switch.\n  keep,\n\n  /// The user chose Discard: a never-saved plan is deleted; a saved plan\n  /// with changes goes back to what was saved (S4-DEF-04 = R).\n  discard,\n}\n\n/// Asks before New plan, Copy to another night or Open replaces a plan with\n/// unsaved changes (S6.3; U1; supersedes S1.6's guard): Save · Discard ·\n/// Cancel. Save saves the plan as the Save plan button does, then goes on; a\n/// failed Save stops and says so. Cancel, back and a tap outside stop, and\n/// nothing changes. Null means stop; otherwise the caller goes on and passes\n/// the answer to the lifecycle (`discard:`).\nFuture<LeavingPlan?> askBeforeLeavingPlan(BuildContext context) async {\n  final plan = context.read<SessionPlanViewModel>();\n  if (!plan.hasUnsavedChanges) return LeavingPlan.keep;\n  final target = plan.selectedTarget;\n  final choice = await askUnsavedChanges(\n    context,\n    plan: target == null ? 'This plan' : target.commonName ?? target.catalogId,\n  );\n  switch (choice) {\n    case UnsavedChoice.cancel:\n      return null;\n    case UnsavedChoice.discard:\n      return LeavingPlan.discard;\n    case UnsavedChoice.save:\n      if (!context.mounted) return null;\n      final saved = await runWithFeedback(\n        context,\n        'save the plan',\n        context.read<CaptureAnalysisViewModel>().saveSession,\n      );\n      return saved ? LeavingPlan.keep : null;\n  }\n}\n",
+      "href": "design-sources/524b4ccdc230.html"
+    }
+  ],
+  "external": [
+    {
+      "name": "figma",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma\\SKILL.md",
+      "sha256": "5b11f7c8d0ce4c047b401323e7b8fe6559bd3162a3397bf5248634a5444609d5",
+      "href": "design-sources/external-7955c4c7aeb2.html",
+      "description": "Use the Figma MCP server to fetch design context, screenshots, variables, and assets from Figma, and to translate Figma nodes into production code. Trigger when a task involves Figma URLs, node IDs, design-to-code implementation, or Figma MCP setup and troubleshooting."
+    },
+    {
+      "name": "figma-code-connect-components",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-code-connect-components\\SKILL.md",
+      "sha256": "0f19edad8aed28063a3517c419fbcbef5421d024f189fd02a17fae25093ec69d",
+      "href": "design-sources/external-cac642e6ffd9.html",
+      "description": "Connects Figma design components to code components using Code Connect mapping tools. Use when user says \"code connect\", \"connect this component to code\", \"map this component\", \"link component to code\", \"create code connect mapping\", or wants to establish mappings between Figma designs and code implementations. For canvas writes via `use_figma`, use `figma-use`."
+    },
+    {
+      "name": "figma-create-design-system-rules",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-create-design-system-rules\\SKILL.md",
+      "sha256": "1f4d7e16ba5325a80da32e2e6bde0ea850ba9287f35f4675d51d55d2f0dc6e2a",
+      "href": "design-sources/external-13077d75730b.html",
+      "description": "Generates custom design system rules for the user's codebase. Use when user says \"create design system rules\", \"generate rules for my project\", \"set up design rules\", \"customize design system guidelines\", or wants to establish project-specific conventions for Figma-to-code workflows. Requires Figma MCP server connection."
+    },
+    {
+      "name": "figma-create-new-file",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-create-new-file\\SKILL.md",
+      "sha256": "23f429203bd57f186905b2523d4ff8bdf10d3b85b39fc7eed4786097d81f1adc",
+      "href": "design-sources/external-5c78cb1e2c4c.html",
+      "description": "Create a new blank Figma file. Use when the user wants to create a new Figma design or FigJam file, or when you need a new file before calling use_figma. Handles plan resolution via whoami if needed. Usage — /figma-create-new-file [editorType] [fileName] (e.g. /figma-create-new-file figjam My Whiteboard)"
+    },
+    {
+      "name": "figma-generate-design",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-generate-design\\SKILL.md",
+      "sha256": "45d2b97103bdeb31cb2744fca2c79bcefb659c88faca626bea30ec2f9342dcc9",
+      "href": "design-sources/external-6e9c9c43a741.html",
+      "description": "Use this skill alongside figma-use when the task involves translating an application page, view, or multi-section layout into Figma. Triggers: 'write to Figma', 'create in Figma from code', 'push page to Figma', 'take this app/page and build it in Figma', 'create a screen', 'build a landing page in Figma', 'update the Figma screen to match code'. This is the preferred workflow skill whenever the user wants to build or update a full page, screen, or view in Figma from code or a description. Discovers design system components, variables, and styles via search_design_system, imports them, and assembles screens incrementally section-by-section using design system tokens instead of hardcoded values."
+    },
+    {
+      "name": "figma-generate-library",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-generate-library\\SKILL.md",
+      "sha256": "7f42103c59fc181d7081404a56545f321c458d97f5ee7f7a0ab2af75ea69a85f",
+      "href": "design-sources/external-ed7a4624cdfe.html",
+      "description": "Build or update a professional-grade design system in Figma from a codebase. Use when the user wants to create variables/tokens, build component libraries, set up theming (light/dark modes), document foundations, or reconcile gaps between code and Figma. This skill teaches WHAT to build and in WHAT ORDER — it complements the `figma-use` skill which teaches HOW to call the Plugin API. Both skills should be loaded together."
+    },
+    {
+      "name": "figma-implement-design",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-implement-design\\SKILL.md",
+      "sha256": "63f3d12d444547bbf68c10a12982b1f42e0f6e26fc074324564a13184d4b15ad",
+      "href": "design-sources/external-f69ce1319633.html",
+      "description": "Translates Figma designs into production-ready application code with 1:1 visual fidelity. Use when implementing UI code from Figma files, when user mentions \"implement design\", \"generate code\", \"implement component\", provides Figma URLs, or asks to build components matching Figma specs. For Figma canvas writes via `use_figma`, use `figma-use`."
+    },
+    {
+      "name": "figma-use",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\figma-use\\SKILL.md",
+      "sha256": "afa9c4ae068a18b93e4914b2d224180ace113db7713dd66f4df397f16ba9c4b4",
+      "href": "design-sources/external-7ff8193726c5.html",
+      "description": "**MANDATORY prerequisite** — you MUST invoke this skill BEFORE every `use_figma` tool call. NEVER call `use_figma` directly without loading this skill first. Skipping it causes common, hard-to-debug failures. Trigger whenever the user wants to perform a write action or a unique read action that requires JavaScript execution in the Figma file context — e.g. create/edit/delete nodes, set up variables or tokens, build components and variants, modify auto-layout or fills, bind variables to properties, or inspect file structure programmatically."
+    },
+    {
+      "name": "imagegen",
+      "path": "C:\\Users\\zalub\\.codex\\skills\\.system\\imagegen\\SKILL.md",
+      "sha256": "706d4d96e1d5c9e6023fe3ccabba1bb34b364024d344fd25b8515ec7d28fe3c4",
+      "href": "design-sources/external-1645511a051c.html",
+      "description": "Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas."
+    },
+    {
+      "name": "impeccable",
+      "path": "C:\\Users\\zalub\\.agents\\skills\\impeccable\\SKILL.md",
+      "sha256": "88e9a46a91b6ddd1059f03f578bd0f9bbe6d212d6a395124379b9bb5c97c5cf2",
+      "href": "design-sources/external-532c69f241a4.html",
+      "description": "Use when the user wants to design, redesign, shape, critique, audit, polish, simplify, harden, animate, or otherwise improve a frontend interface: websites, landing pages, dashboards, product UI, components, forms, settings, onboarding, empty states, and native iOS or Android screens. Handles UX review, hierarchy, layout, typography, color, motion, UX copy, accessibility, responsive behavior, edge cases, and capturing or documenting design systems (DESIGN.md, tokens). Also for making bland UI bolder, loud UI quieter, or ambitious visual effects. Not for backend-only or non-UI tasks."
+    },
+    {
+      "name": "sites",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\sites\\1.1.2\\skills\\sites\\SKILL.md",
+      "sha256": "00750ea5ca37e2b49afd2a57fee2149d22ee4f48af40bc094e6d2cee3e7bd1ad",
+      "href": "design-sources/external-61573ca721d0.html",
+      "description": "Use Sites when the user wants a website built for them (including a landing page, portfolio, dashboard, portal, tracker, hub, game, event registration, or tool), requests changes to a website already built with Sites, wants to publish a website with Sites, or wants to manage Sites hosting."
+    },
+    {
+      "name": "sites-remix",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\sites\\1.1.2\\skills\\sites-remix\\SKILL.md",
+      "sha256": "34a249750d98e38f676fa391819593ab5c14e5f46f9137832a8c49180d47022d",
+      "href": "design-sources/external-a5fa395c15b5.html",
+      "description": "Remix a Site built with the Sites plugin into a new Site. Use when the user has identified the source Site and asks to remix it."
+    },
+    {
+      "name": "audit",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\audit\\SKILL.md",
+      "sha256": "087f798c3fe02e91b4cca18cc0f42c358a4dc2c02ccf37a348b476fb19b64aa3",
+      "href": "design-sources/external-071bb1941b97.html",
+      "description": "Audit or critique a product flow, journey, workflow, funnel, onboarding path, checkout path, settings path, screen, or multi-step product experience by capturing screenshots first, then reporting UX, design, and accessibility findings from that evidence. Default to an inline report; use a canvas for a visual walkthrough when requested or clearly implied by the ongoing task. Use when the user asks to audit, review, critique, inspect, assess, analyze, evaluate, or give feedback on a product experience."
+    },
+    {
+      "name": "design-qa",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\design-qa\\SKILL.md",
+      "sha256": "19303684c7c84e279f3582d784493a6f09d207d92a29e9b15b7056020bcf306e",
+      "href": "design-sources/external-79754c9ab399.html",
+      "description": "Internal prototype QA helper. Use only after a Product Design prototype, URL-to-code build, or image-to-code build has a source visual target and a rendered implementation to compare before handoff. Do not use for broad UX critique, design critique, product audits, or flow reviews; route those user-facing requests to audit."
+    },
+    {
+      "name": "get-context",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\get-context\\SKILL.md",
+      "sha256": "151267c873003b7b03715c0842ef798369420464844218492f732edd2f6f7fd1",
+      "href": "design-sources/external-59ef74d40c78.html",
+      "description": "Mandatory design-brief gate for clarifying the product and outcome. Use before ideation, image-to-code builds, redesigns, or product UI work to clarify missing product information and play back the brief before proceeding."
+    },
+    {
+      "name": "ideate",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\ideate\\SKILL.md",
+      "sha256": "649e8782ca93d5aece712964fae5be2b111cc3143577e1507b98df7f9d8e6bde",
+      "href": "design-sources/external-97c6394ce254.html",
+      "description": "Generate image-based alternatives, remixes, or new design directions from a Product Design brief. Use when the user asks for design variants, visual exploration, remixes, or image-generated approaches from provided context."
+    },
+    {
+      "name": "image-to-code",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\image-to-code\\SKILL.md",
+      "sha256": "694b4102bc339e3038173f8063d83a19e08d2a2cfab1f2e478d6412870a61ff0",
+      "href": "design-sources/external-054b72e3ca16.html",
+      "description": "Implement a selected image, screenshot, mockup, or Image Gen reference as a faithful, responsive frontend."
+    },
+    {
+      "name": "index",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\index\\SKILL.md",
+      "sha256": "8e9916d9e5dc3b6a394bedcaa38cd9c8833a1f3b0c4538b75647cf9f62f779fc",
+      "href": "design-sources/external-7ada4856bdda.html",
+      "description": "Use when Product Design is explicitly invoked, or when the user's main goal is to explore a design, research UX, audit or critique a flow, faithfully clone a visual source, check a built design, or share a prototype. Do not use Product Design for ordinary implementation unless the user explicitly asks for it."
+    },
+    {
+      "name": "research",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\research\\SKILL.md",
+      "sha256": "bf824e72dd93941c8d591e4af13bb7e3a09380cd6ed7dd8c1f61a295648fa023",
+      "href": "design-sources/external-c3fb1c17d989.html",
+      "description": "Run fast, source-grounded UX research on the highest-signal problems users are experiencing with a user-specified digital product. Use when the user asks to research user pain, UX friction, onboarding issues, docs/help problems, developer experience friction, support pain, product workflow issues, or current user complaints for a named product."
+    },
+    {
+      "name": "share",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\share\\SKILL.md",
+      "sha256": "19327c50a52f3b9e2ebfcef47d394d988bd6f4c64524c98f665d43bdf5f02c45",
+      "href": "design-sources/external-ec4317f72474.html",
+      "description": "Share a runnable prototype using the user's preferred deployment tool."
+    },
+    {
+      "name": "url-to-code",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\url-to-code\\SKILL.md",
+      "sha256": "2624d0e2ec5f14ba2a4bf74fe05aaa23520b4fb76ca57973c9dadd54fd4b09d2",
+      "href": "design-sources/external-a012df0a3617.html",
+      "description": "Clone a live URL as a runnable frontend-only local app."
+    },
+    {
+      "name": "user-context",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\product-design\\0.1.56\\skills\\user-context\\SKILL.md",
+      "sha256": "5690a7f99cf896970493f5d0bd7f35f62ab9cbe21744352acf84dc0ceea4194c",
+      "href": "design-sources/external-ff5c5c238447.html",
+      "description": "Load or manage Product Design's saved user context. Use when the user asks to set up Product Design, get started, onboard, save product or design sources, see what Product Design remembers, update saved context, or remember Product Design preferences. Examples include product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, and general product/design notes."
+    },
+    {
+      "name": "impeccable",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\impeccable\\4.3.1\\skills\\impeccable\\SKILL.md",
+      "sha256": "5ce02fc8f353d7f659535fb80e453963dc047a07c4396adf098fe010b479e7c0",
+      "href": "design-sources/external-679410c8a78e.html",
+      "description": "Use when the user wants to design, redesign, shape, critique, audit, polish, clarify, distill, harden, optimize, adapt, animate, colorize, extract, or otherwise improve a frontend interface. Covers websites, landing pages, dashboards, product UI, app shells, components, forms, settings, onboarding, and empty states. Handles UX review, visual hierarchy, information architecture, cognitive load, accessibility, performance, responsive behavior, theming, anti-patterns, typography, fonts, spacing, layout, alignment, color, motion, micro-interactions, UX copy, error states, edge cases, i18n, and reusable design systems or tokens. Also use for bland designs that need to become bolder or more delightful, loud designs that should become quieter, live browser iteration on UI elements, or ambitious visual effects that should feel technically extraordinary. Not for backend-only or non-UI tasks."
+    },
+    {
+      "name": "brand-identity",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-6a314a73f8ac819195b0d55e36b9c609\\2.8.0\\skills\\brand-identity\\SKILL.md",
+      "sha256": "901bef5a1a1f758e2b0619d8cfa8db0c41a69d6981cb8bef0377fc079defbb10",
+      "href": "design-sources/external-a7fc1066d678.html",
+      "description": "Collect a named organization's existing logo, color palette, fonts, and homepage messaging for a pitch deck, sales presentation, proposal, or other document. Use for requests such as making a slide match a company's website, finding the right logo and brand hex codes, or assembling a website-derived asset pack, even if the user never asks to scrape or search. Return sourced asset links and observed styling so the document can use the actual identity. Excludes inventing a brand, brand positioning advice, and styling from already sufficient supplied assets."
+    },
+    {
+      "name": "design",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-6a314a73f8ac819195b0d55e36b9c609\\2.8.0\\skills\\design\\SKILL.md",
+      "sha256": "b746c87ae37b76dfbf6e4e690e973a5e8193796773d7a544d43ab8e9fceb48ac",
+      "href": "design-sources/external-48bafbacec6b.html",
+      "description": "Extract an existing website's visual system into an implementation-ready DESIGN.md with design tokens, layout, components and image references. Use for recreating a site's visual style, building a page to match a reference URL, or documenting its UI patterns, even without an explicit request to scrape. Excludes creating a new brand and simple logo, color or font lookups for documents."
+    },
+    {
+      "name": "build-brand-palette",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\build-brand-palette\\SKILL.md",
+      "sha256": "af637ff477aa20e61cfc1077d3b105f720ee33088210352c3a57c2388b59fd09",
+      "href": "design-sources/external-404b4bffa118.html",
+      "description": "Build a distinctive, usable brand color system from an organization, product, audience, positioning, personality, industry, or existing brand color. Use for brand identity palettes, rebrands, campaign palettes, startup colors, or assigning brand color roles. Do not use for full UI themes, interior design, image extraction, or merely formatting existing colors as code."
+    },
+    {
+      "name": "compose-ui-theme",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\compose-ui-theme\\SKILL.md",
+      "sha256": "f7a1a7e96f30a4a305bed0c04ed6b653480e2b4881d8f4e519c53a03a67df264",
+      "href": "design-sources/external-ff8f16e1e8bc.html",
+      "description": "Compose a coherent application or website color theme from seed colors, an existing palette, a product brief, or light/dark-mode requirements. Use for UI surfaces, text hierarchy, controls, focus states, borders, and semantic feedback colors. Do not use for brand identity alone, interior spaces, or code-only token formatting without theme design."
+    },
+    {
+      "name": "direct-creative-palette",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\direct-creative-palette\\SKILL.md",
+      "sha256": "30c044bd52ce8f33b8d327a96a2d285813c12f2940bcb4fdf82200b1a20f45e1",
+      "href": "design-sources/external-a542de9e5a7d.html",
+      "description": "Translate an emotion, story, era, place, genre, sensory phrase, cultural reference, or abstract creative direction into an original editable palette. Use for evocative palettes, art direction, fictional worlds, campaigns, covers, events, and mood-led color exploration. Do not use for literal image extraction, formal brand systems, interior specifications, or UI role assignment."
+    },
+    {
+      "name": "extract-image-palette",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\extract-image-palette\\SKILL.md",
+      "sha256": "17d0116cd5ab61853fdcccf38112f48090402068154baaaf91bbe42f0fbc5c7d",
+      "href": "design-sources/external-96d79ebf15b3.html",
+      "description": "Extract a purposeful editable color palette from an attached photo, logo, screenshot, artwork, mood board, or other visible reference. Use when users ask for colors from an image, a visual-reference palette, dominant or accent colors, or a palette inspired by an attachment. Do not trigger when no image is available or when the user wants the image edited rather than its colors analyzed."
+    },
+    {
+      "name": "generate-design-tokens",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\generate-design-tokens\\SKILL.md",
+      "sha256": "7c9086119246c94517d59e8e16eaad8013336a170a12d9456feb567485b0ab83",
+      "href": "design-sources/external-55fdd07175ae.html",
+      "description": "Convert a supplied or currently selected palette into semantic design tokens, color roles, and implementation-ready CSS variables, Tailwind theme values, or design-token JSON. Use for naming palette colors, creating primitive and semantic color layers, or preparing colors for a design system. Do not use to invent a broad brand identity, extract image colors, or design an entire UI without an input palette or seed."
+    },
+    {
+      "name": "harmonize-palette",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\harmonize-palette\\SKILL.md",
+      "sha256": "4cf455d59ec602c93453d3951ef599358da85996e818cfbbf13a0d1a66384ace",
+      "href": "design-sources/external-f550fc231daa.html",
+      "description": "Diagnose and repair an existing color palette that feels clashing, muddy, repetitive, unbalanced, too warm or cool, or otherwise incoherent while preserving its intent and specified anchor colors. Use for making supplied colors more cohesive or revising a current palette. Do not trigger for creating a palette from scratch unless the user provides a clear starting palette."
+    },
+    {
+      "name": "plan-interior-palette",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-curated-remote\\app-696e890a45388191b24c4a36d2177201\\3.0.0\\skills\\plan-interior-palette\\SKILL.md",
+      "sha256": "f4c3e7c275c4c04438d48b1a84f3d11e8085c208983d5da3c2d818c74de1a14c",
+      "href": "design-sources/external-da634994b0e5.html",
+      "description": "Plan a practical interior color palette for a room or property using its function, orientation, natural and artificial light, dimensions, fixed finishes, furnishings, and desired atmosphere. Use for walls, trim, ceilings, cabinetry, upholstery, and decor color schemes. Do not use for exterior architecture, product UI themes, or brand palettes."
+    },
+    {
+      "name": "visualize",
+      "path": "C:\\Users\\zalub\\.codex\\plugins\\cache\\openai-bundled\\visualize\\1.0.57\\skills\\visualize\\SKILL.md",
+      "sha256": "e99b3dbd273d81a42ba20ed4b6e574435bdfa8ef4782f71f177a02fbe3871309",
+      "href": "design-sources/external-7ca314925c89.html",
+      "description": "Create visualizations and interactive tools directly in conversation. Proactively use to show how something works; explore 'what happens when', 'what changes', or 'help me understand'; compare or inspect; create simulations, maps, charts, graphs, and mockups. Use standard tools for static scientific figures."
+    }
+  ],
+  "colors": [
+    {
+      "name": "lightBackground",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "lightSurface",
+      "value": "#F7F7F5"
+    },
+    {
+      "name": "lightSurfaceRaised",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "lightTextPrimary",
+      "value": "#37352F"
+    },
+    {
+      "name": "lightTextSecondary",
+      "value": "#5A5955"
+    },
+    {
+      "name": "lightTextTertiary",
+      "value": "#6E6D69"
+    },
+    {
+      "name": "lightTextDisabled",
+      "value": "#A3A29F"
+    },
+    {
+      "name": "lightBorder",
+      "value": "#E9E9E7"
+    },
+    {
+      "name": "lightControlBorder",
+      "value": "#8F8E8A"
+    },
+    {
+      "name": "lightError",
+      "value": "#B00020"
+    },
+    {
+      "name": "darkBackground",
+      "value": "#191919"
+    },
+    {
+      "name": "darkSurface",
+      "value": "#202020"
+    },
+    {
+      "name": "darkSurfaceRaised",
+      "value": "#252525"
+    },
+    {
+      "name": "darkTextPrimary",
+      "value": "#EBEBEA"
+    },
+    {
+      "name": "darkTextSecondary",
+      "value": "#A5A5A3"
+    },
+    {
+      "name": "darkTextTertiary",
+      "value": "#8F8F8D"
+    },
+    {
+      "name": "darkTextDisabled",
+      "value": "#6B6B69"
+    },
+    {
+      "name": "darkSelection",
+      "value": "#343432"
+    },
+    {
+      "name": "darkBorder",
+      "value": "#2F2F2F"
+    },
+    {
+      "name": "darkControlBorder",
+      "value": "#6F6F6D"
+    },
+    {
+      "name": "darkError",
+      "value": "#F28B82"
+    },
+    {
+      "name": "fieldBackground",
+      "value": "#000000"
+    },
+    {
+      "name": "fieldSurface",
+      "value": "#110000"
+    },
+    {
+      "name": "fieldSurfaceRaised",
+      "value": "#1A0000"
+    },
+    {
+      "name": "fieldTextPrimary",
+      "value": "#FF0000"
+    },
+    {
+      "name": "fieldTextSecondary",
+      "value": "#AA0000"
+    },
+    {
+      "name": "fieldTextTertiary",
+      "value": "#880000"
+    },
+    {
+      "name": "fieldTextDisabled",
+      "value": "#660000"
+    },
+    {
+      "name": "fieldBorder",
+      "value": "#330000"
+    },
+    {
+      "name": "fieldControlBorder",
+      "value": "#880000"
+    }
+  ],
+  "spacing": {
+    "xs": "4.0",
+    "sm": "8.0",
+    "md": "16.0",
+    "lg": "24.0",
+    "xl": "32.0",
+    "xxl": "48.0",
+    "hair": "2.0",
+    "nudge": "3.0",
+    "cellY": "6.0",
+    "notes": "10.0",
+    "itemGap": "12.0",
+    "rowY": "14.0",
+    "gutter": "20.0",
+    "section": "28.0"
+  },
+  "scope": "All five project design skills and their supporting references, project governance pointers, current theme owners, plus design-facing skill copies discovered in the three listed local skill/cache roots. External copies are optional tools, not adopted Culmina rules; duplicate versions remain visible. Archived evidence is not active policy."
+}

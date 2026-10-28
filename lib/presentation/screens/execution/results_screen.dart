@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/units/display_units.dart';
 import '../../../domain/models/calendar_date.dart';
@@ -284,7 +284,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
     // resolved, never from the working edits.
     if (!vm.pendingChanges) _fill(vm);
     final p = AppPalette.of(context);
-    final legend = AppTypography.caption.copyWith(color: p.textSecondary);
+    final legend = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
     final camera = vm.review?.cameraClass;
     Widget field(
       String label,
@@ -302,7 +303,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
           if (hint != null)
             Padding(
               padding: const EdgeInsets.only(top: AppSpacing.xs),
-              child: Text(hint, style: legend.copyWith(height: 1.55)),
+              child: Text(
+                hint,
+                style: AppTextTheme.of(context)
+                    .resolve(legend, AppTextGeometry.supporting),
+              ),
             ),
         ],
       ),
@@ -313,15 +318,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
         header: true,
         child: Text(
           text,
-          style: AppTypography.itemTitle.copyWith(color: p.textPrimary),
+          style: AppTextTheme.of(context).itemTitle
+              .copyWith(color: p.textPrimary),
         ),
       ),
     );
-    final notes = AppTypography.value.copyWith(
-      fontSize: 16,
-      height: 1.5,
-      color: p.textPrimary,
-    );
+    final notes = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).value, AppTextGeometry.resultNotes)
+        .copyWith(color: p.textPrimary);
     return CallbackShortcuts(
       bindings: {const SingleActivator(LogicalKeyboardKey.escape): _leave},
       child: Focus(
@@ -435,7 +439,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           'This night is still under way. Saving a result now '
                           'finishes it early; you can edit the result later.',
                           key: const Key('results.early'),
-                          style: legend.copyWith(height: 1.55),
+                          style: AppTextTheme.of(context)
+                              .resolve(legend, AppTextGeometry.supporting),
                         ),
                       ),
                     DocumentSection(
@@ -454,10 +459,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               'Records every light block as fully taken. This is '
                               'your report, not a frame count.',
                               key: const Key('results.asPlannedNote'),
-                              style: AppTypography.body.copyWith(
-                                height: 1.6,
-                                color: p.textSecondary,
-                              ),
+                              style: AppTextTheme.of(context)
+                                  .resolve(
+                                    AppTextTheme.of(context).body,
+                                    AppTextGeometry.reading,
+                                  )
+                                  .copyWith(color: p.textSecondary),
                             ),
                           ),
                       ],
@@ -476,9 +483,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               TextFormField(
                                 key: Key('results.count.${b.id}'),
                                 controller: _counts[b.id],
-                                style: AppTypography.body.copyWith(
-                                  color: p.textPrimary,
-                                ),
+                                style: AppTextTheme.of(context).body
+                                    .copyWith(color: p.textPrimary),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
@@ -623,10 +629,9 @@ class _ReviewState extends State<_Review> {
     final working = vm.savedPlanUnreadable;
     final night = snap?.eveningDate ?? (working ? null : s.eveningDate);
     final target = snap?.targetName ?? (working ? null : s.record.targetName);
-    final small = AppTypography.caption.copyWith(
-      height: 1.55,
-      color: p.textSecondary,
-    );
+    final small = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .copyWith(color: p.textSecondary);
     final planned = SessionReconciliation.plannedOnly(vm.lightBlocks)
         .plannedIntegration;
     return Column(
@@ -638,11 +643,12 @@ class _ReviewState extends State<_Review> {
           child: Text(
             '${target ?? 'Target unknown'} · '
             '${night == null ? 'night unknown' : NightTimeFormatter.eveningDateWithWeekday(night)}',
-            style: AppTypography.sectionSubject.copyWith(
-              fontWeight: FontWeight.w600,
-              height: 1.4,
-              color: p.textPrimary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).sectionSubject,
+                  AppTextGeometry.compact,
+                )
+                .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
           ),
         ),
         Semantics(
@@ -669,7 +675,7 @@ class _ReviewState extends State<_Review> {
                   Expanded(
                     child: Text(
                       'Plan context and light frames',
-                      style: AppTypography.caption.copyWith(
+                      style: AppTextTheme.of(context).caption.copyWith(
                         fontWeight: FontWeight.w500,
                         color: p.textPrimary,
                       ),
@@ -707,10 +713,12 @@ class _ReviewState extends State<_Review> {
               Text(
                 '${snap?.siteName ?? 'Site unknown'} · '
                 '${snap?.rigName ?? 'Rig unknown'}',
-                style: AppTypography.body.copyWith(
-                  height: 1.6,
-                  color: p.textSecondary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).body,
+                      AppTextGeometry.reading,
+                    )
+                    .copyWith(color: p.textSecondary),
               ),
               Text(
                 '${OpportunityText.duration(planned)} planned integration · '
@@ -772,10 +780,9 @@ class _NotYet extends StatelessWidget {
       child: Text(
         "This night hasn't started yet. You can record the result $when.",
         key: const Key('results.notYet'),
-        style: AppTypography.body.copyWith(
-          height: 1.6,
-          color: AppPalette.of(context).textPrimary,
-        ),
+        style: AppTextTheme.of(context)
+            .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
+            .copyWith(color: AppPalette.of(context).textPrimary),
       ),
     );
   }
@@ -809,7 +816,8 @@ class _PendingChanges extends StatelessWidget {
             header: true,
             child: Text(
               'This plan changed since it was saved',
-              style: AppTypography.itemTitle.copyWith(color: p.textPrimary),
+              style: AppTextTheme.of(context).itemTitle
+                  .copyWith(color: p.textPrimary),
             ),
           ),
           Text(
@@ -819,10 +827,9 @@ class _PendingChanges extends StatelessWidget {
                 : 'Discard the changes first: the result is recorded '
                       'against the saved plan. To keep them, open the '
                       'plan and save it.',
-            style: AppTypography.body.copyWith(
-              height: 1.6,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
+                .copyWith(color: p.textSecondary),
           ),
           if (vm.canSaveChanges)
             FilledButton(
@@ -880,7 +887,7 @@ class _SoFar extends StatelessWidget {
           Text(
             ResultsText.integration(r),
             key: const Key('results.summary'),
-            style: AppTypography.value.copyWith(
+            style: AppTextTheme.of(context).value.copyWith(
               color: p.textPrimary,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
@@ -889,7 +896,8 @@ class _SoFar extends StatelessWidget {
             Text(
               '${r.rejectedLightFrames} light frames rejected earlier',
               key: const Key('results.rejected'),
-              style: AppTypography.caption.copyWith(color: p.textSecondary),
+              style: AppTextTheme.of(context).caption
+                  .copyWith(color: p.textSecondary),
             ),
         ],
       ),
@@ -938,11 +946,15 @@ class _Choice extends StatelessWidget {
                   Expanded(
                     child: Text(
                       label,
-                      style: AppTypography.body.copyWith(
-                        height: 1.5,
-                        fontWeight: selected ? FontWeight.w600 : null,
-                        color: p.textPrimary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).body,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(
+                            fontWeight: selected ? FontWeight.w600 : null,
+                            color: p.textPrimary,
+                          ),
                     ),
                   ),
                 ],

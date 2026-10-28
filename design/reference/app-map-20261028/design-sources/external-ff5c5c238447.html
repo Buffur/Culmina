@@ -1,0 +1,149 @@
+<!doctype html><meta charset="utf-8"><title>user-context</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>user-context</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\plugins\cache\openai-curated-remote\product-design\0.1.56\skills\user-context\SKILL.md</p><pre>   1  ---
+   2  name: user-context
+   3  description: Load or manage Product Design&#x27;s saved user context. Use when the user asks to set up Product Design, get started, onboard, save product or design sources, see what Product Design remembers, update saved context, or remember Product Design preferences. Examples include product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, and general product/design notes.
+   4  ---
+   5  
+   6  # User Context
+   7  
+   8  User Context stores the product and design references a designer uses often, so future Product Design work starts from the right sources.
+   9  
+  10  Use this skill when the user asks to:
+  11  
+  12  - set up Product Design
+  13  - get started with Product Design
+  14  - onboard with Product Design
+  15  - save product or design sources
+  16  - see what Product Design remembers
+  17  - update saved product or design context
+  18  - remember a Product Design preference
+  19  - setup my plugin
+  20  
+  21  ## Critical Overrides
+  22  
+  23  - Refer to the Plugin router [$index](../index/SKILL.md) before proceeding.
+  24  - Follow [$critical-overrides](../../references/critical-overrides.md).
+  25  - Before offering onboarding or saving context for future conversations, confirm that local shell access is available, `$CODEX_HOME` can be resolved, and `$CODEX_HOME/state/plugins/product-design/` exists and is writable or can be created in a writable parent directory. If `user-context.md` already exists, confirm that it is writable too.
+  26  - If any check cannot be completed or fails, persistent context is unavailable. Do not offer saved-context onboarding or claim that new context was saved for future conversations. If the user asks to save something, explain that it can be used in the current conversation but not saved for future conversations.
+  27  
+  28  ## Saved User Context
+  29  
+  30  If `user-context.md` exists, use it by default.
+  31  
+  32  Use saved product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, component refs, browser preferences, and share targets to ground Product Design work.
+  33  
+  34  Ideation, prototypes, audits, clones, and critiques should match the saved product context unless the user asks for something different.
+  35  
+  36  When a workflow needs visual grounding, attach or include relevant saved screenshots, reference images, tokens, design language, and component references in ImageGen, ideation, prototype, audit, and critique work.
+  37  
+  38  ## State File
+  39  
+  40  Saved context lives here:
+  41  
+  42  ```text
+  43  $CODEX_HOME/state/plugins/product-design/user-context.md
+  44  ```
+  45  
+  46  Saved screenshots and reference images live next to it:
+  47  
+  48  ```text
+  49  $CODEX_HOME/state/plugins/product-design/assets/
+  50  ```
+  51  
+  52  If the file does not exist, continue normally unless the user asks to set up Product Design, save context, or the current task is blocked by missing product/design context.
+  53  
+  54  ## Preflight
+  55  
+  56  When any Product Design workflow needs saved context, run:
+  57  
+  58  ```bash
+  59  python3 scripts/user_context_preflight.py
+  60  ```
+  61  
+  62  Use the returned saved entries as the starting context for the task.
+  63  
+  64  If the script reports that no saved context exists, continue from the current user prompt unless setup context is required.
+  65  
+  66  Do not browse, open, or inspect every saved reference during preflight. Inspect only the saved references needed for the current task.
+  67  
+  68  ## Setup
+  69  
+  70  Use [references/onboarding.md](references/onboarding.md) when the user asks to set up Product Design, asks what Product Design can remember, asks what Product Design knows about their product, or provides product/design references to save.
+  71  
+  72  For setup-only requests, explain what Product Design can remember and ask for useful sources.
+  73  
+  74  Adjust the context-gathering request to match the user&#x27;s request. First-time setup differs from updating existing context.
+  75  
+  76  Do not inspect the workspace, install dependencies, scaffold a prototype, generate images, run audits, or start implementation during setup.
+  77  
+  78  After the user provides references to save, run:
+  79  
+  80  ```bash
+  81  python3 scripts/init_user_context.py
+  82  ```
+  83  
+  84  Then add the references to the created `user-context.md`.
+  85  
+  86  ## Save
+  87  
+  88  Save useful, durable Product Design context:
+  89  
+  90  - Product URLs
+  91  - Figma files
+  92  - Screenshots and reference images
+  93  - Codebase paths
+  94  - Storybook and component docs
+  95  - Design tokens and theme sources
+  96  - Brand, logo, icon, illustration, image, and asset sources
+  97  - Preferred browser, capture tools, and share targets
+  98  - Team conventions that make future Product Design work more accurate
+  99  
+ 100  When the user provides screenshots or reference images to save, copy them into `assets/` next to `user-context.md` and link them from the saved entry.
+ 101  
+ 102  Give each saved image a clear, descriptive filename that says what the image shows. Use names future Product Design runs can understand without opening the file.
+ 103  
+ 104  Good image names:
+ 105  
+ 106  ```text
+ 107  assets/chatgpt-settings-modal-dark-mode.png
+ 108  assets/payment-sheet-mobile-error-state.png
+ 109  assets/product-dashboard-sidebar-navigation.png
+ 110  assets/storybook-primary-button-states.png
+ 111  assets/brand-logo-lockup-purple-gradient.png
+ 112  assets/onboarding-flow-welcome-step.png
+ 113  assets/checkout-confirmation-screen.png
+ 114  assets/account-menu-open-state.png
+ 115  ```
+ 116  
+ 117  Do not save secrets, credentials, API keys, private tokens, copied customer data, or anything that should not persist.
+ 118  
+ 119  Use this structure:
+ 120  
+ 121  ```md
+ 122  # {Category}
+ 123  
+ 124  - Description: {what this category is and when future Product Design runs should use it}
+ 125  
+ 126  ## Saved Links And Context
+ 127  
+ 128  {Saved reference or fact}
+ 129  - Date Added: YYYY-MM-DD.
+ 130  - File: assets/{clear-descriptive-name}.png
+ 131  - Useful Context: {what this reference represents}
+ 132  - Future Use: {how future Product Design work should use it}
+ 133  ```
+ 134  
+ 135  Include `File:` only when the saved entry has a local image file.
+ 136  
+ 137  When a category has no saved references yet, use exactly:
+ 138  
+ 139  ```md
+ 140  status: not provided
+ 141  ```
+ 142  
+ 143  Keep saved context curated. Prefer a few high-value references over a dump of every possible URL or file.
+ 144  
+ 145  ## Read
+ 146  
+ 147  - Do not treat `status: not provided` as a fact.
+ 148  - Read through `scripts/user_context_preflight.py` when local shell access is available.
+ 149  - Use saved context as default grounding, then inspect only what the current task needs.</pre>

@@ -15,6 +15,6 @@ Use when a UI task affects product meaning, scientific inputs, missing data or p
 - Core planning, catalog and local records must remain usable offline. Preserve cache timestamps and missing/stale weather distinctions. Label illustrative fixtures as examples.
 - Support Light, Dark and Field Red using `lib/core/theme/` and the field filter in `lib/main.dart`. Inspect pairing/readability in the intended theme; source colors alone do not establish accessibility acceptance.
 
-Use `.audit/atlas/` only as historical visual evidence and identify its captured state. It supplies neither current implementation requirements nor approval for a new direction. The reserved `design/` directory currently contains no browser prototype.
+Use `design/reference/atlas/` only as historical visual evidence and identify its captured state. It supplies neither current implementation requirements nor approval for a new direction. The `design/reference/` website documents the system with browser specimens; these do not establish native behavior.
 
 Report the affected invariant, owning source/caller, change or review finding, checks and remaining limits. Keep unrelated findings separate from the requested implementation.

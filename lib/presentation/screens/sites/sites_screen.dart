@@ -20,7 +20,7 @@ import 'site_editor_screen.dart';
 import '../../navigation/app_router.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../shared/hybrid_icon.dart';
 import '../library/library_parts.dart';
 import '../settings/settings_parts.dart';
@@ -264,17 +264,18 @@ class _SitesScreenState extends State<SitesScreen> {
                     SiteLabel.compact(vm),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTypography.rowTitle.copyWith(
-                      color: p.textPrimary,
-                    ),
+                    style: AppTextTheme.of(context).rowTitle
+                        .copyWith(color: p.textPrimary),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${siteDegrees(vm.latitude)}, ${siteDegrees(vm.longitude)} · Not saved',
-                    style: AppTypography.body.copyWith(
-                      color: p.textSecondary,
-                      height: 1.5,
-                    ),
+                    style: AppTextTheme.of(context)
+                        .resolve(
+                          AppTextTheme.of(context).body,
+                          AppTextGeometry.standard,
+                        )
+                        .copyWith(color: p.textSecondary),
                   ),
                 ],
               ),
@@ -358,17 +359,18 @@ class _SitesScreenState extends State<SitesScreen> {
                                       SiteLabel.displayName(site.name),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: AppTypography.rowTitle.copyWith(
-                                        color: p.textPrimary,
-                                      ),
+                                      style: AppTextTheme.of(context).rowTitle
+                                          .copyWith(color: p.textPrimary),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       caption,
-                                      style: AppTypography.body.copyWith(
-                                        height: 1.5,
-                                        color: p.textSecondary,
-                                      ),
+                                      style: AppTextTheme.of(context)
+                                          .resolve(
+                                            AppTextTheme.of(context).body,
+                                            AppTextGeometry.standard,
+                                          )
+                                          .copyWith(color: p.textSecondary),
                                     ),
                                   ],
                                 ),

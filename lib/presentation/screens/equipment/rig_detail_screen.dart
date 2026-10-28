@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/equipment_profile.dart';
@@ -109,10 +109,9 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
   Widget build(BuildContext context) {
     final r = _rig;
     final p = AppPalette.of(context);
-    final caption = AppTypography.caption.copyWith(
-      height: 1.5,
-      color: p.textSecondary,
-    );
+    final caption = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.standard)
+        .copyWith(color: p.textSecondary);
     final camera = r.cameraClass == CameraClass.unknown
         ? 'Unknown'
         : r.cameraClass.label;
@@ -130,8 +129,10 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
         child: Text(
           text,
           style: small
-              ? AppTypography.itemTitle.copyWith(color: p.textPrimary)
-              : AppTypography.sectionHeading.copyWith(color: p.textPrimary),
+              ? AppTextTheme.of(context).itemTitle
+                    .copyWith(color: p.textPrimary)
+              : AppTextTheme.of(context).sectionHeading
+                    .copyWith(color: p.textPrimary),
         ),
       ),
     );

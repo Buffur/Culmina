@@ -7,7 +7,7 @@ import '../../core/theme/hybrid_tokens.dart';
 import '../../core/theme/hybrid_view_entrance.dart';
 import '../shared/app_words.dart';
 import '../shared/hybrid_icon.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 
 /// The bottom-navigation shell of ADR-015 (TASK 12.2): Tonight · Logbook ·
 /// Library · Settings, one navigator per tab.
@@ -94,12 +94,13 @@ class AppShell extends StatelessWidget {
                       Text(
                         item.label,
                         textAlign: TextAlign.center,
-                        style: AppTypography.navigationLabel.copyWith(
-                          color: color,
-                          fontWeight: selected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                        ),
+                        style: AppTextTheme.of(context).navigationLabel
+                            .copyWith(
+                              color: color,
+                              fontWeight: selected
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
+                            ),
                       ),
                     ],
                   ),

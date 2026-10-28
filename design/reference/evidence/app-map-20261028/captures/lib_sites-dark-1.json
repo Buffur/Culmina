@@ -1,0 +1,273 @@
+{
+  "name": "lib_sites",
+  "captureUtc": "2026-10-28T14:46:19.6817081Z",
+  "captureKind": "native Flutter host",
+  "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "inputManifest": null,
+  "proposalOnly": false,
+  "fixtureSucceeded": true,
+  "devicePixelRatio": 1.0,
+  "visibleScreens": [
+    "SitesScreen"
+  ],
+  "theme": "dark",
+  "scale": 1.0,
+  "width": 375.0,
+  "height": 812.0,
+  "route": "/library",
+  "routeError": null,
+  "layoutError": null,
+  "texts": [
+    {
+      "text": "Sites",
+      "x": 36.0,
+      "y": 105.0,
+      "w": 199.3100128173828,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 600,
+      "height": 1.55
+    },
+    {
+      "text": "Add site",
+      "x": 273.3100128173828,
+      "y": 106.0,
+      "w": 53.68998718261719,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 500,
+      "height": 1.4285714285714286
+    },
+    {
+      "text": "Name, time zone or notes",
+      "x": 52.0,
+      "y": 162.0,
+      "w": 235.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": 1,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "Kyiv outskirts",
+      "x": 36.0,
+      "y": 236.0,
+      "w": 303.0,
+      "h": 24.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 16.0,
+      "weight": 500,
+      "height": 1.5
+    },
+    {
+      "text": "50.40000°, 30.60000° · Europe/Kyiv",
+      "x": 36.0,
+      "y": 264.0,
+      "w": 303.0,
+      "h": 22.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 14.0,
+      "weight": 400,
+      "height": 1.6
+    },
+    {
+      "text": "Used for planning",
+      "x": 36.0,
+      "y": 290.0,
+      "w": 303.0,
+      "h": 20.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 13.0,
+      "weight": 400,
+      "height": 1.5
+    },
+    {
+      "text": "",
+      "x": 16.0,
+      "y": 20.0,
+      "w": 24.0,
+      "h": 24.0,
+      "family": "MaterialIcons",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 24.0,
+      "weight": null,
+      "height": 1.0
+    },
+    {
+      "text": "Sites",
+      "x": 64.0,
+      "y": 18.5,
+      "w": 52.39961242675781,
+      "h": 27.0,
+      "family": "Geist",
+      "maxLines": null,
+      "didExceedMaxLines": false,
+      "size": 22.0,
+      "weight": 500,
+      "height": 1.25
+    }
+  ],
+  "geometry": [
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "Scaffold",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 812.0
+    },
+    {
+      "type": "DocumentSection",
+      "key": "[<'sites.searchGroup'>]",
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 136.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 76.0,
+      "w": 335.0,
+      "h": 136.0,
+      "padding": "EdgeInsets.all(16.0)"
+    },
+    {
+      "type": "TextButton",
+      "key": "[<'sites.add'>]",
+      "x": 235.3100128173828,
+      "y": 92.0,
+      "w": 103.68998718261719,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 235.3100128173828,
+      "y": 92.0,
+      "w": 103.68998718261719,
+      "h": 48.0,
+      "padding": "EdgeInsets(12.0, 8.0, 12.0, 8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 291.0,
+      "y": 148.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(8.0, 0.0, 12.0, 0.0)"
+    },
+    {
+      "type": "DocumentSection",
+      "key": null,
+      "x": 20.0,
+      "y": 224.0,
+      "w": 335.0,
+      "h": 98.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 20.0,
+      "y": 224.0,
+      "w": 335.0,
+      "h": 98.0,
+      "padding": "EdgeInsets(16.0, 0.0, 16.0, 0.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 36.0,
+      "y": 224.0,
+      "w": 303.0,
+      "h": 98.0,
+      "padding": "EdgeInsets(0.0, 12.0, 0.0, 12.0)"
+    },
+    {
+      "type": "SafeArea",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 0.0,
+      "y": 0.0,
+      "w": 375.0,
+      "h": 64.0,
+      "padding": "EdgeInsets.zero"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<StandardComponentType.backButton>]",
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 4.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 56.0,
+      "h": 48.0,
+      "padding": "EdgeInsets(0.0, 0.0, 8.0, 0.0)"
+    },
+    {
+      "type": "IconButton",
+      "key": "[<'fieldMode.toggle'>]",
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0
+    },
+    {
+      "type": "Padding",
+      "key": null,
+      "x": 319.0,
+      "y": 8.0,
+      "w": 48.0,
+      "h": 48.0,
+      "padding": "EdgeInsets.all(8.0)"
+    }
+  ]
+}

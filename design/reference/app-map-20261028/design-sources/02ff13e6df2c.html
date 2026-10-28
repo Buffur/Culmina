@@ -1,0 +1,346 @@
+<!doctype html><meta charset="utf-8"><title>hybrid_tokens.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>hybrid_tokens.dart</h1><p>lib\core\theme\hybrid_tokens.dart</p><p>SHA-256: 47ce6c5483c70fa36cf94e36cf2c6069de618631a1e5d601bf9f392933fd6293</p><pre>   1  import &#x27;package:flutter/material.dart&#x27;;
+   2  
+   3  /// Approved original Hybrid presentation roles absent from AppPalette.
+   4  /// Values: the final computed cascade of the accepted web reference
+   5  /// (`design/home-lab` at 86873ce: notion-hybrid.css, hybrid-data-tokens.css,
+   6  /// hybrid-refinement.css), Light / Dark / Field. These colours do not supply
+   7  /// astronomical intervals or change data semantics.
+   8  @immutable
+   9  class HybridTokens extends ThemeExtension&lt;HybridTokens&gt; {
+  10    const HybridTokens({
+  11      required this.action,
+  12      required this.onAction,
+  13      required this.selection,
+  14      required this.selectedHourFill,
+  15      required this.selectedHourText,
+  16      required this.selectedHourRule,
+  17      required this.surfaceSubtle,
+  18      required this.surfaceSunken,
+  19      required this.accent,
+  20      required this.success,
+  21      required this.successWash,
+  22      required this.caution,
+  23      required this.cautionWash,
+  24      required this.errorText,
+  25      required this.errorWash,
+  26      required this.hourBackground,
+  27      required this.hourText,
+  28      required this.gainStart,
+  29      required this.gainEnd,
+  30      required this.skyDay,
+  31      required this.skyCivil,
+  32      required this.skyNautical,
+  33      required this.skyAstronomical,
+  34      required this.skyDark,
+  35      required this.moonUp,
+  36      required this.moonFree,
+  37      required this.weatherCaution,
+  38      required this.weatherNotice,
+  39    });
+  40  
+  41    static const sourceRevision = &#x27;86873ce&#x27;;
+  42    static const fontFamily = &#x27;Geist&#x27;;
+  43    static const transparent = Color(0x00000000);
+  44    // Exact compact roles in the approved source. Large text uses full week rows.
+  45    static const calendarCaptionSize = 10.0;
+  46    static const navigationLabelSize = 11.0;
+  47  
+  48    /// Chart tick labels (plan.css `.gain-graph text`, 11 px).
+  49    static const chartLabelSize = 11.0;
+  50    static const minTarget = 48.0;
+  51    static const appBarHeight = 64.0;
+  52  
+  53    /// Primary action fill (WQA-01: Field `#FF0000` with black text).
+  54    final Color action;
+  55  
+  56    /// Text on [action].
+  57    final Color onAction;
+  58  
+  59    /// Selected rows, segments and pressed fills.
+  60    final Color selection;
+  61  
+  62    /// Weather B hour-axis selection fill (weather-radix.css blue5).
+  63    final Color selectedHourFill;
+  64  
+  65    /// Text on [selectedHourFill] (blue12; Field retains primary red).
+  66    final Color selectedHourText;
+  67  
+  68    /// Bottom rule of the selected Weather B hour (blue11).
+  69    final Color selectedHourRule;
+  70  
+  71    /// Subtle surface: selected navigation, quiet panels.
+  72    final Color surfaceSubtle;
+  73  
+  74    /// Sunken surface behind raised panels.
+  75    final Color surfaceSunken;
+  76  
+  77    /// Notion blue: weather icons, main chart lines, links.
+  78    final Color accent;
+  79  
+  80    /// Saved / Completed text.
+  81    final Color success;
+  82  
+  83    /// Saved / Completed compact background.
+  84    final Color successWash;
+  85  
+  86    /// Not saved / Saved · changed / Partly / stale text.
+  87    final Color caution;
+  88  
+  89    /// Caution compact background.
+  90    final Color cautionWash;
+  91  
+  92    /// Data error text.
+  93    final Color errorText;
+  94  
+  95    /// Error compact background.
+  96    final Color errorWash;
+  97  
+  98    /// Selected weather hour fill.
+  99    final Color hourBackground;
+ 100  
+ 101    /// Selected weather hour text.
+ 102    final Color hourText;
+ 103  
+ 104    /// Stacking-gain gradient start.
+ 105    final Color gainStart;
+ 106  
+ 107    /// Stacking-gain gradient end.
+ 108    final Color gainEnd;
+ 109  
+ 110    /// Timeline daylight.
+ 111    final Color skyDay;
+ 112  
+ 113    /// Timeline civil twilight.
+ 114    final Color skyCivil;
+ 115  
+ 116    /// Timeline nautical twilight.
+ 117    final Color skyNautical;
+ 118  
+ 119    /// Timeline astronomical twilight.
+ 120    final Color skyAstronomical;
+ 121  
+ 122    /// Timeline dark time: black in every theme (owner).
+ 123    final Color skyDark;
+ 124  
+ 125    /// Moon-above-horizon lane.
+ 126    final Color moonUp;
+ 127  
+ 128    /// Moon-free dark lane.
+ 129    final Color moonFree;
+ 130  
+ 131    /// Weather caution (dew, stale).
+ 132    final Color weatherCaution;
+ 133  
+ 134    /// The Weather page&#x27;s freshness and gap notices (conditions.css
+ 135    /// `--wx-caution`).
+ 136    final Color weatherNotice;
+ 137  
+ 138    List&lt;Color&gt; get sky =&gt; [
+ 139      skyDay,
+ 140      skyCivil,
+ 141      skyNautical,
+ 142      skyAstronomical,
+ 143      skyDark,
+ 144    ];
+ 145  
+ 146    static const light = HybridTokens(
+ 147      action: Color(0xFF37352F),
+ 148      onAction: Color(0xFFFFFFFF),
+ 149      selection: Color(0xFFE9E9E7),
+ 150      selectedHourFill: Color(0xFFC2E5FF),
+ 151      selectedHourText: Color(0xFF113264),
+ 152      selectedHourRule: Color(0xFF0D74CE),
+ 153      surfaceSubtle: Color(0xFFF7F7F5),
+ 154      surfaceSunken: Color(0xFFF0F0ED),
+ 155      accent: Color(0xFF0075DE),
+ 156      success: Color(0xFF27633D),
+ 157      successWash: Color(0xFFE4EEE7),
+ 158      caution: Color(0xFF754600),
+ 159      cautionWash: Color(0xFFF4ECDF),
+ 160      errorText: Color(0xFFB00020),
+ 161      errorWash: Color(0xFFF7E7E9),
+ 162      hourBackground: Color(0xFFE6F3FE),
+ 163      hourText: Color(0xFF005BAB),
+ 164      gainStart: Color(0xFF0075DE),
+ 165      gainEnd: Color(0xFF005BAB),
+ 166      skyDay: Color(0xFFE6F3FE),
+ 167      skyCivil: Color(0xFFA6D2F3),
+ 168      skyNautical: Color(0xFF599FD5),
+ 169      skyAstronomical: Color(0xFF285B90),
+ 170      skyDark: Color(0xFF000000),
+ 171      moonUp: Color(0xFF607D8B),
+ 172      moonFree: Color(0xFF37352F),
+ 173      weatherCaution: Color(0xFF754600),
+ 174      weatherNotice: Color(0xFF9A5B00),
+ 175    );
+ 176  
+ 177    static const dark = HybridTokens(
+ 178      action: Color(0xFFEBEBEA),
+ 179      onAction: Color(0xFF191919),
+ 180      selection: Color(0xFF343432),
+ 181      selectedHourFill: Color(0xFF004074),
+ 182      selectedHourText: Color(0xFFC2E6FF),
+ 183      selectedHourRule: Color(0xFF70B8FF),
+ 184      surfaceSubtle: Color(0xFF202020),
+ 185      surfaceSunken: Color(0xFF141414),
+ 186      accent: Color(0xFF62AFF3),
+ 187      success: Color(0xFF99C5A6),
+ 188      successWash: Color(0xFF2B352E),
+ 189      caution: Color(0xFFFFCA70),
+ 190      cautionWash: Color(0xFF3B3222),
+ 191      errorText: Color(0xFFFF9592),
+ 192      errorWash: Color(0xFF3C2929),
+ 193      hourBackground: Color(0xFF152D40),
+ 194      hourText: Color(0xFFA6D2F3),
+ 195      gainStart: Color(0xFF62AFF3),
+ 196      gainEnd: Color(0xFFA6D2F3),
+ 197      skyDay: Color(0xFFA6D2F3),
+ 198      skyCivil: Color(0xFF78B5E5),
+ 199      skyNautical: Color(0xFF4388BD),
+ 200      skyAstronomical: Color(0xFF244F7A),
+ 201      skyDark: Color(0xFF000000),
+ 202      moonUp: Color(0xFFB0BEC5),
+ 203      moonFree: Color(0xFFEBEBEA),
+ 204      weatherCaution: Color(0xFFFFCA70),
+ 205      weatherNotice: Color(0xFFFFB74D),
+ 206    );
+ 207  
+ 208    static const field = HybridTokens(
+ 209      action: Color(0xFFFF0000),
+ 210      onAction: Color(0xFF000000),
+ 211      selection: Color(0xFF330000),
+ 212      selectedHourFill: Color(0xFF330000),
+ 213      selectedHourText: Color(0xFFFF0000),
+ 214      selectedHourRule: Color(0xFFFF0000),
+ 215      surfaceSubtle: Color(0xFF110000),
+ 216      surfaceSunken: Color(0xFF000000),
+ 217      accent: Color(0xFFFF0000),
+ 218      success: Color(0xFFFF0000),
+ 219      successWash: Color(0xFF110000),
+ 220      caution: Color(0xFFFF0000),
+ 221      cautionWash: Color(0xFF1A0000),
+ 222      errorText: Color(0xFFFF0000),
+ 223      errorWash: Color(0xFF1A0000),
+ 224      hourBackground: Color(0xFF330000),
+ 225      hourText: Color(0xFFFF0000),
+ 226      gainStart: Color(0xFF990000),
+ 227      gainEnd: Color(0xFFFF0000),
+ 228      skyDay: Color(0xFF800000),
+ 229      skyCivil: Color(0xFF650000),
+ 230      skyNautical: Color(0xFF4D0000),
+ 231      skyAstronomical: Color(0xFF340000),
+ 232      skyDark: Color(0xFF000000),
+ 233      moonUp: Color(0xFFB00000),
+ 234      moonFree: Color(0xFFFF0000),
+ 235      weatherCaution: Color(0xFFFF0000),
+ 236      weatherNotice: Color(0xFFFF0000),
+ 237    );
+ 238  
+ 239    @override
+ 240    HybridTokens copyWith({
+ 241      Color? action,
+ 242      Color? onAction,
+ 243      Color? selection,
+ 244      Color? selectedHourFill,
+ 245      Color? selectedHourText,
+ 246      Color? selectedHourRule,
+ 247      Color? surfaceSubtle,
+ 248      Color? surfaceSunken,
+ 249      Color? accent,
+ 250      Color? success,
+ 251      Color? successWash,
+ 252      Color? caution,
+ 253      Color? cautionWash,
+ 254      Color? errorText,
+ 255      Color? errorWash,
+ 256      Color? hourBackground,
+ 257      Color? hourText,
+ 258      Color? gainStart,
+ 259      Color? gainEnd,
+ 260      Color? skyDay,
+ 261      Color? skyCivil,
+ 262      Color? skyNautical,
+ 263      Color? skyAstronomical,
+ 264      Color? skyDark,
+ 265      Color? moonUp,
+ 266      Color? moonFree,
+ 267      Color? weatherCaution,
+ 268      Color? weatherNotice,
+ 269    }) =&gt; HybridTokens(
+ 270      action: action ?? this.action,
+ 271      onAction: onAction ?? this.onAction,
+ 272      selection: selection ?? this.selection,
+ 273      selectedHourFill: selectedHourFill ?? this.selectedHourFill,
+ 274      selectedHourText: selectedHourText ?? this.selectedHourText,
+ 275      selectedHourRule: selectedHourRule ?? this.selectedHourRule,
+ 276      surfaceSubtle: surfaceSubtle ?? this.surfaceSubtle,
+ 277      surfaceSunken: surfaceSunken ?? this.surfaceSunken,
+ 278      accent: accent ?? this.accent,
+ 279      success: success ?? this.success,
+ 280      successWash: successWash ?? this.successWash,
+ 281      caution: caution ?? this.caution,
+ 282      cautionWash: cautionWash ?? this.cautionWash,
+ 283      errorText: errorText ?? this.errorText,
+ 284      errorWash: errorWash ?? this.errorWash,
+ 285      hourBackground: hourBackground ?? this.hourBackground,
+ 286      hourText: hourText ?? this.hourText,
+ 287      gainStart: gainStart ?? this.gainStart,
+ 288      gainEnd: gainEnd ?? this.gainEnd,
+ 289      skyDay: skyDay ?? this.skyDay,
+ 290      skyCivil: skyCivil ?? this.skyCivil,
+ 291      skyNautical: skyNautical ?? this.skyNautical,
+ 292      skyAstronomical: skyAstronomical ?? this.skyAstronomical,
+ 293      skyDark: skyDark ?? this.skyDark,
+ 294      moonUp: moonUp ?? this.moonUp,
+ 295      moonFree: moonFree ?? this.moonFree,
+ 296      weatherCaution: weatherCaution ?? this.weatherCaution,
+ 297      weatherNotice: weatherNotice ?? this.weatherNotice,
+ 298    );
+ 299  
+ 300    @override
+ 301    HybridTokens lerp(covariant HybridTokens? other, double t) {
+ 302      if (other == null) return this;
+ 303      return HybridTokens(
+ 304        action: Color.lerp(action, other.action, t)!,
+ 305        onAction: Color.lerp(onAction, other.onAction, t)!,
+ 306        selection: Color.lerp(selection, other.selection, t)!,
+ 307        selectedHourFill: Color.lerp(
+ 308          selectedHourFill,
+ 309          other.selectedHourFill,
+ 310          t,
+ 311        )!,
+ 312        selectedHourText: Color.lerp(
+ 313          selectedHourText,
+ 314          other.selectedHourText,
+ 315          t,
+ 316        )!,
+ 317        selectedHourRule: Color.lerp(
+ 318          selectedHourRule,
+ 319          other.selectedHourRule,
+ 320          t,
+ 321        )!,
+ 322        surfaceSubtle: Color.lerp(surfaceSubtle, other.surfaceSubtle, t)!,
+ 323        surfaceSunken: Color.lerp(surfaceSunken, other.surfaceSunken, t)!,
+ 324        accent: Color.lerp(accent, other.accent, t)!,
+ 325        success: Color.lerp(success, other.success, t)!,
+ 326        successWash: Color.lerp(successWash, other.successWash, t)!,
+ 327        caution: Color.lerp(caution, other.caution, t)!,
+ 328        cautionWash: Color.lerp(cautionWash, other.cautionWash, t)!,
+ 329        errorText: Color.lerp(errorText, other.errorText, t)!,
+ 330        errorWash: Color.lerp(errorWash, other.errorWash, t)!,
+ 331        hourBackground: Color.lerp(hourBackground, other.hourBackground, t)!,
+ 332        hourText: Color.lerp(hourText, other.hourText, t)!,
+ 333        gainStart: Color.lerp(gainStart, other.gainStart, t)!,
+ 334        gainEnd: Color.lerp(gainEnd, other.gainEnd, t)!,
+ 335        skyDay: Color.lerp(skyDay, other.skyDay, t)!,
+ 336        skyCivil: Color.lerp(skyCivil, other.skyCivil, t)!,
+ 337        skyNautical: Color.lerp(skyNautical, other.skyNautical, t)!,
+ 338        skyAstronomical: Color.lerp(skyAstronomical, other.skyAstronomical, t)!,
+ 339        skyDark: Color.lerp(skyDark, other.skyDark, t)!,
+ 340        moonUp: Color.lerp(moonUp, other.moonUp, t)!,
+ 341        moonFree: Color.lerp(moonFree, other.moonFree, t)!,
+ 342        weatherCaution: Color.lerp(weatherCaution, other.weatherCaution, t)!,
+ 343        weatherNotice: Color.lerp(weatherNotice, other.weatherNotice, t)!,
+ 344      );
+ 345    }
+ 346  }</pre>

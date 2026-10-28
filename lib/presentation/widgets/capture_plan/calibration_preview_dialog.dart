@@ -4,7 +4,7 @@ import '../../shared/document_section.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/capture_block.dart';
 import '../../../domain/services/calibration_builder.dart';
@@ -181,10 +181,9 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final secondary = AppTypography.caption.copyWith(
-      height: 1.5,
-      color: p.textSecondary,
-    );
+    final secondary = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.standard)
+        .copyWith(color: p.textSecondary);
     final kept = [
       for (var i = 0; i < _rows.length; i++)
         if (_kept[i] && !_leftOutByFlat(i)) i,
@@ -233,10 +232,12 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
                                   'needs in this plan.'
                             : 'Add proposed frames to this plan. Review counts '
                                   'before applying.',
-                        style: AppTypography.body.copyWith(
-                          height: 1.6,
-                          color: p.textSecondary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).body,
+                              AppTextGeometry.reading,
+                            )
+                            .copyWith(color: p.textSecondary),
                       ),
                       // plan.css `.reference-light`: 13 at 1.6, primary. The
                       // native builder references every light at once.
@@ -251,10 +252,12 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
                                 : 'References ${lights.length} light blocks; each '
                                       'set names its light.',
                             key: const Key('calibration.reference'),
-                            style: AppTypography.caption.copyWith(
-                              height: 1.6,
-                              color: p.textPrimary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).caption,
+                                  AppTextGeometry.reading,
+                                )
+                                .copyWith(color: p.textPrimary),
                           ),
                         ),
                       if (widget.proposal.darksByCamera)
@@ -266,10 +269,12 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
                           child: Text(
                             "No darks: the camera's long-exposure noise "
                             'reduction takes one after each light.',
-                            style: AppTypography.caption.copyWith(
-                              height: 1.6,
-                              color: p.textPrimary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).caption,
+                                  AppTextGeometry.reading,
+                                )
+                                .copyWith(color: p.textPrimary),
                           ),
                         ),
                     ],
@@ -350,10 +355,12 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
                   Text(
                     'These add session time and storage, not integration. '
                     'No calibration files are checked or acquired.',
-                    style: AppTypography.caption.copyWith(
-                      height: 1.6,
-                      color: p.textSecondary,
-                    ),
+                    style: AppTextTheme.of(context)
+                        .resolve(
+                          AppTextTheme.of(context).caption,
+                          AppTextGeometry.reading,
+                        )
+                        .copyWith(color: p.textSecondary),
                   ),
                 ],
               ),
@@ -391,10 +398,12 @@ class _Legend extends StatelessWidget {
         children: [
           Text(
             text,
-            style: AppTypography.caption.copyWith(
-              height: 1.5,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).caption,
+                  AppTextGeometry.standard,
+                )
+                .copyWith(color: p.textSecondary),
           ),
           const SizedBox(width: AppSpacing.xs),
           Expanded(child: Divider(height: 1, thickness: 1, color: p.border)),

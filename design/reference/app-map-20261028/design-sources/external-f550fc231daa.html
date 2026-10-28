@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><title>harmonize-palette</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>harmonize-palette</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\plugins\cache\openai-curated-remote\app-696e890a45388191b24c4a36d2177201\3.0.0\skills\harmonize-palette\SKILL.md</p><pre>   1  ---
+   2  name: harmonize-palette
+   3  description: Diagnose and repair an existing color palette that feels clashing, muddy, repetitive, unbalanced, too warm or cool, or otherwise incoherent while preserving its intent and specified anchor colors. Use for making supplied colors more cohesive or revising a current palette. Do not trigger for creating a palette from scratch unless the user provides a clear starting palette.
+   4  ---
+   5  
+   6  # Harmonize a palette
+   7  
+   8  ## Diagnose before changing
+   9  
+  10  1. Identify the supplied or current palette and any colors that must remain unchanged.
+  11  2. Infer the intended mood and use from the prompt. If neither is clear, optimize for general visual cohesion without pretending to know a specific application.
+  12  3. Locate the smallest set of problems: competing undertones, uneven lightness, excessive saturation, redundant hues, weak anchors, or an accent with the wrong visual weight.
+  13  
+  14  ## Revise conservatively
+  15  
+  16  - Preserve anchor colors exactly unless the user permits changes.
+  17  - Change as few colors as needed. Prefer modest hue, saturation, or lightness adjustments over replacing the palette wholesale.
+  18  - Maintain useful separation between colors; harmony does not mean making every swatch similar.
+  19  - Preserve the requested temperature, energy, and contrast. When goals conflict, prioritize explicit user constraints and name the tradeoff.
+  20  - Do not claim accessibility based on harmony. Flag any intended text/background combinations for separate contrast checking.
+  21  
+  22  ## Show the revision
+  23  
+  24  - Summarize the diagnosis and describe material changes with before-and-after hex values.
+  25  - Invoke `palette-picker` with the revised ordered uppercase `#RRGGBB` colors and a `reason` describing preserved anchors and the harmonization strategy.
+  26  - If multiple directions are equally valid, choose the best-supported one first rather than overcrowding one palette; mention that alternatives can be generated on request.
+  27  </pre>

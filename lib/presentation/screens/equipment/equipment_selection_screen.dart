@@ -27,7 +27,7 @@ import 'equipment_editor.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../shared/collapsible_section.dart';
 import '../../shared/hybrid_icon.dart';
 import '../library/library_parts.dart';
@@ -216,7 +216,8 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
             has(eq.cameraClass.label))
           eq,
     ];
-    final quiet = AppTypography.caption.copyWith(color: p.textSecondary);
+    final quiet = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
     return Scaffold(
       appBar: hybridAppBar(
         context,

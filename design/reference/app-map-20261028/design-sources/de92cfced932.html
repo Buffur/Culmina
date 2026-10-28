@@ -1,0 +1,81 @@
+<!doctype html><meta charset="utf-8"><title>hybrid_view_entrance.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>hybrid_view_entrance.dart</h1><p>lib\core\theme\hybrid_view_entrance.dart</p><p>SHA-256: a9dbfcbfd4a2de1a5d5bfe5d9217310db9cfd50ace074de4733f427d6550a304</p><pre>   1  import &#x27;package:flutter/material.dart&#x27;;
+   2  
+   3  import &#x27;app_motion.dart&#x27;;
+   4  
+   5  /// Hybrid&#x27;s one-shot view entrance. Input changes do not restart it.
+   6  class HybridViewEntrance extends StatefulWidget {
+   7    const HybridViewEntrance({
+   8      super.key,
+   9      required this.trigger,
+  10      required this.child,
+  11    });
+  12  
+  13    final Object trigger;
+  14    final Widget child;
+  15  
+  16    @override
+  17    State&lt;HybridViewEntrance&gt; createState() =&gt; _HybridViewEntranceState();
+  18  }
+  19  
+  20  class _HybridViewEntranceState extends State&lt;HybridViewEntrance&gt;
+  21      with SingleTickerProviderStateMixin {
+  22    late final controller = AnimationController(
+  23      vsync: this,
+  24      duration: AppMotion.medium,
+  25    )..forward();
+  26  
+  27    @override
+  28    void didUpdateWidget(HybridViewEntrance oldWidget) {
+  29      super.didUpdateWidget(oldWidget);
+  30      if (oldWidget.trigger != widget.trigger) controller.forward(from: 0);
+  31    }
+  32  
+  33    @override
+  34    void dispose() {
+  35      controller.dispose();
+  36      super.dispose();
+  37    }
+  38  
+  39    @override
+  40    Widget build(BuildContext context) {
+  41      if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
+  42        return widget.child;
+  43      }
+  44      return _entrance(controller, widget.child);
+  45    }
+  46  }
+  47  
+  48  Widget _entrance(Animation&lt;double&gt; animation, Widget child) =&gt; AnimatedBuilder(
+  49    animation: animation,
+  50    child: child,
+  51    builder: (context, child) {
+  52      final progress = AppMotion.curve.transform(animation.value);
+  53      return Opacity(
+  54        opacity: .72 + .28 * progress,
+  55        child: Transform.translate(
+  56          offset: Offset(0, 4 * (1 - progress)),
+  57          child: child,
+  58        ),
+  59      );
+  60    },
+  61  );
+  62  
+  63  /// Material routes use the same logical-pixel entrance as the root views.
+  64  /// Cupertino&#x27;s interactive edge-back transition is retained by the theme.
+  65  class HybridPageTransitionsBuilder extends PageTransitionsBuilder {
+  66    const HybridPageTransitionsBuilder();
+  67  
+  68    @override
+  69    Duration get transitionDuration =&gt; AppMotion.medium;
+  70  
+  71    @override
+  72    Widget buildTransitions&lt;T&gt;(
+  73      PageRoute&lt;T&gt; route,
+  74      BuildContext context,
+  75      Animation&lt;double&gt; animation,
+  76      Animation&lt;double&gt; secondaryAnimation,
+  77      Widget child,
+  78    ) =&gt; (MediaQuery.maybeDisableAnimationsOf(context) ?? false)
+  79        ? child
+  80        : _entrance(animation, child);
+  81  }</pre>

@@ -10,6 +10,8 @@ import 'app_colors.dart';
 @immutable
 class AppPalette extends ThemeExtension<AppPalette> {
   const AppPalette({
+    this.fieldMode = false,
+    this.brightness = Brightness.light,
     required this.textPrimary,
     required this.textSecondary,
     required this.textTertiary,
@@ -46,6 +48,10 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.bortle,
     required this.onBortle,
   });
+
+  /// Semantic mode metadata retained when a palette is copied or interpolated.
+  final bool fieldMode;
+  final Brightness brightness;
 
   /// The text roles (S5.1; `docs/DESIGN_SYSTEM.md`): primary for the
   /// answer and values, secondary for labels and supporting text, tertiary
@@ -169,6 +175,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
   );
 
   static const dark = AppPalette(
+    brightness: Brightness.dark,
     statusFits: AppColors.darkTextPrimary,
     statusTight: _darkCaution,
     statusDoesNotFit: AppColors.darkError,
@@ -208,6 +215,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
 
   /// Red on black only: brightness, not hue, tells elements apart.
   static const field = AppPalette(
+    fieldMode: true,
+    brightness: Brightness.dark,
     statusFits: AppColors.fieldTextPrimary,
     statusTight: AppColors.fieldTextPrimary,
     statusDoesNotFit: AppColors.fieldTextPrimary,
@@ -334,9 +343,142 @@ class AppPalette extends ThemeExtension<AppPalette> {
   ];
 
   @override
-  AppPalette copyWith() => this;
+  AppPalette copyWith({
+    bool? fieldMode,
+    Brightness? brightness,
+    Color? textPrimary,
+    Color? textSecondary,
+    Color? textTertiary,
+    Color? textDisabled,
+    Color? surfaceRaised,
+    Color? border,
+    Color? controlBorder,
+    Color? statusFits,
+    Color? statusTight,
+    Color? statusDoesNotFit,
+    Color? statusNoWindow,
+    Color? statusNeutral,
+    Color? stateUnsaved,
+    Color? stateSettled,
+    Color? stateQuiet,
+    Color? muted,
+    Color? caution,
+    Color? sunEvent,
+    Color? twilightEvent,
+    Color? moon,
+    Color? selected,
+    Color? chartDay,
+    Color? chartTwilight,
+    Color? chartDark,
+    Color? chartWindow,
+    Color? chartTarget,
+    Color? chartMoon,
+    Color? chartMinAltitude,
+    Color? chartNow,
+    Color? chartNowCentre,
+    Color? chartGrid,
+    Color? chartLabel,
+    Color? swatchBorder,
+    List<Color>? bortle,
+    List<Color>? onBortle,
+  }) => AppPalette(
+    fieldMode: fieldMode ?? this.fieldMode,
+    brightness: brightness ?? this.brightness,
+    textPrimary: textPrimary ?? this.textPrimary,
+    textSecondary: textSecondary ?? this.textSecondary,
+    textTertiary: textTertiary ?? this.textTertiary,
+    textDisabled: textDisabled ?? this.textDisabled,
+    surfaceRaised: surfaceRaised ?? this.surfaceRaised,
+    border: border ?? this.border,
+    controlBorder: controlBorder ?? this.controlBorder,
+    statusFits: statusFits ?? this.statusFits,
+    statusTight: statusTight ?? this.statusTight,
+    statusDoesNotFit: statusDoesNotFit ?? this.statusDoesNotFit,
+    statusNoWindow: statusNoWindow ?? this.statusNoWindow,
+    statusNeutral: statusNeutral ?? this.statusNeutral,
+    stateUnsaved: stateUnsaved ?? this.stateUnsaved,
+    stateSettled: stateSettled ?? this.stateSettled,
+    stateQuiet: stateQuiet ?? this.stateQuiet,
+    muted: muted ?? this.muted,
+    caution: caution ?? this.caution,
+    sunEvent: sunEvent ?? this.sunEvent,
+    twilightEvent: twilightEvent ?? this.twilightEvent,
+    moon: moon ?? this.moon,
+    selected: selected ?? this.selected,
+    chartDay: chartDay ?? this.chartDay,
+    chartTwilight: chartTwilight ?? this.chartTwilight,
+    chartDark: chartDark ?? this.chartDark,
+    chartWindow: chartWindow ?? this.chartWindow,
+    chartTarget: chartTarget ?? this.chartTarget,
+    chartMoon: chartMoon ?? this.chartMoon,
+    chartMinAltitude: chartMinAltitude ?? this.chartMinAltitude,
+    chartNow: chartNow ?? this.chartNow,
+    chartNowCentre: chartNowCentre ?? this.chartNowCentre,
+    chartGrid: chartGrid ?? this.chartGrid,
+    chartLabel: chartLabel ?? this.chartLabel,
+    swatchBorder: swatchBorder ?? this.swatchBorder,
+    bortle: bortle ?? this.bortle,
+    onBortle: onBortle ?? this.onBortle,
+  );
 
   @override
-  AppPalette lerp(AppPalette? other, double t) =>
-      other == null || t < 0.5 ? this : other;
+  AppPalette lerp(AppPalette? other, double t) {
+    if (other == null || t == 0) return this;
+    if (t == 1) return other;
+    assert(bortle.length == other.bortle.length);
+    assert(onBortle.length == other.onBortle.length);
+    return AppPalette(
+      fieldMode: t < .5 ? fieldMode : other.fieldMode,
+      brightness: t < .5 ? brightness : other.brightness,
+      textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
+      textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
+      textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
+      textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
+      surfaceRaised: Color.lerp(surfaceRaised, other.surfaceRaised, t)!,
+      border: Color.lerp(border, other.border, t)!,
+      controlBorder: Color.lerp(controlBorder, other.controlBorder, t)!,
+      statusFits: Color.lerp(statusFits, other.statusFits, t)!,
+      statusTight: Color.lerp(statusTight, other.statusTight, t)!,
+      statusDoesNotFit: Color.lerp(
+        statusDoesNotFit,
+        other.statusDoesNotFit,
+        t,
+      )!,
+      statusNoWindow: Color.lerp(statusNoWindow, other.statusNoWindow, t)!,
+      statusNeutral: Color.lerp(statusNeutral, other.statusNeutral, t)!,
+      stateUnsaved: Color.lerp(stateUnsaved, other.stateUnsaved, t)!,
+      stateSettled: Color.lerp(stateSettled, other.stateSettled, t)!,
+      stateQuiet: Color.lerp(stateQuiet, other.stateQuiet, t)!,
+      muted: Color.lerp(muted, other.muted, t)!,
+      caution: Color.lerp(caution, other.caution, t)!,
+      sunEvent: Color.lerp(sunEvent, other.sunEvent, t)!,
+      twilightEvent: Color.lerp(twilightEvent, other.twilightEvent, t)!,
+      moon: Color.lerp(moon, other.moon, t)!,
+      selected: Color.lerp(selected, other.selected, t)!,
+      chartDay: Color.lerp(chartDay, other.chartDay, t)!,
+      chartTwilight: Color.lerp(chartTwilight, other.chartTwilight, t)!,
+      chartDark: Color.lerp(chartDark, other.chartDark, t)!,
+      chartWindow: Color.lerp(chartWindow, other.chartWindow, t)!,
+      chartTarget: Color.lerp(chartTarget, other.chartTarget, t)!,
+      chartMoon: Color.lerp(chartMoon, other.chartMoon, t)!,
+      chartMinAltitude: Color.lerp(
+        chartMinAltitude,
+        other.chartMinAltitude,
+        t,
+      )!,
+      chartNow: Color.lerp(chartNow, other.chartNow, t)!,
+      chartNowCentre: Color.lerp(chartNowCentre, other.chartNowCentre, t)!,
+      chartGrid: Color.lerp(chartGrid, other.chartGrid, t)!,
+      chartLabel: Color.lerp(chartLabel, other.chartLabel, t)!,
+      swatchBorder: Color.lerp(swatchBorder, other.swatchBorder, t)!,
+      bortle: List.generate(
+        bortle.length,
+        (i) => Color.lerp(bortle[i], other.bortle[i], t)!,
+      ),
+      onBortle: List.generate(
+        onBortle.length,
+        (i) => Color.lerp(onBortle[i], other.onBortle[i], t)!,
+      ),
+    );
+  }
 }

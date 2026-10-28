@@ -1,0 +1,144 @@
+<!doctype html><meta charset="utf-8"><title>AGENTS.md</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>AGENTS.md</h1><p>AGENTS.md</p><p>SHA-256: 830c16e7a50cd7d39dc77f55925f55de223a4bd02e99ed47343c628c169aef3a</p><pre>   1  # Culmina — shared agent instructions
+   2  
+   3  Culmina is a Flutter/Dart Android astrophotography planner and observing log.
+   4  The technical Dart package is `astroplan`; keep existing imports and identifiers.
+   5  Plan a night, site, target and rig; save a Capture Plan; record imaging results.
+   6  The app does not control cameras or mounts.
+   7  
+   8  ## Source and scope
+   9  
+  10  - This file is the shared instruction source for Codex, Claude and Gemini.
+  11  - Follow the current user task; skills and archived findings are not a task queue.
+  12  - Establish behavior from current source and tests before editing docs or code.
+  13  - Read only the relevant skill and supporting reference for the requested work.
+  14  - Keep new or substantially revised project documentation in English.
+  15  - Preserve unrelated local changes and historical evidence; report checks actually performed.
+  16  
+  17  ## Architecture map
+  18  
+  19  - `lib/main.dart`: startup, catalog seeding and concrete dependency composition.
+  20  - `lib/presentation/app_view_models.dart`: injected interfaces, services and ViewModels.
+  21  - `lib/presentation/`: screens, shared UI, widgets and screen-scoped Provider/ViewModels.
+  22  - `lib/presentation/navigation/app_router.dart`: go_router shell and root overlay routes.
+  23  - Bottom tabs: Tonight, Logbook, Library and Settings; Plan opens above the shell.
+  24  - Library contains rigs, targets and sites; Night, Moon and Weather have detail views.
+  25  - `lib/domain/`: models, repository interfaces and astronomical/capture calculations.
+  26  - `lib/data/`: Drift repositories, preferences, HTTP, backup and platform adapters.
+  27  - `lib/core/`: clocks/time, units, diagnostics, configuration and theme tokens.
+  28  - `lib/data/database/app_database.dart`: native SQLite database, currently schema v27.
+  29  - `lib/data/database/schema_versions.dart` and `lib/data/database/generated_migrations/`: migrations.
+  30  - `drift_schemas/`: exported JSON snapshots; `build.yaml` configures Drift generation.
+  31  - `assets/catalog/catalog_v2.json`: bundled OpenNGC subset; filename is not catalog version.
+  32  - `test/`: core/data/domain/presentation regressions; `test/support/` contains shared fakes.
+  33  - `integration_test/` and `test_driver/`: host flows and separate Android capture routes.
+  34  - `tool/`: verification, CI partitioning, catalog generation and design helper scripts.
+  35  - `design/`: currently empty; historical browser helpers require missing lab inputs.
+  36  - `.audit/atlas/index.html`: Visual Atlas; manifest, boards and captures accompany it.
+  37  - `.audit/` and `docs/archive/`: historical evidence; inspect as needed, preserve contents.
+  38  - `.agents/skills/`: active project recipes; `.agents/rules/` holds compatibility pointers.
+  39  
+  40  ## Technical invariants
+  41  
+  42  - Keep UI, ViewModels, domain interfaces/calculations and data implementations separated.
+  43  - Reuse Provider, repository injection and existing router/draft guards for focused changes.
+  44  - Keep catalogs, saved plans, calculations and Logbook useful offline.
+  45  - Forecast retrieval, map tiles and optional place-name lookup need network access.
+  46  - Preserve weather cache/freshness/error states and opt-in reverse-geocoding consent.
+  47  - Unknown is not zero: preserve missing values, units, provenance and partial observations.
+  48  - Never invent sensor specifications, catalog values, measurements or a quality score.
+  49  - Relative stacking gain is not absolute SNR; storage estimates retain their evidence kind.
+  50  - AF/MF and white balance are descriptive; do not invent numeric focus measurements.
+  51  - SessionNight is 24 hours from site mean solar noon in UTC; retain zone/DST display semantics.
+  52  - A placeholder location is not a selected site; preserve no-site and missing-input states.
+  53  - CaptureBudgetCalculator and FitAnalyzer share atomic events; keep timing assumptions aligned.
+  54  - Preserve draft, explicit Save plan, fit verdict and recorded-result distinctions.
+  55  - Preserve local records, supported migrations and backup/restore compatibility.
+  56  - Maintain Light, Dark and Field Red, including the root field color filter.
+  57  - Theme definitions live in `lib/core/theme/`; inspect semantic roles and actual callers.
+  58  - Use existing Geist typography, spacing, radii and reduced-motion handling for local UI fixes.
+  59  - Keep meaningful words, accessible actions, text scaling and reachable controls.
+  60  
+  61  ## Commands and verification
+  62  
+  63  Run from the repository root with Flutter/Dart on PATH and resolved dependencies.
+  64  `pubspec.yaml` requires Dart `^3.13.3`; CI pins its SDK in `.github/workflows/ci.yml`.
+  65  Inspect the installed SDK and lockfile; do not upgrade dependencies as a bootstrap step.
+  66  
+  67  ```sh
+  68  flutter pub get
+  69  flutter run
+  70  flutter analyze --no-pub
+  71  flutter test --no-pub
+  72  flutter test --no-pub test/data/database/schema_migration_test.dart
+  73  dart run build_runner build
+  74  dart run drift_dev schema steps drift_schemas/ lib/data/database/schema_versions.dart
+  75  flutter build apk --debug
+  76  ```
+  77  
+  78  - Code generation changes files: run for changed database inputs and inspect the diff.
+  79  - Preserve older schema snapshots; test migrations against supported stored databases.
+  80  - Format changed Dart files; select tests from changed behavior and its callers.
+  81  - `dart run tool/check.dart --checks-only` runs encoding, formatting and analysis checks.
+  82  - `dart run tool/check.dart` also runs unit tests and each host-capable integration file.
+  83  - CI implementation/job selection live in `tool/ci.py` and `.github/workflows/ci.yml`.
+  84  - Run host integration files separately; Android-only capture tests need an Android device.
+  85  - For instruction-only edits, validate paths, frontmatter and diffs; app checks are optional.
+  86  
+  87  Native UI renders in PowerShell (synthetic fixtures; fresh evidence goes to build):
+  88  
+  89  ```powershell
+  90  New-Item -ItemType Directory -Path build/ui-renders -Force | Out-Null
+  91  $env:CULMINA_AUDIT_RENDERS = &#x27;build/ui-renders&#x27;
+  92  $env:CULMINA_AUDIT_SHOTS = &#x27;home,plan&#x27;
+  93  $env:CULMINA_AUDIT_THEMES = &#x27;light,dark,field&#x27;
+  94  $env:CULMINA_AUDIT_SCALE = &#x27;1&#x27;
+  95  flutter test --no-pub test/presentation/design_system/concept_b_app_audit_renders_test.dart
+  96  Remove-Item Env:CULMINA_AUDIT_RENDERS, Env:CULMINA_AUDIT_SHOTS, Env:CULMINA_AUDIT_THEMES, Env:CULMINA_AUDIT_SCALE
+  97  ```
+  98  
+  99  The harness loads real fonts and uses in-memory state; inspect supported shot names.
+ 100  The archived Atlas has 40 Dark/100%/375×812 captures with dated source provenance.
+ 101  Check its manifest before reusing frames; archive presence does not prove current behavior.
+ 102  Keep browser, Flutter host, Android/device, accessibility and owner acceptance evidence distinct.
+ 103  
+ 104  ## Active project skills
+ 105  
+ 106  Entrypoints are `.agents/skills/&lt;name&gt;/SKILL.md`; the [skill index](.agents/skills/README.md) links them.
+ 107  Upstream metadata and lock hashes describe acquisition provenance, not current local hashes.
+ 108  
+ 109  | Skill | Invoke for |
+ 110  | --- | --- |
+ 111  | culmina-design-components | Existing components, variants, callbacks and adopters |
+ 112  | culmina-design-rules | Product meaning, missing data and scientific invariants |
+ 113  | culmina-design-spacing | Local density, alignment, shape and motion |
+ 114  | culmina-design-tokens | Semantic colors/surfaces across all three themes |
+ 115  | culmina-design-typography | Text roles, weight, wrapping and numeric readability |
+ 116  | dart-add-unit-test | Focused domain/data regressions with existing fakes |
+ 117  | dart-build-cli-app | Existing Dart utilities under tool/ |
+ 118  | dart-collect-coverage | A specifically scoped coverage question |
+ 119  | dart-fix-runtime-errors | A reproduced exception and stack trace |
+ 120  | dart-generate-test-mocks | Handwritten fakes; generated mocks only if adopted |
+ 121  | dart-resolve-package-conflicts | A concrete dependency resolution conflict |
+ 122  | dart-run-static-analysis | Scoped analyzer diagnostics and corrections |
+ 123  | dart-use-doc-examples | External Dartdoc examples for a documentation task |
+ 124  | dart-use-path-package | Existing path-package callers and file-path behavior |
+ 125  | dart-use-pattern-matching | A named refactor preserving cases and null semantics |
+ 126  | dart-use-primary-constructors | Explicit syntax evaluation after SDK verification |
+ 127  | dart-write-documentation | Dart API documentation and doc comments |
+ 128  | flutter-add-integration-test | Existing host/device integration flows |
+ 129  | flutter-add-widget-preview | A specifically requested isolated widget preview |
+ 130  | flutter-add-widget-test | Component rendering and interaction regressions |
+ 131  | flutter-apply-architecture-best-practices | Existing layer/ViewModel boundaries |
+ 132  | flutter-build-responsive-layout | A named adaptive layout task and its sizes |
+ 133  | flutter-fix-layout-issues | A specific overflow, constraint or ParentData failure |
+ 134  | flutter-implement-json-serialization | Model/backup JSON contracts and round trips |
+ 135  | flutter-setup-declarative-routing | Routes, shell, Back behavior and draft guards |
+ 136  | flutter-use-http-package | Injected HTTP services and provider contracts |
+ 137  
+ 138  ## Current external documentation
+ 139  
+ 140  Use Context7 for library/framework/SDK/API/CLI questions, including unfamiliar flags.
+ 141  Resolve the library ID first unless the user supplies an exact `/org/project` ID.
+ 142  Choose an authoritative/version-matched result, then query one concept per call.
+ 143  Use fetched docs with the installed SDK and actual callers; disclose failed lookups.
+ 144  General code reasoning and source-only refactors need no library-documentation lookup.</pre>

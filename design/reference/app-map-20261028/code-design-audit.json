@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "title": "Culmina — independent source audit of design-rule adherence",
+  "date": "2026-10-28",
+  "head": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "mode": "Read-only production source audit by delegated agent",
+  "verdict": "Substantial source-backed adoption with two confirmed local discrepancies and two implementation risks requiring current visual/runtime validation. No whole-app compliance score is warranted.",
+  "summary": {
+    "confirmed": 2,
+    "risks": 2,
+    "strengths": 8
+  },
+  "findings": [
+    {
+      "id": "CODE-01",
+      "title": "Custom switches bypass reduced-motion handling",
+      "status": "confirmed_code_violation",
+      "priority": "P2",
+      "rule": {
+        "file": ".agents/skills/culmina-design-spacing/SKILL.md",
+        "line": 15,
+        "excerpt": "- Use AppMotion and its reduced-motion handling. Source-owned scientific sky ramps and stacking-gain gradients are functional data presentation, not permission to add decorative effects."
+      },
+      "evidence": [
+        {
+          "file": "lib/presentation/shared/hybrid_parts.dart",
+          "line": 647,
+          "excerpt": "child: AnimatedAlign("
+        },
+        {
+          "file": "lib/presentation/shared/hybrid_parts.dart",
+          "line": 648,
+          "excerpt": "duration: const Duration(milliseconds: 120),"
+        },
+        {
+          "file": "lib/presentation/shared/hybrid_parts.dart",
+          "line": 740,
+          "excerpt": "HybridSwitch(value: value, onChanged: onChanged),"
+        },
+        {
+          "file": "lib/presentation/screens/settings/settings_screen.dart",
+          "line": 201,
+          "excerpt": "HybridSwitchRow("
+        }
+      ],
+      "impact": "HybridSwitch always configures a 120 ms alignment animation, including when the device requests disabled animations. This is an actual production dependency chain, not an unused gallery component.",
+      "minimalSuggestion": "Use AppMotion.duration(context, AppMotion.short) for this animation and the existing motion curve; verify the disabled-animation branch.",
+      "risk": "Low; switch state, semantics, hit target and persistence must remain unchanged.",
+      "acceptance": "A value change with disableAnimations=true has zero configured animation duration; normal mode uses the adopted short duration. This audit did not execute a runtime toggle."
+    },
+    {
+      "id": "CODE-02",
+      "title": "Total session time caption unconditionally promises setup and calibration",
+      "status": "confirmed_code_copy_mismatch",
+      "priority": "P2",
+      "rule": {
+        "file": ".agents/skills/culmina-design-rules/SKILL.md",
+        "line": 13,
+        "excerpt": "- Preserve Capture Plan assumptions, calibration policies, exposure/filter groups and fit reasons. Follow actual camera-class validation rather than hiding inconvenient inputs."
+      },
+      "evidence": [
+        {
+          "file": "lib/presentation/widgets/capture_plan/capture_budget_summary.dart",
+          "line": 104,
+          "excerpt": "note: 'with overheads, setup and calibration',"
+        },
+        {
+          "file": "lib/presentation/widgets/capture_plan/capture_budget_summary.dart",
+          "line": 248,
+          "excerpt": "budget.setupMs == null"
+        },
+        {
+          "file": "lib/domain/services/capture_budget_calculator.dart",
+          "line": 243,
+          "excerpt": "windowLoadMs + outsideWindowCalibrationMs + (setupMs ?? 0);"
+        },
+        {
+          "file": "lib/presentation/screens/home/home_screen.dart",
+          "line": 214,
+          "excerpt": "const CaptureBudgetSummary(),"
+        }
+      ],
+      "impact": "The displayed caption implies setup is included even when the detail explicitly says Not included. This is a wording/assumption mismatch, not evidence that the numeric calculator is wrong.",
+      "minimalSuggestion": "Derive the local caption from included budget components; explicitly disclose omitted setup and preserve null versus configured zero.",
+      "risk": "Low; avoid changing calculations or conflating in-window time with total session budget.",
+      "acceptance": "No-setup, zero-setup and positive-setup states have captions consistent with expanded facts; calibration placement meanings and all durations remain unchanged."
+    },
+    {
+      "id": "CODE-03",
+      "title": "App-bar title height depends on an estimated action width",
+      "status": "source_risk_requires_rendering",
+      "priority": "P2",
+      "rule": {
+        "file": ".agents/skills/culmina-design-typography/SKILL.md",
+        "line": 12,
+        "excerpt": "- Diagnose available width, wrapping and padding before shrinking text. Preserve the user's text scaler and full accessible labels. Compact chart/calendar/navigation roles are explicit exceptions in current source, not a global size prescription."
+      },
+      "evidence": [
+        {
+          "file": "lib/presentation/shared/hybrid_app_bar.dart",
+          "line": 57,
+          "excerpt": "48 * effectiveActions.length -"
+        },
+        {
+          "file": "lib/presentation/shared/hybrid_app_bar.dart",
+          "line": 96,
+          "excerpt": "actionsPadding: EdgeInsets.only(right: hasLeading ? 8 : 16),"
+        },
+        {
+          "file": "lib/presentation/screens/logbook/session_detail_screen.dart",
+          "line": 139,
+          "excerpt": "title: Text(entryTitle(s)),"
+        }
+      ],
+      "impact": "The height measurement assumes 48 pixels for each action and does not subtract the separately configured actionsPadding. Actual title layout can have a narrower constraint, especially with long identity strings and large text. Source inspection alone does not establish visible clipping.",
+      "minimalSuggestion": "Compare the measured width with actual toolbar title constraints for the saved-entry caller before choosing a bounded correction; retain the text scaler and full accessible title.",
+      "risk": "Medium if changing the shared helper, because many screens adopt it.",
+      "acceptance": "Render long entry names at 375/412 widths and 100/150/200% in all themes; inspect title pixels and control reachability, not just absence of exceptions."
+    },
+    {
+      "id": "CODE-04",
+      "title": "Field tracking guidance uses the dim secondary status role",
+      "status": "source_readability_risk_requires_device_and_rendering",
+      "priority": "P2",
+      "rule": {
+        "file": ".agents/skills/culmina-design-tokens/SKILL.md",
+        "line": 13,
+        "excerpt": "4. Inspect affected foreground/background pairs in Light, Dark and Field Red. Keep red/black field presentation and the production filter in `lib/main.dart`; evaluate accessibility against actual rendered uses rather than assuming all themes meet a threshold."
+      },
+      "evidence": [
+        {
+          "file": "lib/presentation/widgets/capture_plan_widget.dart",
+          "line": 442,
+          "excerpt": "style: small(palette.statusNeutral),"
+        },
+        {
+          "file": "lib/core/theme/app_palette.dart",
+          "line": 215,
+          "excerpt": "statusNeutral: AppColors.fieldTextSecondary,"
+        },
+        {
+          "file": "lib/core/theme/app_colors.dart",
+          "line": 44,
+          "excerpt": "static const Color fieldTextSecondary = Color(0xFFAA0000);"
+        },
+        {
+          "file": "lib/core/theme/app_colors.dart",
+          "line": 41,
+          "excerpt": "static const Color fieldSurface = Color(0xFF110000);"
+        }
+      ],
+      "impact": "Unknown tracking guidance resolves to #AA0000 against field grouping surfaces defined as #110000. This source pairing merits a rendered readability check, but code colors alone are not visual accessibility acceptance or a physical low-light finding.",
+      "minimalSuggestion": "Inspect the current warning and corrective-action render; if readability is insufficient, use an existing higher-contrast role locally without turning an unknown condition into a confirmed failure.",
+      "risk": "Medium: field brightness/comfort and semantics need owner/device review.",
+      "acceptance": "Verify actual rendered pairings, conditional wording, red-only output and readability on a physical low-light device."
+    }
+  ],
+  "strengths": [
+    {
+      "title": "Geist roles are centralized and adopted by themes",
+      "evidence": [
+        {
+          "file": "lib/core/theme/app_typography.dart",
+          "line": 13,
+          "excerpt": "fontFamily: HybridTokens.fontFamily,"
+        },
+        {
+          "file": "lib/core/theme/app_theme.dart",
+          "line": 26,
+          "excerpt": "fontFamily: _family,"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "Field mode retains the production root color filter",
+      "evidence": [
+        {
+          "file": "lib/main.dart",
+          "line": 360,
+          "excerpt": "? ColorFiltered(colorFilter: AppTheme.fieldFilter, child: content)"
+        },
+        {
+          "file": "lib/core/theme/app_theme.dart",
+          "line": 246,
+          "excerpt": "static const ColorFilter fieldFilter = ColorFilter.matrix(fieldFilterMatrix);"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "Fit and working-plan persistence states are independently represented",
+      "evidence": [
+        {
+          "file": "lib/presentation/shared/plan_state.dart",
+          "line": 55,
+          "excerpt": "static PlanState forWorkingPlan("
+        },
+        {
+          "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+          "line": 400,
+          "excerpt": "state: missing != null ? FitState.needsInput : fit.state,"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "Unsaved-plan replacement retains Save / Discard / Cancel and stops after failed Save",
+      "evidence": [
+        {
+          "file": "lib/presentation/shared/unsaved_plan_prompt.dart",
+          "line": 29,
+          "excerpt": "if (!plan.hasUnsavedChanges) return LeavingPlan.keep;"
+        },
+        {
+          "file": "lib/presentation/shared/unsaved_plan_prompt.dart",
+          "line": 47,
+          "excerpt": "return saved ? LeavingPlan.keep : null;"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "Placeholder site does not supply a selected imaging night",
+      "evidence": [
+        {
+          "file": "lib/presentation/viewmodels/session_plan_viewmodel.dart",
+          "line": 101,
+          "excerpt": "SessionNight? get sessionNight => _site.isDefaultLocation ? null : _night;"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "SessionNight enforces UTC instants and a fixed 24-hour interval",
+      "evidence": [
+        {
+          "file": "lib/domain/models/session_night.dart",
+          "line": 28,
+          "excerpt": "if (!startUtc.isUtc || !endUtc.isUtc) {"
+        },
+        {
+          "file": "lib/domain/models/session_night.dart",
+          "line": 31,
+          "excerpt": "if (endUtc.difference(startUtc) != length) {"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "Storage unknown and per-group relative gain remain explicitly qualified",
+      "evidence": [
+        {
+          "file": "lib/presentation/widgets/capture_plan/capture_budget_summary.dart",
+          "line": 114,
+          "excerpt": ": 'Unknown',"
+        },
+        {
+          "file": "lib/presentation/widgets/capture_plan/capture_budget_summary.dart",
+          "line": 184,
+          "excerpt": "'Relative gain is ideal √N within comparable light frames, not '"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    },
+    {
+      "title": "Disclosure and edit-change cues use reduced-motion-aware AppMotion",
+      "evidence": [
+        {
+          "file": "lib/presentation/shared/collapsible_section.dart",
+          "line": 152,
+          "excerpt": "duration: AppMotion.duration(context, AppMotion.short),"
+        },
+        {
+          "file": "lib/presentation/shared/change_mark.dart",
+          "line": 32,
+          "excerpt": "final duration = AppMotion.duration(context, AppMotion.highlight);"
+        }
+      ],
+      "qualification": "Source-confirmed implementation; not an exhaustive runtime pass."
+    }
+  ],
+  "scope": [
+    "AGENTS.md",
+    "All five active Culmina design skills",
+    "Component Forms and Data-display references",
+    "Semantic token role map",
+    "Current production theme, motion, app-bar, Plan, Tonight, Settings, time and persistence callers"
+  ],
+  "checksPerformed": [
+    "Read active guidance rather than treating compatibility pointers as independent rules",
+    "Traced HybridSwitch through HybridSwitchRow into production Settings",
+    "Compared unconditional time caption with optional setup detail and owning domain formula",
+    "Inspected app-bar measurement and saved-entry adopter",
+    "Inspected source Field foreground/surface definitions and the tracking warning adopter",
+    "Inspected no-site, UTC/night, plan-state and leaving-guard implementation",
+    "Searched presentation code for scaler clamps, custom font families, raw colors and animation durations; matches were leads, not automatically violations"
+  ],
+  "testsExecuted": [],
+  "limitations": [
+    "No production changes or dependency changes were made.",
+    "No new renders, Android interactions, TalkBack sessions, physical low-light checks or runtime switch toggles were performed by this subagent.",
+    "This is representative code inspection, not proof that every screen/state follows every rule.",
+    "Existing earlier visual findings were not used as proof for the source-only risk classifications.",
+    "Hardcoded spacing/radii matching existing local compositions were not treated as violations merely because they were literals.",
+    "A source role declaration or test file presence is not a runtime or owner-acceptance pass."
+  ]
+}

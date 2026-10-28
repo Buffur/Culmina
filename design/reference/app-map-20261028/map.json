@@ -1,0 +1,2836 @@
+{
+  "title": "Culmina — current application map",
+  "date": "2026-10-28",
+  "head": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "branch": "develop",
+  "nodes": [
+    {
+      "id": "tonight",
+      "label": "Tonight",
+      "area": "Tonight",
+      "kind": "Tab",
+      "routes": [
+        "/tonight"
+      ],
+      "widget": "TonightHomeScreen",
+      "source": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 49,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "shots": [
+        "home",
+        "home_timeline",
+        "home_nosite"
+      ],
+      "note": "The tab can display a selected night other than tonight.",
+      "availableShots": [
+        "home",
+        "home_timeline",
+        "home_nosite"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "candidates",
+      "label": "What can I image?",
+      "area": "Tonight",
+      "kind": "Screen",
+      "routes": [
+        "/tonight/candidates"
+      ],
+      "widget": "TonightCandidatesScreen",
+      "source": {
+        "file": "lib/presentation/screens/tonight/tonight_candidates_screen.dart",
+        "line": 35,
+        "sha256": "eb6127e32b7e3d3bdc5ebd2fe70f3d3e87e031d0aba241550f7889b52b9e760f"
+      },
+      "shots": [
+        "home_candidates"
+      ],
+      "note": "Selecting a row changes the working target and returns to the caller; it does not create a scored recommendation.",
+      "availableShots": [
+        "home_candidates"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "plan",
+      "label": "Capture Plan",
+      "area": "Plan",
+      "kind": "Root overlay",
+      "routes": [
+        "/session/:id"
+      ],
+      "widget": "HomeScreen",
+      "source": {
+        "file": "lib/presentation/screens/home/home_screen.dart",
+        "line": 54,
+        "sha256": "ddec02193e632ae679500eea7d0e85caaec7628f5afd6652ccdf98433edcabca"
+      },
+      "shots": [
+        "plan",
+        "plan_b",
+        "plan_capture",
+        "plan_gain_open",
+        "plan_budget_assumptions",
+        "plan_empty"
+      ],
+      "note": "SessionPlannerRoute wraps this screen. current opens the working plan; a numeric id can open a stored plan. Save is an action on this screen, not a destination.",
+      "availableShots": [
+        "plan",
+        "plan_b",
+        "plan_capture",
+        "plan_gain_open",
+        "plan_budget_assumptions",
+        "plan_empty"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "context",
+      "label": "Site and night",
+      "area": "Plan",
+      "kind": "Imperative page",
+      "routes": [],
+      "widget": "PlanContextScreen",
+      "source": {
+        "file": "lib/presentation/screens/home/plan_context_screen.dart",
+        "line": 29,
+        "sha256": "e62b34430a36f55aaece89ec35d17c71cf0d19577f10c21506c2f48e5d5d4964"
+      },
+      "shots": [
+        "plan_context"
+      ],
+      "note": "Apply changes updates the working draft. Close discards unapplied choices.",
+      "availableShots": [
+        "plan_context"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "choose_target",
+      "label": "Choose target",
+      "area": "Plan",
+      "kind": "Root overlay",
+      "routes": [
+        "/select/target"
+      ],
+      "widget": "PlanTargetScreen",
+      "source": {
+        "file": "lib/presentation/screens/home/plan_target_screen.dart",
+        "line": 26,
+        "sha256": "17f167fd21a97e135e6f89127b91724d12955cc80dfa94948b2247acbbdb48c3"
+      },
+      "shots": [
+        "plan_target"
+      ],
+      "note": "Scoped selection with Apply changes.",
+      "availableShots": [
+        "plan_target"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "choose_rig",
+      "label": "Choose rig",
+      "area": "Plan",
+      "kind": "Root overlay",
+      "routes": [
+        "/select/rig"
+      ],
+      "widget": "PlanRigScreen",
+      "source": {
+        "file": "lib/presentation/screens/home/plan_rig_screen.dart",
+        "line": 28,
+        "sha256": "1b372ab3da0e3022bc729e8d4d816879889896c8ec8bf5a4e2d140dfc1dd5fc3"
+      },
+      "shots": [
+        "plan_rig"
+      ],
+      "note": "?for=plan preserves the create-and-select rig flow. An empty list can replace this screen with Manage rigs.",
+      "availableShots": [
+        "plan_rig"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "block",
+      "label": "Capture block editor",
+      "area": "Plan",
+      "kind": "Imperative editor",
+      "routes": [],
+      "widget": "showCaptureBlockDialog",
+      "source": {
+        "file": "lib/presentation/widgets/capture_plan/capture_block_dialog.dart",
+        "line": 60,
+        "sha256": "8424a60e5a0c85c657ca09554abc3e717f7634aeb195122afec7177efb9e6816"
+      },
+      "shots": [
+        "plan_editor",
+        "plan_editor_bottom"
+      ],
+      "note": "Despite its historical function name, this is a full-page editor. Add/Edit returns a block; the caller applies it with Undo.",
+      "availableShots": [
+        "plan_editor",
+        "plan_editor_bottom"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "calibration",
+      "label": "Build calibration frames",
+      "area": "Plan",
+      "kind": "Imperative preview page",
+      "routes": [],
+      "widget": "_CalibrationPreview",
+      "source": {
+        "file": "lib/presentation/widgets/capture_plan/calibration_preview_dialog.dart",
+        "line": 42,
+        "sha256": "987358935882eaa8e1c9110788e6593d71434cd0c66ab897da4609903400c401"
+      },
+      "shots": [
+        "plan_cal",
+        "plan_cal_b"
+      ],
+      "note": "A full-page preview, despite the historical dialog filename. Explicit application; calibration inside/outside the window and from a library remain distinct.",
+      "availableShots": [
+        "plan_cal",
+        "plan_cal_b"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "assumptions",
+      "label": "Plan assumptions",
+      "area": "Plan",
+      "kind": "Imperative editor",
+      "routes": [],
+      "widget": "PlanOverridesEditor",
+      "source": {
+        "file": "lib/presentation/widgets/capture_plan/plan_overrides_editor.dart",
+        "line": 30,
+        "sha256": "0ac4db9f4e3e5cd2195742b5630c467a1a7e7336f85d6c5ee7029d28617fa791"
+      },
+      "shots": [
+        "plan_asm"
+      ],
+      "note": "These are per-plan overrides, separate from global planning defaults.",
+      "availableShots": [
+        "plan_asm"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "plan_settings",
+      "label": "Planning settings over Plan",
+      "area": "Plan",
+      "kind": "Root overlay",
+      "routes": [
+        "/plan/settings"
+      ],
+      "widget": "SettingsScreen",
+      "source": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 51,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "shots": [
+        "plan_settings"
+      ],
+      "note": "Global defaults; Back returns to Plan. Different scope from per-plan assumptions.",
+      "availableShots": [
+        "plan_settings"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "guard",
+      "label": "Unsaved changes",
+      "area": "Shared",
+      "kind": "Dialog",
+      "routes": [],
+      "widget": "askUnsavedChanges",
+      "source": {
+        "file": "lib/presentation/shared/confirmation_patterns.dart",
+        "line": 18,
+        "sha256": "5df999727dd4a60fbb5164d3d0ca23deafadcfe008294ce281220ced57c06d60"
+      },
+      "shots": [
+        "lib_rig_unsaved"
+      ],
+      "note": "Save / Discard / Cancel. The captured example is a Library editor; Plan wording and callers vary.",
+      "availableShots": [
+        "lib_rig_unsaved"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "night",
+      "label": "Night",
+      "area": "Conditions",
+      "kind": "Root overlay",
+      "routes": [
+        "/night"
+      ],
+      "widget": "NightMoonScreen",
+      "source": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 41,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "shots": [
+        "night",
+        "night_reading_body",
+        "night_exact_intervals"
+      ],
+      "note": "Night and Moon share a page controller; /moon opens the Moon page.",
+      "availableShots": [
+        "night",
+        "night_reading_body",
+        "night_exact_intervals"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "moon",
+      "label": "Moon",
+      "area": "Conditions",
+      "kind": "Root overlay",
+      "routes": [
+        "/moon"
+      ],
+      "widget": "NightMoonScreen",
+      "source": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 41,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "shots": [
+        "moon",
+        "moon_b"
+      ],
+      "note": "The Moon page of NightMoonScreen, not an independent bottom tab.",
+      "availableShots": [
+        "moon",
+        "moon_b"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "weather",
+      "label": "Weather",
+      "area": "Conditions",
+      "kind": "Root overlay",
+      "routes": [
+        "/weather"
+      ],
+      "widget": "WeatherDetailScreen",
+      "source": {
+        "file": "lib/presentation/screens/details/weather_detail_screen.dart",
+        "line": 7,
+        "sha256": "2988b080e195dba24e65c5fb20ce4bae7c5fb8b00b55be03fd16517398059aab"
+      },
+      "shots": [
+        "weather",
+        "weather_charts_b",
+        "weather_forecast_table",
+        "weather_offline"
+      ],
+      "note": "Wrapper opens NightMoonScreen at page 2. Night / Moon / Weather are panes of one conditions browser; switching pane does not require a new router path. Forecast / cache / offline-refresh states remain distinct.",
+      "availableShots": [
+        "weather",
+        "weather_charts_b",
+        "weather_forecast_table",
+        "weather_offline"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "logbook",
+      "label": "Logbook",
+      "area": "Logbook",
+      "kind": "Tab",
+      "routes": [
+        "/sessions"
+      ],
+      "widget": "LogbookScreen",
+      "source": {
+        "file": "lib/presentation/screens/logbook/logbook_screen.dart",
+        "line": 74,
+        "sha256": "6db298c6d875135170d8d08d5bd60088c9bfc13e40f6dcbceea7a805dd84a61a"
+      },
+      "shots": [
+        "logbook"
+      ],
+      "note": "The technical route is /sessions; the visible tab is Logbook.",
+      "availableShots": [
+        "logbook"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "entry",
+      "label": "Saved plan / entry",
+      "area": "Logbook",
+      "kind": "Branch detail",
+      "routes": [
+        "/sessions/:id"
+      ],
+      "widget": "SessionDetailScreen",
+      "source": {
+        "file": "lib/presentation/screens/logbook/session_detail_screen.dart",
+        "line": 63,
+        "sha256": "8b22402e357ce298bc83c8055c440e36a55fd847e74bd600e7a60fb138114278"
+      },
+      "shots": [
+        "entry",
+        "entry_b"
+      ],
+      "note": "Shows planned and recorded information. Upcoming saved plans can reopen in Plan; other states offer record/edit result or copy.",
+      "availableShots": [
+        "entry",
+        "entry_b"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "result",
+      "label": "Record result",
+      "area": "Logbook",
+      "kind": "Root overlay",
+      "routes": [
+        "/session/:id/results"
+      ],
+      "widget": "ResultsScreen",
+      "source": {
+        "file": "lib/presentation/screens/execution/results_screen.dart",
+        "line": 39,
+        "sha256": "aa46c223620916ba7eb2a12a5784d272426304dc566989b1313fa28efc315aec"
+      },
+      "shots": [
+        "result"
+      ],
+      "note": "Recorded result is distinct from fit and a saved plan. Recording availability depends on the saved night and entry state.",
+      "availableShots": [
+        "result"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "progress",
+      "label": "Progress by target",
+      "area": "Logbook",
+      "kind": "Branch detail",
+      "routes": [
+        "/sessions/progress"
+      ],
+      "widget": "ProgressScreen",
+      "source": {
+        "file": "lib/presentation/screens/logbook/progress_screen.dart",
+        "line": 25,
+        "sha256": "2ccb8a5a8f07b367cb1bd601b530e5bb8b1df83eade0eb0c241aa50181e1cb23"
+      },
+      "shots": [
+        "logbook_progress",
+        "progress_guide_open"
+      ],
+      "note": "Aggregates recorded results; a planned integration is not a recorded result.",
+      "availableShots": [
+        "logbook_progress",
+        "progress_guide_open"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "library",
+      "label": "Library",
+      "area": "Library",
+      "kind": "Tab",
+      "routes": [
+        "/library"
+      ],
+      "widget": "LibraryScreen",
+      "source": {
+        "file": "lib/presentation/screens/library/library_screen.dart",
+        "line": 24,
+        "sha256": "02caf67a9af81d4c5c62be4c5066de66210e4e40a573c1cf15cbcba4680c1a0f"
+      },
+      "shots": [
+        "library"
+      ],
+      "note": "Manages rigs, targets and sites.",
+      "availableShots": [
+        "library"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "rigs",
+      "label": "Rigs",
+      "area": "Library",
+      "kind": "Branch list",
+      "routes": [
+        "/library/rigs"
+      ],
+      "widget": "EquipmentSelectionScreen",
+      "source": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 40,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "shots": [
+        "lib_rigs"
+      ],
+      "note": "ListMode.manage; tapping opens a record rather than silently selecting a plan rig.",
+      "availableShots": [
+        "lib_rigs"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "rig",
+      "label": "Rig record",
+      "area": "Library",
+      "kind": "Imperative detail",
+      "routes": [],
+      "widget": "RigDetailScreen",
+      "source": {
+        "file": "lib/presentation/screens/equipment/rig_detail_screen.dart",
+        "line": 66,
+        "sha256": "2e43e07ad569762b7a6bc7a1298c5f2e1707b9fb63e5210d7ec2c1dca6b329aa"
+      },
+      "shots": [
+        "lib_rig",
+        "lib_rig_full"
+      ],
+      "note": "Existing profile with specifications and their evidence; no invented sensor data.",
+      "availableShots": [
+        "lib_rig",
+        "lib_rig_full"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "rig_editor",
+      "label": "Rig editor",
+      "area": "Library",
+      "kind": "Imperative editor",
+      "routes": [],
+      "widget": "showEquipmentEditor",
+      "source": {
+        "file": "lib/presentation/screens/equipment/equipment_editor.dart",
+        "line": 43,
+        "sha256": "554a399e3d891648b6e64a4eb61401d01e4e345b0768daa96e9e245999c941a2"
+      },
+      "shots": [
+        "lib_rig_edit",
+        "rig_new"
+      ],
+      "note": "New, edit or metadata-prefilled draft; explicit Save rig.",
+      "availableShots": [
+        "lib_rig_edit",
+        "rig_new"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "manage_rigs",
+      "label": "Manage rigs over chooser",
+      "area": "Library",
+      "kind": "Root overlay",
+      "routes": [
+        "/manage/rigs"
+      ],
+      "widget": "EquipmentSelectionScreen",
+      "source": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 40,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "shots": [
+        "manage_rigs"
+      ],
+      "note": "Same management screen in a different navigation context; ?for=plan can select a newly created rig.",
+      "availableShots": [
+        "manage_rigs"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "targets",
+      "label": "Targets",
+      "area": "Library",
+      "kind": "Branch list",
+      "routes": [
+        "/library/targets"
+      ],
+      "widget": "TargetSelectionScreen",
+      "source": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 34,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "shots": [
+        "lib_targets"
+      ],
+      "note": "",
+      "availableShots": [
+        "lib_targets"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "target",
+      "label": "Target record",
+      "area": "Library",
+      "kind": "Imperative detail",
+      "routes": [],
+      "widget": "TargetDetailScreen",
+      "source": {
+        "file": "lib/presentation/screens/target/target_detail_screen.dart",
+        "line": 30,
+        "sha256": "b4ae2e2a6a91deaede8b8605fa4cb7cb5a1df11a72d640b89a90335ff7eca427"
+      },
+      "shots": [
+        "lib_target"
+      ],
+      "note": "Plan this target starts a new plan after the leaving guard. A candidate-row tap has a different contract.",
+      "availableShots": [
+        "lib_target"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "target_editor",
+      "label": "Target editor",
+      "area": "Library",
+      "kind": "Imperative editor",
+      "routes": [],
+      "widget": "TargetEditorScreen",
+      "source": {
+        "file": "lib/presentation/screens/target/target_editor_screen.dart",
+        "line": 36,
+        "sha256": "8e9050f503f5a6d61f63d022343d3adbc470db639440a6c73f83aba3e0341dac"
+      },
+      "shots": [
+        "lib_target_new"
+      ],
+      "note": "Add/edit targets, including the existing catalogue edit path; untouched catalogue values retain their provenance.",
+      "availableShots": [
+        "lib_target_new"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "manage_targets",
+      "label": "Manage targets over chooser",
+      "area": "Library",
+      "kind": "Root overlay",
+      "routes": [
+        "/manage/targets"
+      ],
+      "widget": "TargetSelectionScreen",
+      "source": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 34,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "shots": [
+        "manage_targets"
+      ],
+      "note": "Library management above the scoped target chooser.",
+      "availableShots": [
+        "manage_targets"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "sites",
+      "label": "Sites",
+      "area": "Library",
+      "kind": "Branch list",
+      "routes": [
+        "/library/sites"
+      ],
+      "widget": "SitesScreen",
+      "source": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 36,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "shots": [
+        "lib_sites"
+      ],
+      "note": "",
+      "availableShots": [
+        "lib_sites"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "site",
+      "label": "Site record",
+      "area": "Library",
+      "kind": "Imperative detail",
+      "routes": [],
+      "widget": "SiteDetailScreen",
+      "source": {
+        "file": "lib/presentation/screens/sites/site_detail_screen.dart",
+        "line": 56,
+        "sha256": "d993fac2d2874e76fa4c1e847ef2c5d232e978887626f85e610edc73da059517"
+      },
+      "shots": [
+        "lib_site"
+      ],
+      "note": "Stored site and its provenance; not the transient map position.",
+      "availableShots": [
+        "lib_site"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "choose_site",
+      "label": "Choose site",
+      "area": "Location",
+      "kind": "Root overlay",
+      "routes": [
+        "/select/site"
+      ],
+      "widget": "SitesScreen",
+      "source": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 36,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "shots": [
+        "select_sites"
+      ],
+      "note": "ListMode.choose; Tonight opens this directly. A row selects the site immediately without closing; the Manage site icon opens its record. Different from the unapplied choices in Plan context.",
+      "availableShots": [
+        "select_sites"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "site_editor",
+      "label": "Site editor",
+      "area": "Location",
+      "kind": "Root overlay",
+      "routes": [
+        "/site/edit"
+      ],
+      "widget": "SiteEditorScreen",
+      "source": {
+        "file": "lib/presentation/screens/sites/site_editor_screen.dart",
+        "line": 79,
+        "sha256": "72156fc93fb6521c5ce5507e8c5a1273f58cb7cc729598ac6dc294d6cdf4a55a"
+      },
+      "shots": [
+        "geo_add",
+        "lib_site_edit"
+      ],
+      "note": "Receives typed SiteEditorArgs. Restored lost arguments return to Library sites instead of opening a different form.",
+      "availableShots": [
+        "geo_add",
+        "lib_site_edit"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "position",
+      "label": "Current / transient position",
+      "area": "Location",
+      "kind": "Root overlay",
+      "routes": [
+        "/position"
+      ],
+      "widget": "LocationPickerScreen",
+      "source": {
+        "file": "lib/presentation/screens/location/location_picker_screen.dart",
+        "line": 23,
+        "sha256": "4641548e7c8e86c7c4f2a0adf9ee1e4928d2276538b814887644bb927c9ae95a"
+      },
+      "shots": [
+        "geo_map"
+      ],
+      "note": "Transient position for map/GPS; not equivalent to a stored selected site. Map tiles/GPS permission are platform boundaries.",
+      "availableShots": [
+        "geo_map"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "site_picker",
+      "label": "Map coordinate picker",
+      "area": "Location",
+      "kind": "Root overlay",
+      "routes": [
+        "/site/pick"
+      ],
+      "widget": "LocationPickerScreen",
+      "source": {
+        "file": "lib/presentation/screens/location/location_picker_screen.dart",
+        "line": 23,
+        "sha256": "4641548e7c8e86c7c4f2a0adf9ee1e4928d2276538b814887644bb927c9ae95a"
+      },
+      "shots": [
+        "site_pick"
+      ],
+      "note": "pickOnly=true for the site editor; typed LatLng extra. Lost restored arguments return to Library sites.",
+      "availableShots": [
+        "site_pick"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "metadata",
+      "label": "Add from a photo",
+      "area": "Library",
+      "kind": "Root overlay",
+      "routes": [
+        "/equipment/import"
+      ],
+      "widget": "MetadataImportScreen",
+      "source": {
+        "file": "lib/presentation/screens/metadata/metadata_import_screen.dart",
+        "line": 38,
+        "sha256": "9853e4766338b21dc5280291551b3486f54b8a8fd1a18da0d91cb095170915d0"
+      },
+      "shots": [
+        "metadata_ready"
+      ],
+      "note": "Review imported metadata and create a rig draft; native file-picker behavior is not verified by a host render.",
+      "availableShots": [
+        "metadata_ready"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "settings",
+      "label": "Settings",
+      "area": "Settings",
+      "kind": "Tab",
+      "routes": [
+        "/settings"
+      ],
+      "widget": "SettingsScreen",
+      "source": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 51,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "shots": [
+        "settings"
+      ],
+      "note": "",
+      "availableShots": [
+        "settings"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "appearance",
+      "label": "Appearance",
+      "area": "Settings",
+      "kind": "Imperative page",
+      "routes": [],
+      "widget": "SettingsScreen",
+      "source": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 51,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "shots": [
+        "settings_appearance"
+      ],
+      "note": "Named MaterialPageRoute /settings/appearance, not a GoRoute. Theme, units and Android-controlled text size.",
+      "availableShots": [
+        "settings_appearance"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "defaults",
+      "label": "Planning defaults",
+      "area": "Settings",
+      "kind": "Imperative page",
+      "routes": [],
+      "widget": "SettingsScreen",
+      "source": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 51,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "shots": [
+        "settings_planning"
+      ],
+      "note": "Named MaterialPageRoute /settings/planning; global settings with explicit draft Save.",
+      "availableShots": [
+        "settings_planning"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "privacy",
+      "label": "Privacy",
+      "area": "Settings",
+      "kind": "Imperative page",
+      "routes": [],
+      "widget": "SettingsScreen",
+      "source": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 51,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "shots": [
+        "settings_privacy"
+      ],
+      "note": "Named MaterialPageRoute /settings/privacy. Optional place-name lookup and its consent.",
+      "availableShots": [
+        "settings_privacy"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "backup",
+      "label": "Backup & data",
+      "area": "Settings",
+      "kind": "Imperative page",
+      "routes": [],
+      "widget": "SettingsScreen",
+      "source": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 51,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "shots": [
+        "settings_backup"
+      ],
+      "note": "Named MaterialPageRoute /settings/backup. Backup, preview and restore operations have separate confirmation/platform boundaries.",
+      "availableShots": [
+        "settings_backup"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "about",
+      "label": "About",
+      "area": "Settings",
+      "kind": "Root overlay",
+      "routes": [
+        "/settings/about"
+      ],
+      "widget": "AboutScreen",
+      "source": {
+        "file": "lib/presentation/screens/about/about_screen.dart",
+        "line": 22,
+        "sha256": "1dec96c344dd2814cf89b9469b4f88166d37d7b41571150195ee5625e9240b2e"
+      },
+      "shots": [
+        "settings_about"
+      ],
+      "note": "",
+      "availableShots": [
+        "settings_about"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "licenses",
+      "label": "Open-source licenses",
+      "area": "Settings",
+      "kind": "Framework page",
+      "routes": [],
+      "widget": "LicensePage",
+      "source": {
+        "file": "lib/presentation/screens/about/about_screen.dart",
+        "line": 228,
+        "sha256": "1dec96c344dd2814cf89b9469b4f88166d37d7b41571150195ee5625e9240b2e"
+      },
+      "shots": [
+        "licenses"
+      ],
+      "note": "Opened with showLicensePage; not a custom named GoRoute.",
+      "availableShots": [
+        "licenses"
+      ],
+      "evidence": "Fresh Flutter host"
+    },
+    {
+      "id": "welcome",
+      "label": "Welcome / setup",
+      "area": "Startup",
+      "kind": "Root overlay",
+      "routes": [
+        "/welcome"
+      ],
+      "widget": "WelcomeScreen",
+      "source": {
+        "file": "lib/presentation/screens/welcome/welcome_screen.dart",
+        "line": 32,
+        "sha256": "cb7e7c77664ff154c4f8355b105328dedaaf7c1f41bc669f9aa7ef6bbe856553"
+      },
+      "shots": [
+        "welcome",
+        "welcome_b"
+      ],
+      "note": "First-run route is chosen from TonightViewModel state, not always shown on app launch.",
+      "availableShots": [
+        "welcome",
+        "welcome_b"
+      ],
+      "evidence": "Fresh Flutter host"
+    }
+  ],
+  "edges": [
+    {
+      "source": "tonight",
+      "target": "plan",
+      "label": "Open planner",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 435,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "candidates",
+      "label": "What can I image?",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 429,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "night",
+      "label": "Night",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 529,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "moon",
+      "label": "Moon",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 566,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "weather",
+      "label": "Weather",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 579,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "choose_target",
+      "label": "Choose a target",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 423,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "choose_rig",
+      "label": "Choose a rig",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 411,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "choose_site",
+      "label": "Site context / Set site",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/home_context_sheets.dart",
+        "line": 16,
+        "sha256": "08bd27ff17baa9606a2d88498ae450b41070b12bc41757728bf3e8b698ebfa94"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "tonight",
+      "target": "result",
+      "label": "How did it go?",
+      "when": "A saved entry is due for a result",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_home_screen.dart",
+        "line": 694,
+        "sha256": "b10ebeae83c39fb1c6c0f25a3d5a80105725cd17051628c7f73fafe4e53986ac"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "candidates",
+      "target": "tonight",
+      "label": "Choose target → return",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/tonight/tonight_candidates_screen.dart",
+        "line": 375,
+        "sha256": "eb6127e32b7e3d3bdc5ebd2fe70f3d3e87e031d0aba241550f7889b52b9e760f"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "choose_target",
+      "label": "Target row",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/home_screen.dart",
+        "line": 165,
+        "sha256": "ddec02193e632ae679500eea7d0e85caaec7628f5afd6652ccdf98433edcabca"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "choose_rig",
+      "label": "Rig row",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/home_screen.dart",
+        "line": 186,
+        "sha256": "ddec02193e632ae679500eea7d0e85caaec7628f5afd6652ccdf98433edcabca"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "night",
+      "label": "Night & Moon row",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/home_screen.dart",
+        "line": 265,
+        "sha256": "ddec02193e632ae679500eea7d0e85caaec7628f5afd6652ccdf98433edcabca"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "weather",
+      "label": "Weather row",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/home_screen.dart",
+        "line": 276,
+        "sha256": "ddec02193e632ae679500eea7d0e85caaec7628f5afd6652ccdf98433edcabca"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "context",
+      "label": "Site and night row",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/home_screen.dart",
+        "line": 803,
+        "sha256": "ddec02193e632ae679500eea7d0e85caaec7628f5afd6652ccdf98433edcabca"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "block",
+      "label": "Add / Edit block",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/widgets/capture_plan_widget.dart",
+        "line": 180,
+        "sha256": "452406f69127c2e5678f9265e5c9f45fd0d7c366dd6c57b02aa83fd7b597d782"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "calibration",
+      "label": "Build calibration frames",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/widgets/capture_plan_widget.dart",
+        "line": 159,
+        "sha256": "452406f69127c2e5678f9265e5c9f45fd0d7c366dd6c57b02aa83fd7b597d782"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "assumptions",
+      "label": "Budget → Edit assumptions",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/widgets/capture_plan/capture_assumptions_panel.dart",
+        "line": 185,
+        "sha256": "ff0b5f9dc4714a62e25d2a5ba5092e5a14ab8c29655eee1d595394dbca460ea9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "assumptions",
+      "target": "plan",
+      "label": "Apply per-plan changes",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/widgets/capture_plan/plan_overrides_editor.dart",
+        "line": 56,
+        "sha256": "0ac4db9f4e3e5cd2195742b5630c467a1a7e7336f85d6c5ee7029d28617fa791"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "plan_settings",
+      "label": "Budget → Change in Settings",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/widgets/capture_plan/capture_assumptions_panel.dart",
+        "line": 192,
+        "sha256": "ff0b5f9dc4714a62e25d2a5ba5092e5a14ab8c29655eee1d595394dbca460ea9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "context",
+      "target": "choose_site",
+      "label": "Manage sites",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/plan_context_screen.dart",
+        "line": 138,
+        "sha256": "e62b34430a36f55aaece89ec35d17c71cf0d19577f10c21506c2f48e5d5d4964"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "context",
+      "target": "plan",
+      "label": "Apply changes / Close",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/plan_context_screen.dart",
+        "line": 62,
+        "sha256": "e62b34430a36f55aaece89ec35d17c71cf0d19577f10c21506c2f48e5d5d4964"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_target",
+      "target": "manage_targets",
+      "label": "Add or manage targets",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/plan_target_screen.dart",
+        "line": 256,
+        "sha256": "17f167fd21a97e135e6f89127b91724d12955cc80dfa94948b2247acbbdb48c3"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_target",
+      "target": "plan",
+      "label": "Apply choice → return",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/plan_target_screen.dart",
+        "line": 122,
+        "sha256": "17f167fd21a97e135e6f89127b91724d12955cc80dfa94948b2247acbbdb48c3"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_rig",
+      "target": "manage_rigs",
+      "label": "Add or manage rigs",
+      "when": "Empty initial list replaces chooser; ?for=plan preserves create-and-select",
+      "evidence": {
+        "file": "lib/presentation/screens/home/plan_rig_screen.dart",
+        "line": 65,
+        "sha256": "1b372ab3da0e3022bc729e8d4d816879889896c8ec8bf5a4e2d140dfc1dd5fc3"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_rig",
+      "target": "plan",
+      "label": "Apply choice → return",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/home/plan_rig_screen.dart",
+        "line": 88,
+        "sha256": "1b372ab3da0e3022bc729e8d4d816879889896c8ec8bf5a4e2d140dfc1dd5fc3"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "plan",
+      "target": "guard",
+      "label": "New / Copy replaces changed draft",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/shared/unsaved_plan_prompt.dart",
+        "line": 31,
+        "sha256": "9a7503e64edb1695caaf19808931cde0268af82e69543ecce2bbe79c7c1b699c"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "logbook",
+      "target": "entry",
+      "label": "Open entry",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/logbook/logbook_screen.dart",
+        "line": 602,
+        "sha256": "6db298c6d875135170d8d08d5bd60088c9bfc13e40f6dcbceea7a805dd84a61a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "logbook",
+      "target": "progress",
+      "label": "Progress by target",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/logbook/logbook_screen.dart",
+        "line": 269,
+        "sha256": "6db298c6d875135170d8d08d5bd60088c9bfc13e40f6dcbceea7a805dd84a61a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "entry",
+      "target": "plan",
+      "label": "Open in planner",
+      "when": "Upcoming editable plan; leave guard if replacing another changed plan",
+      "evidence": {
+        "file": "lib/presentation/screens/logbook/session_detail_screen.dart",
+        "line": 442,
+        "sha256": "8b22402e357ce298bc83c8055c440e36a55fd847e74bd600e7a60fb138114278"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "entry",
+      "target": "result",
+      "label": "Record / Edit result",
+      "when": "Availability follows the saved night and result state",
+      "evidence": {
+        "file": "lib/presentation/screens/logbook/session_detail_screen.dart",
+        "line": 536,
+        "sha256": "8b22402e357ce298bc83c8055c440e36a55fd847e74bd600e7a60fb138114278"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "entry",
+      "target": "guard",
+      "label": "Open / Copy over changed draft",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/logbook/session_detail_screen.dart",
+        "line": 424,
+        "sha256": "8b22402e357ce298bc83c8055c440e36a55fd847e74bd600e7a60fb138114278"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "library",
+      "target": "rigs",
+      "label": "Rigs",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/library/library_screen.dart",
+        "line": 99,
+        "sha256": "02caf67a9af81d4c5c62be4c5066de66210e4e40a573c1cf15cbcba4680c1a0f"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "library",
+      "target": "targets",
+      "label": "Targets",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/library/library_screen.dart",
+        "line": 109,
+        "sha256": "02caf67a9af81d4c5c62be4c5066de66210e4e40a573c1cf15cbcba4680c1a0f"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "library",
+      "target": "sites",
+      "label": "Sites",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/library/library_screen.dart",
+        "line": 117,
+        "sha256": "02caf67a9af81d4c5c62be4c5066de66210e4e40a573c1cf15cbcba4680c1a0f"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "rigs",
+      "target": "rig",
+      "label": "Open rig record",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 373,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "manage_rigs",
+      "target": "rig",
+      "label": "Open rig record",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 373,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "targets",
+      "target": "target",
+      "label": "Open target record",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 184,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "manage_targets",
+      "target": "target",
+      "label": "Open target record",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 184,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "sites",
+      "target": "site",
+      "label": "Open site record",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 68,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_site",
+      "target": "site",
+      "label": "Manage site icon → record",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 68,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "rigs",
+      "target": "rig_editor",
+      "label": "Add / Edit rig",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 141,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "manage_rigs",
+      "target": "rig_editor",
+      "label": "Add / Edit rig",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 141,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "rig",
+      "target": "rig_editor",
+      "label": "Edit rig",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/rig_detail_screen.dart",
+        "line": 91,
+        "sha256": "2e43e07ad569762b7a6bc7a1298c5f2e1707b9fb63e5210d7ec2c1dca6b329aa"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "rig_editor",
+      "target": "guard",
+      "label": "Back with unsaved edits",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_editor.dart",
+        "line": 322,
+        "sha256": "554a399e3d891648b6e64a4eb61401d01e4e345b0768daa96e9e245999c941a2"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "targets",
+      "target": "target_editor",
+      "label": "Add / Edit target",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 170,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "manage_targets",
+      "target": "target_editor",
+      "label": "Add / Edit target",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 170,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "target",
+      "target": "target_editor",
+      "label": "Edit target callback",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 188,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "target",
+      "target": "plan",
+      "label": "Plan this target → new plan",
+      "when": "After Save / Discard / Cancel guard",
+      "evidence": {
+        "file": "lib/presentation/screens/target/target_selection_screen.dart",
+        "line": 148,
+        "sha256": "c896df94fe2c83f6bb7ce90fa5e3a5bd136179dca5de1cf91cfe8cc445730bec"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "sites",
+      "target": "site_editor",
+      "label": "Add / Edit site",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 92,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_site",
+      "target": "site_editor",
+      "label": "Add / Edit site",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 92,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "site",
+      "target": "site_editor",
+      "label": "Edit site",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/site_detail_screen.dart",
+        "line": 88,
+        "sha256": "d993fac2d2874e76fa4c1e847ef2c5d232e978887626f85e610edc73da059517"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "choose_site",
+      "target": "position",
+      "label": "Use current position / map",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/sites_screen.dart",
+        "line": 220,
+        "sha256": "b45355fa5de54567d025557790978c995ffc8be81cfcc6b733fbec13a6dce2f2"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "site_editor",
+      "target": "site_picker",
+      "label": "Pick coordinates on map",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/sites/site_editor_screen.dart",
+        "line": 340,
+        "sha256": "72156fc93fb6521c5ce5507e8c5a1273f58cb7cc729598ac6dc294d6cdf4a55a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "rigs",
+      "target": "metadata",
+      "label": "Add from a photo",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 126,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "manage_rigs",
+      "target": "metadata",
+      "label": "Add from a photo",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/equipment/equipment_selection_screen.dart",
+        "line": 126,
+        "sha256": "1c7aab13e8e385b0e8de0dcd1d997d52347e3dc3d7a7bebde8d0643af66e0cc9"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "metadata",
+      "target": "rig_editor",
+      "label": "Use reviewed metadata → rig draft",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/metadata/metadata_import_screen.dart",
+        "line": 227,
+        "sha256": "9853e4766338b21dc5280291551b3486f54b8a8fd1a18da0d91cb095170915d0"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "settings",
+      "target": "appearance",
+      "label": "Appearance",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 755,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "settings",
+      "target": "defaults",
+      "label": "Planning",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 766,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "settings",
+      "target": "privacy",
+      "label": "Privacy",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 777,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "settings",
+      "target": "backup",
+      "label": "Backup & data",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 792,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "settings",
+      "target": "about",
+      "label": "About",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/settings/settings_screen.dart",
+        "line": 806,
+        "sha256": "94a1f9c7cf60e4a84631456c88d16e809fb6d65be743e7e224611cf215a74a12"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "about",
+      "target": "licenses",
+      "label": "Licenses",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/about/about_screen.dart",
+        "line": 228,
+        "sha256": "1dec96c344dd2814cf89b9469b4f88166d37d7b41571150195ee5625e9240b2e"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "night",
+      "target": "moon",
+      "label": "Switch conditions pane (same route context)",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 116,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "night",
+      "target": "weather",
+      "label": "Switch conditions pane (same route context)",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 116,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "moon",
+      "target": "night",
+      "label": "Switch conditions pane (same route context)",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 116,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "moon",
+      "target": "weather",
+      "label": "Switch conditions pane (same route context)",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 116,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "weather",
+      "target": "night",
+      "label": "Switch conditions pane (same route context)",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 116,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "weather",
+      "target": "moon",
+      "label": "Switch conditions pane (same route context)",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/details/night_moon_screen.dart",
+        "line": 116,
+        "sha256": "38af11c78320ba2ecce6db6709ed499f1f4e7af91b6bc2bbe2a60d896d581f1a"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "welcome",
+      "target": "tonight",
+      "label": "Start planning",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/welcome/welcome_screen.dart",
+        "line": 43,
+        "sha256": "cb7e7c77664ff154c4f8355b105328dedaaf7c1f41bc669f9aa7ef6bbe856553"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "welcome",
+      "target": "choose_site",
+      "label": "Set a site",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/welcome/welcome_screen.dart",
+        "line": 123,
+        "sha256": "cb7e7c77664ff154c4f8355b105328dedaaf7c1f41bc669f9aa7ef6bbe856553"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "welcome",
+      "target": "choose_rig",
+      "label": "Choose a rig",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/welcome/welcome_screen.dart",
+        "line": 147,
+        "sha256": "cb7e7c77664ff154c4f8355b105328dedaaf7c1f41bc669f9aa7ef6bbe856553"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    },
+    {
+      "source": "welcome",
+      "target": "metadata",
+      "label": "Add from a photo",
+      "when": "",
+      "evidence": {
+        "file": "lib/presentation/screens/welcome/welcome_screen.dart",
+        "line": 67,
+        "sha256": "cb7e7c77664ff154c4f8355b105328dedaaf7c1f41bc669f9aa7ef6bbe856553"
+      },
+      "verification": "Current production caller; not a claim that every transition was exercised on Android"
+    }
+  ],
+  "captures": [
+    {
+      "name": "entry",
+      "file": "captures/entry-dark-1.png",
+      "metadata": "captures/entry-dark-1.json",
+      "sha256": "8274d79e2d3a41584f79b841b4d1d8afc9e1efd0ba10314095cacc18a301c682",
+      "atlasId": "AT-29",
+      "surface": "Logbook entry / top",
+      "route": "/sessions",
+      "visibleScreens": [
+        "SessionDetailScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:10.249339+00:00"
+    },
+    {
+      "name": "entry_b",
+      "file": "captures/entry_b-dark-1.png",
+      "metadata": "captures/entry_b-dark-1.json",
+      "sha256": "0d4b070a1225c66bc348363b970a5827c4d8929fafaf50335becd554d605c78f",
+      "atlasId": "AT-30",
+      "surface": "Logbook entry / lower",
+      "route": "/sessions",
+      "visibleScreens": [
+        "SessionDetailScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:12.858346+00:00"
+    },
+    {
+      "name": "geo_add",
+      "file": "captures/geo_add-dark-1.png",
+      "metadata": "captures/geo_add-dark-1.json",
+      "sha256": "04d4c0d17c21690986f3c941ad3b296d6876bbd129c07cc11a2745df4397982b",
+      "atlasId": "AT-26",
+      "surface": "Site / editor",
+      "route": "/tonight",
+      "visibleScreens": [
+        "SiteEditorScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:04.222840+00:00"
+    },
+    {
+      "name": "geo_map",
+      "file": "captures/geo_map-dark-1.png",
+      "metadata": "captures/geo_map-dark-1.json",
+      "sha256": "29f86e8a5ebb84bc7f30e14e940dff3dbdc2f63d4fca027439a7516abbbe8190",
+      "atlasId": null,
+      "surface": "geo map",
+      "route": "/tonight",
+      "visibleScreens": [
+        "LocationPickerScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:57.837717+00:00"
+    },
+    {
+      "name": "home",
+      "file": "captures/home-dark-1.png",
+      "metadata": "captures/home-dark-1.json",
+      "sha256": "8eadd4bfa4390ff5666bf16d64eb7ac4f5b39fcf2f1463556226319b80fd940b",
+      "atlasId": "AT-01",
+      "surface": "Tonight",
+      "route": "/tonight",
+      "visibleScreens": [
+        "TonightHomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:40:51.090440+00:00"
+    },
+    {
+      "name": "home_candidates",
+      "file": "captures/home_candidates-dark-1.png",
+      "metadata": "captures/home_candidates-dark-1.json",
+      "sha256": "6e4f3a6bb47c19749a2ac5a84c3e6efffad4a962fe55eec5554cdfd621711504",
+      "atlasId": null,
+      "surface": "home candidates",
+      "route": "/tonight",
+      "visibleScreens": [
+        "TonightCandidatesScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:41.491428+00:00"
+    },
+    {
+      "name": "home_nosite",
+      "file": "captures/home_nosite-dark-1.png",
+      "metadata": "captures/home_nosite-dark-1.json",
+      "sha256": "2087cb31708d62c0efb6430b896fe56b107b0834bddea78d75ab28a8701c44e8",
+      "atlasId": null,
+      "surface": "home nosite",
+      "route": "/tonight",
+      "visibleScreens": [
+        "TonightHomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:22.083823+00:00"
+    },
+    {
+      "name": "home_timeline",
+      "file": "captures/home_timeline-dark-1.png",
+      "metadata": "captures/home_timeline-dark-1.json",
+      "sha256": "0ef4249a774f9f69121a8374015befcd74bdecf1fbba290c44f89d53a24b1eb1",
+      "atlasId": "AT-02",
+      "surface": "Tonight / lower flow",
+      "route": "/tonight",
+      "visibleScreens": [
+        "TonightHomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:40:53.315230+00:00"
+    },
+    {
+      "name": "lib_rig",
+      "file": "captures/lib_rig-dark-1.png",
+      "metadata": "captures/lib_rig-dark-1.json",
+      "sha256": "065236f7967b96ac12a23789a2bef6cfa75ffd228a8e39d7455d4b4ef4cdee0a",
+      "atlasId": "AT-23",
+      "surface": "Rig / detail",
+      "route": "/library",
+      "visibleScreens": [
+        "RigDetailScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:54.804794+00:00"
+    },
+    {
+      "name": "lib_rig_edit",
+      "file": "captures/lib_rig_edit-dark-1.png",
+      "metadata": "captures/lib_rig_edit-dark-1.json",
+      "sha256": "a5cb99a9748f1730597af3f84384a1398fe2678a9a2c69646ec83f45514894f0",
+      "atlasId": null,
+      "surface": "lib rig edit",
+      "route": "/library",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:14.006341+00:00"
+    },
+    {
+      "name": "lib_rig_full",
+      "file": "captures/lib_rig_full-dark-1.png",
+      "metadata": "captures/lib_rig_full-dark-1.json",
+      "sha256": "5ee027393ca89f9b90d409af5bd2f03334999114548649469e9e1782b1c36deb",
+      "atlasId": "AT-24",
+      "surface": "Rig / full record",
+      "route": "/library",
+      "visibleScreens": [
+        "RigDetailScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:59.031116+00:00"
+    },
+    {
+      "name": "lib_rig_unsaved",
+      "file": "captures/lib_rig_unsaved-dark-1.png",
+      "metadata": "captures/lib_rig_unsaved-dark-1.json",
+      "sha256": "184eed593f0d983abf710680e3efb539b0f1c2bd0117d0b8d8c521d9d06972f4",
+      "atlasId": "AT-40",
+      "surface": "Unsaved changes / dialog",
+      "route": "/library",
+      "visibleScreens": [
+        "DisplayFeatureSubScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:39.357859+00:00"
+    },
+    {
+      "name": "lib_rigs",
+      "file": "captures/lib_rigs-dark-1.png",
+      "metadata": "captures/lib_rigs-dark-1.json",
+      "sha256": "00b133882cc40065b43b8722b636480b90193969e52b0edb0e6095804c8d891b",
+      "atlasId": null,
+      "surface": "lib rigs",
+      "route": "/library",
+      "visibleScreens": [
+        "EquipmentSelectionScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:46:19.6817081Z",
+      "writtenUtc": "2026-10-28T14:46:29.394043+00:00"
+    },
+    {
+      "name": "lib_site",
+      "file": "captures/lib_site-dark-1.png",
+      "metadata": "captures/lib_site-dark-1.json",
+      "sha256": "26d8e38db79ebab963aa96935515069aebd9a0220043812814b4347506ada95d",
+      "atlasId": "AT-25",
+      "surface": "Site / detail",
+      "route": "/library",
+      "visibleScreens": [
+        "SiteDetailScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:02.069828+00:00"
+    },
+    {
+      "name": "lib_site_edit",
+      "file": "captures/lib_site_edit-dark-1.png",
+      "metadata": "captures/lib_site_edit-dark-1.json",
+      "sha256": "0d898f4839c9137ce5bb9cec4d7bd760746373186ebc1e94da7f42301635093d",
+      "atlasId": null,
+      "surface": "lib site edit",
+      "route": "/library",
+      "visibleScreens": [
+        "SiteEditorScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:17.793074+00:00"
+    },
+    {
+      "name": "lib_sites",
+      "file": "captures/lib_sites-dark-1.png",
+      "metadata": "captures/lib_sites-dark-1.json",
+      "sha256": "d1de8ba7e7dd7fcf03bd4f57fa82d2dcd514a3531c6a21ee8a4cf8f1ad450153",
+      "atlasId": null,
+      "surface": "lib sites",
+      "route": "/library",
+      "visibleScreens": [
+        "SitesScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:46:19.6817081Z",
+      "writtenUtc": "2026-10-28T14:46:34.285532+00:00"
+    },
+    {
+      "name": "lib_target",
+      "file": "captures/lib_target-dark-1.png",
+      "metadata": "captures/lib_target-dark-1.json",
+      "sha256": "be4be3a275ae780ca6136e0bc5c4d7669f0c0bc4d20726d27ba1a2795605c02e",
+      "atlasId": "AT-22",
+      "surface": "Target / detail",
+      "route": "/library",
+      "visibleScreens": [
+        "TargetDetailScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:51.672009+00:00"
+    },
+    {
+      "name": "lib_target_new",
+      "file": "captures/lib_target_new-dark-1.png",
+      "metadata": "captures/lib_target_new-dark-1.json",
+      "sha256": "524e4104344d9b5891fcd752f9c532f06ce25216042fac9c4aa3475ab0d4784f",
+      "atlasId": null,
+      "surface": "lib target new",
+      "route": "/library",
+      "visibleScreens": [
+        "TargetEditorScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:20.865754+00:00"
+    },
+    {
+      "name": "lib_targets",
+      "file": "captures/lib_targets-dark-1.png",
+      "metadata": "captures/lib_targets-dark-1.json",
+      "sha256": "0aa32750966397b35ed838fd9780f343d201c1c75174b1347d147e86dc7cc65e",
+      "atlasId": null,
+      "surface": "lib targets",
+      "route": "/library",
+      "visibleScreens": [
+        "TargetSelectionScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:46:19.6817081Z",
+      "writtenUtc": "2026-10-28T14:46:31.973875+00:00"
+    },
+    {
+      "name": "library",
+      "file": "captures/library-dark-1.png",
+      "metadata": "captures/library-dark-1.json",
+      "sha256": "323e54bdfd3250cae3ce0b1cb930dfcf234c75269a6201e79482274bdf683a52",
+      "atlasId": "AT-27",
+      "surface": "Library",
+      "route": "/library",
+      "visibleScreens": [
+        "LibraryScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:06.077234+00:00"
+    },
+    {
+      "name": "licenses",
+      "file": "captures/licenses-dark-1.png",
+      "metadata": "captures/licenses-dark-1.json",
+      "sha256": "37c586e1945a5d530ab6efdb2f5c41f275059c15492fc059b0253dee610f516f",
+      "atlasId": null,
+      "surface": "licenses",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:10.165795+00:00"
+    },
+    {
+      "name": "logbook",
+      "file": "captures/logbook-dark-1.png",
+      "metadata": "captures/logbook-dark-1.json",
+      "sha256": "7dd32359fd54f155c4f794d6cac0e91bf6d67efcc44e634706b6f0b06560d3d1",
+      "atlasId": "AT-28",
+      "surface": "Logbook / populated",
+      "route": "/sessions",
+      "visibleScreens": [
+        "LogbookScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:07.955214+00:00"
+    },
+    {
+      "name": "logbook_progress",
+      "file": "captures/logbook_progress-dark-1.png",
+      "metadata": "captures/logbook_progress-dark-1.json",
+      "sha256": "67610d89719ec51237cfa7305b945c2a6a022da5629e00808c6ec31e782fce25",
+      "atlasId": "AT-32",
+      "surface": "Progress",
+      "route": "/sessions",
+      "visibleScreens": [
+        "ProgressScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:17.821630+00:00"
+    },
+    {
+      "name": "manage_rigs",
+      "file": "captures/manage_rigs-dark-1.png",
+      "metadata": "captures/manage_rigs-dark-1.json",
+      "sha256": "11751c4d9fa50f5f7def928f6a3897b30e8a10e800e4290f57fc777624d81458",
+      "atlasId": null,
+      "surface": "manage rigs",
+      "route": "/tonight",
+      "visibleScreens": [
+        "EquipmentSelectionScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:49.364842+00:00"
+    },
+    {
+      "name": "manage_targets",
+      "file": "captures/manage_targets-dark-1.png",
+      "metadata": "captures/manage_targets-dark-1.json",
+      "sha256": "0aa32750966397b35ed838fd9780f343d201c1c75174b1347d147e86dc7cc65e",
+      "atlasId": null,
+      "surface": "manage targets",
+      "route": "/tonight",
+      "visibleScreens": [
+        "TargetSelectionScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:51.467875+00:00"
+    },
+    {
+      "name": "metadata_ready",
+      "file": "captures/metadata_ready-dark-1.png",
+      "metadata": "captures/metadata_ready-dark-1.json",
+      "sha256": "61e28c98a199fb19edb655b6644df1d17230290080cc408d8960f73b8081469b",
+      "atlasId": null,
+      "surface": "metadata ready",
+      "route": "/tonight",
+      "visibleScreens": [
+        "MetadataImportScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:55.617507+00:00"
+    },
+    {
+      "name": "moon",
+      "file": "captures/moon-dark-1.png",
+      "metadata": "captures/moon-dark-1.json",
+      "sha256": "64d76344b86452e73555d978fa389d42b78835ad90d9a02f6bfd021e3a34663a",
+      "atlasId": "AT-14",
+      "surface": "Moon / overview",
+      "route": "/tonight",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:25.902514+00:00"
+    },
+    {
+      "name": "moon_b",
+      "file": "captures/moon_b-dark-1.png",
+      "metadata": "captures/moon_b-dark-1.json",
+      "sha256": "21c7bf89469a4a10b16677fb7c0c216b705be6056b4eda658519dce8444a6fc8",
+      "atlasId": "AT-15",
+      "surface": "Moon / lower calendar",
+      "route": "/tonight",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:28.507207+00:00"
+    },
+    {
+      "name": "night",
+      "file": "captures/night-dark-1.png",
+      "metadata": "captures/night-dark-1.json",
+      "sha256": "d99eb7e32160e9092a1641fc82a7a0007b30a4da9fe1263120c8c54f62587638",
+      "atlasId": "AT-11",
+      "surface": "Night / overview",
+      "route": "/tonight",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:16.355783+00:00"
+    },
+    {
+      "name": "night_exact_intervals",
+      "file": "captures/night_exact_intervals-dark-1.png",
+      "metadata": "captures/night_exact_intervals-dark-1.json",
+      "sha256": "6352037a31c452a654ccb8c91a00aac98fed4d0ae78edb3245c51c0635a25e43",
+      "atlasId": "AT-13",
+      "surface": "Night / exact intervals",
+      "route": "/tonight",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:23.674576+00:00"
+    },
+    {
+      "name": "night_reading_body",
+      "file": "captures/night_reading_body-dark-1.png",
+      "metadata": "captures/night_reading_body-dark-1.json",
+      "sha256": "d341d0b208b59101fee79419b57d4d1921367f01a3cacb35fefbdba8c6a6fccb",
+      "atlasId": "AT-12",
+      "surface": "Night / reading the night",
+      "route": "/tonight",
+      "visibleScreens": [
+        "NightMoonScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:20.022338+00:00"
+    },
+    {
+      "name": "plan",
+      "file": "captures/plan-dark-1.png",
+      "metadata": "captures/plan-dark-1.json",
+      "sha256": "7663fba3081f10ffd1853c54fa8e4871f2a30a96beb50702ff04e56e06193ab6",
+      "atlasId": "AT-03",
+      "surface": "Plan / Capture Plan",
+      "route": "/tonight",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:40:55.617429+00:00"
+    },
+    {
+      "name": "plan_asm",
+      "file": "captures/plan_asm-dark-1.png",
+      "metadata": "captures/plan_asm-dark-1.json",
+      "sha256": "760001ef6adc625320504ac55b970c27384596e922cb75be55dffa0b956344e3",
+      "atlasId": "AT-20",
+      "surface": "Plan assumptions / editor",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:45.425426+00:00"
+    },
+    {
+      "name": "plan_b",
+      "file": "captures/plan_b-dark-1.png",
+      "metadata": "captures/plan_b-dark-1.json",
+      "sha256": "6d60e5a156e608a07b9e5ef7dd6b43f6df682e4abe7512d890fded54faa49cb4",
+      "atlasId": "AT-04",
+      "surface": "Plan / lower flow",
+      "route": "/tonight",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:40:58.298901+00:00"
+    },
+    {
+      "name": "plan_budget_assumptions",
+      "file": "captures/plan_budget_assumptions-dark-1.png",
+      "metadata": "captures/plan_budget_assumptions-dark-1.json",
+      "sha256": "5b3d98e895927af87d781cb7ee9b5d593b4fd12d40641815a7566048fb58667e",
+      "atlasId": "AT-07",
+      "surface": "Plan / budget assumptions",
+      "route": "/tonight",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:05.932339+00:00"
+    },
+    {
+      "name": "plan_cal",
+      "file": "captures/plan_cal-dark-1.png",
+      "metadata": "captures/plan_cal-dark-1.json",
+      "sha256": "e0f36f81c5f522417c1fe5a10bd6a5425b61927f875413c3322fff2e6abcbef3",
+      "atlasId": "AT-18",
+      "surface": "Calibration / preview",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:37.982936+00:00"
+    },
+    {
+      "name": "plan_cal_b",
+      "file": "captures/plan_cal_b-dark-1.png",
+      "metadata": "captures/plan_cal_b-dark-1.json",
+      "sha256": "3c1fffe7b50d56973992561c0507d000acbfc8619cf86add220acc547d32eec4",
+      "atlasId": "AT-19",
+      "surface": "Calibration / lower",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:41.308360+00:00"
+    },
+    {
+      "name": "plan_capture",
+      "file": "captures/plan_capture-dark-1.png",
+      "metadata": "captures/plan_capture-dark-1.json",
+      "sha256": "266b7b765621336e9f47b48e5bd3162397caf4c5808f9249bc1cb187cdc011be",
+      "atlasId": "AT-05",
+      "surface": "Plan / capture blocks",
+      "route": "/tonight",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:00.162854+00:00"
+    },
+    {
+      "name": "plan_context",
+      "file": "captures/plan_context-dark-1.png",
+      "metadata": "captures/plan_context-dark-1.json",
+      "sha256": "9c0d211f911e83bc5603caf7077cbb3ce8e504bbc6a882c85f5fd3e9f3602850",
+      "atlasId": null,
+      "surface": "plan context",
+      "route": "/tonight",
+      "visibleScreens": [
+        "PlanContextScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:47.305908+00:00"
+    },
+    {
+      "name": "plan_editor",
+      "file": "captures/plan_editor-dark-1.png",
+      "metadata": "captures/plan_editor-dark-1.json",
+      "sha256": "595a7c6519d2b76642dae36ff6ed48d94f5a185e5eea9476f0d4b5ff0a111339",
+      "atlasId": "AT-16",
+      "surface": "Capture block / editor",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:31.592713+00:00"
+    },
+    {
+      "name": "plan_editor_bottom",
+      "file": "captures/plan_editor_bottom-dark-1.png",
+      "metadata": "captures/plan_editor_bottom-dark-1.json",
+      "sha256": "e53f5896be08f12ef4610b917bdb7afe77a380a494682ebded53f0ee29fe29f7",
+      "atlasId": "AT-17",
+      "surface": "Capture block / lower",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:34.983167+00:00"
+    },
+    {
+      "name": "plan_empty",
+      "file": "captures/plan_empty-dark-1.png",
+      "metadata": "captures/plan_empty-dark-1.json",
+      "sha256": "bdea8b220a6deaa1495dcb6956630eb89c6002e54878a9a0c29d3513532d80be",
+      "atlasId": null,
+      "surface": "plan empty",
+      "route": "/tonight",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:23.580466+00:00"
+    },
+    {
+      "name": "plan_gain_open",
+      "file": "captures/plan_gain_open-dark-1.png",
+      "metadata": "captures/plan_gain_open-dark-1.json",
+      "sha256": "caaaf047c26a7e2cbb73c0063275e63b8012ad79363a26e42e3367106021abfe",
+      "atlasId": "AT-06",
+      "surface": "Plan / gain explanation",
+      "route": "/tonight",
+      "visibleScreens": [
+        "HomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:02.679788+00:00"
+    },
+    {
+      "name": "plan_rig",
+      "file": "captures/plan_rig-dark-1.png",
+      "metadata": "captures/plan_rig-dark-1.json",
+      "sha256": "adb4f43fe2b0e6880b304766bd15cf63216728581262f5a80ecd361a70b10da1",
+      "atlasId": null,
+      "surface": "plan rig",
+      "route": "/tonight",
+      "visibleScreens": [
+        "PlanRigScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:44.427294+00:00"
+    },
+    {
+      "name": "plan_settings",
+      "file": "captures/plan_settings-dark-1.png",
+      "metadata": "captures/plan_settings-dark-1.json",
+      "sha256": "089632cd8b22eacecde52c45495531be41af50f24c6960d2107c8b103321ec1f",
+      "atlasId": null,
+      "surface": "plan settings",
+      "route": "/tonight",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:25.045739+00:00"
+    },
+    {
+      "name": "plan_target",
+      "file": "captures/plan_target-dark-1.png",
+      "metadata": "captures/plan_target-dark-1.json",
+      "sha256": "ae98eb03bfda265181f8ffebb8a9ca317d7b4ffc3df934f7c6bce6a08c2c1980",
+      "atlasId": "AT-21",
+      "surface": "Target / selection",
+      "route": "/tonight",
+      "visibleScreens": [
+        "PlanTargetScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:48.401145+00:00"
+    },
+    {
+      "name": "progress_guide_open",
+      "file": "captures/progress_guide_open-dark-1.png",
+      "metadata": "captures/progress_guide_open-dark-1.json",
+      "sha256": "8961e2af8b7eb1067e9ee8f4b7e4ae3033329c1d8fb220084258397c95f4f5a4",
+      "atlasId": "AT-33",
+      "surface": "Progress / explanation",
+      "route": "/sessions",
+      "visibleScreens": [
+        "ProgressScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:21.634007+00:00"
+    },
+    {
+      "name": "result",
+      "file": "captures/result-dark-1.png",
+      "metadata": "captures/result-dark-1.json",
+      "sha256": "05b60cbc0dc1d83800473aa7b5ea22c8d91853486427758720fa9811bb4ef629",
+      "atlasId": "AT-31",
+      "surface": "Record results",
+      "route": "/sessions",
+      "visibleScreens": [
+        "ResultsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:15.142047+00:00"
+    },
+    {
+      "name": "rig_new",
+      "file": "captures/rig_new-dark-1.png",
+      "metadata": "captures/rig_new-dark-1.json",
+      "sha256": "635ad7d158b9238505244fe7be1082655a5c0ead225980e536209f7577874cd8",
+      "atlasId": null,
+      "surface": "rig new",
+      "route": "/tonight",
+      "visibleScreens": [],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:29.135693+00:00"
+    },
+    {
+      "name": "select_sites",
+      "file": "captures/select_sites-dark-1.png",
+      "metadata": "captures/select_sites-dark-1.json",
+      "sha256": "169b287a3d6f4ae3c45f946443ddaf225760f884e3d9a423c93dd3de89242147",
+      "atlasId": null,
+      "surface": "select sites",
+      "route": "/tonight",
+      "visibleScreens": [
+        "SitesScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:53.543460+00:00"
+    },
+    {
+      "name": "settings",
+      "file": "captures/settings-dark-1.png",
+      "metadata": "captures/settings-dark-1.json",
+      "sha256": "966ae968486b83404173ae9c0cb80f3c4148bff577c5c90c382a93abee623945",
+      "atlasId": "AT-34",
+      "surface": "Settings",
+      "route": "/settings",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:23.315893+00:00"
+    },
+    {
+      "name": "settings_about",
+      "file": "captures/settings_about-dark-1.png",
+      "metadata": "captures/settings_about-dark-1.json",
+      "sha256": "f4cd405f33476bae66914ab9975d813c42404c079b6bf0c3fe3e0940fa14c959",
+      "atlasId": null,
+      "surface": "settings about",
+      "route": "/settings",
+      "visibleScreens": [
+        "AboutScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:07.311146+00:00"
+    },
+    {
+      "name": "settings_appearance",
+      "file": "captures/settings_appearance-dark-1.png",
+      "metadata": "captures/settings_appearance-dark-1.json",
+      "sha256": "635e796bdfe7b074aaaa52b462e4f7aa53e87b6568386072aebfb3d8613da90d",
+      "atlasId": "AT-35",
+      "surface": "Appearance",
+      "route": "/settings",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:25.789167+00:00"
+    },
+    {
+      "name": "settings_backup",
+      "file": "captures/settings_backup-dark-1.png",
+      "metadata": "captures/settings_backup-dark-1.json",
+      "sha256": "a9a2bea2c6223a6ecf41fdb238d3fc752ffcd35ebacaa96bfba0a845a2623d40",
+      "atlasId": null,
+      "surface": "settings backup",
+      "route": "/settings",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:04.821049+00:00"
+    },
+    {
+      "name": "settings_planning",
+      "file": "captures/settings_planning-dark-1.png",
+      "metadata": "captures/settings_planning-dark-1.json",
+      "sha256": "f5ff228c16ed01f7bb82103d98077bbafe405a1e7f283b10108f4d40533620bf",
+      "atlasId": "AT-36",
+      "surface": "Planning defaults",
+      "route": "/settings",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:27.600428+00:00"
+    },
+    {
+      "name": "settings_privacy",
+      "file": "captures/settings_privacy-dark-1.png",
+      "metadata": "captures/settings_privacy-dark-1.json",
+      "sha256": "0952f04958565740ae847a37fbf69412fa875cc44b5642c6aa0c3335ae2b2c95",
+      "atlasId": null,
+      "surface": "settings privacy",
+      "route": "/settings",
+      "visibleScreens": [
+        "SettingsScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:43:02.381522+00:00"
+    },
+    {
+      "name": "site_pick",
+      "file": "captures/site_pick-dark-1.png",
+      "metadata": "captures/site_pick-dark-1.json",
+      "sha256": "aba6741309db724ac282a83ae3b0a3ef15a78e3863920f9a631f9c07779d29d0",
+      "atlasId": null,
+      "surface": "site pick",
+      "route": "/tonight",
+      "visibleScreens": [
+        "LocationPickerScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:59.915841+00:00"
+    },
+    {
+      "name": "weather",
+      "file": "captures/weather-dark-1.png",
+      "metadata": "captures/weather-dark-1.json",
+      "sha256": "26dfe03a70f1fb810cfbd8961c79dfa26a21e107f36f45a1fc5fcfcb7d10a1fd",
+      "atlasId": "AT-08",
+      "surface": "Weather / overview",
+      "route": "/tonight",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:08.217368+00:00"
+    },
+    {
+      "name": "weather_charts_b",
+      "file": "captures/weather_charts_b-dark-1.png",
+      "metadata": "captures/weather_charts_b-dark-1.json",
+      "sha256": "d2af0d42cd3cb196eaac6dcc56823d333ea10916e31efd91cd7f3217894278dd",
+      "atlasId": "AT-09",
+      "surface": "Weather / lower charts",
+      "route": "/tonight",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:10.842219+00:00"
+    },
+    {
+      "name": "weather_forecast_table",
+      "file": "captures/weather_forecast_table-dark-1.png",
+      "metadata": "captures/weather_forecast_table-dark-1.json",
+      "sha256": "9de715a54623e7ee3d633fe6fedd58826a400ad4e71fc7843db3c0f10c088e30",
+      "atlasId": "AT-10",
+      "surface": "Weather / forecast table",
+      "route": "/tonight",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:41:14.217743+00:00"
+    },
+    {
+      "name": "weather_offline",
+      "file": "captures/weather_offline-dark-1.png",
+      "metadata": "captures/weather_offline-dark-1.json",
+      "sha256": "8a11beffa47fbc2c992854bca19eb58cd9b7b5849ac2cb402bf1572199bfe289",
+      "atlasId": "AT-39",
+      "surface": "Weather / cached refresh failure",
+      "route": "/tonight",
+      "visibleScreens": [
+        "WeatherDetailScreen",
+        "NightMoonScreen",
+        "HybridWeatherView"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:34.233189+00:00"
+    },
+    {
+      "name": "welcome",
+      "file": "captures/welcome-dark-1.png",
+      "metadata": "captures/welcome-dark-1.json",
+      "sha256": "9f7f06fae84d3359167dea1e9a2b5902c06eefe6966e97df72206ad74bfebb42",
+      "atlasId": "AT-37",
+      "surface": "Welcome / top",
+      "route": "/tonight",
+      "visibleScreens": [
+        "WelcomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:29.113222+00:00"
+    },
+    {
+      "name": "welcome_b",
+      "file": "captures/welcome_b-dark-1.png",
+      "metadata": "captures/welcome_b-dark-1.json",
+      "sha256": "b74cda9dedf172496fe146249dbeafb61aecdd9f11e67f90173160ca639902c1",
+      "atlasId": "AT-38",
+      "surface": "Welcome / lower",
+      "route": "/tonight",
+      "visibleScreens": [
+        "WelcomeScreen"
+      ],
+      "sourceHead": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+      "runStartedUtc": "2026-10-28T14:39:56.9593931Z",
+      "writtenUtc": "2026-10-28T14:42:30.955084+00:00"
+    }
+  ],
+  "atlasBaseline": "8ec241cd3e4e57a11d9133c7ec4541d4dbd7801a",
+  "atlasCount": 40,
+  "atlasManifestSha256": "767a4cae007860eafb45b7f852a62d6196add0fd9178de2a6018e7265527d455",
+  "atlasImagesReused": false,
+  "fixture": "Synthetic data; frozen clock 2026-10-18T15:00Z, planned night 2026-10-19, Europe/Kyiv. Real current production widgets/fonts/router/ViewModels/domain; in-memory SQLite. Dark / 100% / 375×812 / DPR 1.",
+  "limits": "Fresh host renders establish captured compositions only. Edges are traced from current production callers, not an exhaustive interaction test. Android, TalkBack, all error states, themes and text scales are not revalidated by this map. System file pickers, permissions and external share/map endpoints are boundaries, not internal routes.",
+  "tabNavigation": {
+    "roots": [
+      "tonight",
+      "logbook",
+      "library",
+      "settings"
+    ],
+    "behavior": "Bottom tabs exist only at the four root paths. Each branch keeps its stack. A reselected tab can reset its branch; Back at another root returns to Tonight. Root overlays and detail pages return to their caller."
+  },
+  "stateModel": [
+    {
+      "label": "Working draft",
+      "meaning": "Edits can be persisted for recovery; this is not explicit Save plan."
+    },
+    {
+      "label": "Saved plan",
+      "meaning": "Explicit snapshot. Later changes are Saved · changed until saved again."
+    },
+    {
+      "label": "Fit verdict",
+      "meaning": "Independent time-placement analysis: not a persistence or result state."
+    },
+    {
+      "label": "Recorded result",
+      "meaning": "Reported imaging outcome; not implied by planned integration or Fits."
+    }
+  ]
+}

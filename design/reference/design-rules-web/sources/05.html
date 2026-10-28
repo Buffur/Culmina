@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><title>.agents\skills\culmina-design-spacing\SKILL.md</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>.agents\skills\culmina-design-spacing\SKILL.md</h1><div id="L1"><a href="#L1">1</a> ---</div>
+<div id="L2"><a href="#L2">2</a> name: culmina-design-spacing</div>
+<div id="L3"><a href="#L3">3</a> description: Apply Culmina spacing, shape and motion to focused density, alignment or layout corrections within the accepted composition. Adaptive navigation or alternative visual studies require their named task.</div>
+<div id="L4"><a href="#L4">4</a> ---</div>
+<div id="L5"><a href="#L5">5</a> </div>
+<div id="L6"><a href="#L6">6</a> # Culmina spacing, shape and motion</div>
+<div id="L7"><a href="#L7">7</a> </div>
+<div id="L8"><a href="#L8">8</a> Use for local spacing, alignment, density, radius, border and functional-motion work. Read [AGENTS](../../../AGENTS.md), the affected widget/callers and the relevant definitions in `lib/core/theme/app_spacing.dart`, `app_radius.dart` and `app_motion.dart`.</div>
+<div id="L9"><a href="#L9">9</a> </div>
+<div id="L10"><a href="#L10">10</a> - Distinguish scale values, component padding and screen gutters. `md=16`, `gutter=20` and `section=28` are available values, not instructions to normalize every screen.</div>
+<div id="L11"><a href="#L11">11</a> - Inspect actual screen padding and chart/calendar width constraints before adjusting a gap. `DocumentSection` in `lib/presentation/shared/document_section.dart` supplies flat grouping, default 16 dp padding and 8 dp corners; preserve child actions, focus and natural text height.</div>
+<div id="L12"><a href="#L12">12</a> - Improve grouping before shrinking text. Diagnose width/height and scrolling ownership before adding flex or wrapping; use [layout diagnosis](../flutter-fix-layout-issues/SKILL.md) for an actual constraint error.</div>
+<div id="L13"><a href="#L13">13</a> - Preserve reachable controls, full labels, text scaling and large-content scrolling. Avoid clipping, fixed text-card heights or a smaller user scaler as overflow repairs.</div>
+<div id="L14"><a href="#L14">14</a> - Read shape values from AppRadius: small 6, menu 8, large 12, pill 999. Inspect the caller&#x27;s current role before changing it.</div>
+<div id="L15"><a href="#L15">15</a> - Use AppMotion and its reduced-motion handling. Source-owned scientific sky ramps and stacking-gain gradients are functional data presentation, not permission to add decorative effects.</div>
+<div id="L16"><a href="#L16">16</a> </div>
+<div id="L17"><a href="#L17">17</a> A phone overflow does not call for new navigation or an adaptive shell. Use the named adaptive-layout skill only for that task.</div>
+<div id="L18"><a href="#L18">18</a> </div>
+<div id="L19"><a href="#L19">19</a> Report the geometry/source/caller, chosen correction, actual checks and limits. A static render establishes only its captured theme, size, scale and state.</div>

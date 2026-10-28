@@ -1,0 +1,50 @@
+<!doctype html><meta charset="utf-8"><title>lib\core\theme\app_colors.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\core\theme\app_colors.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/material.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> /// The raw colours behind the three themes. Widgets never read these</div>
+<div id="L4"><a href="#L4">4</a> /// directly: they use `Theme.of(context).colorScheme` or [AppPalette]</div>
+<div id="L5"><a href="#L5">5</a> /// (TASK 12.4). The text roles (S5.1) are documented in</div>
+<div id="L6"><a href="#L6">6</a> /// `docs/DESIGN_SYSTEM.md`: in light and dark every role is WCAG AA</div>
+<div id="L7"><a href="#L7">7</a> /// (4.5:1) on the background, the surface and the raised surface, and each</div>
+<div id="L8"><a href="#L8">8</a> /// is at least 1.3 times the next one&#x27;s contrast. Control borders (S5.2)</div>
+<div id="L9"><a href="#L9">9</a> /// are at least 3:1 (WCAG 1.4.11); the error colour is AA as text.</div>
+<div id="L10"><a href="#L10">10</a> class AppColors {</div>
+<div id="L11"><a href="#L11">11</a>   // The Culmina mark&#x27;s colours are generated with its geometry</div>
+<div id="L12"><a href="#L12">12</a>   // (lib/presentation/shared/culmina_mark_geometry.dart, tool/culmina_mark.py).</div>
+<div id="L13"><a href="#L13">13</a> </div>
+<div id="L14"><a href="#L14">14</a>   // Light Theme</div>
+<div id="L15"><a href="#L15">15</a>   static const Color lightBackground = Color(0xFFFFFFFF);</div>
+<div id="L16"><a href="#L16">16</a>   static const Color lightSurface = Color(0xFFF7F7F5);</div>
+<div id="L17"><a href="#L17">17</a>   static const Color lightSurfaceRaised = Color(0xFFFFFFFF);</div>
+<div id="L18"><a href="#L18">18</a>   static const Color lightTextPrimary = Color(0xFF37352F); // 11.4:1</div>
+<div id="L19"><a href="#L19">19</a>   static const Color lightTextSecondary = Color(0xFF5A5955); // 6.5:1</div>
+<div id="L20"><a href="#L20">20</a>   static const Color lightTextTertiary = Color(0xFF6E6D69); // 4.8:1</div>
+<div id="L21"><a href="#L21">21</a>   static const Color lightTextDisabled = Color(0xFFA3A29F);</div>
+<div id="L22"><a href="#L22">22</a>   static const Color lightBorder = Color(0xFFE9E9E7);</div>
+<div id="L23"><a href="#L23">23</a>   static const Color lightControlBorder = Color(0xFF8F8E8A); // 3.1:1</div>
+<div id="L24"><a href="#L24">24</a>   static const Color lightError = Color(0xFFB00020); // 6.8:1</div>
+<div id="L25"><a href="#L25">25</a> </div>
+<div id="L26"><a href="#L26">26</a>   // Dark Theme</div>
+<div id="L27"><a href="#L27">27</a>   static const Color darkBackground = Color(0xFF191919);</div>
+<div id="L28"><a href="#L28">28</a>   static const Color darkSurface = Color(0xFF202020);</div>
+<div id="L29"><a href="#L29">29</a>   static const Color darkSurfaceRaised = Color(0xFF252525);</div>
+<div id="L30"><a href="#L30">30</a>   static const Color darkTextPrimary = Color(0xFFEBEBEA); // 12.8:1</div>
+<div id="L31"><a href="#L31">31</a>   static const Color darkTextSecondary = Color(0xFFA5A5A3); // 6.2:1</div>
+<div id="L32"><a href="#L32">32</a>   static const Color darkTextTertiary = Color(0xFF8F8F8D); // 4.7:1</div>
+<div id="L33"><a href="#L33">33</a>   static const Color darkTextDisabled = Color(0xFF6B6B69);</div>
+<div id="L34"><a href="#L34">34</a>   static const Color darkSelection = Color(0xFF343432);</div>
+<div id="L35"><a href="#L35">35</a>   static const Color darkBorder = Color(0xFF2F2F2F);</div>
+<div id="L36"><a href="#L36">36</a>   static const Color darkControlBorder = Color(0xFF6F6F6D); // 3.0:1</div>
+<div id="L37"><a href="#L37">37</a>   static const Color darkError = Color(0xFFF28B82); // 6.4:1</div>
+<div id="L38"><a href="#L38">38</a> </div>
+<div id="L39"><a href="#L39">39</a>   // Field Mode (Red): brightness, not hue, separates the roles.</div>
+<div id="L40"><a href="#L40">40</a>   static const Color fieldBackground = Color(0xFF000000);</div>
+<div id="L41"><a href="#L41">41</a>   static const Color fieldSurface = Color(0xFF110000);</div>
+<div id="L42"><a href="#L42">42</a>   static const Color fieldSurfaceRaised = Color(0xFF1A0000);</div>
+<div id="L43"><a href="#L43">43</a>   static const Color fieldTextPrimary = Color(0xFFFF0000);</div>
+<div id="L44"><a href="#L44">44</a>   static const Color fieldTextSecondary = Color(0xFFAA0000);</div>
+<div id="L45"><a href="#L45">45</a>   static const Color fieldTextTertiary = Color(0xFF880000);</div>
+<div id="L46"><a href="#L46">46</a>   static const Color fieldTextDisabled = Color(0xFF660000);</div>
+<div id="L47"><a href="#L47">47</a>   static const Color fieldBorder = Color(0xFF330000);</div>
+<div id="L48"><a href="#L48">48</a>   // Brighter than a card border so controls stay visible (UX-39).</div>
+<div id="L49"><a href="#L49">49</a>   static const Color fieldControlBorder = Color(0xFF880000);</div>
+<div id="L50"><a href="#L50">50</a> }</div>

@@ -1,0 +1,59 @@
+{
+  "head": "0e2130238f6d241cec270f65ff030d2ea67cf73f",
+  "retained": [
+    {
+      "name": "culmina-design-components",
+      "status": "Current \u2014 retain",
+      "reason": "Distinct bounded purpose; no duplicate Culmina design skill.",
+      "path": ".agents\\skills\\culmina-design-components\\SKILL.md"
+    },
+    {
+      "name": "culmina-design-rules",
+      "status": "Current \u2014 retain",
+      "reason": "Distinct bounded purpose; no duplicate Culmina design skill.",
+      "path": ".agents\\skills\\culmina-design-rules\\SKILL.md"
+    },
+    {
+      "name": "culmina-design-spacing",
+      "status": "Current \u2014 retain",
+      "reason": "Distinct bounded purpose; no duplicate Culmina design skill.",
+      "path": ".agents\\skills\\culmina-design-spacing\\SKILL.md"
+    },
+    {
+      "name": "culmina-design-tokens",
+      "status": "Current \u2014 retain",
+      "reason": "Distinct bounded purpose; no duplicate Culmina design skill.",
+      "path": ".agents\\skills\\culmina-design-tokens\\SKILL.md"
+    },
+    {
+      "name": "culmina-design-typography",
+      "status": "Current \u2014 retain",
+      "reason": "Distinct bounded purpose; no duplicate Culmina design skill.",
+      "path": ".agents\\skills\\culmina-design-typography\\SKILL.md"
+    }
+  ],
+  "reclassified": [
+    {
+      "category": "Implementation sources / references",
+      "decision": "Supporting evidence under the relevant skill; not independent design policy"
+    },
+    {
+      "category": "6 compatibility pointers",
+      "decision": "Redirects to AGENTS/skills; no additional rules"
+    },
+    {
+      "category": "External playbooks and duplicate acquisitions",
+      "decision": "Removed from normal Culmina design navigation; optional tools, not adopted product policy. Global installations preserved."
+    },
+    {
+      "category": "Archived or empty project skill directories",
+      "decision": "No active SKILL.md: not active skills; preserve historical acquisition evidence."
+    }
+  ],
+  "notes": [
+    "No obsolete one of the five Culmina design skills was found.",
+    "DetailScaffold and AltitudeChartWidget remain reference-only where there is no current production adopter; gallery availability does not imply adoption.",
+    "Legacy gallery renderer did not load Geist. New isolated renderer loads the actual bundled Geist font."
+  ],
+  "productionModified": false
+}

@@ -1,3 +1,5 @@
+import '../../core/theme/app_text_theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -69,10 +71,12 @@ class PlannerSummaryCard extends StatelessWidget {
                           ),
                         Text(
                           title,
-                          style: text.bodyLarge?.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                text.bodyLarge,
+                                AppTextGeometry.summaryTitle,
+                              )
+                              .copyWith(fontWeight: FontWeight.w400),
                         ),
                         if (caption != null)
                           Text(

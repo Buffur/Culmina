@@ -12,7 +12,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../domain/models/camera_class.dart';
@@ -156,10 +156,12 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                     Text(
                       line,
                       key: const Key('detail.context'),
-                      style: AppTypography.body.copyWith(
-                        height: 1.5,
-                        color: p.textSecondary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).body,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(color: p.textSecondary),
                     ),
                   if (zoneRule != null)
                     Padding(
@@ -167,9 +169,8 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                       child: Text(
                         zoneRule,
                         key: const Key('detail.zone'),
-                        style: AppTypography.dense.copyWith(
-                          color: p.textSecondary,
-                        ),
+                        style: AppTextTheme.of(context).dense
+                            .copyWith(color: p.textSecondary),
                       ),
                     ),
                   _Result(
@@ -278,9 +279,8 @@ class _Block extends StatelessWidget {
             header: true,
             child: Text(
               title,
-              style: AppTypography.sectionHeading.copyWith(
-                color: p.textPrimary,
-              ),
+              style: AppTextTheme.of(context).sectionHeading
+                  .copyWith(color: p.textPrimary),
             ),
           ),
           const SizedBox(height: AppSpacing.cellY),
@@ -345,10 +345,9 @@ class _Facts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final label = AppTypography.body.copyWith(
-      height: 1.5,
-      color: p.textPrimary,
-    );
+    final label = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+        .copyWith(color: p.textPrimary);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -362,9 +361,8 @@ class _Facts extends StatelessWidget {
                       children: [
                         Text(
                           key,
-                          style: AppTypography.caption.copyWith(
-                            color: p.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context).caption
+                              .copyWith(color: p.textSecondary),
                         ),
                         Text(value, style: label),
                       ],
@@ -511,7 +509,7 @@ class _Result extends StatelessWidget {
                   due: due,
                 ),
           key: const Key('detail.summary'),
-          style: AppTypography.value.copyWith(
+          style: AppTextTheme.of(context).value.copyWith(
             color: p.textPrimary,
             fontFeatures: const [FontFeature.tabularFigures()],
           ),
@@ -522,10 +520,12 @@ class _Result extends StatelessWidget {
             child: Text(
               when,
               key: const Key('detail.resultWhen'),
-              style: AppTypography.caption.copyWith(
-                height: 1.55,
-                color: p.textSecondary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).caption,
+                    AppTextGeometry.supporting,
+                  )
+                  .copyWith(color: p.textSecondary),
             ),
           ),
         const SizedBox(height: AppSpacing.itemGap),
@@ -616,10 +616,8 @@ class _SnapshotSections extends StatelessWidget {
         header: true,
         child: Text(
           text,
-          style: AppTypography.value.copyWith(
-            fontWeight: FontWeight.w600,
-            color: p.textPrimary,
-          ),
+          style: AppTextTheme.of(context).value
+              .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
         ),
       ),
     );
@@ -789,12 +787,14 @@ class _PlanVsActual extends StatelessWidget {
           : 'Not yet: the night has not started';
     }
 
-    final small = AppTypography.caption.copyWith(color: p.textSecondary);
-    final value = AppTypography.body.copyWith(
-      height: 1.5,
-      color: p.textPrimary,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
+    final small = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
+    final value = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+        .copyWith(
+          color: p.textPrimary,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        );
     Widget pair(
       String a,
       String av,
@@ -899,7 +899,8 @@ class _PlanVsActual extends StatelessWidget {
                   Text(
                     'Ideal √N within comparable light frames: twice the time '
                     'gives 1.41×, not 2×. Not absolute signal-to-noise.',
-                    style: small.copyWith(height: 1.55),
+                    style: AppTextTheme.of(context)
+                        .resolve(small, AppTextGeometry.supporting),
                   ),
                 ],
               ),
@@ -1093,17 +1094,20 @@ class _NameTile extends StatelessWidget {
                         children: [
                           Text(
                             AppWords.nameOptional,
-                            style: AppTypography.body.copyWith(
-                              height: 1.5,
-                              fontWeight: FontWeight.w500,
-                              color: p.textPrimary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).body,
+                                  AppTextGeometry.standard,
+                                )
+                                .copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: p.textPrimary,
+                                ),
                           ),
                           Text(
                             session.name ?? 'None · shown as target · night',
-                            style: AppTypography.caption.copyWith(
-                              color: p.textSecondary,
-                            ),
+                            style: AppTextTheme.of(context).caption
+                                .copyWith(color: p.textSecondary),
                           ),
                         ],
                       ),

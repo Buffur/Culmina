@@ -1,0 +1,211 @@
+00:00 +0: loading C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart
+00:00 +0: Concept B app audit: home dark 1.0
+00:02 +1: Concept B app audit: home_timeline dark 1.0
+00:04 +2: Concept B app audit: plan dark 1.0
+00:07 +3: Concept B app audit: plan_b dark 1.0
+00:09 +4: Concept B app audit: plan_capture dark 1.0
+00:11 +5: Concept B app audit: plan_gain_open dark 1.0
+00:14 +6: Concept B app audit: plan_budget_assumptions dark 1.0
+00:17 +7: Concept B app audit: weather dark 1.0
+00:19 +8: Concept B app audit: weather_charts_b dark 1.0
+00:22 +9: Concept B app audit: weather_forecast_table dark 1.0
+00:25 +10: Concept B app audit: night dark 1.0
+00:27 +11: Concept B app audit: night_reading_body dark 1.0
+00:31 +12: Concept B app audit: night_exact_intervals dark 1.0
+00:35 +13: Concept B app audit: moon dark 1.0
+00:37 +14: Concept B app audit: moon_b dark 1.0
+00:40 +15: Concept B app audit: plan_editor dark 1.0
+00:43 +16: Concept B app audit: plan_editor_bottom dark 1.0
+00:46 +17: Concept B app audit: plan_cal dark 1.0
+00:49 +18: Concept B app audit: plan_cal_b dark 1.0
+00:52 +19: Concept B app audit: plan_asm dark 1.0
+00:56 +20: Concept B app audit: plan_target dark 1.0
+00:59 +21: Concept B app audit: lib_target dark 1.0
+01:03 +22: Concept B app audit: lib_rig dark 1.0
+01:06 +23: Concept B app audit: lib_rig_full dark 1.0
+01:10 +24: Concept B app audit: lib_site dark 1.0
+01:13 +25: Concept B app audit: geo_add dark 1.0
+01:15 +26: Concept B app audit: library dark 1.0
+01:17 +27: Concept B app audit: logbook dark 1.0
+01:19 +28: Concept B app audit: entry dark 1.0
+01:21 +29: Concept B app audit: entry_b dark 1.0
+01:24 +30: Concept B app audit: result dark 1.0
+01:26 +31: Concept B app audit: logbook_progress dark 1.0
+01:29 +32: Concept B app audit: progress_guide_open dark 1.0
+01:33 +33: Concept B app audit: settings dark 1.0
+01:34 +34: Concept B app audit: settings_appearance dark 1.0
+01:37 +35: Concept B app audit: settings_planning dark 1.0
+01:39 +36: Concept B app audit: welcome dark 1.0
+01:40 +37: Concept B app audit: welcome_b dark 1.0
+01:42 +38: Concept B app audit: weather_offline dark 1.0
+01:45 +39: Concept B app audit: lib_rig_unsaved dark 1.0
+01:50 +40: Concept B app audit: home_candidates dark 1.0
+01:53 +41: Concept B app audit: plan_rig dark 1.0
+01:55 +42: Concept B app audit: plan_context dark 1.0
+01:58 +43: Concept B app audit: manage_rigs dark 1.0
+02:00 +44: Concept B app audit: manage_targets dark 1.0
+02:03 +45: Concept B app audit: select_sites dark 1.0
+02:05 +46: Concept B app audit: metadata_ready dark 1.0
+02:07 +47: Concept B app audit: geo_map dark 1.0
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/12.png
+02:09 +48: Concept B app audit: site_pick dark 1.0
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/10.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/18/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/9.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/11.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/17/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/19/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/8.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/16/12.png
+HTTP request failed, statusCode: 400, https://tile.openstreetmap.org/5/20/12.png
+02:11 +49: Concept B app audit: settings_privacy dark 1.0
+02:13 +50: Concept B app audit: settings_backup dark 1.0
+02:16 +51: Concept B app audit: settings_about dark 1.0
+02:18 +52: Concept B app audit: licenses dark 1.0
+02:21 +53: Concept B app audit: lib_rig_edit dark 1.0
+02:25 +54: Concept B app audit: lib_site_edit dark 1.0
+02:29 +55: Concept B app audit: lib_target_new dark 1.0
+02:32 +56: Concept B app audit: home_nosite dark 1.0
+02:33 +57: Concept B app audit: plan_empty dark 1.0
+02:35 +58: Concept B app audit: plan_settings dark 1.0
+02:36 +59: Concept B app audit: rig_new dark 1.0
+02:40 +60: Concept B app audit: targets dark 1.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: _TypeError:<Null check operator used on a null value>
+targets route
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart:923:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart line 923
+The test description was:
+  Concept B app audit: targets dark 1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:41 +60 -1: Concept B app audit: targets dark 1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Concept B app audit: targets dark 1.0
+  
+02:41 +60 -1: Concept B app audit: rigs dark 1.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: _TypeError:<Null check operator used on a null value>
+rigs route
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart:923:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart line 923
+The test description was:
+  Concept B app audit: rigs dark 1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:42 +60 -2: Concept B app audit: rigs dark 1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Concept B app audit: rigs dark 1.0
+  
+02:42 +60 -2: Concept B app audit: sites dark 1.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: _TypeError:<Null check operator used on a null value>
+sites route
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart:923:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/Users/zalub/OneDrive/Desktop/Astro%20Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart line 923
+The test description was:
+  Concept B app audit: sites dark 1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:43 +60 -3: Concept B app audit: sites dark 1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Concept B app audit: sites dark 1.0
+  
+02:43 +60 -3: Some tests failed.
+
+Failing tests:
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart: Concept B app audit: rigs dark 1.0
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart: Concept B app audit: sites dark 1.0
+  C:/Users/zalub/OneDrive/Desktop/Astro Planner/Astro-Planner/test/presentation/design_system/concept_b_app_audit_renders_test.dart: Concept B app audit: targets dark 1.0

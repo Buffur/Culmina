@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 
 /// A content-sized calendar at standard text size with Material controls,
 /// YearPicker, validated date input and the local-date Cancel/OK contract.
@@ -81,7 +81,7 @@ class _NightPickerDialogState extends State<NightPickerDialog> {
                             header: true,
                             child: Text(
                               localizations.formatMediumDate(_selected),
-                              style: AppTypography.nightHeading,
+                              style: AppTextTheme.of(context).nightHeading,
                             ),
                           ),
                         ],
@@ -247,7 +247,7 @@ class _NightPickerDialogState extends State<NightPickerDialog> {
                                           .firstDayOfWeekIndex +
                                       i) %
                                   7],
-                              style: AppTypography.caption,
+                              style: AppTextTheme.of(context).caption,
                             ),
                           ),
                         ),
@@ -294,7 +294,7 @@ class _NightPickerDialogState extends State<NightPickerDialog> {
                                 : scheme.onSurface,
                             textStyle:
                                 Theme.of(context).datePickerTheme.dayStyle ??
-                                AppTypography.body,
+                                AppTextTheme.of(context).body,
                           ),
                           onPressed: enabled ? choose : null,
                           child: ExcludeSemantics(
@@ -425,7 +425,7 @@ class _DateChoiceListState extends State<_DateChoiceList> {
                 backgroundColor: selected ? scheme.primary : null,
                 textStyle:
                     Theme.of(context).datePickerTheme.dayStyle ??
-                    AppTypography.body,
+                    AppTextTheme.of(context).body,
               ),
               onPressed: enabled ? choose : null,
               child: Row(

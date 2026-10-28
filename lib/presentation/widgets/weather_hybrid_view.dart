@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import '../../core/units/display_units.dart';
 import '../../core/utils/quantity_text.dart';
@@ -144,15 +144,12 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
       windowStartUtc: night?.startUtc ?? utc,
       zoneId: zoneId,
     );
-    final quiet = AppTypography.caption.copyWith(
-      height: 1.65,
-      color: p.textSecondary,
-    );
-    final status = AppTypography.body.copyWith(
-      height: 1.5,
-      fontWeight: FontWeight.w600,
-      color: p.textPrimary,
-    );
+    final quiet = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.explanatory)
+        .copyWith(color: p.textSecondary);
+    final status = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+        .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary);
     final noDark = s?.span == NightWeatherSpan.noDark;
     final available = state is NightWeatherAvailable ? state : null;
     final unavailable = state is NightWeatherUnavailable;
@@ -184,10 +181,12 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
             child: Text(
               headline,
               key: const Key('weather.facts'),
-              style: AppTypography.answerHeading.copyWith(
-                height: 1.3,
-                color: p.textPrimary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).answerHeading,
+                    AppTextGeometry.answer,
+                  )
+                  .copyWith(color: p.textPrimary),
             ),
           ),
           if (available != null &&
@@ -205,11 +204,15 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
               'Dark ${at(s.fromUtc)} → ${at(s.toUtc)} · '
               '${QuantityText.duration(s.toUtc.difference(s.fromUtc))}',
               key: const Key('weather.span'),
-              style: AppTypography.body.copyWith(
-                height: 1.55,
-                color: p.textSecondary,
-                fontFeatures: const [FontFeature.tabularFigures()],
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).body,
+                    AppTextGeometry.supporting,
+                  )
+                  .copyWith(
+                    color: p.textSecondary,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
             ),
           ] else if (s != null) ...[
             const SizedBox(height: 8),
@@ -224,10 +227,12 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
                 at,
               ),
               key: const Key('weather.span'),
-              style: AppTypography.body.copyWith(
-                height: 1.55,
-                color: p.textSecondary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).body,
+                    AppTextGeometry.supporting,
+                  )
+                  .copyWith(color: p.textSecondary),
             ),
           ],
           if (s != null &&
@@ -246,11 +251,15 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
               Text(
                 trend,
                 key: const Key('weather.trend'),
-                style: AppTypography.value.copyWith(
-                  height: 1.55,
-                  color: p.textPrimary,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).value,
+                      AppTextGeometry.supporting,
+                    )
+                    .copyWith(
+                      color: p.textPrimary,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
               ),
             ],
           // How far to trust it (`.weather-trust`).
@@ -351,9 +360,8 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
               header: true,
               child: Text(
                 'Dark-time statistics',
-                style: AppTypography.sectionHeading.copyWith(
-                  color: p.textPrimary,
-                ),
+                style: AppTextTheme.of(context).sectionHeading
+                    .copyWith(color: p.textPrimary),
               ),
             ),
             if (view == WeatherView.charts)
@@ -392,10 +400,12 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
             const SizedBox(height: 16),
             Text(
               'Inspect an hour',
-              style: AppTypography.caption.copyWith(
-                height: 1.5,
-                color: p.textSecondary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).caption,
+                    AppTextGeometry.standard,
+                  )
+                  .copyWith(color: p.textSecondary),
             ),
             if (slots.length > 1)
               SliderTheme(
@@ -475,12 +485,16 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
                         widthFactor: 1,
                         child: Text(
                           'Look at Clear Outside',
-                          style: AppTypography.caption.copyWith(
-                            height: 1.7,
-                            color: p.textSecondary,
-                            decoration: TextDecoration.underline,
-                            decorationColor: p.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).caption,
+                                AppTextGeometry.weatherDescription,
+                              )
+                              .copyWith(
+                                color: p.textSecondary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: p.textSecondary,
+                              ),
                         ),
                       ),
                     ),
@@ -489,10 +503,12 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
               ],
             ),
             key: const Key('weather.notSeeing'),
-            style: AppTypography.caption.copyWith(
-              height: 1.7,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).caption,
+                  AppTextGeometry.weatherDescription,
+                )
+                .copyWith(color: p.textSecondary),
           ),
         ],
       ),
@@ -537,10 +553,10 @@ class _HybridWeatherViewState extends State<HybridWeatherView> {
   }
 }
 
-TextStyle _note(BuildContext context) => AppTypography.dense.copyWith(
-  height: 1.6,
-  color: AppPalette.of(context).textSecondary,
-);
+TextStyle _note(BuildContext context) =>
+    AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).dense, AppTextGeometry.reading)
+        .copyWith(color: AppPalette.of(context).textSecondary);
 
 /// "19 Oct, 22:00 GMT+3", with " *" when only part of its preceding hour
 /// is in the dark span.
@@ -677,11 +693,15 @@ class _Rows extends StatelessWidget {
                     builder: (context, constraints) {
                       final w = constraints.maxWidth - 14;
                       final overview = _overview(slots, m, units);
-                      final valueStyle = AppTypography.value.copyWith(
-                        height: 1.5,
-                        color: p.textPrimary,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      );
+                      final valueStyle = AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).value,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(
+                            color: p.textPrimary,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          );
                       final valueWidth = TextPainter(
                         text: TextSpan(text: overview, style: valueStyle),
                         textDirection: Directionality.of(context),
@@ -693,11 +713,15 @@ class _Rows extends StatelessWidget {
                       valueWidth.dispose();
                       final name = _MetricName(
                         m,
-                        style: AppTypography.caption.copyWith(
-                          height: 1.45,
-                          fontWeight: FontWeight.w500,
-                          color: p.textPrimary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).caption,
+                              AppTextGeometry.tableValue,
+                            )
+                            .copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: p.textPrimary,
+                            ),
                       );
                       final value = Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -710,9 +734,8 @@ class _Rows extends StatelessWidget {
                           const SizedBox(height: 3),
                           Text(
                             _coverageLine(slots, m),
-                            style: AppTypography.dense.copyWith(
-                              color: p.textSecondary,
-                            ),
+                            style: AppTextTheme.of(context).dense
+                                .copyWith(color: p.textSecondary),
                           ),
                         ],
                       );
@@ -814,7 +837,7 @@ class _ChartsState extends State<_Charts> {
                   child: Text(
                     time(s),
                     textAlign: TextAlign.center,
-                    style: AppTypography.dense.copyWith(
+                    style: AppTextTheme.of(context).dense.copyWith(
                       fontWeight: i == selected
                           ? FontWeight.w600
                           : FontWeight.w400,
@@ -883,14 +906,15 @@ class _ChartsState extends State<_Charts> {
                                   ),
                                   child: Text(
                                     time(s),
-                                    style: AppTypography.dense.copyWith(
-                                      color: i == selected
-                                          ? hybrid.selectedHourText
-                                          : p.textSecondary,
-                                      fontFeatures: const [
-                                        FontFeature.tabularFigures(),
-                                      ],
-                                    ),
+                                    style: AppTextTheme.of(context).dense
+                                        .copyWith(
+                                          color: i == selected
+                                              ? hybrid.selectedHourText
+                                              : p.textSecondary,
+                                          fontFeatures: const [
+                                            FontFeature.tabularFigures(),
+                                          ],
+                                        ),
                                   ),
                                 ),
                               ),
@@ -969,7 +993,8 @@ class _Panel extends StatelessWidget {
             values.reduce(math.max).ceil() + (m.temperature ? 1 : 0),
           );
     final unit = _unit(m, units);
-    final small = AppTypography.dense.copyWith(color: p.textSecondary);
+    final small = AppTextTheme.of(context).dense
+        .copyWith(color: p.textSecondary);
     final axis = values.isEmpty
         ? 'No known values'
         : '$low–$high $unit'
@@ -1002,10 +1027,12 @@ class _Panel extends StatelessWidget {
                 children: [
                   _MetricName(
                     m,
-                    style: AppTypography.itemTitle.copyWith(
-                      height: 1.45,
-                      color: p.textPrimary,
-                    ),
+                    style: AppTextTheme.of(context)
+                        .resolve(
+                          AppTextTheme.of(context).itemTitle,
+                          AppTextGeometry.tableValue,
+                        )
+                        .copyWith(color: p.textPrimary),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -1027,6 +1054,7 @@ class _Panel extends StatelessWidget {
             child: CustomPaint(
               size: Size(width, 80),
               painter: _LinePainter(
+                gapStyle: AppTextTheme.of(context).caption,
                 slots: slots,
                 metric: m,
                 units: units,
@@ -1050,6 +1078,7 @@ class _Panel extends StatelessWidget {
 class _LinePainter extends CustomPainter {
   _LinePainter({
     required this.slots,
+    required this.gapStyle,
     required this.metric,
     required this.units,
     required this.low,
@@ -1062,6 +1091,7 @@ class _LinePainter extends CustomPainter {
   });
 
   final List<NightWeatherSlot> slots;
+  final TextStyle gapStyle;
   final _Metric metric;
   final DisplayUnits units;
   final double low;
@@ -1112,7 +1142,7 @@ class _LinePainter extends CustomPainter {
             final tp = TextPainter(
               text: TextSpan(
                 text: '?',
-                style: AppTypography.caption.copyWith(color: gap),
+                style: gapStyle.copyWith(color: gap),
               ),
               textDirection: TextDirection.ltr,
             )..layout();
@@ -1147,6 +1177,7 @@ class _LinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_LinePainter old) =>
+      old.gapStyle != gapStyle ||
       old.slots != slots ||
       old.units != units ||
       old.line != line ||
@@ -1217,7 +1248,8 @@ class _HourDetails extends StatelessWidget {
             : 'Unknown',
       ),
     ];
-    final style = AppTypography.caption.copyWith(height: 1.5);
+    final style = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.standard);
     return DecoratedBox(
       key: const Key('weather.hourDetails'),
       decoration: BoxDecoration(
@@ -1252,22 +1284,30 @@ class _HourDetails extends StatelessWidget {
                           children: [
                             Text(
                               'Hourly values',
-                              style: AppTypography.body.copyWith(
-                                height: 1.5,
-                                fontWeight: FontWeight.w500,
-                                color: p.textPrimary,
-                              ),
+                              style: AppTextTheme.of(context)
+                                  .resolve(
+                                    AppTextTheme.of(context).body,
+                                    AppTextGeometry.standard,
+                                  )
+                                  .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: p.textPrimary,
+                                  ),
                             ),
                             Text(
                               time,
                               key: const Key('weather.hourLabel'),
-                              style: AppTypography.body.copyWith(
-                                height: 1.5,
-                                color: p.textSecondary,
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                              ),
+                              style: AppTextTheme.of(context)
+                                  .resolve(
+                                    AppTextTheme.of(context).body,
+                                    AppTextGeometry.standard,
+                                  )
+                                  .copyWith(
+                                    color: p.textSecondary,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  ),
                             ),
                           ],
                         ),
@@ -1291,11 +1331,15 @@ class _HourDetails extends StatelessWidget {
                     ),
                     child: Text(
                       _instant(context, slot, zoneId),
-                      style: AppTypography.body.copyWith(
-                        height: 1.5,
-                        fontWeight: FontWeight.w600,
-                        color: p.textPrimary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).body,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: p.textPrimary,
+                          ),
                     ),
                   ),
                   for (final (label, value) in rows)
@@ -1373,19 +1417,19 @@ class _Details extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     final s = summary;
-    final text = AppTypography.caption.copyWith(
-      height: 1.7,
-      color: p.textSecondary,
-    );
+    final text = AppTextTheme.of(context)
+        .resolve(
+          AppTextTheme.of(context).caption,
+          AppTextGeometry.weatherDescription,
+        )
+        .copyWith(color: p.textSecondary);
     final snapshot = state.snapshot;
-    final dense = AppTypography.dense.copyWith(
+    final dense = AppTextTheme.of(context).dense.copyWith(
       color: p.textPrimary,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
-    final head = AppTypography.dense.copyWith(
-      fontWeight: FontWeight.w600,
-      color: p.textSecondary,
-    );
+    final head = AppTextTheme.of(context).dense
+        .copyWith(fontWeight: FontWeight.w600, color: p.textSecondary);
     String v(double? x) => x == null ? '—' : _number(x);
     final columns = [
       'Local time',
@@ -1535,7 +1579,8 @@ class _ComingNights extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final p = AppPalette.of(context);
-    final small = AppTypography.caption.copyWith(color: p.textSecondary);
+    final small = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
     final beyond = overview.firstBeyond;
     final browser = context.read<NightBrowserViewModel?>();
     return Padding(
@@ -1551,19 +1596,20 @@ class _ComingNights extends StatelessWidget {
                 header: true,
                 child: Text(
                   'Coming nights',
-                  style: AppTypography.sectionHeading.copyWith(
-                    color: p.textPrimary,
-                  ),
+                  style: AppTextTheme.of(context).sectionHeading
+                      .copyWith(color: p.textPrimary),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'The forecast covers some or all of these nights. Later dates '
                 'have no forecast.',
-                style: AppTypography.caption.copyWith(
-                  height: 1.65,
-                  color: p.textSecondary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      AppTextGeometry.explanatory,
+                    )
+                    .copyWith(color: p.textSecondary),
               ),
               const SizedBox(height: AppSpacing.md),
               for (final (i, n) in overview.nights.indexed)
@@ -1584,7 +1630,7 @@ class _ComingNights extends StatelessWidget {
                         Text(
                           'Night of ${NightTimeFormatter.eveningDate(n.eveningDate)}'
                           '${n.eveningDate == plan.eveningDate ? ' · your plan' : ''}',
-                          style: AppTypography.value.copyWith(
+                          style: AppTextTheme.of(context).value.copyWith(
                             fontWeight: FontWeight.w500,
                             color: p.textPrimary,
                           ),
@@ -1630,10 +1676,12 @@ class _ComingNights extends StatelessWidget {
                   'Night and Moon browsing remain '
                   'available.',
                   key: const Key('weather.nights.beyond'),
-                  style: AppTypography.caption.copyWith(
-                    height: 1.65,
-                    color: p.textSecondary,
-                  ),
+                  style: AppTextTheme.of(context)
+                      .resolve(
+                        AppTextTheme.of(context).caption,
+                        AppTextGeometry.explanatory,
+                      )
+                      .copyWith(color: p.textSecondary),
                 ),
             ],
           ),

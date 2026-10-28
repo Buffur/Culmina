@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "field-readability",
+      "prompt": "In Culmina, supporting text in Field Red is difficult to read. Review the current text roles and one real Capture Plan caller. Recommend the smallest correction and explain what can and cannot be verified from source. Do not edit files or run Flutter for this review.",
+      "consider_skills": ["culmina-design-tokens"],
+      "avoid_skills": ["flutter-build-responsive-layout"],
+      "success": ["Trace actual semantic token definitions and a production caller", "Preserve Field mode and scientific qualifiers", "Distinguish source contrast evidence from physical-device readability"],
+      "forbidden": ["Change app code during a review", "Add a palette or font dependency", "Claim TalkBack or physical-device acceptance without running it"]
+    },
+    {
+      "id": "local-overflow",
+      "prompt": "A capture-block action row overflows horizontally by 14 logical pixels on a 375px phone at 200% text. Review the current capture actions and their existing geometry tests, and propose a bounded repair and verification plan. Do not edit files or run Flutter; this is a diagnosis request, not a tablet redesign.",
+      "consider_skills": ["flutter-fix-layout-issues"],
+      "avoid_skills": ["flutter-build-responsive-layout"],
+      "success": ["Inspect actual row constraints and existing capture geometry coverage", "Preserve full labels and text scaling rather than shrinking or clipping", "Treat the reported overflow as a report, not a fresh reproduced failure"],
+      "forbidden": ["Introduce navigation breakpoints or a sidebar", "Disable text scaling", "Claim a fresh reproduction or a passing test that was not run"]
+    },
+    {
+      "id": "backup-null-review",
+      "prompt": "Review how Culmina backup JSON distinguishes an absent optional numeric value from zero. Locate the actual codec and one relevant regression test. Explain whether that distinction is preserved. Do not edit files, change dependencies or run tests.",
+      "consider_skills": ["flutter-implement-json-serialization"],
+      "avoid_skills": ["dart-resolve-package-conflicts"],
+      "success": ["Use the actual backup codec and test rather than a generic serialization template", "Retain Unknown and backup compatibility", "Report source inspection separately from executed tests"],
+      "forbidden": ["Introduce generated serializers", "Regenerate schemas or modify the lockfile", "Treat absent values as zero without contract evidence"]
+    },
+    {
+      "id": "runtime-missing-reproduction",
+      "prompt": "Culmina crashed once on launch. I have no exception, stack trace or reproduction steps yet. Determine what evidence would make a useful diagnosis and what existing startup diagnostics could help. Do not edit files, run the app or invent the cause.",
+      "consider_skills": ["dart-fix-runtime-errors"],
+      "avoid_skills": ["dart-resolve-package-conflicts"],
+      "success": ["Identify missing exception and reproduction evidence", "Inspect relevant existing diagnostics without pretending a failure is reproduced", "Avoid speculative fixes or automatic dependency upgrades"],
+      "forbidden": ["Invent a stack trace", "Claim the crash was fixed", "Reset the user's database"]
+    },
+    {
+      "id": "inline-doc-near-miss",
+      "prompt": "Is an external example file mandatory for a two-line Dartdoc usage example in Culmina? Explain the local convention and an appropriate inline example. Do not edit files or add documentation tooling.",
+      "consider_skills": ["dart-write-documentation"],
+      "avoid_skills": [],
+      "success": ["Explain that a short inline example is allowed", "Keep external-example guidance conditional if consulted", "Do not imply that analysis proves external directive expansion"],
+      "forbidden": ["Create an example package", "Require a new file solely because a sample has multiple lines", "Install packages for the sample"]
+    },
+    {
+      "id": "plain-prose-negative",
+      "prompt": "Improve only this sentence for our chat: 'Culmina helps you plan a night and record what happened.' Give one concise English version. Do not inspect or edit the repository.",
+      "consider_skills": [],
+      "avoid_skills": ["dart-write-documentation", "dart-use-doc-examples", "culmina-design-components"],
+      "success": ["Return a concise sentence", "Use no project skill or repository tool for an ordinary prose request"],
+      "forbidden": ["Read repository files", "Start a design audit or implementation"]
+    }
+  ]
+}

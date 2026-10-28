@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/app_text_theme.dart';
 import 'hybrid_icon.dart';
 import 'hybrid_quiet_ink.dart';
 import '../viewmodels/disclosure_viewmodel.dart';
@@ -123,9 +123,10 @@ class CollapsibleSection extends StatelessWidget {
                               title,
                               style:
                                   (titleStyle ??
-                                          AppTypography.sectionHeading.copyWith(
-                                            height: 1.4,
-                                            letterSpacing: 0,
+                                          AppTextTheme.of(context).resolve(
+                                            AppTextTheme.of(context)
+                                                .sectionHeading,
+                                            AppTextGeometry.badge,
                                           ))
                                       .copyWith(color: p.textPrimary),
                             ),
@@ -137,10 +138,12 @@ class CollapsibleSection extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             summary!,
-                            style: AppTypography.caption.copyWith(
-                              height: 1.4,
-                              color: p.textSecondary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).caption,
+                                  AppTextGeometry.compact,
+                                )
+                                .copyWith(color: p.textSecondary),
                           ),
                         ),
                     ],

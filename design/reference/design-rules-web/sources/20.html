@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>lib\core\theme\app_motion.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\core\theme\app_motion.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/widgets.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> /// The motion scale (S5.2): short, subtle transitions only</div>
+<div id="L4"><a href="#L4">4</a> /// (`.agents/rules/05-ui-design.md`). Every animated component asks</div>
+<div id="L5"><a href="#L5">5</a> /// [duration] for its length, so the platform&#x27;s reduced-motion setting</div>
+<div id="L6"><a href="#L6">6</a> /// turns motion off. See `docs/DESIGN_SYSTEM.md`.</div>
+<div id="L7"><a href="#L7">7</a> abstract final class AppMotion {</div>
+<div id="L8"><a href="#L8">8</a>   /// A state change in place: a pressed control, a chevron turning.</div>
+<div id="L9"><a href="#L9">9</a>   static const Duration short = Duration(milliseconds: 120);</div>
+<div id="L10"><a href="#L10">10</a> </div>
+<div id="L11"><a href="#L11">11</a>   /// Content appearing or collapsing: a section opening, a row leaving.</div>
+<div id="L12"><a href="#L12">12</a>   static const Duration medium = Duration(milliseconds: 180);</div>
+<div id="L13"><a href="#L13">13</a> </div>
+<div id="L14"><a href="#L14">14</a>   /// A brief mark on what an edit changed, fading out (S6.9: a capture</div>
+<div id="L15"><a href="#L15">15</a>   /// block just added or edited). Long enough to be seen, never repeated.</div>
+<div id="L16"><a href="#L16">16</a>   static const Duration highlight = Duration(milliseconds: 1500);</div>
+<div id="L17"><a href="#L17">17</a> </div>
+<div id="L18"><a href="#L18">18</a>   /// The one curve: fast out, gentle in.</div>
+<div id="L19"><a href="#L19">19</a>   static const Curve curve = Cubic(0.16, 1, 0.3, 1);</div>
+<div id="L20"><a href="#L20">20</a> </div>
+<div id="L21"><a href="#L21">21</a>   /// [base], or zero when the user asked the platform for less motion.</div>
+<div id="L22"><a href="#L22">22</a>   static Duration duration(BuildContext context, Duration base) =&gt;</div>
+<div id="L23"><a href="#L23">23</a>       MediaQuery.maybeDisableAnimationsOf(context) ?? false</div>
+<div id="L24"><a href="#L24">24</a>       ? Duration.zero</div>
+<div id="L25"><a href="#L25">25</a>       : base;</div>
+<div id="L26"><a href="#L26">26</a> }</div>

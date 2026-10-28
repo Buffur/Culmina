@@ -1,0 +1,165 @@
+<!doctype html><meta charset="utf-8"><title>audit</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>audit</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\plugins\cache\openai-curated-remote\product-design\0.1.56\skills\audit\SKILL.md</p><pre>   1  ---
+   2  name: audit
+   3  description: &quot;Audit or critique a product flow, journey, workflow, funnel, onboarding path, checkout path, settings path, screen, or multi-step product experience by capturing screenshots first, then reporting UX, design, and accessibility findings from that evidence. Default to an inline report; use a canvas for a visual walkthrough when requested or clearly implied by the ongoing task. Use when the user asks to audit, review, critique, inspect, assess, analyze, evaluate, or give feedback on a product experience.&quot;
+   4  ---
+   5  
+   6  # Audit
+   7  
+   8  Use this skill when the user wants to audit, review, critique, inspect, assess, analyze, evaluate, or give feedback on a product flow, journey, funnel, onboarding path, checkout path, settings path, screen, or other product experience.
+   9  
+  10  Recognize that intent from the ongoing task; the user need not name the audit skill.
+  11  
+  12  The output is not a loose opinion. The output is:
+  13  
+  14  - Screenshots of the flow
+  15  - Those screenshots presented in a report or a visual walkthrough on the user&#x27;s chosen canvas
+  16  - A numbered step list
+  17  - UX and design findings tied to steps or screenshots
+  18  - Accessibility risks tied to steps or screenshots
+  19  - Clear limits on what could not be checked from screenshots alone
+  20  
+  21  ## Critical Overrides
+  22  
+  23  - Refer to the Plugin router [$index](../index/SKILL.md) before proceeding.
+  24  - Follow [$critical-overrides](../../references/critical-overrides.md).
+  25  
+  26  ## User Context
+  27  
+  28  Before starting, load [$user-context](../user-context/SKILL.md) and run its preflight script when local shell access is available.
+  29  
+  30  Use saved product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, component refs, browser preferences, and share targets as grounding material when relevant.
+  31  
+  32  Do not inspect every saved reference. Inspect only what the current task needs.
+  33  
+  34  ## Route
+  35  
+  36  Before auditing:
+  37  
+  38  1. Identify the product or surface.
+  39  2. Identify the flow or task.
+  40  3. Choose the capture tool.
+  41  4. Capture the flow.
+  42  5. Save and inspect each screenshot.
+  43  6. Present the accepted screenshots and findings in the user&#x27;s chosen format, defaulting to an inline report.
+  44  
+  45  Output rules:
+  46  
+  47  - Honor the output format and canvas already stated or clearly implied by the ongoing task. Proceed without reasking settled choices; if a canvas walkthrough is chosen but its destination is unclear, ask only which canvas to use.
+  48  - If no output format is established, default to a concise inline report with screenshots rendered in the chat.
+  49  - Saving screenshots and notes in the workspace is an internal implementation detail. Do not ask the user to choose a local folder.
+  50  - Let the user choose a report with screenshots or a visual walkthrough: screenshots laid out step by step on a canvas, with notes beside each screen.
+  51  - Only if no output format has been established or declined, offer a canvas walkthrough at most once. With no established tool preference, ask: `Would you like these screenshots laid out step by step on a canvas, with notes for each screen?`
+  52  - Within that single offer, suggest Figma or another design tool only when the user&#x27;s request or relevant saved context or memory indicates they use it and available tools can create the walkthrough. Tool availability alone is not a reason to promote it; saved tool usage alone does not select a canvas output.
+  53  - If the user chooses a canvas walkthrough, follow their chosen tool&#x27;s skills to arrange the screenshots and notes in flow order. Return a link and concise summary inline; include a full inline report only if requested.
+  54  
+  55  Capture rules:
+  56  
+  57  - Follow the Browser Choice rule in [$index](../index/SKILL.md#browser-choice).
+  58  - If none of those can capture valid screenshots or control the flow, stop and report the blocker.
+  59  
+  60  Browser capture order:
+  61  
+  62  1. Load the Browser skill before browser work.
+  63  2. Connect to the browser and use the current tab when it already shows the target.
+  64  3. Do not reload or navigate away unless the audit needs a fresh start.
+  65  4. Observe the visible state before acting.
+  66  5. Before each click, type, or key press, use the latest DOM snapshot to target one clear control.
+  67  6. After each action, take the cheapest fresh check that proves what changed: DOM for structure, screenshot for visual state.
+  68  7. Save and inspect the accepted screenshot before using it as audit evidence.
+  69  
+  70  Canvas rules:
+  71  
+  72  - Load the chosen tool&#x27;s skills before creating or editing the canvas.
+  73  - Keep a local copy of every screenshot even when the canvas succeeds.
+  74  - Do not upload a screenshot until the saved local file has been inspected and accepted.
+  75  - The walkthrough is not done until the screenshots and notes are visibly placed on the canvas.
+  76  - Render or inspect the canvas and confirm every flow step has the correct screenshot and its notes visible together in flow order.
+  77  - If an image is missing, misplaced, blank, or only uploaded as an unused asset, fix it before handoff.
+  78  - If the chosen tool cannot create the canvas or place images, return the inline audit and explain the missing capability.
+  79  
+  80  Evidence rules:
+  81  
+  82  - Use only evidence captured in the current audit run.
+  83  - Do not use memory, prior chats, old traces, cached screenshots, or prior generated artifacts as audit evidence unless the user explicitly provides them.
+  84  - Do not audit until the product, flow, and capture tool are known.
+  85  - Do not claim full accessibility compliance from screenshots alone.
+  86  
+  87  ## Capture And Audit The Flow
+  88  
+  89  You are an expert design, UX, and accessibility auditor. For each step in the flow, capture what the user sees, observe how the screen behaves, inspect the screenshot, and write audit notes before moving on.
+  90  
+  91  Follow [references/design-audit-framework.md](references/design-audit-framework.md) when deciding what to inspect and how to describe strengths, UX issues, accessibility risks, limits, and recommendations.
+  92  
+  93  Screenshot source rule:
+  94  
+  95  - Use the screenshot you actually saw.
+  96  - Save that exact screenshot to the local audit folder.
+  97  - Open or inspect the saved file before accepting it.
+  98  - If the saved file shows the wrong window, wrong state, blank page, crop, or loading screen, reject it and capture again.
+  99  - When a canvas is the destination, upload that accepted local file.
+ 100  - After upload, verify the canvas shows the same step.
+ 101  - Do not replace a Browser, Chrome, or Computer Use screenshot with an OS screenshot unless you first prove the saved file shows the same window and state.
+ 102  
+ 103  For every step:
+ 104  
+ 105  1. Move to the next step in the requested flow.
+ 106  2. Wait until the screen is loaded and visually stable.
+ 107  3. Check for loading spinners, blank areas, login walls, error pages, blocked states, cookie dialogs, and half-rendered content.
+ 108  4. Capture the screenshot.
+ 109  5. Inspect the screenshot before accepting it.
+ 110  6. Reject the screenshot if it is blank, loading, cropped, blocked, or showing the wrong state.
+ 111  7. Observe behavior that matters for the audit, such as navigation, focus, loading, validation, error handling, empty states, motion, and whether the next action is clear.
+ 112  8. Write notes for that step.
+ 113  9. In the notes, report strengths, UX issues, accessibility risks, and any limits that made the step difficult to audit.
+ 114  10. Save accepted screenshots with numbered names, such as `01-start.png`, `02-form-filled.png`, and `03-confirmation.png`.
+ 115  11. Inspect the saved screenshot file before upload or handoff.
+ 116  12. Keep each accepted screenshot and its notes together for the report or canvas walkthrough.
+ 117  13. If the user requested a canvas walkthrough, add each accepted screenshot and its notes to the canvas immediately.
+ 118  
+ 119  Default inline report:
+ 120  
+ 121  - Render accepted screenshots in flow order.
+ 122  - Keep the report pithy: overall verdict, numbered steps, highest-impact changes, and evidence limits.
+ 123  - Tie every finding to the screenshot or step that supports it.
+ 124  
+ 125  If the user requested a canvas walkthrough:
+ 126  
+ 127  - Place screenshots in order, left to right on the same row, with 200px between each one. Go to a new row every 15 screenshots, and separate those rows by 600px.
+ 128  - Underneath the screenshot, add text with the Step number and its name, and notes.
+ 129  - Keep a local folder copy even when the canvas succeeds.
+ 130  - Give the walkthrough a title and group its assets in a section or equivalent container supported by the chosen tool.
+ 131  
+ 132  Acceptance checks:
+ 133  
+ 134  - Every important step in the requested flow has a valid screenshot or a named blocker.
+ 135  - Screenshots are saved in order.
+ 136  - Screenshots are visible in the chosen output: inline in the report or arranged in flow order on the canvas.
+ 137  - For a canvas walkthrough, every accepted screenshot and its notes are visibly placed together in flow order and verified on the completed canvas.
+ 138  - Every note points to the screenshot or step it describes.
+ 139  - Notes explain strengths, UX issues, accessibility risks, and evidence limits when those apply.
+ 140  - Accessibility risks say what can be seen from screenshots and what still needs testing.
+ 141  - The final screenshot set and notes are enough to support the requested audit.
+ 142  
+ 143  Blockers:
+ 144  
+ 145  - The flow cannot be completed.
+ 146  - A required step cannot be screenshotted.
+ 147  - The source changes in a way that makes the flow unclear.
+ 148  - Screenshots cannot be saved or displayed in the chosen output.
+ 149  - Notes cannot be written.
+ 150  - The requested claim would require evidence that screenshots cannot provide.
+ 151  - Do not claim an audit if the actual flow could not be accessed and captured. Help Center pages, web searches, and other indirect evidence are research, not an audit.
+ 152  
+ 153  ## Final Response
+ 154  
+ 155  After the flow is captured and notes are written, list every step in the final response.
+ 156  
+ 157  The final step list MUST include:
+ 158  
+ 159  - step number
+ 160  - short description of the step
+ 161  - general health of that step
+ 162  
+ 163  Also include where the full output was saved or placed.
+ 164  
+ 165  Keep the language direct. Do not use broad design jargon when a plain phrase works.</pre>

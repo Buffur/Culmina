@@ -13,7 +13,7 @@ import '../../shared/hybrid_icon.dart';
 import '../../shared/collapsible_section.dart';
 import '../../../domain/models/session.dart';
 import '../../../domain/models/calendar_date.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/hybrid_view_entrance.dart';
 import '../../../core/utils/quantity_text.dart';
@@ -98,10 +98,9 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
     final browser = context.watch<NightBrowserViewModel>();
     final text = Theme.of(context).textTheme;
     final p = AppPalette.of(context);
-    final quiet = AppTypography.caption.copyWith(
-      height: 1.65,
-      color: p.textSecondary,
-    );
+    final quiet = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.explanatory)
+        .copyWith(color: p.textSecondary);
     // Three equal tabs hold 14 px labels up to about 1.3x on a phone.
     final largeTabs = MediaQuery.textScalerOf(context).scale(14) > 14 * 1.3;
     return DefaultTabController(
@@ -129,11 +128,11 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
             ),
             labelColor: p.textPrimary,
             unselectedLabelColor: p.textSecondary,
-            labelStyle: text.bodySmall?.copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-            unselectedLabelStyle: text.bodySmall?.copyWith(fontSize: 14),
+            labelStyle: AppTextTheme.of(context)
+                .resolve(text.bodySmall, AppTextGeometry.formLabel)
+                .copyWith(fontWeight: FontWeight.w600),
+            unselectedLabelStyle: AppTextTheme.of(context)
+                .resolve(text.bodySmall, AppTextGeometry.formLabel),
             onTap: (value) => setState(() => page = value),
             tabs: const [
               Tab(text: 'Night'),
@@ -158,9 +157,8 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                       // conditions.js `missing-conditions`.
                       Text(
                         'Set an observing site',
-                        style: AppTypography.sectionHeading.copyWith(
-                          color: p.textPrimary,
-                        ),
+                        style: AppTextTheme.of(context).sectionHeading
+                            .copyWith(color: p.textPrimary),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
@@ -220,10 +218,12 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                                         '${SiteLabel.of(site) ?? 'No observing site'} · '
                                         '${site.displayZoneId ?? 'device time zone'}',
                                         key: const Key('detail.context'),
-                                        style: AppTypography.caption.copyWith(
-                                          height: 1.6,
-                                          color: p.textSecondary,
-                                        ),
+                                        style: AppTextTheme.of(context)
+                                            .resolve(
+                                              AppTextTheme.of(context).caption,
+                                              AppTextGeometry.reading,
+                                            )
+                                            .copyWith(color: p.textSecondary),
                                       ),
                                     ),
                                   ),
@@ -398,14 +398,12 @@ class _NightAnswer extends StatelessWidget {
       windowStartUtc: view.night.startUtc,
       zoneId: zoneId,
     );
-    final quiet = AppTypography.caption.copyWith(
-      height: 1.65,
-      color: p.textSecondary,
-    );
-    final time = AppTypography.value.copyWith(
-      height: 1.65,
-      color: p.textSecondary,
-    );
+    final quiet = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.explanatory)
+        .copyWith(color: p.textSecondary);
+    final time = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).value, AppTextGeometry.explanatory)
+        .copyWith(color: p.textSecondary);
     return Semantics(
       container: true,
       child: Column(
@@ -419,10 +417,12 @@ class _NightAnswer extends StatelessWidget {
                   : '${QuantityText.duration(dark.$2.difference(dark.$1))} '
                         'of dark time',
               key: const Key('nightMoon.answer'),
-              style: AppTypography.answerHeading.copyWith(
-                height: 1.3,
-                color: p.textPrimary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).answerHeading,
+                    AppTextGeometry.answer,
+                  )
+                  .copyWith(color: p.textPrimary),
             ),
           ),
           const SizedBox(height: 8),
@@ -496,15 +496,12 @@ class _MoonAnswer extends StatelessWidget {
         'The Moon is above the horizon throughout dark time.',
       final k => classification(k),
     };
-    final value = AppTypography.itemTitle.copyWith(
-      fontWeight: FontWeight.w400,
-      height: 1.5,
-      color: p.textPrimary,
-    );
-    final time = AppTypography.value.copyWith(
-      height: 1.5,
-      color: p.textPrimary,
-    );
+    final value = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).itemTitle, AppTextGeometry.standard)
+        .copyWith(fontWeight: FontWeight.w400, color: p.textPrimary);
+    final time = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).value, AppTextGeometry.standard)
+        .copyWith(color: p.textPrimary);
     final moon = view.moon;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -518,10 +515,12 @@ class _MoonAnswer extends StatelessWidget {
               header: true,
               child: Text(
                 'Moon-free dark',
-                style: AppTypography.answerHeading.copyWith(
-                  height: 1.3,
-                  color: p.textPrimary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).answerHeading,
+                      AppTextGeometry.answer,
+                    )
+                    .copyWith(color: p.textPrimary),
               ),
             ),
             Padding(
@@ -529,13 +528,16 @@ class _MoonAnswer extends StatelessWidget {
               child: Text(
                 big,
                 key: const Key('nightMoon.moonFreeTotal'),
-                style: AppTypography.screenTitle.copyWith(
-                  fontSize: 24,
-                  height: 1.3,
-                  fontWeight: FontWeight.w600,
-                  color: p.textPrimary,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).screenTitle,
+                      AppTextGeometry.moonTotal,
+                    )
+                    .copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: p.textPrimary,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
               ),
             ),
           ],
@@ -561,19 +563,20 @@ class _MoonAnswer extends StatelessWidget {
         Text(
           sub,
           key: const Key('nightMoon.moonFreeKind'),
-          style: AppTypography.body.copyWith(
-            height: 1.5,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+              .copyWith(color: p.textSecondary),
         ),
         const SizedBox(height: 8),
         Text(
           '${moon.phaseName == null ? 'Phase unknown' : MoonText.phaseName(moon.phaseName!)} · '
           '${QuantityText.percent(moon.illuminationAtMidnight * 100)} lit',
-          style: AppTypography.caption.copyWith(
-            height: 1.65,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.explanatory,
+              )
+              .copyWith(color: p.textSecondary),
         ),
         Align(
           alignment: Alignment.centerLeft,
@@ -669,7 +672,8 @@ class _ViewedNightHeader extends StatelessWidget {
     final browser = context.watch<NightBrowserViewModel>();
     final p = AppPalette.of(context);
     final date = browser.viewedDate;
-    final small = AppTypography.caption.copyWith(color: p.textSecondary);
+    final small = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
     Widget arrow(String tip, HybridIconData icon, CalendarDate to) =>
         _RevealViewedNightControl(
           child: IconButton(
@@ -713,17 +717,20 @@ class _ViewedNightHeader extends StatelessWidget {
                               ? 'Your plan’s night'
                               : 'Viewing',
                           textAlign: TextAlign.center,
-                          style: small.copyWith(height: 24 / 13),
+                          style: AppTextTheme.of(
+                            context,
+                          ).resolve(small, AppTextGeometry.calendarInstruction),
                         ),
                         const SizedBox(height: 3),
                         Text(
                           'Night of ${NightTimeFormatter.eveningDate(date)}',
                           textAlign: TextAlign.center,
-                          style: AppTypography.screenTitle.copyWith(
-                            height: 1.35,
-                            letterSpacing: -0.33,
-                            color: p.textPrimary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).screenTitle,
+                                AppTextGeometry.calendarHeading,
+                              )
+                              .copyWith(color: p.textPrimary),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -748,7 +755,8 @@ class _ViewedNightHeader extends StatelessWidget {
             '${NightTimeFormatter.eveningDate(browser.planNight)}. Browsing '
             'changes nothing.',
             key: const Key('nightMoon.viewing'),
-            style: small.copyWith(height: 1.6),
+            style: AppTextTheme.of(context)
+                .resolve(small, AppTextGeometry.reading),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -909,19 +917,27 @@ class _ConditionFacts extends StatelessWidget {
                     children: [
                       Text(
                         label,
-                        style: AppTypography.caption.copyWith(
-                          height: 1.4,
-                          color: p.textSecondary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).caption,
+                              AppTextGeometry.compact,
+                            )
+                            .copyWith(color: p.textSecondary),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         value,
-                        style: AppTypography.value.copyWith(
-                          height: 1.45,
-                          color: p.textPrimary,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).value,
+                              AppTextGeometry.tableValue,
+                            )
+                            .copyWith(
+                              color: p.textPrimary,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
                       ),
                     ],
                   ),
@@ -979,10 +995,12 @@ class _SunEvents extends StatelessWidget {
         Text(
           'Twilight limits: civil −6°, nautical −12°, astronomical −18°. '
           'The selected dark limit is $limit.',
-          style: AppTypography.caption.copyWith(
-            height: 1.65,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.explanatory,
+              )
+              .copyWith(color: p.textSecondary),
         ),
       ],
     );
@@ -1013,13 +1031,16 @@ class _MoonSummary extends StatelessWidget {
       windowStartUtc: night.startUtc,
       zoneId: zoneId,
     );
-    final label = AppTypography.caption.copyWith(color: p.textSecondary);
-    final value = AppTypography.value.copyWith(
-      height: 1.45,
-      color: p.textPrimary,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
-    final key = AppTypography.itemTitle.copyWith(color: p.textPrimary);
+    final label = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
+    final value = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).value, AppTextGeometry.tableValue)
+        .copyWith(
+          color: p.textPrimary,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        );
+    final key = AppTextTheme.of(context).itemTitle
+        .copyWith(color: p.textPrimary);
     final ups = moon.upIntervals;
     final phase = moon.phaseName == null
         ? 'Phase unknown'
@@ -1058,9 +1079,8 @@ class _MoonSummary extends StatelessWidget {
                 children: [
                   Text(
                     phase,
-                    style: AppTypography.sectionHeading.copyWith(
-                      color: p.textPrimary,
-                    ),
+                    style: AppTextTheme.of(context).sectionHeading
+                        .copyWith(color: p.textPrimary),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -1105,11 +1125,12 @@ class _MoonSummary extends StatelessWidget {
             MoonFreeKind.none => 'None',
             _ => QuantityText.duration(free.moonFree),
           },
-          style: AppTypography.screenTitle.copyWith(
-            height: 1.3,
-            fontWeight: FontWeight.w600,
-            color: p.textPrimary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).screenTitle,
+                AppTextGeometry.answer,
+              )
+              .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
         ),
         if (free.kind != MoonFreeKind.noDark && free.kind != MoonFreeKind.none)
           for (final i in free.intervals)
@@ -1130,10 +1151,12 @@ class _MoonSummary extends StatelessWidget {
                 'The Moon is above the horizon throughout dark time.',
               final k => _MoonAnswer.classification(k),
             },
-            style: AppTypography.body.copyWith(
-              height: 1.5,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).body,
+                  AppTextGeometry.standard,
+                )
+                .copyWith(color: p.textSecondary),
           ),
         ),
         if (moon.closestApproachWhileBothUp case final a?) ...[
@@ -1142,20 +1165,24 @@ class _MoonSummary extends StatelessWidget {
             'Closest to the target while both are up: '
             '${QuantityText.degrees(a.separationDeg)} at ${at(a.instantUtc)}.',
             key: const Key('nightMoon.closestApproach'),
-            style: AppTypography.caption.copyWith(
-              height: 1.65,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).caption,
+                  AppTextGeometry.explanatory,
+                )
+                .copyWith(color: p.textSecondary),
           ),
         ],
         const SizedBox(height: 22),
         Text(
           'Moon-free means dark time with the Moon below the horizon. Phase '
           'alone does not determine it.',
-          style: AppTypography.caption.copyWith(
-            height: 1.65,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.explanatory,
+              )
+              .copyWith(color: p.textSecondary),
         ),
       ],
     );

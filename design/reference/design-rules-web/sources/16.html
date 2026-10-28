@@ -1,0 +1,346 @@
+<!doctype html><meta charset="utf-8"><title>lib\core\theme\hybrid_tokens.dart</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>lib\core\theme\hybrid_tokens.dart</h1><div id="L1"><a href="#L1">1</a> import &#x27;package:flutter/material.dart&#x27;;</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> /// Approved original Hybrid presentation roles absent from AppPalette.</div>
+<div id="L4"><a href="#L4">4</a> /// Values: the final computed cascade of the accepted web reference</div>
+<div id="L5"><a href="#L5">5</a> /// (`design/home-lab` at 86873ce: notion-hybrid.css, hybrid-data-tokens.css,</div>
+<div id="L6"><a href="#L6">6</a> /// hybrid-refinement.css), Light / Dark / Field. These colours do not supply</div>
+<div id="L7"><a href="#L7">7</a> /// astronomical intervals or change data semantics.</div>
+<div id="L8"><a href="#L8">8</a> @immutable</div>
+<div id="L9"><a href="#L9">9</a> class HybridTokens extends ThemeExtension&lt;HybridTokens&gt; {</div>
+<div id="L10"><a href="#L10">10</a>   const HybridTokens({</div>
+<div id="L11"><a href="#L11">11</a>     required this.action,</div>
+<div id="L12"><a href="#L12">12</a>     required this.onAction,</div>
+<div id="L13"><a href="#L13">13</a>     required this.selection,</div>
+<div id="L14"><a href="#L14">14</a>     required this.selectedHourFill,</div>
+<div id="L15"><a href="#L15">15</a>     required this.selectedHourText,</div>
+<div id="L16"><a href="#L16">16</a>     required this.selectedHourRule,</div>
+<div id="L17"><a href="#L17">17</a>     required this.surfaceSubtle,</div>
+<div id="L18"><a href="#L18">18</a>     required this.surfaceSunken,</div>
+<div id="L19"><a href="#L19">19</a>     required this.accent,</div>
+<div id="L20"><a href="#L20">20</a>     required this.success,</div>
+<div id="L21"><a href="#L21">21</a>     required this.successWash,</div>
+<div id="L22"><a href="#L22">22</a>     required this.caution,</div>
+<div id="L23"><a href="#L23">23</a>     required this.cautionWash,</div>
+<div id="L24"><a href="#L24">24</a>     required this.errorText,</div>
+<div id="L25"><a href="#L25">25</a>     required this.errorWash,</div>
+<div id="L26"><a href="#L26">26</a>     required this.hourBackground,</div>
+<div id="L27"><a href="#L27">27</a>     required this.hourText,</div>
+<div id="L28"><a href="#L28">28</a>     required this.gainStart,</div>
+<div id="L29"><a href="#L29">29</a>     required this.gainEnd,</div>
+<div id="L30"><a href="#L30">30</a>     required this.skyDay,</div>
+<div id="L31"><a href="#L31">31</a>     required this.skyCivil,</div>
+<div id="L32"><a href="#L32">32</a>     required this.skyNautical,</div>
+<div id="L33"><a href="#L33">33</a>     required this.skyAstronomical,</div>
+<div id="L34"><a href="#L34">34</a>     required this.skyDark,</div>
+<div id="L35"><a href="#L35">35</a>     required this.moonUp,</div>
+<div id="L36"><a href="#L36">36</a>     required this.moonFree,</div>
+<div id="L37"><a href="#L37">37</a>     required this.weatherCaution,</div>
+<div id="L38"><a href="#L38">38</a>     required this.weatherNotice,</div>
+<div id="L39"><a href="#L39">39</a>   });</div>
+<div id="L40"><a href="#L40">40</a> </div>
+<div id="L41"><a href="#L41">41</a>   static const sourceRevision = &#x27;86873ce&#x27;;</div>
+<div id="L42"><a href="#L42">42</a>   static const fontFamily = &#x27;Geist&#x27;;</div>
+<div id="L43"><a href="#L43">43</a>   static const transparent = Color(0x00000000);</div>
+<div id="L44"><a href="#L44">44</a>   // Exact compact roles in the approved source. Large text uses full week rows.</div>
+<div id="L45"><a href="#L45">45</a>   static const calendarCaptionSize = 10.0;</div>
+<div id="L46"><a href="#L46">46</a>   static const navigationLabelSize = 11.0;</div>
+<div id="L47"><a href="#L47">47</a> </div>
+<div id="L48"><a href="#L48">48</a>   /// Chart tick labels (plan.css `.gain-graph text`, 11 px).</div>
+<div id="L49"><a href="#L49">49</a>   static const chartLabelSize = 11.0;</div>
+<div id="L50"><a href="#L50">50</a>   static const minTarget = 48.0;</div>
+<div id="L51"><a href="#L51">51</a>   static const appBarHeight = 64.0;</div>
+<div id="L52"><a href="#L52">52</a> </div>
+<div id="L53"><a href="#L53">53</a>   /// Primary action fill (WQA-01: Field `#FF0000` with black text).</div>
+<div id="L54"><a href="#L54">54</a>   final Color action;</div>
+<div id="L55"><a href="#L55">55</a> </div>
+<div id="L56"><a href="#L56">56</a>   /// Text on [action].</div>
+<div id="L57"><a href="#L57">57</a>   final Color onAction;</div>
+<div id="L58"><a href="#L58">58</a> </div>
+<div id="L59"><a href="#L59">59</a>   /// Selected rows, segments and pressed fills.</div>
+<div id="L60"><a href="#L60">60</a>   final Color selection;</div>
+<div id="L61"><a href="#L61">61</a> </div>
+<div id="L62"><a href="#L62">62</a>   /// Weather B hour-axis selection fill (weather-radix.css blue5).</div>
+<div id="L63"><a href="#L63">63</a>   final Color selectedHourFill;</div>
+<div id="L64"><a href="#L64">64</a> </div>
+<div id="L65"><a href="#L65">65</a>   /// Text on [selectedHourFill] (blue12; Field retains primary red).</div>
+<div id="L66"><a href="#L66">66</a>   final Color selectedHourText;</div>
+<div id="L67"><a href="#L67">67</a> </div>
+<div id="L68"><a href="#L68">68</a>   /// Bottom rule of the selected Weather B hour (blue11).</div>
+<div id="L69"><a href="#L69">69</a>   final Color selectedHourRule;</div>
+<div id="L70"><a href="#L70">70</a> </div>
+<div id="L71"><a href="#L71">71</a>   /// Subtle surface: selected navigation, quiet panels.</div>
+<div id="L72"><a href="#L72">72</a>   final Color surfaceSubtle;</div>
+<div id="L73"><a href="#L73">73</a> </div>
+<div id="L74"><a href="#L74">74</a>   /// Sunken surface behind raised panels.</div>
+<div id="L75"><a href="#L75">75</a>   final Color surfaceSunken;</div>
+<div id="L76"><a href="#L76">76</a> </div>
+<div id="L77"><a href="#L77">77</a>   /// Notion blue: weather icons, main chart lines, links.</div>
+<div id="L78"><a href="#L78">78</a>   final Color accent;</div>
+<div id="L79"><a href="#L79">79</a> </div>
+<div id="L80"><a href="#L80">80</a>   /// Saved / Completed text.</div>
+<div id="L81"><a href="#L81">81</a>   final Color success;</div>
+<div id="L82"><a href="#L82">82</a> </div>
+<div id="L83"><a href="#L83">83</a>   /// Saved / Completed compact background.</div>
+<div id="L84"><a href="#L84">84</a>   final Color successWash;</div>
+<div id="L85"><a href="#L85">85</a> </div>
+<div id="L86"><a href="#L86">86</a>   /// Not saved / Saved · changed / Partly / stale text.</div>
+<div id="L87"><a href="#L87">87</a>   final Color caution;</div>
+<div id="L88"><a href="#L88">88</a> </div>
+<div id="L89"><a href="#L89">89</a>   /// Caution compact background.</div>
+<div id="L90"><a href="#L90">90</a>   final Color cautionWash;</div>
+<div id="L91"><a href="#L91">91</a> </div>
+<div id="L92"><a href="#L92">92</a>   /// Data error text.</div>
+<div id="L93"><a href="#L93">93</a>   final Color errorText;</div>
+<div id="L94"><a href="#L94">94</a> </div>
+<div id="L95"><a href="#L95">95</a>   /// Error compact background.</div>
+<div id="L96"><a href="#L96">96</a>   final Color errorWash;</div>
+<div id="L97"><a href="#L97">97</a> </div>
+<div id="L98"><a href="#L98">98</a>   /// Selected weather hour fill.</div>
+<div id="L99"><a href="#L99">99</a>   final Color hourBackground;</div>
+<div id="L100"><a href="#L100">100</a> </div>
+<div id="L101"><a href="#L101">101</a>   /// Selected weather hour text.</div>
+<div id="L102"><a href="#L102">102</a>   final Color hourText;</div>
+<div id="L103"><a href="#L103">103</a> </div>
+<div id="L104"><a href="#L104">104</a>   /// Stacking-gain gradient start.</div>
+<div id="L105"><a href="#L105">105</a>   final Color gainStart;</div>
+<div id="L106"><a href="#L106">106</a> </div>
+<div id="L107"><a href="#L107">107</a>   /// Stacking-gain gradient end.</div>
+<div id="L108"><a href="#L108">108</a>   final Color gainEnd;</div>
+<div id="L109"><a href="#L109">109</a> </div>
+<div id="L110"><a href="#L110">110</a>   /// Timeline daylight.</div>
+<div id="L111"><a href="#L111">111</a>   final Color skyDay;</div>
+<div id="L112"><a href="#L112">112</a> </div>
+<div id="L113"><a href="#L113">113</a>   /// Timeline civil twilight.</div>
+<div id="L114"><a href="#L114">114</a>   final Color skyCivil;</div>
+<div id="L115"><a href="#L115">115</a> </div>
+<div id="L116"><a href="#L116">116</a>   /// Timeline nautical twilight.</div>
+<div id="L117"><a href="#L117">117</a>   final Color skyNautical;</div>
+<div id="L118"><a href="#L118">118</a> </div>
+<div id="L119"><a href="#L119">119</a>   /// Timeline astronomical twilight.</div>
+<div id="L120"><a href="#L120">120</a>   final Color skyAstronomical;</div>
+<div id="L121"><a href="#L121">121</a> </div>
+<div id="L122"><a href="#L122">122</a>   /// Timeline dark time: black in every theme (owner).</div>
+<div id="L123"><a href="#L123">123</a>   final Color skyDark;</div>
+<div id="L124"><a href="#L124">124</a> </div>
+<div id="L125"><a href="#L125">125</a>   /// Moon-above-horizon lane.</div>
+<div id="L126"><a href="#L126">126</a>   final Color moonUp;</div>
+<div id="L127"><a href="#L127">127</a> </div>
+<div id="L128"><a href="#L128">128</a>   /// Moon-free dark lane.</div>
+<div id="L129"><a href="#L129">129</a>   final Color moonFree;</div>
+<div id="L130"><a href="#L130">130</a> </div>
+<div id="L131"><a href="#L131">131</a>   /// Weather caution (dew, stale).</div>
+<div id="L132"><a href="#L132">132</a>   final Color weatherCaution;</div>
+<div id="L133"><a href="#L133">133</a> </div>
+<div id="L134"><a href="#L134">134</a>   /// The Weather page&#x27;s freshness and gap notices (conditions.css</div>
+<div id="L135"><a href="#L135">135</a>   /// `--wx-caution`).</div>
+<div id="L136"><a href="#L136">136</a>   final Color weatherNotice;</div>
+<div id="L137"><a href="#L137">137</a> </div>
+<div id="L138"><a href="#L138">138</a>   List&lt;Color&gt; get sky =&gt; [</div>
+<div id="L139"><a href="#L139">139</a>     skyDay,</div>
+<div id="L140"><a href="#L140">140</a>     skyCivil,</div>
+<div id="L141"><a href="#L141">141</a>     skyNautical,</div>
+<div id="L142"><a href="#L142">142</a>     skyAstronomical,</div>
+<div id="L143"><a href="#L143">143</a>     skyDark,</div>
+<div id="L144"><a href="#L144">144</a>   ];</div>
+<div id="L145"><a href="#L145">145</a> </div>
+<div id="L146"><a href="#L146">146</a>   static const light = HybridTokens(</div>
+<div id="L147"><a href="#L147">147</a>     action: Color(0xFF37352F),</div>
+<div id="L148"><a href="#L148">148</a>     onAction: Color(0xFFFFFFFF),</div>
+<div id="L149"><a href="#L149">149</a>     selection: Color(0xFFE9E9E7),</div>
+<div id="L150"><a href="#L150">150</a>     selectedHourFill: Color(0xFFC2E5FF),</div>
+<div id="L151"><a href="#L151">151</a>     selectedHourText: Color(0xFF113264),</div>
+<div id="L152"><a href="#L152">152</a>     selectedHourRule: Color(0xFF0D74CE),</div>
+<div id="L153"><a href="#L153">153</a>     surfaceSubtle: Color(0xFFF7F7F5),</div>
+<div id="L154"><a href="#L154">154</a>     surfaceSunken: Color(0xFFF0F0ED),</div>
+<div id="L155"><a href="#L155">155</a>     accent: Color(0xFF0075DE),</div>
+<div id="L156"><a href="#L156">156</a>     success: Color(0xFF27633D),</div>
+<div id="L157"><a href="#L157">157</a>     successWash: Color(0xFFE4EEE7),</div>
+<div id="L158"><a href="#L158">158</a>     caution: Color(0xFF754600),</div>
+<div id="L159"><a href="#L159">159</a>     cautionWash: Color(0xFFF4ECDF),</div>
+<div id="L160"><a href="#L160">160</a>     errorText: Color(0xFFB00020),</div>
+<div id="L161"><a href="#L161">161</a>     errorWash: Color(0xFFF7E7E9),</div>
+<div id="L162"><a href="#L162">162</a>     hourBackground: Color(0xFFE6F3FE),</div>
+<div id="L163"><a href="#L163">163</a>     hourText: Color(0xFF005BAB),</div>
+<div id="L164"><a href="#L164">164</a>     gainStart: Color(0xFF0075DE),</div>
+<div id="L165"><a href="#L165">165</a>     gainEnd: Color(0xFF005BAB),</div>
+<div id="L166"><a href="#L166">166</a>     skyDay: Color(0xFFE6F3FE),</div>
+<div id="L167"><a href="#L167">167</a>     skyCivil: Color(0xFFA6D2F3),</div>
+<div id="L168"><a href="#L168">168</a>     skyNautical: Color(0xFF599FD5),</div>
+<div id="L169"><a href="#L169">169</a>     skyAstronomical: Color(0xFF285B90),</div>
+<div id="L170"><a href="#L170">170</a>     skyDark: Color(0xFF000000),</div>
+<div id="L171"><a href="#L171">171</a>     moonUp: Color(0xFF607D8B),</div>
+<div id="L172"><a href="#L172">172</a>     moonFree: Color(0xFF37352F),</div>
+<div id="L173"><a href="#L173">173</a>     weatherCaution: Color(0xFF754600),</div>
+<div id="L174"><a href="#L174">174</a>     weatherNotice: Color(0xFF9A5B00),</div>
+<div id="L175"><a href="#L175">175</a>   );</div>
+<div id="L176"><a href="#L176">176</a> </div>
+<div id="L177"><a href="#L177">177</a>   static const dark = HybridTokens(</div>
+<div id="L178"><a href="#L178">178</a>     action: Color(0xFFEBEBEA),</div>
+<div id="L179"><a href="#L179">179</a>     onAction: Color(0xFF191919),</div>
+<div id="L180"><a href="#L180">180</a>     selection: Color(0xFF343432),</div>
+<div id="L181"><a href="#L181">181</a>     selectedHourFill: Color(0xFF004074),</div>
+<div id="L182"><a href="#L182">182</a>     selectedHourText: Color(0xFFC2E6FF),</div>
+<div id="L183"><a href="#L183">183</a>     selectedHourRule: Color(0xFF70B8FF),</div>
+<div id="L184"><a href="#L184">184</a>     surfaceSubtle: Color(0xFF202020),</div>
+<div id="L185"><a href="#L185">185</a>     surfaceSunken: Color(0xFF141414),</div>
+<div id="L186"><a href="#L186">186</a>     accent: Color(0xFF62AFF3),</div>
+<div id="L187"><a href="#L187">187</a>     success: Color(0xFF99C5A6),</div>
+<div id="L188"><a href="#L188">188</a>     successWash: Color(0xFF2B352E),</div>
+<div id="L189"><a href="#L189">189</a>     caution: Color(0xFFFFCA70),</div>
+<div id="L190"><a href="#L190">190</a>     cautionWash: Color(0xFF3B3222),</div>
+<div id="L191"><a href="#L191">191</a>     errorText: Color(0xFFFF9592),</div>
+<div id="L192"><a href="#L192">192</a>     errorWash: Color(0xFF3C2929),</div>
+<div id="L193"><a href="#L193">193</a>     hourBackground: Color(0xFF152D40),</div>
+<div id="L194"><a href="#L194">194</a>     hourText: Color(0xFFA6D2F3),</div>
+<div id="L195"><a href="#L195">195</a>     gainStart: Color(0xFF62AFF3),</div>
+<div id="L196"><a href="#L196">196</a>     gainEnd: Color(0xFFA6D2F3),</div>
+<div id="L197"><a href="#L197">197</a>     skyDay: Color(0xFFA6D2F3),</div>
+<div id="L198"><a href="#L198">198</a>     skyCivil: Color(0xFF78B5E5),</div>
+<div id="L199"><a href="#L199">199</a>     skyNautical: Color(0xFF4388BD),</div>
+<div id="L200"><a href="#L200">200</a>     skyAstronomical: Color(0xFF244F7A),</div>
+<div id="L201"><a href="#L201">201</a>     skyDark: Color(0xFF000000),</div>
+<div id="L202"><a href="#L202">202</a>     moonUp: Color(0xFFB0BEC5),</div>
+<div id="L203"><a href="#L203">203</a>     moonFree: Color(0xFFEBEBEA),</div>
+<div id="L204"><a href="#L204">204</a>     weatherCaution: Color(0xFFFFCA70),</div>
+<div id="L205"><a href="#L205">205</a>     weatherNotice: Color(0xFFFFB74D),</div>
+<div id="L206"><a href="#L206">206</a>   );</div>
+<div id="L207"><a href="#L207">207</a> </div>
+<div id="L208"><a href="#L208">208</a>   static const field = HybridTokens(</div>
+<div id="L209"><a href="#L209">209</a>     action: Color(0xFFFF0000),</div>
+<div id="L210"><a href="#L210">210</a>     onAction: Color(0xFF000000),</div>
+<div id="L211"><a href="#L211">211</a>     selection: Color(0xFF330000),</div>
+<div id="L212"><a href="#L212">212</a>     selectedHourFill: Color(0xFF330000),</div>
+<div id="L213"><a href="#L213">213</a>     selectedHourText: Color(0xFFFF0000),</div>
+<div id="L214"><a href="#L214">214</a>     selectedHourRule: Color(0xFFFF0000),</div>
+<div id="L215"><a href="#L215">215</a>     surfaceSubtle: Color(0xFF110000),</div>
+<div id="L216"><a href="#L216">216</a>     surfaceSunken: Color(0xFF000000),</div>
+<div id="L217"><a href="#L217">217</a>     accent: Color(0xFFFF0000),</div>
+<div id="L218"><a href="#L218">218</a>     success: Color(0xFFFF0000),</div>
+<div id="L219"><a href="#L219">219</a>     successWash: Color(0xFF110000),</div>
+<div id="L220"><a href="#L220">220</a>     caution: Color(0xFFFF0000),</div>
+<div id="L221"><a href="#L221">221</a>     cautionWash: Color(0xFF1A0000),</div>
+<div id="L222"><a href="#L222">222</a>     errorText: Color(0xFFFF0000),</div>
+<div id="L223"><a href="#L223">223</a>     errorWash: Color(0xFF1A0000),</div>
+<div id="L224"><a href="#L224">224</a>     hourBackground: Color(0xFF330000),</div>
+<div id="L225"><a href="#L225">225</a>     hourText: Color(0xFFFF0000),</div>
+<div id="L226"><a href="#L226">226</a>     gainStart: Color(0xFF990000),</div>
+<div id="L227"><a href="#L227">227</a>     gainEnd: Color(0xFFFF0000),</div>
+<div id="L228"><a href="#L228">228</a>     skyDay: Color(0xFF800000),</div>
+<div id="L229"><a href="#L229">229</a>     skyCivil: Color(0xFF650000),</div>
+<div id="L230"><a href="#L230">230</a>     skyNautical: Color(0xFF4D0000),</div>
+<div id="L231"><a href="#L231">231</a>     skyAstronomical: Color(0xFF340000),</div>
+<div id="L232"><a href="#L232">232</a>     skyDark: Color(0xFF000000),</div>
+<div id="L233"><a href="#L233">233</a>     moonUp: Color(0xFFB00000),</div>
+<div id="L234"><a href="#L234">234</a>     moonFree: Color(0xFFFF0000),</div>
+<div id="L235"><a href="#L235">235</a>     weatherCaution: Color(0xFFFF0000),</div>
+<div id="L236"><a href="#L236">236</a>     weatherNotice: Color(0xFFFF0000),</div>
+<div id="L237"><a href="#L237">237</a>   );</div>
+<div id="L238"><a href="#L238">238</a> </div>
+<div id="L239"><a href="#L239">239</a>   @override</div>
+<div id="L240"><a href="#L240">240</a>   HybridTokens copyWith({</div>
+<div id="L241"><a href="#L241">241</a>     Color? action,</div>
+<div id="L242"><a href="#L242">242</a>     Color? onAction,</div>
+<div id="L243"><a href="#L243">243</a>     Color? selection,</div>
+<div id="L244"><a href="#L244">244</a>     Color? selectedHourFill,</div>
+<div id="L245"><a href="#L245">245</a>     Color? selectedHourText,</div>
+<div id="L246"><a href="#L246">246</a>     Color? selectedHourRule,</div>
+<div id="L247"><a href="#L247">247</a>     Color? surfaceSubtle,</div>
+<div id="L248"><a href="#L248">248</a>     Color? surfaceSunken,</div>
+<div id="L249"><a href="#L249">249</a>     Color? accent,</div>
+<div id="L250"><a href="#L250">250</a>     Color? success,</div>
+<div id="L251"><a href="#L251">251</a>     Color? successWash,</div>
+<div id="L252"><a href="#L252">252</a>     Color? caution,</div>
+<div id="L253"><a href="#L253">253</a>     Color? cautionWash,</div>
+<div id="L254"><a href="#L254">254</a>     Color? errorText,</div>
+<div id="L255"><a href="#L255">255</a>     Color? errorWash,</div>
+<div id="L256"><a href="#L256">256</a>     Color? hourBackground,</div>
+<div id="L257"><a href="#L257">257</a>     Color? hourText,</div>
+<div id="L258"><a href="#L258">258</a>     Color? gainStart,</div>
+<div id="L259"><a href="#L259">259</a>     Color? gainEnd,</div>
+<div id="L260"><a href="#L260">260</a>     Color? skyDay,</div>
+<div id="L261"><a href="#L261">261</a>     Color? skyCivil,</div>
+<div id="L262"><a href="#L262">262</a>     Color? skyNautical,</div>
+<div id="L263"><a href="#L263">263</a>     Color? skyAstronomical,</div>
+<div id="L264"><a href="#L264">264</a>     Color? skyDark,</div>
+<div id="L265"><a href="#L265">265</a>     Color? moonUp,</div>
+<div id="L266"><a href="#L266">266</a>     Color? moonFree,</div>
+<div id="L267"><a href="#L267">267</a>     Color? weatherCaution,</div>
+<div id="L268"><a href="#L268">268</a>     Color? weatherNotice,</div>
+<div id="L269"><a href="#L269">269</a>   }) =&gt; HybridTokens(</div>
+<div id="L270"><a href="#L270">270</a>     action: action ?? this.action,</div>
+<div id="L271"><a href="#L271">271</a>     onAction: onAction ?? this.onAction,</div>
+<div id="L272"><a href="#L272">272</a>     selection: selection ?? this.selection,</div>
+<div id="L273"><a href="#L273">273</a>     selectedHourFill: selectedHourFill ?? this.selectedHourFill,</div>
+<div id="L274"><a href="#L274">274</a>     selectedHourText: selectedHourText ?? this.selectedHourText,</div>
+<div id="L275"><a href="#L275">275</a>     selectedHourRule: selectedHourRule ?? this.selectedHourRule,</div>
+<div id="L276"><a href="#L276">276</a>     surfaceSubtle: surfaceSubtle ?? this.surfaceSubtle,</div>
+<div id="L277"><a href="#L277">277</a>     surfaceSunken: surfaceSunken ?? this.surfaceSunken,</div>
+<div id="L278"><a href="#L278">278</a>     accent: accent ?? this.accent,</div>
+<div id="L279"><a href="#L279">279</a>     success: success ?? this.success,</div>
+<div id="L280"><a href="#L280">280</a>     successWash: successWash ?? this.successWash,</div>
+<div id="L281"><a href="#L281">281</a>     caution: caution ?? this.caution,</div>
+<div id="L282"><a href="#L282">282</a>     cautionWash: cautionWash ?? this.cautionWash,</div>
+<div id="L283"><a href="#L283">283</a>     errorText: errorText ?? this.errorText,</div>
+<div id="L284"><a href="#L284">284</a>     errorWash: errorWash ?? this.errorWash,</div>
+<div id="L285"><a href="#L285">285</a>     hourBackground: hourBackground ?? this.hourBackground,</div>
+<div id="L286"><a href="#L286">286</a>     hourText: hourText ?? this.hourText,</div>
+<div id="L287"><a href="#L287">287</a>     gainStart: gainStart ?? this.gainStart,</div>
+<div id="L288"><a href="#L288">288</a>     gainEnd: gainEnd ?? this.gainEnd,</div>
+<div id="L289"><a href="#L289">289</a>     skyDay: skyDay ?? this.skyDay,</div>
+<div id="L290"><a href="#L290">290</a>     skyCivil: skyCivil ?? this.skyCivil,</div>
+<div id="L291"><a href="#L291">291</a>     skyNautical: skyNautical ?? this.skyNautical,</div>
+<div id="L292"><a href="#L292">292</a>     skyAstronomical: skyAstronomical ?? this.skyAstronomical,</div>
+<div id="L293"><a href="#L293">293</a>     skyDark: skyDark ?? this.skyDark,</div>
+<div id="L294"><a href="#L294">294</a>     moonUp: moonUp ?? this.moonUp,</div>
+<div id="L295"><a href="#L295">295</a>     moonFree: moonFree ?? this.moonFree,</div>
+<div id="L296"><a href="#L296">296</a>     weatherCaution: weatherCaution ?? this.weatherCaution,</div>
+<div id="L297"><a href="#L297">297</a>     weatherNotice: weatherNotice ?? this.weatherNotice,</div>
+<div id="L298"><a href="#L298">298</a>   );</div>
+<div id="L299"><a href="#L299">299</a> </div>
+<div id="L300"><a href="#L300">300</a>   @override</div>
+<div id="L301"><a href="#L301">301</a>   HybridTokens lerp(covariant HybridTokens? other, double t) {</div>
+<div id="L302"><a href="#L302">302</a>     if (other == null) return this;</div>
+<div id="L303"><a href="#L303">303</a>     return HybridTokens(</div>
+<div id="L304"><a href="#L304">304</a>       action: Color.lerp(action, other.action, t)!,</div>
+<div id="L305"><a href="#L305">305</a>       onAction: Color.lerp(onAction, other.onAction, t)!,</div>
+<div id="L306"><a href="#L306">306</a>       selection: Color.lerp(selection, other.selection, t)!,</div>
+<div id="L307"><a href="#L307">307</a>       selectedHourFill: Color.lerp(</div>
+<div id="L308"><a href="#L308">308</a>         selectedHourFill,</div>
+<div id="L309"><a href="#L309">309</a>         other.selectedHourFill,</div>
+<div id="L310"><a href="#L310">310</a>         t,</div>
+<div id="L311"><a href="#L311">311</a>       )!,</div>
+<div id="L312"><a href="#L312">312</a>       selectedHourText: Color.lerp(</div>
+<div id="L313"><a href="#L313">313</a>         selectedHourText,</div>
+<div id="L314"><a href="#L314">314</a>         other.selectedHourText,</div>
+<div id="L315"><a href="#L315">315</a>         t,</div>
+<div id="L316"><a href="#L316">316</a>       )!,</div>
+<div id="L317"><a href="#L317">317</a>       selectedHourRule: Color.lerp(</div>
+<div id="L318"><a href="#L318">318</a>         selectedHourRule,</div>
+<div id="L319"><a href="#L319">319</a>         other.selectedHourRule,</div>
+<div id="L320"><a href="#L320">320</a>         t,</div>
+<div id="L321"><a href="#L321">321</a>       )!,</div>
+<div id="L322"><a href="#L322">322</a>       surfaceSubtle: Color.lerp(surfaceSubtle, other.surfaceSubtle, t)!,</div>
+<div id="L323"><a href="#L323">323</a>       surfaceSunken: Color.lerp(surfaceSunken, other.surfaceSunken, t)!,</div>
+<div id="L324"><a href="#L324">324</a>       accent: Color.lerp(accent, other.accent, t)!,</div>
+<div id="L325"><a href="#L325">325</a>       success: Color.lerp(success, other.success, t)!,</div>
+<div id="L326"><a href="#L326">326</a>       successWash: Color.lerp(successWash, other.successWash, t)!,</div>
+<div id="L327"><a href="#L327">327</a>       caution: Color.lerp(caution, other.caution, t)!,</div>
+<div id="L328"><a href="#L328">328</a>       cautionWash: Color.lerp(cautionWash, other.cautionWash, t)!,</div>
+<div id="L329"><a href="#L329">329</a>       errorText: Color.lerp(errorText, other.errorText, t)!,</div>
+<div id="L330"><a href="#L330">330</a>       errorWash: Color.lerp(errorWash, other.errorWash, t)!,</div>
+<div id="L331"><a href="#L331">331</a>       hourBackground: Color.lerp(hourBackground, other.hourBackground, t)!,</div>
+<div id="L332"><a href="#L332">332</a>       hourText: Color.lerp(hourText, other.hourText, t)!,</div>
+<div id="L333"><a href="#L333">333</a>       gainStart: Color.lerp(gainStart, other.gainStart, t)!,</div>
+<div id="L334"><a href="#L334">334</a>       gainEnd: Color.lerp(gainEnd, other.gainEnd, t)!,</div>
+<div id="L335"><a href="#L335">335</a>       skyDay: Color.lerp(skyDay, other.skyDay, t)!,</div>
+<div id="L336"><a href="#L336">336</a>       skyCivil: Color.lerp(skyCivil, other.skyCivil, t)!,</div>
+<div id="L337"><a href="#L337">337</a>       skyNautical: Color.lerp(skyNautical, other.skyNautical, t)!,</div>
+<div id="L338"><a href="#L338">338</a>       skyAstronomical: Color.lerp(skyAstronomical, other.skyAstronomical, t)!,</div>
+<div id="L339"><a href="#L339">339</a>       skyDark: Color.lerp(skyDark, other.skyDark, t)!,</div>
+<div id="L340"><a href="#L340">340</a>       moonUp: Color.lerp(moonUp, other.moonUp, t)!,</div>
+<div id="L341"><a href="#L341">341</a>       moonFree: Color.lerp(moonFree, other.moonFree, t)!,</div>
+<div id="L342"><a href="#L342">342</a>       weatherCaution: Color.lerp(weatherCaution, other.weatherCaution, t)!,</div>
+<div id="L343"><a href="#L343">343</a>       weatherNotice: Color.lerp(weatherNotice, other.weatherNotice, t)!,</div>
+<div id="L344"><a href="#L344">344</a>     );</div>
+<div id="L345"><a href="#L345">345</a>   }</div>
+<div id="L346"><a href="#L346">346</a> }</div>

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../shared/entry_text.dart';
 import '../../shared/collapsible_section.dart';
@@ -41,10 +41,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final copy = AppTypography.body.copyWith(
-      height: 1.6,
-      color: p.textSecondary,
-    );
+    final copy = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
+        .copyWith(color: p.textSecondary);
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -113,7 +112,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         topRule: false,
                         sectionKey: 'logbook.progressGuide',
                         title: 'How totals are grouped',
-                        titleStyle: AppTypography.body.copyWith(
+                        titleStyle: AppTextTheme.of(context).body.copyWith(
                           fontWeight: FontWeight.w500,
                           color: p.textPrimary,
                         ),
@@ -163,10 +162,9 @@ class TargetProgressCard extends StatelessWidget {
     final t = progress;
     final p = AppPalette.of(context);
     final night = t.lastNight;
-    final caption = AppTypography.caption.copyWith(
-      height: 1.55,
-      color: p.textSecondary,
-    );
+    final caption = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .copyWith(color: p.textSecondary);
     final rule = BorderSide(color: p.border);
     Widget heading(String name, String total, TextStyle style, Key? key) =>
         Wrap(
@@ -200,7 +198,7 @@ class TargetProgressCard extends StatelessWidget {
           heading(
             t.label,
             OpportunityText.duration(t.integration),
-            AppTypography.itemTitle.copyWith(color: p.textPrimary),
+            AppTextTheme.of(context).itemTitle.copyWith(color: p.textPrimary),
             Key('progress.total.${t.targetId}'),
           ),
           const SizedBox(height: AppSpacing.xs),
@@ -216,10 +214,8 @@ class TargetProgressCard extends StatelessWidget {
             heading(
               filter,
               OpportunityText.duration(total),
-              AppTypography.body.copyWith(
-                fontWeight: FontWeight.w600,
-                color: p.textPrimary,
-              ),
+              AppTextTheme.of(context).body
+                  .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
               null,
             ),
             for (final g in t.groups[filter] ?? const <ProgressGroup>[])
@@ -238,21 +234,29 @@ class TargetProgressCard extends StatelessWidget {
                         if (g.binning > 1) 'bin ${g.binning}×${g.binning}',
                         g.rig,
                       ].join(' · '),
-                      style: AppTypography.body.copyWith(
-                        height: 1.5,
-                        fontWeight: FontWeight.w500,
-                        color: p.textPrimary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).body,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: p.textPrimary,
+                          ),
                     ),
                     Text(
                       '${EntryText.plural(g.frames, 'frame')} · '
                       '${OpportunityText.duration(g.integration)} · '
                       '${EntryText.plural(g.nights.length, 'night')}',
-                      style: AppTypography.caption.copyWith(
-                        height: 1.5,
-                        color: p.textPrimary,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).caption,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(
+                            color: p.textPrimary,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
                     ),
                     if (!g.known)
                       Text(

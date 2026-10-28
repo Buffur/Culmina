@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/services/capture_budget_calculator.dart';
 import '../../shared/app_words.dart';
 import '../../shared/change_mark.dart';
@@ -64,10 +64,9 @@ class CaptureBudgetSummary extends StatelessWidget {
     ], rig: plan.selectedEquipment);
 
     final library = budget.libraryBlockIndexes.length;
-    final caption = AppTypography.caption.copyWith(
-      height: 1.6,
-      color: palette.textTertiary,
-    );
+    final caption = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.reading)
+        .copyWith(color: palette.textTertiary);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -158,10 +157,11 @@ class CaptureBudgetSummary extends StatelessWidget {
                             TextSpan(
                               text:
                                   '×${g.relativeStackingGain.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                color: palette.textPrimary,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: AppTextTheme.of(context).inherited
+                                  .copyWith(
+                                    color: palette.textPrimary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                             ),
                             TextSpan(
                               text:
@@ -170,9 +170,8 @@ class CaptureBudgetSummary extends StatelessWidget {
                             ),
                           ],
                         ),
-                        style: AppTypography.caption.copyWith(
-                          color: palette.textSecondary,
-                        ),
+                        style: AppTextTheme.of(context).caption
+                            .copyWith(color: palette.textSecondary),
                       ),
                     ),
                   ),
@@ -272,7 +271,7 @@ class CaptureBudgetSummary extends StatelessWidget {
                       children: [
                         Text(
                           'File size basis',
-                          style: AppTypography.caption.copyWith(
+                          style: AppTextTheme.of(context).caption.copyWith(
                             color: palette.textPrimary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -281,10 +280,12 @@ class CaptureBudgetSummary extends StatelessWidget {
                         Text(
                           storageNote,
                           textAlign: TextAlign.start,
-                          style: AppTypography.caption.copyWith(
-                            color: palette.textSecondary,
-                            height: 1.7,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).caption,
+                                AppTextGeometry.weatherDescription,
+                              )
+                              .copyWith(color: palette.textSecondary),
                         ),
                       ],
                     ),
@@ -349,9 +350,8 @@ class CaptureBudgetSummary extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Text(
                     'Ideal relative gain within each comparable light group',
-                    style: AppTypography.dense.copyWith(
-                      color: palette.textSecondary,
-                    ),
+                    style: AppTextTheme.of(context).dense
+                        .copyWith(color: palette.textSecondary),
                   ),
                 ),
                 _GainTable(groups: groups),
@@ -416,8 +416,9 @@ class _GainTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final head = AppTypography.dense.copyWith(color: p.textSecondary);
-    final cell = AppTypography.dense.copyWith(
+    final head = AppTextTheme.of(context).dense
+        .copyWith(color: p.textSecondary);
+    final cell = AppTextTheme.of(context).dense.copyWith(
       color: p.textPrimary,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
@@ -482,28 +483,32 @@ class _Estimate extends StatelessWidget {
           children: [
             Text(
               label,
-              style: AppTypography.caption.copyWith(
-                color: palette.textSecondary,
-              ),
+              style: AppTextTheme.of(context).caption
+                  .copyWith(color: palette.textSecondary),
             ),
             const SizedBox(height: 2),
             Text(
               value,
-              style: AppTypography.sectionHeading.copyWith(
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0,
-                height: 1.3,
-                color: palette.textPrimary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).sectionHeading,
+                    AppTextGeometry.answerNeutralTracking,
+                  )
+                  .copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: palette.textPrimary,
+                  ),
             ),
             if (note.isNotEmpty) ...[
               const SizedBox(height: 2),
               Text(
                 note,
-                style: AppTypography.caption.copyWith(
-                  height: 1.45,
-                  color: palette.textTertiary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      AppTextGeometry.tableValue,
+                    )
+                    .copyWith(color: palette.textTertiary),
               ),
             ],
           ],

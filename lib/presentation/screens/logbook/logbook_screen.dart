@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../domain/models/session.dart';
@@ -314,9 +314,8 @@ class _LogbookScreenState extends State<LogbookScreen> {
                 final n = _night(s);
                 (months[(n.year, n.month)] ??= []).add(s);
               }
-              final quiet = AppTypography.caption.copyWith(
-                color: p.textSecondary,
-              );
+              final quiet = AppTextTheme.of(context).caption
+                  .copyWith(color: p.textSecondary);
               return SliverPadding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.gutter,
@@ -353,10 +352,9 @@ class _LogbookScreenState extends State<LogbookScreen> {
                                   header: true,
                                   child: Text(
                                     '${_monthNames[month - 1]} $year',
-                                    style: quiet.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.4,
-                                    ),
+                                    style: AppTextTheme.of(context)
+                                        .resolve(quiet, AppTextGeometry.compact)
+                                        .copyWith(fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -427,13 +425,11 @@ class _LogbookScreenState extends State<LogbookScreen> {
         controller: _search,
         focusNode: _searchFocus,
         textInputAction: TextInputAction.search,
-        style: AppTypography.caption.copyWith(color: p.textPrimary),
+        style: AppTextTheme.of(context).caption.copyWith(color: p.textPrimary),
         decoration: InputDecoration(
           hintText: 'Name, target, site or notes',
-          hintStyle: AppTypography.caption.copyWith(
-            color: p.textSecondary,
-            fontStyle: FontStyle.italic,
-          ),
+          hintStyle: AppTextTheme.of(context).caption
+              .copyWith(color: p.textSecondary, fontStyle: FontStyle.italic),
           contentPadding: const EdgeInsets.fromLTRB(12, 14, 0, 14),
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
@@ -484,12 +480,16 @@ class _LogbookScreenState extends State<LogbookScreen> {
                                   textAlign: TextAlign.center,
                                   // The reference's 11 px, at the
                                   // project's 12 sp floor.
-                                  style: AppTypography.dense.copyWith(
-                                    height: 16 / 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                  ),
+                                  style: AppTextTheme.of(context)
+                                      .resolve(
+                                        AppTextTheme.of(context).dense,
+                                        AppTextGeometry.chartCaption,
+                                      )
+                                      .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                      ),
                                 ),
                               ),
                             ),
@@ -576,15 +576,15 @@ class _LogbookScreenState extends State<LogbookScreen> {
       log.equipmentName,
       ?log.locationName,
     ].join(' · ');
-    final caption = AppTypography.caption.copyWith(
-      height: 1.55,
-      color: p.textSecondary,
-    );
-    final integration = AppTypography.caption.copyWith(
-      height: 1.5,
-      color: p.textPrimary,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
+    final caption = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .copyWith(color: p.textSecondary);
+    final integration = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.standard)
+        .copyWith(
+          color: p.textPrimary,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        );
     return SwipeToDelete(
       itemKey: ValueKey('logbook_${session.id}'),
       onDelete: () async {
@@ -622,16 +622,17 @@ class _LogbookScreenState extends State<LogbookScreen> {
                         Text(
                           entryTitle(session),
                           key: Key('logbook.title.${session.id}'),
-                          style: AppTypography.rowTitle.copyWith(
-                            color: p.textPrimary,
-                          ),
+                          style: AppTextTheme.of(context).rowTitle
+                              .copyWith(color: p.textPrimary),
                         ),
                         Text(
                           details,
-                          style: AppTypography.body.copyWith(
-                            height: 1.6,
-                            color: p.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).body,
+                                AppTextGeometry.reading,
+                              )
+                              .copyWith(color: p.textSecondary),
                         ),
                       ],
                     );
@@ -735,16 +736,17 @@ class _ProgressRow extends StatelessWidget {
                     children: [
                       Text(
                         AppWords.progressByTarget,
-                        style: AppTypography.rowTitle.copyWith(
-                          color: p.textPrimary,
-                        ),
+                        style: AppTextTheme.of(context).rowTitle
+                            .copyWith(color: p.textPrimary),
                       ),
                       Text(
                         'Integration so far, from your results',
-                        style: AppTypography.body.copyWith(
-                          height: 1.6,
-                          color: p.textSecondary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).body,
+                              AppTextGeometry.reading,
+                            )
+                            .copyWith(color: p.textSecondary),
                       ),
                     ],
                   ),
@@ -788,7 +790,8 @@ class _Empty extends StatelessWidget {
           Text(
             count,
             key: const Key('logbook.resultCount'),
-            style: AppTypography.caption.copyWith(color: p.textSecondary),
+            style: AppTextTheme.of(context).caption
+                .copyWith(color: p.textSecondary),
           ),
           const SizedBox(height: AppSpacing.itemGap),
           Text(
@@ -797,10 +800,9 @@ class _Empty extends StatelessWidget {
                 : 'Nothing saved yet. Save a plan, then return here to '
                       'record its result.',
             key: const Key('logbook.empty'),
-            style: AppTypography.body.copyWith(
-              height: 1.6,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
+                .copyWith(color: p.textSecondary),
           ),
           const SizedBox(height: AppSpacing.itemGap),
           OutlinedButton(
@@ -856,7 +858,8 @@ class _FilterPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final label = AppTypography.caption.copyWith(color: p.textSecondary);
+    final label = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
     final f = filter;
     Widget select(String key, String title, int? value, Map<int, String> all) =>
         Column(
@@ -869,7 +872,8 @@ class _FilterPanel extends StatelessWidget {
               initialValue: value ?? -1,
               isExpanded: true,
               icon: hybridSelectIcon(context),
-              style: AppTypography.caption.copyWith(color: p.textPrimary),
+              style: AppTextTheme.of(context).caption
+                  .copyWith(color: p.textPrimary),
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 12,
@@ -922,7 +926,7 @@ class _FilterPanel extends StatelessWidget {
                   value == null
                       ? 'Any'
                       : NightTimeFormatter.recordedDate(value),
-                  style: AppTypography.caption.copyWith(
+                  style: AppTextTheme.of(context).caption.copyWith(
                     color: value == null ? p.textSecondary : p.textPrimary,
                   ),
                 ),
@@ -954,7 +958,8 @@ class _FilterPanel extends StatelessWidget {
           padding: const EdgeInsets.only(top: AppSpacing.sm),
           child: Text(
             'Completed includes Partly results.',
-            style: label.copyWith(height: 1.55),
+            style: AppTextTheme.of(context)
+                .resolve(label, AppTextGeometry.supporting),
           ),
         ),
         const SizedBox(height: AppSpacing.gutter),

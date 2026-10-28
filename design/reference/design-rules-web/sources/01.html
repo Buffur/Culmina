@@ -1,0 +1,109 @@
+<!doctype html><meta charset="utf-8"><title>docs\DESIGN_SYSTEM.md</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>docs\DESIGN_SYSTEM.md</h1><div id="L1"><a href="#L1">1</a> # Design system</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> This is a reference to the implemented Flutter UI in `lib/`.</div>
+<div id="L4"><a href="#L4">4</a> It does not assert visual or accessibility acceptance.</div>
+<div id="L5"><a href="#L5">5</a> </div>
+<div id="L6"><a href="#L6">6</a> ## Design guidance structure</div>
+<div id="L7"><a href="#L7">7</a> </div>
+<div id="L8"><a href="#L8">8</a> The five local Culmina design skills are the only project design authorities.</div>
+<div id="L9"><a href="#L9">9</a> They cover all UI code, including screens, composed widgets, scientific displays,</div>
+<div id="L10"><a href="#L10">10</a> dialogs, states and all themes; the gallery is only a scoped visual inventory.</div>
+<div id="L11"><a href="#L11">11</a> Use the relevant skills during implementation. Supporting references and</div>
+<div id="L12"><a href="#L12">12</a> implementation files are not additional rule sets. Extend the relevant Culmina</div>
+<div id="L13"><a href="#L13">13</a> skill when guidance is missing. Technical and artifact helpers remain available</div>
+<div id="L14"><a href="#L14">14</a> as described in [agent tooling](AGENT_TOOLING.md).</div>
+<div id="L15"><a href="#L15">15</a> Shared product invariants remain in [AGENTS.md](../AGENTS.md).</div>
+<div id="L16"><a href="#L16">16</a> </div>
+<div id="L17"><a href="#L17">17</a> | Local skill | Owns |</div>
+<div id="L18"><a href="#L18">18</a> | --- | --- |</div>
+<div id="L19"><a href="#L19">19</a> | [Components](../.agents/skills/culmina-design-components/SKILL.md) | Existing components, states, callbacks and actual adopters |</div>
+<div id="L20"><a href="#L20">20</a> | [Product rules](../.agents/skills/culmina-design-rules/SKILL.md) | Scientific meaning, time, missing data and persistence distinctions |</div>
+<div id="L21"><a href="#L21">21</a> | [Spacing](../.agents/skills/culmina-design-spacing/SKILL.md) | Local geometry, shape, density and reduced motion |</div>
+<div id="L22"><a href="#L22">22</a> | [Tokens](../.agents/skills/culmina-design-tokens/SKILL.md) | Semantic colors and surfaces across all three themes |</div>
+<div id="L23"><a href="#L23">23</a> | [Typography](../.agents/skills/culmina-design-typography/SKILL.md) | Adopted text roles, wrapping, scaling and numeric readability |</div>
+<div id="L24"><a href="#L24">24</a> </div>
+<div id="L25"><a href="#L25">25</a> This document indexes the implementation. The skills&#x27; supporting references route</div>
+<div id="L26"><a href="#L26">26</a> to current definitions and callers. Compatibility files in `.agents/rules/` point</div>
+<div id="L27"><a href="#L27">27</a> back to shared guidance; external design playbooks and archived recipes are not</div>
+<div id="L28"><a href="#L28">28</a> automatically adopted Culmina policy. A component specimen demonstrates appearance</div>
+<div id="L29"><a href="#L29">29</a> in its captured state, not production adoption or device acceptance.</div>
+<div id="L30"><a href="#L30">30</a> </div>
+<div id="L31"><a href="#L31">31</a> ## Theme sources</div>
+<div id="L32"><a href="#L32">32</a> </div>
+<div id="L33"><a href="#L33">33</a> - `core/theme/app_theme.dart`: Light, Dark and red Field `ThemeData`.</div>
+<div id="L34"><a href="#L34">34</a> - `app_colors.dart`: raw colors; `app_palette.dart`: semantic theme extension.</div>
+<div id="L35"><a href="#L35">35</a> - `hybrid_tokens.dart`: additional surfaces, selection, feedback, chart colors,</div>
+<div id="L36"><a href="#L36">36</a>   compact type sizes, minimum target and app-bar height.</div>
+<div id="L37"><a href="#L37">37</a> - `app_typography.dart`, `app_spacing.dart`, `app_radius.dart`,</div>
+<div id="L38"><a href="#L38">38</a>   `app_motion.dart`: type, spacing, shape and transition values.</div>
+<div id="L39"><a href="#L39">39</a> - `app_button_styles.dart`: shared button styling.</div>
+<div id="L40"><a href="#L40">40</a> </div>
+<div id="L41"><a href="#L41">41</a> `DisplaySettingsViewModel` stores System/Light/Dark appearance and display</div>
+<div id="L42"><a href="#L42">42</a> choices. `ThemeViewModel` stores field mode separately. `main.dart` selects</div>
+<div id="L43"><a href="#L43">43</a> the theme and applies `AppTheme.fieldFilter` around app content in field mode.</div>
+<div id="L44"><a href="#L44">44</a> </div>
+<div id="L45"><a href="#L45">45</a> ## Base colors</div>
+<div id="L46"><a href="#L46">46</a> </div>
+<div id="L47"><a href="#L47">47</a> | Role | Light | Dark | Field |</div>
+<div id="L48"><a href="#L48">48</a> | --- | --- | --- | --- |</div>
+<div id="L49"><a href="#L49">49</a> | Background | `#FFFFFF` | `#191919` | `#000000` |</div>
+<div id="L50"><a href="#L50">50</a> | Surface | `#F7F7F5` | `#202020` | `#110000` |</div>
+<div id="L51"><a href="#L51">51</a> | Raised surface | `#FFFFFF` | `#252525` | `#1A0000` |</div>
+<div id="L52"><a href="#L52">52</a> | Primary text | `#37352F` | `#EBEBEA` | `#FF0000` |</div>
+<div id="L53"><a href="#L53">53</a> | Secondary text | `#5A5955` | `#A5A5A3` | `#AA0000` |</div>
+<div id="L54"><a href="#L54">54</a> | Border | `#E9E9E7` | `#2F2F2F` | `#330000` |</div>
+<div id="L55"><a href="#L55">55</a> </div>
+<div id="L56"><a href="#L56">56</a> `AppPalette` adds semantic event/chart roles. `HybridTokens` supplies action,</div>
+<div id="L57"><a href="#L57">57</a> accent, success/caution/error and selected-hour roles. These are separate</div>
+<div id="L58"><a href="#L58">58</a> from base surfaces; component callers resolve the relevant token set.</div>
+<div id="L59"><a href="#L59">59</a> </div>
+<div id="L60"><a href="#L60">60</a> ## Typography</div>
+<div id="L61"><a href="#L61">61</a> </div>
+<div id="L62"><a href="#L62">62</a> Production text roles use the bundled **Geist** family.</div>
+<div id="L63"><a href="#L63">63</a> Source Serif 4 is bundled in `pubspec.yaml` but is not the production role family.</div>
+<div id="L64"><a href="#L64">64</a> </div>
+<div id="L65"><a href="#L65">65</a> | `AppTypography` role | Size / line height | Weight |</div>
+<div id="L66"><a href="#L66">66</a> | --- | --- | --- |</div>
+<div id="L67"><a href="#L67">67</a> | `screenTitle` | 22 / 27.5 | 500 |</div>
+<div id="L68"><a href="#L68">68</a> | `sectionHeading` | 20 / 28 | 600 |</div>
+<div id="L69"><a href="#L69">69</a> | `sectionSubject` | 18 / 23.4 | 500 |</div>
+<div id="L70"><a href="#L70">70</a> | `itemTitle` | 16 / 22.4 | 600 |</div>
+<div id="L71"><a href="#L71">71</a> | `rowTitle` | 16 / 24 | 500 |</div>
+<div id="L72"><a href="#L72">72</a> | `value` | 15 / 21.75 | 400 |</div>
+<div id="L73"><a href="#L73">73</a> | `body` | 14 / 21.7 | 400 |</div>
+<div id="L74"><a href="#L74">74</a> | `caption` | 13 / 19.5 | 400 |</div>
+<div id="L75"><a href="#L75">75</a> | `dense` | 12 / 18 | 400 |</div>
+<div id="L76"><a href="#L76">76</a> | `navigationLabel` | 11 / 16.5 | Caller selects 400/600 |</div>
+<div id="L77"><a href="#L77">77</a> </div>
+<div id="L78"><a href="#L78">78</a> Additional heading roles are `homeHeading` (29), `nightHeading` (25)</div>
+<div id="L79"><a href="#L79">79</a> and `answerHeading` (28). `AppTypography.scale` also defines the Material</div>
+<div id="L80"><a href="#L80">80</a> `TextTheme`; it is distinct from the named screen roles.</div>
+<div id="L81"><a href="#L81">81</a> Compact calendar/chart token sizes are 10/11 logical pixels.</div>
+<div id="L82"><a href="#L82">82</a> </div>
+<div id="L83"><a href="#L83">83</a> ## Layout, shape and motion</div>
+<div id="L84"><a href="#L84">84</a> </div>
+<div id="L85"><a href="#L85">85</a> - `AppSpacing`: 4, 8, 16, 24, 32, 48; page gutter 20 and section gap 28.</div>
+<div id="L86"><a href="#L86">86</a>   Additional compact steps are 2, 3, 6, 10, 12 and 14.</div>
+<div id="L87"><a href="#L87">87</a> - `AppRadius`: small 6, menu 8, large 12 and pill 999.</div>
+<div id="L88"><a href="#L88">88</a> - `HybridTokens`: minimum target 48; app bar height 64.</div>
+<div id="L89"><a href="#L89">89</a> - `AppMotion`: short 120 ms, medium 180 ms, highlight 1500 ms;</div>
+<div id="L90"><a href="#L90">90</a>   curve `Cubic(0.16, 1, 0.3, 1)`.</div>
+<div id="L91"><a href="#L91">91</a>   Its duration helper returns zero when platform animations are disabled.</div>
+<div id="L92"><a href="#L92">92</a> - `AppShell`: four navigation items with minimum height 56;</div>
+<div id="L93"><a href="#L93">93</a>   at text scale 1.5 or greater it lays them out two per row.</div>
+<div id="L94"><a href="#L94">94</a> </div>
+<div id="L95"><a href="#L95">95</a> ## Shared UI</div>
+<div id="L96"><a href="#L96">96</a> </div>
+<div id="L97"><a href="#L97">97</a> `presentation/shared/` contains the app bar, line icons, section headers,</div>
+<div id="L98"><a href="#L98">98</a> collapsible sections, detail scaffold, status/failure feedback, confirmation</div>
+<div id="L99"><a href="#L99">99</a> and deletion patterns, field-mode control and form-input helpers.</div>
+<div id="L100"><a href="#L100">100</a> `presentation/widgets/` contains altitude/night/weather visualizations,</div>
+<div id="L101"><a href="#L101">101</a> capture planning, budgets, fit/status and storage/gain presentation.</div>
+<div id="L102"><a href="#L102">102</a> Screen-specific layouts live under `presentation/screens/`.</div>
+<div id="L103"><a href="#L103">103</a> </div>
+<div id="L104"><a href="#L104">104</a> The current composition is Tonight → separate Plan/detail flows, with</div>
+<div id="L105"><a href="#L105">105</a> Logbook, Library and Settings as other root destinations.</div>
+<div id="L106"><a href="#L106">106</a> Labels, unknown-data messages and draft/result distinctions come from</div>
+<div id="L107"><a href="#L107">107</a> shared text helpers and the relevant screen/ViewModel state.</div>
+<div id="L108"><a href="#L108">108</a> </div>
+<div id="L109"><a href="#L109">109</a> See [Product specification](PRODUCT_SPEC.md) and [Architecture](ARCHITECTURE.md).</div>

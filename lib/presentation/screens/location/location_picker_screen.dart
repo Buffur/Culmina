@@ -13,7 +13,7 @@ import '../../../domain/services/location_service.dart';
 import '../../shared/coordinate_input.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/location_feedback.dart';
@@ -129,7 +129,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 children: [
                   Text(
                     'Selected point',
-                    style: AppTypography.body.copyWith(color: p.textSecondary),
+                    style: AppTextTheme.of(context).body
+                        .copyWith(color: p.textSecondary),
                   ),
                   TextButton(
                     key: const Key('location.coordinates'),
@@ -142,7 +143,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 Text(
                   '${QuantityText.degrees(point.latitude, digits: 5)}, ${QuantityText.degrees(point.longitude, digits: 5)}',
                   key: const Key('location.selectedPoint'),
-                  style: AppTypography.rowTitle.copyWith(color: p.textPrimary),
+                  style: AppTextTheme.of(context).rowTitle
+                      .copyWith(color: p.textPrimary),
                 ),
               const SizedBox(height: 12),
               FilledButton(

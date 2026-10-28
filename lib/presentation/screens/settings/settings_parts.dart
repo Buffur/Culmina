@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/hybrid_icon.dart';
 
@@ -33,9 +33,8 @@ class SettingsHeading extends StatelessWidget {
       header: true,
       child: Text(
         text,
-        style: AppTypography.sectionHeading.copyWith(
-          color: AppPalette.of(context).textPrimary,
-        ),
+        style: AppTextTheme.of(context).sectionHeading
+            .copyWith(color: AppPalette.of(context).textPrimary),
       ),
     ),
   );
@@ -63,10 +62,12 @@ class SettingsCopy extends StatelessWidget {
       padding: EdgeInsets.only(top: top),
       child: Text(
         text,
-        style: AppTypography.body.copyWith(
-          height: primary ? 1.5 : 1.6,
-          color: primary ? p.textPrimary : p.textSecondary,
-        ),
+        style: AppTextTheme.of(context)
+            .resolve(
+              AppTextTheme.of(context).body,
+              (primary ? AppTextGeometry.standard : AppTextGeometry.reading),
+            )
+            .copyWith(color: primary ? p.textPrimary : p.textSecondary),
       ),
     );
   }
@@ -85,17 +86,18 @@ class SettingsHint extends StatelessWidget {
     padding: EdgeInsets.only(top: top),
     child: Text(
       text,
-      style: AppTypography.caption.copyWith(
-        height: 1.55,
-        color: color ?? AppPalette.of(context).textSecondary,
-      ),
+      style: AppTextTheme.of(context)
+          .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+          .copyWith(color: color ?? AppPalette.of(context).textSecondary),
     ),
   );
 }
 
 /// The legend of a group of choices (`.settings-units > legend`): 15/400.
-TextStyle settingsLegendStyle(BuildContext context) => AppTypography.value
-    .copyWith(height: 1.5, color: AppPalette.of(context).textPrimary);
+TextStyle settingsLegendStyle(BuildContext context) =>
+    AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).value, AppTextGeometry.standard)
+        .copyWith(color: AppPalette.of(context).textPrimary);
 
 /// A row of the Settings root (`.settings-row`): the 24 px icon, 16 before
 /// a 16/500 title over a 14 px summary, the chevron; padding 16 0 and a
@@ -149,16 +151,17 @@ class SettingsRow extends StatelessWidget {
                       children: [
                         Text(
                           title,
-                          style: AppTypography.rowTitle.copyWith(
-                            color: p.textPrimary,
-                          ),
+                          style: AppTextTheme.of(context).rowTitle
+                              .copyWith(color: p.textPrimary),
                         ),
                         Text(
                           summary,
-                          style: AppTypography.body.copyWith(
-                            height: 1.6,
-                            color: p.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).body,
+                                AppTextGeometry.reading,
+                              )
+                              .copyWith(color: p.textSecondary),
                         ),
                       ],
                     ),
@@ -213,7 +216,8 @@ class SettingsSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final ends = AppTypography.caption.copyWith(color: p.textSecondary);
+    final ends = AppTextTheme.of(context).caption
+        .copyWith(color: p.textSecondary);
     return Padding(
       padding: EdgeInsets.only(top: top),
       child: Column(
@@ -398,12 +402,16 @@ class SettingsLink extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               label,
-              style: AppTypography.body.copyWith(
-                height: 1.5,
-                color: p.textPrimary,
-                decoration: TextDecoration.underline,
-                decorationColor: p.textPrimary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).body,
+                    AppTextGeometry.standard,
+                  )
+                  .copyWith(
+                    color: p.textPrimary,
+                    decoration: TextDecoration.underline,
+                    decorationColor: p.textPrimary,
+                  ),
             ),
           ),
         ),
@@ -463,15 +471,15 @@ class FactRows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final label = AppTypography.body.copyWith(
-      height: 1.55,
-      color: p.textSecondary,
-    );
-    final value = AppTypography.body.copyWith(
-      height: 1.5,
-      color: p.textPrimary,
-      fontFeatures: const [FontFeature.tabularFigures()],
-    );
+    final label = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.supporting)
+        .copyWith(color: p.textSecondary);
+    final value = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+        .copyWith(
+          color: p.textPrimary,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -499,10 +507,12 @@ class FactRows extends StatelessWidget {
                     Text(
                       note,
                       textAlign: TextAlign.end,
-                      style: AppTypography.caption.copyWith(
-                        height: 1.5,
-                        color: p.textSecondary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).caption,
+                            AppTextGeometry.standard,
+                          )
+                          .copyWith(color: p.textSecondary),
                     ),
                 ],
               ),

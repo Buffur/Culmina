@@ -6,7 +6,7 @@ import '../../shared/site_label.dart';
 import '../../shared/document_section.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/moon_conditions.dart';
 import '../../../domain/models/night_timeline.dart';
 import '../../../domain/models/night_weather.dart';
@@ -75,20 +75,24 @@ class TonightHomeScreen extends StatelessWidget {
             header: true,
             child: Text(
               "Couldn't load your plan",
-              style: AppTypography.homePlanHeading.copyWith(
-                height: 1.3,
-                color: p.textPrimary,
-              ),
+              style: AppTextTheme.of(context)
+                  .resolve(
+                    AppTextTheme.of(context).homePlanHeading,
+                    AppTextGeometry.answer,
+                  )
+                  .copyWith(color: p.textPrimary),
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             "Your site, settings and current plan couldn't be loaded. Retry "
             'to load them again.',
-            style: AppTypography.body.copyWith(
-              height: 1.5,
-              color: p.textSecondary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).body,
+                  AppTextGeometry.standard,
+                )
+                .copyWith(color: p.textSecondary),
           ),
           const SizedBox(height: AppSpacing.md),
           FilledButton(
@@ -153,9 +157,8 @@ class _Title extends StatelessWidget {
                   child: Text(
                     PlanNightPhrase.title(plan.eveningDate, plan.tonightKey),
                     key: const Key('tonight.title'),
-                    style: AppTypography.homeHeading.copyWith(
-                      color: p.textPrimary,
-                    ),
+                    style: AppTextTheme.of(context).homeHeading
+                        .copyWith(color: p.textPrimary),
                   ),
                 ),
               ),
@@ -165,7 +168,7 @@ class _Title extends StatelessWidget {
         ),
         Text(
           'A clear plan for the night ahead.',
-          style: AppTypography.body.copyWith(color: p.textTertiary),
+          style: AppTextTheme.of(context).body.copyWith(color: p.textTertiary),
         ),
       ],
     );
@@ -239,20 +242,21 @@ class _NoSite extends StatelessWidget {
           header: true,
           child: Text(
             'Where will you observe?',
-            style: AppTypography.homePlanHeading.copyWith(
-              height: 1.3,
-              color: p.textPrimary,
-            ),
+            style: AppTextTheme.of(context)
+                .resolve(
+                  AppTextTheme.of(context).homePlanHeading,
+                  AppTextGeometry.answer,
+                )
+                .copyWith(color: p.textPrimary),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
           'Set up your observing site to see the night, Moon and weather '
           'for it.',
-          style: AppTypography.body.copyWith(
-            height: 1.5,
-            color: p.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
+              .copyWith(color: p.textSecondary),
         ),
         const SizedBox(height: AppSpacing.md),
         FilledButton(
@@ -280,11 +284,15 @@ class _NoSite extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Use current position',
-                        style: AppTypography.itemTitle.copyWith(
-                          fontWeight: FontWeight.w500,
-                          height: 1.5,
-                          color: p.textPrimary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).itemTitle,
+                              AppTextGeometry.standard,
+                            )
+                            .copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: p.textPrimary,
+                            ),
                       ),
                     ),
                     HybridIcon(
@@ -347,9 +355,8 @@ class _PlanSection extends StatelessWidget {
                 child: Text(
                   AppWords.yourPlan,
                   key: const Key('tonight.planHeading'),
-                  style: AppTypography.homePlanHeading.copyWith(
-                    color: palette.textPrimary,
-                  ),
+                  style: AppTextTheme.of(context).homePlanHeading
+                      .copyWith(color: palette.textPrimary),
                 ),
               ),
               if (session != null)
@@ -369,7 +376,7 @@ class _PlanSection extends StatelessWidget {
                 ? 'No target chosen'
                 : target.commonName ?? target.catalogId,
             key: const Key('tonight.planTarget'),
-            style: AppTypography.homeTarget.copyWith(
+            style: AppTextTheme.of(context).homeTarget.copyWith(
               color: target == null
                   ? palette.textSecondary
                   : palette.textPrimary,
@@ -388,7 +395,8 @@ class _PlanSection extends StatelessWidget {
                 ExampleText.rigName(rig),
               ].join(' · '),
               key: const Key('tonight.planRig'),
-              style: AppTypography.body.copyWith(color: palette.textTertiary),
+              style: AppTextTheme.of(context).body
+                  .copyWith(color: palette.textTertiary),
             ),
           ],
           const SizedBox(height: 18),
@@ -479,7 +487,8 @@ class _NightSection extends StatelessWidget {
       header: true,
       child: Text(
         'The night ahead',
-        style: AppTypography.nightHeading.copyWith(color: p.textPrimary),
+        style: AppTextTheme.of(context).nightHeading
+            .copyWith(color: p.textPrimary),
       ),
     );
     // Home shows the site prompt instead (`_NoSite`).
@@ -754,18 +763,21 @@ class _ActionRow extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: AppTypography.itemTitle.copyWith(
-                          fontWeight: FontWeight.w500,
-                          height: 21 / 16,
-                          color: p.textPrimary,
-                        ),
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).itemTitle,
+                              AppTextGeometry.dialogTitle,
+                            )
+                            .copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: p.textPrimary,
+                            ),
                       ),
                       if (caption != null)
                         Text(
                           caption!,
-                          style: AppTypography.caption.copyWith(
-                            color: p.textSecondary,
-                          ),
+                          style: AppTextTheme.of(context).caption
+                              .copyWith(color: p.textSecondary),
                         ),
                     ],
                   ),
@@ -829,9 +841,8 @@ class _ConditionRow extends StatelessWidget {
                       Expanded(
                         child: Text(
                           label,
-                          style: AppTypography.itemTitle.copyWith(
-                            color: p.textPrimary,
-                          ),
+                          style: AppTextTheme.of(context).itemTitle
+                              .copyWith(color: p.textPrimary),
                         ),
                       ),
                     ],
@@ -839,7 +850,7 @@ class _ConditionRow extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     value,
-                    style: AppTypography.value.copyWith(
+                    style: AppTextTheme.of(context).value.copyWith(
                       color: p.textPrimary,
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
@@ -848,10 +859,12 @@ class _ConditionRow extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       extra,
-                      style: AppTypography.caption.copyWith(
-                        height: 1.55,
-                        color: p.textSecondary,
-                      ),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).caption,
+                            AppTextGeometry.supporting,
+                          )
+                          .copyWith(color: p.textSecondary),
                     ),
                   ],
                 ],

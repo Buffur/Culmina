@@ -1,0 +1,50 @@
+<!doctype html><meta charset="utf-8"><title>get-context</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>get-context</h1><p>Optional external playbook — not adopted Culmina policy.</p><p>C:\Users\zalub\.codex\plugins\cache\openai-curated-remote\product-design\0.1.56\skills\get-context\SKILL.md</p><pre>   1  ---
+   2  name: get-context
+   3  description: &quot;Mandatory design-brief gate for clarifying the product and outcome. Use before ideation, image-to-code builds, redesigns, or product UI work to clarify missing product information and play back the brief before proceeding.&quot;
+   4  ---
+   5  
+   6  # Get Context
+   7  
+   8  
+   9  Run this skill at the start of Product Design requests that ask to design, build, prototype, clone, redesign, extend, or generate product UI directions.
+  10  
+  11  Use question mode when any of the following are unclear:
+  12  
+  13  - what product, site, feature, workflow, component, or screen is being designed, redesigned, or extended
+  14  - what the feature, change, app, or website should help the user do
+  15  - whether the target is a website, desktop/web application, or mobile app when that is not apparent from the visual source or brief
+  16  
+  17  Do not re-ask answered questions. When both are clear, play back the brief and defaults in one pithy note, name the next workflow, and continue in the same turn. Playback is not a request for approval. The user can course-correct style, scope, or interactivity at any point.
+  18  
+  19  Hard boundary: do not implement UI, scaffold a prototype, start a server, or create files while the design target or intended user outcome is still missing.
+  20  
+  21  ## Critical Overrides
+  22  
+  23  - Refer to the Plugin router [$index](../index/SKILL.md) before proceeding.
+  24  - Follow [$critical-overrides](../../references/critical-overrides.md).
+  25  
+  26  ## User Context
+  27  
+  28  Before starting, load [$user-context](../user-context/SKILL.md) and run its preflight script when local shell access is available.
+  29  
+  30  Use saved product URLs, Figma files, screenshots, reference images, codebase paths, Storybook, tokens, design systems, brand assets, component refs, browser preferences, and share targets as grounding material when relevant.
+  31  
+  32  Do not inspect every saved reference. Inspect only what the current task needs.
+  33  
+  34  ## Handoff To The Next Workflow
+  35  
+  36  1. When the next workflow is already clear, read that skill before sending the brief playback. Do not only name a skill you have not read.
+  37  
+  38  2. Before executing `$ideate`, `$url-to-code`, or `$image-to-code`, play back the minimum brief and any defaults in one pithy user-visible note.
+  39  
+  40  3. If the target and intended user outcome are clear, continue to the next workflow in the same turn. Do not wait for explicit confirmation. If the user provides feedback, incorporate it and course-correct.
+  41  
+  42  4. Before starting an involved app, prototype, clone, redesign, or build, send one short expectation-setting note and continue. Example:
+  43  
+  44  ```text
+  45  This kind of build usually takes about 10-15 minutes, and ambitious ones can take longer. Good moment to grab coffee or tend to something else; I’ll keep moving and bring the prototype back when it is ready.
+  46  ```
+  47  
+  48  Do not send this note for tiny static changes, quick audits, simple research, setup-only, or share-only requests.
+  49  
+  50  Done means the design target and intended user outcome are clear, defaults have been played back, and any already-determined next skill has been read.</pre>

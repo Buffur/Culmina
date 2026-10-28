@@ -1,0 +1,342 @@
+<!doctype html><meta charset="utf-8"><title>app_palette.dart</title><style>body{font:15px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{color:#1768ae}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>app_palette.dart</h1><p>lib\core\theme\app_palette.dart</p><p>SHA-256: 62015cbef94e3a18bd561e9221b5091acb39d353985472340bc650b885e15d6f</p><pre>   1  import &#x27;package:flutter/material.dart&#x27;;
+   2  
+   3  import &#x27;app_colors.dart&#x27;;
+   4  
+   5  /// Semantic colour tokens that the Material [ColorScheme] has no role for
+   6  /// (TASK 12.4): muted text, the night&#x27;s events, the altitude chart and the
+   7  /// Bortle scale. Widgets read them with [AppPalette.of]; `lib/presentation`
+   8  /// never names a colour itself (a test enforces it). Field mode&#x27;s tokens
+   9  /// are red or black only.
+  10  @immutable
+  11  class AppPalette extends ThemeExtension&lt;AppPalette&gt; {
+  12    const AppPalette({
+  13      required this.textPrimary,
+  14      required this.textSecondary,
+  15      required this.textTertiary,
+  16      required this.textDisabled,
+  17      required this.surfaceRaised,
+  18      required this.border,
+  19      required this.controlBorder,
+  20      required this.statusFits,
+  21      required this.statusTight,
+  22      required this.statusDoesNotFit,
+  23      required this.statusNoWindow,
+  24      required this.statusNeutral,
+  25      required this.stateUnsaved,
+  26      required this.stateSettled,
+  27      required this.stateQuiet,
+  28      required this.muted,
+  29      required this.caution,
+  30      required this.sunEvent,
+  31      required this.twilightEvent,
+  32      required this.moon,
+  33      required this.selected,
+  34      required this.chartDay,
+  35      required this.chartTwilight,
+  36      required this.chartDark,
+  37      required this.chartWindow,
+  38      required this.chartTarget,
+  39      required this.chartMoon,
+  40      required this.chartMinAltitude,
+  41      required this.chartNow,
+  42      required this.chartNowCentre,
+  43      required this.chartGrid,
+  44      required this.chartLabel,
+  45      required this.swatchBorder,
+  46      required this.bortle,
+  47      required this.onBortle,
+  48    });
+  49  
+  50    /// The text roles (S5.1; `docs/DESIGN_SYSTEM.md`): primary for the
+  51    /// answer and values, secondary for labels and supporting text, tertiary
+  52    /// for captions and metadata. In light and dark each is WCAG AA on the
+  53    /// background, the surface and [surfaceRaised]; disabled is exempt (WCAG
+  54    /// 1.4.3 excludes inactive controls).
+  55    final Color textPrimary;
+  56    final Color textSecondary;
+  57    final Color textTertiary;
+  58    final Color textDisabled;
+  59  
+  60    /// Dialogs, menus and sheets: one level above the card surface.
+  61    final Color surfaceRaised;
+  62  
+  63    /// Card and section outlines; dividers (decorative).
+  64    final Color border;
+  65  
+  66    /// The boundary of a control (S5.2): a text field&#x27;s underline or
+  67    /// outline, an outlined button. At least 3:1 in light and dark (WCAG
+  68    /// 1.4.11); in field mode brighter than [border] (UX-39).
+  69    final Color controlBorder;
+  70  
+  71    /// The verdict&#x27;s colours (S5.4; UX-16): each `FitState` has one. A real
+  72    /// verdict is coloured; a missing input ([statusNeutral]) is not. &quot;Tight&quot;
+  73    /// is a caution at least as prominent as &quot;Fits&quot; (S1.9); in field mode all
+  74    /// are red and the word carries the difference.
+  75    final Color statusFits;
+  76    final Color statusTight;
+  77    final Color statusDoesNotFit;
+  78    final Color statusNoWindow;
+  79    final Color statusNeutral;
+  80  
+  81    /// The plan-state label&#x27;s tones (S5.4; ADR-019 §3): unsaved work draws
+  82    /// attention (Not saved, Saved · changed); a settled plan reads as
+  83    /// primary text (Saved, Tracking, Completed); the rest is quiet (Partly,
+  84    /// Not done, Old log). Tones, never verdicts.
+  85    final Color stateUnsaved;
+  86    final Color stateSettled;
+  87    final Color stateQuiet;
+  88  
+  89    /// Secondary text and icons for empty or unknown states.
+  90    final Color muted;
+  91  
+  92    /// A caution that is not an error, such as a &quot;Tight&quot; fit (S1.9): at least
+  93    /// as prominent as body text.
+  94    final Color caution;
+  95  
+  96    /// Sunset/sunrise and astronomical dusk/dawn icons.
+  97    final Color sunEvent;
+  98    final Color twilightEvent;
+  99  
+ 100    /// The Moon icon.
+ 101    final Color moon;
+ 102  
+ 103    /// The check mark on the selected rig or target.
+ 104    final Color selected;
+ 105  
+ 106    /// Altitude chart: darkness bands, imaging windows, lines and labels.
+ 107    final Color chartDay;
+ 108    final Color chartTwilight;
+ 109    final Color chartDark;
+ 110    final Color chartWindow;
+ 111    final Color chartTarget;
+ 112    final Color chartMoon;
+ 113    final Color chartMinAltitude;
+ 114    final Color chartNow;
+ 115    final Color chartNowCentre;
+ 116    final Color chartGrid;
+ 117    final Color chartLabel;
+ 118  
+ 119    /// The outline of the chart legend&#x27;s swatches and of the Bortle badge.
+ 120    final Color swatchBorder;
+ 121  
+ 122    /// Bortle badge background and text: index 0 is &quot;unknown&quot;, 1–9 the class.
+ 123    final List&lt;Color&gt; bortle;
+ 124    final List&lt;Color&gt; onBortle;
+ 125  
+ 126    static AppPalette of(BuildContext context) =&gt;
+ 127        Theme.of(context).extension&lt;AppPalette&gt;() ?? light;
+ 128  
+ 129    // The accepted web cascade&#x27;s caution role (notion-hybrid.css, 86873ce).
+ 130    static const _lightCaution = Color(0xFF754600); // 8.0:1 on white
+ 131    static const _darkCaution = Color(0xFFFFCA70); // 11.7:1 on #191919
+ 132  
+ 133    static const light = AppPalette(
+ 134      statusFits: AppColors.lightTextPrimary,
+ 135      statusTight: _lightCaution,
+ 136      statusDoesNotFit: AppColors.lightError,
+ 137      statusNoWindow: AppColors.lightError,
+ 138      statusNeutral: AppColors.lightTextSecondary,
+ 139      stateUnsaved: _lightCaution,
+ 140      stateSettled: AppColors.lightTextPrimary,
+ 141      stateQuiet: AppColors.lightTextSecondary,
+ 142      textPrimary: AppColors.lightTextPrimary,
+ 143      textSecondary: AppColors.lightTextSecondary,
+ 144      textTertiary: AppColors.lightTextTertiary,
+ 145      textDisabled: AppColors.lightTextDisabled,
+ 146      surfaceRaised: AppColors.lightSurfaceRaised,
+ 147      border: AppColors.lightBorder,
+ 148      controlBorder: AppColors.lightControlBorder,
+ 149      muted: Colors.grey,
+ 150      caution: _lightCaution, // 5.4:1 on white, 5.0:1 on the surface (AA)
+ 151      sunEvent: Colors.orange,
+ 152      twilightEvent: Colors.indigo,
+ 153      moon: Colors.blueGrey,
+ 154      selected: Colors.blue,
+ 155      chartDay: Color(0xFFB3E5FC), // lightBlue.shade100
+ 156      chartTwilight: Color(0xFF7986CB), // indigo.shade300
+ 157      chartDark: Colors.black87,
+ 158      chartWindow: Color(0x6600C853),
+ 159      chartTarget: Colors.amber,
+ 160      chartMoon: Color(0xFFB0BEC5), // blueGrey.shade200
+ 161      chartMinAltitude: Colors.redAccent,
+ 162      chartNow: Colors.redAccent,
+ 163      chartNowCentre: Colors.white,
+ 164      chartGrid: Colors.white60,
+ 165      chartLabel: Colors.white,
+ 166      swatchBorder: Color(0xFFBDBDBD), // grey.shade400
+ 167      bortle: _bortleColours,
+ 168      onBortle: _onBortleColours,
+ 169    );
+ 170  
+ 171    static const dark = AppPalette(
+ 172      statusFits: AppColors.darkTextPrimary,
+ 173      statusTight: _darkCaution,
+ 174      statusDoesNotFit: AppColors.darkError,
+ 175      statusNoWindow: AppColors.darkError,
+ 176      statusNeutral: AppColors.darkTextSecondary,
+ 177      stateUnsaved: _darkCaution,
+ 178      stateSettled: AppColors.darkTextPrimary,
+ 179      stateQuiet: AppColors.darkTextSecondary,
+ 180      textPrimary: AppColors.darkTextPrimary,
+ 181      textSecondary: AppColors.darkTextSecondary,
+ 182      textTertiary: AppColors.darkTextTertiary,
+ 183      textDisabled: AppColors.darkTextDisabled,
+ 184      surfaceRaised: AppColors.darkSurfaceRaised,
+ 185      border: AppColors.darkBorder,
+ 186      controlBorder: AppColors.darkControlBorder,
+ 187      muted: Colors.grey,
+ 188      caution: _darkCaution,
+ 189      sunEvent: Colors.orange,
+ 190      twilightEvent: Colors.indigo,
+ 191      moon: Colors.blueGrey,
+ 192      selected: Colors.blue,
+ 193      chartDay: Color(0xFF37474F), // blueGrey.shade800
+ 194      chartTwilight: Color(0xFF1A237E), // indigo.shade900
+ 195      chartDark: Colors.black,
+ 196      chartWindow: Color(0x6600C853),
+ 197      chartTarget: Colors.amber,
+ 198      chartMoon: Color(0xFFB0BEC5),
+ 199      chartMinAltitude: Colors.redAccent,
+ 200      chartNow: Colors.redAccent,
+ 201      chartNowCentre: Colors.white,
+ 202      chartGrid: Colors.white30,
+ 203      chartLabel: Colors.white70,
+ 204      swatchBorder: Color(0xFFBDBDBD),
+ 205      bortle: _bortleColours,
+ 206      onBortle: _onBortleColours,
+ 207    );
+ 208  
+ 209    /// Red on black only: brightness, not hue, tells elements apart.
+ 210    static const field = AppPalette(
+ 211      statusFits: AppColors.fieldTextPrimary,
+ 212      statusTight: AppColors.fieldTextPrimary,
+ 213      statusDoesNotFit: AppColors.fieldTextPrimary,
+ 214      statusNoWindow: AppColors.fieldTextPrimary,
+ 215      statusNeutral: AppColors.fieldTextSecondary,
+ 216      stateUnsaved: AppColors.fieldTextPrimary,
+ 217      stateSettled: AppColors.fieldTextPrimary,
+ 218      stateQuiet: AppColors.fieldTextSecondary,
+ 219      textPrimary: AppColors.fieldTextPrimary,
+ 220      textSecondary: AppColors.fieldTextSecondary,
+ 221      textTertiary: AppColors.fieldTextTertiary,
+ 222      textDisabled: AppColors.fieldTextDisabled,
+ 223      surfaceRaised: AppColors.fieldSurfaceRaised,
+ 224      border: AppColors.fieldBorder,
+ 225      controlBorder: AppColors.fieldControlBorder,
+ 226      muted: AppColors.fieldTextSecondary,
+ 227      // As bright as &quot;Fits&quot;: in red mode the word carries the caution.
+ 228      caution: AppColors.fieldTextPrimary,
+ 229      sunEvent: AppColors.fieldTextPrimary,
+ 230      twilightEvent: AppColors.fieldTextSecondary,
+ 231      moon: AppColors.fieldTextSecondary,
+ 232      selected: AppColors.fieldTextPrimary,
+ 233      chartDay: Color(0xFF3A0000),
+ 234      chartTwilight: Color(0xFF1C0000),
+ 235      chartDark: AppColors.fieldBackground,
+ 236      chartWindow: Color(0x55FF0000),
+ 237      chartTarget: AppColors.fieldTextPrimary,
+ 238      chartMoon: Color(0xFF990000),
+ 239      chartMinAltitude: Color(0xFFCC0000),
+ 240      chartNow: AppColors.fieldTextPrimary,
+ 241      chartNowCentre: AppColors.fieldBackground,
+ 242      chartGrid: Color(0x66FF0000),
+ 243      chartLabel: Color(0xFFCC0000),
+ 244      swatchBorder: AppColors.fieldBorder,
+ 245      bortle: [
+ 246        Color(0xFF330000),
+ 247        Color(0xFF110000),
+ 248        Color(0xFF220000),
+ 249        Color(0xFF330000),
+ 250        Color(0xFF440000),
+ 251        Color(0xFF660000),
+ 252        Color(0xFF880000),
+ 253        Color(0xFFAA0000),
+ 254        Color(0xFFCC0000),
+ 255        Color(0xFFFF0000),
+ 256      ],
+ 257      onBortle: [
+ 258        AppColors.fieldTextPrimary,
+ 259        AppColors.fieldTextPrimary,
+ 260        AppColors.fieldTextPrimary,
+ 261        AppColors.fieldTextPrimary,
+ 262        AppColors.fieldTextPrimary,
+ 263        AppColors.fieldTextPrimary,
+ 264        AppColors.fieldBackground,
+ 265        AppColors.fieldBackground,
+ 266        AppColors.fieldBackground,
+ 267        AppColors.fieldBackground,
+ 268      ],
+ 269    );
+ 270  
+ 271    /// The conventional Bortle map colours (unchanged from before TASK 12.4).
+ 272    static const _bortleColours = [
+ 273      Colors.grey,
+ 274      Colors.black,
+ 275      Color(0xFF263238), // blueGrey.shade900
+ 276      Color(0xFF0D47A1), // blue.shade900
+ 277      Color(0xFF388E3C), // green.shade700
+ 278      Color(0xFFFBC02D), // yellow.shade700
+ 279      Colors.orange,
+ 280      Colors.deepOrange,
+ 281      Colors.red,
+ 282      Colors.white,
+ 283    ];
+ 284    static const _onBortleColours = [
+ 285      Colors.white,
+ 286      Colors.white,
+ 287      Colors.white,
+ 288      Colors.white,
+ 289      Colors.white,
+ 290      Colors.black,
+ 291      Colors.white,
+ 292      Colors.white,
+ 293      Colors.white,
+ 294      Colors.red,
+ 295    ];
+ 296  
+ 297    /// Every token, for tests.
+ 298    List&lt;Color&gt; get all =&gt; [
+ 299      textPrimary,
+ 300      textSecondary,
+ 301      textTertiary,
+ 302      textDisabled,
+ 303      surfaceRaised,
+ 304      border,
+ 305      controlBorder,
+ 306      statusFits,
+ 307      statusTight,
+ 308      statusDoesNotFit,
+ 309      statusNoWindow,
+ 310      statusNeutral,
+ 311      stateUnsaved,
+ 312      stateSettled,
+ 313      stateQuiet,
+ 314      muted,
+ 315      caution,
+ 316      sunEvent,
+ 317      twilightEvent,
+ 318      moon,
+ 319      selected,
+ 320      chartDay,
+ 321      chartTwilight,
+ 322      chartDark,
+ 323      chartWindow,
+ 324      chartTarget,
+ 325      chartMoon,
+ 326      chartMinAltitude,
+ 327      chartNow,
+ 328      chartNowCentre,
+ 329      chartGrid,
+ 330      chartLabel,
+ 331      swatchBorder,
+ 332      ...bortle,
+ 333      ...onBortle,
+ 334    ];
+ 335  
+ 336    @override
+ 337    AppPalette copyWith() =&gt; this;
+ 338  
+ 339    @override
+ 340    AppPalette lerp(AppPalette? other, double t) =&gt;
+ 341        other == null || t &lt; 0.5 ? this : other;
+ 342  }</pre>

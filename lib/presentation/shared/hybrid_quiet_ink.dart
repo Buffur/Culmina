@@ -18,7 +18,7 @@ class HybridQuietInk extends StatelessWidget {
 
   static WidgetStateProperty<Color?>? overlay(BuildContext context) {
     final p = AppPalette.of(context);
-    if (p == AppPalette.field) return null;
+    if (p.fieldMode) return null;
     final canvas = Theme.of(context).scaffoldBackgroundColor;
     return WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.disabled)) return null;

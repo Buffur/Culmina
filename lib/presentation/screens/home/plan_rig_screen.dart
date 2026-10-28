@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/equipment_profile.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
@@ -159,7 +159,8 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
                 Text(
                   AppWords.noRigs,
                   key: const Key('planRig.empty'),
-                  style: AppTypography.body.copyWith(color: p.textPrimary),
+                  style: AppTextTheme.of(context).body
+                      .copyWith(color: p.textPrimary),
                 )
               else ...[
                 const HybridFieldLabel('Choose a rig'),
@@ -192,10 +193,12 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
                 'Camera type comes from the rig. Blocks show ISO or gain to match '
                 'it; values recorded for another type are kept.',
                 key: const Key('planRig.help'),
-                style: AppTypography.caption.copyWith(
-                  height: 1.6,
-                  color: AppPalette.of(context).textSecondary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      AppTextGeometry.reading,
+                    )
+                    .copyWith(color: AppPalette.of(context).textSecondary),
               ),
               const SizedBox(height: 12),
               Align(

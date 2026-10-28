@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/astro_target.dart';
 import '../../../domain/models/target_alias.dart';
 import '../../../domain/models/target_types.dart';
@@ -134,10 +134,9 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     final selected = _chosen;
-    final note = AppTypography.caption.copyWith(
-      height: 1.55,
-      color: p.textSecondary,
-    );
+    final note = AppTextTheme.of(context)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .copyWith(color: p.textSecondary);
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -193,9 +192,8 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
                         ? 'Results unavailable'
                         : '${_found.length} result${_found.length == 1 ? '' : 's'}',
                     key: const Key('planTarget.count'),
-                    style: AppTypography.caption.copyWith(
-                      color: p.textSecondary,
-                    ),
+                    style: AppTextTheme.of(context).caption
+                        .copyWith(color: p.textSecondary),
                   ),
                 ),
               ],
@@ -218,7 +216,8 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
                 else if (!_loading && _found.isEmpty)
                   Text(
                     'No matches. Try a catalogue number or another name.',
-                    style: AppTypography.body.copyWith(color: p.textPrimary),
+                    style: AppTextTheme.of(context).body
+                        .copyWith(color: p.textPrimary),
                   )
                 else ...[
                   const HybridFieldLabel('Choose a target'),

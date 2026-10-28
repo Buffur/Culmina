@@ -42,7 +42,7 @@ import '../../shared/plan_night_phrase.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../shared/hybrid_parts.dart';
 import '../../shared/rig_summary_text.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/moon_conditions.dart';
 import '../../../domain/models/night_timeline.dart';
 import '../../../domain/models/night_weather.dart';
@@ -237,10 +237,14 @@ class HomeScreen extends StatelessWidget {
                             header: true,
                             child: Text(
                               'The night ahead',
-                              style: AppTypography.nightHeading.copyWith(
-                                letterSpacing: -0.25,
-                                color: AppPalette.of(context).textPrimary,
-                              ),
+                              style: AppTextTheme.of(context)
+                                  .resolve(
+                                    AppTextTheme.of(context).nightHeading,
+                                    AppTextGeometry.tightTracking,
+                                  )
+                                  .copyWith(
+                                    color: AppPalette.of(context).textPrimary,
+                                  ),
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -367,7 +371,9 @@ class _SaveBar extends StatelessWidget {
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(48),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        textStyle: AppTypography.itemTitle.copyWith(height: 1.5),
+        textStyle: AppTextTheme.of(
+          context,
+        ).resolve(AppTextTheme.of(context).itemTitle, AppTextGeometry.standard),
       ),
       child: const Text(AppWords.savePlan),
     );
@@ -387,10 +393,12 @@ class _SaveBar extends StatelessWidget {
                         ? 'planner.saveState'
                         : 'planner.saveReason',
                   ),
-                  style: AppTypography.caption.copyWith(
-                    height: 1.55,
-                    color: AppPalette.of(context).textSecondary,
-                  ),
+                  style: AppTextTheme.of(context)
+                      .resolve(
+                        AppTextTheme.of(context).caption,
+                        AppTextGeometry.supporting,
+                      )
+                      .copyWith(color: AppPalette.of(context).textSecondary),
                 ),
               ),
             ),
@@ -435,10 +443,13 @@ class _BootstrapErrorView extends StatelessWidget {
               color: Theme.of(context).colorScheme.error,
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               "Couldn't load your site, settings and current plan.",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+              style: AppTextTheme.of(context).resolve(
+                AppTextTheme.of(context).inherited,
+                AppTextGeometry.recoveryBody,
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
@@ -617,9 +628,8 @@ class _PlanIdentity extends StatelessWidget {
                 ? 'No night without a site'
                 : '${AppWords.nightOf} ${NightTimeFormatter.eveningDate(evening)}'
                       ' · Ends ${NightTimeFormatter.eveningDate(evening.addDays(1))}',
-            style: AppTypography.caption.copyWith(
-              color: AppPalette.of(context).textSecondary,
-            ),
+            style: AppTextTheme.of(context).caption
+                .copyWith(color: AppPalette.of(context).textSecondary),
           ),
           if (session != null)
             PlanStateLabel(

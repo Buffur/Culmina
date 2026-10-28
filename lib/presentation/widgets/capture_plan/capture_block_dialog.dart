@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/capture_block.dart';
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/services/block_proposal.dart';
 import '../../../domain/services/calibration_match.dart';
@@ -789,7 +789,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
     final text = Theme.of(context).textTheme;
     final secondary = AppPalette.of(context).textSecondary;
     // plan.css: .screen-context 13 px, secondary.
-    final context13 = text.bodySmall?.copyWith(fontSize: 13, color: secondary);
+    final context13 = AppTextTheme.of(context)
+        .resolve(text.bodySmall, AppTextGeometry.contextCaption)
+        .copyWith(color: secondary);
     // plan.js blockView: what Details holds, by camera class.
     final detailsSummary = _showBinning ? 'Binning and timing' : 'Timing';
     return CallbackShortcuts(
@@ -1091,12 +1093,16 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                         child: Text(
                                           _total(),
                                           key: const Key('blockDialog.total'),
-                                          style: text.bodyMedium?.copyWith(
-                                            fontSize: 14,
-                                            fontFeatures: const [
-                                              FontFeature.tabularFigures(),
-                                            ],
-                                          ),
+                                          style: AppTextTheme.of(context)
+                                              .resolve(
+                                                text.bodyMedium,
+                                                AppTextGeometry.formLabel,
+                                              )
+                                              .copyWith(
+                                                fontFeatures: const [
+                                                  FontFeature.tabularFigures(),
+                                                ],
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -1304,10 +1310,14 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                           'Records describe how you plan to shoot. Culmina does not '
                           'control a camera.',
                           // plan.css `.editor-help`: 13 at 1.6, secondary.
-                          style: AppTypography.caption.copyWith(
-                            height: 1.6,
-                            color: AppPalette.of(context).textSecondary,
-                          ),
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).caption,
+                                AppTextGeometry.reading,
+                              )
+                              .copyWith(
+                                color: AppPalette.of(context).textSecondary,
+                              ),
                         ),
                       ],
                     ),
@@ -1430,11 +1440,15 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
             ExcludeSemantics(
               child: Text(
                 'White balance',
-                style: AppTypography.body.copyWith(
-                  height: 1.5,
-                  fontWeight: FontWeight.w600,
-                  color: palette.textPrimary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).body,
+                      AppTextGeometry.standard,
+                    )
+                    .copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: palette.textPrimary,
+                    ),
               ),
             ),
             const SizedBox(height: 10),
@@ -1551,10 +1565,12 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
         Text(
           note,
           key: const Key('blockDialog.focusNote'),
-          style: AppTypography.caption.copyWith(
-            height: 1.55,
-            color: palette.textSecondary,
-          ),
+          style: AppTextTheme.of(context)
+              .resolve(
+                AppTextTheme.of(context).caption,
+                AppTextGeometry.supporting,
+              )
+              .copyWith(color: palette.textSecondary),
         ),
     ];
   }

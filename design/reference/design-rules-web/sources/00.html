@@ -1,0 +1,179 @@
+<!doctype html><meta charset="utf-8"><title>AGENTS.md</title><style>body{background:#191919;color:#ebebea;font:14px/1.65 monospace;padding:24px}a{color:#a5a5a3}div{white-space:pre-wrap;overflow-wrap:anywhere}div:target{background:#343432}h1{font:20px system-ui}</style><link data-source-view="true" rel="stylesheet" href="../../shared/site.css"><script src="../../shared/theme.js"></script><body class="source-view"><h1>AGENTS.md</h1><div id="L1"><a href="#L1">1</a> # Culmina — shared agent instructions</div>
+<div id="L2"><a href="#L2">2</a> </div>
+<div id="L3"><a href="#L3">3</a> Culmina is a Flutter/Dart Android astrophotography planner and observing log.</div>
+<div id="L4"><a href="#L4">4</a> The technical Dart package is `astroplan`; keep existing imports and identifiers.</div>
+<div id="L5"><a href="#L5">5</a> Plan a night, site, target and rig; save a Capture Plan; record imaging results.</div>
+<div id="L6"><a href="#L6">6</a> The app does not control cameras or mounts.</div>
+<div id="L7"><a href="#L7">7</a> </div>
+<div id="L8"><a href="#L8">8</a> ## Source and scope</div>
+<div id="L9"><a href="#L9">9</a> </div>
+<div id="L10"><a href="#L10">10</a> - This file is the shared instruction source for Codex, Claude and Gemini.</div>
+<div id="L11"><a href="#L11">11</a> - Follow the current user task; skills and archived findings are not a task queue.</div>
+<div id="L12"><a href="#L12">12</a> - Establish behavior from current source and tests before editing docs or code.</div>
+<div id="L13"><a href="#L13">13</a> - Read only the relevant skill and supporting reference for the requested work.</div>
+<div id="L14"><a href="#L14">14</a> - Keep new or substantially revised project documentation in English.</div>
+<div id="L15"><a href="#L15">15</a> - Preserve unrelated local changes and historical evidence; report checks actually performed.</div>
+<div id="L16"><a href="#L16">16</a> </div>
+<div id="L17"><a href="#L17">17</a> ## Architecture map</div>
+<div id="L18"><a href="#L18">18</a> </div>
+<div id="L19"><a href="#L19">19</a> - `lib/main.dart`: startup, catalog seeding and concrete dependency composition.</div>
+<div id="L20"><a href="#L20">20</a> - `lib/presentation/app_view_models.dart`: injected interfaces, services and ViewModels.</div>
+<div id="L21"><a href="#L21">21</a> - `lib/presentation/`: screens, shared UI, widgets and screen-scoped Provider/ViewModels.</div>
+<div id="L22"><a href="#L22">22</a> - `lib/presentation/navigation/app_router.dart`: go_router shell and root overlay routes.</div>
+<div id="L23"><a href="#L23">23</a> - Bottom tabs: Tonight, Logbook, Library and Settings; Plan opens above the shell.</div>
+<div id="L24"><a href="#L24">24</a> - Library contains rigs, targets and sites; Night, Moon and Weather have detail views.</div>
+<div id="L25"><a href="#L25">25</a> - `lib/domain/`: models, repository interfaces and astronomical/capture calculations.</div>
+<div id="L26"><a href="#L26">26</a> - `lib/data/`: Drift repositories, preferences, HTTP, backup and platform adapters.</div>
+<div id="L27"><a href="#L27">27</a> - `lib/core/`: clocks/time, units, diagnostics, configuration and theme tokens.</div>
+<div id="L28"><a href="#L28">28</a> - `lib/data/database/app_database.dart`: native SQLite database, currently schema v27.</div>
+<div id="L29"><a href="#L29">29</a> - `lib/data/database/schema_versions.dart` and `lib/data/database/generated_migrations/`: migrations.</div>
+<div id="L30"><a href="#L30">30</a> - `drift_schemas/`: exported JSON snapshots; `build.yaml` configures Drift generation.</div>
+<div id="L31"><a href="#L31">31</a> - `assets/catalog/catalog_v2.json`: bundled OpenNGC subset; filename is not catalog version.</div>
+<div id="L32"><a href="#L32">32</a> - `test/`: core/data/domain/presentation regressions; `test/support/` contains shared fakes.</div>
+<div id="L33"><a href="#L33">33</a> - `integration_test/` and `test_driver/`: host flows and separate Android capture routes.</div>
+<div id="L34"><a href="#L34">34</a> - `tool/`: verification, CI partitioning, catalog generation and design helper scripts.</div>
+<div id="L35"><a href="#L35">35</a> - `design/reference/`: consolidated design rules website, current application map, historical Atlas, shared assets and render evidence. Start at `design/reference/index.html`.</div>
+<div id="L36"><a href="#L36">36</a> - `design/reference/atlas/index.html`: historical Visual Atlas; manifest, boards and captures accompany it. `.audit/atlas/index.html` redirects here.</div>
+<div id="L37"><a href="#L37">37</a> - `.audit/` and `docs/archive/`: historical evidence; inspect as needed, preserve contents.</div>
+<div id="L38"><a href="#L38">38</a> - `.agents/skills/`: active project recipes; `.agents/rules/` holds compatibility pointers.</div>
+<div id="L39"><a href="#L39">39</a> </div>
+<div id="L40"><a href="#L40">40</a> ## Technical invariants</div>
+<div id="L41"><a href="#L41">41</a> </div>
+<div id="L42"><a href="#L42">42</a> - Keep UI, ViewModels, domain interfaces/calculations and data implementations separated.</div>
+<div id="L43"><a href="#L43">43</a> - Reuse Provider, repository injection and existing router/draft guards for focused changes.</div>
+<div id="L44"><a href="#L44">44</a> - Keep catalogs, saved plans, calculations and Logbook useful offline.</div>
+<div id="L45"><a href="#L45">45</a> - Forecast retrieval, map tiles and optional place-name lookup need network access.</div>
+<div id="L46"><a href="#L46">46</a> - Preserve weather cache/freshness/error states and opt-in reverse-geocoding consent.</div>
+<div id="L47"><a href="#L47">47</a> - Unknown is not zero: preserve missing values, units, provenance and partial observations.</div>
+<div id="L48"><a href="#L48">48</a> - Never invent sensor specifications, catalog values, measurements or a quality score.</div>
+<div id="L49"><a href="#L49">49</a> - Relative stacking gain is not absolute SNR; storage estimates retain their evidence kind.</div>
+<div id="L50"><a href="#L50">50</a> - AF/MF and white balance are descriptive; do not invent numeric focus measurements.</div>
+<div id="L51"><a href="#L51">51</a> - SessionNight is 24 hours from site mean solar noon in UTC; retain zone/DST display semantics.</div>
+<div id="L52"><a href="#L52">52</a> - A placeholder location is not a selected site; preserve no-site and missing-input states.</div>
+<div id="L53"><a href="#L53">53</a> - CaptureBudgetCalculator and FitAnalyzer share atomic events; keep timing assumptions aligned.</div>
+<div id="L54"><a href="#L54">54</a> - Preserve draft, explicit Save plan, fit verdict and recorded-result distinctions.</div>
+<div id="L55"><a href="#L55">55</a> - Preserve local records, supported migrations and backup/restore compatibility.</div>
+<div id="L56"><a href="#L56">56</a> - Maintain Light, Dark and Field Red, including the root field color filter.</div>
+<div id="L57"><a href="#L57">57</a> - Theme definitions live in `lib/core/theme/`; inspect semantic roles and actual callers.</div>
+<div id="L58"><a href="#L58">58</a> - Use existing Geist typography, spacing, radii and reduced-motion handling for local UI fixes.</div>
+<div id="L59"><a href="#L59">59</a> - Keep meaningful words, accessible actions, text scaling and reachable controls.</div>
+<div id="L60"><a href="#L60">60</a> </div>
+<div id="L61"><a href="#L61">61</a> ## Commands and verification</div>
+<div id="L62"><a href="#L62">62</a> </div>
+<div id="L63"><a href="#L63">63</a> Run from the repository root with Flutter/Dart on PATH and resolved dependencies.</div>
+<div id="L64"><a href="#L64">64</a> `pubspec.yaml` requires Dart `^3.13.3`; CI pins its SDK in `.github/workflows/ci.yml`.</div>
+<div id="L65"><a href="#L65">65</a> Inspect the installed SDK and lockfile; do not upgrade dependencies as a bootstrap step.</div>
+<div id="L66"><a href="#L66">66</a> </div>
+<div id="L67"><a href="#L67">67</a> ```sh</div>
+<div id="L68"><a href="#L68">68</a> flutter pub get</div>
+<div id="L69"><a href="#L69">69</a> flutter run</div>
+<div id="L70"><a href="#L70">70</a> flutter analyze --no-pub</div>
+<div id="L71"><a href="#L71">71</a> flutter test --no-pub</div>
+<div id="L72"><a href="#L72">72</a> flutter test --no-pub test/data/database/schema_migration_test.dart</div>
+<div id="L73"><a href="#L73">73</a> dart run build_runner build</div>
+<div id="L74"><a href="#L74">74</a> dart run drift_dev schema steps drift_schemas/ lib/data/database/schema_versions.dart</div>
+<div id="L75"><a href="#L75">75</a> flutter build apk --debug</div>
+<div id="L76"><a href="#L76">76</a> ```</div>
+<div id="L77"><a href="#L77">77</a> </div>
+<div id="L78"><a href="#L78">78</a> - Code generation changes files: run for changed database inputs and inspect the diff.</div>
+<div id="L79"><a href="#L79">79</a> - Preserve older schema snapshots; test migrations against supported stored databases.</div>
+<div id="L80"><a href="#L80">80</a> - Format changed Dart files; select tests from changed behavior and its callers.</div>
+<div id="L81"><a href="#L81">81</a> - `dart run tool/check.dart --checks-only` runs encoding, formatting and analysis checks.</div>
+<div id="L82"><a href="#L82">82</a> - `dart run tool/check.dart` also runs unit tests and each host-capable integration file.</div>
+<div id="L83"><a href="#L83">83</a> - CI implementation/job selection live in `tool/ci.py` and `.github/workflows/ci.yml`.</div>
+<div id="L84"><a href="#L84">84</a> - Run host integration files separately; Android-only capture tests need an Android device.</div>
+<div id="L85"><a href="#L85">85</a> - For instruction-only edits, validate paths, frontmatter and diffs; app checks are optional.</div>
+<div id="L86"><a href="#L86">86</a> </div>
+<div id="L87"><a href="#L87">87</a> Instruction tooling uses Python with `tool/requirements-instructions.txt`:</div>
+<div id="L88"><a href="#L88">88</a> `python -m pip install -r tool/requirements-instructions.txt`, then</div>
+<div id="L89"><a href="#L89">89</a> `python tool/check_instructions.py` and</div>
+<div id="L90"><a href="#L90">90</a> `python -m unittest discover -s tool -p check_instructions_test.py -v`.</div>
+<div id="L91"><a href="#L91">91</a> CI runs these in the changes job, including documentation-only changes.</div>
+<div id="L92"><a href="#L92">92</a> The validator checks active skill YAML and local Markdown file references in</div>
+<div id="L93"><a href="#L93">93</a> the root entrypoints, `.agents/` and `.claude/`; it does not check remote URLs,</div>
+<div id="L94"><a href="#L94">94</a> heading anchors, code-span paths or agent behavior. Behavioral review cases and</div>
+<div id="L95"><a href="#L95">95</a> their evidence requirements are in [skill evals](tool/skill_evals/README.md).</div>
+<div id="L96"><a href="#L96">96</a> </div>
+<div id="L97"><a href="#L97">97</a> Native UI renders in PowerShell (synthetic fixtures; fresh evidence goes to build):</div>
+<div id="L98"><a href="#L98">98</a> </div>
+<div id="L99"><a href="#L99">99</a> ```powershell</div>
+<div id="L100"><a href="#L100">100</a> New-Item -ItemType Directory -Path build/ui-renders -Force | Out-Null</div>
+<div id="L101"><a href="#L101">101</a> $env:CULMINA_AUDIT_RENDERS = &#x27;build/ui-renders&#x27;</div>
+<div id="L102"><a href="#L102">102</a> $env:CULMINA_AUDIT_SHOTS = &#x27;home,plan&#x27;</div>
+<div id="L103"><a href="#L103">103</a> $env:CULMINA_AUDIT_THEMES = &#x27;light,dark,field&#x27;</div>
+<div id="L104"><a href="#L104">104</a> $env:CULMINA_AUDIT_SCALE = &#x27;1&#x27;</div>
+<div id="L105"><a href="#L105">105</a> flutter test --no-pub test/presentation/design_system/concept_b_app_audit_renders_test.dart</div>
+<div id="L106"><a href="#L106">106</a> Remove-Item Env:CULMINA_AUDIT_RENDERS, Env:CULMINA_AUDIT_SHOTS, Env:CULMINA_AUDIT_THEMES, Env:CULMINA_AUDIT_SCALE</div>
+<div id="L107"><a href="#L107">107</a> ```</div>
+<div id="L108"><a href="#L108">108</a> </div>
+<div id="L109"><a href="#L109">109</a> The harness loads real fonts and uses in-memory state; inspect supported shot names.</div>
+<div id="L110"><a href="#L110">110</a> The archived Atlas has 40 Dark/100%/375×812 captures with dated source provenance.</div>
+<div id="L111"><a href="#L111">111</a> Check its manifest before reusing frames; archive presence does not prove current behavior.</div>
+<div id="L112"><a href="#L112">112</a> Keep browser, Flutter host, Android/device, accessibility and owner acceptance evidence distinct.</div>
+<div id="L113"><a href="#L113">113</a> </div>
+<div id="L114"><a href="#L114">114</a> For meaningful product-design refinement, use a brief</div>
+<div id="L115"><a href="#L115">115</a> [decision record](.agents/skills/references/refinement-decision.md) in the existing</div>
+<div id="L116"><a href="#L116">116</a> task or review: user problem, intended benefit, observable success, matched</div>
+<div id="L117"><a href="#L117">117</a> before/after evidence, actual checks and the accept/revise/reject decision.</div>
+<div id="L118"><a href="#L118">118</a> Scale the record to the change; this adds no separate approval gate.</div>
+<div id="L119"><a href="#L119">119</a> </div>
+<div id="L120"><a href="#L120">120</a> ## Active project skills</div>
+<div id="L121"><a href="#L121">121</a> </div>
+<div id="L122"><a href="#L122">122</a> ### Design authority and supporting tools</div>
+<div id="L123"><a href="#L123">123</a> </div>
+<div id="L124"><a href="#L124">124</a> The five `culmina-design-*` skills below are the only project design authorities</div>
+<div id="L125"><a href="#L125">125</a> for all UI code: screens, shared and composed widgets, scientific displays,</div>
+<div id="L126"><a href="#L126">126</a> dialogs, states and all three themes. Use the relevant skills during implementation;</div>
+<div id="L127"><a href="#L127">127</a> their scope is not limited to the component gallery. AGENTS supplies shared</div>
+<div id="L128"><a href="#L128">128</a> invariants; current source/callers and tests establish actual behavior.</div>
+<div id="L129"><a href="#L129">129</a> References and `docs/DESIGN_SYSTEM.md` support these skills, not parallel policy.</div>
+<div id="L130"><a href="#L130">130</a> Fill a design-guidance gap in the relevant Culmina skill instead of adopting an</div>
+<div id="L131"><a href="#L131">131</a> external playbook or inventing another design authority.</div>
+<div id="L132"><a href="#L132">132</a> </div>
+<div id="L133"><a href="#L133">133</a> Dart/Flutter skills remain technical helpers for architecture, routing, layout</div>
+<div id="L134"><a href="#L134">134</a> diagnosis, previews and tests. Context7 supplies external API documentation.</div>
+<div id="L135"><a href="#L135">135</a> Figma, image generation, visualization, browser/computer use and Sites remain</div>
+<div id="L136"><a href="#L136">136</a> optional execution tools for a requested artifact, not sources of Culmina style.</div>
+<div id="L137"><a href="#L137">137</a> Generic design/audit, brand and palette playbooks are archived for this project.</div>
+<div id="L138"><a href="#L138">138</a> See [agent tooling](docs/AGENT_TOOLING.md) for retained helpers, archive and plugin evidence.</div>
+<div id="L139"><a href="#L139">139</a> Installed or enabled plugins do not prove authentication, invocation or acceptance.</div>
+<div id="L140"><a href="#L140">140</a> </div>
+<div id="L141"><a href="#L141">141</a> Entrypoints are `.agents/skills/&lt;name&gt;/SKILL.md`; the [skill index](.agents/skills/README.md) links them.</div>
+<div id="L142"><a href="#L142">142</a> Upstream metadata and lock hashes describe acquisition provenance, not current local hashes.</div>
+<div id="L143"><a href="#L143">143</a> </div>
+<div id="L144"><a href="#L144">144</a> | Skill | Invoke for |</div>
+<div id="L145"><a href="#L145">145</a> | --- | --- |</div>
+<div id="L146"><a href="#L146">146</a> | culmina-design-components | Existing components, variants, callbacks and adopters |</div>
+<div id="L147"><a href="#L147">147</a> | culmina-design-rules | Product meaning, missing data and scientific invariants |</div>
+<div id="L148"><a href="#L148">148</a> | culmina-design-spacing | Local density, alignment, shape and motion |</div>
+<div id="L149"><a href="#L149">149</a> | culmina-design-tokens | Semantic colors/surfaces across all three themes |</div>
+<div id="L150"><a href="#L150">150</a> | culmina-design-typography | Text roles, weight, wrapping and numeric readability |</div>
+<div id="L151"><a href="#L151">151</a> | dart-add-unit-test | Focused domain/data regressions with existing fakes |</div>
+<div id="L152"><a href="#L152">152</a> | dart-build-cli-app | Existing Dart utilities under tool/ |</div>
+<div id="L153"><a href="#L153">153</a> | dart-collect-coverage | A specifically scoped coverage question |</div>
+<div id="L154"><a href="#L154">154</a> | dart-fix-runtime-errors | A reproduced exception and stack trace |</div>
+<div id="L155"><a href="#L155">155</a> | dart-generate-test-mocks | Handwritten fakes; generated mocks only if adopted |</div>
+<div id="L156"><a href="#L156">156</a> | dart-resolve-package-conflicts | A concrete dependency resolution conflict |</div>
+<div id="L157"><a href="#L157">157</a> | dart-run-static-analysis | Scoped analyzer diagnostics and corrections |</div>
+<div id="L158"><a href="#L158">158</a> | dart-use-doc-examples | External Dartdoc examples for a documentation task |</div>
+<div id="L159"><a href="#L159">159</a> | dart-use-path-package | Existing path-package callers and file-path behavior |</div>
+<div id="L160"><a href="#L160">160</a> | dart-use-pattern-matching | A named refactor preserving cases and null semantics |</div>
+<div id="L161"><a href="#L161">161</a> | dart-use-primary-constructors | Explicit syntax evaluation after SDK verification |</div>
+<div id="L162"><a href="#L162">162</a> | dart-write-documentation | Dart API documentation and doc comments |</div>
+<div id="L163"><a href="#L163">163</a> | flutter-add-integration-test | Existing host/device integration flows |</div>
+<div id="L164"><a href="#L164">164</a> | flutter-add-widget-preview | A specifically requested isolated widget preview |</div>
+<div id="L165"><a href="#L165">165</a> | flutter-add-widget-test | Component rendering and interaction regressions |</div>
+<div id="L166"><a href="#L166">166</a> | flutter-apply-architecture-best-practices | Existing layer/ViewModel boundaries |</div>
+<div id="L167"><a href="#L167">167</a> | flutter-build-responsive-layout | A named adaptive layout task and its sizes |</div>
+<div id="L168"><a href="#L168">168</a> | flutter-fix-layout-issues | A specific overflow, constraint or ParentData failure |</div>
+<div id="L169"><a href="#L169">169</a> | flutter-implement-json-serialization | Model/backup JSON contracts and round trips |</div>
+<div id="L170"><a href="#L170">170</a> | flutter-setup-declarative-routing | Routes, shell, Back behavior and draft guards |</div>
+<div id="L171"><a href="#L171">171</a> | flutter-use-http-package | Injected HTTP services and provider contracts |</div>
+<div id="L172"><a href="#L172">172</a> </div>
+<div id="L173"><a href="#L173">173</a> ## Current external documentation</div>
+<div id="L174"><a href="#L174">174</a> </div>
+<div id="L175"><a href="#L175">175</a> Use Context7 for library/framework/SDK/API/CLI questions, including unfamiliar flags.</div>
+<div id="L176"><a href="#L176">176</a> Resolve the library ID first unless the user supplies an exact `/org/project` ID.</div>
+<div id="L177"><a href="#L177">177</a> Choose an authoritative/version-matched result, then query one concept per call.</div>
+<div id="L178"><a href="#L178">178</a> Use fetched docs with the installed SDK and actual callers; disclose failed lookups.</div>
+<div id="L179"><a href="#L179">179</a> General code reasoning and source-only refactors need no library-documentation lookup.</div>

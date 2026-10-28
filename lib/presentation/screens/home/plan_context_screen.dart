@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
-import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/calendar_date.dart';
 import '../../../domain/models/iana_time_context.dart';
 import '../../navigation/app_router.dart';
@@ -105,7 +105,8 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     SiteLabel.of(site) ?? ContextLine.noSite,
-                    style: AppTypography.body.copyWith(color: p.textPrimary),
+                    style: AppTextTheme.of(context).body
+                        .copyWith(color: p.textPrimary),
                   ),
                 ),
             ],
@@ -175,11 +176,15 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
                             night == null
                                 ? 'No night without a site'
                                 : 'Night of ${NightTimeFormatter.eveningDate(night)}',
-                            style: AppTypography.itemTitle.copyWith(
-                              fontWeight: FontWeight.w400,
-                              height: 1.4,
-                              color: p.textPrimary,
-                            ),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).itemTitle,
+                                  AppTextGeometry.compact,
+                                )
+                                .copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  color: p.textPrimary,
+                                ),
                           ),
                         ),
                         HybridIcon(
@@ -197,10 +202,12 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
                 Text(
                   'Ends ${NightTimeFormatter.eveningDate(night.addDays(1))}. '
                   '${zone == null ? 'Times are in the device zone.' : 'Times are in the site zone, $zone.'}',
-                  style: AppTypography.caption.copyWith(
-                    height: 1.55,
-                    color: p.textSecondary,
-                  ),
+                  style: AppTextTheme.of(context)
+                      .resolve(
+                        AppTextTheme.of(context).caption,
+                        AppTextGeometry.supporting,
+                      )
+                      .copyWith(color: p.textSecondary),
                 ),
               ],
               const SizedBox(height: 20),
@@ -209,10 +216,12 @@ class _PlanContextScreenState extends State<PlanContextScreen> {
                 'Changing the night edits this plan. To keep the saved plan and '
                 'plan a copy, use More › Copy to another night.',
                 key: const Key('planContext.help'),
-                style: AppTypography.caption.copyWith(
-                  height: 1.6,
-                  color: AppPalette.of(context).textSecondary,
-                ),
+                style: AppTextTheme.of(context)
+                    .resolve(
+                      AppTextTheme.of(context).caption,
+                      AppTextGeometry.reading,
+                    )
+                    .copyWith(color: AppPalette.of(context).textSecondary),
               ),
             ],
           ),

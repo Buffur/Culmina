@@ -28,6 +28,26 @@ void main() {
     expect(offenders(RegExp(r'fontSize:\s*(\d|1[01])(\.\d+)?\b')), isEmpty);
   });
 
+  test('presentation reads typography through the theme', () {
+    expect(offenders(RegExp(r'\bAppTypography\s*\.')), isEmpty);
+    expect(offenders(RegExp(r'\bfontSize\s*:')), isEmpty);
+    expect(offenders(RegExp(r'\bTextStyle\s*\(')), isEmpty);
+  });
+
+  test('text geometry is not overridden inside presentation copyWith', () {
+    final violations = <String>[];
+    for (final file in files) {
+      final source = file.readAsStringSync();
+      for (final call in RegExp(r'\.copyWith\([\s\S]*?\)').allMatches(source)) {
+        if (RegExp(r'\b(fontSize|height|letterSpacing|fontFamily)\s*:')
+            .hasMatch(call.group(0)!)) {
+          violations.add('${file.path}: ${call.group(0)}');
+        }
+      }
+    }
+    expect(violations, isEmpty);
+  });
+
   test('no shrink-wrapped tap target (keeps 48 dp)', () {
     expect(offenders(RegExp(r'MaterialTapTargetSize\.shrinkWrap')), isEmpty);
   });
