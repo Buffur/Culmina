@@ -110,11 +110,12 @@ class StatusBlock extends StatelessWidget {
           : text.bodyMedium?.copyWith(color: p.textSecondary),
     );
     final verdictStyle =
-        (fitLine
-                ? AppTextTheme.of(context)
-                      .resolve(text.bodySmall, AppTextGeometry.fitVerdict)
-                      .copyWith(fontWeight: FontWeight.w500)
-                : (headingStyle ?? text.titleMedium))
+        (headingStyle ??
+                (fitLine
+                    ? AppTextTheme.of(context)
+                          .resolve(text.bodySmall, AppTextGeometry.fitVerdict)
+                          .copyWith(fontWeight: FontWeight.w500)
+                    : text.titleMedium))
             ?.copyWith(color: FitText.color(state, theme.colorScheme, p));
     final verdict = Text(
       headline(

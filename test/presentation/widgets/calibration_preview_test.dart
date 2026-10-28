@@ -290,10 +290,7 @@ void main() {
       ],
     );
     expect(find.text('No flats for: R'), findsOneWidget);
-    expect(
-      find.text('Build calibration frames, with the missing flats'),
-      findsOneWidget,
-    );
+    expect(find.text('Build calibration frames'), findsOneWidget);
     await openPreview(tester);
     Finder inPreview(String text) => find.descendant(
       of: find.byKey(const Key('calibration.scroll')),

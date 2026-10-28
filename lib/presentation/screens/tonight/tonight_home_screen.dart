@@ -402,6 +402,7 @@ class _PlanSection extends StatelessWidget {
           const SizedBox(height: 18),
           StatusBlock(
             key: const Key('tonight.status'),
+            headingStyle: AppTextTheme.of(context).itemTitle,
             separateFigures: true,
             figuresBeforeReason: false,
             fitLine: true,
@@ -573,6 +574,8 @@ class _NightSection extends StatelessWidget {
             ].join(' · '),
             extra: free == null ? '' : _moonFree(free, at),
             onTap: () => context.push(AppRouter.moon),
+            // The timeline already supplies this boundary.
+            topRule: false,
           ),
         );
       }

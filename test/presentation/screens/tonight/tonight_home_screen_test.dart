@@ -22,6 +22,7 @@ import 'package:drift/native.dart';
 import 'package:astroplan/domain/services/fit_analyzer.dart';
 import 'package:astroplan/presentation/shared/status_block.dart';
 import 'package:astroplan/presentation/widgets/plan_status.dart';
+import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/presentation/shared/night_picker_dialog.dart';
@@ -200,6 +201,48 @@ void main() {
       find.descendant(of: weather, matching: find.textContaining('%')),
       findsNothing,
     );
+  });
+
+  testWidgets('Tonight preview result stays above expanded exact times', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await start(tester, lightFrames: 10);
+    await reveal(tester, 'nightMoon.exactToggle');
+    final toggle = find.byKey(const Key('nightMoon.exactToggle'));
+    final summary = find.byKey(const Key('nightMoon.cursorSummary'));
+    final state = find.byKey(const Key('nightMoon.cursorState'));
+    final browser = tester
+        .element(find.byKey(const Key('nightMoon.slider')))
+        .read<NightBrowserViewModel>();
+    final preview = browser.cursor.instantUtc;
+    final eveningDate = vm.plan.eveningDate;
+    expect(tester.getSize(toggle).height, greaterThanOrEqualTo(48));
+    expect(
+      tester.getBottomRight(summary).dy,
+      lessThan(tester.getTopLeft(toggle).dy),
+    );
+    expect(find.byKey(const Key('nightMoon.legend')), findsNothing);
+    await tester.tap(toggle);
+    await settle(tester);
+    expect(find.byKey(const Key('nightMoon.legend')), findsOneWidget);
+    expect(
+      tester.getBottomRight(state).dy,
+      lessThan(tester.getTopLeft(summary).dy),
+    );
+    expect(
+      tester.getBottomRight(summary).dy,
+      lessThan(tester.getTopLeft(toggle).dy),
+    );
+    expect(tester.getSize(toggle).height, greaterThanOrEqualTo(48));
+    expect(browser.cursor.instantUtc, preview);
+    expect(vm.plan.eveningDate, eveningDate);
+    expect(find.text('Drag to preview the night.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   // S6.13: the plan card's status says what is missing, in the planner's
@@ -410,7 +453,7 @@ void main() {
         tester.widget<Text>(find.byKey(const Key('tonight.planRig'))).data,
         startsWith('M42 · '),
       );
-      // Hybrid's fit line: a mark beside a 13 px verdict.
+      // Fit uses the item-title role, stronger than the persistence badge.
       final verdict = tester
           .widget<Text>(
             find.descendant(
@@ -419,8 +462,8 @@ void main() {
             ),
           )
           .style!;
-      expect(verdict.fontSize, 13);
-      expect(verdict.fontWeight, FontWeight.w500);
+      expect(verdict.fontSize, AppTypography.itemTitle.fontSize);
+      expect(verdict.fontWeight, AppTypography.itemTitle.fontWeight);
     });
 
     for (final chosen in [true, false]) {

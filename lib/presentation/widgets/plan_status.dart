@@ -138,21 +138,48 @@ class PlanStatus extends StatelessWidget {
           children: [
             Semantics(
               header: true,
-              child: Text(
-                verdict,
-                key: const Key('status.headline'),
-                style: AppTextTheme.of(context)
-                    .resolve(
-                      AppTextTheme.of(context).screenTitle,
-                      AppTextGeometry.compactHeading,
-                    )
-                    .copyWith(
+              label: 'Imaging-window fit: $verdict',
+              excludeSemantics: true,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.xs),
+                    child: Icon(
+                      state == FitState.needsInput ||
+                              state == FitState.nothingToFit
+                          ? Icons.info_outline
+                          : state == FitState.fits || state == FitState.tight
+                          ? Icons.check
+                          : Icons.close,
+                      size: MediaQuery.textScalerOf(context).scale(22),
                       color: FitText.color(
                         state,
                         Theme.of(context).colorScheme,
                         palette,
                       ),
                     ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      verdict,
+                      key: const Key('status.headline'),
+                      style: AppTextTheme.of(context)
+                          .resolve(
+                            AppTextTheme.of(context).screenTitle,
+                            AppTextGeometry.compactHeading,
+                          )
+                          .copyWith(
+                            color: FitText.color(
+                              state,
+                              Theme.of(context).colorScheme,
+                              palette,
+                            ),
+                          ),
+                    ),
+                  ),
+                ],
               ),
             ),
             if (measured) ...[

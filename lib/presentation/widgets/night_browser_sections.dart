@@ -89,6 +89,32 @@ class NightBarSection extends StatelessWidget {
     final cursor = browser.cursor;
     final index = view.indexOf(cursor.instantUtc);
     final dark = view.darkInterval;
+    final cursorDetails = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          cursor.dark
+              ? cursor.moonUp
+                    ? 'Dark · Moon above horizon'
+                    : 'Moon-free dark'
+              : '${NightBrowseText.sky(cursor.sky, view.limitDeg)} · '
+                    'Moon ${cursor.moonUp ? 'above' : 'below'} horizon',
+          key: const Key('nightMoon.cursorState'),
+          style: AppTextTheme.of(context).body
+              .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
+        ),
+        const SizedBox(height: AppSpacing.nudge),
+        Semantics(
+          liveRegion: true,
+          child: Text(
+            _compactCursor(view, cursor, at),
+            key: const Key('nightMoon.cursorSummary'),
+            style: AppTextTheme.of(context)
+                .resolve(caption, AppTextGeometry.supporting),
+          ),
+        ),
+      ],
+    );
     return Column(
       key: const Key('nightMoon.bar'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -235,31 +261,19 @@ class NightBarSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Text('Drag to preview · arrow keys step 5 min.', style: caption),
-        const SizedBox(height: 12),
-        _ExactTimes(view: view, zoneId: zoneId),
-        const SizedBox(height: 10),
         Text(
-          cursor.dark
-              ? cursor.moonUp
-                    ? 'Dark · Moon above horizon'
-                    : 'Moon-free dark'
-              : '${NightBrowseText.sky(cursor.sky, view.limitDeg)} · '
-                    'Moon ${cursor.moonUp ? 'above' : 'below'} horizon',
-          key: const Key('nightMoon.cursorState'),
-          style: AppTextTheme.of(context).body
-              .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
+          home
+              ? 'Drag to preview the night.'
+              : 'Drag to preview · arrow keys step 5 min.',
+          style: caption,
         ),
-        const SizedBox(height: 3),
-        Semantics(
-          liveRegion: true,
-          child: Text(
-            _compactCursor(view, cursor, at),
-            key: const Key('nightMoon.cursorSummary'),
-            style: AppTextTheme.of(context)
-                .resolve(caption, AppTextGeometry.supporting),
-          ),
-        ),
+        const SizedBox(height: AppSpacing.itemGap),
+        if (home) ...[
+          cursorDetails,
+          const SizedBox(height: AppSpacing.itemGap),
+        ],
+        _ExactTimes(view: view, zoneId: zoneId),
+        if (!home) ...[const SizedBox(height: AppSpacing.notes), cursorDetails],
       ],
     );
   }

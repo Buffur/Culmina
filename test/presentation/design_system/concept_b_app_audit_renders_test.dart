@@ -23,6 +23,7 @@ import 'package:astroplan/presentation/screens/target/target_detail_screen.dart'
 import 'package:astroplan/presentation/screens/home/plan_rig_screen.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:astroplan/domain/models/target_alias.dart';
+import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -192,6 +193,79 @@ Future<void> _scrollPage(HybridRenderContext c, double amount) async {
 
 final _auditShots = <String, HybridStep>{
   ...hybridShots,
+
+  'home_timeline_exact': (c) async {
+    await c.go(AppRouter.tonight);
+    await c.tapKey('nightMoon.exactToggle');
+    final scroll = find.byType(Scrollable).first;
+    final position = c.tester.state<ScrollableState>(scroll).position;
+    final preview = find.byKey(const Key('nightMoon.previewTime'));
+    position.jumpTo(
+      (position.pixels + c.tester.getTopLeft(preview).dy - 40).clamp(
+        position.minScrollExtent,
+        position.maxScrollExtent,
+      ),
+    );
+    await c.settle();
+  },
+  'plan_missing_flats': (c) async {
+    await c.tester.runAsync(() async {
+      // Match the existing unfiltered light group; leave Ha uncovered.
+      // A plan with no flats deliberately has no missing-flat warning.
+      await c.fixture.vm.plan.addCaptureBlocks([
+        CaptureBlock(
+          frameType: FrameType.flat,
+          exposureTimeSeconds: 1,
+          frameCount: 20,
+        ),
+        CaptureBlock(
+          frameType: FrameType.light,
+          filterName: 'Ha',
+          exposureTimeSeconds: 120,
+          frameCount: 30,
+          gain: CaptureGain.iso(800),
+        ),
+      ]);
+      await c.fixture.vm.plan.idle;
+    });
+    await c.push(AppRouter.session());
+    final warning = find.byKey(const Key('capture.flatsMissing'));
+    final scroll = find
+        .descendant(
+          of: find.byKey(const Key('planner.scroll')),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await c.tester.scrollUntilVisible(warning, 300, scrollable: scroll);
+    await c.settle();
+    final action = find.byKey(const Key('capturePlan.buildCalibration'));
+    final position = c.tester.state<ScrollableState>(scroll).position;
+    position.jumpTo(
+      (position.pixels + c.tester.getTopLeft(action).dy - 420).clamp(
+        position.minScrollExtent,
+        position.maxScrollExtent,
+      ),
+    );
+    await c.settle();
+    expect(c.tester.getRect(action).overlaps(c.tester.getRect(scroll)), isTrue);
+    expect(
+      c.tester.getRect(warning).overlaps(c.tester.getRect(scroll)),
+      isTrue,
+    );
+  },
+  'plan_unsaved': (c) => c.push(AppRouter.session()),
+  'plan_changed': (c) async {
+    await c.tester.runAsync(() async {
+      final block = c.fixture.vm.plan.captureBlocks.first;
+      await c.fixture.vm.plan.updateCaptureBlock(
+        0,
+        block.copyWith(frameCount: block.frameCount + 10),
+      );
+      await c.fixture.vm.plan.idle;
+    });
+    await c.push(AppRouter.session());
+  },
+  'plan_nosite': (c) => c.push(AppRouter.session()),
 
   'plan_capture': (c) async {
     await c.push(AppRouter.session());
@@ -714,8 +788,8 @@ void main() {
         await tester.runAsync(() async {
           fixture = await HybridTransferFixture.create(
             AppDatabase(NativeDatabase.memory()),
-            savePlan: name != 'logbook_empty',
-            withSite: name != 'home_nosite',
+            savePlan: name != 'logbook_empty' && name != 'plan_unsaved',
+            withSite: name != 'home_nosite' && name != 'plan_nosite',
           );
           if (theme == 'field') await fixture.vm.theme.toggleFieldMode();
         });

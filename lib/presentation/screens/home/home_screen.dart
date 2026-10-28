@@ -106,6 +106,8 @@ class HomeScreen extends StatelessWidget {
                         key: const Key('planner.statusGroup'),
                         children: const [
                           _PlanIdentity(),
+                          SizedBox(height: AppSpacing.itemGap),
+                          Divider(height: 1),
                           PlanStatus(showFillAction: false),
                         ],
                       ),
@@ -637,6 +639,7 @@ class _PlanIdentity extends StatelessWidget {
                 session,
                 hasUnsavedChanges: plan.hasUnsavedChanges,
               ),
+              withIcon: true,
             ),
         ],
       ),

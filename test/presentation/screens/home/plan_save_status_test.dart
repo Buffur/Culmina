@@ -19,6 +19,8 @@ import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
+import 'package:astroplan/presentation/shared/plan_state.dart';
+import 'package:astroplan/presentation/shared/status_block.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -98,32 +100,65 @@ void main() {
   Finder inIdentity(String text) =>
       find.descendant(of: identity, matching: find.text(text));
 
+  void expectPlanStateAndFit(WidgetTester tester, PlanState state) {
+    final stateLabel = find.descendant(
+      of: identity,
+      matching: find.byType(PlanStateLabel),
+    );
+    expect(stateLabel, findsOneWidget);
+    final label = tester.widget<PlanStateLabel>(stateLabel);
+    expect(label.state, state);
+    expect(
+      label.withIcon,
+      isTrue,
+      reason: 'persistence has its own visual cue',
+    );
+    expect(inIdentity(state.word), findsOneWidget);
+
+    final verdict = StatusBlock.headline(vm.fitAnalysis.state);
+    final headline = find.byKey(const Key('status.headline'));
+    expect(tester.widget<Text>(headline).data, verdict);
+    final fitLabel = tester.getSemantics(headline).label;
+    expect(
+      fitLabel,
+      startsWith('Imaging-window fit: $verdict'),
+      reason: 'time fit is named independently from plan persistence',
+    );
+    expect(fitLabel, isNot(contains(state.word)));
+  }
+
   testWidgets('the first edit of a saved plan says its changes are not saved '
       'yet, also when a frame is built before the autosave lands', (
     tester,
   ) async {
-    await start(tester);
-    await save(tester);
-    expect(find.text('Saved on this device.'), findsOneWidget);
-    expect(inIdentity('Saved'), findsOneWidget);
+    final semantics = tester.ensureSemantics();
+    try {
+      await start(tester);
+      expectPlanStateAndFit(tester, PlanState.notSaved);
+      await save(tester);
+      expect(find.text('Saved on this device.'), findsOneWidget);
+      expectPlanStateAndFit(tester, PlanState.saved);
 
-    // Started, not awaited: the frame below is built before the write lands.
-    late Future<void> edit;
-    await tester.runAsync(() async {
-      edit = vm.addCaptureBlock(_extra);
-    });
-    // The device's frame between the edit and its autosave.
-    await tester.pump();
-    await tester.runAsync(() => edit);
-    await settle(tester);
+      // Started, not awaited: the frame below is built before the write lands.
+      late Future<void> edit;
+      await tester.runAsync(() async {
+        edit = vm.addCaptureBlock(_extra);
+      });
+      // The device's frame between the edit and its autosave.
+      await tester.pump();
+      await tester.runAsync(() => edit);
+      await settle(tester);
 
-    expect(find.text('Changes are not saved yet.'), findsOneWidget);
-    expect(find.text('Saved on this device.'), findsNothing);
-    expect(inIdentity('Saved · changed'), findsOneWidget);
+      expect(find.text('Changes are not saved yet.'), findsOneWidget);
+      expect(find.text('Saved on this device.'), findsNothing);
+      expectPlanStateAndFit(tester, PlanState.savedChanged);
 
-    await save(tester);
-    expect(find.text('Saved on this device.'), findsOneWidget);
-    expect(inIdentity('Saved'), findsOneWidget);
+      await save(tester);
+      expect(find.text('Saved on this device.'), findsOneWidget);
+      expectPlanStateAndFit(tester, PlanState.saved);
+    } finally {
+      semantics.dispose();
+    }
   });
 }
 

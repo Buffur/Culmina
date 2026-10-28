@@ -94,8 +94,9 @@ enum PlanState {
 /// its wash; Not saved, Saved · changed and Partly in the caution role on
 /// its wash (attention, not an error); Not done and Old log quiet on the
 /// selection fill. 13 px, padding 3 × 6, radius 4. [withIcon]: Tonight's
-/// check (saved) or pencil (unsaved work) mark, 13 px; Plan's label is
-/// the word alone at weight 500. It wraps at large text; not tappable.
+/// check (saved) or pencil (unsaved work) mark, 13 px, also used in Plan's
+/// identity strip. Without an icon the word has weight 500. It wraps at
+/// large text; not tappable.
 class PlanStateLabel extends StatelessWidget {
   const PlanStateLabel(this.state, {super.key, this.withIcon = false});
 

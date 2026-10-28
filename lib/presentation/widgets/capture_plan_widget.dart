@@ -422,7 +422,7 @@ class _BlockListState extends State<_BlockList> {
                               style: small(
                                 unplaced > 0
                                     ? palette.statusDoesNotFit
-                                    : palette.textTertiary,
+                                    : palette.textSecondary,
                               ),
                             ),
                           ],
@@ -646,8 +646,8 @@ class _BlockListState extends State<_BlockList> {
                       OutlinedButton(
                         key: const Key('capturePlan.buildCalibration'),
                         onPressed: _buildCalibration,
-                        child: Text(
-                          flatsMissing.isEmpty ? 'Build calibration frames' : 'Build calibration frames, with the missing flats',
+                        child: const Text(
+                          'Build calibration frames',
                           textAlign: TextAlign.center,
                         ),
                       ),
