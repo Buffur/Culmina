@@ -12,6 +12,7 @@ The rules website loads its catalog with fetch, so use HTTP rather than `file:`.
 | `shared/` | Local Geist font, common shell colors, atlas styling and theme persistence |
 | `evidence/` | Original map and component render inputs previously under build/ |
 | `qa/` | Browser comparison screenshots and verification artifacts |
+| `figma-transfer-20261029/` | Editable Figma backup, source parity evidence and Longread verification |
 | `relocation.json` | Original paths and SHA-256 hashes recorded before moving 1063 files |
 
 The old entry pages under `build/design-rules-web/`, `.audit/app-map-20261028/`

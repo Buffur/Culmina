@@ -1,0 +1,692 @@
+{
+  "completedBaseCases": 9,
+  "sceneCount": 51,
+  "allScenePaintTextActionsAndScrollExact": true,
+  "changedPNGCount": 30,
+  "sceneValidation": [
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_01-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_01-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_01-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_02-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_02-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_02-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_03-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_03-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_03-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_04-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_04-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "lib_rig_edit__scroll_04-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_01-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_01-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_01-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_02-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_02-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_02-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_03-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_03-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_03-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_04-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_04-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "plan__scroll_04-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_01-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_01-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_01-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": false
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_02-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_02-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_02-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_03-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_03-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_03-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_04-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_04-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_04-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_05-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_05-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_05-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_06-dark-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_06-field-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    },
+    {
+      "textsExact": true,
+      "paintExact": true,
+      "actionsExact": true,
+      "scrollExact": true,
+      "file": "weather_forecast_open__scroll_06-light-1.scene.json",
+      "fixtureSucceeded": true,
+      "paintErrors": [],
+      "unsupportedPaint": [],
+      "pngBytesChanged": true
+    }
+  ],
+  "comparisons": [
+    {
+      "name": "plan-light",
+      "sourceSize": [
+        375,
+        2275
+      ],
+      "figmaSize": [
+        375,
+        2275
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 2.9494
+    },
+    {
+      "name": "lib_rig_edit-light",
+      "sourceSize": [
+        375,
+        2021
+      ],
+      "figmaSize": [
+        375,
+        2021
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 2.3139
+    },
+    {
+      "name": "weather_forecast_open-light",
+      "sourceSize": [
+        375,
+        3162
+      ],
+      "figmaSize": [
+        375,
+        3162
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 2.9992
+    },
+    {
+      "name": "plan-dark",
+      "sourceSize": [
+        375,
+        2275
+      ],
+      "figmaSize": [
+        375,
+        2275
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 3.0798
+    },
+    {
+      "name": "lib_rig_edit-dark",
+      "sourceSize": [
+        375,
+        2021
+      ],
+      "figmaSize": [
+        375,
+        2021
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 2.3767
+    },
+    {
+      "name": "weather_forecast_open-dark",
+      "sourceSize": [
+        375,
+        3162
+      ],
+      "figmaSize": [
+        375,
+        3162
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 3.3203
+    },
+    {
+      "name": "plan-field",
+      "sourceSize": [
+        375,
+        2275
+      ],
+      "figmaSize": [
+        375,
+        2275
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 1.0557
+    },
+    {
+      "name": "lib_rig_edit-field",
+      "sourceSize": [
+        375,
+        2021
+      ],
+      "figmaSize": [
+        375,
+        2021
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 0.8339
+    },
+    {
+      "name": "weather_forecast_open-field",
+      "sourceSize": [
+        375,
+        3162
+      ],
+      "figmaSize": [
+        375,
+        3162
+      ],
+      "dimensionsExact": true,
+      "meanAbsoluteChannelError": 1.1096
+    }
+  ],
+  "comparisonCount": 9,
+  "allDimensionsExact": true,
+  "method": "Bottom-up markNeedsPaint for every attached render object before every captureSnapshot, tester.pump + hybridSettle before boundary.toImage. Same longread-plan primary/segments/seams/footer. Forecast-lead alias verified exact against refreshed forecast-open source scene. No original captures, Figma layers or production files modified.",
+  "evidenceLimit": "Native Flutter host synthetic fixture compared with native Figma export; not pixel-perfect, device, accessibility or owner acceptance proof."
+}

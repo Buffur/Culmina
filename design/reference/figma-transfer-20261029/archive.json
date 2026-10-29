@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-29",
+  "localArchive": "docs/archive/2026-10-29_figma-transfer/",
+  "archiveIgnoredByGit": true,
+  "fileCount": 11901,
+  "totalBytes": 1269802584,
+  "localFileManifest": "files.json",
+  "localFileManifestSHA256": "ac874d762b7ebf48b6e79a56ca010ccf6a32e2ff9d2cf374d2cf27e57f796c9b",
+  "method": "Move complete task work directories without deletion; verify every archived file against its pre-move SHA-256. Retain the registered read-only plugin at its existing local path.",
+  "retainedLivePlugin": "build/figma-transfer-20261029/local-plugin/",
+  "finalPackage": "design/reference/figma-transfer-20261029/",
+  "verifiedSHA256Files": 11901,
+  "deletedFiles": 0,
+  "retainedResultCompatibilityCopy": "build/figma-parity-20261029/Culmina-parity-longreads-2026-10-29.fig"
+}
