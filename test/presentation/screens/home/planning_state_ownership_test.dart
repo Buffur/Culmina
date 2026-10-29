@@ -13,6 +13,7 @@ import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/domain/models/astro_target.dart';
+import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/location_profile.dart';
 import 'package:astroplan/domain/models/session.dart';
 import 'package:astroplan/domain/models/target_alias.dart';
@@ -23,6 +24,7 @@ import 'package:astroplan/presentation/screens/logbook/logbook_screen.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:astroplan/presentation/screens/tonight/tonight_home_screen.dart';
 import 'package:astroplan/presentation/shared/failure_feedback.dart';
+import 'package:astroplan/presentation/shared/plan_state.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +97,7 @@ Future<void> _fonts() async {
 Future<HybridTransferFixture> _fixture(
   WidgetTester tester, {
   bool withSite = true,
+  bool savePlan = true,
 }) async {
   tester.view.physicalSize = const Size(375, 812);
   tester.view.devicePixelRatio = 1;
@@ -108,6 +111,7 @@ Future<HybridTransferFixture> _fixture(
     fixture = await HybridTransferFixture.create(
       AppDatabase(NativeDatabase.memory()),
       withSite: withSite,
+      savePlan: savePlan,
     );
   });
   addTearDown(() async {
@@ -348,11 +352,17 @@ void main() {
   );
 
   testWidgets(
-    'Q2 staged site zone follows selected site while Close preserves active context',
+    'Plan opens shared site management directly; Back cancels and selection updates its context',
     (tester) async {
       final fixture = await _fixture(tester);
       final originalId = fixture.vm.site.activeSite!.id;
       final originalNight = fixture.vm.plan.eveningDate;
+      final originalSession = fixture.vm.plan.activeSessionId!;
+      final originalTarget = fixture.vm.plan.selectedTarget!.id;
+      final originalRig = fixture.vm.plan.selectedEquipment!.id;
+      final originalBlocks = fixture.vm.plan.captureBlocks;
+      final originalSnapshot =
+          fixture.vm.plan.activeSession!.planSnapshot!.json;
       late int newYork;
       late int unknown;
       await tester.runAsync(() async {
@@ -380,29 +390,57 @@ void main() {
       try {
         await _mount(tester, fixture);
         await _push(tester, AppRouter.session());
-        await _semanticTap(tester, find.byKey(const Key('planner.context')));
-        await _semanticTap(
-          tester,
-          find.byKey(Key('planContext.site.$newYork')),
-        );
-        expect(
-          find.textContaining('Times are in the site zone, America/New_York.'),
-          findsOneWidget,
-        );
+        await _semanticTap(tester, find.byKey(const Key('planner.site')));
+        expect(find.text('Manage sites'), findsOneWidget);
+        expect(find.byKey(const Key('planContext.apply')), findsNothing);
         expect(fixture.vm.site.activeSite!.id, originalId);
-        expect(fixture.vm.plan.eveningDate, originalNight);
-        await _semanticTap(
-          tester,
-          find.byKey(Key('planContext.site.$unknown')),
-        );
-        expect(
-          find.textContaining('Times are in the device zone.'),
-          findsOneWidget,
-        );
-        await tester.tap(find.byKey(const Key('scoped.close')));
+        expect(fixture.vm.plan.hasUnsavedChanges, isFalse);
+        await tester.pageBack();
         await hybridSettle(tester);
+        expect(find.byKey(const Key('planner.site')), findsOneWidget);
         expect(fixture.vm.site.activeSite!.id, originalId);
         expect(fixture.vm.plan.eveningDate, originalNight);
+        expect(fixture.vm.plan.hasUnsavedChanges, isFalse);
+
+        await _semanticTap(tester, find.byKey(const Key('planner.site')));
+        await _semanticTap(tester, find.byKey(ValueKey('site-$newYork')));
+        await tester.runAsync(() => fixture.vm.plan.idle);
+        expect(fixture.vm.site.activeSite!.id, newYork);
+        expect(fixture.vm.site.displayZoneId, 'America/New_York');
+        expect(fixture.vm.plan.eveningDate, originalNight);
+        expect(fixture.vm.plan.activeSessionId, originalSession);
+        expect(fixture.vm.plan.selectedTarget!.id, originalTarget);
+        expect(fixture.vm.plan.selectedEquipment!.id, originalRig);
+        expect(fixture.vm.plan.captureBlocks, originalBlocks);
+        expect(fixture.vm.plan.hasUnsavedChanges, isTrue);
+        await tester.pageBack();
+        await hybridSettle(tester);
+        final siteRow = find.byKey(const Key('planner.site'));
+        expect(
+          find.descendant(
+            of: siteRow,
+            matching: find.text('Synthetic New York'),
+          ),
+          findsOneWidget,
+        );
+        expect(find.textContaining('America/New_York'), findsWidgets);
+        final stored = await tester.runAsync(
+          () => fixture.sessions.get(originalSession),
+        );
+        expect(stored!.siteId, newYork);
+        expect(stored.timeZoneId, 'America/New_York');
+        expect(stored.eveningDate, originalNight);
+        expect(stored.planSnapshot!.json, originalSnapshot);
+
+        await _semanticTap(tester, siteRow);
+        await _semanticTap(tester, find.byKey(ValueKey('site-$unknown')));
+        await tester.runAsync(() => fixture.vm.plan.idle);
+        await tester.pageBack();
+        await hybridSettle(tester);
+        expect(fixture.vm.site.activeSite!.id, unknown);
+        expect(fixture.vm.site.displayZoneId, isNull);
+        expect(fixture.vm.plan.eveningDate, originalNight);
+        expect(fixture.vm.plan.sessionNight!.timeContextId, 'solar');
         expect(tester.takeException(), isNull);
       } finally {
         handle.dispose();
@@ -585,7 +623,7 @@ void main() {
   );
 
   testWidgets(
-    'Q1 semantic Night jumps preview boundaries and context night opens a cancellable picker',
+    'Q1 semantic Night jumps preview boundaries and Plan opens the shared calendar directly',
     (tester) async {
       final fixture = await _fixture(tester);
       final originalNight = fixture.vm.plan.eveningDate;
@@ -616,21 +654,175 @@ void main() {
         await hybridSettle(tester);
 
         await _push(tester, AppRouter.session());
-        await _semanticTap(tester, find.byKey(const Key('planner.context')));
-        await _semanticTap(tester, find.byKey(const Key('planContext.night')));
+        await _semanticTap(
+          tester,
+          find.byKey(const Key('planner.nightChoice')),
+        );
         expect(find.byType(NightPickerDialog), findsOneWidget);
         expect(fixture.vm.plan.eveningDate, originalNight);
+        await tester.tap(find.text('20'));
         await tester.tap(find.text('Cancel'));
         await hybridSettle(tester);
         expect(find.byType(NightPickerDialog), findsNothing);
-        expect(find.byKey(const Key('planContext.night')), findsOneWidget);
+        expect(find.byKey(const Key('planner.nightChoice')), findsOneWidget);
         expect(fixture.vm.plan.eveningDate, originalNight);
+        expect(fixture.vm.plan.captureBlocks, originalBlocks);
+        expect(fixture.vm.plan.activeSessionId, originalSession);
+        expect(fixture.vm.plan.hasUnsavedChanges, isFalse);
+
+        // The unchanged confirmation must not turn a saved plan into an edit.
+        await _semanticTap(
+          tester,
+          find.byKey(const Key('planner.nightChoice')),
+        );
+        await tester.tap(find.text('OK'));
+        await hybridSettle(tester);
+        expect(fixture.vm.plan.hasUnsavedChanges, isFalse);
+        expect(fixture.vm.plan.activeSession!.status, SessionStatus.planned);
+
+        // Back dismisses the dialog, including a highlighted but unconfirmed day.
+        await _semanticTap(
+          tester,
+          find.byKey(const Key('planner.nightChoice')),
+        );
+        await tester.tap(find.text('20'));
+        await tester.binding.handlePopRoute();
+        await hybridSettle(tester);
+        expect(find.byType(NightPickerDialog), findsNothing);
+        expect(fixture.vm.plan.eveningDate, originalNight);
+        expect(fixture.vm.plan.captureBlocks, originalBlocks);
+        expect(fixture.vm.plan.hasUnsavedChanges, isFalse);
+
+        // Cancel also keeps edits already present on the working plan.
+        await tester.runAsync(() async {
+          await fixture.vm.plan.addCaptureBlock(originalBlocks.first);
+          await fixture.vm.plan.idle;
+        });
+        await hybridSettle(tester);
+        final editedBlocks = fixture.vm.plan.captureBlocks;
+        expect(fixture.vm.plan.hasUnsavedChanges, isTrue);
+        await _semanticTap(
+          tester,
+          find.byKey(const Key('planner.nightChoice')),
+        );
+        await tester.tap(find.text('20'));
+        await tester.tap(find.text('Cancel'));
+        await hybridSettle(tester);
+        expect(fixture.vm.plan.eveningDate, originalNight);
+        expect(fixture.vm.plan.captureBlocks, editedBlocks);
+        expect(fixture.vm.plan.activeSessionId, originalSession);
+        expect(fixture.vm.plan.hasUnsavedChanges, isTrue);
         expect(tester.takeException(), isNull);
       } finally {
         handle.dispose();
       }
     },
   );
+
+  for (final savedBefore in [false, true]) {
+    testWidgets(
+      'Plan calendar confirms into ${savedBefore ? 'a saved plan as modified' : 'a new draft'}, restores it and saves explicitly',
+      (tester) async {
+        final fixture = await _fixture(tester, savePlan: savedBefore);
+        final original = fixture.vm.plan.activeSession!;
+        final originalTarget = fixture.vm.plan.selectedTarget!.id;
+        final originalRig = fixture.vm.plan.selectedEquipment!.id;
+        final originalSite = fixture.vm.site.activeSite!.id;
+        final originalBlocks = [
+          for (final b in fixture.vm.plan.captureBlocks)
+            (b.frameType, b.frameCount, b.exposureTimeSeconds),
+        ];
+        final picked = CalendarDate(2026, 10, 20);
+        final handle = tester.ensureSemantics();
+        try {
+          await _mount(tester, fixture);
+          await _push(tester, AppRouter.session());
+          await _semanticTap(
+            tester,
+            find.byKey(const Key('planner.nightChoice')),
+          );
+          expect(find.byType(NightPickerDialog), findsOneWidget);
+          await tester.tap(find.text('20'));
+          // Selecting a day is a preview until the shared calendar's OK.
+          expect(fixture.vm.plan.eveningDate, hybridTransferNight);
+          await tester.tap(find.text('OK'));
+          await hybridSettle(tester);
+          await tester.runAsync(() => fixture.vm.plan.idle);
+          expect(find.byType(NightPickerDialog), findsNothing);
+          expect(fixture.vm.plan.eveningDate, picked);
+          expect(fixture.vm.plan.activeSessionId, original.id);
+          expect(fixture.vm.plan.selectedTarget!.id, originalTarget);
+          expect(fixture.vm.plan.selectedEquipment!.id, originalRig);
+          expect(fixture.vm.site.activeSite!.id, originalSite);
+          expect(fixture.vm.site.displayZoneId, 'Europe/Kyiv');
+          expect(fixture.vm.plan.hasUnsavedChanges, isTrue);
+          final stored = await tester.runAsync(
+            () => fixture.sessions.get(original.id),
+          );
+          expect(stored!.eveningDate, picked);
+          expect(stored.status, SessionStatus.draft);
+          expect(stored.timeZoneId, 'Europe/Kyiv');
+          expect(stored.planSnapshot?.json, original.planSnapshot?.json);
+          expect(
+            PlanState.of(stored),
+            savedBefore ? PlanState.savedChanged : PlanState.notSaved,
+          );
+
+          // Exercise the actual restore path against the autosaved row.
+          late Future<void> restored;
+          var restoreComplete = false;
+          await tester.runAsync(() async {
+            restored = fixture.vm.lifecycle.load().whenComplete(
+              () => restoreComplete = true,
+            );
+          });
+          for (var attempt = 0; attempt < 20 && !restoreComplete; attempt++) {
+            await hybridSettle(tester);
+          }
+          expect(restoreComplete, isTrue);
+          await tester.runAsync(() => restored);
+          await hybridSettle(tester);
+          expect(fixture.vm.plan.activeSessionId, original.id);
+          expect(fixture.vm.plan.eveningDate, picked);
+          expect(fixture.vm.plan.hasUnsavedChanges, isTrue);
+          expect(fixture.vm.plan.selectedTarget!.id, originalTarget);
+          expect(fixture.vm.plan.selectedEquipment!.id, originalRig);
+          expect([
+            for (final b in fixture.vm.plan.captureBlocks)
+              (b.frameType, b.frameCount, b.exposureTimeSeconds),
+          ], originalBlocks);
+          await tester.drag(
+            find.byKey(const Key('planner.scroll')),
+            const Offset(0, 1500),
+          );
+          await hybridSettle(tester);
+          final state = find.descendant(
+            of: find.byKey(const Key('planner.identity')),
+            matching: find.byType(PlanStateLabel),
+          );
+          expect(
+            tester.widget<PlanStateLabel>(state).state,
+            savedBefore ? PlanState.savedChanged : PlanState.notSaved,
+          );
+
+          await _semanticTap(tester, find.byKey(const Key('planner.save')));
+          await tester.runAsync(() => fixture.vm.plan.idle);
+          await hybridSettle(tester);
+          final saved = await tester.runAsync(
+            () => fixture.sessions.get(original.id),
+          );
+          expect(saved!.status, SessionStatus.planned);
+          expect(saved.eveningDate, picked);
+          expect(saved.planSnapshot!.eveningDate, picked);
+          expect(fixture.vm.plan.hasUnsavedChanges, isFalse);
+          expect(tester.widget<PlanStateLabel>(state).state, PlanState.saved);
+          expect(tester.takeException(), isNull);
+        } finally {
+          handle.dispose();
+        }
+      },
+    );
+  }
 
   testWidgets(
     'Q1 no-site position semantics invokes safe fake and unavailable night stays disabled',
@@ -660,13 +852,17 @@ void main() {
             .removeCurrentSnackBar();
         await hybridSettle(tester);
         await _push(tester, AppRouter.session());
-        await _semanticTap(tester, find.byKey(const Key('planner.context')));
         final node = tester.getSemantics(
-          find.byKey(const Key('planContext.night')),
+          find.byKey(const Key('planner.nightChoice')),
         );
         final data = node.getSemanticsData();
         expect(data.hasAction(SemanticsAction.tap), isFalse);
         expect(data.flagsCollection.isEnabled, ui.Tristate.isFalse);
+        expect(fixture.vm.plan.sessionNight, isNull);
+        await _semanticTap(tester, find.byKey(const Key('planner.site')));
+        expect(find.text('Manage sites'), findsOneWidget);
+        await tester.pageBack();
+        await hybridSettle(tester);
         expect(fixture.vm.plan.sessionNight, isNull);
         expect(tester.takeException(), isNull);
       } finally {

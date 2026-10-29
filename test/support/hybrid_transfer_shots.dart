@@ -178,6 +178,18 @@ final Map<String, HybridStep> hybridShots = {
     await c.settle();
   },
   'plan': (c) => c.push(AppRouter.session()),
+  'plan_budget': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.budgetDetails');
+    await c.tester.ensureVisible(find.byKey(const Key('budget.timeNeeded')));
+    await c.settle();
+  },
+  'plan_rig_details': (c) async {
+    await c.push(AppRouter.session());
+    await c.tapKey('section.planner.rigDetails');
+    await c.tester.ensureVisible(find.text('Camera type'));
+    await c.settle();
+  },
   'plan_b': (c) async {
     await c.push(AppRouter.session());
     await c.scrollBy(1200, key: 'planner.scroll');
@@ -522,7 +534,7 @@ final Map<String, HybridStep> hybridShots = {
   },
   'plan_context': (c) async {
     await c.push(AppRouter.session());
-    await c.tapKey('planner.context');
+    await c.tapKey('planner.nightChoice');
   },
   for (final page in ['appearance', 'planning', 'privacy', 'backup', 'about'])
     'settings_$page': (c) async {

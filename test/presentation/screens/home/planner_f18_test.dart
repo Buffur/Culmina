@@ -165,7 +165,8 @@ void main() {
       tester.widget<Text>(find.byKey(const Key('planner.saveReason'))).data,
       'To save: ${PlanStatus.targetReason}',
     );
-    await tester.tap(find.byKey(const Key('planner.saveFix')));
+    expect(find.byKey(const Key('planner.saveFix')), findsNothing);
+    await tester.tap(find.byKey(const Key('status.choose')));
     await settle(tester);
     expect(find.text('Choose a target'), findsWidgets);
     await tester.runAsync(() async {

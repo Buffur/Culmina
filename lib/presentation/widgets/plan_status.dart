@@ -121,7 +121,7 @@ class PlanStatus extends StatelessWidget {
     // the capture end, 6 apart; the missing input's action below.
     return Padding(
       key: const Key('planner.status'),
-      padding: const EdgeInsets.only(top: 12),
+      padding: EdgeInsets.zero,
       // S6.10 (P6.9's cause and effect): an edit that changes the verdict or
       // its numbers marks the status briefly.
       child: ChangeMark(

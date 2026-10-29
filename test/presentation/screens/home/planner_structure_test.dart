@@ -5,6 +5,8 @@
 // FitAnalyzer and the budget say; without a target or a rig the structure
 // stays, with a neutral status. Through the real app and database.
 
+import 'dart:io';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
@@ -29,6 +31,7 @@ import 'package:astroplan/presentation/widgets/tonight_opportunity_widget.dart';
 import 'package:drift/native.dart';
 import 'package:astroplan/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +45,14 @@ import '../../../support/planner_harness.dart';
 class _NoForecast with NoSnapshotWeather implements WeatherRepository {}
 
 void main() {
+  setUpAll(() async {
+    await (FontLoader('Geist')..addFont(
+          File('assets/fonts/Geist.ttf')
+              .readAsBytes()
+              .then(ByteData.sublistView),
+        ))
+        .load();
+  });
   late AppDatabase db;
   late PlannerHarness vm;
 
@@ -126,10 +137,10 @@ void main() {
       final identity = find.byKey(const Key('planner.identity'));
       // 1. Which target, night, site and rig-independent state.
       onFirstScreen(tester, identity, 'the target, night and state');
-      // Hybrid: one Site and night row (plan.js rowButton).
+      // Site and night choices open the shared controls directly.
       onFirstScreen(
         tester,
-        find.byKey(const Key('planner.context')),
+        find.byKey(const Key('planner.site')),
         'site and night',
       );
       // 2–4. The verdict with time needed and usable time.
@@ -285,8 +296,10 @@ void main() {
       'conditions (F18: no target\'s-night section)', (tester) async {
     await start(tester, size: const Size(800, 8000));
     final order = [
+      ('identity', find.byKey(const Key('planner.identity'))),
       ('status', find.byKey(const Key('planner.status'))),
-      ('context', find.byKey(const Key('planner.context'))),
+      ('site', find.byKey(const Key('planner.site'))),
+      ('night choice', find.byKey(const Key('planner.nightChoice'))),
       ('target', find.byKey(const Key('planner.target'))),
       ('rig', find.byKey(const Key('planner.rig'))),
       ('capture plan', find.text(AppWords.capturePlan)),
@@ -308,7 +321,7 @@ void main() {
     // marker and sections retain the shared heading role.
     expect(
       find.descendant(
-        of: find.byKey(const Key('planner.context')),
+        of: find.byKey(const Key('planner.site')),
         matching: find.byKey(const Key('context.card')),
       ),
       findsNothing,
@@ -389,6 +402,11 @@ void main() {
     expect(inStatus(find.text(AppWords.needsTarget)), findsOneWidget);
     expect(inStatus(find.text(PlanStatus.targetReason)), findsOneWidget);
     expect(inStatus(find.text('Choose a target')), findsOneWidget);
+    expect(
+      find.widgetWithText(OutlinedButton, 'Choose a target'),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('planner.saveFix')), findsNothing);
     // No verdict, end or fill invented from a window that is not known.
     for (final state in [FitState.fits, FitState.tight, FitState.doesNotFit]) {
       expect(

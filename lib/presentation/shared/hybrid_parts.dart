@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_palette.dart';
+import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_theme.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import 'hybrid_icon.dart';
@@ -49,9 +50,8 @@ class HybridSectionTitle extends StatelessWidget {
   }
 }
 
-/// One label/value pair (`dl` in a disclosure): a 13/400 secondary label
-/// at the start and the 13/500 primary value at the end; a long value
-/// wraps beside its label.
+/// A disclosure fact with equal label/value columns and natural wrapping.
+/// Compact widths or large text stack the value beneath its label.
 class HybridFact extends StatelessWidget {
   const HybridFact(this.label, this.value, {super.key, this.emphasis = false});
 
@@ -65,30 +65,45 @@ class HybridFact extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return MergeSemantics(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Flexible(
-            child: Text(
-              label,
-              style: AppTextTheme.of(context).caption.copyWith(
-                color: emphasis ? p.textPrimary : p.textSecondary,
-                fontWeight: emphasis ? FontWeight.w600 : FontWeight.w400,
-              ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final name = Text(
+            label,
+            style: AppTextTheme.of(context).caption.copyWith(
+              color: emphasis ? p.textPrimary : p.textSecondary,
+              fontWeight: emphasis ? FontWeight.w600 : FontWeight.w400,
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: AppTextTheme.of(context).caption.copyWith(
-                color: p.textPrimary,
-                fontWeight: emphasis ? FontWeight.w600 : FontWeight.w500,
-              ),
+          );
+          final data = Text(
+            value,
+            style: AppTextTheme.of(context).caption.copyWith(
+              color: p.textPrimary,
+              fontWeight: emphasis ? FontWeight.w600 : FontWeight.w500,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
-          ),
-        ],
+          );
+          final captionSize = AppTextTheme.of(context).caption.fontSize!;
+          final textScale =
+              MediaQuery.textScalerOf(context).scale(captionSize) / captionSize;
+          if (constraints.maxWidth < 240 * textScale) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                name,
+                const SizedBox(height: AppSpacing.xs),
+                data,
+              ],
+            );
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: name),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: data),
+            ],
+          );
+        },
       ),
     );
   }
@@ -154,13 +169,17 @@ class HybridPlanRow extends StatelessWidget {
     required this.onTap,
     this.caption,
     this.semanticsHint,
+    this.valueColor,
+    this.padding = const EdgeInsets.symmetric(vertical: AppSpacing.itemGap),
   });
 
   final String label;
   final String value;
   final String? caption;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String? semanticsHint;
+  final Color? valueColor;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
@@ -170,60 +189,63 @@ class HybridPlanRow extends StatelessWidget {
       label: [label, value, ?caption].join(', '),
       hint: semanticsHint,
       excludeSemantics: true,
-      enabled: true,
+      enabled: onTap != null,
       onTap: onTap,
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: AppTextTheme.of(context)
-                          .resolve(
-                            AppTextTheme.of(context).itemTitle,
-                            AppTextGeometry.supporting,
-                          )
-                          .copyWith(color: p.textPrimary),
-                    ),
-                    const SizedBox(height: 1),
-                    Text(
-                      value,
-                      style: AppTextTheme.of(context)
-                          .resolve(
-                            AppTextTheme.of(context).value,
-                            AppTextGeometry.standard,
-                          )
-                          .copyWith(color: p.textPrimary),
-                    ),
-                    if (caption != null) ...[
-                      const SizedBox(height: 1),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: HybridTokens.minTarget),
+          child: Padding(
+            padding: padding,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        caption!,
+                        label,
                         style: AppTextTheme.of(context)
                             .resolve(
-                              AppTextTheme.of(context).caption,
+                              AppTextTheme.of(context).itemTitle,
                               AppTextGeometry.supporting,
                             )
-                            .copyWith(color: p.textTertiary),
+                            .copyWith(color: p.textPrimary),
                       ),
+                      const SizedBox(height: 1),
+                      Text(
+                        value,
+                        style: AppTextTheme.of(context)
+                            .resolve(
+                              AppTextTheme.of(context).value,
+                              AppTextGeometry.standard,
+                            )
+                            .copyWith(color: valueColor ?? p.textPrimary),
+                      ),
+                      if (caption != null) ...[
+                        const SizedBox(height: 1),
+                        Text(
+                          caption!,
+                          style: AppTextTheme.of(context)
+                              .resolve(
+                                AppTextTheme.of(context).caption,
+                                AppTextGeometry.supporting,
+                              )
+                              .copyWith(color: p.textTertiary),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              HybridIcon(
-                HybridIcons.rowChevron,
-                size: 16,
-                strokeWidth: 1.6,
-                color: p.textSecondary,
-              ),
-            ],
+                const SizedBox(width: 8),
+                HybridIcon(
+                  HybridIcons.rowChevron,
+                  size: 16,
+                  strokeWidth: 1.6,
+                  color: p.textSecondary,
+                ),
+              ],
+            ),
           ),
         ),
       ),

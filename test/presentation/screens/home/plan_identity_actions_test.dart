@@ -5,8 +5,11 @@
 // planner with the real database.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/theme/app_palette.dart';
+import 'package:astroplan/core/theme/app_spacing.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -15,6 +18,7 @@ import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/data/services/catalog_seeder.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
+import 'package:astroplan/domain/models/calendar_date.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/main.dart';
@@ -22,6 +26,8 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,14 +48,26 @@ final _extra = CaptureBlock(
 );
 
 void main() {
+  setUpAll(() async {
+    await (FontLoader('Geist')..addFont(
+          File('assets/fonts/Geist.ttf')
+              .readAsBytes()
+              .then(ByteData.sublistView),
+        ))
+        .load();
+  });
   late AppDatabase db;
   late DriftSessionRepository sessions;
   late PlannerHarness vm;
 
   /// [choose]: the plan a user makes (S6.8: nothing is preselected); false
   /// keeps the first run's untouched, empty plan.
-  Future<void> start(WidgetTester tester, {bool choose = true}) async {
-    tester.view.physicalSize = const Size(800, 4000);
+  Future<void> start(
+    WidgetTester tester, {
+    bool choose = true,
+    Size size = const Size(800, 4000),
+  }) async {
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     await tester.runAsync(() async {
@@ -94,6 +112,152 @@ void main() {
   final identity = find.byKey(const Key('planner.identity'));
   Finder inIdentity(String text) =>
       find.descendant(of: identity, matching: find.text(text));
+
+  for (final (theme, brightness, field) in [
+    ('light', Brightness.light, false),
+    ('dark', Brightness.dark, false),
+    ('field', Brightness.dark, true),
+  ]) {
+    testWidgets(
+      'Night dates stay on one line in secondary text at 100%: $theme',
+      (tester) async {
+        tester.platformDispatcher.platformBrightnessTestValue = brightness;
+        tester.platformDispatcher.textScaleFactorTestValue = 1;
+        addTearDown(tester.platformDispatcher.clearAllTestValues);
+        await start(tester, size: const Size(375, 812));
+        if (field) {
+          await tester.runAsync(vm.theme.toggleFieldMode);
+          await settle(tester);
+        }
+        void checkDates() {
+          final evening = vm.eveningDate!;
+          final night = inIdentity(
+            'Night of ${NightTimeFormatter.eveningDate(evening)}',
+          );
+          final ends = inIdentity(
+            'Ends ${NightTimeFormatter.eveningDate(evening.addDays(1))}',
+          );
+          final nightBounds = tester.getRect(night);
+          final endsBounds = tester.getRect(ends);
+          final identityBounds = tester.getRect(identity);
+          expect(nightBounds.top, endsBounds.top);
+          expect(
+            endsBounds.left - nightBounds.right,
+            closeTo(AppSpacing.itemGap, .01),
+          );
+          expect(nightBounds.left, identityBounds.left);
+          expect(endsBounds.right, lessThanOrEqualTo(identityBounds.right));
+          final palette = AppPalette.of(tester.element(night));
+          expect(
+            tester.widget<Text>(night).style!.color,
+            palette.textSecondary,
+          );
+          for (final f in [night, ends]) {
+            final text = tester.widget<Text>(f);
+            expect(text.softWrap, isFalse);
+            expect(text.maxLines, 1);
+            final paragraph = tester.renderObject<RenderParagraph>(f);
+            expect(paragraph.didExceedMaxLines, isFalse);
+            final boxes = paragraph.getBoxesForSelection(
+              TextSelection(baseOffset: 0, extentOffset: text.data!.length),
+            );
+            expect(boxes.map((b) => b.top).toSet(), hasLength(1));
+          }
+          final persistence = tester.getRect(
+            find.byKey(const Key('planner.persistence')),
+          );
+          expect(persistence.right, closeTo(identityBounds.right, .01));
+          expect(persistence.left, greaterThanOrEqualTo(identityBounds.left));
+          expect(persistence.bottom, lessThanOrEqualTo(identityBounds.bottom));
+          expect(
+            nightBounds.expandToInclude(endsBounds).overlaps(persistence),
+            isFalse,
+          );
+          expect(tester.takeException(), isNull);
+        }
+
+        checkDates();
+        await tester.tap(find.byKey(const Key('planner.save')));
+        await settle(tester);
+        await tester.runAsync(() => vm.plan.idle);
+        expect(inIdentity('Saved'), findsOneWidget);
+        checkDates();
+        final nightControl = find.descendant(
+          of: find.byKey(const Key('planner.nightChoice')),
+          matching: find.text(
+            'Night of ${NightTimeFormatter.eveningDate(vm.eveningDate!)}',
+          ),
+        );
+        expect(
+          tester.widget<Text>(nightControl).style!.color,
+          AppPalette.of(tester.element(nightControl)).textSecondary,
+        );
+        expect(
+          tester.getRect(find.byKey(const Key('planner.identityGroup'))).bottom,
+          lessThan(
+            tester.getRect(find.byKey(const Key('planner.statusGroup'))).top,
+          ),
+        );
+        // The formatter supports twelve fixed English month abbreviations.
+        // Measure every available civil day plus leap/year transitions using
+        // the bundled font and unchanged production styles, then render the
+        // widest pair through the actual planner.
+        final nightStyle = tester
+            .widget<Text>(
+              inIdentity(
+                'Night of ${NightTimeFormatter.eveningDate(vm.eveningDate!)}',
+              ),
+            )
+            .style!;
+        final endsStyle = tester
+            .widget<Text>(
+              inIdentity(
+                'Ends ${NightTimeFormatter.eveningDate(vm.eveningDate!.addDays(1))}',
+              ),
+            )
+            .style!;
+        double width(String text, TextStyle style) {
+          final painter = TextPainter(
+            text: TextSpan(text: text, style: style),
+            textDirection: TextDirection.ltr,
+            textScaler: TextScaler.noScaling,
+          )..layout();
+          final result = painter.width;
+          painter.dispose();
+          return result;
+        }
+
+        var widest = CalendarDate(2026, 1, 1);
+        var widestWidth = 0.0;
+        for (final date in [
+          for (var day = 0; day < 365; day++)
+            CalendarDate(2026, 1, 1).addDays(day),
+          CalendarDate(2028, 2, 28),
+          CalendarDate(2028, 2, 29),
+        ]) {
+          final pairWidth =
+              width(
+                'Night of ${NightTimeFormatter.eveningDate(date)}',
+                nightStyle,
+              ) +
+              AppSpacing.itemGap +
+              width(
+                'Ends ${NightTimeFormatter.eveningDate(date.addDays(1))}',
+                endsStyle,
+              );
+          expect(pairWidth, lessThanOrEqualTo(tester.getSize(identity).width));
+          if (pairWidth > widestWidth) {
+            widestWidth = pairWidth;
+            widest = date;
+          }
+        }
+        await tester.runAsync(() => vm.plan.setEveningDate(widest));
+        await settle(tester);
+        checkDates();
+        expect(inIdentity('Saved · changed'), findsOneWidget);
+      },
+    );
+  }
 
   Future<void> openMenu(WidgetTester tester) async {
     await tester.tap(find.byKey(const Key('planner.menu')));

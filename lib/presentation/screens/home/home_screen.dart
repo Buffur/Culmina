@@ -49,7 +49,7 @@ import '../../../domain/models/night_weather.dart';
 import '../../../domain/models/night_weather_summary.dart';
 import '../../../domain/models/session_night.dart';
 import '../../../domain/models/camera_class.dart';
-import 'plan_context_screen.dart';
+import '../tonight/home_context_sheets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -103,32 +103,58 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
                     children: [
                       DocumentSection(
+                        key: const Key('planner.identityGroup'),
+                        children: const [_PlanIdentity()],
+                      ),
+                      const SizedBox(height: AppSpacing.itemGap),
+                      DocumentSection(
                         key: const Key('planner.statusGroup'),
-                        children: const [
-                          _PlanIdentity(),
-                          SizedBox(height: AppSpacing.itemGap),
-                          Divider(height: 1),
-                          PlanStatus(showFillAction: false),
-                        ],
+                        children: const [PlanStatus(showFillAction: false)],
                       ),
                       const SizedBox(height: 24),
                       // plan.js `rowButton` (Hybrid): the plan's context,
                       // target and rig, each opening its scoped chooser.
                       DocumentSection(
                         key: const Key('planner.inputsGroup'),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.sm,
+                        ),
                         children: [
                           HybridPlanRow(
-                            key: const Key('planner.context'),
-                            label: 'Site and night',
+                            key: const Key('planner.site'),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.sm,
+                            ),
+                            label: AppWords.site,
                             value: SiteLabel.of(siteVm) ?? ContextLine.noSite,
                             caption: planVm.sessionNight == null
                                 ? 'No night without a site'
                                 : siteVm.displayZoneId == null
                                 ? 'Times in the device zone'
                                 : 'Site zone: ${siteVm.displayZoneId}',
-                            onTap: () => openPlanContext(context),
+                            semanticsHint: 'Choose a site',
+                            onTap: () => showHomeSiteSheet(context),
                           ),
                           HybridPlanRow(
+                            key: const Key('planner.nightChoice'),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.sm,
+                            ),
+                            label: 'Night',
+                            valueColor: AppPalette.of(context).textSecondary,
+                            value: planVm.eveningDate == null
+                                ? 'No night without a site'
+                                : '${AppWords.nightOf} ${NightTimeFormatter.eveningDate(planVm.eveningDate!)}',
+                            semanticsHint: 'Choose a night',
+                            onTap: planVm.sessionNight == null
+                                ? null
+                                : () => showHomeNightSheet(context),
+                          ),
+                          HybridPlanRow(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.sm,
+                            ),
                             key: Key(
                               target == null
                                   ? 'planner.noTarget'
@@ -167,6 +193,9 @@ class HomeScreen extends StatelessWidget {
                             onTap: () => context.push(AppRouter.selectTarget),
                           ),
                           HybridPlanRow(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.sm,
+                            ),
                             key: Key(
                               equipment == null
                                   ? 'planner.noRig'
@@ -406,7 +435,7 @@ class _SaveBar extends StatelessWidget {
             ),
             // plan.css `.savebar-row` wraps: on a narrow bar the remedy's
             // words wrap instead of pushing past the edge.
-            if (missing != null)
+            if (missing != null && missing.route != AppRouter.selectTarget)
               Flexible(
                 child: TextButton(
                   key: const Key('planner.saveFix'),
@@ -620,28 +649,68 @@ class _PlanIdentity extends StatelessWidget {
     return Semantics(
       key: const Key('planner.identity'),
       container: true,
-      child: Wrap(
-        spacing: 12,
-        runSpacing: AppSpacing.xs,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Text(
-            evening == null
-                ? 'No night without a site'
-                : '${AppWords.nightOf} ${NightTimeFormatter.eveningDate(evening)}'
-                      ' · Ends ${NightTimeFormatter.eveningDate(evening.addDays(1))}',
-            style: AppTextTheme.of(context).caption
-                .copyWith(color: AppPalette.of(context).textSecondary),
-          ),
-          if (session != null)
-            PlanStateLabel(
-              PlanState.forWorkingPlan(
-                session,
-                hasUnsavedChanges: plan.hasUnsavedChanges,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final dates = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                evening == null
+                    ? 'No night without a site'
+                    : '${AppWords.nightOf} ${NightTimeFormatter.eveningDate(evening)}',
+                style: AppTextTheme.of(context).caption.copyWith(
+                  color: AppPalette.of(context).textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                softWrap: false,
               ),
-              withIcon: true,
-            ),
-        ],
+              if (evening != null) ...[
+                const SizedBox(width: AppSpacing.itemGap),
+                Text(
+                  'Ends ${NightTimeFormatter.eveningDate(evening.addDays(1))}',
+                  style: AppTextTheme.of(context).caption
+                      .copyWith(color: AppPalette.of(context).textSecondary),
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ],
+            ],
+          );
+          final state = PlanStateLabel(
+            session == null
+                ? PlanState.notSaved
+                : PlanState.forWorkingPlan(
+                    session,
+                    hasUnsavedChanges: plan.hasUnsavedChanges,
+                  ),
+            key: const Key('planner.persistence'),
+            withIcon: true,
+          );
+          final captionSize = AppTextTheme.of(context).caption.fontSize!;
+          final textScale =
+              MediaQuery.textScalerOf(context).scale(captionSize) / captionSize;
+          if (constraints.maxWidth < 260 * textScale) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                dates,
+                const SizedBox(height: AppSpacing.sm),
+                Align(alignment: Alignment.centerRight, child: state),
+              ],
+            );
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              dates,
+              const SizedBox(width: AppSpacing.itemGap),
+              Expanded(
+                child: Align(alignment: Alignment.centerRight, child: state),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -810,8 +879,3 @@ class _RigDetails extends StatelessWidget {
     );
   }
 }
-
-/// Opens Site and night (plan.js `context` screen): the observing site and
-/// the night, applied to the working plan together.
-Future<void> openPlanContext(BuildContext context) => Navigator.of(context)
-    .push<void>(MaterialPageRoute(builder: (_) => const PlanContextScreen()));

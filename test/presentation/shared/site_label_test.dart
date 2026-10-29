@@ -155,7 +155,7 @@ void main() {
       }
     }
 
-    // Home's context chip; the planner's Site and night row (Hybrid).
+    // Home's compact context and Plan's full site row.
     String siteText([String key = 'context.site']) => tester
         .widgetList<Text>(
           find.descendant(
@@ -179,11 +179,7 @@ void main() {
 
     unawaited(AppRouter.router.push(AppRouter.session()));
     await settle();
-    expect(
-      siteText('planner.context'),
-      contains(unsaved),
-      reason: 'the planner',
-    );
+    expect(siteText('planner.site'), contains(unsaved), reason: 'the planner');
     expect(find.textContaining('Current position'), findsNothing);
 
     AppRouter.router.go(AppRouter.welcome);

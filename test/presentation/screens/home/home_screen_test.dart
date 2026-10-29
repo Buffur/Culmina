@@ -466,12 +466,23 @@ void main() {
     final expectedDate = NightTimeFormatter.eveningDate(
       CalendarDate(2026, 9, 21),
     );
+    final identityNight = find.descendant(
+      of: find.byKey(const Key('planner.identity')),
+      matching: find.text('Night of $expectedDate'),
+    );
     await tester.scrollUntilVisible(
-      find.textContaining('Night of $expectedDate'),
+      identityNight,
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.textContaining('Night of $expectedDate'), findsOneWidget);
+    expect(identityNight, findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('planner.nightChoice')),
+        matching: find.text('Night of $expectedDate'),
+      ),
+      findsOneWidget,
+    );
     expect(find.textContaining('No site set'), findsNothing);
   });
 
