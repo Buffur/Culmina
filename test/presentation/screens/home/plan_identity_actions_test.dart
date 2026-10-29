@@ -119,7 +119,7 @@ void main() {
     ('field', Brightness.dark, true),
   ]) {
     testWidgets(
-      'Night dates stay on one line in secondary text at 100%: $theme',
+      'Night dates reflow without clipping in secondary text at 100%: $theme',
       (tester) async {
         tester.platformDispatcher.platformBrightnessTestValue = brightness;
         tester.platformDispatcher.textScaleFactorTestValue = 1;
@@ -140,11 +140,17 @@ void main() {
           final nightBounds = tester.getRect(night);
           final endsBounds = tester.getRect(ends);
           final identityBounds = tester.getRect(identity);
-          expect(nightBounds.top, endsBounds.top);
-          expect(
-            endsBounds.left - nightBounds.right,
-            closeTo(AppSpacing.itemGap, .01),
-          );
+          if (nightBounds.top == endsBounds.top) {
+            expect(
+              endsBounds.left - nightBounds.right,
+              closeTo(AppSpacing.itemGap, .01),
+            );
+          } else {
+            expect(
+              endsBounds.top - nightBounds.bottom,
+              closeTo(AppSpacing.xs, .01),
+            );
+          }
           expect(nightBounds.left, identityBounds.left);
           expect(endsBounds.right, lessThanOrEqualTo(identityBounds.right));
           final palette = AppPalette.of(tester.element(night));
@@ -154,14 +160,14 @@ void main() {
           );
           for (final f in [night, ends]) {
             final text = tester.widget<Text>(f);
-            expect(text.softWrap, isFalse);
-            expect(text.maxLines, 1);
+            expect(text.softWrap, isNot(false));
+            expect(text.maxLines, isNull);
             final paragraph = tester.renderObject<RenderParagraph>(f);
             expect(paragraph.didExceedMaxLines, isFalse);
             final boxes = paragraph.getBoxesForSelection(
               TextSelection(baseOffset: 0, extentOffset: text.data!.length),
             );
-            expect(boxes.map((b) => b.top).toSet(), hasLength(1));
+            expect(boxes, isNotEmpty);
           }
           final persistence = tester.getRect(
             find.byKey(const Key('planner.persistence')),
