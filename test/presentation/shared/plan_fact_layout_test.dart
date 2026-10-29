@@ -87,7 +87,8 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     var taps = 0;
-    const longValue = 'Довга назва місця спостережень: І і Ї ї Є є Ґ ґ';
+    const longValue =
+        '\u0414\u043e\u0432\u0433\u0430 \u043d\u0430\u0437\u0432\u0430 \u043c\u0456\u0441\u0446\u044f \u0441\u043f\u043e\u0441\u0442\u0435\u0440\u0435\u0436\u0435\u043d\u044c: \u0406 \u0456 \u0407 \u0457 \u0404 \u0454 \u0490 \u0491';
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.dark,
