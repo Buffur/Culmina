@@ -651,8 +651,9 @@ class _PlanIdentity extends StatelessWidget {
       container: true,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final dates = Row(
-            mainAxisSize: MainAxisSize.min,
+          final dates = Wrap(
+            spacing: AppSpacing.itemGap,
+            runSpacing: AppSpacing.xs,
             children: [
               Text(
                 evening == null
@@ -662,17 +663,12 @@ class _PlanIdentity extends StatelessWidget {
                   color: AppPalette.of(context).textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
-                maxLines: 1,
-                softWrap: false,
               ),
               if (evening != null) ...[
-                const SizedBox(width: AppSpacing.itemGap),
                 Text(
                   'Ends ${NightTimeFormatter.eveningDate(evening.addDays(1))}',
                   style: AppTextTheme.of(context).caption
                       .copyWith(color: AppPalette.of(context).textSecondary),
-                  maxLines: 1,
-                  softWrap: false,
                 ),
               ],
             ],
@@ -703,7 +699,7 @@ class _PlanIdentity extends StatelessWidget {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              dates,
+              Expanded(child: dates),
               const SizedBox(width: AppSpacing.itemGap),
               Expanded(
                 child: Align(alignment: Alignment.centerRight, child: state),

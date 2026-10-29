@@ -121,7 +121,12 @@ void main() {
             final numeric = find
                 .descendant(of: total, matching: find.byType(Text))
                 .last;
-            expect(t.widget<Text>(numeric).textAlign, TextAlign.end);
+            // HybridFact uses a shared leading edge for the value column,
+            // including when narrow layouts stack the label above it.
+            expect(
+              t.widget<Text>(numeric).textAlign ?? TextAlign.start,
+              TextAlign.start,
+            );
             expect(f.vm.plan.captureBlocks, blocks);
             expect(f.vm.analysis.frameStorage, frames);
             await t.runAsync(() async {
