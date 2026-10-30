@@ -4,6 +4,14 @@
 
 The target is a calm document-oriented Dark UI: neutral surfaces, strong but compact text hierarchy, growing content rows, restrained record containers and a readable blue action accent. Local Notion references guide visual grammar; Culmina retains its own scientific semantics, complete data, actions and states. Existing production skills remain authoritative for production work; D01 owner decisions authorize different After visual values and composition.
 
+## Current delivery and next stage
+
+F01 delivered 94 variables, 18 Geist text styles, 24 catalog sets and 417 variants on the [After Design System page](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=53-482), with three locked BEFORE copies in the [Before & After UI Lab](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=53-484). Figma authoring and Geist loading were verified through the supported Codex desktop input → Web Figma → Scripter route. This does not assert Figma MCP/server write access.
+
+Final structural audits passed. Visual coverage is 93/514 regions at 100%; 200% QA was excluded by the owner, and native checks were not performed. The owner accepted F01 with these recorded limits. See [WORKFLOW](WORKFLOW.md) for the authoritative final status and [QA checklist](qa_checklist.md) for stage-specific evidence and active future criteria.
+
+Next stage: **F02 — Tonight Pilot**, following the [Tonight contract](screens/tonight.md). AFTER pilot screens remain future work; task closure itself does not authorize F02 execution or Flutter migration.
+
 ## Read in order
 
 1. [Reference evidence and transformations](reference_mapping.md) — observations, exact pack indices and evidence limits.
@@ -14,7 +22,9 @@ The target is a calm document-oriented Dark UI: neutral surfaces, strong but com
 6. Pilot contracts: [Tonight](screens/tonight.md), [Plan](screens/plan.md), [Weather](screens/weather.md).
 7. [QA checklist](qa_checklist.md), [workflow record](WORKFLOW.md), [verification evidence](verification.json).
 
-## Scope and source boundary
+## Historical D01 — scope and source boundary
+
+The following observations describe D01 at its recorded baseline, before F01 construction. They are historical evidence, not current access or delivery status.
 
 Read-only source inspection on `develop`, HEAD `55d07528d4e6107bcd504bef632a869f2a85c434`. The pre-existing untracked [planning handoff](../../docs/PLANNING_CONTEXT_2026-10-30.md) was preserved. Its old UI Lab IDs and former visual restrictions are not current After authority.
 
@@ -28,11 +38,13 @@ Live Web Figma reads confirmed file **Culmina** and page **Dark · current scree
 | Plan | 002 · plan · Dark · Longread | 9:135698 | 375 × 2275 |
 | Weather | 005 · weather · Dark · Longread | 9:140569 | 375 × 2214 |
 
-Figma Plugin catalog inspection exposed metadata, design-context, screenshot, general use_figma and embedded-app opening actions. Their exposure does not prove usable authentication/quota. Following the stated MCP constraint, D01 did not invoke those server endpoints or attempt writes; source verification used the already open authenticated Web Figma. Read access is verified; future write capability remains untested.
+Figma Plugin catalog inspection exposed metadata, design-context, screenshot, general use_figma and embedded-app opening actions. Their exposure does not prove usable authentication/quota. Following the stated MCP constraint, D01 did not invoke those server endpoints or attempt writes; source verification used the already open authenticated Web Figma. At D01, read access was verified and write capability had not yet been tested. F01 subsequently verified authoring through the route recorded above.
 
 The main external evidence is the local notion.id LLM-ready pack documented in [reference_mapping](reference_mapping.md). Read collection README/QA_SUMMARY and Notion START_HERE/AI_DESIGN_SPEC/QA_REVIEW, with anatomy, clusters 01/03 and native detail panels 01–03. No new capture or regeneration was performed. Other packages were not used to blend visual directions.
 
-## Future F01 build specification — do not execute in D01
+## Historical D01 — original F01 build specification
+
+The instructions below preserve the original specification. F01 is now complete; they are not a request to restart it. Pilot composition and comparison criteria remain applicable to future authorized AFTER screens. The final F01 QA scope supersedes the original 200% requirement for F01 only.
 
 Create the page **After: Design System** with clearly labeled sections:
 
@@ -51,8 +63,8 @@ Name frames `<Pilot> / Before / Longread`, `<Pilot> / After V1 / Longread / AFTE
 
 F01 must check source nodes still exist and retain the recorded names/dimensions; report drift instead of silently substituting another baseline. It must check available Figma write tooling and Geist, then implement the already specified system and run static QA. This recheck is operational validation, not an invitation to reinvent the visual direction.
 
-## Coverage and readiness
+## Current coverage and readiness
 
-The catalog contains 24 proposed component contracts across three categories. Detailed evidence concerns three pilot longreads; full-file coverage is explicitly not claimed. Additional states are annotated as source-backed. Native behavior, font availability inside Figma, server write access, owner acceptance and Flutter migration approval are not established.
+The 24 component contracts have been constructed in Figma and F01 is owner-accepted. Its scoped structural and visual evidence is recorded in [WORKFLOW](WORKFLOW.md); full-file visual coverage and native behavior/accessibility are not established. The [QA checklist](qa_checklist.md) retains active parity, layout and scientific-data criteria for future AFTER screens.
 
-F01 has defined values, bindings, components, source nodes, layout instructions and a QA gate. It can start after its normal source/access/font check. If writes are unavailable, retain this contract and report the specific access gap; do not alter BEFORE through another mechanism.
+Documentation is ready for **F02 — Tonight Pilot**. Recheck the actual source fixture and operational authoring access when F02 is authorized; preserve BEFORE and shared dependencies. Flutter migration requires separate authorization and native verification.

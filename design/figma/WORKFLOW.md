@@ -13,6 +13,8 @@ Delivered revision: **AFTER-DARK-1.0** on the [After Design System page](https:/
 
 Final local evidence (machine-local, not included in Git): `build/figma-f01/continuation6-final-structural.executed.js`, `continuation6-structural-pass-native.jpg`, geometry V7/V8 executed scripts, and `v8r-100-0000.jpg` through `v8r-100-0092.jpg` where captured across continuations. Earlier continuation handoffs are historical checkpoints, not the final status.
 
+Next stage: **F02 — Tonight Pilot**, using the accepted AFTER-DARK-1.0 system and the [Tonight contract](screens/tonight.md). Documentation is ready for F02; execution requires its own task authorization. The [QA checklist](qa_checklist.md) keeps future AFTER-screen criteria active and separates Flutter migration checks. F03 scope remains for a later task.
+
 ## Historical workflow
 
 | Stage | Revision | Results | QA | Owner decision | Next action | Blockers / limits |
