@@ -121,6 +121,8 @@ Scale the record to the change; this adds no separate approval gate.
 
 ### Design authority and supporting tools
 
+For explicitly authorized Culmina After/Figma exploration, the [After router](.agents/skills/culmina-figma-after/SKILL.md) and [target contract](design/figma/TARGET_DESIGN_SYSTEM.md) govern the requested After scope. Production skills below still describe current UI semantics and APIs, but do not constrain authorized After visual values or composition. This exception does not authorize Flutter migration or changes to BEFORE/shared dependencies; apply the current task's theme and stage limits.
+
 The five `culmina-design-*` skills below are the only project design authorities
 for all UI code: screens, shared and composed widgets, scientific displays,
 dialogs, states and all three themes. Use the relevant skills during implementation;

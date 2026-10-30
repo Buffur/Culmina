@@ -1,0 +1,312 @@
+{
+  "revision": "AFTER-DARK-1.0",
+  "scope": "Document consistency, local source existence, textual owner/member checks and selected opaque color pairs; not Figma/native acceptance.",
+  "required_modules": 15,
+  "resolved_local_links": 191,
+  "tokens": 94,
+  "component_contracts": 24,
+  "external_evidence_paths": 11,
+  "contrast_pairs": [
+    {
+      "foreground": "AppPalette.textPrimary",
+      "background": "ThemeData.scaffoldBackgroundColor",
+      "ratio": 14.179,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textSecondary",
+      "background": "ThemeData.scaffoldBackgroundColor",
+      "ratio": 9.079,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textTertiary",
+      "background": "ThemeData.scaffoldBackgroundColor",
+      "ratio": 6.875,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.action",
+      "background": "ThemeData.scaffoldBackgroundColor",
+      "ratio": 7.675,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.controlBorder",
+      "background": "ThemeData.scaffoldBackgroundColor",
+      "ratio": 5.003,
+      "minimum": 3
+    },
+    {
+      "foreground": "ThemeData.focusColor",
+      "background": "ThemeData.scaffoldBackgroundColor",
+      "ratio": 10.784,
+      "minimum": 3
+    },
+    {
+      "foreground": "AppPalette.textPrimary",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 13.169,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textSecondary",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 8.432,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textTertiary",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 6.386,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.action",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 7.128,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.controlBorder",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 4.647,
+      "minimum": 3
+    },
+    {
+      "foreground": "ThemeData.focusColor",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 10.017,
+      "minimum": 3
+    },
+    {
+      "foreground": "AppPalette.textPrimary",
+      "background": "ThemeData.colorScheme.surfaceContainerHigh",
+      "ratio": 11.485,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textSecondary",
+      "background": "ThemeData.colorScheme.surfaceContainerHigh",
+      "ratio": 7.354,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textTertiary",
+      "background": "ThemeData.colorScheme.surfaceContainerHigh",
+      "ratio": 5.569,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.action",
+      "background": "ThemeData.colorScheme.surfaceContainerHigh",
+      "ratio": 6.217,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.controlBorder",
+      "background": "ThemeData.colorScheme.surfaceContainerHigh",
+      "ratio": 4.053,
+      "minimum": 3
+    },
+    {
+      "foreground": "ThemeData.focusColor",
+      "background": "ThemeData.colorScheme.surfaceContainerHigh",
+      "ratio": 8.736,
+      "minimum": 3
+    },
+    {
+      "foreground": "AppPalette.textPrimary",
+      "background": "ThemeData.hoverColor",
+      "ratio": 11.485,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textSecondary",
+      "background": "ThemeData.hoverColor",
+      "ratio": 7.354,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textTertiary",
+      "background": "ThemeData.hoverColor",
+      "ratio": 5.569,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.action",
+      "background": "ThemeData.hoverColor",
+      "ratio": 6.217,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.controlBorder",
+      "background": "ThemeData.hoverColor",
+      "ratio": 4.053,
+      "minimum": 3
+    },
+    {
+      "foreground": "ThemeData.focusColor",
+      "background": "ThemeData.hoverColor",
+      "ratio": 8.736,
+      "minimum": 3
+    },
+    {
+      "foreground": "AppPalette.textPrimary",
+      "background": "ThemeData.highlightColor",
+      "ratio": 9.898,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textSecondary",
+      "background": "ThemeData.highlightColor",
+      "ratio": 6.338,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textTertiary",
+      "background": "ThemeData.highlightColor",
+      "ratio": 4.8,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.action",
+      "background": "ThemeData.highlightColor",
+      "ratio": 5.358,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.controlBorder",
+      "background": "ThemeData.highlightColor",
+      "ratio": 3.493,
+      "minimum": 3
+    },
+    {
+      "foreground": "ThemeData.focusColor",
+      "background": "ThemeData.highlightColor",
+      "ratio": 7.529,
+      "minimum": 3
+    },
+    {
+      "foreground": "AppPalette.textPrimary",
+      "background": "HybridTokens.surfaceSunken",
+      "ratio": 15.146,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textSecondary",
+      "background": "HybridTokens.surfaceSunken",
+      "ratio": 9.698,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.textTertiary",
+      "background": "HybridTokens.surfaceSunken",
+      "ratio": 7.344,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.action",
+      "background": "HybridTokens.surfaceSunken",
+      "ratio": 8.198,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.controlBorder",
+      "background": "HybridTokens.surfaceSunken",
+      "ratio": 5.344,
+      "minimum": 3
+    },
+    {
+      "foreground": "ThemeData.focusColor",
+      "background": "HybridTokens.surfaceSunken",
+      "ratio": 11.52,
+      "minimum": 3
+    },
+    {
+      "foreground": "HybridTokens.onAction",
+      "background": "HybridTokens.action",
+      "ratio": 7.518,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "ThemeData.colorScheme.onSecondaryContainer",
+      "background": "ThemeData.colorScheme.secondaryContainer",
+      "ratio": 9.066,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.statusFits",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 7.839,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.statusTight",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 8.845,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.statusDoesNotFit",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 7.158,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.statusNoWindow",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 7.196,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.statusNeutral",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 8.432,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.stateUnsaved",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 8.845,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.stateSettled",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 7.839,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "AppPalette.stateQuiet",
+      "background": "AppPalette.surfaceRaised",
+      "ratio": 6.386,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.success",
+      "background": "HybridTokens.successWash",
+      "ratio": 6.425,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.caution",
+      "background": "HybridTokens.cautionWash",
+      "ratio": 7.273,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.errorText",
+      "background": "HybridTokens.errorWash",
+      "ratio": 6.095,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "HybridTokens.selectedHourText",
+      "background": "HybridTokens.selectedHourFill",
+      "ratio": 9.066,
+      "minimum": 4.5
+    }
+  ],
+  "errors": []
+}
