@@ -7,7 +7,7 @@ title: Culmina — Privacy policy
 *Effective 24 September 2026; updated 26 September 2026 ("Add from a photo"), 29 September
 2026 (backups include settings), 17 October 2026 (the new name and address, the position sent
 for the weather, the multi-night forecast, links you open) and 18 October 2026 (a suggested name
-for a new site, with place names on). Applies to Culmina for Android
+for a new site, with place names on) and 1 November 2026 (the contact address). Applies to Culmina for Android
 (`io.github.buffur.culmina`), and to its earlier builds named Astro Planner
 (`io.github.chacha12.astroplanner`).*
 
@@ -72,6 +72,6 @@ A change to this policy is published on this page with a new effective date.
 
 ## Contact
 
-Questions about this policy: **[zalubovskyi.vadym@gmail.com](mailto:zalubovskyi.vadym@gmail.com)**
+Questions about this policy: **[culmina.team@gmail.com](mailto:culmina.team@gmail.com)**
 
 Source code (GPL-3.0): <https://github.com/Buffur/Culmina>
