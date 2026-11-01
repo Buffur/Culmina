@@ -81,4 +81,4 @@ permission for the Google Play services location library. Target data is an adap
 and licence details are in the [repository](https://github.com/Buffur/Culmina).
 
 Questions about the app or this page:
-[culmina.team@gmail.com](mailto:culmina.team@gmail.com)
+[culmina.app@gmail.com](mailto:culmina.app@gmail.com)
