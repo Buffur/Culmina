@@ -1,7 +1,8 @@
 # Agent design authority and tooling
 
 Verified on 2026-10-28. This file records routing and local configuration evidence;
-it is not another design rule set. User instructions take precedence.
+it is not another design rule set. User instructions take precedence. The archive
+and `.codex/config.toml` it describes are local files, not tracked in Git.
 
 ## Source order
 

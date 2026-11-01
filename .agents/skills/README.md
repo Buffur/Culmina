@@ -18,6 +18,8 @@ Extend the relevant skill if guidance is missing.
 | [culmina-design-tokens](culmina-design-tokens/SKILL.md) | Semantic colors across Light, Dark and Field Red |
 | [culmina-design-typography](culmina-design-typography/SKILL.md) | Text roles, wrapping and readable measurements |
 
+The [After router](culmina-figma-after/SKILL.md) is separate: use it only when a task explicitly names Culmina After/Figma exploration (see [AGENTS](../../AGENTS.md)); it produces no production Flutter UI.
+
 ## Retained technical helpers
 
 These skills explain implementation and verification mechanics under the five

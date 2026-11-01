@@ -424,13 +424,3 @@ Path svgPath(String d) {
   }
   return path;
 }
-
-/// Kept for tests that compare an icon's drawn bounds.
-@visibleForTesting
-Rect hybridIconBounds(HybridIconData data) {
-  var r = Rect.zero;
-  for (final s in _SvgBody.parse(data).shapes) {
-    r = r.isEmpty ? s.path.getBounds() : r.expandToInclude(s.path.getBounds());
-  }
-  return r;
-}

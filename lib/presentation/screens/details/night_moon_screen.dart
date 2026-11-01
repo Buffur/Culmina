@@ -19,7 +19,6 @@ import '../../../core/theme/hybrid_view_entrance.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/moon_conditions.dart';
 import '../../../domain/models/night_timeline.dart';
-import '../../../domain/models/session_night.dart';
 import '../../shared/app_words.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/context_line.dart';
@@ -827,64 +826,6 @@ class _RevealViewedNightControl extends StatelessWidget {
     },
     child: child,
   );
-}
-
-/// "Night of Tue, Nov 10 · Ljubljana" for a detail's header (S6.5).
-String? detailContext(SessionNight? night, String? siteName) {
-  if (night == null) return null;
-  final date =
-      '${AppWords.nightOf} '
-      '${NightTimeFormatter.eveningDate(night.eveningDate)}';
-  return siteName == null ? date : '$date · $siteName';
-}
-
-/// The night in two lines (S6.5): the dark span at the user's limit, and
-/// when the Moon is up. Shared by the Night & Moon detail's summary and the
-/// planner's Night row; facts only.
-class NightSummary extends StatelessWidget {
-  const NightSummary({
-    super.key,
-    required this.night,
-    required this.dark,
-    required this.moon,
-    required this.zoneId,
-    this.words,
-    this.showMoon = true,
-  });
-
-  final SessionNight night;
-  final SunThresholdResult? dark;
-  final MoonConditions? moon;
-  final String? zoneId;
-  final bool showMoon;
-
-  /// Words the plan's night (F18 A6), e.g. "not tonight" for another night.
-  final String Function(String)? words;
-
-  @override
-  Widget build(BuildContext context) {
-    String at(DateTime utc) => NightTimeFormatter.instant(
-      context,
-      utc,
-      windowStartUtc: night.startUtc,
-      zoneId: zoneId,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (dark case final d?)
-          Text(
-            (words ?? (s) => s)(DarkText.span(d, at)),
-            key: const Key('nightSummary.dark'),
-          ),
-        if (showMoon && moon != null)
-          Text(
-            (words ?? (s) => s)(MoonText.up(moon!, at)),
-            key: const Key('nightSummary.moon'),
-          ),
-      ],
-    );
-  }
 }
 
 /// conditions.css `.condition-facts`: the label (13/1.4 secondary) with

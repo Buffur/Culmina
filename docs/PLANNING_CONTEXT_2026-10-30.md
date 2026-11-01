@@ -1,5 +1,7 @@
 # Culmina planning agent context
 
+> Historical handoff, valid at commit `55d07528`; it is not maintained. Machine-local paths and evidence it names (`C:\Users\zalub\.codex\...`, `build/planning-context-20261030/`) are not part of the repository.
+
 Prepared on 30 October 2026 for an agent that will plan subsequent work after inspecting the repository, external LLM UI references and existing Figma screens. The requested outcome is a plan; this handoff does not select a redesign or authorize implementing an experimental Figma variant.
 
 ## Workspace and current baseline

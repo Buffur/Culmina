@@ -35,6 +35,7 @@ The app does not control cameras or mounts.
 - `design/reference/`: consolidated design rules website, current application map, historical Atlas, shared assets and render evidence. Start at `design/reference/index.html`.
 - `design/reference/atlas/index.html`: historical Visual Atlas; manifest, boards and captures accompany it. `.audit/atlas/index.html` redirects here.
 - `.audit/` and `docs/archive/`: historical evidence; inspect as needed, preserve contents.
+  `docs/archive/` is local and gitignored: source comments that cite `docs/DECISIONS.md`, `docs/refinement/`, `docs/design/` or `docs/TECH_DEBT.md` point there, not to tracked files.
 - `.agents/skills/`: active project recipes; `.agents/rules/` holds compatibility pointers.
 
 ## Technical invariants
