@@ -5,8 +5,9 @@ title: Culmina — Privacy policy
 # Culmina — Privacy policy
 
 *Effective 24 September 2026; updated 26 September 2026 ("Add from a photo"), 29 September
-2026 (backups include settings) and 17 October 2026 (the new name and address, the position sent
-for the weather, the multi-night forecast, links you open). Applies to Culmina for Android
+2026 (backups include settings), 17 October 2026 (the new name and address, the position sent
+for the weather, the multi-night forecast, links you open) and 18 October 2026 (a suggested name
+for a new site, with place names on) and 1 November 2026 (the contact address). Applies to Culmina for Android
 (`io.github.buffur.culmina`), and to its earlier builds named Astro Planner
 (`io.github.chacha12.astroplanner`).*
 
@@ -48,9 +49,9 @@ any internet request does.
 
 | Service | When | What it receives |
 | --- | --- | --- |
-| **Open-Meteo** (open-meteo.com), weather forecasts | when a forecast is loaded or refreshed: for a night you plan, or for the overview of the coming nights (up to 16 days ahead) | the latitude and longitude of the saved site, or of a position you chose but did not save (a point picked on the map or your current position), as precise as the app holds it; and the hours requested. Open-Meteo states that it keeps IP addresses in server logs for 90 days, not linked to identities ([terms](https://open-meteo.com/en/terms)). |
+| **Open-Meteo** (open-meteo.com), weather forecasts | when a forecast is loaded or refreshed: for a night you plan, or for the overview of the coming nights (up to 16 days ahead) | the latitude and longitude of the saved site, or of a position you chose but did not save (a point picked on the map or your current position), as precise as the app holds it; one request asks for the whole 16-day forecast in UTC. Open-Meteo states that it keeps IP addresses in server logs for 90 days, not linked to identities ([terms](https://open-meteo.com/en/terms)). |
 | **OpenStreetMap tile servers** (tile.openstreetmap.org), map images | while you look at the map to pick a position | the map tiles for the area on screen ([policy](https://operations.osmfoundation.org/policies/tiles/), [privacy](https://osmfoundation.org/wiki/Privacy_Policy)) |
-| **OpenStreetMap Nominatim** (nominatim.openstreetmap.org), place names | **only if you switch on "Look up place names" in Settings** (off by default) | the chosen position, rounded to about 1 km ([policy](https://operations.osmfoundation.org/policies/nominatim/), [privacy](https://osmfoundation.org/wiki/Privacy_Policy)) |
+| **OpenStreetMap Nominatim** (nominatim.openstreetmap.org), place names | **only if you switch on "Look up place names"** (off by default), in Settings or from the site editor's offer after "Use current position" | the chosen position, rounded to about 1 km: the position in use, or the position "Use current position" put into a new site's form, to suggest its name ([policy](https://operations.osmfoundation.org/policies/nominatim/), [privacy](https://osmfoundation.org/wiki/Privacy_Policy)) |
 
 Links you open yourself (the light-pollution map at lightpollutionmap.app, which receives the
 site's or the typed coordinates in the link; the Clear Outside forecast at clearoutside.com, for
@@ -71,6 +72,6 @@ A change to this policy is published on this page with a new effective date.
 
 ## Contact
 
-Questions about this policy: **[zalubovskyi.vadym@gmail.com](mailto:zalubovskyi.vadym@gmail.com)**
+Questions about this policy: **[culmina.team@gmail.com](mailto:culmina.team@gmail.com)**
 
 Source code (GPL-3.0): <https://github.com/Buffur/Culmina>
