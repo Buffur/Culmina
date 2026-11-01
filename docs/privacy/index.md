@@ -72,6 +72,6 @@ A change to this policy is published on this page with a new effective date.
 
 ## Contact
 
-Questions about this policy: **[culmina.team@gmail.com](mailto:culmina.team@gmail.com)**
+Questions about this policy: **[culmina.app@gmail.com](mailto:culmina.app@gmail.com)**
 
 Source code (GPL-3.0): <https://github.com/Buffur/Culmina>
