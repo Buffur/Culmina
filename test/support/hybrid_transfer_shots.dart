@@ -486,15 +486,18 @@ final Map<String, HybridStep> hybridShots = {
   'settings': (c) => c.go(AppRouter.settings),
   'plan_editor': (c) async {
     await c.push(AppRouter.session());
+    await c.tapKey('capture.menu.0');
     await c.tapKey('capture.edit.0');
   },
   'plan_editor_bottom': (c) async {
     await c.push(AppRouter.session());
+    await c.tapKey('capture.menu.0');
     await c.tapKey('capture.edit.0');
     await c.scrollBy(2000, key: 'blockEditor.scroll');
   },
   'plan_editor_dialog': (c) async {
     await c.push(AppRouter.session());
+    await c.tapKey('capture.menu.0');
     await c.tapKey('capture.edit.0');
     await c.tester.enterText(find.byKey(const Key('blockDialog.count')), '121');
     await c.settle();

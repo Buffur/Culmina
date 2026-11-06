@@ -127,8 +127,18 @@ void main() {
         );
         expect(gradle, isNot(contains(RegExp('$key\\s*=\\s*"'))));
       }
-      // The debug key is only the fallback when key.properties is absent.
+      // Release packaging fails closed; local debug builds need no key.
       expect(gradle, contains('if (hasUploadKey)'));
+      expect(gradle, isNot(contains('signingConfigs.getByName("debug")')));
+      expect(gradle, contains('dependsOn(requireReleaseSigning)'));
+      for (final task in [
+        'validateSigningRelease',
+        'packageRelease',
+        'packageReleaseBundle',
+      ]) {
+        expect(gradle, contains('"$task"'));
+      }
+      expect(gradle, contains('CN=Android Debug'));
     });
 
     test('the version is "x.y.z+code" with a positive version code', () {

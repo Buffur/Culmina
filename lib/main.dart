@@ -59,7 +59,7 @@ import 'presentation/screens/startup/unsupported_database_screen.dart';
 import 'presentation/widgets/night_clock.dart';
 import 'core/config/app_identity.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppFontLicenses.register();
   // TASK 8.2: the target catalog's CC BY-SA 4.0 notice in the licence page.
@@ -92,7 +92,7 @@ Future<void> _start({bool animate = true}) async {
       animate: animate,
       splashGone: animate ? _launch?.splashGone : null,
       onShown: () => unawaited(_launch?.appShown()),
-      initialize: _initialize,
+      initialize: initializeApplication,
     ),
   );
 }
@@ -115,7 +115,8 @@ Future<LaunchLook> _launchLook() async {
 
 /// Opens the database and prepares the app; completes with its root widget
 /// (the app, or the recovery screen for a database this build refuses).
-Future<Widget> _initialize() async {
+@visibleForTesting
+Future<Widget> initializeApplication() async {
   // F01 (TASK 14.4, D7 A): a confirmed restore is staged and the app
   // restarts at once; the staged database is checked again and replaces the
   // live one before it opens, and an interrupted restore is completed. The
@@ -134,6 +135,9 @@ Future<Widget> _initialize() async {
       error: e,
       stackTrace: s,
     );
+    // LaunchGate owns the retry. Never open writable storage while a
+    // restore or its rollback may still have an unresolved journal.
+    rethrow;
   }
   final database = AppDatabase();
 

@@ -13,7 +13,6 @@ import '../shared/plan_night_phrase.dart';
 import '../shared/app_words.dart';
 import '../shared/change_mark.dart';
 import '../shared/failure_feedback.dart';
-import '../shared/night_text.dart';
 import '../shared/night_time_formatter.dart';
 import '../shared/status_block.dart';
 import '../viewmodels/capture_analysis_viewmodel.dart';
@@ -105,9 +104,6 @@ class PlanStatus extends StatelessWidget {
     final end = fit.endUtc;
     final action = missing?.action;
     final palette = AppPalette.of(context);
-    final body = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading);
-    final verdict = StatusBlock.headline(state, missing: missing?.headline);
     final zoneId = site.displayZoneId;
     String captureEnd(DateTime utc) {
       final wall = NightTimeFormatter.wallClock(utc, zoneId: zoneId);
@@ -136,76 +132,19 @@ class PlanStatus extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Semantics(
-              header: true,
-              label: 'Imaging-window fit: $verdict',
-              excludeSemantics: true,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.xs),
-                    child: Icon(
-                      state == FitState.needsInput ||
-                              state == FitState.nothingToFit
-                          ? Icons.info_outline
-                          : state == FitState.fits || state == FitState.tight
-                          ? Icons.check
-                          : Icons.close,
-                      size: MediaQuery.textScalerOf(context).scale(22),
-                      color: FitText.color(
-                        state,
-                        Theme.of(context).colorScheme,
-                        palette,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      verdict,
-                      key: const Key('status.headline'),
-                      style: AppTextTheme.of(context)
-                          .resolve(
-                            AppTextTheme.of(context).screenTitle,
-                            AppTextGeometry.compactHeading,
-                          )
-                          .copyWith(
-                            color: FitText.color(
-                              state,
-                              Theme.of(context).colorScheme,
-                              palette,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (measured) ...[
-              const SizedBox(height: 2),
-              Text(
-                'Needed in imaging window: '
-                '${QuantityText.budgetDuration(Duration(milliseconds: fit.windowLoadMs))}',
-                key: const Key('status.number.Needed in imaging window'),
-                style: body.copyWith(color: palette.textPrimary),
-              ),
-              if (fit.availableMs > 0)
-                Text(
-                  '${QuantityText.budgetDuration(Duration(milliseconds: fit.availableMs))} usable',
-                  key: const Key('status.number.Usable'),
-                  style: body.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: palette.textSecondary,
-                  ),
-                ),
-            ],
-            const SizedBox(height: 6),
-            // TD-075: a missing input's own reason, else the fit's.
-            Text(
-              words(missing?.reason ?? fit.reason),
-              key: const Key('status.reason'),
-              style: body.copyWith(color: palette.textSecondary),
+            StatusBlock(
+              state: state,
+              missing: missing?.headline,
+              needed: measured
+                  ? Duration(milliseconds: fit.windowLoadMs)
+                  : null,
+              usable: measured && fit.availableMs > 0
+                  ? Duration(milliseconds: fit.availableMs)
+                  : null,
+              separateFigures: true,
+              figuresBeforeReason: true,
+              headingStyle: AppTextTheme.of(context).screenTitle,
+              reason: words(missing?.reason ?? fit.reason),
             ),
             if (missing == null &&
                 end != null &&
@@ -216,7 +155,8 @@ class PlanStatus extends StatelessWidget {
               Text(
                 'Capture end: ${captureEnd(end)}.',
                 key: const Key('status.number.Capture ends'),
-                style: body.copyWith(color: palette.textSecondary),
+                style: AppTextTheme.of(context).caption
+                    .copyWith(color: palette.textSecondary),
               ),
             ],
             if (action != null) ...[
@@ -271,16 +211,27 @@ class FillWindowAction extends StatelessWidget {
     }
     if (target == block.frameCount) return const SizedBox.shrink();
     final trim = target < block.frameCount;
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: OutlinedButton.icon(
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
         key: const Key('capturePlan.fillWindow'),
-        icon: Icon(trim ? Icons.content_cut : Icons.open_in_full),
-        label: Text(
-          words(
-            trim
-                ? 'Trim $label to $target frames to fit tonight'
-                : 'Fill tonight\'s window: $label × $target',
+        style: OutlinedButton.styleFrom(
+          alignment: AlignmentDirectional.centerStart,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(trim ? 'Trim to fit' : 'Fill the window'),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                '${NightTimeFormatter.eveningDate(plan.eveningDate ?? plan.tonightKey)}'
+                ' · $label · $target frames',
+                style: AppTextTheme.of(context).caption
+                    .copyWith(color: AppPalette.of(context).textSecondary),
+              ),
+            ],
           ),
         ),
         onPressed: () => runWithFeedback(

@@ -1,6 +1,6 @@
 # Rules and constraints
 
-Revision: AFTER-DARK-1.0. These rules are binding for explicitly requested After artifacts. They do not retroactively modify the production UI. Owner decisions in D01 permit new visual composition and values while preserving product meaning.
+Revision: AFTER-DARK-1.2. These rules are binding for explicitly requested After artifacts. They do not retroactively modify the production UI. Owner decisions in D01 permit new visual composition and values while preserving product meaning.
 
 ## Control semantics
 
@@ -22,6 +22,14 @@ Do not use decorative status chips for everything, replace labeled actions with 
 
 ## BEFORE protection and parity
 
+### Functional preservation — owner correction, 2026-11-05
+
+Before composing or reviewing each After screen, inspect the complete corresponding BEFORE reference alongside the current source. Record its meaningful blocks, visualizations, information coverage, controls and actions, then map each to the After result. Protecting immutable BEFORE nodes is not enough: preserve the capabilities they demonstrate. Code-backed responsive fallbacks and external design references do not by themselves authorize reducing those capabilities.
+
+When the owner questions whether a block is needed, apply the [Step 4 UX exploration gate](REDESIGN_STRATEGY.md#ux-exploration--structural-alternatives-extension-of-step-4-gate): propose structural alternatives before editing the screen. Routine visual QA remains directly executable under that rule's exception.
+
+Visual simplification must retain the user's ability to see, compare and act on the same information. For example, Moon's month calendar provides a full-month overview of phase and moon-free dark time plus month navigation and day selection; a seven-day list is not an equivalent replacement. Adapt the enclosing block or component geometry before dropping this overview. If equivalence or a tradeoff is doubtful, explain the concrete loss and ask the owner before committing the replacement. Record unresolved parity gaps explicitly; do not report a screen complete while a required capability is missing. Actual source discrepancies remain documented rather than silently copied or discarded.
+
 The three source nodes listed in [screen contracts](TARGET_DESIGN_SYSTEM.md) are frozen comparison baselines. Do not edit, reparent, rename, resize, relink or delete them. Do not edit a variable, style, component, vector asset or font binding used by BEFORE. Create independent After resources; a duplicated comparison reference must remain clearly labeled as a copy of the immutable source, never a replacement baseline.
 
 Keep exact fixture content, selected night/site/target/rig, known/unknown values and actions during paired comparisons. Do not “fix” stale timestamps or apparent inconsistencies in a frozen fixture. Record them separately. Current source clarifies invisible behavior; visible source-code differences must stay in a discrepancy note.
@@ -41,6 +49,6 @@ Keep exact fixture content, selected night/site/target/rig, known/unknown values
 
 ## Change control
 
-A local screen/component deviation is not allowed without updating the owning module, the reference transformation and revision record together. V1/V2 use AFTER-DARK-1.0 unless a named experimental revision states the exact difference. Do not create an untracked per-screen palette, text scale or component fork.
+A local screen/component deviation is not allowed without updating the owning module, the reference transformation and revision record together. V1/V2 use AFTER-DARK-1.2 unless a named experimental revision states the exact difference. Do not create an untracked per-screen palette, text scale or component fork.
 
 Light and Field Red are deferred. This does not authorize changing or breaking those production themes. Native accessibility and implementation checks occur in a separately authorized migration.

@@ -73,6 +73,10 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
       "homeTarget": AppTypography.homeTarget,
       "homeWordmark": AppTypography.homeWordmark,
       "homeWelcome": AppTypography.homeWelcome,
+      "nestedTitle": AppTypography.itemTitle,
+      "actionLabel": AppTypography.rowTitle.copyWith(
+        fontWeight: FontWeight.w600,
+      ),
       "inherited": const TextStyle(),
     },
     {
@@ -127,6 +131,44 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
     },
   );
 
+  /// Current After resolver removes legacy local numeric overrides in Dark.
+  static final afterDark = AppTextTheme._(AppTypography.afterDarkRoles, {
+    ...standard._geometry,
+    for (final geometry in AppTextGeometry.values)
+      if (_afterRole(geometry) case final role?)
+        geometry: AppTypography.afterDarkRoles[role]!,
+    AppTextGeometry.compact: const TextStyle(),
+  });
+
+  static String? _afterRole(AppTextGeometry geometry) => switch (geometry) {
+    AppTextGeometry.answer ||
+    AppTextGeometry.answerNeutralTracking => 'answerHeading',
+    AppTextGeometry.fitVerdict => 'nestedTitle',
+    AppTextGeometry.fitValue => 'value',
+    AppTextGeometry.fitMeasure ||
+    AppTextGeometry.explanatory ||
+    AppTextGeometry.contextCaption ||
+    AppTextGeometry.timelineDate ||
+    AppTextGeometry.badge ||
+    AppTextGeometry.tableValue ||
+    AppTextGeometry.calendarCell => 'caption',
+    AppTextGeometry.fitExplanation ||
+    AppTextGeometry.weatherDescription ||
+    AppTextGeometry.reading ||
+    AppTextGeometry.supporting => 'body',
+    AppTextGeometry.formLabel || AppTextGeometry.standard => 'rowTitle',
+    AppTextGeometry.chartLabel ||
+    AppTextGeometry.chartCaption ||
+    AppTextGeometry.calendarCaption => 'dense',
+    AppTextGeometry.calendarHeading ||
+    AppTextGeometry.compactHeading ||
+    AppTextGeometry.summaryTitle ||
+    AppTextGeometry.dialogTitle => 'screenTitle',
+    _ => null,
+  };
+
+  TextStyle get nestedTitle => _roles['nestedTitle']!;
+  TextStyle get actionLabel => _roles['actionLabel']!;
   TextStyle get support => _roles["support"]!;
   TextStyle get nightHeading => _roles["nightHeading"]!;
   TextStyle get answerHeading => _roles["answerHeading"]!;
@@ -172,6 +214,8 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
     TextStyle? homeTarget,
     TextStyle? homeWordmark,
     TextStyle? homeWelcome,
+    TextStyle? nestedTitle,
+    TextStyle? actionLabel,
     TextStyle? inherited,
     Map<AppTextGeometry, TextStyle>? geometry,
   }) => AppTextTheme._(
@@ -194,6 +238,8 @@ class AppTextTheme extends ThemeExtension<AppTextTheme> {
       'homeTarget': homeTarget ?? this.homeTarget,
       'homeWordmark': homeWordmark ?? this.homeWordmark,
       'homeWelcome': homeWelcome ?? this.homeWelcome,
+      'nestedTitle': nestedTitle ?? this.nestedTitle,
+      'actionLabel': actionLabel ?? this.actionLabel,
       'inherited': inherited ?? this.inherited,
     },
     {..._geometry, ...?geometry},

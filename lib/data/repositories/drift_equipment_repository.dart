@@ -142,6 +142,7 @@ class DriftEquipmentRepository
 
   @override
   Future<int> insertEquipment(domain.EquipmentProfile profile) async {
+    profile.validateForPersistence();
     return await _db.transaction(() async {
       final deviceId = await _db
           .into(_db.devices)
@@ -280,6 +281,7 @@ class DriftEquipmentRepository
 
   @override
   Future<void> updateEquipment(domain.EquipmentProfile profile) async {
+    profile.validateForPersistence();
     await _db.transaction(() async {
       final rig = await (_db.select(
         _db.opticalRigs,

@@ -91,7 +91,15 @@ while camera/device references restrict deletion.
 SharedPreferences stores planning/display/privacy/first-run preferences,
 planner selection state and weather snapshots.
 `FileBackupService` and `BackupStaging` validate and stage local restore;
-startup applies it before opening the live database.
+startup applies it before opening the live database. An unresolved restore or
+rollback error stops bootstrap in the existing launch Retry state. The journal
+retains the preference snapshot and a terminal marker, so an interrupted cleanup
+does not reapply settings after the data has committed.
+
+Equipment repository saves validate finite, positive physical quantities and
+the focal length/diameter/ratio relationship before any row is written. These
+storage invariants do not turn editor plausibility warnings or independently
+sourced sensor dimensions into additional save restrictions.
 
 ## External adapters and dependencies
 

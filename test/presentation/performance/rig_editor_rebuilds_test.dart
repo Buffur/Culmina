@@ -91,6 +91,8 @@ void main() {
       'the derived sensor size', (tester) async {
     await _open(tester);
     final field = find.byKey(const Key('equipmentEditor.pixelSize'));
+    await tester.ensureVisible(field);
+    await tester.pumpAndSettle();
     await tester.tap(field);
     await tester.pump();
     final counts = await _rebuilds(() async {
@@ -107,6 +109,8 @@ void main() {
   ) async {
     await _open(tester);
     final field = fieldLabeled('Rig name');
+    await tester.ensureVisible(field);
+    await tester.pumpAndSettle();
     await tester.tap(field);
     await tester.pump();
     final counts = await _rebuilds(() async {

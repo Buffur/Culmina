@@ -65,10 +65,12 @@ class OpportunityWeather {
     required this.snapshot,
     required this.age,
     required this.dewMarginC,
+    this.refreshFailed = false,
   });
 
   final WeatherSnapshot snapshot;
   final WeatherAge age;
+  final bool refreshFailed;
 
   /// `PlanningPreferences.dewMarginC`, °C.
   final double dewMarginC;
@@ -337,6 +339,7 @@ abstract final class ImagingOpportunityCalculator {
       }
       weatherNote = WeatherWindowAnnotation(
         age: weather.age,
+        refreshFailed: weather.refreshFailed,
         hours: keys.length,
         hoursWithoutForecast: missing,
         cloudMinPct: lo,

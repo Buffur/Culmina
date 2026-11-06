@@ -17,6 +17,7 @@ class BlockField extends StatelessWidget {
     this.hint,
     this.note,
     this.noteKey,
+    this.noteStyle,
   });
 
   final String label;
@@ -28,6 +29,7 @@ class BlockField extends StatelessWidget {
   /// Where the value came from (`.field-source`), under the field.
   final String? note;
   final Key? noteKey;
+  final TextStyle? noteStyle;
 
   // plan.css `.block-input` gap 4; the label 13/1.5, the hint and the
   // source 13 (hybrid-refinement.css) at 1.55 and 1.5, all secondary.
@@ -41,11 +43,22 @@ class BlockField extends StatelessWidget {
         ExcludeSemantics(
           child: Text(
             label,
-            style: AppTextTheme.of(context).caption.copyWith(color: secondary),
+            style: AppTextTheme.of(context).rowTitle.copyWith(color: secondary),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
         Semantics(label: label, hint: hint, child: child),
+        if (note != null)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.xs),
+            child: Text(
+              note!,
+              key: noteKey,
+              style: (noteStyle ?? AppTextTheme.of(context).caption).copyWith(
+                color: secondary,
+              ),
+            ),
+          ),
         if (hint != null)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xs),
@@ -55,20 +68,10 @@ class BlockField extends StatelessWidget {
                 style: AppTextTheme.of(context)
                     .resolve(
                       AppTextTheme.of(context).caption,
-                      AppTextGeometry.supporting,
+                      AppTextGeometry.compact,
                     )
                     .copyWith(color: secondary),
               ),
-            ),
-          ),
-        if (note != null)
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: Text(
-              note!,
-              key: noteKey,
-              style: AppTextTheme.of(context).caption
-                  .copyWith(color: secondary),
             ),
           ),
       ],
@@ -94,6 +97,7 @@ class HybridSegmented<T> extends StatelessWidget {
     this.radioSize = 18,
     this.radioGap = 10,
     this.stackLargeText = false,
+    this.stacked = false,
   });
 
   /// Settings' choices (settings.css `.settings-view .segmented`): 16 apart
@@ -112,7 +116,8 @@ class HybridSegmented<T> extends StatelessWidget {
        runGap = 4,
        radioSize = 24,
        radioGap = 12,
-       stackLargeText = true;
+       stackLargeText = true,
+       stacked = true;
 
   final String legend;
 
@@ -127,6 +132,7 @@ class HybridSegmented<T> extends StatelessWidget {
   final double radioSize;
   final double radioGap;
   final bool stackLargeText;
+  final bool stacked;
 
   /// Each option: its value, its label, and the suffix of its key
   /// (`'$keyPrefix.$suffix'`).
@@ -160,98 +166,117 @@ class HybridSegmented<T> extends StatelessWidget {
                 legend,
                 style:
                     legendStyle ??
-                    AppTextTheme.of(context)
-                        .resolve(
-                          theme.textTheme.bodySmall,
-                          AppTextGeometry.contextCaption,
-                        )
-                        .copyWith(color: palette.textSecondary),
+                    (stacked
+                        ? AppTextTheme.of(context).rowTitle
+                        : AppTextTheme.of(context)
+                              .resolve(
+                                theme.textTheme.bodySmall,
+                                AppTextGeometry.contextCaption,
+                              )
+                              .copyWith(color: palette.textSecondary)),
               ),
             ),
             SizedBox(height: legendStyle == null ? _gap : 4),
           ],
-          LayoutBuilder(
-            builder: (context, constraints) {
-              // CSS `flex: 1 1 auto; min-width: 72px` in a wrapping row:
-              // each choice's base is its content (the selected one's
-              // label at 600); a line takes choices while they fit, and its
-              // free space is shared equally.
-              final max = constraints.maxWidth;
-              final bases = [
-                for (final (option, label, _) in options)
-                  () {
-                    final painter = TextPainter(
-                      text: TextSpan(
-                        text: label,
-                        style: labelStyle.copyWith(
-                          fontWeight: option == value ? FontWeight.w600 : null,
+          if (stacked)
+            for (final (option, label, suffix) in options)
+              _Choice(
+                key: Key('$keyPrefix.$suffix'),
+                label: label,
+                selected: option == value,
+                selection: selection,
+                border: palette.controlBorder,
+                style: labelStyle,
+                radioSize: 24,
+                radioGap: 8,
+                plain: true,
+                onTap: () => onChanged(option),
+              )
+          else
+            LayoutBuilder(
+              builder: (context, constraints) {
+                // CSS `flex: 1 1 auto; min-width: 72px` in a wrapping row:
+                // each choice's base is its content (the selected one's
+                // label at 600); a line takes choices while they fit, and its
+                // free space is shared equally.
+                final max = constraints.maxWidth;
+                final bases = [
+                  for (final (option, label, _) in options)
+                    () {
+                      final painter = TextPainter(
+                        text: TextSpan(
+                          text: label,
+                          style: labelStyle.copyWith(
+                            fontWeight: option == value
+                                ? FontWeight.w600
+                                : null,
+                          ),
+                        ),
+                        textDirection: Directionality.of(context),
+                        textScaler: scaler,
+                        maxLines: 1,
+                      )..layout();
+                      // Radio, its gap, padding 2 × 12, border 2.
+                      final w = painter.width + radioSize + radioGap + 24 + 2;
+                      painter.dispose();
+                      return w < 72.0 ? 72.0 : (w > max ? max : w);
+                    }(),
+                ];
+                final rows = <List<int>>[];
+                var used = 0.0;
+                final stack = stackLargeText && scaler.scale(1) >= 1.5;
+                for (var i = 0; i < options.length; i++) {
+                  final extra = (rows.isEmpty || rows.last.isEmpty ? 0 : gap);
+                  if (rows.isEmpty ||
+                      stack ||
+                      used + extra + bases[i] > max + 0.01) {
+                    rows.add([i]);
+                    used = bases[i];
+                  } else {
+                    rows.last.add(i);
+                    used += extra + bases[i];
+                  }
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: runGap,
+                  children: [
+                    for (final row in rows)
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: gap,
+                          children: [
+                            for (final i in row)
+                              SizedBox(
+                                width:
+                                    bases[i] +
+                                    (max -
+                                            gap * (row.length - 1) -
+                                            row.fold(
+                                              0.0,
+                                              (s, j) => s + bases[j],
+                                            )) /
+                                        row.length,
+                                child: _Choice(
+                                  key: Key('$keyPrefix.${options[i].$3}'),
+                                  label: options[i].$2,
+                                  selected: options[i].$1 == value,
+                                  selection: selection,
+                                  border: palette.controlBorder,
+                                  style: labelStyle,
+                                  radioSize: radioSize,
+                                  radioGap: radioGap,
+                                  onTap: () => onChanged(options[i].$1),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                      textDirection: Directionality.of(context),
-                      textScaler: scaler,
-                      maxLines: 1,
-                    )..layout();
-                    // Radio, its gap, padding 2 × 12, border 2.
-                    final w = painter.width + radioSize + radioGap + 24 + 2;
-                    painter.dispose();
-                    return w < 72.0 ? 72.0 : (w > max ? max : w);
-                  }(),
-              ];
-              final rows = <List<int>>[];
-              var used = 0.0;
-              final stack = stackLargeText && scaler.scale(1) >= 1.5;
-              for (var i = 0; i < options.length; i++) {
-                final extra = (rows.isEmpty || rows.last.isEmpty ? 0 : gap);
-                if (rows.isEmpty ||
-                    stack ||
-                    used + extra + bases[i] > max + 0.01) {
-                  rows.add([i]);
-                  used = bases[i];
-                } else {
-                  rows.last.add(i);
-                  used += extra + bases[i];
-                }
-              }
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                spacing: runGap,
-                children: [
-                  for (final row in rows)
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: gap,
-                        children: [
-                          for (final i in row)
-                            SizedBox(
-                              width:
-                                  bases[i] +
-                                  (max -
-                                          gap * (row.length - 1) -
-                                          row.fold(
-                                            0.0,
-                                            (s, j) => s + bases[j],
-                                          )) /
-                                      row.length,
-                              child: _Choice(
-                                key: Key('$keyPrefix.${options[i].$3}'),
-                                label: options[i].$2,
-                                selected: options[i].$1 == value,
-                                selection: selection,
-                                border: palette.controlBorder,
-                                style: labelStyle,
-                                radioSize: radioSize,
-                                radioGap: radioGap,
-                                onTap: () => onChanged(options[i].$1),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
+                  ],
+                );
+              },
+            ),
         ],
       ),
     );
@@ -269,10 +294,12 @@ class _Choice extends StatelessWidget {
     required this.onTap,
     required this.radioSize,
     required this.radioGap,
+    this.plain = false,
   });
 
   final double radioSize;
   final double radioGap;
+  final bool plain;
   final String label;
   final bool selected;
   final Color selection;
@@ -286,22 +313,27 @@ class _Choice extends StatelessWidget {
       inMutuallyExclusiveGroup: true,
       checked: selected,
       child: Material(
-        color: selected ? selection : HybridTokens.transparent,
+        color: !plain && selected ? selection : HybridTokens.transparent,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: border),
+          side: plain ? BorderSide.none : BorderSide(color: border),
           borderRadius: BorderRadius.circular(6),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(6),
           onTap: onTap,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: HybridTokens.minTarget,
+            constraints: BoxConstraints(
+              minHeight: plain ? 56 : HybridTokens.minTarget,
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: plain ? 8 : 12,
+                vertical: 8,
+              ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: plain
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.center,
                 children: [
                   HybridRadio(checked: selected, size: radioSize),
                   SizedBox(width: radioGap),
@@ -309,7 +341,7 @@ class _Choice extends StatelessWidget {
                     child: Text(
                       label,
                       style: style?.copyWith(
-                        fontWeight: selected ? FontWeight.w600 : null,
+                        fontWeight: !plain && selected ? FontWeight.w600 : null,
                       ),
                     ),
                   ),

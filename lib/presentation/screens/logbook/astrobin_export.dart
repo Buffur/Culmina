@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../domain/services/astrobin_acquisitions.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/confirmation_patterns.dart';
+import '../../shared/content_states.dart';
+import '../../shared/section_card.dart';
 import '../../viewmodels/astrobin_export_viewmodel.dart';
 import 'logbook_screen.dart' show entryTitle;
 
@@ -57,7 +60,7 @@ class _Preview extends StatelessWidget {
   Widget build(BuildContext context) {
     final a = export;
     final theme = Theme.of(context);
-    return AlertDialog(
+    return ConfirmationDialog(
       key: const Key('astrobin.preview'),
       title: const Text('Export for AstroBin'),
       content: SingleChildScrollView(
@@ -72,8 +75,8 @@ class _Preview extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             if (a.rows.isEmpty)
-              const Text(
-                'Nothing to export: no entry has recorded frames.',
+              const EmptyState(
+                title: 'Nothing to export: no entry has recorded frames.',
                 key: Key('astrobin.empty'),
               )
             else ...[
@@ -81,8 +84,12 @@ class _Preview extends StatelessWidget {
                 "Rows, in the file's order",
                 style: theme.textTheme.titleSmall,
               ),
-              for (final (i, line) in a.rowLines.indexed)
-                Text(line, key: Key('astrobin.row.$i')),
+              SectionCard(
+                children: [
+                  for (final (i, line) in a.rowLines.indexed)
+                    Text(line, key: Key('astrobin.row.$i')),
+                ],
+              ),
             ],
             if (a.skipped.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.md),

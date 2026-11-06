@@ -352,4 +352,43 @@ class EquipmentProfile {
   /// never reinterpreted (ADR-011 §6).
   bool get needsApertureReview =>
       focalRatio > EquipmentLimits.reviewFocalRatioAbove;
+
+  /// Storage invariants, distinct from the editor's plausibility ranges.
+  /// Legacy positive values and independently sourced sensor dimensions
+  /// remain valid; an unknown optional value remains null.
+  void validateForPersistence() {
+    void positive(String field, num value) {
+      if (!value.isFinite || value <= 0) {
+        throw ArgumentError.value(value, field, 'must be finite and positive');
+      }
+    }
+
+    if (name.trim().isEmpty) {
+      throw ArgumentError.value(name, 'name', 'must not be empty');
+    }
+    for (final (field, value) in [
+      ('sensorWidthMm', sensorWidthMm),
+      ('sensorHeightMm', sensorHeightMm),
+      ('pixelPitchUm', pixelPitchUm),
+      ('resolutionWidthPx', resolutionWidthPx),
+      ('resolutionHeightPx', resolutionHeightPx),
+      ('focalLengthMm', focalLengthMm),
+      ('focalRatio', focalRatio),
+      if (apertureDiameterMm != null)
+        ('apertureDiameterMm', apertureDiameterMm!),
+      if (averageRawFileSizeMB != null)
+        ('averageRawFileSizeMB', averageRawFileSizeMB!),
+      if (maxExposureS != null) ('maxExposureS', maxExposureS!),
+    ]) {
+      positive(field, value);
+    }
+    if (rotationDeg != null && !rotationDeg!.isFinite) {
+      throw ArgumentError.value(rotationDeg, 'rotationDeg', 'must be finite');
+    }
+    if (apertureDiameterMm != null &&
+        (focalLengthMm / apertureDiameterMm! - focalRatio).abs() / focalRatio >
+            EquipmentLimits.apertureAgreement) {
+      throw ArgumentError('Focal length, diameter and focal ratio disagree');
+    }
+  }
 }

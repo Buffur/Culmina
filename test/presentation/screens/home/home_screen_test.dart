@@ -309,6 +309,20 @@ void main() {
       final row = find.byKey(const Key('planner.weather'));
       await tester.scrollUntilVisible(row, 300, scrollable: list);
       expect(
+        find.descendant(
+          of: find.byKey(const Key('planner.conditionsGroup')),
+          matching: row,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('planner.nightGroup')),
+          matching: row,
+        ),
+        findsNothing,
+      );
+      expect(
         // Hybrid night row: "Forecast unavailable", then why.
         find.descendant(
           of: row,

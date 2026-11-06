@@ -114,10 +114,52 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  android:
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      ORG_GRADLE_PROJECT_CULMINA_VERIFICATION: 'true'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Native storage and preference recovery only
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          script: mkdir -p reports/android && flutter test --no-pub integration_test/native_restore_safety_test.dart -d emulator-5554 --dart-define=CULMINA_ISOLATED_VERIFY=true --file-reporter=json:reports/android/tests.jsonl
+      - name: Native metadata reader unit tests
+        run: cd android && ./gradlew :app:testDebugUnitTest --console=plain
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: native-android
+          path: |
+            reports/android
+            build/app/reports/tests/testDebugUnitTest
+          if-no-files-found: error
+          retention-days: 14
+
   quality-gate:
     # Preserve the existing required-check name. Missing/failed jobs fail closed.
     if: always()
-    needs: [changes, checks, unit, host]
+    needs: [changes, checks, unit, host, android]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
@@ -128,7 +170,8 @@ jobs:
           CHECKS: ${{ needs.checks.result }}
           UNIT: ${{ needs.unit.result }}
           HOST: ${{ needs.host.result }}
-        run: python3 tool/ci.py require-jobs "$CHANGES" "$FULL" "$CHECKS" "$UNIT" "$HOST"
+          ANDROID: ${{ needs.android.result }}
+        run: python3 tool/ci.py require-jobs "$CHANGES" "$FULL" "$CHECKS" "$UNIT" "$HOST" "$ANDROID"
       - uses: actions/download-artifact@v7
         if: needs.changes.outputs.full == 'true'
         with:

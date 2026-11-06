@@ -172,6 +172,9 @@ void main() {
     await build(tester, blocks: [_ha(10), _ha(20)]);
     final before = vm.captureBlocks.toList();
 
+    await tester.tap(find.byKey(const Key('capture.menu.1')));
+
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('capture.edit.1')));
     await settle(tester);
     expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
@@ -259,6 +262,8 @@ void main() {
   // the badge lasts until the first edit); a replaced plan is never touched.
   group('Delete with Undo owns only the deleted block (TD-082)', () {
     Future<void> deleteFirst(WidgetTester tester) async {
+      await tester.tap(find.byKey(const Key('capture.menu.0')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('capture.delete.0')));
       await settle(tester);
     }
@@ -373,6 +378,9 @@ void main() {
       final snapshot = jsonEncode(saved.planSnapshot!.json);
       final before = vm.captureBlocks.toList();
 
+      await tester.tap(find.byKey(const Key('capture.menu.1')));
+
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('capture.delete.1')));
       await settle(tester);
       await tapUndo(tester);

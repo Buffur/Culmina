@@ -44,53 +44,50 @@ the theme and applies `AppTheme.fieldFilter` around app content in field mode.
 
 ## Base colors
 
-| Role | Light | Dark | Field |
-| --- | --- | --- | --- |
-| Background | `#FFFFFF` | `#191919` | `#000000` |
-| Surface | `#F7F7F5` | `#202020` | `#110000` |
-| Raised surface | `#FFFFFF` | `#252525` | `#1A0000` |
-| Primary text | `#37352F` | `#EBEBEA` | `#FF0000` |
-| Secondary text | `#5A5955` | `#A5A5A3` | `#AA0000` |
-| Border | `#E9E9E7` | `#2F2F2F` | `#330000` |
+[AppColors](../lib/core/theme/app_colors.dart) owns raw Light, Dark and Field
+values; [AppPalette](../lib/core/theme/app_palette.dart) and
+[HybridTokens](../lib/core/theme/hybrid_tokens.dart) expose semantic roles.
+[AppTheme](../lib/core/theme/app_theme.dart) installs each appearance's actual
+surfaces and control colors. Inspect the runtime role and caller rather than
+copying a hexadecimal snapshot from this index or the historical Atlas.
 
-`AppPalette` adds semantic event/chart roles. `HybridTokens` supplies action,
-accent, success/caution/error and selected-hour roles. These are separate
-from base surfaces; component callers resolve the relevant token set.
+Dark currently adopts AFTER-DARK-1.2; Light and Field retain their source
+palettes. The existence of a role, including a selected-hour color, does not
+establish that the current view reads it. The tokens skill's caller map and
+actual source distinguish declarations from adoption.
 
 ## Typography
 
 Production text roles use the bundled **Geist** family.
 Source Serif 4 is bundled in `pubspec.yaml` but is not the production role family.
 
-| `AppTypography` role | Size / line height | Weight |
-| --- | --- | --- |
-| `screenTitle` | 22 / 27.5 | 500 |
-| `sectionHeading` | 20 / 28 | 600 |
-| `sectionSubject` | 18 / 23.4 | 500 |
-| `itemTitle` | 16 / 22.4 | 600 |
-| `rowTitle` | 16 / 24 | 500 |
-| `value` | 15 / 21.75 | 400 |
-| `body` | 14 / 21.7 | 400 |
-| `caption` | 13 / 19.5 | 400 |
-| `dense` | 12 / 18 | 400 |
-| `navigationLabel` | 11 / 16.5 | Caller selects 400/600 |
+[AppTypography](../lib/core/theme/app_typography.dart) defines the base scale
+and the adopted `afterDarkRoles` / `afterDarkScale`.
+[AppTextTheme](../lib/core/theme/app_text_theme.dart) provides runtime named
+roles and central `AppTextGeometry` resolution. Current `AppTheme._withTokens`
+installs `AppTextTheme.afterDark` and merges `afterDarkScale` for all three
+appearances: geometry is shared while colors remain appearance-specific.
+The resolver's name does not limit its current installation to Dark.
 
-Additional heading roles are `homeHeading` (29), `nightHeading` (25)
-and `answerHeading` (28). `AppTypography.scale` also defines the Material
-`TextTheme`; it is distinct from the named screen roles.
-Compact calendar/chart token sizes are 10/11 logical pixels.
+Presentation reads Material roles through `Theme.of(context).textTheme` and
+Culmina roles through `AppTextTheme.of(context)`. Direct base declarations are
+not proof of the rendered role; inspect the installed resolver and caller.
+Compact calendar/chart exceptions remain source-owned, not a general text-size
+prescription.
 
 ## Layout, shape and motion
 
-- `AppSpacing`: 4, 8, 16, 24, 32, 48; page gutter 20 and section gap 28.
-  Additional compact steps are 2, 3, 6, 10, 12 and 14.
-- `AppRadius`: small 6, menu 8, large 12 and pill 999.
-- `HybridTokens`: minimum target 48; app bar height 64.
-- `AppMotion`: short 120 ms, medium 180 ms, highlight 1500 ms;
-  curve `Cubic(0.16, 1, 0.3, 1)`.
+- [AppSpacing](../lib/core/theme/app_spacing.dart) owns named spacing roles.
+  Component padding, page gutters and section gaps are distinct; inspect each
+  constructor and caller override before using a token.
+- [AppRadius](../lib/core/theme/app_radius.dart) owns shape roles; the caller
+  chooses which role applies.
+- [HybridTokens](../lib/core/theme/hybrid_tokens.dart) owns minimum-target and
+  app-bar constants; a constant is not a measurement of every control.
+- [AppMotion](../lib/core/theme/app_motion.dart) owns durations and the curve.
   Its duration helper returns zero when platform animations are disabled.
-- `AppShell`: four navigation items with minimum height 56;
-  at text scale 1.5 or greater it lays them out two per row.
+- [AppShell](../lib/presentation/navigation/app_shell.dart) owns the four peer
+  destinations and their current text-scale-dependent arrangement.
 
 ## Shared UI
 
@@ -107,3 +104,11 @@ Labels, unknown-data messages and draft/result distinctions come from
 shared text helpers and the relevant screen/ViewModel state.
 
 See [Product specification](PRODUCT_SPEC.md) and [Architecture](ARCHITECTURE.md).
+
+## Historical/Superseded — implementation snapshots preserved 2026-11-06
+
+The [pre-maintenance index](../_archive/cleanup_2026-11-06/docs/instruction-followup-before/docs/DESIGN_SYSTEM.md)
+retains the former palette/type/geometry tables. Those numeric snapshots are not
+current production prescriptions. The definitions, installed resolver and
+callers linked above own the current values; no Flutter value or behavior was
+changed by this documentation correction.

@@ -1,3 +1,4 @@
+import 'package:astroplan/core/theme/app_spacing.dart';
 // S5.6 (ADR-019 §5, §6): the context line. Each part reports its tap; the
 // zone rule follows the site (its zone, or the labelled device zone); no
 // site means no night; the shared night picker returns the chosen evening
@@ -205,7 +206,7 @@ void main() {
           find.byKey(const Key('nightPicker.content')),
         );
         expect(rect.height, lessThan(500));
-        expect(rect.left, greaterThanOrEqualTo(16));
+        expect(rect.left, greaterThanOrEqualTo(AppSpacing.md));
         await tester.tap(find.byKey(const Key('nightPicker.inputMode')));
         await tester.pumpAndSettle();
         expect(find.byType(InputDatePickerFormField), findsOneWidget);

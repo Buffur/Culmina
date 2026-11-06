@@ -121,12 +121,27 @@ void main() {
             final numeric = find
                 .descendant(of: total, matching: find.byType(Text))
                 .last;
-            // HybridFact uses a shared leading edge for the value column,
-            // including when narrow layouts stack the label above it.
-            expect(
-              t.widget<Text>(numeric).textAlign ?? TextAlign.start,
-              TextAlign.start,
-            );
+            final numericText = t.widget<Text>(numeric);
+            final numericRect = t.getRect(numeric);
+            final totalRect = t.getRect(total);
+            // Every appearance uses the same measured fact layout. Short pairs
+            // align at the trailing edge; pairs that cannot fit stack naturally.
+            final label = find
+                .descendant(of: total, matching: find.byType(Text))
+                .first;
+            final labelRect = t.getRect(label);
+            if (numericText.textAlign == TextAlign.end) {
+              expect(numericRect.right, closeTo(totalRect.right, .01));
+              expect(numericRect.center.dy, closeTo(labelRect.center.dy, .01));
+              expect(numericRect.left, greaterThanOrEqualTo(labelRect.right));
+            } else {
+              expect(numericRect.left, closeTo(totalRect.left, .01));
+              expect(numericRect.top, greaterThanOrEqualTo(labelRect.bottom));
+            }
+            expect(numericRect.left, greaterThanOrEqualTo(totalRect.left));
+            expect(numericRect.right, lessThanOrEqualTo(totalRect.right + .01));
+            expect(numericText.maxLines, isNull);
+            expect(numericText.overflow, isNot(TextOverflow.ellipsis));
             expect(f.vm.plan.captureBlocks, blocks);
             expect(f.vm.analysis.frameStorage, frames);
             await t.runAsync(() async {

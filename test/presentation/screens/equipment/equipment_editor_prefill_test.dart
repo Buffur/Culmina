@@ -2,6 +2,9 @@
 // candidate. Each pre-filled value says where it came from until it is
 // edited; nothing is written before Save (ADR-018 §2, §4–§5).
 
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
+
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/models/spec_confidence.dart';
 import 'package:astroplan/domain/models/spec_provenance.dart';
@@ -44,6 +47,8 @@ Future<_Repository> _open(WidgetTester tester, EquipmentDraft draft) async {
     ChangeNotifierProvider(
       create: (_) => GearViewModel(repo),
       child: MaterialApp(
+        theme: phase2Theme(_phase2Theme),
+        builder: (_, child) => phase2Frame(child: child!, theme: _phase2Theme),
         home: Scaffold(
           body: Builder(
             builder: (context) => TextButton(
@@ -65,101 +70,121 @@ String? _note(WidgetTester tester, EquipmentSpec spec) {
   return f.evaluate().isEmpty ? null : tester.widget<Text>(f).data;
 }
 
+late String _phase2Theme;
+
 void main() {
-  testWidgets('pre-filled values show their origin; the diameter, tracking '
-      'and limits are left to the user', (tester) async {
-    await _open(tester, EquipmentDraft.fromCandidate(phoneCandidate()));
-    expect(find.text('Add rig'), findsOneWidget);
-    expect(_note(tester, EquipmentSpec.focalLength), 'From the file (JPEG)');
-    expect(_note(tester, EquipmentSpec.resolution), 'From the file (JPEG)');
-    expect(
-      _note(tester, EquipmentSpec.pixelPitch),
-      'Estimated from the 35 mm equivalent — check it',
-    );
-    expect(
-      _note(tester, EquipmentSpec.sensorSize),
-      'Estimated from the 35 mm equivalent — check it',
-    );
-    expect(_note(tester, EquipmentSpec.rawFileSize), isNull);
-    expect(find.widgetWithText(TextFormField, '6.57'), findsOneWidget);
-    expect(
-      tester
-          .widget<TextFormField>(
-            fieldLabeled('Aperture diameter (mm, optional)'),
-          )
-          .controller!
-          .text,
-      '',
-    );
-  });
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      testWidgets('pre-filled values show their origin; the diameter, tracking '
+          'and limits are left to the user', (tester) async {
+        await _open(tester, EquipmentDraft.fromCandidate(phoneCandidate()));
+        expect(find.text('Add rig'), findsOneWidget);
+        expect(
+          _note(tester, EquipmentSpec.focalLength),
+          'From the file (JPEG)',
+        );
+        expect(_note(tester, EquipmentSpec.resolution), 'From the file (JPEG)');
+        expect(
+          _note(tester, EquipmentSpec.pixelPitch),
+          'Estimated from the 35 mm equivalent — check it',
+        );
+        expect(
+          _note(tester, EquipmentSpec.sensorSize),
+          'Estimated from the 35 mm equivalent — check it',
+        );
+        expect(_note(tester, EquipmentSpec.rawFileSize), isNull);
+        expect(find.widgetWithText(TextFormField, '6.57'), findsOneWidget);
+        expect(
+          tester
+              .widget<TextFormField>(
+                fieldLabeled('Aperture diameter (mm, optional)'),
+              )
+              .controller!
+              .text,
+          '',
+        );
+      });
 
-  testWidgets('saved untouched: each value keeps its origin, and the file '
-      'identity is stored', (tester) async {
-    final repo = await _open(
-      tester,
-      EquipmentDraft.fromCandidate(phoneCandidate()),
-    );
-    await tester.tap(find.text('Save rig'));
-    await tester.pumpAndSettle();
+      testWidgets('saved untouched: each value keeps its origin, and the file '
+          'identity is stored', (tester) async {
+        final repo = await _open(
+          tester,
+          EquipmentDraft.fromCandidate(phoneCandidate()),
+        );
+        await tester.tap(find.text('Save rig'));
+        await tester.pumpAndSettle();
 
-    final p = repo.inserted.single;
-    expect(
-      p.provenanceOf(EquipmentSpec.focalLength),
-      const SpecProvenance('metadata:jpeg', SpecConfidence.reported),
-    );
-    expect(
-      p.provenanceOf(EquipmentSpec.pixelPitch)?.confidence,
-      SpecConfidence.estimated,
-    );
-    expect(p.metadataModel, 'TestMake TestPhone');
-    expect(p.apertureDiameterMm, isNull);
-    expect(find.text('Add rig'), findsNothing);
-  });
+        final p = repo.inserted.single;
+        expect(
+          p.provenanceOf(EquipmentSpec.focalLength),
+          const SpecProvenance('metadata:jpeg', SpecConfidence.reported),
+        );
+        expect(
+          p.provenanceOf(EquipmentSpec.pixelPitch)?.confidence,
+          SpecConfidence.estimated,
+        );
+        expect(p.metadataModel, 'TestMake TestPhone');
+        expect(p.apertureDiameterMm, isNull);
+        expect(find.text('Add rig'), findsNothing);
+      });
 
-  testWidgets('editing the pixel size makes it (and the sensor size derived '
-      'from it) the user\'s own', (tester) async {
-    final repo = await _open(
-      tester,
-      EquipmentDraft.fromCandidate(phoneCandidate()),
-    );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, '2.414').first,
-      '2.5',
-    );
-    await tester.pump();
-    expect(_note(tester, EquipmentSpec.pixelPitch), isNull);
-    expect(_note(tester, EquipmentSpec.sensorSize), isNull);
-    expect(_note(tester, EquipmentSpec.focalLength), 'From the file (JPEG)');
+      testWidgets(
+        'editing the pixel size makes it (and the sensor size derived '
+        'from it) the user\'s own',
+        (tester) async {
+          final repo = await _open(
+            tester,
+            EquipmentDraft.fromCandidate(phoneCandidate()),
+          );
+          await tester.enterText(
+            find.widgetWithText(TextFormField, '2.414').first,
+            '2.5',
+          );
+          await tester.pump();
+          expect(_note(tester, EquipmentSpec.pixelPitch), isNull);
+          expect(_note(tester, EquipmentSpec.sensorSize), isNull);
+          expect(
+            _note(tester, EquipmentSpec.focalLength),
+            'From the file (JPEG)',
+          );
 
-    await tester.tap(find.text('Save rig'));
-    await tester.pumpAndSettle();
-    final p = repo.inserted.single;
-    expect(p.pixelPitchUm, 2.5);
-    expect(p.sensorWidthMm, 10.24);
-    expect(p.provenanceOf(EquipmentSpec.pixelPitch), SpecProvenance.user);
-    expect(p.provenanceOf(EquipmentSpec.sensorSize), SpecProvenance.user);
-    expect(p.provenanceOf(EquipmentSpec.focalLength)?.source, 'metadata:jpeg');
-  });
+          await tester.tap(find.text('Save rig'));
+          await tester.pumpAndSettle();
+          final p = repo.inserted.single;
+          expect(p.pixelPitchUm, 2.5);
+          expect(p.sensorWidthMm, 10.24);
+          expect(p.provenanceOf(EquipmentSpec.pixelPitch), SpecProvenance.user);
+          expect(p.provenanceOf(EquipmentSpec.sensorSize), SpecProvenance.user);
+          expect(
+            p.provenanceOf(EquipmentSpec.focalLength)?.source,
+            'metadata:jpeg',
+          );
+        },
+      );
 
-  testWidgets('Cancel writes nothing', (tester) async {
-    final repo = await _open(
-      tester,
-      EquipmentDraft.fromCandidate(phoneCandidate()),
-    );
-    await tester.tap(find.text('Cancel'));
-    await tester.pumpAndSettle();
-    expect(repo.inserted, isEmpty);
-  });
+      testWidgets('Cancel writes nothing', (tester) async {
+        final repo = await _open(
+          tester,
+          EquipmentDraft.fromCandidate(phoneCandidate()),
+        );
+        await tester.tap(find.text('Cancel'));
+        await tester.pumpAndSettle();
+        expect(repo.inserted, isEmpty);
+      });
 
-  testWidgets('what the file lacks is required: Save is refused until the '
-      'user fills it', (tester) async {
-    final repo = await _open(
-      tester,
-      EquipmentDraft.fromCandidate(phoneCandidate(withDims: false)),
-    );
-    await tester.tap(find.text('Save rig'));
-    await tester.pumpAndSettle();
-    expect(find.text('Required'), findsWidgets);
-    expect(repo.inserted, isEmpty);
-  });
+      testWidgets('what the file lacks is required: Save is refused until the '
+          'user fills it', (tester) async {
+        final repo = await _open(
+          tester,
+          EquipmentDraft.fromCandidate(phoneCandidate(withDims: false)),
+        );
+        await tester.tap(find.text('Save rig'));
+        await tester.pumpAndSettle();
+        expect(find.text('Required'), findsWidgets);
+        expect(repo.inserted, isEmpty);
+      });
+    });
+  }
 }

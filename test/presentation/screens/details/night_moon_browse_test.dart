@@ -1,3 +1,4 @@
+import 'package:astroplan/core/theme/app_radius.dart';
 // F15 A1/A2/A3/A5 (ADR-022 N10/N11; D9 A; AM-01 SP07/SP08): the Night &
 // Moon detail opens on the plan's night with the shared bar and its time
 // slider, and the month of Moon nights (computed in an isolate). Tapping a
@@ -9,9 +10,11 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/core/theme/app_palette.dart';
+import 'package:astroplan/core/theme/app_text_theme.dart';
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -21,6 +24,7 @@ import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/data/services/catalog_seeder.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/calendar_date.dart';
+import 'package:astroplan/domain/models/moon_conditions.dart';
 import 'package:astroplan/domain/models/location_profile.dart' as domain;
 import 'package:astroplan/domain/repositories/weather_repository.dart';
 import 'package:astroplan/domain/services/night_view.dart';
@@ -122,7 +126,13 @@ void main() {
     addTearDown(() => tester.runAsync(db.close));
     AppRouter.router.go(AppRouter.nightMoon);
     await tester.pumpWidget(
-      MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
+      RepaintBoundary(
+        key: const Key('phase2.details.capture'),
+        child: MultiProvider(
+          providers: vm.providers,
+          child: const AstroPlanApp(),
+        ),
+      ),
     );
     await settle(tester);
     if (!activeSite) return;
@@ -179,14 +189,19 @@ void main() {
             label == selected ? palette.textPrimary : palette.textSecondary,
             reason: '$mode $label with $selected selected',
           );
-          expect(
-            style.fontWeight,
-            label == selected ? FontWeight.w600 : FontWeight.w400,
-          );
-          expect(style.fontSize, 14);
+          expect(style.fontWeight, FontWeight.w500);
+          final expectedLabel = AppTextTheme.of(element).navigationLabel;
+          expect(style.fontSize, expectedLabel.fontSize);
+          expect(style.height, expectedLabel.height);
         }
         final bar = tester.widget<TabBar>(find.byType(TabBar));
-        expect((bar.indicator! as UnderlineTabIndicator).borderSide.width, 2);
+        expect(bar.indicator, isA<BoxDecoration>());
+        expect(
+          (bar.indicator! as BoxDecoration).borderRadius,
+          BorderRadius.circular(AppRadius.small),
+        );
+        expect(bar.indicatorPadding.vertical, 12);
+        expect(bar.tabs.every((tab) => (tab as Tab).height == 48), isTrue);
       }
     });
   }
@@ -203,15 +218,10 @@ void main() {
       tester.view.physicalSize = const Size(375, 5000);
       await tester.tap(find.widgetWithText(Tab, 'Night'));
       await settle(tester);
-      await tester.ensureVisible(find.text('Exact times & reading key'));
-      await tester.tap(find.text('Exact times & reading key'));
+      await tester.ensureVisible(find.text('Exact times'));
+      await tester.tap(find.text('Exact times'));
       await settle(tester);
-      final section = find
-          .ancestor(
-            of: find.text('Exact times & reading key'),
-            matching: find.byType(Column),
-          )
-          .first;
+      final section = find.byKey(const Key('nightMoon.exactTimes'));
       var rows = 0;
       var intervals = 0;
       for (final element
@@ -282,8 +292,11 @@ void main() {
     expect(find.byKey(const Key('nightMoon.legend')), findsNothing);
     expect(find.byKey(const Key('nightMoon.encoding')), findsNothing);
     final rail = tester.getRect(find.byKey(const Key('nightMoon.rail')));
-    final jumps = tester.getRect(find.byKey(const Key('nightMoon.jumpStart')));
-    expect(rail.top - jumps.bottom, greaterThanOrEqualTo(16));
+    final previewRect = tester.getRect(
+      find.byKey(const Key('nightMoon.previewTime')),
+    );
+    expect(rail.top, greaterThan(previewRect.bottom));
+    expect(find.byKey(const Key('nightMoon.jumpStart')), findsNothing);
     expect(
       tester.getSize(find.byKey(const Key('nightMoon.slider'))).height,
       greaterThanOrEqualTo(48),
@@ -299,7 +312,7 @@ void main() {
     expect(browser(tester).cursor.instantUtc, preview);
     final handle = tester.ensureSemantics();
     expect(
-      find.bySemanticsLabel(RegExp('Night bar: Daylight')),
+      find.bySemanticsLabel(RegExp('Moon above horizon:')),
       findsOneWidget,
     );
     handle.dispose();
@@ -403,6 +416,9 @@ void main() {
     expect(mid, contains('site zone Europe/Ljubljana, CET'));
     expect(vm.eveningDate, tonight);
     // "Dark starts" jumps there; another night resets the cursor too.
+    await tester.ensureVisible(find.byKey(const Key('nightMoon.exactToggle')));
+    await tester.tap(find.byKey(const Key('nightMoon.exactToggle')));
+    await settle(tester);
     await tester.ensureVisible(find.byKey(const Key('nightMoon.jumpStart')));
     await settle(tester);
     await tester.tap(find.byKey(const Key('nightMoon.jumpStart')));
@@ -545,6 +561,339 @@ void main() {
     await settle(tester);
   }
 
+  for (final mode in ['light', 'dark', 'field']) {
+    testWidgets('Phase2 details state matrix $mode', (tester) async {
+      await (FontLoader(
+        'Geist',
+      )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+      tester.platformDispatcher.platformBrightnessTestValue = mode == 'dark'
+          ? Brightness.dark
+          : Brightness.light;
+      addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+      await start(tester);
+      if (mode == 'field') {
+        await tester.runAsync(vm.theme.toggleFieldMode);
+      }
+      tester.view.physicalSize = const Size(375, 812);
+      await settle(tester);
+      Future<void> capture(String id) async {
+        final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+        if (output == null || output.isEmpty) return;
+        await tester.pump();
+        final boundary = tester.renderObject<RenderRepaintBoundary>(
+          find.byKey(const Key('phase2.details.capture')),
+        );
+        await tester.runAsync(() async {
+          final image = await boundary.toImage(pixelRatio: 1);
+          final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+          final file = File('$output/package1/$id-$mode.png');
+          await file.parent.create(recursive: true);
+          await file.writeAsBytes(bytes!.buffer.asUint8List());
+          image.dispose();
+        });
+      }
+
+      // Actual domain results supply each Moon classification; no fabricated
+      // phase, duration or rise/set fixture is injected into the screen.
+      final b = browser(tester);
+      final cursorStates = <String>{};
+      expect(
+        vm.selectedTarget,
+        isNull,
+        reason: 'missing target does not invent Moon-target separation',
+      );
+      expect(find.byKey(const Key('nightMoon.closestApproach')), findsNothing);
+      final reading = find.byKey(const Key('nightMoon.readingNote'));
+      expect(
+        tester.widget<Text>(reading).data,
+        contains('Preview never changes or saves the plan.'),
+      );
+      await tester.ensureVisible(reading);
+      await settle(tester);
+      await capture('night-reading-guide');
+
+      final found = <MoonFreeKind>{};
+      final contexts = <String, Object>{};
+      var currentLatitude = 46.05;
+      // These contexts were discovered with the real calculator in the first
+      // matrix run; replay them deterministically instead of rescanning a year.
+      for (final (latitude, date) in [
+        (46.05, CalendarDate(2027, 1, 1)),
+        (46.05, CalendarDate(2027, 1, 4)),
+        (46.05, CalendarDate(2027, 1, 10)),
+        (46.05, CalendarDate(2027, 1, 19)),
+        (65.0, CalendarDate(2027, 4, 7)),
+        (78.0, CalendarDate(2027, 11, 20)),
+        (88.0, CalendarDate(2027, 12, 6)),
+      ]) {
+        if (latitude != currentLatitude) {
+          await polarSite(tester, latitude);
+          currentLatitude = latitude;
+        }
+        b.viewNight(date);
+        final kind = b.view.moonFree.kind;
+        expect(
+          found.add(kind),
+          isTrue,
+          reason: 'one fixture per classification',
+        );
+        await settle(tester);
+        if (kind == MoonFreeKind.evening) {
+          expect(
+            find.text('Move this unsaved plan to this night.'),
+            findsOneWidget,
+          );
+        }
+        expect(find.byKey(const Key('nightMoon.moonFreeKind')), findsOneWidget);
+        expect(vm.eveningDate, tonight, reason: 'viewing does not adopt');
+        contexts[kind.name] = {'latitude': latitude, 'date': date.toString()};
+        await tester.ensureVisible(find.byKey(const Key('moon.answerGroup')));
+        await settle(tester);
+        await capture('moon-${kind.name}');
+        // Open the real disclosure for each classification as well as answer.
+        await tester.runAsync(
+          () => vm.disclosure.setOpen('conditions.moonDetails', true),
+        );
+        await settle(tester);
+        expect(find.byKey(const Key('nightMoon.moonSummary')), findsOneWidget);
+        await tester.ensureVisible(
+          find.byKey(const Key('nightMoon.moonSummary')),
+        );
+        await settle(tester);
+        await capture('moon-${kind.name}-details');
+        if (kind == MoonFreeKind.noDark) {
+          final exact = find.byKey(const Key('nightMoon.exactToggle'));
+          tester.widget<Semantics>(exact).properties.onTap!();
+          await settle(tester);
+          final explanation = find.byKey(const Key('nightMoon.encoding'));
+          expect(
+            tester.widget<Text>(explanation).data,
+            startsWith('There is no dark time at the selected Sun limit'),
+          );
+          await tester.ensureVisible(explanation);
+          await settle(tester);
+          await capture('night-no-dark-exact-open');
+          tester.widget<Semantics>(exact).properties.onTap!();
+          await settle(tester);
+        }
+
+        for (final segment in b.view.segments) {
+          final cursorID =
+              '${segment.sky.name}-${segment.moonUp ? 'moon-up' : 'moon-down'}';
+          if (!cursorStates.add(cursorID)) continue;
+          b.setCursor(segment.startUtc);
+          await settle(tester);
+          final cursor = find.byKey(const Key('nightMoon.cursorState'));
+          await tester.ensureVisible(cursor);
+          await settle(tester);
+          expect(tester.widget<Text>(cursor).data, isNotEmpty);
+          await capture('cursor-$cursorID');
+        }
+      }
+      final polarKinds = <String>{};
+      for (var day = 0; day < 60; day++) {
+        b.viewNight(CalendarDate(2027, 1, 1).addDays(day));
+        final moon = b.view.moon;
+        final state = moon.riseSet.alwaysAbove
+            ? 'always-above'
+            : moon.samples.every((sample) => !sample.up)
+            ? 'always-below'
+            : null;
+        if (state == null || !polarKinds.add(state)) continue;
+        await settle(tester);
+        await tester.ensureVisible(
+          find.byKey(const Key('nightMoon.moonSummary')),
+        );
+        await settle(tester);
+        expect(
+          find.text(
+            state == 'always-above' ? 'All night' : 'Not during this night',
+          ),
+          findsOneWidget,
+        );
+        await capture('moon-$state');
+        if (polarKinds.length == 2) break;
+      }
+      expect(polarKinds, containsAll(['always-above', 'always-below']));
+      b.viewNight(CalendarDate(2027, 12, 6));
+      await tester.runAsync(() async {
+        final target = (await DriftTargetRepository(
+          db,
+        ).getAllTargets()).firstWhere((target) => target.declination > 10);
+        await vm.setTarget(target);
+        await vm.setEquipment(
+          (await DriftEquipmentRepository(db).getAllEquipment()).first,
+        );
+        await vm.plan.idle;
+        await vm.saveSession();
+      });
+      await settle(tester);
+      final savedID = vm.activeSession!.id;
+      expect(
+        find.text(
+          'Create a copy for this night. The saved plan stays unchanged.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('nightMoon.closestApproach')),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(
+        find.byKey(const Key('nightMoon.closestApproach')),
+      );
+      await settle(tester);
+      await capture('moon-closest-approach');
+      await capture('conditions-saved-plan');
+      final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+      if (output != null && output.isNotEmpty) {
+        await tester.runAsync(() async {
+          await File(
+            '$output/package1/moon-contexts-$mode.json',
+          ).writeAsString(const JsonEncoder.withIndent('  ').convert(contexts));
+        });
+      }
+      expect(found, containsAll(MoonFreeKind.values));
+      await tester.tap(find.widgetWithText(Tab, 'Night'));
+      await settle(tester);
+      expect(find.byKey(const Key('nightMoon.answer')), findsOneWidget);
+      await capture('night-browsed');
+      for (final (id, label) in [
+        ('moonIntervals', 'night-moon-details'),
+        ('sun', 'night-sun-details'),
+      ]) {
+        await tester.runAsync(
+          () => vm.disclosure.setOpen('conditions.$id', true),
+        );
+        await settle(tester);
+        final key = id == 'sun'
+            ? 'nightMoon.sunEvents'
+            : 'nightMoon.moonSummary';
+        await tester.ensureVisible(find.byKey(Key(key)));
+        await settle(tester);
+        await capture(label);
+      }
+      final exact = find.byKey(const Key('nightMoon.exactToggle'));
+      tester.widget<Semantics>(exact).properties.onTap!();
+      await settle(tester);
+      expect(tester.widget<Semantics>(exact).properties.expanded, isTrue);
+      final encoding = tester
+          .widget<Text>(find.byKey(const Key('nightMoon.encoding')))
+          .data!;
+      expect(encoding, contains('calculated intervals'));
+      expect(encoding, isNot(contains('blends')));
+      tester
+          .widget<OutlinedButton>(find.byKey(const Key('nightMoon.jumpEnd')))
+          .onPressed!();
+      await settle(tester);
+      final chosen = b.cursorUtc;
+      await tester.ensureVisible(exact);
+      await settle(tester);
+      await capture('night-exact-open');
+      tester.widget<Semantics>(exact).properties.onTap!();
+      await settle(tester);
+      expect(tester.widget<Semantics>(exact).properties.expanded, isFalse);
+      expect(b.cursorUtc, chosen, reason: 'closing retains the source preview');
+      expect(
+        vm.activeSession!.id,
+        savedID,
+        reason: 'preview never adopts or saves',
+      );
+      await tester.runAsync(() async {
+        final other = (await DriftTargetRepository(db).getAllTargets())
+            .firstWhere((target) => target.id != vm.selectedTarget!.id);
+        await vm.setTarget(other);
+        await vm.plan.idle;
+      });
+      await settle(tester);
+      expect(vm.plan.hasUnsavedChanges, isTrue);
+      final beforeDate = vm.eveningDate;
+      await tester.tap(find.byKey(const Key('nightMoon.planThisNight')));
+      await settle(tester);
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      for (final action in ['save', 'discard', 'cancel']) {
+        expect(find.byKey(Key('unsaved.$action')), findsOneWidget);
+      }
+      await capture('conditions-unsaved-adoption');
+      await tester.tap(find.byKey(const Key('unsaved.cancel')));
+      await settle(tester);
+      expect(vm.activeSession!.id, savedID);
+      expect(vm.eveningDate, beforeDate);
+      expect(
+        vm.plan.hasUnsavedChanges,
+        isTrue,
+        reason: 'Cancel preserves the changed saved plan',
+      );
+
+      await capture('night-exact-closed');
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final mode in ['light', 'dark', 'field']) {
+    testWidgets('Phase2 details missing site $mode', (tester) async {
+      await (FontLoader(
+        'Geist',
+      )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+      tester.platformDispatcher.platformBrightnessTestValue = mode == 'dark'
+          ? Brightness.dark
+          : Brightness.light;
+      addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+      await start(tester, activeSite: false);
+      if (mode == 'field') await tester.runAsync(vm.theme.toggleFieldMode);
+      tester.view.physicalSize = const Size(375, 812);
+      await settle(tester);
+      for (final tab in ['Night', 'Moon', 'Weather']) {
+        await tester.tap(find.widgetWithText(Tab, tab));
+        await settle(tester);
+        expect(find.text('Set an observing site'), findsOneWidget);
+        expect(find.byKey(const Key('conditions.chooseSite')), findsOneWidget);
+        expect(find.byKey(const Key('weather.hybrid')), findsNothing);
+        final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+        if (output != null && output.isNotEmpty) {
+          final boundary = tester.renderObject<RenderRepaintBoundary>(
+            find.byKey(const Key('phase2.details.capture')),
+          );
+          await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: 1);
+            final bytes = await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            final file = File(
+              '$output/package1/conditions-no-site-${tab.toLowerCase()}-$mode.png',
+            );
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(bytes!.buffer.asUint8List());
+            image.dispose();
+          });
+        }
+      }
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      await settle(tester);
+      expect(tester.widget<TabBar>(find.byType(TabBar)).isScrollable, isTrue);
+      final weatherTab = find.widgetWithText(Tab, 'Weather');
+      await tester.ensureVisible(weatherTab);
+      await tester.tap(weatherTab);
+      await settle(tester);
+      expect(find.text('Set an observing site'), findsOneWidget);
+      final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+      if (output != null && output.isNotEmpty) {
+        final boundary = tester.renderObject<RenderRepaintBoundary>(
+          find.byKey(const Key('phase2.details.capture')),
+        );
+        await tester.runAsync(() async {
+          final image = await boundary.toImage(pixelRatio: 1);
+          final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+          final file = File('$output/package1/conditions-large-tabs-$mode.png');
+          await file.parent.create(recursive: true);
+          await file.writeAsBytes(bytes!.buffer.asUint8List());
+          image.dispose();
+        });
+      }
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('A5 polar: under the midnight Sun (78° N, June) the readout '
       'says there is no more dark time, all night', (tester) async {
     await start(tester);
@@ -598,10 +947,14 @@ void main() {
 
     // Its semantics: a slider whose value is the instant the readout
     // starts with, with increase / decrease actions.
-    SemanticsNode node() =>
-        find.semantics.byFlag(SemanticsFlag.isSlider).evaluate().single;
+    SemanticsNode node() => tester.getSemantics(slider);
+    expect(
+      find.semantics.byFlag(SemanticsFlag.isSlider).evaluate(),
+      hasLength(2),
+      reason: 'the two visual lanes offer the same cursor control',
+    );
     expect(node().value, isNotEmpty);
-    expect(node().value, startsWith('${node().label}, '));
+    expect(node().label, 'Dark preview time');
     expect(node().value, contains('Moon'));
     expect(node().value, readout(tester));
     expect(
@@ -631,7 +984,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await settle(tester);
     expect(b.cursorUtc, before.add(const Duration(minutes: 5)));
-    expect(readout(tester), startsWith('${node().label}, '));
+    expect(node().value, readout(tester));
     expect(node().value, up);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);

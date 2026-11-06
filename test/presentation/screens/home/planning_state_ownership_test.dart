@@ -642,6 +642,10 @@ void main() {
         await hybridSettle(tester);
         await _semanticTap(
           tester,
+          find.byKey(const Key('nightMoon.exactToggle')),
+        );
+        await _semanticTap(
+          tester,
           find.byKey(const Key('nightMoon.jumpStart')),
         );
         expect(browser.cursorUtc, view.gridAt(view.darkInterval!.$1));

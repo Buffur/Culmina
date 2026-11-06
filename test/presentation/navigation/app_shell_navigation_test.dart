@@ -24,6 +24,7 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/navigation/app_shell.dart';
 import 'package:astroplan/presentation/screens/settings/settings_screen.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
+import 'package:astroplan/presentation/shared/section_card.dart';
 
 import '../../support/planner_harness.dart';
 
@@ -156,9 +157,9 @@ void main() {
     TextStyle style(String tab) => tester
         .widget<Text>(find.descendant(of: bar, matching: find.text(tab)))
         .style!;
-    expect(style('Tonight').fontWeight, FontWeight.w600);
+    expect(style('Tonight').fontWeight, FontWeight.w500);
     expect(style('Tonight').color, palette.textPrimary);
-    expect(style('Library').fontWeight, FontWeight.w400);
+    expect(style('Library').fontWeight, FontWeight.w500);
     expect(style('Library').color, palette.textSecondary);
     for (final tab in ['Tonight', 'Logbook', 'Library', 'Settings']) {
       expect(
@@ -201,6 +202,38 @@ void main() {
           expect(content.center.dy, closeTo(bounds.center.dy, .01));
         }
         expect(tester.takeException(), isNull);
+      }
+    }
+  });
+
+  testWidgets('every root page resizes with the window and keeps full-width '
+      'navigation', (tester) async {
+    await pumpApp(tester);
+    for (final route in [
+      AppRouter.tonight,
+      AppRouter.sessions,
+      AppRouter.library,
+      AppRouter.settings,
+    ]) {
+      AppRouter.router.go(route);
+      await settle(tester);
+      for (final width in [320.0, 375.0, 412.0, 600.0, 1024.0, 412.0]) {
+        // Resize the existing page, including a return to phone width.
+        tester.view.physicalSize = Size(width, width > 500 ? 700 : 900);
+        await settle(tester);
+        final bar = tester.getRect(find.byKey(AppShell.navigationKey));
+        expect(bar.left, closeTo(0, .01), reason: '$route at $width');
+        expect(bar.right, closeTo(width, .01), reason: '$route at $width');
+        final page = tester.getRect(find.byType(Scaffold).last);
+        expect(page.width, closeTo(width, .01), reason: '$route at $width');
+        final group = tester.getRect(find.byType(SectionCard).first);
+        expect(group.left, closeTo(24, .01), reason: '$route at $width');
+        expect(
+          group.right,
+          closeTo(width - 24, .01),
+          reason: '$route at $width',
+        );
+        expect(tester.takeException(), isNull, reason: '$route at $width');
       }
     }
   });

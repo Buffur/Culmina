@@ -163,7 +163,7 @@ void main() {
     expect(find.byKey(const Key('conditions.page.2')), findsOneWidget);
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.facts'))).data,
-      startsWith('Cloud 30%'),
+      'Cloud cover 30% in known dark hours',
     );
   });
 

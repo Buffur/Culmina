@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
+
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_editor.dart';
 import 'package:astroplan/presentation/shared/equipment_draft.dart';
@@ -70,85 +73,111 @@ const _newDraft = EquipmentDraft(
 );
 
 void main() {
-  for (final editing in [false, true]) {
-    testWidgets(
-      '${editing ? 'update' : 'add'} owns one write, guards exit, retries failure',
-      (t) async {
-        final gear = _Gear();
-        addTearDown(gear.dispose);
-        final pops = _Pops();
-        int? result;
-        t.view.physicalSize = const Size(375, 812);
-        t.view.devicePixelRatio = 1;
-        addTearDown(t.view.reset);
-        await t.pumpWidget(
-          ChangeNotifierProvider<GearViewModel>.value(
-            value: gear,
-            child: MaterialApp(
-              navigatorObservers: [pops],
-              home: Builder(
-                builder: (context) => Scaffold(
-                  body: TextButton(
-                    onPressed: () async {
-                      result = await showEquipmentEditor(
-                        context,
-                        existing: editing ? _rig : null,
-                        draft: editing ? null : _newDraft,
-                      );
-                    },
-                    child: const Text('Open editor'),
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      for (final editing in [false, true]) {
+        testWidgets(
+          '${editing ? 'update' : 'add'} owns one write, guards exit, retries failure',
+          (t) async {
+            final gear = _Gear();
+            addTearDown(gear.dispose);
+            final pops = _Pops();
+            int? result;
+            t.view.physicalSize = const Size(375, 812);
+            t.view.devicePixelRatio = 1;
+            addTearDown(t.view.reset);
+            await t.pumpWidget(
+              ChangeNotifierProvider<GearViewModel>.value(
+                value: gear,
+                child: MaterialApp(
+                  theme: phase2Theme(theme),
+                  builder: (_, child) =>
+                      phase2Frame(child: child!, theme: theme),
+                  navigatorObservers: [pops],
+                  home: Builder(
+                    builder: (context) => Scaffold(
+                      body: TextButton(
+                        onPressed: () async {
+                          result = await showEquipmentEditor(
+                            context,
+                            existing: editing ? _rig : null,
+                            draft: editing ? null : _newDraft,
+                          );
+                        },
+                        child: const Text('Open editor'),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        );
-        await t.tap(find.text('Open editor'));
-        await t.pumpAndSettle();
-        final save = find.byKey(const Key('rigEditor.save'));
-        final cancel = find.byKey(const Key('rigEditor.cancel'));
-        await t.tap(save);
-        await t.pump();
-        expect(gear.writes, hasLength(1));
-        expect(gear.writes.single.kind, editing ? 'update' : 'add');
-        expect(t.widget<FilledButton>(save).onPressed, isNull);
-        expect(t.widget<OutlinedButton>(cancel).onPressed, isNull);
-        await t.sendKeyEvent(LogicalKeyboardKey.tab);
-        await t.pump();
-        for (final field in find.byType(EditableText).evaluate()) {
-          expect((field.widget as EditableText).focusNode.hasFocus, isFalse);
-        }
-        // A second physical tap and system Back must not start another write
-        // or dismiss a still-pending editor, including an unchanged edit.
-        await t.tap(save);
-        await t.binding.handlePopRoute();
-        await t.pump();
-        expect(gear.writes, hasLength(1));
-        expect(save, findsOneWidget);
-        expect(pops.count, 0);
+            );
+            await t.tap(find.text('Open editor'));
+            await t.pumpAndSettle();
+            final save = find.byKey(const Key('rigEditor.save'));
+            final cancel = find.byKey(const Key('rigEditor.cancel'));
+            await t.tap(save);
+            await t.pump();
+            expect(gear.writes, hasLength(1));
+            expect(gear.writes.single.kind, editing ? 'update' : 'add');
+            expect(t.widget<FilledButton>(save).onPressed, isNull);
+            expect(t.widget<OutlinedButton>(cancel).onPressed, isNull);
+            await t.sendKeyEvent(LogicalKeyboardKey.tab);
+            await t.pump();
+            for (final field in find.byType(EditableText).evaluate()) {
+              expect(
+                (field.widget as EditableText).focusNode.hasFocus,
+                isFalse,
+              );
+            }
+            // A second physical tap and system Back must not start another write
+            // or dismiss a still-pending editor, including an unchanged edit.
+            await t.tap(save);
+            await t.binding.handlePopRoute();
+            await t.pump();
+            expect(gear.writes, hasLength(1));
+            expect(save, findsOneWidget);
+            expect(pops.count, 0);
+            await capturePhase2State(
+              t,
+              package: 'package3',
+              state: 'rig-${editing ? "edit" : "add"}-saving',
+              theme: theme,
+            );
 
-        gear.writes[0].done.completeError(
-          StateError('synthetic unavailable store'),
+            gear.writes[0].done.completeError(
+              StateError('synthetic unavailable store'),
+            );
+            await t.pumpAndSettle();
+            expect(save, findsOneWidget);
+            expect(t.widget<FilledButton>(save).onPressed, isNotNull);
+            expect(t.widget<OutlinedButton>(cancel).onPressed, isNotNull);
+            expect(find.text('Synthetic audit rig'), findsOneWidget);
+            expect(
+              find.textContaining("Couldn't save the rig"),
+              findsOneWidget,
+            );
+            await capturePhase2State(
+              t,
+              package: 'package3',
+              state: 'rig-${editing ? "edit" : "add"}-save-failed',
+              theme: theme,
+            );
+            await t.pump(const Duration(seconds: 5));
+            await t.pumpAndSettle();
+            await t.tap(save);
+            await t.pump();
+            expect(gear.writes, hasLength(2));
+            expect(gear.writes[1].profile.name, 'Synthetic audit rig');
+            gear.writes[1].done.complete(42);
+            await t.pumpAndSettle();
+            expect(save, findsNothing);
+            expect(pops.count, 1);
+            expect(result, editing ? 7 : 42);
+            await t.pumpWidget(const SizedBox.shrink());
+          },
         );
-        await t.pumpAndSettle();
-        expect(save, findsOneWidget);
-        expect(t.widget<FilledButton>(save).onPressed, isNotNull);
-        expect(t.widget<OutlinedButton>(cancel).onPressed, isNotNull);
-        expect(find.text('Synthetic audit rig'), findsOneWidget);
-        expect(find.textContaining("Couldn't save the rig"), findsOneWidget);
-        await t.pump(const Duration(seconds: 5));
-        await t.pumpAndSettle();
-        await t.tap(save);
-        await t.pump();
-        expect(gear.writes, hasLength(2));
-        expect(gear.writes[1].profile.name, 'Synthetic audit rig');
-        gear.writes[1].done.complete(42);
-        await t.pumpAndSettle();
-        expect(save, findsNothing);
-        expect(pops.count, 1);
-        expect(result, editing ? 7 : 42);
-        await t.pumpWidget(const SizedBox.shrink());
-      },
-    );
+      }
+    });
   }
 }

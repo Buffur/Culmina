@@ -1,0 +1,38 @@
+[
+  {
+    "source": ".agents/skills/culmina-design-spacing/SKILL.md",
+    "before_snapshot": "_archive/cleanup_2026-11-06/docs/instruction-followup-before/.agents/skills/culmina-design-spacing/SKILL.md",
+    "bytes": 1984,
+    "sha256": "8b598be4c304854a4db9a06f4f21d46215e70b6a1f14e098da4ab552f974474b",
+    "purpose": "Exact pre-edit source-description snapshot; no design value or executable code adoption.",
+    "after_sha256": "5efc12d20b1c294cad4f33aad0416dace31cba8ef72b5be11b8bb231672351ab",
+    "after_bytes": 2625
+  },
+  {
+    "source": ".agents/skills/culmina-design-components/references/data-display.md",
+    "before_snapshot": "_archive/cleanup_2026-11-06/docs/instruction-followup-before/.agents/skills/culmina-design-components/references/data-display.md",
+    "bytes": 6181,
+    "sha256": "666c7fc2f4b38c49e6598eec3508b42601564857d88ce484c64e7d02e3aabeff",
+    "purpose": "Exact pre-edit source-description snapshot; no design value or executable code adoption.",
+    "after_sha256": "dd97a505c9a321fb6fd561581ff01df852e9df8cc3f23ad0b1543782cc4da9ea",
+    "after_bytes": 6660
+  },
+  {
+    "source": ".agents/skills/culmina-design-tokens/references/semantic-map.md",
+    "before_snapshot": "_archive/cleanup_2026-11-06/docs/instruction-followup-before/.agents/skills/culmina-design-tokens/references/semantic-map.md",
+    "bytes": 4791,
+    "sha256": "038465166f922b8c54ec2c42bfb2861db83b841f5a949e279ffbf44e17a287bb",
+    "purpose": "Exact pre-edit source-description snapshot; no design value or executable code adoption.",
+    "after_sha256": "779e965f8edcec0a8284cd0c986ca0ee530a76894ceb2f13d071b27d3d9d65d2",
+    "after_bytes": 5513
+  },
+  {
+    "source": "docs/DESIGN_SYSTEM.md",
+    "before_snapshot": "_archive/cleanup_2026-11-06/docs/instruction-followup-before/docs/DESIGN_SYSTEM.md",
+    "bytes": 5336,
+    "sha256": "14ce60ff04aaa753d1f758970db64f838bebbecf6fa79659cd618b7504b634b8",
+    "purpose": "Exact pre-edit implementation index, preserving prior palette/type/layout snapshots; current runtime sources remain sole value owners.",
+    "after_sha256": "db44ec6862cb08c29b70508676b96c1d02a49e3fa7fe0305dbf2086c2b6988cc",
+    "after_bytes": 6311
+  }
+]

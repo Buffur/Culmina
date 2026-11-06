@@ -6,6 +6,11 @@
 // saving creates and chooses nothing. Through the real app and an
 // in-memory database.
 
+import 'package:astroplan/core/units/display_units.dart';
+
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
+
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -52,181 +57,279 @@ List<int> _phoneJpeg() {
   return jpegFile([exifApp1(exif.build().bytes)]);
 }
 
+class _FailingFirstRun extends InMemoryFirstRun {
+  @override
+  Future<void> markDone() async =>
+      throw StateError('synthetic preferences unavailable');
+}
+
+late String _phase2Theme;
+
 void main() {
-  late AppDatabase database;
-  late PlannerHarness vm;
-  late FakeLocationService location;
-  late FakeCaptureFileAccess files;
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      late AppDatabase database;
+      late PlannerHarness vm;
+      late FakeLocationService location;
+      late FakeCaptureFileAccess files;
 
-  Future<void> settle(WidgetTester tester) async {
-    for (var i = 0; i < 8; i++) {
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
-      await tester.pump(const Duration(milliseconds: 200));
-    }
-  }
+      Future<void> settle(WidgetTester tester) async {
+        for (var i = 0; i < 8; i++) {
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          await tester.pump(const Duration(milliseconds: 200));
+        }
+      }
 
-  /// A first run: no site, no rig, the Welcome page open.
-  Future<void> start(WidgetTester tester) async {
-    AppRouter.router.go(AppRouter.welcome);
-    SharedPreferences.setMockInitialValues({});
-    files = FakeCaptureFileAccess();
-    location = FakeLocationService(); // a denied permission
-    await tester.runAsync(() async {
-      database = AppDatabase(NativeDatabase.memory());
-      vm = PlannerHarness(
-        DriftTargetRepository(database),
-        DriftEquipmentRepository(database),
-        _NoForecast(),
-        DriftLocationRepository(database),
-        locationService: location,
-        reverseGeocoder: FakeReverseGeocoder(),
-        deviceTimeZone: FakeDeviceTimeZone(),
-        sessionRepository: DriftSessionRepository(database, clock: _december),
-        clock: _december,
-        firstRun: InMemoryFirstRun(),
-        captureFiles: files,
-      );
-      await vm.ready;
+      /// A first run: no site, no rig, the Welcome page open.
+      Future<void> start(
+        WidgetTester tester, {
+        InMemoryFirstRun? firstRun,
+      }) async {
+        AppRouter.router.go(AppRouter.welcome);
+        SharedPreferences.setMockInitialValues({});
+        files = FakeCaptureFileAccess();
+        location = FakeLocationService(); // a denied permission
+        await tester.runAsync(() async {
+          database = AppDatabase(NativeDatabase.memory());
+          vm = PlannerHarness(
+            DriftTargetRepository(database),
+            DriftEquipmentRepository(database),
+            _NoForecast(),
+            DriftLocationRepository(database),
+            locationService: location,
+            reverseGeocoder: FakeReverseGeocoder(),
+            deviceTimeZone: FakeDeviceTimeZone(),
+            sessionRepository: DriftSessionRepository(
+              database,
+              clock: _december,
+            ),
+            clock: _december,
+            firstRun: firstRun ?? InMemoryFirstRun(),
+            captureFiles: files,
+          );
+          await vm.ready;
+          await vm.vms.displaySettings.setAppearance(
+            _phase2Theme == 'light' ? Appearance.light : Appearance.dark,
+          );
+          if (_phase2Theme == 'field') await vm.theme.toggleFieldMode();
+        });
+        addTearDown(() => tester.runAsync(database.close));
+        tester.view.physicalSize = const Size(800, 3000);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: vm.providers,
+            child: MediaQuery(
+              data: MediaQueryData.fromView(tester.view),
+              child: phase2Frame(
+                theme: _phase2Theme,
+                applyFieldFilter: false,
+                child: const AstroPlanApp(),
+              ),
+            ),
+          ),
+        );
+        await settle(tester);
+        await capturePhase2State(
+          tester,
+          package: 'package4-startup',
+          state: 'welcome-no-site-no-rig',
+          theme: _phase2Theme,
+        );
+      }
+
+      Future<void> tapKey(WidgetTester tester, String key) async {
+        final f = find.byKey(Key(key));
+        await tester.ensureVisible(f);
+        await settle(tester);
+        await tester.tap(f);
+        await settle(tester);
+      }
+
+      String currentRoute() =>
+          AppRouter.router.routerDelegate.currentConfiguration.uri.toString();
+
+      Future<int> rigRows(WidgetTester tester) async => (await tester.runAsync(
+        () async =>
+            (await DriftEquipmentRepository(database).getAllEquipment()).length,
+      ))!;
+
+      for (final mode in ['start', 'back', 'persistence-failed']) {
+        testWidgets(
+          'optional setup closes through $mode without inventing selections',
+          (tester) async {
+            final firstRun = mode == 'persistence-failed'
+                ? _FailingFirstRun()
+                : InMemoryFirstRun();
+            await start(tester, firstRun: firstRun);
+            expect(vm.site.activeSite, isNull);
+            expect(vm.plan.selectedEquipment, isNull);
+            if (mode == 'back') {
+              await tester.binding.handlePopRoute();
+              await settle(tester);
+            } else {
+              await tapKey(tester, 'welcome.start');
+            }
+            expect(currentRoute(), AppRouter.tonight);
+            expect(vm.site.activeSite, isNull);
+            expect(vm.plan.selectedEquipment, isNull);
+            expect(firstRun.done, mode != 'persistence-failed');
+            if (mode == 'persistence-failed') {
+              expect(
+                find.textContaining("Couldn't save your setup"),
+                findsOneWidget,
+              );
+            }
+            await capturePhase2State(
+              tester,
+              package: 'package4-startup',
+              state: 'welcome-closed-$mode',
+              theme: _phase2Theme,
+            );
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+
+      testWidgets('A2: shown, Welcome never asks for the position; a tap asks '
+          'once', (tester) async {
+        await start(tester);
+        expect(find.byKey(const Key('welcome.site')), findsOneWidget);
+        expect(location.calls, 0, reason: 'showing the page asks nothing');
+        // Rebuilds (a scroll, the rig step) do not ask either.
+        await tester.ensureVisible(find.byKey(const Key('welcome.start')));
+        await settle(tester);
+        expect(location.calls, 0);
+
+        await tapKey(tester, 'welcome.useCurrentPosition');
+        expect(location.calls, 1, reason: 'one request per tap');
+      });
+
+      testWidgets('A3: after a denial the reason is shown and choosing or '
+          'entering a site still works, without asking again', (tester) async {
+        await start(tester);
+        await tapKey(tester, 'welcome.useCurrentPosition');
+        expect(location.calls, 1);
+        expect(
+          find.text(
+            LocationFailureText.message(LocationFailure.permissionDenied),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('welcome.site')),
+            matching: find.text('Not set'),
+          ),
+          findsOneWidget,
+          reason: 'a denial sets no site',
+        );
+        final choose = tester.widget<ButtonStyleButton>(
+          find.byKey(const Key('welcome.chooseSite')),
+        );
+        expect(choose.onPressed, isNotNull);
+
+        // Choose or add a site → Add site → typed by hand.
+        await tapKey(tester, 'welcome.chooseSite');
+        expect(find.text('Manage sites'), findsOneWidget);
+        await tester.tap(find.text('Add site'));
+        await settle(tester);
+        await tester.enterText(
+          find.byKey(const Key('siteEditor.name')),
+          'Garden',
+        );
+        await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
+        await tester.enterText(fieldLabeled('Longitude (°)'), '14.51');
+        await tapKey(tester, 'siteEditor.save');
+        expect(
+          vm.site.activeSite?.name,
+          'Garden',
+          reason: 'chosen to plan with',
+        );
+        // Back from the sites list (the editor closed itself on Save).
+        for (
+          var i = 0;
+          i < 2 && find.byKey(welcomeSite).evaluate().isEmpty;
+          i++
+        ) {
+          await tester.pageBack();
+          await settle(tester);
+        }
+        expect(currentRoute(), AppRouter.welcome);
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('welcome.site')),
+            matching: find.textContaining('Garden'),
+          ),
+          findsOneWidget,
+        );
+        expect(location.calls, 1, reason: 'nothing asked again');
+      });
+
+      testWidgets("A3: Welcome's photo path opens the metadata import; leaving "
+          'it without saving returns to Welcome with no rig', (tester) async {
+        await start(tester);
+        await startPhoto(tester);
+        expect(find.byKey(const Key('metadata.pick')), findsOneWidget);
+        expect(find.text('Add from a photo'), findsOneWidget);
+        expect(find.byKey(welcomeSite), findsNothing, reason: 'covered');
+
+        files.file('IMG.jpg', _phoneJpeg());
+        await tapKey(tester, 'metadata.pick');
+        await tapKey(tester, 'import.new');
+        expect(find.byKey(const Key('rigEditor.save')), findsOneWidget);
+        await tester.tap(find.text('Cancel'));
+        await settle(tester);
+        expect(
+          find.byKey(const Key('metadata.pick')),
+          findsOneWidget,
+          reason: "the editor's Cancel goes back to the import",
+        );
+        await tester.pageBack();
+        await settle(tester);
+
+        expect(currentRoute(), AppRouter.welcome);
+        expect(
+          find.byKey(welcomeSite),
+          findsOneWidget,
+          reason: 'back on Welcome',
+        );
+        expect(await rigRows(tester), 0);
+        expect(vm.plan.selectedEquipment, isNull);
+        expect(find.text(RigInputText.savedAndChosen), findsNothing);
+        expect(
+          find.descendant(
+            of: find.byKey(const Key('welcome.rig')),
+            matching: find.text('Not chosen'),
+          ),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets("A3: Welcome's photo path: a saved new rig comes back to "
+          'Welcome and is the plan\'s', (tester) async {
+        await start(tester);
+        await startPhoto(tester);
+        files.file('IMG.jpg', _phoneJpeg());
+        await tapKey(tester, 'metadata.pick');
+        await tapKey(tester, 'import.new');
+        await tapKey(tester, 'rigEditor.save');
+
+        expect(
+          find.byKey(welcomeSite),
+          findsOneWidget,
+          reason: 'back on Welcome',
+        );
+        expect(find.byKey(const Key('metadata.pick')), findsNothing);
+        expect(find.text(RigInputText.savedAndChosen), findsOneWidget);
+        expect(vm.plan.selectedEquipment?.cameraClass, CameraClass.phone);
+        expect(await rigRows(tester), 1);
+      });
     });
-    addTearDown(() => tester.runAsync(database.close));
-    tester.view.physicalSize = const Size(800, 3000);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(
-      MultiProvider(providers: vm.providers, child: const AstroPlanApp()),
-    );
-    await settle(tester);
   }
-
-  Future<void> tapKey(WidgetTester tester, String key) async {
-    final f = find.byKey(Key(key));
-    await tester.ensureVisible(f);
-    await settle(tester);
-    await tester.tap(f);
-    await settle(tester);
-  }
-
-  String currentRoute() =>
-      AppRouter.router.routerDelegate.currentConfiguration.uri.toString();
-
-  Future<int> rigRows(WidgetTester tester) async => (await tester.runAsync(
-    () async =>
-        (await DriftEquipmentRepository(database).getAllEquipment()).length,
-  ))!;
-
-  testWidgets('A2: shown, Welcome never asks for the position; a tap asks '
-      'once', (tester) async {
-    await start(tester);
-    expect(find.byKey(const Key('welcome.site')), findsOneWidget);
-    expect(location.calls, 0, reason: 'showing the page asks nothing');
-    // Rebuilds (a scroll, the rig step) do not ask either.
-    await tester.ensureVisible(find.byKey(const Key('welcome.start')));
-    await settle(tester);
-    expect(location.calls, 0);
-
-    await tapKey(tester, 'welcome.useCurrentPosition');
-    expect(location.calls, 1, reason: 'one request per tap');
-  });
-
-  testWidgets('A3: after a denial the reason is shown and choosing or '
-      'entering a site still works, without asking again', (tester) async {
-    await start(tester);
-    await tapKey(tester, 'welcome.useCurrentPosition');
-    expect(location.calls, 1);
-    expect(
-      find.text(LocationFailureText.message(LocationFailure.permissionDenied)),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: find.byKey(const Key('welcome.site')),
-        matching: find.text('Not set'),
-      ),
-      findsOneWidget,
-      reason: 'a denial sets no site',
-    );
-    final choose = tester.widget<ButtonStyleButton>(
-      find.byKey(const Key('welcome.chooseSite')),
-    );
-    expect(choose.onPressed, isNotNull);
-
-    // Choose or add a site → Add site → typed by hand.
-    await tapKey(tester, 'welcome.chooseSite');
-    expect(find.text('Manage sites'), findsOneWidget);
-    await tester.tap(find.text('Add site'));
-    await settle(tester);
-    await tester.enterText(find.byKey(const Key('siteEditor.name')), 'Garden');
-    await tester.enterText(fieldLabeled('Latitude (°)'), '46.05');
-    await tester.enterText(fieldLabeled('Longitude (°)'), '14.51');
-    await tapKey(tester, 'siteEditor.save');
-    expect(vm.site.activeSite?.name, 'Garden', reason: 'chosen to plan with');
-    // Back from the sites list (the editor closed itself on Save).
-    for (var i = 0; i < 2 && find.byKey(welcomeSite).evaluate().isEmpty; i++) {
-      await tester.pageBack();
-      await settle(tester);
-    }
-    expect(currentRoute(), AppRouter.welcome);
-    expect(
-      find.descendant(
-        of: find.byKey(const Key('welcome.site')),
-        matching: find.textContaining('Garden'),
-      ),
-      findsOneWidget,
-    );
-    expect(location.calls, 1, reason: 'nothing asked again');
-  });
-
-  testWidgets("A3: Welcome's photo path opens the metadata import; leaving "
-      'it without saving returns to Welcome with no rig', (tester) async {
-    await start(tester);
-    await startPhoto(tester);
-    expect(find.byKey(const Key('metadata.pick')), findsOneWidget);
-    expect(find.text('Add from a photo'), findsOneWidget);
-    expect(find.byKey(welcomeSite), findsNothing, reason: 'covered');
-
-    files.file('IMG.jpg', _phoneJpeg());
-    await tapKey(tester, 'metadata.pick');
-    await tapKey(tester, 'import.new');
-    expect(find.byKey(const Key('rigEditor.save')), findsOneWidget);
-    await tester.tap(find.text('Cancel'));
-    await settle(tester);
-    expect(
-      find.byKey(const Key('metadata.pick')),
-      findsOneWidget,
-      reason: "the editor's Cancel goes back to the import",
-    );
-    await tester.pageBack();
-    await settle(tester);
-
-    expect(currentRoute(), AppRouter.welcome);
-    expect(find.byKey(welcomeSite), findsOneWidget, reason: 'back on Welcome');
-    expect(await rigRows(tester), 0);
-    expect(vm.plan.selectedEquipment, isNull);
-    expect(find.text(RigInputText.savedAndChosen), findsNothing);
-    expect(
-      find.descendant(
-        of: find.byKey(const Key('welcome.rig')),
-        matching: find.text('Not chosen'),
-      ),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets("A3: Welcome's photo path: a saved new rig comes back to "
-      'Welcome and is the plan\'s', (tester) async {
-    await start(tester);
-    await startPhoto(tester);
-    files.file('IMG.jpg', _phoneJpeg());
-    await tapKey(tester, 'metadata.pick');
-    await tapKey(tester, 'import.new');
-    await tapKey(tester, 'rigEditor.save');
-
-    expect(find.byKey(welcomeSite), findsOneWidget, reason: 'back on Welcome');
-    expect(find.byKey(const Key('metadata.pick')), findsNothing);
-    expect(find.text(RigInputText.savedAndChosen), findsOneWidget);
-    expect(vm.plan.selectedEquipment?.cameraClass, CameraClass.phone);
-    expect(await rigRows(tester), 1);
-  });
 }
 
 /// Welcome's own rig step: the Phone class, then From a photo.

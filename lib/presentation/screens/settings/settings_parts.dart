@@ -6,15 +6,18 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/hybrid_icon.dart';
+import '../../shared/hybrid_quiet_ink.dart';
+import '../../shared/action_row.dart';
+import '../../shared/fact_row.dart';
 
 /// The pieces of Hybrid's Settings pages (settings.js, settings.css), so
 /// every page uses one geometry for the same role.
 
-/// A Settings page's padding: 12 below the app bar, 20 at the sides.
+/// After reading gutters: 24 at the sides and 12 below the app bar.
 const settingsPagePadding = EdgeInsets.fromLTRB(
-  AppSpacing.gutter,
-  AppSpacing.itemGap,
-  AppSpacing.gutter,
+  24,
+  AppSpacing.md,
+  24,
   AppSpacing.xl,
 );
 
@@ -28,7 +31,7 @@ class SettingsHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.only(top: top, bottom: AppSpacing.xs),
+    padding: EdgeInsets.only(top: top, bottom: AppSpacing.sm),
     child: Semantics(
       header: true,
       child: Text(
@@ -86,8 +89,7 @@ class SettingsHint extends StatelessWidget {
     padding: EdgeInsets.only(top: top),
     child: Text(
       text,
-      style: AppTextTheme.of(context)
-          .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+      style: AppTextTheme.of(context).caption
           .copyWith(color: color ?? AppPalette.of(context).textSecondary),
     ),
   );
@@ -120,65 +122,9 @@ class SettingsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    final scale = MediaQuery.textScalerOf(context);
-    return MergeSemantics(
-      child: Semantics(
-        button: true,
-        child: InkWell(
-          onTap: onTap,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              border: divider
-                  ? Border(bottom: BorderSide(color: p.border))
-                  : null,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-              child: Row(
-                children: [
-                  HybridIcon(
-                    icon,
-                    size: scale.scale(24),
-                    strokeWidth: 1.7,
-                    color: p.textPrimary,
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: AppSpacing.xs,
-                      children: [
-                        Text(
-                          title,
-                          style: AppTextTheme.of(context).rowTitle
-                              .copyWith(color: p.textPrimary),
-                        ),
-                        Text(
-                          summary,
-                          style: AppTextTheme.of(context)
-                              .resolve(
-                                AppTextTheme.of(context).body,
-                                AppTextGeometry.reading,
-                              )
-                              .copyWith(color: p.textSecondary),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  HybridIcon(
-                    HybridIcons.next,
-                    size: scale.scale(18),
-                    strokeWidth: 1.7,
-                    color: p.textSecondary,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+    return Padding(
+      padding: EdgeInsets.only(bottom: divider ? AppSpacing.sm : 0),
+      child: ActionRow(title: title, description: summary, onTap: onTap),
     );
   }
 }
@@ -215,30 +161,14 @@ class SettingsSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
     final ends = AppTextTheme.of(context).caption
-        .copyWith(color: p.textSecondary);
+        .copyWith(color: AppPalette.of(context).textSecondary);
     return Padding(
       padding: EdgeInsets.only(top: top),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.end,
-            spacing: AppSpacing.md,
-            runSpacing: AppSpacing.sm,
-            children: [
-              Text(title, style: settingsLegendStyle(context)),
-              Text(
-                label,
-                style: settingsLegendStyle(context).copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
-              ),
-            ],
-          ),
+          FactRow(label: title, value: label),
           SettingsHint(help),
           const SizedBox(height: AppSpacing.xs),
           HybridSlider(
@@ -380,8 +310,7 @@ class SettingsStepper extends StatelessWidget {
   }
 }
 
-/// A link that opens outside the app (`.settings-link`): 14 px primary,
-/// underlined, 48 tall.
+/// An external link using the adopted centered quiet-action role.
 class SettingsLink extends StatelessWidget {
   const SettingsLink({super.key, required this.label, required this.url});
 
@@ -394,24 +323,18 @@ class SettingsLink extends StatelessWidget {
     return Semantics(
       link: true,
       child: InkWell(
+        overlayColor: HybridQuietInk.overlay(context),
         onTap: () =>
             launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: HybridTokens.minTarget),
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             child: Text(
               label,
-              style: AppTextTheme.of(context)
-                  .resolve(
-                    AppTextTheme.of(context).body,
-                    AppTextGeometry.standard,
-                  )
-                  .copyWith(
-                    color: p.textPrimary,
-                    decoration: TextDecoration.underline,
-                    decorationColor: p.textPrimary,
-                  ),
+              textAlign: TextAlign.center,
+              style: AppTextTheme.of(context).actionLabel
+                  .copyWith(color: p.textPrimary),
             ),
           ),
         ),
@@ -470,53 +393,13 @@ class FactRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    final label = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).body, AppTextGeometry.supporting)
-        .copyWith(color: p.textSecondary);
-    final value = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
-        .copyWith(
-          color: p.textPrimary,
-          fontFeatures: const [FontFeature.tabularFigures()],
-        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (final (l, v, note) in rows)
+        for (final (label, value, note) in rows)
           Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: MergeSemantics(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    // The label at the start, the value at the end; each
-                    // wraps within its share when long.
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(child: Text(l, style: label)),
-                      const SizedBox(width: AppSpacing.itemGap),
-                      Flexible(
-                        child: Text(v, textAlign: TextAlign.end, style: value),
-                      ),
-                    ],
-                  ),
-                  if (note != null && note.isNotEmpty)
-                    Text(
-                      note,
-                      textAlign: TextAlign.end,
-                      style: AppTextTheme.of(context)
-                          .resolve(
-                            AppTextTheme.of(context).caption,
-                            AppTextGeometry.standard,
-                          )
-                          .copyWith(color: p.textSecondary),
-                    ),
-                ],
-              ),
-            ),
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: FactRow(label: label, value: value, caption: note),
           ),
       ],
     );

@@ -102,7 +102,10 @@ class StatusBlock extends StatelessWidget {
     ];
     final figuresFirst = figuresBeforeReason ?? separateFigures;
     final explanation = Text(
-      reason ?? '',
+      state == FitState.fits
+          ? (reason ?? '').replaceFirst('Everything fits with ', 'Fits with ')
+          : reason ?? '',
+      key: const Key('status.reason'),
       style: fitLine
           ? AppTextTheme.of(context)
                 .resolve(text.bodySmall, AppTextGeometry.fitExplanation)
@@ -116,7 +119,11 @@ class StatusBlock extends StatelessWidget {
                           .resolve(text.bodySmall, AppTextGeometry.fitVerdict)
                           .copyWith(fontWeight: FontWeight.w500)
                     : text.titleMedium))
-            ?.copyWith(color: FitText.color(state, theme.colorScheme, p));
+            ?.copyWith(
+              color: state == FitState.fits
+                  ? p.textPrimary
+                  : FitText.color(state, theme.colorScheme, p),
+            );
     final verdict = Text(
       headline(
         state,
@@ -132,6 +139,9 @@ class StatusBlock extends StatelessWidget {
       children: [
         Semantics(
           header: true,
+          label:
+              'Imaging-window fit: ${headline(state, needed: separateFigures ? null : needed, usable: separateFigures ? null : usable, missing: missing)}',
+          excludeSemantics: true,
           child: fitLine
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,54 +171,79 @@ class StatusBlock extends StatelessWidget {
           explanation,
         ],
         if (figures.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
           // S6.16: each number as a label above its value, so the answer's
           // figures read as a set (the scale's caption and group roles).
-          Wrap(
-            spacing: AppSpacing.lg,
-            runSpacing: AppSpacing.sm,
-            children: [
-              for (final (label, value) in figures)
-                MergeSemantics(
-                  child: Column(
-                    key: Key('status.number.$label'),
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        label,
-                        // Hybrid `.plan-measures dt`: 13 at normal leading.
-                        style:
-                            (fitLine
-                                    ? AppTextTheme.of(context).resolve(
-                                        text.bodySmall,
-                                        AppTextGeometry.fitMeasure,
-                                      )
-                                    : text.bodySmall)
-                                ?.copyWith(color: p.textTertiary),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns =
+                  MediaQuery.textScalerOf(context).scale(1) < 1.5 &&
+                  constraints.maxWidth.isFinite &&
+                  constraints.maxWidth >= 240;
+              final columnWidth = (constraints.maxWidth - AppSpacing.md) / 2;
+              final labelStyle = text.bodySmall?.copyWith(
+                color: p.textTertiary,
+              );
+              var labelHeight = 0.0;
+              if (columns) {
+                for (final (label, _) in figures) {
+                  final painter = TextPainter(
+                    text: TextSpan(text: label, style: labelStyle),
+                    textDirection: Directionality.of(context),
+                    textScaler: MediaQuery.textScalerOf(context),
+                  )..layout(maxWidth: columnWidth);
+                  if (painter.height > labelHeight) {
+                    labelHeight = painter.height;
+                  }
+                  painter.dispose();
+                }
+              }
+              return Wrap(
+                spacing: AppSpacing.md,
+                runSpacing: AppSpacing.sm,
+                children: [
+                  for (final (label, value) in figures)
+                    SizedBox(
+                      width: columns ? columnWidth : constraints.maxWidth,
+                      child: MergeSemantics(
+                        child: Column(
+                          key: Key('status.number.$label'),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              height: columns ? labelHeight : null,
+                              child: Text(
+                                label,
+                                // Hybrid `.plan-measures dt`: 13 at normal leading.
+                                style:
+                                    (fitLine
+                                            ? AppTextTheme.of(context).resolve(
+                                                text.bodySmall,
+                                                AppTextGeometry.fitMeasure,
+                                              )
+                                            : text.bodySmall)
+                                        ?.copyWith(color: p.textTertiary),
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              value,
+                              style: AppTextTheme.of(context).value.copyWith(
+                                color: p.textPrimary,
+                                fontWeight: FontWeight.w600,
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      if (fitLine) const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        value,
-                        style: fitLine
-                            ? AppTextTheme.of(context)
-                                  .resolve(
-                                    text.bodyMedium,
-                                    AppTextGeometry.fitValue,
-                                  )
-                                  .copyWith(
-                                    color: p.textPrimary,
-                                    fontWeight: FontWeight.w500,
-                                    fontFeatures: const [
-                                      FontFeature.tabularFigures(),
-                                    ],
-                                  )
-                            : text.titleSmall?.copyWith(color: p.textPrimary),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
+                    ),
+                ],
+              );
+            },
           ),
         ],
         if (reason != null && figuresFirst) ...[

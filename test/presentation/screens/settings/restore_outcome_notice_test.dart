@@ -1,3 +1,5 @@
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
 // F01 A5 (UXA-C1, SP09): the app instance that starts after a restore says
 // what actually happened, once, and forgets it; the restoring screen offers
 // nothing to edit (D7 A).
@@ -37,110 +39,127 @@ class _Stored implements BackupService {
 }
 
 void main() {
-  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-    for (final field in [false, true]) {
-      testWidgets('restore retains $mode with Field $field', (tester) async {
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 restore_outcome_notice $theme', () {
+      void scenario(String description, WidgetTesterCallback callback) =>
+          phase2Scenario(
+            description,
+            callback,
+            package: 'package4',
+            theme: theme,
+          );
+
+      for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+        for (final field in [false, true]) {
+          scenario('restore retains $mode with Field $field', (tester) async {
+            await tester.pumpWidget(
+              RestoringBackupApp(
+                theme: AppTheme.light,
+                darkTheme: AppTheme.dark,
+                themeMode: mode,
+                isFieldMode: field,
+              ),
+            );
+            final expected = field
+                ? AppTheme.fieldTheme
+                : mode == ThemeMode.light
+                ? AppTheme.light
+                : AppTheme.dark;
+            final context = tester.element(
+              find.byKey(const Key('restore.restoring')),
+            );
+            expect(Theme.of(context).colorScheme, expected.colorScheme);
+            expect(
+              find.byType(ColorFiltered),
+              field ? findsOneWidget : findsNothing,
+            );
+            expect(find.byType(ButtonStyleButton), findsNothing);
+            expect(tester.takeException(), isNull);
+          });
+        }
+      }
+
+      Future<_Stored> start(WidgetTester tester, RestoreOutcome? o) async {
+        final service = _Stored(o);
+        final vm = BackupViewModel(service);
+        await tester.runAsync(vm.load);
         await tester.pumpWidget(
-          RestoringBackupApp(
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: mode,
-            isFieldMode: field,
+          ChangeNotifierProvider<BackupViewModel?>.value(
+            value: vm,
+            child: MaterialApp(
+              theme: phase2Theme(theme),
+              builder: (context, child) => phase2Frame(
+                theme: theme,
+                child: RestoreOutcomeNotice(child: child!),
+              ),
+              home: const Scaffold(body: Text('Home')),
+            ),
           ),
         );
-        final expected = field
-            ? AppTheme.fieldTheme
-            : mode == ThemeMode.light
-            ? AppTheme.light
-            : AppTheme.dark;
-        final context = tester.element(
-          find.byKey(const Key('restore.restoring')),
-        );
-        expect(Theme.of(context).colorScheme, expected.colorScheme);
-        expect(
-          find.byType(ColorFiltered),
-          field ? findsOneWidget : findsNothing,
-        );
-        expect(find.byType(ButtonStyleButton), findsNothing);
-        expect(tester.takeException(), isNull);
-      });
-    }
-  }
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        return service;
+      }
 
-  Future<_Stored> start(WidgetTester tester, RestoreOutcome? o) async {
-    final service = _Stored(o);
-    final vm = BackupViewModel(service);
-    await tester.runAsync(vm.load);
-    await tester.pumpWidget(
-      ChangeNotifierProvider<BackupViewModel?>.value(
-        value: vm,
-        child: MaterialApp(
-          builder: (context, child) => RestoreOutcomeNotice(child: child!),
-          home: const Scaffold(body: Text('Home')),
+      for (final (outcome, says, unchanged) in [
+        (
+          const RestoreOutcome(RestoreResult.applied),
+          'Backup restored. Your data now comes from the backup.',
+          false,
         ),
-      ),
-    );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
-    return service;
-  }
+        (
+          const RestoreOutcome(
+            RestoreResult.refused,
+            problem: BackupProblem.unusable,
+          ),
+          'The backup was not applied: the data in it is damaged or incomplete. '
+              'Your current data is unchanged.',
+          true,
+        ),
+        (
+          const RestoreOutcome(RestoreResult.completedAfterInterruption),
+          'The restore was interrupted, and has now been completed. Your data '
+              'now comes from the backup.',
+          false,
+        ),
+      ]) {
+        scenario('${outcome.result.name}: reported once, then cleared', (
+          tester,
+        ) async {
+          final service = await start(tester, outcome);
+          expect(find.text(says), findsOneWidget);
+          expect(
+            find.textContaining('unchanged'),
+            unchanged ? findsOneWidget : findsNothing,
+            reason: 'never claim unchanged data after a new state committed',
+          );
+          await tester.runAsync(() async {});
+          expect(service.cleared, 1);
+          // Dismissed and rebuilt: not shown again.
+          await tester.tap(find.text('OK'));
+          await tester.pumpAndSettle();
+          await tester.pumpWidget(const SizedBox());
+          await start(tester, service.stored);
+          expect(find.text(says), findsNothing);
+        });
+      }
 
-  for (final (outcome, says, unchanged) in [
-    (
-      const RestoreOutcome(RestoreResult.applied),
-      'Backup restored. Your data now comes from the backup.',
-      false,
-    ),
-    (
-      const RestoreOutcome(
-        RestoreResult.refused,
-        problem: BackupProblem.unusable,
-      ),
-      'The backup was not applied: the data in it is damaged or incomplete. '
-          'Your current data is unchanged.',
-      true,
-    ),
-    (
-      const RestoreOutcome(RestoreResult.completedAfterInterruption),
-      'The restore was interrupted, and has now been completed. Your data '
-          'now comes from the backup.',
-      false,
-    ),
-  ]) {
-    testWidgets('${outcome.result.name}: reported once, then cleared', (
-      tester,
-    ) async {
-      final service = await start(tester, outcome);
-      expect(find.text(says), findsOneWidget);
-      expect(
-        find.textContaining('unchanged'),
-        unchanged ? findsOneWidget : findsNothing,
-        reason: 'never claim unchanged data after a new state committed',
-      );
-      await tester.runAsync(() async {});
-      expect(service.cleared, 1);
-      // Dismissed and rebuilt: not shown again.
-      await tester.tap(find.text('OK'));
-      await tester.pumpAndSettle();
-      await tester.pumpWidget(const SizedBox());
-      await start(tester, service.stored);
-      expect(find.text(says), findsNothing);
+      scenario('no outcome: nothing is shown', (tester) async {
+        final service = await start(tester, null);
+        expect(find.byKey(const Key('restore.outcome')), findsNothing);
+        expect(service.cleared, 0);
+      });
+
+      scenario('the restoring screen offers nothing to edit and cannot be '
+          'left with Back', (tester) async {
+        await tester.pumpWidget(const RestoringBackupApp());
+        expect(find.byKey(const Key('restore.restoring')), findsOneWidget);
+        expect(find.byType(TextField), findsNothing);
+        expect(find.byType(ButtonStyleButton), findsNothing);
+        final pop = tester.widget<PopScope>(find.byType(PopScope));
+        expect(pop.canPop, isFalse);
+      });
     });
   }
-
-  testWidgets('no outcome: nothing is shown', (tester) async {
-    final service = await start(tester, null);
-    expect(find.byKey(const Key('restore.outcome')), findsNothing);
-    expect(service.cleared, 0);
-  });
-
-  testWidgets('the restoring screen offers nothing to edit and cannot be '
-      'left with Back', (tester) async {
-    await tester.pumpWidget(const RestoringBackupApp());
-    expect(find.byKey(const Key('restore.restoring')), findsOneWidget);
-    expect(find.byType(TextField), findsNothing);
-    expect(find.byType(ButtonStyleButton), findsNothing);
-    final pop = tester.widget<PopScope>(find.byType(PopScope));
-    expect(pop.canPop, isFalse);
-  });
 }

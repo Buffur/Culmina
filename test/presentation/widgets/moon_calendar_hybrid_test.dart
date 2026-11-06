@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/core/theme/hybrid_tokens.dart';
@@ -13,6 +15,8 @@ import 'package:astroplan/presentation/viewmodels/settings_viewmodel.dart';
 import 'package:astroplan/presentation/viewmodels/site_viewmodel.dart';
 import 'package:astroplan/presentation/widgets/night_browser_sections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
@@ -51,9 +55,9 @@ List<MoonCalendarDay> _days(MoonCalendarRequest request) => [
   )
     MoonCalendarDay(
       date: CalendarDate(request.year, request.month, day),
-      phase: MoonPhaseName.waxingGibbous,
+      phase: day == 4 ? null : MoonPhaseName.waxingGibbous,
       illumination: .82,
-      phaseLongitudeDeg: 130,
+      phaseLongitudeDeg: day == 4 ? null : 130,
       moonFree: MoonFreeNight(
         kind: day == 2
             ? MoonFreeKind.none
@@ -105,6 +109,7 @@ void main() {
     double scale = 1,
     ThemeData? theme,
     double width = 412,
+    bool settle = true,
   }) async {
     tester.view.physicalSize = Size(width, 915);
     tester.view.devicePixelRatio = 1;
@@ -112,24 +117,38 @@ void main() {
     await tester.pumpWidget(
       ChangeNotifierProvider.value(
         value: browser,
-        child: MaterialApp(
-          theme: theme ?? AppTheme.light,
-          home: MediaQuery(
-            data: MediaQueryData(
-              size: Size(width, 915),
-              textScaler: TextScaler.linear(scale),
-            ),
-            child: const Scaffold(
-              body: SingleChildScrollView(
-                padding: EdgeInsets.all(20),
-                child: MoonCalendarSection(),
+        child: RepaintBoundary(
+          key: const Key('phase2.calendar.capture'),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: theme ?? AppTheme.light,
+            builder: (context, child) => theme == AppTheme.fieldTheme
+                ? ColorFiltered(
+                    colorFilter: AppTheme.fieldFilter,
+                    child: child!,
+                  )
+                : child!,
+            home: MediaQuery(
+              data: MediaQueryData(
+                size: Size(width, 915),
+                textScaler: TextScaler.linear(scale),
+              ),
+              child: const Scaffold(
+                body: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 19.5, vertical: 20),
+                  child: MoonCalendarSection(),
+                ),
               ),
             ),
           ),
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    if (settle) {
+      await tester.pumpAndSettle();
+    } else {
+      await tester.pump();
+    }
   }
 
   for (final (name, theme) in [
@@ -154,11 +173,17 @@ void main() {
         ),
         reason: 'The normal-scale heading and month controls share one row.',
       );
-      expect(find.text('10 h 55 min'), findsWidgets);
+      expect(find.text('10h55m'), findsWidgets);
       expect(find.text('10.9 h'), findsNothing);
-      expect(find.text('0 min'), findsOneWidget);
+      expect(find.text('0m'), findsOneWidget);
       expect(find.text('no dark'), findsOneWidget);
       final day = find.byKey(const Key('nightMoon.day.2026-12-30'));
+      final semantics = tester.ensureSemantics();
+      expect(
+        tester.getSemantics(day).label,
+        contains('moon-free dark 10 h 55 min'),
+      );
+      semantics.dispose();
       final decoration =
           tester
                   .widget<Container>(
@@ -170,6 +195,171 @@ void main() {
               as BoxDecoration;
       expect(decoration.color, theme.extension<HybridTokens>()!.selection);
       expect(decoration.borderRadius, BorderRadius.circular(6));
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final (mode, theme) in [
+    ('light', AppTheme.light),
+    ('dark', AppTheme.dark),
+    ('field', AppTheme.fieldTheme),
+  ]) {
+    for (final state in ['month', 'loading', 'error', 'week']) {
+      testWidgets('Phase2 calendar $state $mode', (tester) async {
+        await (FontLoader(
+          'Geist',
+        )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+        Completer<List<MoonCalendarDay>>? pending;
+        if (state == 'loading' || state == 'error') {
+          browser.dispose();
+          pending = Completer<List<MoonCalendarDay>>();
+          browser = NightBrowserViewModel(
+            site: site,
+            plan: plan,
+            settings: settings,
+            nowUtc: () => DateTime.utc(2026, 12, 30),
+            computeMonth: (_) => pending!.future,
+          );
+          expect(browser.monthDays, isNull);
+          if (state == 'error') {
+            await tester.runAsync(() async {
+              pending!.completeError(StateError('fixture compute failure'));
+              await browser.idle;
+            });
+          }
+        }
+        await show(
+          tester,
+          theme: theme,
+          width: 375,
+          scale: state == 'week' ? 2 : 1,
+          settle: state != 'loading',
+        );
+        if (state == 'month') {
+          final semantics = tester.ensureSemantics();
+          expect(
+            tester
+                .getSemantics(find.byKey(const Key('nightMoon.day.2026-12-04')))
+                .label,
+            contains('phase unknown'),
+          );
+          semantics.dispose();
+        }
+        if (state == 'loading') {
+          expect(
+            find.byKey(const Key('nightMoon.calendarLoading')),
+            findsOneWidget,
+          );
+        } else if (state == 'error') {
+          expect(
+            find.byKey(const Key('nightMoon.calendarError')),
+            findsOneWidget,
+          );
+          expect(find.text('Retry month'), findsOneWidget);
+        } else {
+          expect(
+            find.byKey(const Key('nightMoon.day.2026-12-30')),
+            findsOneWidget,
+          );
+          expect(
+            find.byKey(const Key('nightMoon.nextWeek')),
+            state == 'week' ? findsOneWidget : findsNothing,
+          );
+        }
+        final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+        if (output != null && output.isNotEmpty) {
+          final boundary = tester.renderObject<RenderRepaintBoundary>(
+            find.byKey(const Key('phase2.calendar.capture')),
+          );
+          await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: 1);
+            final bytes = await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            final file = File('$output/package1/calendar-$state-$mode.png');
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(bytes!.buffer.asUint8List());
+            image.dispose();
+          });
+        }
+        if (state == 'loading') {
+          await tester.runAsync(() async {
+            pending!.complete(const []);
+            await browser.idle;
+          });
+        }
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+
+  for (final (mode, theme) in [
+    ('light', AppTheme.light),
+    ('dark', AppTheme.dark),
+    ('field', AppTheme.fieldTheme),
+  ]) {
+    testWidgets('Phase2 calendar adjacent week loading failure retry $mode', (
+      tester,
+    ) async {
+      browser.dispose();
+      final pending = Completer<List<MoonCalendarDay>>();
+      var januaryRequests = 0;
+      browser = NightBrowserViewModel(
+        site: site,
+        plan: plan,
+        settings: settings,
+        nowUtc: () => DateTime.utc(2026, 12, 30),
+        computeMonth: (request) {
+          if (request.month == 12) return Future.value(_days(request));
+          januaryRequests++;
+          return januaryRequests == 1
+              ? pending.future
+              : Future.value(_days(request));
+        },
+      );
+      await (FontLoader(
+        'Geist',
+      )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+      await show(tester, theme: theme, width: 375, scale: 2, settle: false);
+      await tester.pump();
+      expect(find.byKey(const Key('nightMoon.weekLoading')), findsOneWidget);
+      Future<void> capture(String state) async {
+        final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+        if (output == null || output.isEmpty) return;
+        final boundary = tester.renderObject<RenderRepaintBoundary>(
+          find.byKey(const Key('phase2.calendar.capture')),
+        );
+        await tester.runAsync(() async {
+          final image = await boundary.toImage(pixelRatio: 1);
+          final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+          final file = File('$output/package1/calendar-$state-$mode.png');
+          await file.parent.create(recursive: true);
+          await file.writeAsBytes(bytes!.buffer.asUint8List());
+          image.dispose();
+        });
+      }
+
+      await capture('week-loading');
+      await tester.runAsync(() async {
+        pending.completeError(StateError('adjacent month fixture failure'));
+        await browser.idle;
+      });
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('nightMoon.weekError')), findsOneWidget);
+      expect(find.text('Retry week'), findsOneWidget);
+      expect(januaryRequests, 1, reason: 'no rebuild retry loop');
+      await capture('week-error');
+      await tester.ensureVisible(find.text('Retry week'));
+      await tester.tap(find.text('Retry week'));
+      await tester.pumpAndSettle();
+      expect(januaryRequests, 2);
+      expect(find.byKey(const Key('nightMoon.weekError')), findsNothing);
+      expect(find.byKey(const Key('nightMoon.day.2027-01-03')), findsOneWidget);
+      expect(
+        browser.viewedDate,
+        plan.eveningDate,
+        reason: 'retry never adopts a night',
+      );
       expect(tester.takeException(), isNull);
     });
   }

@@ -139,5 +139,7 @@ void main() {
     expect(cached.age, WeatherAge.aging);
     expect(cached.ageDuration, const Duration(hours: 6));
     expect(cached.refreshFailed, WeatherFailure.unavailable);
+    expect(vm.conditions.opportunityWeather!.refreshFailed, isTrue);
+    expect(vm.conditions.opportunityWeather!.age, WeatherAge.aging);
   });
 }

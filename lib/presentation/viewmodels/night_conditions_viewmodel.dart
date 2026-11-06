@@ -24,10 +24,8 @@ import 'site_viewmodel.dart';
 
 part 'night_forecast_loading.dart';
 
-/// Tonight's conditions for the plan (split out of the planner ViewModel in TASK 12.3): the night
-/// timeline, the forecast (ADR-012), the Moon, the imaging opportunity (ADR-013). Tonight's
-/// candidates moved to `CandidatesViewModel` (S6.5). The forecast reloads whenever the night or the
-/// site changes.
+/// Tonight's plan conditions, split from the planner ViewModel in TASK 12.3: night timeline, forecast (ADR-012), Moon and imaging opportunity (ADR-013).
+/// Candidates moved to `CandidatesViewModel` (S6.5); the forecast reloads when the night or site changes.
 class NightConditionsViewModel extends ChangeNotifier {
   NightConditionsViewModel({
     required this._site,
@@ -220,6 +218,7 @@ class NightConditionsViewModel extends ChangeNotifier {
         ? OpportunityWeather(
             snapshot: weather.snapshot,
             age: weather.age,
+            refreshFailed: weather.refreshFailed != null,
             dewMarginC: _settings.planningPreferences.dewMarginC,
           )
         : null;
@@ -238,7 +237,12 @@ class NightConditionsViewModel extends ChangeNotifier {
       target.declination,
       prefs,
       switch (_nightWeather) {
-        NightWeatherAvailable(:final snapshot, :final age) => (snapshot, age),
+        NightWeatherAvailable(
+          :final snapshot,
+          :final age,
+          :final refreshFailed,
+        ) =>
+          (snapshot, age, refreshFailed),
         final other => other,
       },
       _site.activeSite,

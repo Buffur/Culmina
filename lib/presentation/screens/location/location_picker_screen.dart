@@ -11,6 +11,8 @@ import '../../../core/config/app_identity.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../domain/services/location_service.dart';
 import '../../shared/coordinate_input.dart';
+import '../../shared/section_card.dart';
+import '../../shared/confirmation_patterns.dart';
 import '../../shared/hybrid_icon.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_text_theme.dart';
@@ -117,7 +119,12 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           decoration: BoxDecoration(
             border: Border(top: BorderSide(color: p.border)),
           ),
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            AppSpacing.sm,
+            AppSpacing.gutter,
+            AppSpacing.md,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -240,11 +247,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           ),
           if (_isLoadingLocation)
             const Center(
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
-                ),
+              child: SectionCard(
+                children: [Center(child: CircularProgressIndicator())],
               ),
             ),
         ],
@@ -301,7 +305,7 @@ class _CoordinateEntryDialogState extends State<_CoordinateEntryDialog> {
       signed: true,
       decimal: true,
     );
-    return AlertDialog(
+    return ConfirmationDialog(
       title: const Text('Enter coordinates'),
       content: Form(
         key: _formKey,
@@ -313,15 +317,20 @@ class _CoordinateEntryDialogState extends State<_CoordinateEntryDialog> {
               decoration: const InputDecoration(
                 labelText: 'Latitude (°)',
                 helperText: 'Decimal degrees, north positive',
+                helperMaxLines: 2,
+                errorMaxLines: 3,
               ),
               keyboardType: keyboard,
               validator: CoordinateInput.validateLatitude,
             ),
+            const SizedBox(height: AppSpacing.md),
             TextFormField(
               controller: _longitude,
               decoration: const InputDecoration(
                 labelText: 'Longitude (°)',
                 helperText: 'Decimal degrees, east positive',
+                helperMaxLines: 2,
+                errorMaxLines: 3,
               ),
               keyboardType: keyboard,
               validator: CoordinateInput.validateLongitude,

@@ -1,8 +1,10 @@
 # Flutter and Figma bindings
 
-Revision: AFTER-DARK-1.0. This is a binding inventory, **not an implementation patch**. [Semantic tokens](tokens_semantic.md) owns values. [Typography](typography.md) owns text geometry. Figma resources do not exist yet; every resource name below is planned, never a claimed node ID.
+Revision: AFTER-DARK-1.2. This is a binding inventory, **not an implementation patch**. [Semantic tokens](tokens_semantic.md) owns values. [Typography](typography.md) owns text geometry. Figma resources were constructed in F01 and refined in 1.1; this table maps names to owners, without claiming Dart implementation or duplicating live node IDs.
 
-Create one new collection `After / AFTER-DARK-1.0` with a single `Dark` mode. A role `Owner.member` maps mechanically to `Owner/member` (nested member dots become slashes) within this collection. Do not bind After to BEFORE's variables or edit a shared style. Keep distinct roles as distinct variables, even for equal values.
+The 2026-11-04 adoptions add the Figma-only actionLabel and nestedTitle presentation roles; neither is a new Dart API. Approved Tonight/Plan establish composition while the adopted DS board reconciles icon-only Moon, light-action and root-navigation treatments. Current resource inventory, exact evidence and remaining implementation limits live in WORKFLOW. No Flutter migration is implied.
+
+The existing independent collection is named `After / AFTER-DARK-1.2` with a single `Dark` mode; its resource IDs are retained from F01. A role `Owner.member` maps mechanically to `Owner/member` (nested member dots become slashes) within this collection. Do not bind After to BEFORE's variables or edit a shared style. Keep distinct roles as distinct variables, even for equal values.
 
 | Target role | Planned Figma variable | Actual Flutter owner/member |
 | --- | --- | --- |
@@ -103,11 +105,11 @@ Create one new collection `After / AFTER-DARK-1.0` with a single `Dark` mode. A 
 
 ## Typography and component bridges
 
-All named styles in [typography](typography.md) bind to `AppTextTheme.<role>` backed by [AppTypography](../../lib/core/theme/app_typography.dart). Figma names follow `After/AFTER-DARK-1.0/Text/<role>`. Named AppTextGeometry overrides are resolved centrally as that module specifies; do not inherit current numeric geometry accidentally.
+Existing Dart text-role bridges use `AppTextTheme.<role>` backed by [AppTypography](../../lib/core/theme/app_typography.dart), with the explicit After resolutions in [typography](typography.md). Figma names follow `After/AFTER-DARK-1.2/Text/<role>`; this naming does not imply a Dart member for every style. In particular, actionLabel and nestedTitle are Figma-only presentation roles. Named AppTextGeometry overrides are resolved centrally as that module specifies; do not inherit current numeric geometry accidentally.
 
 Catalog names `After/Forms/…`, `After/Navigation/…`, `After/Data/…` are proposed Figma assets and logical contracts. They are **not Dart classes**. Each catalog gives the real callable owner and any adapter needed. A future migration must preserve constructor/callback types, Provider ownership and guards; it requires separate owner authorization.
 
-ThemeData mappings refer to the installed Material theme built by AppTheme, not newly declared fields on AppTheme. AppPalette and HybridTokens are existing ThemeExtensions. `AfterGeometry.focusRingWidth` is the only new role in this revision: a shared, measurable focus indicator width has no named current project token.
+ThemeData mappings refer to the installed Material theme built by AppTheme, not newly declared fields on AppTheme. AppPalette and HybridTokens are existing ThemeExtensions. Within the variable mapping above, `AfterGeometry.focusRingWidth` is the proposed geometry role without a named current project token. This does not classify the Figma-only text roles as existing Dart APIs.
 
 ## Existing roles deliberately outside this revision
 

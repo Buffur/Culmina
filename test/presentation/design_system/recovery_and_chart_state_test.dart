@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:astroplan/core/theme/app_theme.dart';
-import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/domain/models/planning_preferences.dart';
@@ -22,6 +22,9 @@ import 'package:astroplan/presentation/viewmodels/settings_viewmodel.dart';
 import 'package:astroplan/presentation/widgets/weather_hybrid_view.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:astroplan/presentation/shared/night_time_formatter.dart';
+import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -182,7 +185,7 @@ void main() {
   for (final width in [375.0, 412.0]) {
     for (final theme in _variants) {
       testWidgets(
-        'Q5 pinned chart headers and one shared hour offset $width $theme',
+        'Q5 full-width plots share nearest-hour selection $width $theme',
         (t) async {
           final f = await _app(t, width: width, theme: theme);
           await t.runAsync(
@@ -199,132 +202,189 @@ void main() {
           final summary = scoped.nightWeatherSummary!;
           expect(summary.cloudGapHours, greaterThan(0));
           final originalSummary = summary;
-          final chart = find.byKey(const Key('weather.chartScroll'));
-          final scrollables = find.descendant(
-            of: chart,
-            matching: find.byType(Scrollable),
-          );
+          final chart = find.byKey(const Key('weather.charts'));
           expect(
-            scrollables,
-            findsOneWidget,
-            reason: 'all plots and repeated axes share one physical scroll position',
+            find.byKey(const Key('weather.selectionControls')),
+            findsNothing,
           );
-          final position = t.state<ScrollableState>(scrollables).position;
-          final page = t
-              .state<ScrollableState>(
-                find
-                    .ancestor(
-                      of: find.byKey(const Key('weather.summaryGroup')),
-                      matching: find.byType(Scrollable),
-                    )
-                    .first,
-              )
-              .position;
-          final heading = find.byKey(
-            const Key('weather.chartHeader.Temperature'),
-          );
-          page.jumpTo(page.pixels + t.getTopLeft(heading).dy - 180);
-          await hybridSettle(t);
+          for (final name in _metrics) {
+            expect(find.byKey(Key('weather.cursor.$name')), findsNothing);
+          }
+          expect(find.byKey(const Key('weather.chartScroll')), findsNothing);
           final viewport = t.getRect(chart);
-          final headerRects = <String, Rect>{};
-          final headerTexts = <String, List<String>>{};
-          for (final name in _metrics) {
-            final key = find.byKey(Key('weather.chartHeader.$name'));
-            headerRects[name] = t.getRect(key);
-            headerTexts[name] = _texts(key);
-          }
-          final hourZero = t
-              .widget<Text>(
-                find.descendant(
-                  of: find.byKey(const Key('weather.hour.0')),
-                  matching: find.byType(Text),
-                ),
-              )
-              .data!;
-          final repeated = find.descendant(
-            of: chart,
-            matching: find.text(hourZero),
-          );
-          final hourXs = [
-            for (final element in repeated.evaluate())
-              (element.renderObject as RenderBox).localToGlobal(Offset.zero).dx,
-          ];
-          expect(hourXs.length, greaterThanOrEqualTo(5));
-          await t.drag(
-            find.byKey(const Key('weather.hour.0')),
-            const Offset(-400, 0),
-          );
-          await hybridSettle(t);
-          expect(position.pixels, greaterThan(0));
-          for (final name in _metrics) {
-            final key = find.byKey(Key('weather.chartHeader.$name'));
-            final rect = t.getRect(key);
-            expect(
-              rect.left,
-              closeTo(headerRects[name]!.left, 0.5),
-              reason: '$name stays pinned',
-            );
-            expect(rect.right, lessThanOrEqualTo(viewport.right + 0.5));
-            expect(rect.left, greaterThanOrEqualTo(viewport.left - 0.5));
-            expect(
-              _texts(key),
-              headerTexts[name],
-              reason: 'same values, units, coverage and independent scale',
-            );
-          }
-          final afterXs = [
-            for (final element in repeated.evaluate())
-              (element.renderObject as RenderBox).localToGlobal(Offset.zero).dx,
-          ];
-          expect(afterXs.length, hourXs.length);
-          for (var i = 0; i < hourXs.length; i++) {
-            expect(
-              afterXs[i] - hourXs[i],
-              closeTo(-position.pixels, 0.5),
-              reason: 'time axis $i shares chart offset',
-            );
-          }
-          expect(scoped.nightWeatherSummary, same(originalSummary));
-          if (width == 375) {
-            // A wider viewport clamps the same controller's old end offset.
-            // Pinning must remain correct after content-dimension corrections.
-            t.view.physicalSize = const Size(412, 812);
-            await hybridSettle(t);
-            final resizedViewport = t.getRect(chart);
-            for (final name in _metrics) {
-              final rect = t.getRect(
-                find.byKey(Key('weather.chartHeader.$name')),
-              );
-              expect(
-                rect.left,
-                closeTo(resizedViewport.left, 0.5),
-                reason: '$name remains pinned after375->412 viewport clamp',
-              );
-            }
-          }
           final slots = [
             for (final slot in summary.slots)
               if (slot.instant || slot.preceding) slot,
           ];
-          final last = slots.length - 1;
-          final target = find.byKey(Key('weather.hour.$last'));
-          final labelBefore = t
-              .widget<Text>(find.byKey(const Key('weather.hourLabel')))
-              .data;
-          await t.tap(target);
+          String selected(String name) => t
+              .widget<Semantics>(find.byKey(Key('weather.chart.$name')))
+              .properties
+              .value!;
+          final before = selected(_metrics.first);
+          for (final name in _metrics) {
+            final panel = find.byKey(Key('weather.chart.$name'));
+            final rect = t.getRect(panel);
+            expect(rect.left, closeTo(viewport.left, .5));
+            expect(rect.right, closeTo(viewport.right, .5));
+            expect(
+              selected(name),
+              before,
+              reason: 'all five plots share the selected hour',
+            );
+            expect(
+              _texts(find.byKey(Key('weather.chartHeader.$name'))).join(' '),
+              contains('Dark time:'),
+            );
+          }
+          final targetIndex = slots.indexWhere(
+            (s) => s.instant && s.hour?.cloudCoverPct == null,
+          );
+          expect(targetIndex, greaterThanOrEqualTo(0));
+          final target = find.byKey(const Key('weather.chart.Cloud cover'));
+          await t.ensureVisible(target);
+          await hybridSettle(t);
+          final targetRect = t.getRect(target);
+          await t.tapAt(
+            Offset(
+              targetRect.left +
+                  24 +
+                  (targetIndex + .5) / slots.length * (targetRect.width - 24),
+              targetRect.center.dy,
+            ),
+          );
           await t.pump();
+          final after = selected(_metrics.first);
+          if (targetIndex != 0) expect(after, isNot(before));
+          for (final name in _metrics) {
+            expect(
+              selected(name),
+              after,
+              reason: 'plot taps update the same hour for $name',
+            );
+          }
           expect(
-            t.widget<Text>(find.byKey(const Key('weather.hourLabel'))).data,
-            isNot(labelBefore),
+            find.byKey(const Key('weather.selectionControls')),
+            findsOneWidget,
           );
-          final cell = t.widget<Container>(
-            find.descendant(of: target, matching: find.byType(Container)),
-          );
-          final tokens = Theme.of(t.element(target)).extension<HybridTokens>()!;
           expect(
-            (cell.decoration! as BoxDecoration).color,
-            tokens.selectedHourFill,
+            t.widget<Text>(find.byKey(const Key('weather.selectedTime'))).data,
+            after,
           );
+          double? cursorX;
+          for (final name in _metrics) {
+            final cursor = find.byKey(Key('weather.cursor.$name'));
+            expect(
+              cursor,
+              findsOneWidget,
+              reason: 'visible selected cursor for $name',
+            );
+            final rect = t.getRect(cursor);
+            expect(rect.height, greaterThan(0));
+            if (cursorX != null) expect(rect.left, closeTo(cursorX, .01));
+            cursorX = rect.left;
+          }
+          expect(
+            t
+                .widget<Text>(
+                  find.byKey(const Key('weather.chartValue.Cloud cover')),
+                )
+                .data,
+            'Unknown',
+          );
+          if (targetIndex > 0) {
+            await t.ensureVisible(
+              find.byKey(const Key('weather.previousHour')),
+            );
+            await hybridSettle(t);
+            await t.tap(find.byKey(const Key('weather.previousHour')));
+            await hybridSettle(t);
+            expect(
+              t
+                  .widget<Text>(find.byKey(const Key('weather.selectedTime')))
+                  .data,
+              isNot(after),
+            );
+            await t.tap(find.byKey(const Key('weather.nextHour')));
+            await hybridSettle(t);
+            expect(
+              t
+                  .widget<Text>(find.byKey(const Key('weather.selectedTime')))
+                  .data,
+              after,
+            );
+          }
+          expect(scoped.nightWeatherSummary, same(originalSummary));
+          expect(
+            slots[targetIndex].hour?.cloudCoverPct,
+            isNull,
+            reason: 'selection never turns the gap into zero',
+          );
+          await t.ensureVisible(find.text('Forecast details'));
+          await hybridSettle(t);
+          await t.tap(find.text('Forecast details'));
+          await hybridSettle(t);
+          expect(find.byKey(const Key('weather.hourSlider')), findsNothing);
+          final tableFinder = find.byKey(const Key('weather.table'));
+          final table = t.widget<Table>(
+            find.descendant(
+              of: tableFinder,
+              matching: find.byWidgetPredicate((widget) => widget is Table),
+            ),
+          );
+          final sourceIndex = summary.slots.indexWhere(
+            (slot) => slot.timeUtc == slots[targetIndex].timeUtc,
+          );
+          final cells = table.children[sourceIndex + 1].children;
+          final values = [
+            for (final cell in cells)
+              t
+                  .widget<Text>(
+                    find.descendant(
+                      of: find.byWidget(cell),
+                      matching: find.byType(Text),
+                    ),
+                  )
+                  .data!,
+          ];
+          expect(
+            values,
+            hasLength(9),
+            reason: 'pinned date plus every weather column',
+          );
+          expect(
+            values.first,
+            after,
+            reason: 'graph selection and exact table read the same UTC instant',
+          );
+          expect(
+            values[1],
+            'Unknown',
+            reason: 'that exact selected cloud gap remains missing, never 0',
+          );
+          expect(find.byKey(const Key('weather.tableKey')), findsOneWidget);
+          expect(
+            t.widget<Text>(find.byKey(const Key('weather.selectedTime'))).data,
+            after,
+          );
+          await t.ensureVisible(
+            find.byKey(const Key('weather.resetSelection')),
+          );
+          await hybridSettle(t);
+          await t.tap(find.byKey(const Key('weather.resetSelection')));
+          await hybridSettle(t);
+          expect(
+            find.byKey(const Key('weather.selectionControls')),
+            findsNothing,
+          );
+          expect(find.byKey(const Key('weather.selectedTime')), findsNothing);
+          for (final name in _metrics) {
+            expect(find.byKey(Key('weather.cursor.$name')), findsNothing);
+            expect(
+              _texts(find.byKey(Key('weather.chartHeader.$name'))).join(' '),
+              contains('Dark time:'),
+            );
+          }
+          expect(scoped.nightWeatherSummary, same(originalSummary));
           // Dispose and recreate the chart after a nonzero scroll offset.
           await t.runAsync(
             () => f.vm.vms.displaySettings.setWeatherView(WeatherView.rows),
@@ -335,6 +395,114 @@ void main() {
           );
           await t.pump();
           expect(t.takeException(), isNull);
+        },
+      );
+    }
+  }
+  for (final scale in [1.0, 2.0]) {
+    for (final hour in [3, 6]) {
+      testWidgets(
+        'G2 selected $hour hour is visible and truthful at $scale text',
+        (t) async {
+          final f = await _app(t, theme: 'dark');
+          t.platformDispatcher.textScaleFactorTestValue = scale;
+          t.view.physicalSize = Size(375, scale == 1 ? 2600 : 4000);
+          await t.runAsync(
+            () => f.vm.vms.displaySettings.setWeatherView(WeatherView.charts),
+          );
+          await HybridRenderContext(t, f).push(AppRouter.weather);
+          await hybridSettle(t);
+          final scoped = t
+              .element(find.byType(HybridWeatherView))
+              .read<NightConditionsViewModel>();
+          final slots = [
+            for (final slot in scoped.nightWeatherSummary!.slots)
+              if (slot.instant || slot.preceding) slot,
+          ];
+          final index = slots.indexWhere(
+            (slot) =>
+                NightTimeFormatter.wallClock(
+                  slot.timeUtc,
+                  zoneId: f.vm.site.displayZoneId,
+                ).hour ==
+                hour,
+          );
+          expect(index, greaterThanOrEqualTo(0));
+          final cloud = find.byKey(const Key('weather.chart.Cloud cover'));
+          await t.ensureVisible(cloud);
+          await hybridSettle(t);
+          final rect = t.getRect(cloud);
+          await t.tapAt(
+            Offset(
+              rect.left + 24 + (index + .5) / slots.length * (rect.width - 24),
+              rect.center.dy,
+            ),
+          );
+          await hybridSettle(t);
+          final controls = find.byKey(const Key('weather.selectionControls'));
+          expect(controls, findsOneWidget);
+          expect(t.getRect(controls).left, greaterThanOrEqualTo(0));
+          expect(t.getRect(controls).right, lessThanOrEqualTo(375));
+          for (final key in [
+            'weather.previousHour',
+            'weather.nextHour',
+            'weather.resetSelection',
+          ]) {
+            final bounds = t.getRect(find.byKey(Key(key)));
+            expect(bounds.height, greaterThanOrEqualTo(48));
+            expect(bounds.left, greaterThanOrEqualTo(0));
+            expect(bounds.right, lessThanOrEqualTo(375));
+          }
+          for (final name in _metrics) {
+            expect(find.byKey(Key('weather.cursor.$name')), findsOneWidget);
+          }
+          final selectedCloud = t
+              .widget<Text>(
+                find.byKey(const Key('weather.chartValue.Cloud cover')),
+              )
+              .data;
+          if (hour == 3) {
+            expect(slots[index].instant, isTrue);
+            expect(
+              selectedCloud,
+              QuantityText.percent(slots[index].hour!.cloudCoverPct!),
+            );
+          } else {
+            expect(slots[index].instant, isFalse);
+            expect(selectedCloud, 'Outside dark span');
+            expect(slots[index].preceding, isTrue);
+            expect(
+              t
+                  .widget<Text>(
+                    find.byKey(
+                      const Key('weather.chartValue.Precipitation probability'),
+                    ),
+                  )
+                  .data,
+              QuantityText.percent(
+                slots[index].hour!.precipitationProbabilityPct!,
+              ),
+            );
+          }
+          expect(t.takeException(), isNull);
+          final output =
+              Platform.environment['CULMINA_WEATHER_SELECTION_RENDERS'];
+          if (output != null) {
+            await t.runAsync(() async {
+              final boundary = t.renderObject<RenderRepaintBoundary>(
+                find.byKey(_shot),
+              );
+              final image = await boundary.toImage(pixelRatio: 1);
+              final bytes = await image.toByteData(
+                format: ui.ImageByteFormat.png,
+              );
+              Directory(output).createSync(recursive: true);
+              File(
+                '$output/selected-${hour.toString().padLeft(2, '0')}-dark-${scale.toInt()}.png',
+              ).writeAsBytesSync(bytes!.buffer.asUint8List());
+              image.dispose();
+            });
+          }
         },
       );
     }

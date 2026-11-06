@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +18,7 @@ import '../../shared/app_words.dart';
 import '../../shared/delete_patterns.dart';
 import '../../shared/example_text.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/content_states.dart';
 import '../../shared/equipment_draft.dart';
 import '../../shared/list_mode.dart';
 import '../../shared/rig_input_text.dart';
@@ -64,24 +65,42 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
   bool _helpOpen = false;
   bool _initialLoading = true;
   Object? _loadError;
+  int _loadGeneration = 0;
+
+  GearViewModel? _gearChanges;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final current = context.watch<GearViewModel>();
+    if (identical(current, _gearChanges)) return;
+    _gearChanges?.removeListener(_loadEquipment);
+    _gearChanges = current;
+    current.addListener(_loadEquipment);
     _loadEquipment();
   }
 
   @override
   void dispose() {
+    _gearChanges?.removeListener(_loadEquipment);
     _search.dispose();
     super.dispose();
   }
 
   Future<void> _loadEquipment() async {
+    // Distinguish an in-flight Retry from the failure it replaces.
+    if (_loadError != null) {
+      setState(() {
+        _initialLoading = true;
+        _loadError = null;
+      });
+    }
     final gear = context.read<GearViewModel>();
+    final generation = ++_loadGeneration;
+    bool current() => mounted && generation == _loadGeneration;
     try {
       final results = await gear.all();
-      if (mounted) {
+      if (current()) {
         setState(() {
           _equipment = results;
           _loadError = null;
@@ -90,7 +109,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
       }
     } catch (e) {
       // TASK 15.1: an unreadable list says so instead of looking empty.
-      if (mounted) {
+      if (current()) {
         setState(() {
           _loadError = e;
           _initialLoading = false;
@@ -227,7 +246,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
         ),
       ),
       body: _initialLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const LoadingState(message: 'Loading rigs…')
           : _loadError != null
           ? LoadFailureView(
               action: 'load the rigs',
@@ -240,10 +259,10 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
               key: const Key('rigs.empty'),
               padding: settingsPagePadding,
               children: [
-                DocumentSection(
+                SectionCard(
                   key: const Key('rigs.emptyGroup'),
                   children: [
-                    const SettingsCopy(AppWords.noRigs, primary: true),
+                    const EmptyState(title: AppWords.noRigs),
                     const SizedBox(height: AppSpacing.md),
                     _panel(),
                   ],
@@ -255,9 +274,10 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
               key: const Key('rigs.list'),
               padding: settingsPagePadding,
               children: [
-                DocumentSection(
+                SectionCard(
                   key: const Key('rigs.searchGroup'),
                   children: [
+                    const SettingsHeading('Find or add a rig', top: 0),
                     LibrarySearchField(
                       key: const Key('rigs.search'),
                       controller: _search,
@@ -283,13 +303,18 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
                       ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.itemGap),
+                if (shown.isNotEmpty)
+                  const SectionCard(
+                    joinNext: true,
+                    children: [SettingsHeading('Your rigs', top: 0)],
+                  ),
                 for (final (i, eq) in shown.indexed)
-                  DocumentSection(
-                    joinPrevious: i > 0,
+                  SectionCard(
+                    joinPrevious: true,
                     joinNext: i < shown.length - 1,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
+                      horizontal: AppSpacing.sm,
                     ),
                     children: [
                       SwipeToDelete(
@@ -339,7 +364,7 @@ class _EquipmentSelectionScreenState extends State<EquipmentSelectionScreen> {
                     ),
                   ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('rigs.helpGroup'),
                   children: [
                     Padding(

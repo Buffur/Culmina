@@ -1,6 +1,6 @@
 # Culmina After — Dark design-system contract
 
-**Revision AFTER-DARK-1.0 · 2026-10-30.** F01 is fully complete by explicit owner decision; see the [final workflow status and QA coverage](WORKFLOW.md). **Flutter migration is not authorized.** The D01 specification and its historical source observations below are preserved; subsequent F01 construction and verification are recorded in the workflow.
+**Current revision AFTER-DARK-1.2 · 2026-10-30 — Notion component refinement.** Owner-authorized refinement of the completed and accepted F01 base, AFTER-DARK-1.0. Geist is retained; typography and spacing are screenshot reconstructions. See [workflow and QA scope](WORKFLOW.md). **Flutter migration is not authorized.** Historical D01 instructions below retain their original revision.
 
 The target is a calm document-oriented Dark UI: neutral surfaces, strong but compact text hierarchy, growing content rows, restrained record containers and a readable blue action accent. Local Notion references guide visual grammar; Culmina retains its own scientific semantics, complete data, actions and states. Existing production skills remain authoritative for production work; D01 owner decisions authorize different After visual values and composition.
 
@@ -8,11 +8,17 @@ The target is a calm document-oriented Dark UI: neutral surfaces, strong but com
 
 F01 delivered 94 variables, 18 Geist text styles, 24 catalog sets and 417 variants on the [After Design System page](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=53-482), with three locked BEFORE copies in the [Before & After UI Lab](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=53-484). Figma authoring and Geist loading were verified through the supported Codex desktop input → Web Figma → Scripter route. This does not assert Figma MCP/server write access.
 
-Final structural audits passed. Visual coverage is 93/514 regions at 100%; 200% QA was excluded by the owner, and native checks were not performed. The owner accepted F01 with these recorded limits. See [WORKFLOW](WORKFLOW.md) for the authoritative final status and [QA checklist](qa_checklist.md) for stage-specific evidence and active future criteria.
+The accepted F01 base passed its final structural audits. Its historical visual coverage is 93/514 regions at 100%; 200% QA was excluded by the owner, and native checks were not performed. The owner accepted F01 with these recorded limits. See [WORKFLOW](WORKFLOW.md) for the authoritative final status and [QA checklist](qa_checklist.md) for stage-specific evidence and active future criteria.
 
-Next stage: **F02 — Tonight Pilot**, following the [Tonight contract](screens/tonight.md). AFTER pilot screens remain future work; task closure itself does not authorize F02 execution or Flutter migration.
+The current 1.2 refinement is recorded separately in the workflow; the original F01 evidence does not validate revised resources. On 2026-11-04 the owner designated current Tonight and Plan as approved composition references after the requested polish. They establish page hierarchy and composition; After: Design System supplies reusable components and state coverage, with the latest documented owner adaptations taking precedence over older specimens. The [adopted pilot board](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=111-34801) makes these adaptations visible. Further Dark screen mockups can use these combined authorities in a separately scoped task. This composition acceptance does not certify every alternate state, first viewport, 200% text, native behavior or accessibility, and does not authorize Flutter migration. See [workflow](WORKFLOW.md) and [readiness research](research/pilot_readiness_2026-11-04.md).
 
 ## Read in order
+
+For new screen authoring, start with the [current resolved profile and canonical master index](AUTHORING_PROFILE.md) and [current run/checkpoint](REDESIGN_RUN.md). They resolve the 2026-11-04 audit's applicability/selection conflicts; older base catalog recipes below remain source/state references, not competing visual defaults. Typography and geometry own the current values. No production Flutter migration is authorized.
+
+Then use the [redesign strategy](REDESIGN_STRATEGY.md) for the iteration procedure and stage order. Read the following supporting modules only as needed for the authorized screen:
+
+Questions about removing, merging or retaining source/BEFORE blocks follow the strategy's [Step 4 UX exploration gate](REDESIGN_STRATEGY.md#ux-exploration--structural-alternatives-extension-of-step-4-gate) before Figma editing. Routine visual QA follows its direct-execution exception.
 
 1. [Reference evidence and transformations](reference_mapping.md) — observations, exact pack indices and evidence limits.
 2. [Semantic tokens](tokens_semantic.md), [typography](typography.md), [spacing and border](spacing_and_border.md) — single authorities for target values.
@@ -21,6 +27,25 @@ Next stage: **F02 — Tonight Pilot**, following the [Tonight contract](screens/
 5. [Flutter/Figma bindings](flutter_mapping.md) — existing owners vs proposed role, without duplicated values.
 6. Pilot contracts: [Tonight](screens/tonight.md), [Plan](screens/plan.md), [Weather](screens/weather.md).
 7. [QA checklist](qa_checklist.md), [workflow record](WORKFLOW.md), [verification evidence](verification.json).
+
+## Combining accepted screens and the Design System
+
+Tonight and Plan establish accepted composition; the Design System owns reusable visual resources and states. Use the latest owner decisions in the owning modules and adopted pilot board when older specimens conflict. Keep the original sources/BEFORE and historical evidence independent.
+
+The [authoring profile](AUTHORING_PROFILE.md) owns canonical role selection; its linked modules own visual values. The [source-reconciled queue](research/ssot_audit_2026-11-04.md#numbered-base-screen-queue) owns stable numbering and source/route contexts. The [strategy](REDESIGN_STRATEGY.md) owns stage order and the one-base-screen procedure. The [run record](REDESIGN_RUN.md) alone owns current progress, page/root IDs and the owner checkpoint. Use those current records rather than restarting the completed consolidation.
+
+The 2026-11-04 owner-authorized consolidation supplies [canonical bindings and a screen/state/component/route matrix](research/consolidation_2026-11-04.md). Accepted recipes live under `After/Adopted` on DS; Tonight and Plan use linked instances. Existing catalog states and historical specimens remain available. Further work requires explicit screen or batch authorization; apply the current pipeline procedure in REDESIGN_STRATEGY. The queue alone is not authorization.
+
+### Historical — superseded composition plan
+
+The following plan is retained as decision history. Consolidation/rebinding has since been completed; its batch, extra-state and paired-viewport instructions do not govern the current base-screen run. Follow the strategy and run record above.
+
+1. **Consolidate the accepted deltas first.** Reuse existing catalog masters wherever they already match; promote accepted local recipes for navigation, appearance, context, fit, capture/tracking, estimate and conditions into their canonical After components. Preserve the earlier specimens as labeled history. The adoption board records the target; it does not claim every local frame has already been rebound to a master.
+2. **Rebind the two reference screens carefully.** Replace matching detached/local compositions with canonical component instances without changing their accepted content or geometry. A component change should then appear consistently in the system and both screen references. Validate before/after at the same fixture before extending it elsewhere.
+3. **Inventory actual screens and states.** Use the current [router](../../lib/presentation/navigation/app_router.dart), screen owners and application-map evidence. Map each screen to its components, entry/Back paths and relevant loading, empty, missing, unknown, stale, failure and success states. Distinguish root-tab shells from detail/Plan overlays; do not add Plan as a fifth tab.
+4. **Build in coherent flows.** Start with related Night/Moon/Weather details, then Library entities/editors and Logbook flows, followed by Settings and shared prompts. This is a suggested sequence for a separately authorized mockup task, not an automatic implementation queue. New state needs must come from actual product behavior.
+5. **Deliver usable screen specimens.** Pair the complete content Longread with a 375×812 first viewport, actual chrome/footer/safe-inset treatment and connected prototype routes. Preserve all scientific facts, provenance and explicit Save/Cancel/Undo distinctions; show realistic source-backed states rather than inventing measurements.
+6. **Review each batch against the references.** Check hierarchy, spacing, all relevant component states, long text, accessible alternatives and prototype navigation. Update the owning component when a reusable pattern changes, then recheck Tonight/Plan before accepting the batch. Native, Light/Field Red and Flutter migration remain separate authorized work.
 
 ## Historical D01 — scope and source boundary
 
@@ -44,7 +69,7 @@ The main external evidence is the local notion.id LLM-ready pack documented in [
 
 ## Historical D01 — original F01 build specification
 
-The instructions below preserve the original specification. F01 is now complete; they are not a request to restart it. Pilot composition and comparison criteria remain applicable to future authorized AFTER screens. The final F01 QA scope supersedes the original 200% requirement for F01 only.
+The instructions below preserve the original specification. F01 is now complete; they are not a request to restart it. Reuse pilot comparison criteria only within the current owner-authorized scope: the base-screen strategy defers the second viewport, additional states and expanded scaling checks. The final F01 QA scope supersedes the original 200% requirement for F01 only.
 
 Create the page **After: Design System** with clearly labeled sections:
 
@@ -65,6 +90,6 @@ F01 must check source nodes still exist and retain the recorded names/dimensions
 
 ## Current coverage and readiness
 
-The 24 component contracts have been constructed in Figma and F01 is owner-accepted. Its scoped structural and visual evidence is recorded in [WORKFLOW](WORKFLOW.md); full-file visual coverage and native behavior/accessibility are not established. The [QA checklist](qa_checklist.md) retains active parity, layout and scientific-data criteria for future AFTER screens.
+The original 24 catalog component contracts were constructed in Figma and F01 1.0 is owner-accepted. The current documented count is 25, including the source-backed [CandidateRow extension](components/data_display.md#afteradoptedcandidaterow); this addition does not change the historical F01 catalog count. Current visual values follow the owner-authorized 1.2 Notion refinement. Its scoped structural and visual evidence is recorded in [WORKFLOW](WORKFLOW.md); full-file visual coverage and native behavior/accessibility are not established. The [QA checklist](qa_checklist.md) retains active parity, layout and scientific-data criteria for future AFTER screens.
 
-Documentation is ready for **F02 — Tonight Pilot**. Recheck the actual source fixture and operational authoring access when F02 is authorized; preserve BEFORE and shared dependencies. Flutter migration requires separate authorization and native verification.
+The two Longreads are owner-designated composition baselines as recorded in WORKFLOW. Remaining state, viewport, scaling and interaction criteria require their own evidence; preserve BEFORE and shared dependencies. Flutter migration requires separate authorization and native verification.

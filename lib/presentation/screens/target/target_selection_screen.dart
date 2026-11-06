@@ -4,7 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/content_states.dart';
 
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -58,19 +59,35 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
   /// differs from [_searchQuery] the newer search is still running.
   String _shownQuery = '';
 
+  TargetsViewModel? _targetChanges;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final current = context.watch<TargetsViewModel>();
+    if (identical(current, _targetChanges)) return;
+    _targetChanges?.removeListener(_loadTargets);
+    _targetChanges = current;
+    current.addListener(_loadTargets);
     _loadTargets();
   }
 
   @override
   void dispose() {
+    _targetChanges?.removeListener(_loadTargets);
     _searchController.dispose();
     super.dispose();
   }
 
   Future<void> _loadTargets() async {
+    // A failed read's Retry is a new pending request, not the old failure.
+    // Keep the cached records and current query for its eventual response.
+    if (_loadError != null) {
+      setState(() {
+        _initialLoading = true;
+        _loadError = null;
+      });
+    }
     final targets = context.read<TargetsViewModel>();
     final generation = ++_generation;
     final query = _searchQuery;
@@ -245,16 +262,18 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
         key: const Key('targets.list'),
         padding: settingsPagePadding,
         children: [
-          DocumentSection(
+          SectionCard(
             key: const Key('targets.searchGroup'),
             children: [
+              const SettingsHeading('Search and add', top: 0),
               LibrarySearchField(
                 key: const Key('targets.search'),
                 controller: _searchController,
                 label: 'Search targets',
-                hint: 'Designation or name, e.g. M31 or Andromeda',
+                hint: 'Designation or name',
                 onChanged: _onSearchChanged,
               ),
+              const SettingsHint('e.g. M31 or Andromeda', top: 4),
               const SizedBox(height: AppSpacing.itemGap),
               LibraryPrimaryAction(
                 key: const Key('targets.add'),
@@ -267,7 +286,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
           if (_initialLoading)
             const Padding(
               padding: EdgeInsets.all(AppSpacing.lg),
-              child: Center(child: CircularProgressIndicator()),
+              child: LoadingState(message: 'Loading targets…'),
             )
           // F24 A6: an older query's list is never shown under newer text.
           else if (searching)
@@ -287,7 +306,7 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
             )
           else ...[
             const SizedBox(height: AppSpacing.md),
-            DocumentSection(
+            SectionCard(
               joinNext: own.isNotEmpty,
               children: [
                 const SettingsHeading('Your targets', top: 0),
@@ -301,14 +320,14 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
               ],
             ),
             for (final (i, t) in own.indexed)
-              DocumentSection(
+              SectionCard(
                 joinPrevious: true,
                 joinNext: i < own.length - 1,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                 children: [row(t, last: i == own.length - 1)],
               ),
             const SizedBox(height: AppSpacing.md),
-            DocumentSection(
+            SectionCard(
               joinNext: catalogue.isNotEmpty,
               children: [
                 const SettingsHeading('Catalogue', top: 0),
@@ -326,10 +345,10 @@ class _TargetSelectionScreenState extends State<TargetSelectionScreen> {
               ],
             ),
             for (final (i, t) in catalogue.indexed)
-              DocumentSection(
+              SectionCard(
                 joinPrevious: true,
                 joinNext: i < catalogue.length - 1,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                 children: [row(t, last: i == catalogue.length - 1)],
               ),
           ],

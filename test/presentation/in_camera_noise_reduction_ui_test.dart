@@ -327,7 +327,7 @@ void main() {
       await tester.pump();
       final row = find.ancestor(
         of: find.text('In-camera noise reduction'),
-        matching: find.byType(Row),
+        matching: find.byType(HybridFact),
       );
       expect(
         find.descendant(of: row, matching: find.text('Not included')),

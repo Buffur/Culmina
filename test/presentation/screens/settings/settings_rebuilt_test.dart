@@ -1,3 +1,5 @@
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
 // S9.4 (RG-13 answered by S9.3; D9-3; RD-11 = S9, TD-050): Settings in
 // sections by what a value changes; the Moon and cloud gates reachable, and
 // their thresholds used by the planner; the optional overheads' values
@@ -85,212 +87,238 @@ class _Broken implements PlanningPreferencesRepository {
 }
 
 void main() {
-  late AppDatabase database;
-  late PlannerHarness vm;
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 settings_rebuilt $theme', () {
+      void scenario(String description, WidgetTesterCallback callback) =>
+          phase2Scenario(
+            description,
+            callback,
+            package: 'package4',
+            theme: theme,
+          );
 
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+      late AppDatabase database;
+      late PlannerHarness vm;
 
-  /// Ljubljana, the night of 24 Nov 2026 (near full Moon: the Moon is up
-  /// and bright through the dark hours), M42 and the example plan.
-  Future<void> build(
-    WidgetTester tester, {
-    PlanningPreferencesRepository? preferences,
-    bool cloudy = false,
-  }) async {
-    await tester.runAsync(() async {
-      database = AppDatabase(NativeDatabase.memory());
-      await CatalogSeeder(DriftTargetRepository(database)).seedIfNeeded();
-      await EquipmentSeeder(DriftEquipmentRepository(database)).seedIfNeeded();
-      final sites = DriftLocationRepository(database);
-      final id = await sites.insertLocation(
-        domain.LocationProfile(
-          id: 0,
-          name: 'Ljubljana',
-          latitude: 46.05,
-          longitude: 14.51,
-          timeZoneId: 'Europe/Ljubljana',
-        ),
+      setUp(() => SharedPreferences.setMockInitialValues({}));
+
+      /// Ljubljana, the night of 24 Nov 2026 (near full Moon: the Moon is up
+      /// and bright through the dark hours), M42 and the example plan.
+      Future<void> build(
+        WidgetTester tester, {
+        PlanningPreferencesRepository? preferences,
+        bool cloudy = false,
+      }) async {
+        await tester.runAsync(() async {
+          database = AppDatabase(NativeDatabase.memory());
+          await CatalogSeeder(DriftTargetRepository(database)).seedIfNeeded();
+          await EquipmentSeeder(DriftEquipmentRepository(database))
+              .seedIfNeeded();
+          final sites = DriftLocationRepository(database);
+          final id = await sites.insertLocation(
+            domain.LocationProfile(
+              id: 0,
+              name: 'Ljubljana',
+              latitude: 46.05,
+              longitude: 14.51,
+              timeZoneId: 'Europe/Ljubljana',
+            ),
+          );
+          SharedPreferences.setMockInitialValues({'activeLocationId': id});
+          final clock = FixedClock(DateTime.utc(2026, 11, 24, 16));
+          vm = PlannerHarness(
+            DriftTargetRepository(database),
+            DriftEquipmentRepository(database),
+            cloudy ? _Cloudy(clock) : _NoWeather(),
+            sites,
+            locationService: FakeLocationService(),
+            deviceTimeZone: FakeDeviceTimeZone(),
+            clock: clock,
+            preferencesRepository: preferences,
+          );
+          await vm.ready;
+          await vm.choosePlan();
+        });
+        addTearDown(() => tester.runAsync(database.close));
+        tester.view.physicalSize = const Size(800, 6000);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: vm.providers,
+            child: MaterialApp(
+              theme: phase2Theme(theme),
+              builder: (_, child) => phase2Frame(child: child!, theme: theme),
+              home: SettingsScreen(),
+            ),
+          ),
+        );
+        await tester.pump();
+        await tester.tap(find.byKey(const Key('settings.open.planning')));
+        await tester.pumpAndSettle();
+        // F12 (AM-01): the gates and optional times are one tap away.
+        await tester.tap(find.byKey(const Key('settings.advanced')));
+        await tester.pumpAndSettle();
+      }
+
+      Future<void> save(WidgetTester tester, {bool reopen = false}) async {
+        await tester.tap(find.byKey(const Key('settings.savePlanning')));
+        await tester.runAsync(() => pumpEventQueue());
+        await tester.pumpAndSettle();
+        if (reopen) {
+          await tester.tap(find.byKey(const Key('settings.open.planning')));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const Key('settings.advanced')));
+          await tester.pumpAndSettle();
+        }
+      }
+
+      Finder inTile(String key, Type type) => find.descendant(
+        of: find.byKey(Key(key)),
+        matching: find.byType(type),
       );
-      SharedPreferences.setMockInitialValues({'activeLocationId': id});
-      final clock = FixedClock(DateTime.utc(2026, 11, 24, 16));
-      vm = PlannerHarness(
-        DriftTargetRepository(database),
-        DriftEquipmentRepository(database),
-        cloudy ? _Cloudy(clock) : _NoWeather(),
-        sites,
-        locationService: FakeLocationService(),
-        deviceTimeZone: FakeDeviceTimeZone(),
-        clock: clock,
-        preferencesRepository: preferences,
-      );
-      await vm.ready;
-      await vm.choosePlan();
+
+      scenario('the sections, in order, each saying what it changes', (
+        tester,
+      ) async {
+        await build(tester);
+        expect(find.text('Planning'), findsOneWidget);
+        final headings = [
+          'Capture budget',
+          'Imaging window',
+          'Gates and optional times',
+          'Guidance',
+        ];
+        final ys = [
+          for (final h in headings) tester.getTopLeft(find.text(h).first).dy,
+        ];
+        expect(ys, orderedEquals([...ys]..sort()));
+        expect(
+          find.text(
+            'Changes advice only; never the imaging window or the fit.',
+          ),
+          findsOneWidget,
+        );
+      });
+
+      scenario('TD-050: the Moon gate turned on at a threshold changes the '
+          'imaging window the planner computes', (tester) async {
+        await build(tester);
+        final before = vm.imagingOpportunity!.usableTime;
+        expect(before, greaterThan(Duration.zero));
+
+        await tester.tap(inTile('settings.moonGate', HybridSwitch));
+        await tester.pump();
+        expect(vm.planningPreferences.moonGateEnabled, isFalse);
+        expect(
+          find.text('Excludes time when the Moon is up and at least 50% lit.'),
+          findsOneWidget,
+        );
+        // Drag the threshold to 0 %: any Moon above the horizon excludes time.
+        await tester.drag(
+          inTile('settings.moonGate', Slider),
+          const Offset(-2000, 0),
+        );
+        await tester.pump();
+        expect(vm.imagingOpportunity!.usableTime, before);
+
+        await tester.tap(inTile('settings.cloudGate', HybridSwitch));
+        await tester.pump();
+        await save(tester);
+        expect(vm.planningPreferences.moonGateMinIlluminationPct, 0);
+        expect(vm.imagingOpportunity!.usableTime, lessThan(before));
+        expect(vm.planningPreferences.optionalGates.cloudMaxPct, 50);
+        await tester.runAsync(() async {
+          final prefs = await SharedPreferences.getInstance();
+          expect(prefs.getBool('moonGateEnabled'), isTrue);
+          expect(prefs.getBool('cloudGateEnabled'), isTrue);
+        });
+      });
+
+      scenario('TD-089: the cloud gate at a threshold changes the window '
+          'against the forecast; at 100 % it excludes nothing', (tester) async {
+        await build(tester, cloudy: true);
+        await tester.runAsync(() => vm.conditions.idle);
+        await tester.pump();
+        final before = vm.imagingOpportunity!.usableTime;
+        expect(before, greaterThan(Duration.zero));
+        await tester.tap(inTile('settings.cloudGate', HybridSwitch));
+        await tester.pump();
+        expect(vm.imagingOpportunity!.usableTime, before);
+        await save(tester, reopen: true);
+        expect(
+          vm.imagingOpportunity!.usableTime,
+          Duration.zero,
+          reason: '80 % cloud is above the 50 % gate every forecast hour',
+        );
+        await tester.drag(
+          inTile('settings.cloudGate', Slider),
+          const Offset(3000, 0),
+        );
+        await tester.pump();
+        await save(tester);
+        expect(vm.planningPreferences.cloudGateMaxPct, 100);
+        expect(vm.imagingOpportunity!.usableTime, before);
+      });
+
+      scenario('the time between frames reaches the model\'s 120 s', (
+        tester,
+      ) async {
+        await build(tester);
+        await tester.drag(
+          inTile('settings.perFrame', Slider),
+          const Offset(3000, 0),
+        );
+        await tester.pump();
+        await save(tester);
+        expect(
+          vm.planningPreferences.perFrameOverheadSeconds,
+          PlanningPreferences.perFrameRange.$2,
+        );
+      });
+
+      scenario('an overhead\'s value is edited within its range, persists and '
+          'changes the budget', (tester) async {
+        await build(tester);
+        await tester.tap(inTile('settings.dither', HybridSwitch));
+        await tester.pump();
+        final load = vm.captureBudget.windowLoadMs;
+        await tester.tap(find.byTooltip('Settle: more'));
+        await tester.pump();
+        expect(vm.captureBudget.windowLoadMs, load);
+        await tester.tap(find.byTooltip('Every: less'));
+        await tester.pump();
+        await save(tester, reopen: true);
+        expect(vm.planningPreferences.ditherSettleSeconds, 20);
+        expect(vm.captureBudget.windowLoadMs, greaterThan(load));
+        expect(vm.planningPreferences.ditherEveryNFrames, 2);
+        await tester.runAsync(() async {
+          final prefs = await SharedPreferences.getInstance();
+          expect(prefs.getDouble('ditherSettleSeconds'), 20);
+          expect(prefs.getInt('ditherEveryNFrames'), 2);
+        });
+        for (var i = 0; i < 5; i++) {
+          await tester.tap(find.byTooltip('Every: less'));
+          await tester.pump();
+        }
+        await save(tester);
+        expect(
+          vm.planningPreferences.ditherEveryNFrames,
+          1,
+          reason: 'the floor',
+        );
+      });
+
+      scenario('a setting that cannot be saved says so', (tester) async {
+        await build(tester, preferences: _Broken());
+        await tester.tap(inTile('settings.cloudGate', HybridSwitch));
+        await tester.pump();
+        await save(tester);
+        expect(find.byKey(const Key('settings.unsaved')), findsOneWidget);
+        expect(vm.planningPreferences.cloudGateEnabled, isTrue);
+        expect(find.text('Applied · not saved'), findsOneWidget);
+      });
     });
-    addTearDown(() => tester.runAsync(database.close));
-    tester.view.physicalSize = const Size(800, 6000);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: vm.providers,
-        child: const MaterialApp(home: SettingsScreen()),
-      ),
-    );
-    await tester.pump();
-    await tester.tap(find.byKey(const Key('settings.open.planning')));
-    await tester.pumpAndSettle();
-    // F12 (AM-01): the gates and optional times are one tap away.
-    await tester.tap(find.byKey(const Key('settings.advanced')));
-    await tester.pumpAndSettle();
   }
-
-  Future<void> save(WidgetTester tester, {bool reopen = false}) async {
-    await tester.tap(find.byKey(const Key('settings.savePlanning')));
-    await tester.runAsync(() => pumpEventQueue());
-    await tester.pumpAndSettle();
-    if (reopen) {
-      await tester.tap(find.byKey(const Key('settings.open.planning')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('settings.advanced')));
-      await tester.pumpAndSettle();
-    }
-  }
-
-  Finder inTile(String key, Type type) =>
-      find.descendant(of: find.byKey(Key(key)), matching: find.byType(type));
-
-  testWidgets('the sections, in order, each saying what it changes', (
-    tester,
-  ) async {
-    await build(tester);
-    expect(find.text('Planning'), findsOneWidget);
-    final headings = [
-      'Capture budget',
-      'Imaging window',
-      'Gates and optional times',
-      'Guidance',
-    ];
-    final ys = [
-      for (final h in headings) tester.getTopLeft(find.text(h).first).dy,
-    ];
-    expect(ys, orderedEquals([...ys]..sort()));
-    expect(
-      find.text('Changes advice only; never the imaging window or the fit.'),
-      findsOneWidget,
-    );
-  });
-
-  testWidgets('TD-050: the Moon gate turned on at a threshold changes the '
-      'imaging window the planner computes', (tester) async {
-    await build(tester);
-    final before = vm.imagingOpportunity!.usableTime;
-    expect(before, greaterThan(Duration.zero));
-
-    await tester.tap(inTile('settings.moonGate', HybridSwitch));
-    await tester.pump();
-    expect(vm.planningPreferences.moonGateEnabled, isFalse);
-    expect(
-      find.text('Excludes time when the Moon is up and at least 50% lit.'),
-      findsOneWidget,
-    );
-    // Drag the threshold to 0 %: any Moon above the horizon excludes time.
-    await tester.drag(
-      inTile('settings.moonGate', Slider),
-      const Offset(-2000, 0),
-    );
-    await tester.pump();
-    expect(vm.imagingOpportunity!.usableTime, before);
-
-    await tester.tap(inTile('settings.cloudGate', HybridSwitch));
-    await tester.pump();
-    await save(tester);
-    expect(vm.planningPreferences.moonGateMinIlluminationPct, 0);
-    expect(vm.imagingOpportunity!.usableTime, lessThan(before));
-    expect(vm.planningPreferences.optionalGates.cloudMaxPct, 50);
-    await tester.runAsync(() async {
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getBool('moonGateEnabled'), isTrue);
-      expect(prefs.getBool('cloudGateEnabled'), isTrue);
-    });
-  });
-
-  testWidgets('TD-089: the cloud gate at a threshold changes the window '
-      'against the forecast; at 100 % it excludes nothing', (tester) async {
-    await build(tester, cloudy: true);
-    await tester.runAsync(() => vm.conditions.idle);
-    await tester.pump();
-    final before = vm.imagingOpportunity!.usableTime;
-    expect(before, greaterThan(Duration.zero));
-    await tester.tap(inTile('settings.cloudGate', HybridSwitch));
-    await tester.pump();
-    expect(vm.imagingOpportunity!.usableTime, before);
-    await save(tester, reopen: true);
-    expect(
-      vm.imagingOpportunity!.usableTime,
-      Duration.zero,
-      reason: '80 % cloud is above the 50 % gate every forecast hour',
-    );
-    await tester.drag(
-      inTile('settings.cloudGate', Slider),
-      const Offset(3000, 0),
-    );
-    await tester.pump();
-    await save(tester);
-    expect(vm.planningPreferences.cloudGateMaxPct, 100);
-    expect(vm.imagingOpportunity!.usableTime, before);
-  });
-
-  testWidgets('the time between frames reaches the model\'s 120 s', (
-    tester,
-  ) async {
-    await build(tester);
-    await tester.drag(
-      inTile('settings.perFrame', Slider),
-      const Offset(3000, 0),
-    );
-    await tester.pump();
-    await save(tester);
-    expect(
-      vm.planningPreferences.perFrameOverheadSeconds,
-      PlanningPreferences.perFrameRange.$2,
-    );
-  });
-
-  testWidgets('an overhead\'s value is edited within its range, persists and '
-      'changes the budget', (tester) async {
-    await build(tester);
-    await tester.tap(inTile('settings.dither', HybridSwitch));
-    await tester.pump();
-    final load = vm.captureBudget.windowLoadMs;
-    await tester.tap(find.byTooltip('Settle: more'));
-    await tester.pump();
-    expect(vm.captureBudget.windowLoadMs, load);
-    await tester.tap(find.byTooltip('Every: less'));
-    await tester.pump();
-    await save(tester, reopen: true);
-    expect(vm.planningPreferences.ditherSettleSeconds, 20);
-    expect(vm.captureBudget.windowLoadMs, greaterThan(load));
-    expect(vm.planningPreferences.ditherEveryNFrames, 2);
-    await tester.runAsync(() async {
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.getDouble('ditherSettleSeconds'), 20);
-      expect(prefs.getInt('ditherEveryNFrames'), 2);
-    });
-    for (var i = 0; i < 5; i++) {
-      await tester.tap(find.byTooltip('Every: less'));
-      await tester.pump();
-    }
-    await save(tester);
-    expect(vm.planningPreferences.ditherEveryNFrames, 1, reason: 'the floor');
-  });
-
-  testWidgets('a setting that cannot be saved says so', (tester) async {
-    await build(tester, preferences: _Broken());
-    await tester.tap(inTile('settings.cloudGate', HybridSwitch));
-    await tester.pump();
-    await save(tester);
-    expect(find.byKey(const Key('settings.unsaved')), findsOneWidget);
-    expect(vm.planningPreferences.cloudGateEnabled, isTrue);
-    expect(find.text('Applied · not saved'), findsOneWidget);
-  });
 }

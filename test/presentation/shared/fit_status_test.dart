@@ -1,6 +1,6 @@
 // S1.9 (UX-16, UX-15(2)): "Tight" is a caution at least as prominent as
 // "Fits"; a plan missing its site or target is neutral, while a real
-// no-window night stays an error.
+// no-window night retains its explicit status colour.
 
 import 'package:astroplan/core/theme/app_palette.dart';
 import 'package:astroplan/core/theme/app_theme.dart';
@@ -54,8 +54,8 @@ void main() {
         }
       });
 
-      test('$name: a missing input is neutral; a real no-window is an '
-          'error', () {
+      test('$name: a missing input is neutral; a real no-window has its '
+          'own status colour', () {
         final scheme = theme.colorScheme;
         final palette = theme.extension<AppPalette>()!;
         final neutral = FitText.color(FitState.needsInput, scheme, palette);
@@ -64,7 +64,10 @@ void main() {
         for (final bg in [theme.scaffoldBackgroundColor, scheme.surface]) {
           expect(_contrast(neutral, bg), greaterThanOrEqualTo(4.5));
         }
-        expect(FitText.color(FitState.noWindow, scheme, palette), scheme.error);
+        expect(
+          FitText.color(FitState.noWindow, scheme, palette),
+          palette.statusNoWindow,
+        );
         expect(FitText.label(FitState.needsInput), 'No window');
       });
     }

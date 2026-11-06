@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/config/feature_scope.dart';
 import '../../core/theme/app_palette.dart';
+import '../../core/theme/app_radius.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import '../../core/theme/hybrid_view_entrance.dart';
 import '../shared/app_words.dart';
@@ -70,10 +71,10 @@ class AppShell extends StatelessWidget {
         onTap: () => select(i),
         child: Material(
           color: selected ? hybrid.surfaceSubtle : HybridTokens.transparent,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(AppRadius.small),
           child: InkWell(
             key: Key('nav.${item.label.toLowerCase()}'),
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(AppRadius.small),
             onTap: () => select(i),
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 56),
@@ -89,18 +90,14 @@ class AppShell extends StatelessWidget {
                       HybridIcon(
                         item.icon,
                         size: MediaQuery.textScalerOf(context).scale(19),
+                        strokeWidth: 1.8,
                         color: color,
                       ),
                       Text(
                         item.label,
                         textAlign: TextAlign.center,
                         style: AppTextTheme.of(context).navigationLabel
-                            .copyWith(
-                              color: color,
-                              fontWeight: selected
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                            ),
+                            .copyWith(color: color),
                       ),
                     ],
                   ),

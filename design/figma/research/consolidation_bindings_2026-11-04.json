@@ -1,0 +1,730 @@
+{
+  "revision": "AFTER-DARK-1.2",
+  "scope": "Accepted Tonight and Plan canonical instance bindings; nested placement IDs may belong to an owning master",
+  "screen_roots": [
+    "84:34120",
+    "84:34506"
+  ],
+  "canonical_board": "118:37186",
+  "bindings": [
+    {
+      "source": "84:34180",
+      "master": "118:37192",
+      "instance": "118:37193",
+      "name": "Action / Light primary",
+      "keys": [
+        "Text 1 / Action/Label#118:0",
+        "Text 2 / Action/Feedback#118:1"
+      ]
+    },
+    {
+      "source": "84:34743",
+      "master": "118:37192",
+      "instance": "118:37198",
+      "name": "After/Adopted/Action / Light primary",
+      "shared": true
+    },
+    {
+      "source": "88:266",
+      "master": "118:37203",
+      "instance": "118:37204",
+      "name": "PlanState / Saved compact",
+      "keys": [
+        "Text 1 / Saved/Label#118:2"
+      ]
+    },
+    {
+      "source": "88:270",
+      "master": "118:37203",
+      "instance": "118:37208",
+      "name": "After/Adopted/PlanState / Saved compact",
+      "shared": true
+    },
+    {
+      "source": "88:279",
+      "master": "118:37212",
+      "instance": "118:37213",
+      "name": "SectionHeading / Inset",
+      "keys": [
+        "Text 1 / Night/Section heading#118:3"
+      ]
+    },
+    {
+      "source": "88:280",
+      "master": "118:37212",
+      "instance": "118:37215",
+      "name": "After/Adopted/SectionHeading / Inset",
+      "shared": true
+    },
+    {
+      "source": "99:40944",
+      "master": "118:37212",
+      "instance": "118:37217",
+      "name": "After/Adopted/SectionHeading / Inset",
+      "shared": true
+    },
+    {
+      "source": "88:31863",
+      "master": "118:37219",
+      "instance": "118:37220",
+      "name": "EstimateMetric / Quiet",
+      "keys": [
+        "Text 1 / FactRow/Label#118:4",
+        "Text 2 / FactRow/Value#118:5",
+        "Text 3 / FactRow/Caption#118:6",
+        "Text 4 / FactRow/Provenance#118:7"
+      ]
+    },
+    {
+      "source": "88:31871",
+      "master": "118:37219",
+      "instance": "118:37228",
+      "name": "After/Adopted/EstimateMetric / Quiet",
+      "shared": true
+    },
+    {
+      "source": "88:31880",
+      "master": "118:37219",
+      "instance": "118:37236",
+      "name": "After/Adopted/EstimateMetric / Quiet",
+      "shared": true
+    },
+    {
+      "source": "88:31888",
+      "master": "118:37219",
+      "instance": "118:37244",
+      "name": "After/Adopted/EstimateMetric / Quiet",
+      "shared": true
+    },
+    {
+      "source": "86:255",
+      "master": "118:37252",
+      "instance": "118:37253",
+      "name": "ContextAction / Site",
+      "keys": [
+        "Text 1 / Action/Label#118:8"
+      ]
+    },
+    {
+      "source": "86:262",
+      "master": "118:37264",
+      "instance": "118:37265",
+      "name": "ContextAction / Night",
+      "keys": [
+        "Text 1 / Action/Label#118:9"
+      ]
+    },
+    {
+      "source": "88:31818",
+      "master": "118:37276",
+      "instance": "118:37277",
+      "name": "FitAnswer / Tonight",
+      "keys": [
+        "Text 1 / Fit/Verdict#118:10",
+        "Text 2 / Fit/Fact label#118:11",
+        "Text 3 / Fit/Fact value#118:12",
+        "Text 4 / Fit/Fact label#118:13",
+        "Text 5 / Fit/Fact value#118:14",
+        "Text 6 / Fit/Reason#118:15",
+        "Text 7 / Fit/Capture end#118:16"
+      ]
+    },
+    {
+      "source": "88:31807",
+      "master": "118:37288",
+      "instance": "118:37289",
+      "name": "FitAnswer / Plan",
+      "keys": [
+        "Text 1 / Fit/Verdict#118:17",
+        "Text 2 / Fit/Fact label#118:18",
+        "Text 3 / Fit/Fact value#118:19",
+        "Text 4 / Fit/Fact label#118:20",
+        "Text 5 / Fit/Fact value#118:21",
+        "Text 6 / Fit/Reason#118:22",
+        "Text 7 / Fit/Capture end#118:23"
+      ]
+    },
+    {
+      "source": "88:31848",
+      "master": "118:37300",
+      "instance": "118:37301",
+      "name": "Action / Tracking remedy",
+      "keys": [
+        "Text 1 / Command/Label#118:24"
+      ]
+    },
+    {
+      "source": "88:31852",
+      "master": "118:37303",
+      "instance": "118:37304",
+      "name": "Action / Add block",
+      "keys": [
+        "Text 1 / Command/Label#118:25"
+      ]
+    },
+    {
+      "source": "88:31854",
+      "master": "118:37306",
+      "instance": "118:37307",
+      "name": "Action / Calibration",
+      "keys": [
+        "Text 1 / Command/Label#118:26"
+      ]
+    },
+    {
+      "source": "88:31856",
+      "master": "118:37309",
+      "instance": "118:37310",
+      "name": "ContextAction / Fill window",
+      "keys": [
+        "Text 1 / Command/Label#118:27",
+        "Text 2 / Fill/Parameters#118:28"
+      ]
+    },
+    {
+      "source": "88:31833",
+      "master": "118:37313",
+      "instance": "118:37314",
+      "name": "CaptureBlock / Light",
+      "keys": [
+        "Text 1 / CaptureBlock/Title#118:29",
+        "Text 2 / CaptureBlock/Integration#118:30",
+        "Text 3 / CaptureBlock/Settings#118:31",
+        "Text 4 / CaptureBlock/Window capacity#118:32"
+      ]
+    },
+    {
+      "source": "88:31845",
+      "master": "118:37330",
+      "instance": "118:37331",
+      "name": "Tracking / Warning",
+      "keys": [
+        "Text 1 / Tracking/Heading#118:33",
+        "Text 2 / Tracking/Warning#118:34"
+      ]
+    },
+    {
+      "source": "88:31850",
+      "master": "118:37340",
+      "instance": "118:37341",
+      "name": "CaptureCommands",
+      "keys": [
+        "Text 1 / Fill/Proposal context#118:35"
+      ]
+    },
+    {
+      "source": "88:31898",
+      "master": "118:37351",
+      "instance": "118:37352",
+      "name": "Disclosure / Estimate budget",
+      "keys": [
+        "Text 1 / Disclosure/Title#118:36",
+        "Text 2 / Disclosure/Summary#118:37",
+        "Text 3 / Details/Timing rule#118:38",
+        "Text 4 / Details/Scope#118:39"
+      ]
+    },
+    {
+      "source": "88:31908",
+      "master": "118:37362",
+      "instance": "118:37363",
+      "name": "Disclosure / Estimate storage",
+      "keys": [
+        "Text 1 / Disclosure/Title#118:40",
+        "Text 2 / Disclosure/Summary#118:41",
+        "Text 3 / Details/Timing rule#118:42",
+        "Text 4 / Details/Scope#118:43"
+      ]
+    },
+    {
+      "source": "88:31918",
+      "master": "118:37373",
+      "instance": "118:37374",
+      "name": "Disclosure / Estimate gain",
+      "keys": [
+        "Text 1 / Disclosure/Title#118:44",
+        "Text 2 / Disclosure/Summary#118:45",
+        "Text 3 / Details/Timing rule#118:46",
+        "Text 4 / Details/Scope#118:47"
+      ]
+    },
+    {
+      "source": "88:283",
+      "master": "118:37384",
+      "instance": "118:37385",
+      "name": "RootTab / Tonight selected",
+      "keys": [
+        "Text 1 / RootTab/Label#118:48"
+      ]
+    },
+    {
+      "source": "88:287",
+      "master": "118:37391",
+      "instance": "118:37392",
+      "name": "RootTab / Logbook",
+      "keys": [
+        "Text 1 / RootTab/Label#118:49"
+      ]
+    },
+    {
+      "source": "88:291",
+      "master": "118:37400",
+      "instance": "118:37401",
+      "name": "RootTab / Library",
+      "keys": [
+        "Text 1 / RootTab/Label#118:50"
+      ]
+    },
+    {
+      "source": "88:295",
+      "master": "118:37408",
+      "instance": "118:37409",
+      "name": "RootTab / Settings",
+      "keys": [
+        "Text 1 / RootTab/Label#118:51"
+      ]
+    },
+    {
+      "source": "88:281",
+      "master": "118:37415",
+      "instance": "118:43479",
+      "name": "RootTabs / Tonight",
+      "keys": []
+    },
+    {
+      "source": "84:34123",
+      "master": "118:37445",
+      "instance": "118:37446",
+      "name": "Chrome / Tonight heading",
+      "keys": [
+        "Text 1 / Tonight/Heading#118:52"
+      ]
+    },
+    {
+      "source": "84:34129",
+      "master": "118:37455",
+      "instance": "118:37456",
+      "name": "ContextSelectors",
+      "keys": [
+        "Text 1 / Action/Feedback#118:53",
+        "Text 2 / Action/Feedback#118:54"
+      ]
+    },
+    {
+      "source": "86:268",
+      "master": "118:37483",
+      "instance": "118:37484",
+      "name": "PlanRecord / Summary",
+      "keys": [
+        "Text 1 / Section/Heading#118:55",
+        "Text 2 / Section/Summary#118:56",
+        "Text 3 / Plan record/Heading#118:57",
+        "Text 4 / Plan record/Target#118:58",
+        "Text 5 / Plan record/Rig#118:59"
+      ]
+    },
+    {
+      "source": "84:34122",
+      "master": "118:37501",
+      "instance": "118:37502",
+      "name": "Pattern / Tonight identity",
+      "keys": [
+        "Text 1 / Tonight/Intro#118:60"
+      ]
+    },
+    {
+      "source": "84:34140",
+      "master": "118:37540",
+      "instance": "118:37541",
+      "name": "Pattern / Your plan",
+      "keys": []
+    },
+    {
+      "source": "84:34185",
+      "master": "118:37575",
+      "instance": "118:37576",
+      "name": "Pattern / Tonight night ahead",
+      "keys": []
+    },
+    {
+      "source": "93:39756",
+      "master": "118:37660",
+      "instance": "118:37661",
+      "name": "Pattern / Moon and weather",
+      "keys": []
+    },
+    {
+      "source": "84:35902",
+      "master": "118:37678",
+      "instance": "118:37679",
+      "name": "Chrome / Plan app bar",
+      "keys": [
+        "Text 1 / AppBar/Title#118:61"
+      ]
+    },
+    {
+      "source": "84:34524",
+      "master": "118:37697",
+      "instance": "118:37698",
+      "name": "Pattern / Plan identity",
+      "keys": [
+        "Text 1 / Plan/Night#118:62",
+        "Text 2 / Plan/Ends#118:63"
+      ]
+    },
+    {
+      "source": "84:34538",
+      "master": "118:37711",
+      "instance": "118:37712",
+      "name": "Pattern / Plan inputs",
+      "keys": []
+    },
+    {
+      "source": "88:31829",
+      "master": "118:37745",
+      "instance": "118:37746",
+      "name": "Pattern / Capture plan",
+      "keys": [
+        "Text 1 / Capture/Section heading#118:64",
+        "Text 2 / Capture/Count#118:65"
+      ]
+    },
+    {
+      "source": "88:31860",
+      "master": "118:37785",
+      "instance": "118:37786",
+      "name": "Pattern / Estimate",
+      "keys": [
+        "Text 1 / Estimate/Heading#118:66",
+        "Text 2 / Estimate/Relative-gain scope#118:67"
+      ]
+    },
+    {
+      "source": "84:34713",
+      "master": "118:37854",
+      "instance": "118:37855",
+      "name": "Pattern / Plan night ahead",
+      "keys": []
+    },
+    {
+      "source": "99:40943",
+      "master": "118:37944",
+      "instance": "118:37945",
+      "name": "Pattern / Conditions",
+      "keys": []
+    },
+    {
+      "source": "84:34741",
+      "master": "118:37966",
+      "instance": "118:37967",
+      "name": "Pattern / Persistence footer",
+      "keys": [
+        "Text 1 / Plan/Local persistence#118:68"
+      ]
+    }
+  ],
+  "moved_families": [
+    {
+      "id": "93:38045",
+      "name": "After/Adopted/NightTimeline / Tonight",
+      "states": 6
+    },
+    {
+      "id": "93:38514",
+      "name": "After/Adopted/NightTimeline / Plan",
+      "states": 6
+    },
+    {
+      "id": "99:41077",
+      "name": "After/Adopted/Appearance / Moon icon",
+      "states": 2
+    }
+  ],
+  "shared_appearance": [
+    {
+      "instance": "99:41083",
+      "master": "99:41065",
+      "role": "Plan appearance uses same canonical master as Tonight"
+    }
+  ],
+  "navigation": {
+    "tabSet": "118:39921",
+    "navSet": "118:40042",
+    "states": [
+      {
+        "destination": "tonight",
+        "selected": false,
+        "interaction": "default",
+        "id": "118:39786"
+      },
+      {
+        "destination": "tonight",
+        "selected": false,
+        "interaction": "focused",
+        "id": "118:39792"
+      },
+      {
+        "destination": "tonight",
+        "selected": false,
+        "interaction": "pressed",
+        "id": "118:39798"
+      },
+      {
+        "destination": "tonight",
+        "selected": true,
+        "interaction": "default",
+        "id": "118:37384"
+      },
+      {
+        "destination": "tonight",
+        "selected": true,
+        "interaction": "focused",
+        "id": "118:39804"
+      },
+      {
+        "destination": "tonight",
+        "selected": true,
+        "interaction": "pressed",
+        "id": "118:39810"
+      },
+      {
+        "destination": "logbook",
+        "selected": false,
+        "interaction": "default",
+        "id": "118:37391"
+      },
+      {
+        "destination": "logbook",
+        "selected": false,
+        "interaction": "focused",
+        "id": "118:39816"
+      },
+      {
+        "destination": "logbook",
+        "selected": false,
+        "interaction": "pressed",
+        "id": "118:39824"
+      },
+      {
+        "destination": "logbook",
+        "selected": true,
+        "interaction": "default",
+        "id": "118:39832"
+      },
+      {
+        "destination": "logbook",
+        "selected": true,
+        "interaction": "focused",
+        "id": "118:39840"
+      },
+      {
+        "destination": "logbook",
+        "selected": true,
+        "interaction": "pressed",
+        "id": "118:39848"
+      },
+      {
+        "destination": "library",
+        "selected": false,
+        "interaction": "default",
+        "id": "118:37400"
+      },
+      {
+        "destination": "library",
+        "selected": false,
+        "interaction": "focused",
+        "id": "118:39856"
+      },
+      {
+        "destination": "library",
+        "selected": false,
+        "interaction": "pressed",
+        "id": "118:39863"
+      },
+      {
+        "destination": "library",
+        "selected": true,
+        "interaction": "default",
+        "id": "118:39870"
+      },
+      {
+        "destination": "library",
+        "selected": true,
+        "interaction": "focused",
+        "id": "118:39877"
+      },
+      {
+        "destination": "library",
+        "selected": true,
+        "interaction": "pressed",
+        "id": "118:39884"
+      },
+      {
+        "destination": "settings",
+        "selected": false,
+        "interaction": "default",
+        "id": "118:37408"
+      },
+      {
+        "destination": "settings",
+        "selected": false,
+        "interaction": "focused",
+        "id": "118:39891"
+      },
+      {
+        "destination": "settings",
+        "selected": false,
+        "interaction": "pressed",
+        "id": "118:39897"
+      },
+      {
+        "destination": "settings",
+        "selected": true,
+        "interaction": "default",
+        "id": "118:39903"
+      },
+      {
+        "destination": "settings",
+        "selected": true,
+        "interaction": "focused",
+        "id": "118:39909"
+      },
+      {
+        "destination": "settings",
+        "selected": true,
+        "interaction": "pressed",
+        "id": "118:39915"
+      }
+    ],
+    "navs": [
+      {
+        "destination": "tonight",
+        "id": "118:37415"
+      },
+      {
+        "destination": "logbook",
+        "id": "118:39922"
+      },
+      {
+        "destination": "library",
+        "id": "118:39963"
+      },
+      {
+        "destination": "settings",
+        "id": "118:40003"
+      }
+    ],
+    "links": 0,
+    "hitRegions": "No added prototype selection links: accepted Tonight behavior retained. Four selected variants remain configurable in DS; original catalog links untouched."
+  },
+  "night_ahead_families": [
+    {
+      "context": "Tonight",
+      "set": "118:42629",
+      "variants": [
+        {
+          "timelineState": "93:37680",
+          "master": "118:37575",
+          "context": "Tonight",
+          "event": 0,
+          "open": false,
+          "h": 508
+        },
+        {
+          "timelineState": "93:37752",
+          "master": "118:41855",
+          "context": "Tonight",
+          "event": 0,
+          "open": true,
+          "h": 724
+        },
+        {
+          "timelineState": "93:37826",
+          "master": "118:42009",
+          "context": "Tonight",
+          "event": 1,
+          "open": false,
+          "h": 508
+        },
+        {
+          "timelineState": "93:37898",
+          "master": "118:42165",
+          "context": "Tonight",
+          "event": 1,
+          "open": true,
+          "h": 724
+        },
+        {
+          "timelineState": "93:37972",
+          "master": "118:42319",
+          "context": "Tonight",
+          "event": 2,
+          "open": false,
+          "h": 508
+        },
+        {
+          "timelineState": "93:38044",
+          "master": "118:42475",
+          "context": "Tonight",
+          "event": 2,
+          "open": true,
+          "h": 724
+        }
+      ]
+    },
+    {
+      "context": "Plan",
+      "set": "118:43466",
+      "variants": [
+        {
+          "timelineState": "93:38124",
+          "master": "118:37854",
+          "context": "Plan",
+          "event": 0,
+          "open": false,
+          "h": 574
+        },
+        {
+          "timelineState": "93:38201",
+          "master": "118:42642",
+          "context": "Plan",
+          "event": 0,
+          "open": true,
+          "h": 790
+        },
+        {
+          "timelineState": "93:38280",
+          "master": "118:42806",
+          "context": "Plan",
+          "event": 1,
+          "open": false,
+          "h": 574
+        },
+        {
+          "timelineState": "93:38357",
+          "master": "118:42972",
+          "context": "Plan",
+          "event": 1,
+          "open": true,
+          "h": 790
+        },
+        {
+          "timelineState": "93:38436",
+          "master": "118:43136",
+          "context": "Plan",
+          "event": 2,
+          "open": false,
+          "h": 574
+        },
+        {
+          "timelineState": "93:38513",
+          "master": "118:43302",
+          "context": "Plan",
+          "event": 2,
+          "open": true,
+          "h": 790
+        }
+      ]
+    }
+  ]
+}

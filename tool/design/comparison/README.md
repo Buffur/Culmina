@@ -2,10 +2,10 @@
 
 This is test tooling. It never imports into the application and never writes
 `design/home-lab`. The frozen Hybrid browser presentation is historical
-transfer/parity evidence for this comparison tool. Current Concept B design
-authority and later native refinements are routed through
-[BASELINE](../../../docs/design/BASELINE.md); this browser fixture is not their
-exclusive authority or a constraint on future owner-approved composition.
+transfer/parity evidence for this comparison tool. Current production design authority is defined by
+[AGENTS](../../../AGENTS.md) and the Culmina skills indexed in
+[DESIGN_SYSTEM](../../../docs/DESIGN_SYSTEM.md); this browser fixture does not
+constrain later owner-approved composition.
 
 The Flutter render harness exports a fixed-clock fixture using the actual
 production NightView and weather summarizer. It contains a full calendar month,

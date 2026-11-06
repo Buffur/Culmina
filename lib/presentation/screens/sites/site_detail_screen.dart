@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 import '../../shared/geo_controls.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/models/location_profile.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/collapsible_section.dart';
@@ -105,7 +106,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
         key: const Key('siteDetail.scroll'),
         padding: settingsPagePadding,
         children: [
-          DocumentSection(
+          SectionCard(
             key: const Key('siteDetail.identityGroup'),
             children: [
               GeoHeading(active ? 'Used for planning' : 'Saved site'),
@@ -137,7 +138,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('siteDetail.positionGroup'),
             children: [
               const GeoHeading('Position and time zone'),
@@ -162,7 +163,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('siteDetail.detailsGroup'),
             children: [
               Padding(
@@ -171,7 +172,7 @@ class _SiteDetailScreenState extends State<SiteDetailScreen> {
                   key: const Key('siteDetail.details'),
                   sectionKey: 'library.siteDetails',
                   title: 'Site details',
-                  titleStyle: Theme.of(context).textTheme.titleSmall,
+                  titleStyle: AppTextTheme.of(context).nestedTitle,
                   topRule: false,
                   summary: 'Elevation, sky darkness and notes',
                   open: _detailsOpen,

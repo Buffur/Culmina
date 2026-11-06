@@ -13,7 +13,7 @@ class DocumentSection extends StatelessWidget {
   const DocumentSection({
     super.key,
     required this.children,
-    this.padding = const EdgeInsets.all(AppSpacing.md),
+    this.padding = const EdgeInsets.all(AppSpacing.sm),
     this.joinPrevious = false,
     this.joinNext = false,
   });
@@ -25,7 +25,7 @@ class DocumentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const corner = Radius.circular(AppRadius.menu);
+    const corner = Radius.circular(AppRadius.small);
     return Material(
       color:
           Theme.of(context).extension<HybridTokens>()?.surfaceSubtle ??

@@ -146,11 +146,13 @@ class FitAnalyzer {
     var placed = 0;
     DateTime? end;
     var flipApplied = false;
+    var flipRequired = false;
     final lost = <int>[];
     final unplaced = <int, int>{};
 
-    // Places [d] ms; returns false when no window can hold it.
-    bool place(int d) {
+    // Seek before consuming an event: crossing a gap can make a pending
+    // flip due even though the previous cursor was before transit.
+    bool seek(int d) {
       while (wi < windows.length &&
           t.add(Duration(milliseconds: d)).isAfter(windows[wi].end)) {
         lost.add(windows[wi].end.difference(t).inMilliseconds);
@@ -158,6 +160,11 @@ class FitAnalyzer {
         if (wi < windows.length) t = windows[wi].start;
       }
       if (wi >= windows.length) return false;
+      return true;
+    }
+
+    bool place(int d) {
+      if (!seek(d)) return false;
       t = t.add(Duration(milliseconds: d));
       placed += d;
       end = t;
@@ -170,6 +177,19 @@ class FitAnalyzer {
           pendingFlip != null &&
           !t.isBefore(transitUtc!) &&
           wi < windows.length) {
+        flipRequired = true;
+        if (place(pendingFlip.durationMs)) {
+          flipApplied = true;
+          pendingFlip = null;
+        } else {
+          outOfWindows = true;
+        }
+      }
+      if (!outOfWindows &&
+          seek(e.durationMs) &&
+          pendingFlip != null &&
+          !t.isBefore(transitUtc!)) {
+        flipRequired = true;
         if (place(pendingFlip.durationMs)) {
           flipApplied = true;
           pendingFlip = null;
@@ -183,7 +203,7 @@ class FitAnalyzer {
         unplaced.update(e.blockIndex!, (n) => n + 1, ifAbsent: () => 1);
       }
     }
-    final flipDropped = flipEvents.isNotEmpty && !flipApplied;
+    final flipDropped = flipEvents.isNotEmpty && !flipApplied && !flipRequired;
 
     if (unplaced.isNotEmpty) {
       final nights = placed > 0 ? (load / placed).ceil() : null;

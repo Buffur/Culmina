@@ -20,6 +20,10 @@ import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/tonight_viewmodel.dart';
 import '../../../core/config/app_identity.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_text_theme.dart';
+import '../../shared/section_card.dart';
+import '../../shared/fact_row.dart';
 
 /// The first-run setup (TASK 12.5; F16, S16.1, RA-B01–06): one page, the
 /// app's first route on a first run (A1). Two optional steps — the
@@ -85,7 +89,6 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final siteVm = context.watch<SiteViewModel>();
     final planVm = context.watch<SessionPlanViewModel>();
-    final theme = Theme.of(context);
     final rig = planVm.selectedEquipment;
 
     return PopScope(
@@ -100,10 +103,10 @@ class WelcomeScreen extends StatelessWidget {
           automaticallyImplyLeading: false,
         ),
         body: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.gutter),
           children: [
-            Text(intro, style: theme.textTheme.bodyLarge),
-            const SizedBox(height: 16),
+            Text(intro, style: AppTextTheme.of(context).body),
+            const SizedBox(height: AppSpacing.md),
             _Step(
               key: const Key('welcome.site'),
               number: 1,
@@ -184,22 +187,26 @@ class _Step extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('$number. $title', style: theme.textTheme.titleMedium),
-            Text(status, style: theme.textTheme.labelLarge),
-            const SizedBox(height: 8),
-            Text(explanation, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 12),
-            Wrap(spacing: 8, runSpacing: 8, children: actions),
-          ],
-        ),
+    final text = AppTextTheme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: SectionCard(
+        children: [
+          Semantics(
+            header: true,
+            child: Text('$number. $title', style: text.nestedTitle),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          FactRow(label: number == 1 ? 'Site' : 'Rig', value: status),
+          const SizedBox(height: AppSpacing.sm),
+          Text(explanation, style: text.body),
+          const SizedBox(height: AppSpacing.md),
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: actions,
+          ),
+        ],
       ),
     );
   }

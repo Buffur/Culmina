@@ -5,7 +5,9 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/hybrid_tokens.dart';
 import '../../shared/hybrid_icon.dart';
-import '../../shared/hybrid_parts.dart';
+import '../../shared/action_row.dart';
+import '../../shared/search_filter_bar.dart';
+import '../../shared/catalog_scaffold.dart';
 
 /// The pieces of Hybrid's Library pages (library.js, library.css), shared
 /// by the rig, target and site lists and their records.
@@ -34,54 +36,17 @@ class LibrarySearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    final scale = MediaQuery.textScalerOf(context);
-    return HybridPlanInputs(
-      child: Semantics(
-        label: label,
-        child: TextField(
-          controller: controller,
-          textInputAction: TextInputAction.search,
-          style: AppTextTheme.of(context).caption
-              .copyWith(color: p.textPrimary),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: AppTextTheme.of(context).caption
-                .copyWith(color: p.textSecondary, fontStyle: FontStyle.italic),
-            contentPadding: const EdgeInsets.fromLTRB(12, 14, 0, 14),
-            suffixIcon: controller.text.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 12),
-                    child: ExcludeSemantics(
-                      child: Center(
-                        widthFactor: 1,
-                        heightFactor: 1,
-                        child: HybridIcon(
-                          HybridIcons.search,
-                          size: scale.scale(20),
-                          strokeWidth: 1.7,
-                          color: p.textSecondary,
-                        ),
-                      ),
-                    ),
-                  )
-                : IconButton(
-                    tooltip: 'Clear search',
-                    onPressed: () {
-                      controller.clear();
-                      onChanged('');
-                    },
-                    icon: HybridIcon(
-                      HybridIcons.close,
-                      size: scale.scale(20),
-                      strokeWidth: 1.7,
-                      color: p.textSecondary,
-                    ),
-                  ),
-          ),
-          onChanged: onChanged,
-        ),
-      ),
+    return SearchFilterBar(
+      controller: controller,
+      labelText: label,
+      hintText: hint,
+      onChanged: onChanged,
+      onClear: controller.text.isEmpty
+          ? null
+          : () {
+              controller.clear();
+              onChanged('');
+            },
     );
   }
 }
@@ -101,23 +66,12 @@ class LibraryPrimaryAction extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => FilledButton(
-    style: FilledButton.styleFrom(
+  Widget build(BuildContext context) => TextButton(
+    style: TextButton.styleFrom(
       minimumSize: const Size.fromHeight(HybridTokens.minTarget),
     ),
     onPressed: onPressed,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: AppSpacing.sm,
-      children: [
-        HybridIcon(
-          icon,
-          size: MediaQuery.textScalerOf(context).scale(18),
-          strokeWidth: 2,
-        ),
-        Flexible(child: Text(label, textAlign: TextAlign.center)),
-      ],
-    ),
+    child: Text(label, textAlign: TextAlign.center),
   );
 }
 
@@ -138,25 +92,16 @@ class LibraryDeleteAction extends StatelessWidget {
     final error =
         (Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light)
             .errorText;
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
+    return FilledButton(
+      style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(HybridTokens.minTarget),
         foregroundColor: error,
+        backgroundColor:
+            (Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light)
+                .errorWash,
       ),
       onPressed: onPressed,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: AppSpacing.sm,
-        children: [
-          HybridIcon(
-            HybridIcons.trash,
-            size: MediaQuery.textScalerOf(context).scale(20),
-            strokeWidth: 1.7,
-            color: error,
-          ),
-          Flexible(child: Text(label)),
-        ],
-      ),
+      child: Text(label),
     );
   }
 }
@@ -184,47 +129,39 @@ class LibraryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return MergeSemantics(
-      child: Semantics(
-        button: true,
-        child: InkWell(
-          onTap: onTap,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              border: divider
-                  ? Border(bottom: BorderSide(color: p.border))
-                  : null,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.itemGap),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: AppSpacing.xs,
-                children: [
-                  Text(
-                    title,
-                    key: titleKey,
-                    style: AppTextTheme.of(context).rowTitle
-                        .copyWith(color: p.textPrimary),
-                  ),
-                  Text(
-                    caption,
-                    style: AppTextTheme.of(context)
-                        .resolve(
-                          AppTextTheme.of(context).body,
-                          AppTextGeometry.reading,
-                        )
+    return Semantics(
+      button: true,
+      label: [title, caption, ?note].join(', '),
+      excludeSemantics: true,
+      onTap: onTap,
+      child: InkWell(
+        onTap: onTap,
+        excludeFromSemantics: true,
+        child: DecoratedBox(
+          decoration: BoxDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ActionRow(
+                title: title,
+                titleKey: titleKey,
+                description: caption,
+                trailing: HybridIcon(
+                  HybridIcons.rowChevron,
+                  size: 16,
+                  color: p.textSecondary,
+                ),
+              ),
+              if (note case final n?)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Text(
+                    n,
+                    style: AppTextTheme.of(context).caption
                         .copyWith(color: p.textSecondary),
                   ),
-                  if (note case final n?)
-                    Text(
-                      n,
-                      style: AppTextTheme.of(context).caption
-                          .copyWith(color: p.textSecondary),
-                    ),
-                ],
-              ),
-            ),
+                ),
+            ],
           ),
         ),
       ),
@@ -240,6 +177,7 @@ class LibraryRecordHeader extends StatelessWidget {
     required this.caption,
     required this.action,
     this.title,
+    this.snapshotAsCaption = false,
   });
 
   /// A visible heading (a target's "Your target"); rigs and sites show
@@ -247,6 +185,7 @@ class LibraryRecordHeader extends StatelessWidget {
   final String? title;
   final String caption;
   final Widget action;
+  final bool snapshotAsCaption;
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +200,7 @@ class LibraryRecordHeader extends StatelessWidget {
               header: true,
               child: Text(
                 t,
-                style: AppTextTheme.of(context).sectionSubject.copyWith(
+                style: AppTextTheme.of(context).sectionHeading.copyWith(
                   fontWeight: FontWeight.w600,
                   color: p.textPrimary,
                 ),
@@ -270,16 +209,16 @@ class LibraryRecordHeader extends StatelessWidget {
           ),
         Text(
           caption,
-          style: AppTextTheme.of(context)
-              .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
-              .copyWith(color: p.textSecondary),
+          style: AppTextTheme.of(context).body.copyWith(color: p.textSecondary),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           librarySnapshotNote,
-          style: AppTextTheme.of(context)
-              .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
-              .copyWith(color: p.textSecondary),
+          style:
+              (snapshotAsCaption
+                      ? AppTextTheme.of(context).caption
+                      : AppTextTheme.of(context).body)
+                  .copyWith(color: p.textSecondary),
         ),
         const SizedBox(height: AppSpacing.itemGap),
         action,
@@ -328,11 +267,7 @@ class LibraryField extends StatelessWidget {
               padding: const EdgeInsets.only(top: AppSpacing.xs),
               child: Text(
                 h,
-                style: AppTextTheme.of(context)
-                    .resolve(
-                      AppTextTheme.of(context).caption,
-                      AppTextGeometry.supporting,
-                    )
+                style: AppTextTheme.of(context).caption
                     .copyWith(color: p.textSecondary),
               ),
             ),
@@ -369,42 +304,27 @@ class LibrarySaveBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-    child: SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.gutter,
-          AppSpacing.sm,
-          AppSpacing.gutter,
-          AppSpacing.xs,
-        ),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: AppSpacing.itemGap,
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  key: cancelKey,
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(HybridTokens.minTarget),
-                  ),
-                  onPressed: onCancel,
-                  child: const Text('Cancel'),
-                ),
+    child: StickyBottomAction(
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: AppSpacing.itemGap,
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                key: cancelKey,
+                onPressed: onCancel,
+                child: const Text('Cancel'),
               ),
-              Expanded(
-                child: FilledButton(
-                  key: saveKey,
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size.fromHeight(HybridTokens.minTarget),
-                  ),
-                  onPressed: onSave,
-                  child: Text(saveLabel, textAlign: TextAlign.center),
-                ),
+            ),
+            Expanded(
+              child: FilledButton(
+                key: saveKey,
+                onPressed: onSave,
+                child: Text(saveLabel, textAlign: TextAlign.center),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),
@@ -435,77 +355,19 @@ class LibraryChoiceGrid<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    final h = Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
-    final columns = MediaQuery.textScalerOf(context).scale(1) >= 1.5 ? 1 : 2;
-    Widget choice((T, String, String) o) {
-      final selected = o.$1 == value;
-      return MergeSemantics(
-        child: Semantics(
-          inMutuallyExclusiveGroup: true,
-          checked: selected,
-          child: Material(
-            key: Key('$keyPrefix.${o.$3}'),
-            color: selected ? h.selection : HybridTokens.transparent,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: p.controlBorder),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(6),
-              onTap: () => onChanged(o.$1),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: HybridTokens.minTarget,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  child: Row(
-                    children: [
-                      HybridRadio(checked: selected, size: 24),
-                      const SizedBox(width: AppSpacing.itemGap),
-                      Expanded(
-                        child: Text(
-                          o.$2,
-                          style: AppTextTheme.of(context)
-                              .resolve(
-                                AppTextTheme.of(context).body,
-                                AppTextGeometry.standard,
-                              )
-                              .copyWith(
-                                fontWeight: selected ? FontWeight.w600 : null,
-                                color: p.textPrimary,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    final rows = <List<(T, String, String)>>[
-      for (var i = 0; i < options.length; i += columns)
-        options.sublist(i, (i + columns).clamp(0, options.length)),
-    ];
     return Semantics(
       container: true,
       label: legend,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: AppSpacing.sm,
         children: [
-          for (final row in rows)
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: AppSpacing.sm,
-                children: [for (final o in row) Expanded(child: choice(o))],
-              ),
+          for (final option in options)
+            ActionRow(
+              key: Key('$keyPrefix.${option.$3}'),
+              title: option.$2,
+              variant: ActionRowVariant.radio,
+              selected: option.$1 == value,
+              onTap: () => onChanged(option.$1),
             ),
         ],
       ),

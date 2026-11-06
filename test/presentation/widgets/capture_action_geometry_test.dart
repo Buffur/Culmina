@@ -9,7 +9,6 @@ import 'package:astroplan/presentation/shared/document_section.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -95,80 +94,27 @@ void main() {
           );
           await hybridSettle(t);
           for (var i = 0; i < 3; i++) {
-            final keys = [
-              'capture.edit.$i',
-              'capture.moveUp.$i',
-              'capture.moveDown.$i',
-              'capture.delete.$i',
-            ];
-            for (final key in keys) {
-              final finder = find.byKey(Key(key));
-              await t.ensureVisible(finder);
-              await t.pump();
-              final rect = t.getRect(finder);
-              expect(rect.width, greaterThanOrEqualTo(48 - .01), reason: key);
-              expect(rect.height, greaterThanOrEqualTo(48 - .01), reason: key);
-              expect(rect.left, greaterThanOrEqualTo(36 - .01), reason: key);
-              expect(
-                rect.right,
-                lessThanOrEqualTo(width - 36 + .01),
-                reason: key,
-              );
-            }
-            // Read all positions at the same scroll offset.
-            final rects = [
-              for (final key in keys) t.getRect(find.byKey(Key(key))),
-            ];
-            if (scale == 1) {
-              for (final rect in rects.skip(1)) {
-                expect(
-                  rect.center.dy,
-                  closeTo(rects.first.center.dy, .5),
-                  reason: 'All four actions share one band at100% when content fits',
-                );
-              }
-            }
-            for (var a = 0; a < rects.length; a++) {
-              for (var b = a + 1; b < rects.length; b++) {
-                expect(rects[a].overlaps(rects[b]), isFalse);
-              }
-            }
-            for (final action in ['capture.edit.$i', 'capture.delete.$i']) {
-              final text = find
-                  .descendant(
-                    of: find.byKey(Key(action)),
-                    matching: find.byType(RichText),
-                  )
-                  .first;
-              final paragraph = t.renderObject<RenderParagraph>(text);
-              expect(paragraph.didExceedMaxLines, isFalse);
-              expect(
-                paragraph.getBoxesForSelection(
-                  TextSelection(
-                    baseOffset: 0,
-                    extentOffset: paragraph.text.toPlainText().length,
-                  ),
-                ),
-                hasLength(1),
-                reason: 'Edit and Remove remain complete words',
-              );
-            }
+            final menu = find.byKey(Key('capture.menu.$i'));
+            await t.ensureVisible(menu);
+            await t.pump();
+            final rect = t.getRect(menu);
+            expect(rect.width, greaterThanOrEqualTo(48));
+            expect(rect.height, greaterThanOrEqualTo(48));
+            final content = t.getRect(find.byType(CapturePlanWidget));
+            expect(rect.left, greaterThanOrEqualTo(content.left));
+            expect(rect.right, lessThanOrEqualTo(content.right));
+            await t.tap(menu);
+            await t.pumpAndSettle();
+            expect(find.byKey(Key('capture.edit.$i')), findsOneWidget);
+            expect(find.byKey(Key('capture.delete.$i')), findsOneWidget);
+            expect(find.text('Edit block'), findsOneWidget);
+            expect(find.text('Remove'), findsOneWidget);
+            await t.sendKeyEvent(LogicalKeyboardKey.escape);
+            await t.pumpAndSettle();
           }
-          Finder move(String key) => find.descendant(
-            of: find.byKey(Key(key)),
-            matching: find.byType(IconButton),
-          );
           expect(
-            t.widget<IconButton>(move('capture.moveUp.0')).onPressed,
-            isNull,
-          );
-          expect(
-            t.widget<IconButton>(move('capture.moveDown.1')).onPressed,
-            isNotNull,
-          );
-          expect(
-            t.widget<IconButton>(move('capture.moveDown.2')).onPressed,
-            isNull,
+            find.byType(ReorderableDelayedDragStartListener),
+            findsNWidgets(3),
           );
           expect(t.takeException(), isNull);
         });
@@ -191,18 +137,16 @@ void main() {
             ),
           );
           await hybridSettle(t);
-          final group = t.getRect(
-            find.byKey(const Key('targetDetail.factsGroup')),
-          );
+          final facts = t.getRect(find.byKey(const Key('targetDetail.facts')));
           final source = find.byKey(const Key('targetDetail.source'));
           final sourceRect = t.getRect(source);
           final label = find.descendant(
             of: find.byKey(const Key('targetDetail.factsGroup')),
             matching: find.widgetWithText(SettingsHint, 'Source'),
           );
-          expect(t.getRect(label).left, closeTo(group.left + 16, .01));
-          expect(sourceRect.left, closeTo(group.left + 16, .01));
-          expect(sourceRect.width, closeTo(group.width - 32, .01));
+          expect(t.getRect(label).left, closeTo(facts.left, .01));
+          expect(sourceRect.left, closeTo(facts.left, .01));
+          expect(sourceRect.width, closeTo(facts.width, .01));
           expect(
             find.text("OpenNGC, via the app's bundled catalogue"),
             findsOneWidget,

@@ -61,6 +61,17 @@ void main() {
     expect(await store.read('future'), isNull);
   });
 
+  test('an older cached invalid value is unknown without discarding valid offline data', () {
+    final text = SharedPrefsWeatherSnapshotStore.encode(snapshot)
+        .replaceFirst('"cc":12.0', '"cc":-1.0')
+        .replaceFirst('"vis":24140.0', '"vis":-5.0');
+    final back = SharedPrefsWeatherSnapshotStore.decode(text);
+    expect(back.hours.first.cloudCoverPct, isNull);
+    expect(back.hours.first.visibilityM, isNull);
+    expect(back.hours.first.windGustsKmh, 22.5);
+    expect(back.fetchedAtUtc, snapshot.fetchedAtUtc);
+  });
+
   // F14 A2 (ADR-022 N8; TD-049): the per-night version-1 entries are
   // deleted on first read, never migrated; other preferences stay.
   test('version-1 keys are deleted on first read; nothing else', () async {

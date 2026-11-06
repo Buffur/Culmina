@@ -9,6 +9,7 @@ import '../../navigation/app_router.dart';
 import '../../shared/context_line.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/hybrid_icon.dart';
+import '../../shared/action_row.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 
 /// Tonight goes straight to the shared site chooser and management list.
@@ -29,7 +30,7 @@ Future<void> showHomeNightSheet(BuildContext context) async {
           // The seven-column grid needs the compact data role at large
           // text sizes. Keep the user's scaler and the theme's colours.
           datePickerTheme: theme.datePickerTheme.copyWith(
-            dayStyle: AppTextTheme.of(context).body,
+            dayStyle: AppTextTheme.of(context).caption,
           ),
         ),
         child: child!,
@@ -66,27 +67,25 @@ class HomeSheetHeader extends StatelessWidget {
           AppSpacing.sm,
           AppSpacing.sm,
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Culmina',
-                style: AppTextTheme.of(context).dense
-                    .copyWith(color: p.textTertiary),
+        child: ActionRow(
+          title: 'Culmina',
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...actions,
+              IconButton(
+                key: const Key('homeSheet.close'),
+                tooltip: 'Close',
+                onPressed: () => Navigator.of(context).maybePop(),
+                constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
+                icon: HybridIcon(
+                  HybridIcons.close,
+                  size: 20,
+                  color: p.textPrimary,
+                ),
               ),
-            ),
-            ...actions,
-            IconButton(
-              key: const Key('homeSheet.close'),
-              tooltip: 'Close',
-              onPressed: () => Navigator.of(context).maybePop(),
-              icon: HybridIcon(
-                HybridIcons.close,
-                size: MediaQuery.textScalerOf(context).scale(20),
-                color: p.textPrimary,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

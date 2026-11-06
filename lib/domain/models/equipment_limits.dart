@@ -81,6 +81,10 @@ ApertureResolution resolveAperture({
   ApertureResolution fail(ApertureProblem p) =>
       ApertureResolution._(null, null, p);
   if (diameterMm != null) {
+    if (focalRatio != null &&
+        !EquipmentLimits.focalRatio.contains(focalRatio)) {
+      return fail(ApertureProblem.focalRatioOutOfRange);
+    }
     if (!EquipmentLimits.apertureDiameterMm.contains(diameterMm)) {
       return fail(ApertureProblem.diameterOutOfRange);
     }

@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/diagnostics/app_log.dart';
+import '../../domain/services/backup_service.dart';
 import '../repositories/shared_prefs_display_preferences_repository.dart';
 import '../repositories/shared_prefs_display_settings_repository.dart';
 import '../repositories/shared_prefs_first_run_repository.dart';
@@ -114,24 +115,26 @@ abstract final class BackupPreferences {
   }) async {
     final p = await _open(preferences);
     if (carried == null) {
-      await p.remove(SharedPrefsPlannerStateRepository.activeLocationIdKey);
+      await _write(
+        p.remove(SharedPrefsPlannerStateRepository.activeLocationIdKey),
+      );
     } else {
       for (final key in p.getKeys().where(carries).toList()) {
-        await p.remove(key);
+        await _write(p.remove(key));
       }
       for (final e in (carried['bool']! as Map<String, bool>).entries) {
-        await p.setBool(e.key, e.value);
+        await _write(p.setBool(e.key, e.value));
       }
       for (final e in (carried['int']! as Map<String, int>).entries) {
-        await p.setInt(e.key, e.value);
+        await _write(p.setInt(e.key, e.value));
       }
       for (final e in (carried['double']! as Map<String, double>).entries) {
-        await p.setDouble(e.key, e.value);
+        await _write(p.setDouble(e.key, e.value));
       }
       // F21: absent in a file parsed before F21's group existed.
       for (final e
           in (carried['string'] as Map<String, String>? ?? const {}).entries) {
-        await p.setString(e.key, e.value);
+        await _write(p.setString(e.key, e.value));
       }
     }
     await _forgetPlanIds(p);
@@ -158,21 +161,21 @@ abstract final class BackupPreferences {
   }) async {
     final p = await _open(preferences);
     for (final key in p.getKeys().where(_touched).toList()) {
-      await p.remove(key);
+      await _write(p.remove(key));
     }
     for (final MapEntry(:key, :value) in snapshot.entries) {
       if (!_touched(key)) continue;
       switch (value) {
         case final bool v:
-          await p.setBool(key, v);
+          await _write(p.setBool(key, v));
         case final int v:
-          await p.setInt(key, v);
+          await _write(p.setInt(key, v));
         case final double v:
-          await p.setDouble(key, v);
+          await _write(p.setDouble(key, v));
         case final String v:
-          await p.setString(key, v);
+          await _write(p.setString(key, v));
         case final List<Object?> v:
-          await p.setStringList(key, v.cast<String>());
+          await _write(p.setStringList(key, v.cast<String>()));
         default:
           AppLog.warning('backup', 'Setting $key not put back: $value');
       }
@@ -189,13 +192,21 @@ abstract final class BackupPreferences {
     Future<SharedPreferences> Function()? preferences,
   }) async {
     final p = await _open(preferences);
-    await p.remove(SharedPrefsPlannerStateRepository.activeLocationIdKey);
+    await _write(
+      p.remove(SharedPrefsPlannerStateRepository.activeLocationIdKey),
+    );
     await _forgetPlanIds(p);
+  }
+
+  // Android's legacy plugin returns the synchronous disk commit result.
+  // A false result must retain the journal and trigger rollback/retry.
+  static Future<void> _write(Future<bool> operation) async {
+    if (!await operation) throw const BackupException(BackupProblem.notApplied);
   }
 
   static Future<void> _forgetPlanIds(SharedPreferences p) async {
     for (final key in SharedPrefsPlannerStateRepository.planIdKeys) {
-      await p.remove(key);
+      await _write(p.remove(key));
     }
   }
 }

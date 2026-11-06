@@ -8,6 +8,11 @@ import '../../../domain/metadata/capture_metadata.dart';
 import '../../../domain/models/camera_class.dart';
 import '../../../domain/models/spec_provenance.dart';
 import '../../shared/equipment_draft.dart';
+import '../../shared/section_card.dart';
+import '../../shared/async_state_view.dart';
+import '../../shared/fact_row.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_text_theme.dart';
 import '../../shared/equipment_import_text.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/metadata_text.dart';
@@ -64,44 +69,51 @@ class _MetadataImportScreenState extends State<MetadataImportScreen> {
       appBar: hybridAppBar(context, title: const Text('Add from a photo')),
       body: vm == null
           ? const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Reading capture-file metadata is not available on this '
-                'device.',
+              padding: EdgeInsets.all(AppSpacing.gutter),
+              child: AsyncStateView.empty(
+                title:
+                    'Reading capture-file metadata is not available on this '
+                    'device.',
               ),
             )
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.gutter),
               children: [
-                const Text(
-                  "Reads a few kilobytes of a DNG, JPEG, HEIC or FITS file's "
-                  'header, on this device, and proposes a rig from it. Other '
-                  'RAW files are recognized but not read. Nothing is saved '
-                  'until you press Save in the rig editor, and nothing leaves '
-                  'this device.',
-                ),
-                const SizedBox(height: 12),
-                FilledButton.icon(
-                  key: const Key('metadata.pick'),
-                  onPressed: vm.busy
-                      ? null
-                      : () => runWithFeedback(
-                          context,
-                          'choose a capture file',
-                          vm.pickAndRead,
-                        ),
-                  icon: const Icon(Icons.file_open_outlined),
-                  label: const Text('Choose a capture file'),
+                SectionCard(
+                  children: [
+                    const Text(
+                      "Reads a few kilobytes of a DNG, JPEG, HEIC or FITS file's "
+                      'header, on this device, and proposes a rig from it. Other '
+                      'RAW files are recognized but not read. Nothing is saved '
+                      'until you press Save in the rig editor, and nothing leaves '
+                      'this device.',
+                    ),
+                    const SizedBox(height: 12),
+                    FilledButton.icon(
+                      key: const Key('metadata.pick'),
+                      onPressed: vm.busy
+                          ? null
+                          : () => runWithFeedback(
+                              context,
+                              'choose a capture file',
+                              vm.pickAndRead,
+                            ),
+                      icon: const Icon(Icons.file_open_outlined),
+                      label: const Text('Choose a capture file'),
+                    ),
+                  ],
                 ),
                 if (vm.busy) ...[
                   const SizedBox(height: 12),
-                  const LinearProgressIndicator(),
+                  const AsyncStateView.loading(
+                    message: 'Reading capture file…',
+                  ),
                 ],
                 if ((vm.candidate, vm.match) case (
                   final candidate?,
                   final match?,
                 )) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                   _EquipmentCard(
                     vm: vm,
                     candidate: candidate,
@@ -110,7 +122,7 @@ class _MetadataImportScreenState extends State<MetadataImportScreen> {
                   ),
                 ],
                 if (vm.reading case final reading?) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                   _Result(name: vm.fileName, reading: reading),
                 ],
               ],
@@ -127,16 +139,14 @@ class _Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final title = Text(
       name ?? 'Unnamed file',
-      style: theme.textTheme.titleMedium,
+      style: AppTextTheme.of(context).screenTitle,
     );
-    return Card(
+    return SectionCard(
       key: const Key('metadata.result'),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: switch (reading) {
+      children: [
+        switch (reading) {
           MetadataRead(:final format, :final metadata) => Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -145,20 +155,11 @@ class _Result extends StatelessWidget {
               const SizedBox(height: 8),
               for (final row in MetadataText.rows(metadata, unitsOf(context)))
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(row.label, style: theme.textTheme.labelLarge),
-                      Text(row.value),
-                      if (row.source case final source?)
-                        Text(
-                          source,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                    ],
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: FactRow(
+                    label: row.label,
+                    value: row.value,
+                    provenance: row.source,
                   ),
                 ),
             ],
@@ -172,7 +173,7 @@ class _Result extends StatelessWidget {
             children: [title, Text(MetadataText.unreadable(reason))],
           ),
         },
-      ),
+      ],
     );
   }
 }
@@ -253,103 +254,91 @@ class _EquipmentCard extends StatelessWidget {
       MatchKind.ambiguous,
       MatchKind.croppedOrBinnedMode,
     }.contains(outcome);
-    return Card(
+    return SectionCard(
       key: const Key('import.equipment'),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('Equipment', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              EquipmentImportText.headline(candidate, match),
-              key: const Key('import.headline'),
-            ),
-            if (candidate.hasEnoughEvidence)
-              for (final r in match.rigs) ...[
-                const SizedBox(height: 12),
-                Text(r.rig.name, style: theme.textTheme.labelLarge),
-                Text(
-                  EquipmentImportText.reasons(r.reasons),
-                  style: theme.textTheme.bodySmall,
-                ),
-                for (final spec in r.fillable)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      EquipmentImportText.fillable(spec, candidate),
-                      key: Key('import.fill.${r.rig.id}.${spec.name}'),
-                    ),
-                  ),
-                for (final c in r.conflicts)
-                  SwitchListTile(
-                    key: Key('import.take.${r.rig.id}.${c.spec.name}'),
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(EquipmentImportText.useFileValue(c.spec)),
-                    subtitle: Text(
-                      [
-                        EquipmentImportText.conflict(c),
-                        if (c.spec == EquipmentSpec.focalRatio &&
-                            r.rig.apertureDiameterMm != null)
-                          'Using it clears the saved aperture diameter.',
-                      ].join(' '),
-                    ),
-                    value: vm.takesImported(r.rig, c.spec),
-                    onChanged: (take) =>
-                        vm.setTakesImported(r.rig, c.spec, take),
-                  ),
-                if (opens)
-                  OutlinedButton(
-                    key: Key('import.open.${r.rig.id}'),
-                    onPressed: () =>
-                        _openCurrent(context, () => vm.rigDraft(r.rig.id)),
-                    child: Text('Open "${r.rig.name}"'),
-                  ),
-                if (outcome == MatchKind.sameCameraOtherOptics)
-                  OutlinedButton(
-                    key: Key('import.newFrom.${r.rig.id}'),
-                    onPressed: () => _openCurrent(
-                      context,
-                      () => vm.newRigDraftWithCameraOf(r.rig.id),
-                    ),
-                    child: Text(
-                      'New rig with the camera specs of "${r.rig.name}"',
-                    ),
-                  ),
-              ],
-            if (candidate.hasEnoughEvidence &&
-                candidate.missingRequired.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Text(
-                RigInputText.missingIntro,
-                style: theme.textTheme.labelLarge,
-              ),
-              for (final spec in candidate.missingRequired)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    '${RigInputText.name(spec)}: '
-                    '${RigInputText.reason(spec)}.',
-                    key: Key('import.missing.${spec.name}'),
-                  ),
-                ),
-            ],
-            if (candidate.hasEnoughEvidence) ...[
-              const SizedBox(height: 12),
-              FilledButton(
-                key: const Key('import.new'),
-                onPressed: () => _edit(context, vm.newRigDraft()),
-                child: Text(
-                  outcome == MatchKind.none
-                      ? 'New rig from this file'
-                      : 'Create a new rig from this file instead',
-                ),
-              ),
-            ],
-          ],
+      children: [
+        Text('Equipment', style: AppTextTheme.of(context).screenTitle),
+        const SizedBox(height: 4),
+        Text(
+          EquipmentImportText.headline(candidate, match),
+          key: const Key('import.headline'),
         ),
-      ),
+        if (candidate.hasEnoughEvidence)
+          for (final r in match.rigs) ...[
+            const SizedBox(height: 12),
+            Text(r.rig.name, style: theme.textTheme.labelLarge),
+            Text(
+              EquipmentImportText.reasons(r.reasons),
+              style: theme.textTheme.bodySmall,
+            ),
+            for (final spec in r.fillable)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  EquipmentImportText.fillable(spec, candidate),
+                  key: Key('import.fill.${r.rig.id}.${spec.name}'),
+                ),
+              ),
+            for (final c in r.conflicts)
+              SwitchListTile(
+                key: Key('import.take.${r.rig.id}.${c.spec.name}'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(EquipmentImportText.useFileValue(c.spec)),
+                subtitle: Text(
+                  [
+                    EquipmentImportText.conflict(c),
+                    if (c.spec == EquipmentSpec.focalRatio &&
+                        r.rig.apertureDiameterMm != null)
+                      'Using it clears the saved aperture diameter.',
+                  ].join(' '),
+                ),
+                value: vm.takesImported(r.rig, c.spec),
+                onChanged: (take) => vm.setTakesImported(r.rig, c.spec, take),
+              ),
+            if (opens)
+              OutlinedButton(
+                key: Key('import.open.${r.rig.id}'),
+                onPressed: () =>
+                    _openCurrent(context, () => vm.rigDraft(r.rig.id)),
+                child: Text('Open "${r.rig.name}"'),
+              ),
+            if (outcome == MatchKind.sameCameraOtherOptics)
+              OutlinedButton(
+                key: Key('import.newFrom.${r.rig.id}'),
+                onPressed: () => _openCurrent(
+                  context,
+                  () => vm.newRigDraftWithCameraOf(r.rig.id),
+                ),
+                child: Text('New rig with the camera specs of "${r.rig.name}"'),
+              ),
+          ],
+        if (candidate.hasEnoughEvidence &&
+            candidate.missingRequired.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text(RigInputText.missingIntro, style: theme.textTheme.labelLarge),
+          for (final spec in candidate.missingRequired)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                '${RigInputText.name(spec)}: '
+                '${RigInputText.reason(spec)}.',
+                key: Key('import.missing.${spec.name}'),
+              ),
+            ),
+        ],
+        if (candidate.hasEnoughEvidence) ...[
+          const SizedBox(height: 12),
+          FilledButton(
+            key: const Key('import.new'),
+            onPressed: () => _edit(context, vm.newRigDraft()),
+            child: Text(
+              outcome == MatchKind.none
+                  ? 'New rig from this file'
+                  : 'Create a new rig from this file instead',
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

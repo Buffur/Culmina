@@ -114,10 +114,12 @@ class WeatherWindowAnnotation {
     required this.cloudMaxPct,
     required this.dewRiskHours,
     required this.dewKnownHours,
+    this.refreshFailed = false,
   });
 
   /// The forecast's freshness (ADR-012 §6).
   final WeatherAge age;
+  final bool refreshFailed;
 
   final int hours;
 

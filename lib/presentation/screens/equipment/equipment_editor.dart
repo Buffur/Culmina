@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 
@@ -195,10 +195,7 @@ class _EquipmentEditor {
         RigInputText.reason(spec),
         key: Key('rigEditor.reason.${spec.name}'),
         style: AppTextTheme.of(context)
-            .resolve(
-              AppTextTheme.of(context).caption,
-              AppTextGeometry.supporting,
-            )
+            .resolve(AppTextTheme.of(context).caption, AppTextGeometry.compact)
             .copyWith(color: AppPalette.of(context).textSecondary),
       ),
     );
@@ -215,7 +212,7 @@ class _EquipmentEditor {
           style: AppTextTheme.of(context)
               .resolve(
                 AppTextTheme.of(context).caption,
-                AppTextGeometry.supporting,
+                AppTextGeometry.compact,
               )
               .copyWith(color: AppPalette.of(context).textSecondary),
         ),
@@ -371,7 +368,7 @@ class _EquipmentEditor {
               header: true,
               child: Text(
                 text,
-                style: AppTextTheme.of(context).sectionHeading
+                style: AppTextTheme.of(context).screenTitle
                     .copyWith(color: p.textPrimary),
               ),
             ),
@@ -379,7 +376,7 @@ class _EquipmentEditor {
           final hint = AppTextTheme.of(context)
               .resolve(
                 AppTextTheme.of(context).caption,
-                AppTextGeometry.supporting,
+                AppTextGeometry.compact,
               )
               .copyWith(color: p.textSecondary);
           final sensor =
@@ -419,7 +416,7 @@ class _EquipmentEditor {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            DocumentSection(
+                            SectionCard(
                               key: const Key('rigEditor.identityGroup'),
                               children: [
                                 SettingsCopy(
@@ -463,7 +460,7 @@ class _EquipmentEditor {
                               ],
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            DocumentSection(
+                            SectionCard(
                               key: const Key('rigEditor.cameraGroup'),
                               children: [
                                 // S7.2a (ADR-020 §2): the user's choice, never
@@ -585,7 +582,7 @@ class _EquipmentEditor {
                               ],
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            DocumentSection(
+                            SectionCard(
                               key: const Key('rigEditor.sensorGroup'),
                               children: [
                                 legend('Camera sensor'),
@@ -746,7 +743,7 @@ class _EquipmentEditor {
                               ],
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            DocumentSection(
+                            SectionCard(
                               key: const Key('rigEditor.opticsGroup'),
                               children: [
                                 legend('Optics'),
@@ -856,7 +853,7 @@ class _EquipmentEditor {
                             // S7.6 (UX-22): the rare values one tap away, their
                             // meaning unchanged; the summary states what is set.
                             const SizedBox(height: AppSpacing.md),
-                            DocumentSection(
+                            SectionCard(
                               key: const Key('rigEditor.moreGroup'),
                               children: [
                                 ListenableBuilder(

@@ -7,6 +7,7 @@ import 'field_mode_button.dart';
 import '../viewmodels/theme_viewmodel.dart';
 
 import '../../core/theme/hybrid_tokens.dart';
+import '../../core/theme/app_spacing.dart';
 
 /// Standard native AppBar with the approved uncapped title and wrapping height.
 /// Captures the user's scale before AppBar's internal title-only scale clamp.
@@ -39,7 +40,9 @@ AppBar hybridAppBar(
       leading != null ||
       (automaticallyImplyLeading &&
           (Navigator.maybeOf(context)?.canPop() ?? false));
-  final spacing = titleSpacing ?? (hasLeading ? 8.0 : 16.0);
+  final spacing =
+      titleSpacing ?? (hasLeading ? AppSpacing.sm : AppSpacing.gutter);
+  final leadingWidth = hasLeading ? AppSpacing.gutter + 48 : 0.0;
   var height = math.max(HybridTokens.appBarHeight, toolbarHeight ?? 0);
   if (title is Text && title.data != null) {
     final style =
@@ -53,8 +56,9 @@ AppBar hybridAppBar(
           maxWidth: math.max(
             48,
             MediaQuery.sizeOf(context).width -
-                (hasLeading ? 56 : 0) -
+                leadingWidth -
                 48 * effectiveActions.length -
+                AppSpacing.gutter -
                 spacing * 2,
           ),
         );
@@ -84,16 +88,20 @@ AppBar hybridAppBar(
                   : title,
             ),
           ),
-    leading: leading,
+    leading: hasLeading
+        ? Padding(
+            padding: const EdgeInsetsDirectional.only(start: AppSpacing.gutter),
+            child: leading ?? const BackButton(),
+          )
+        : null,
+    leadingWidth: hasLeading ? leadingWidth : null,
     actions: effectiveActions,
     bottom: bottom,
     automaticallyImplyLeading: automaticallyImplyLeading,
     centerTitle: centerTitle,
     toolbarHeight: height,
     titleSpacing: spacing,
-    // Hybrid ends a root's bar on the 16 px page margin and a detail's on
-    // 8 px (styles.css .app-brand-row / plan.css top bar).
-    actionsPadding: EdgeInsets.only(right: hasLeading ? 8 : 16),
+    actionsPadding: const EdgeInsetsDirectional.only(end: AppSpacing.gutter),
     backgroundColor: backgroundColor,
     foregroundColor: foregroundColor,
     elevation: elevation,

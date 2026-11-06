@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/models/iana_time_context.dart';
+import '../../shared/action_row.dart';
+import '../../shared/content_states.dart';
+import '../../shared/search_filter_bar.dart';
 
 /// The user's choice in [showZonePicker]: an IANA zone id, or null for
 /// "unknown".
@@ -42,40 +45,40 @@ class _ZonePickerDialogState extends State<_ZonePickerDialog> {
         height: 420,
         child: Column(
           children: [
-            TextField(
+            SearchFilterBar(
               autofocus: true,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search, e.g. Ljubljana',
-              ),
+              hintText: 'Search, e.g. Ljubljana',
               onChanged: (value) => setState(() => _query = value),
             ),
-            ListTile(
-              title: const Text('Unknown'),
-              subtitle: const Text('Night uses mean solar time'),
+            ActionRow(
+              title: 'Unknown',
+              description: 'Night uses mean solar time',
+              variant: ActionRowVariant.radio,
               selected: widget.current == null,
-              // S11.C2 (S11H-03): the current choice is marked by more than
-              // colour (red on red in field mode).
-              trailing: widget.current == null ? const Icon(Icons.check) : null,
               onTap: () => Navigator.of(context).pop((zoneId: null)),
             ),
             const Divider(height: 1),
             Expanded(
-              child: ListView.builder(
-                itemCount: zones.length,
-                itemBuilder: (context, index) {
-                  final zone = zones[index];
-                  return ListTile(
-                    dense: true,
-                    title: Text(zone),
-                    selected: zone == widget.current,
-                    trailing: zone == widget.current
-                        ? const Icon(Icons.check)
-                        : null,
-                    onTap: () => Navigator.of(context).pop((zoneId: zone)),
-                  );
-                },
-              ),
+              child: zones.isEmpty
+                  ? const SingleChildScrollView(
+                      child: EmptyState(
+                        title: 'No matching time zones',
+                        message: 'Try another city or choose Unknown.',
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: zones.length,
+                      itemBuilder: (context, index) {
+                        final zone = zones[index];
+                        return ActionRow(
+                          title: zone,
+                          variant: ActionRowVariant.radio,
+                          selected: zone == widget.current,
+                          onTap: () =>
+                              Navigator.of(context).pop((zoneId: zone)),
+                        );
+                      },
+                    ),
             ),
           ],
         ),

@@ -1,10 +1,11 @@
 // S6.9 (P6.8; UX-09, UX-15 (1); 08 §14; RD-09 = M + S1; RD-08 = T3): each
 // capture block's row says what will be captured; delete comes with Undo
 // that restores the identical block; unknown tracking is a missing input,
-// not a warning; the dialog's Save is its primary button; an edit briefly
+// shown with After's conditional caution; the dialog's Save is primary; an edit
 // marks the row it changed.
 
 import 'package:astroplan/core/theme/app_palette.dart';
+import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -271,7 +272,9 @@ void main() {
     final before = stored(vm.captureBlocks);
     final middle = vm.captureBlocks[1];
 
-    await tester.ensureVisible(find.byKey(const Key('capture.delete.1')));
+    await tester.ensureVisible(find.byKey(const Key('capture.menu.1')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.menu.1')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('capture.delete.1')));
     await settle(tester);
@@ -291,7 +294,9 @@ void main() {
   testWidgets('a timed-out Undo commits the delete', (tester) async {
     await start(tester);
     await blocks(tester, [_light(60, 10, filter: 'R'), _light(60, 5)]);
-    await tester.ensureVisible(find.byKey(const Key('capture.delete.0')));
+    await tester.ensureVisible(find.byKey(const Key('capture.menu.0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.menu.0')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('capture.delete.0')));
     await settle(tester);
@@ -321,25 +326,33 @@ void main() {
     Color? colourOf(WidgetTester tester, Key key) =>
         tester.widget<Text>(find.byKey(key)).style?.color;
 
-    testWidgets('unknown tracking is a missing input: neutral, with the way '
-        'to set it, and PD-11\'s "if untracked"', (tester) async {
-      await plan(tester, _rig(TrackingType.unknown));
-      expect(vm.plan.effectiveTracking, TrackingType.unknown);
-      expect(find.byKey(const Key('capture.subWarning')), findsNothing);
-      final note = find.byKey(const Key('capture.trackingUnknown'));
-      expect(note, findsOneWidget);
-      expect(
-        tester.widget<Text>(note).data,
-        contains('if this rig is untracked'),
-      );
-      final palette = AppPalette.of(tester.element(note));
-      final scheme = Theme.of(tester.element(note)).colorScheme;
-      final colour = colourOf(tester, const Key('capture.trackingUnknown'));
-      expect(colour, palette.statusNeutral);
-      expect(colour, isNot(scheme.error));
-      expect(colour, isNot(palette.statusDoesNotFit));
-      expect(find.byKey(const Key('capture.setTracking')), findsOneWidget);
-    });
+    testWidgets(
+      'unknown tracking is a missing input: conditional caution, with the way '
+      'to set it, and PD-11\'s "if untracked"',
+      (tester) async {
+        await plan(tester, _rig(TrackingType.unknown));
+        expect(vm.plan.effectiveTracking, TrackingType.unknown);
+        expect(find.byKey(const Key('capture.subWarning')), findsNothing);
+        final note = find.byKey(const Key('capture.trackingUnknown'));
+        expect(note, findsOneWidget);
+        expect(
+          tester.widget<Text>(note).data,
+          contains('if this rig is untracked'),
+        );
+        final palette = AppPalette.of(tester.element(note));
+        final scheme = Theme.of(tester.element(note)).colorScheme;
+        final colour = colourOf(tester, const Key('capture.trackingUnknown'));
+        expect(
+          colour,
+          (Theme.of(tester.element(note)).extension<HybridTokens>() ??
+                  HybridTokens.light)
+              .caution,
+        );
+        expect(colour, isNot(scheme.error));
+        expect(colour, isNot(palette.statusDoesNotFit));
+        expect(find.byKey(const Key('capture.setTracking')), findsOneWidget);
+      },
+    );
 
     testWidgets('a known untracked rig\'s exceedance keeps the warning, with '
         'the tracking it rests on', (tester) async {
@@ -391,7 +404,9 @@ void main() {
       ),
       findsOneWidget,
     );
-    await tester.ensureVisible(find.byKey(const Key('capture.edit.0')));
+    await tester.ensureVisible(find.byKey(const Key('capture.menu.0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.menu.0')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('capture.edit.0')));
     await tester.pumpAndSettle();
@@ -409,7 +424,7 @@ void main() {
   });
 
   testWidgets(
-    'Hybrid move controls reorder the draft and preserve block values',
+    'Long-press reorder callback changes the draft and preserve block values',
     (tester) async {
       await start(tester);
       final first = _light(30, 4, filter: 'L');
@@ -417,34 +432,21 @@ void main() {
       await blocks(tester, [first, second]);
 
       expect(
-        tester
-            .widget<IconButton>(
-              find.descendant(
-                of: find.byKey(const Key('capture.moveUp.0')),
-                matching: find.byType(IconButton),
-              ),
-            )
-            .onPressed,
-        isNull,
+        find.byType(ReorderableDelayedDragStartListener),
+        findsNWidgets(2),
       );
-      expect(
-        tester
-            .widget<IconButton>(
-              find.descendant(
-                of: find.byKey(const Key('capture.moveDown.1')),
-                matching: find.byType(IconButton),
-              ),
-            )
-            .onPressed,
-        isNull,
+      final list = tester.widget<ReorderableListView>(
+        find.byType(ReorderableListView),
       );
-      await tester.tap(find.byKey(const Key('capture.moveDown.0')));
+      list.onReorderItem!(0, 1);
       await settle(tester);
       await tester.runAsync(() => vm.plan.idle);
       await tester.pumpAndSettle();
       expect(stored(vm.captureBlocks), stored([second, first]));
 
-      await tester.tap(find.byKey(const Key('capture.moveUp.1')));
+      tester
+          .widget<ReorderableListView>(find.byType(ReorderableListView))
+          .onReorderItem!(1, 0);
       await settle(tester);
       await tester.runAsync(() => vm.plan.idle);
       await tester.pumpAndSettle();
@@ -456,6 +458,8 @@ void main() {
       'button', (tester) async {
     await start(tester);
     await blocks(tester, [_light(60, 10, filter: 'L')]);
+    await tester.tap(find.byKey(const Key('capture.menu.0')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('capture.edit.0')));
     await tester.pumpAndSettle();
     final submit = find.byKey(const Key('blockDialog.submit'));

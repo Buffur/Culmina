@@ -1,7 +1,9 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/search_filter_bar.dart';
+import '../../shared/content_states.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -231,23 +233,25 @@ class _LogbookScreenState extends State<LogbookScreen> {
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.gutter,
-              AppSpacing.itemGap,
-              AppSpacing.gutter,
-              0,
-            ),
+            padding: const EdgeInsets.fromLTRB(24, AppSpacing.md, 24, 0),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _searchField(context, vm),
+                  SectionCard(
+                    children: [
+                      Text(
+                        'Search',
+                        style: AppTextTheme.of(context).screenTitle,
+                      ),
+                      const SizedBox(height: 8),
+                      _searchField(context, vm),
+                    ],
+                  ),
                   if (_filtersOpen)
                     DecoratedBox(
                       key: const Key('logbook.filters'),
-                      decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: p.border)),
-                      ),
+                      decoration: BoxDecoration(),
                       child: Padding(
                         padding: const EdgeInsets.only(
                           top: AppSpacing.itemGap,
@@ -261,12 +265,23 @@ class _LogbookScreenState extends State<LogbookScreen> {
                       ),
                     ),
                   // logbook.js: Progress by target, a row of its own.
-                  const SizedBox(height: 16),
-                  DocumentSection(
+                  const SizedBox(height: 12),
+                  SectionCard(
                     key: const Key('logbook.progressGroup'),
                     children: [
+                      Text(
+                        'Progress',
+                        style: AppTextTheme.of(context).screenTitle,
+                      ),
                       _ProgressRow(
                         onTap: () => context.push(AppRouter.logbookProgress),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Integration so far, from your results',
+                        style: AppTextTheme.of(context).caption.copyWith(
+                          color: AppPalette.of(context).textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -281,7 +296,7 @@ class _LogbookScreenState extends State<LogbookScreen> {
                 return const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(AppSpacing.lg),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: LoadingState(message: 'Loading Logbook…'),
                   ),
                 );
               }
@@ -317,12 +332,7 @@ class _LogbookScreenState extends State<LogbookScreen> {
               final quiet = AppTextTheme.of(context).caption
                   .copyWith(color: p.textSecondary);
               return SliverPadding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.gutter,
-                  0,
-                  AppSpacing.gutter,
-                  AppSpacing.xl,
-                ),
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, AppSpacing.xl),
                 sliver: SliverList.list(
                   children: [
                     if (all.isEmpty || filtered.isEmpty)
@@ -337,46 +347,40 @@ class _LogbookScreenState extends State<LogbookScreen> {
                       ),
                     for (final (i, MapEntry(key: (year, month), value: list))
                         in months.entries.indexed) ...[
-                      const SizedBox(height: 16),
-                      DocumentSection(
+                      const SizedBox(height: 12),
+                      SectionCard(
                         key: ValueKey('logbook.month.$year.$month'),
                         joinNext: true,
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                        padding: const EdgeInsets.fromLTRB(8, 8, 8, 4),
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Expanded(
-                                child: Semantics(
-                                  header: true,
-                                  child: Text(
-                                    '${_monthNames[month - 1]} $year',
-                                    style: AppTextTheme.of(context)
-                                        .resolve(quiet, AppTextGeometry.compact)
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                              if (i == 0)
-                                Text(
-                                  count,
-                                  key: const Key('logbook.resultCount'),
-                                  style: quiet,
-                                ),
-                            ],
+                          Semantics(
+                            header: true,
+                            child: Text(
+                              '${_monthNames[month - 1]} $year',
+                              style: AppTextTheme.of(context).screenTitle,
+                            ),
                           ),
+                          if (i == 0) ...[
+                            const SizedBox(height: 8),
+                            Text('Entries', style: quiet),
+                            const SizedBox(height: 4),
+                            Text(
+                              count,
+                              key: const Key('logbook.resultCount'),
+                              style: AppTextTheme.of(context).body,
+                            ),
+                          ],
                         ],
                       ),
                       for (final (rowIndex, session) in list.indexed)
-                        DocumentSection(
+                        SectionCard(
                           joinPrevious: true,
                           joinNext: rowIndex != list.length - 1,
                           padding: EdgeInsets.fromLTRB(
-                            16,
+                            8,
                             0,
-                            16,
-                            rowIndex == list.length - 1 ? 16 : 0,
+                            8,
+                            rowIndex == list.length - 1 ? 8 : 0,
                           ),
                           children: [_row(context, vm, session)],
                         ),
@@ -414,124 +418,26 @@ class _LogbookScreenState extends State<LogbookScreen> {
   /// it opens the filters; the magnifier only marks the field, or clears
   /// what was typed.
   Widget _searchField(BuildContext context, SessionsViewModel vm) {
-    final p = AppPalette.of(context);
-    final h = Theme.of(context).extension<HybridTokens>() ?? HybridTokens.light;
     final count = vm.filter.count;
-    final scale = MediaQuery.textScalerOf(context);
-    final typed = _search.text.isNotEmpty;
-    return HybridPlanInputs(
-      child: TextField(
-        key: const Key('logbook.search'),
-        controller: _search,
-        focusNode: _searchFocus,
-        textInputAction: TextInputAction.search,
-        style: AppTextTheme.of(context).caption.copyWith(color: p.textPrimary),
-        decoration: InputDecoration(
-          hintText: 'Name, target, site or notes',
-          hintStyle: AppTextTheme.of(context).caption
-              .copyWith(color: p.textSecondary, fontStyle: FontStyle.italic),
-          contentPadding: const EdgeInsets.fromLTRB(12, 14, 0, 14),
-          suffixIcon: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Semantics(
-                button: true,
-                label: count == 0 ? 'Filters' : 'Filters · $count on',
-                expanded: _filtersOpen,
-                excludeSemantics: true,
-                onTap: _toggleFilters,
-                child: Material(
-                  color: _filtersOpen ? h.selection : HybridTokens.transparent,
-                  borderRadius: BorderRadius.circular(6),
-                  child: InkWell(
-                    key: const Key('logbook.filterToggle'),
-                    borderRadius: BorderRadius.circular(6),
-                    onTap: _toggleFilters,
-                    child: SizedBox.square(
-                      dimension: HybridTokens.minTarget,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          HybridIcon(
-                            HybridIcons.filter,
-                            size: scale.scale(20),
-                            strokeWidth: 1.7,
-                            color: _filtersOpen
-                                ? p.textPrimary
-                                : p.textSecondary,
-                          ),
-                          if (count > 0)
-                            Positioned(
-                              top: 6,
-                              right: 6,
-                              child: Container(
-                                key: const Key('logbook.filterCount'),
-                                constraints: const BoxConstraints(minWidth: 16),
-                                height: 16,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: p.textPrimary,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  '$count',
-                                  textAlign: TextAlign.center,
-                                  // The reference's 11 px, at the
-                                  // project's 12 sp floor.
-                                  style: AppTextTheme.of(context)
-                                      .resolve(
-                                        AppTextTheme.of(context).dense,
-                                        AppTextGeometry.chartCaption,
-                                      )
-                                      .copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: Theme.of(context)
-                                            .scaffoldBackgroundColor,
-                                      ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              if (typed)
-                IconButton(
-                  key: const Key('logbook.searchToggle'),
-                  tooltip: 'Clear search',
-                  onPressed: () => _searchAction(vm),
-                  icon: HybridIcon(
-                    HybridIcons.close,
-                    size: scale.scale(20),
-                    strokeWidth: 1.7,
-                    color: p.textSecondary,
-                  ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 12),
-                  child: ExcludeSemantics(
-                    child: HybridIcon(
-                      HybridIcons.search,
-                      key: const Key('logbook.searchToggle'),
-                      size: scale.scale(20),
-                      strokeWidth: 1.7,
-                      color: p.textSecondary,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        onChanged: (q) {
-          vm.setQuery(q);
-          setState(() {});
-        },
-      ),
+    return SearchFilterBar(
+      textFieldKey: const Key('logbook.search'),
+      controller: _search,
+      focusNode: _searchFocus,
+      labelText: 'Search Logbook',
+      hintText: 'Name, target, site or notes',
+      filterLabel: 'Filters',
+      filterKey: const Key('logbook.filterToggle'),
+      filterCount: count,
+      filterCountKey: const Key('logbook.filterCount'),
+      clearKey: const Key('logbook.searchToggle'),
+      filterTooltip: count == 0 ? 'Filters' : 'Filters · $count on',
+      filtersActive: _filtersOpen || count > 0,
+      onFilter: _toggleFilters,
+      onClear: _search.text.isEmpty ? null : () => _searchAction(vm),
+      onChanged: (q) {
+        vm.setQuery(q);
+        setState(() {});
+      },
     );
   }
 
@@ -576,24 +482,19 @@ class _LogbookScreenState extends State<LogbookScreen> {
       log.equipmentName,
       ?log.locationName,
     ].join(' · ');
-    final caption = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+    final caption = AppTextTheme.of(context).caption
         .copyWith(color: p.textSecondary);
-    final integration = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.standard)
-        .copyWith(
-          color: p.textPrimary,
-          fontFeatures: const [FontFeature.tabularFigures()],
-        );
+    final integration = AppTextTheme.of(context).caption.copyWith(
+      color: p.textSecondary,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return SwipeToDelete(
       itemKey: ValueKey('logbook_${session.id}'),
       onDelete: () async {
         if (await deleteEntry(context, session) && mounted) _refresh();
       },
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: p.border)),
-        ),
+        decoration: BoxDecoration(),
         child: InkWell(
           key: Key('logbook.entry.${session.id}'),
           onTap: () async {
@@ -611,68 +512,23 @@ class _LogbookScreenState extends State<LogbookScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 2,
               children: [
-                // The state is the entry's right column, beside the title
-                // and its first details line.
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final information = Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 2,
-                      children: [
-                        Text(
-                          entryTitle(session),
-                          key: Key('logbook.title.${session.id}'),
-                          style: AppTextTheme.of(context).rowTitle
-                              .copyWith(color: p.textPrimary),
-                        ),
-                        Text(
-                          details,
-                          style: AppTextTheme.of(context)
-                              .resolve(
-                                AppTextTheme.of(context).body,
-                                AppTextGeometry.reading,
-                              )
-                              .copyWith(color: p.textSecondary),
-                        ),
-                      ],
-                    );
-                    final states = Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 4,
-                      children: [
-                        EntryStateBadge(
-                          PlanState.of(session),
-                          key: Key('logbook.status.${session.id}'),
-                        ),
-                        if (dueReport)
-                          EntryStateBadge.due(
-                            key: Key('logbook.noResult.${session.id}'),
-                          ),
-                      ],
-                    );
-                    // Keep complete status labels readable as text grows. A side column
-                    // receives unbounded width in a Row; stacking uses the actual group width.
-                    if (MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
-                        constraints.maxWidth < 280) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          information,
-                          const SizedBox(height: 8),
-                          states,
-                        ],
-                      );
-                    }
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: information),
-                        const SizedBox(width: AppSpacing.itemGap),
-                        states,
-                      ],
-                    );
-                  },
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
+                  ),
+                  child: Text(
+                    entryTitle(session),
+                    key: Key('logbook.title.${session.id}'),
+                    style: AppTextTheme.of(context).body,
+                  ),
                 ),
+                Text(
+                  PlanState.of(session).word,
+                  key: Key('logbook.status.${session.id}'),
+                  style: caption,
+                ),
+                const SizedBox(height: 4),
                 // TASK 13.4 (owner): planned vs actual for a result; F19 A1:
                 // the plan alone for an entry without counts.
                 if (_results[session.id] case final r?)
@@ -700,6 +556,13 @@ class _LogbookScreenState extends State<LogbookScreen> {
                     key: Key('logbook.resultWhen.${session.id}'),
                     style: caption,
                   ),
+                if (dueReport)
+                  Text(
+                    'Not recorded',
+                    key: Key('logbook.noResult.${session.id}'),
+                    style: caption,
+                  ),
+                Text(details, style: caption),
               ],
             ),
           ),
@@ -718,51 +581,15 @@ class _ProgressRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    return MergeSemantics(
-      child: Semantics(
-        button: true,
-        child: InkWell(
-          key: const Key('logbook.progress'),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 2,
-                    children: [
-                      Text(
-                        AppWords.progressByTarget,
-                        style: AppTextTheme.of(context).rowTitle
-                            .copyWith(color: p.textPrimary),
-                      ),
-                      Text(
-                        'Integration so far, from your results',
-                        style: AppTextTheme.of(context)
-                            .resolve(
-                              AppTextTheme.of(context).body,
-                              AppTextGeometry.reading,
-                            )
-                            .copyWith(color: p.textSecondary),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                HybridIcon(
-                  HybridIcons.next,
-                  size: MediaQuery.textScalerOf(context).scale(18),
-                  strokeWidth: 1.7,
-                  color: p.textSecondary,
-                ),
-              ],
-            ),
-          ),
-        ),
+    return TextButton(
+      key: const Key('logbook.progress'),
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        minimumSize: const Size.fromHeight(48),
+        alignment: AlignmentDirectional.centerStart,
+        textStyle: AppTextTheme.of(context).rowTitle,
       ),
+      child: const Text(AppWords.progressByTarget),
     );
   }
 }
@@ -794,15 +621,12 @@ class _Empty extends StatelessWidget {
                 .copyWith(color: p.textSecondary),
           ),
           const SizedBox(height: AppSpacing.itemGap),
-          Text(
-            narrowed
+          EmptyState(
+            key: const Key('logbook.empty'),
+            title: narrowed
                 ? 'Nothing matches the search or the filters.'
                 : 'Nothing saved yet. Save a plan, then return here to '
                       'record its result.',
-            key: const Key('logbook.empty'),
-            style: AppTextTheme.of(context)
-                .resolve(AppTextTheme.of(context).body, AppTextGeometry.reading)
-                .copyWith(color: p.textSecondary),
           ),
           const SizedBox(height: AppSpacing.itemGap),
           OutlinedButton(

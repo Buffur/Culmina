@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.security.KeyStore
 
 plugins {
     id("com.android.application")
@@ -6,17 +7,42 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// TASK 16.2: release signing with the owner's upload key, read from
-// android/key.properties (gitignored; never committed — see
-// docs/RELEASE.md). Google Play App Signing re-signs the app with the app
-// signing key Google keeps; this key only proves an upload is the owner's.
+// GitHub Releases distributes this APK with the owner's signing key.
+// Secrets stay in gitignored android/key.properties; see docs/RELEASE.md.
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties().apply {
     if (keystorePropertiesFile.exists()) {
         keystorePropertiesFile.inputStream().use { load(it) }
     }
 }
-val hasUploadKey = keystorePropertiesFile.exists()
+val hasUploadKey = listOf("storePassword", "keyPassword", "keyAlias", "storeFile")
+    .all { !keystoreProperties.getProperty(it).isNullOrBlank() }
+
+val requireReleaseSigning = tasks.register("requireReleaseSigning") {
+    doLast {
+        check(hasUploadKey) {
+            "Release requires complete android/key.properties. Use debug/profile for local development."
+        }
+        val store = KeyStore.getInstance(
+            file(keystoreProperties.getProperty("storeFile")),
+            keystoreProperties.getProperty("storePassword").toCharArray()
+        )
+        val alias = keystoreProperties.getProperty("keyAlias")
+        val certificate = store.getCertificate(alias) as? java.security.cert.X509Certificate
+        check(store.isKeyEntry(alias) && certificate != null) { "Release signing key missing." }
+        check(!certificate.subjectX500Principal.name.contains("CN=Android Debug", ignoreCase = true)) {
+            "Android Debug certificates cannot sign distribution releases."
+        }
+    }
+}
+
+// Guard the artifact-producing tasks as well as the normal signing task.
+// There is deliberately no debug-key fallback or bypass for release builds.
+tasks.configureEach {
+    if (name in listOf("validateSigningRelease", "packageRelease", "packageReleaseBundle")) {
+        dependsOn(requireReleaseSigning)
+    }
+}
 
 android {
     namespace = "io.github.buffur.culmina"
@@ -55,20 +81,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Native verification uses a separate install and data sandbox.
+            if (providers.gradleProperty("CULMINA_VERIFICATION").orNull == "true") {
+                applicationIdSuffix = ".verification"
+            }
+        }
         release {
-            // With android/key.properties: the upload key. Without it (a
-            // developer machine): the debug key, so `flutter run --release`
-            // still works — Google Play rejects a debug-signed bundle, so
-            // such a build cannot be uploaded by mistake.
             signingConfig = if (hasUploadKey) {
                 signingConfigs.getByName("release")
             } else {
-                logger.warn(
-                    "android/key.properties not found: the release build is " +
-                        "signed with the DEBUG key and cannot be uploaded. " +
-                        "See docs/RELEASE.md."
-                )
-                signingConfigs.getByName("debug")
+                null
             }
             // R8 (code shrinking and resource shrinking) is on for release,
             // as the Flutter Gradle plugin sets it (TASK 16.2 decision).

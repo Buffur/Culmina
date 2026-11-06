@@ -24,6 +24,25 @@ ScrollPosition _position(WidgetTester t) => t
     )
     .position;
 
+// Extract the actual Text from either the component fixture cell or the
+// production TableCell/Padding/ConstrainedBox/Align cell.
+Text _cellText(Widget cell) {
+  var current = cell;
+  while (current is TableCell ||
+      current is Padding ||
+      current is ConstrainedBox ||
+      current is Align) {
+    current = switch (current) {
+      TableCell(:final child) => child,
+      Padding(:final child) => child!,
+      ConstrainedBox(:final child) => child!,
+      Align(:final child) => child!,
+      _ => throw StateError('Unexpected table cell: $current'),
+    };
+  }
+  return current as Text;
+}
+
 Rect _semanticRect(SemanticsNode node) {
   var rect = node.rect;
   for (
@@ -154,9 +173,7 @@ Future<void> _assertPinned(WidgetTester t, String id) async {
   final evidenceId = id.replaceAll('.', '_');
   final widget = t.widget<Table>(_table);
   final render = t.renderObject<RenderTable>(_table);
-  final first = find.byWidget(
-    (widget.children[1].children.first as Padding).child!,
-  );
+  final first = find.byWidget(_cellText(widget.children[1].children.first));
   final original = t.getRect(first);
   final originalSemantics = _semanticRect(t.getSemantics(first));
   final rowHeights = [
@@ -183,9 +200,7 @@ Future<void> _assertPinned(WidgetTester t, String id) async {
     isFalse,
   );
   expect(
-    find.text(
-      ((widget.children[1].children.first as Padding).child! as Text).data!,
-    ),
+    find.text(_cellText(widget.children[1].children.first).data!),
     findsOneWidget,
   );
   final timeBox = t.renderObject<RenderBox>(first);
@@ -288,7 +303,7 @@ void main() {
       final table = t.widget<Table>(_table);
       for (var column = 1; column < 9; column++) {
         final target = find.byWidget(
-          (table.children[1].children[column] as Padding).child!,
+          _cellText(table.children[1].children[column]),
         );
         t.renderObject(target).showOnScreen();
         await t.pumpAndSettle();
@@ -348,10 +363,7 @@ void main() {
             final table = t.widget<Table>(_table);
             final cells = [
               for (final row in table.children)
-                [
-                  for (final cell in row.children)
-                    ((cell as Padding).child! as Text).data!,
-                ],
+                [for (final cell in row.children) _cellText(cell).data!],
             ];
             expect(cells.every((row) => row.length == 9), isTrue);
             expect(cells.first, [
@@ -439,10 +451,7 @@ void main() {
             );
             expect([
               for (final row in t.widget<Table>(_table).children)
-                [
-                  for (final cell in row.children)
-                    ((cell as Padding).child! as Text).data!,
-                ],
+                [for (final cell in row.children) _cellText(cell).data!],
             ], cells);
             expect(f.vm.plan.activeSessionId, saved.id);
             await t.runAsync(() async {

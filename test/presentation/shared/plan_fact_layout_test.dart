@@ -1,6 +1,8 @@
 import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:astroplan/core/theme/app_spacing.dart';
 import 'package:astroplan/presentation/shared/document_section.dart';
 import 'package:astroplan/presentation/shared/hybrid_parts.dart';
+import 'package:astroplan/presentation/shared/fact_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -50,22 +52,38 @@ void main() {
           final rows = tester
               .widgetList<HybridFact>(find.byType(HybridFact))
               .toList();
+          expect(find.byType(FactRow), findsNWidgets(rows.length));
           final labels = [
             for (final row in rows) tester.getRect(find.text(row.label)),
           ];
           final values = [
             for (final row in rows) tester.getRect(find.text(row.value)),
           ];
+          final contentBounds = tester.getRect(find.byType(HybridFacts));
           for (var i = 0; i < rows.length; i++) {
-            expect(labels[i].left, labels.first.left);
-            expect(values[i].left, values.first.left);
-            expect(values[i].right, lessThanOrEqualTo(width - 36));
-            if (scale == 1) {
-              expect(values[i].top, labels[i].top);
-              expect(values[i].left - labels[i].right, closeTo(16, .01));
+            expect(labels[i].left, contentBounds.left);
+            expect(values[i].left, greaterThanOrEqualTo(contentBounds.left));
+            expect(
+              values[i].right,
+              lessThanOrEqualTo(contentBounds.right + .01),
+            );
+            final valueText = tester.widget<Text>(find.text(rows[i].value));
+            expect(valueText.maxLines, isNull);
+            expect(valueText.overflow, isNot(TextOverflow.ellipsis));
+            if (valueText.textAlign == TextAlign.end) {
+              expect(values[i].right, closeTo(contentBounds.right, .01));
+              expect(values[i].center.dy, closeTo(labels[i].center.dy, .01));
+              expect(
+                values[i].left - labels[i].right,
+                greaterThanOrEqualTo(AppSpacing.md - .01),
+              );
             } else {
-              expect(values[i].top - labels[i].bottom, closeTo(4, .01));
+              expect(
+                values[i].top - labels[i].bottom,
+                closeTo(AppSpacing.xs, .01),
+              );
               expect(values[i].left, labels[i].left);
+              expect(values[i].width, closeTo(contentBounds.width, .01));
             }
             if (i > 0) {
               final previousBottom = values[i - 1].bottom > labels[i - 1].bottom

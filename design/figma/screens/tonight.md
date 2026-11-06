@@ -1,6 +1,14 @@
 # Tonight pilot
 
-Revision: AFTER-DARK-1.0.
+Canonical instance bindings and retained state/route boundaries are recorded in the [2026-11-04 consolidation matrix](../research/consolidation_2026-11-04.md). Screen root `84:34120` and approved appearance/content are preserved.
+
+Revision: AFTER-DARK-1.2.
+
+Latest owner correction, 2026-11-04: the appearance control has a centered Moon with no visible Field caption. Bottom tabs use Moon / Notebook Pen / Archive / Sliders Horizontal; their four labels and accepted rectangular selection treatment are retained. This supersedes the earlier appearance-caption wording below.
+
+Owner designation, 2026-11-04: this Longread is an approved **Dark composition reference** for subsequent mockups, together with Plan and the current Design System state catalog. The current appearance is icon-only centered Moon without a visible Field caption; the polish also adds an 8px Night ahead bottom inset and uses SemiBold on Open planner. The older TEST name remains a stable Figma identity; it does not cancel this composition decision. See [WORKFLOW](../WORKFLOW.md) for actual verification and the distinct state, viewport, scaling and native limits. The historical entries below retain their chronology.
+
+Historical integration chronology (superseded appearance wording retained as evidence): [Tonight](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=84-34120). On 2026-11-01 the owner authorized integration of the amended Fits concept, retaining Tonight's existing facts and Open planner action. Needed/usable figures align at the available width; Plan's capture-end caption is not added. Compact context controls, Saved state and navigation retain their accepted treatment. On 2026-11-03 the owner accepted A updated / Prototype Preview states; Night ahead now uses its Dark and Moon-free dark lanes with event-linked Preview and optional Exact times. The subsequent owner correction places Moon and Weather together in a separate compact card below Night ahead and gives Open planner a light fill with dark ink. The appearance control now uses Eye above Field in the original 48px target; the local On variant adds a check and neutral active surface. See [workflow](../WORKFLOW.md) for checks and remaining pilot limits.
 
 ## Frozen BEFORE
 
@@ -36,8 +44,14 @@ Source-backed state matrix for future component specimens: bootstrap/loading/fai
 
 ## After composition intent
 
-Keep night identity first, context directly below, then a coherent plan record with distinct fit and saved label. “The night ahead” becomes a flat document section with well-separated named rows and the full time browser. Preserve the root tabs and every action. Do not add the other source frame's Record result block to this fixture.
+Keep night identity first, context directly below, then a coherent plan record with distinct fit and saved label. The owner-requested block composition keeps “The night ahead” as one bounded group with flat named rows and the full time browser. The saved-plan record, fit and Open planner action remain one coherent block. Preserve the root tabs and every action. Do not add the other source frame's Record result block to this fixture.
 
 ## Limits / differences
 
-The frame is static; no tap, accessibility or native persistence behavior was tested through Figma. Current source supports additional result states and conditional content not shown here; their absence from this specific fixture is not evidence of deletion. Preserve this baseline, with source semantics used only to annotate unseen behavior. F01 must inspect the complete longread and an independently composed 375 × 812 first viewport at the same fixture.
+At the historical F01 baseline inspection, the frame was static; no tap, accessibility or native persistence behavior was tested through Figma. Later scoped Preview checks are recorded in WORKFLOW. Current source supports additional result states and conditional content not shown here; their absence from this specific fixture is not evidence of deletion. Preserve the frozen baseline as evidence; current source/product facts govern new-screen content. Historical F01 scope called for the complete longread and an independently composed 375 × 812 first viewport at the same fixture. The current [base-screen run](../REDESIGN_RUN.md) requires one full Longread and defers the second viewport unless separately requested.
+
+## Experimental Longread — 2026-10-31
+
+Owner update 2026-11-01: restore the compact Saved badge and earlier rectangular root navigation; shrink Geo/Date icons/labels while retaining 48px targets. Night ahead follows the compact wrapper practice of the owner's Plan inputs. These are local TEST-frame overrides; see [workflow](../WORKFLOW.md) for current evidence and owner-review status.
+
+Owner-authorized [After V1 test Longread](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=84-34120) uses 1.2 in the existing UI Lab. See [workflow](../WORKFLOW.md) for exact source parity, measured fact-slot adaptations, the named scientific source-geometry adapter, verification and remaining acceptance limits. The immutable BEFORE is unchanged. No first-viewport or Flutter result is implied.

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Approved original Hybrid presentation roles absent from AppPalette.
-/// Values: the final computed cascade of the accepted web reference
-/// (`design/home-lab` at 86873ce: notion-hybrid.css, hybrid-data-tokens.css,
-/// hybrid-refinement.css), Light / Dark / Field. These colours do not supply
-/// astronomical intervals or change data semantics.
+/// Semantic presentation roles absent from AppPalette.
+/// Dark adopts AFTER-DARK-1.2; Light and Field retain their source palettes.
+/// These colors never supply astronomical intervals or change data meaning.
 @immutable
 class HybridTokens extends ThemeExtension<HybridTokens> {
   const HybridTokens({
@@ -38,7 +36,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
     required this.weatherNotice,
   });
 
-  static const sourceRevision = '86873ce';
+  static const sourceRevision = 'AFTER-DARK-1.2';
   static const fontFamily = 'Geist';
   static const transparent = Color(0x00000000);
   // Exact compact roles in the approved source. Large text uses full week rows.
@@ -48,7 +46,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
   /// Chart tick labels (plan.css `.gain-graph text`, 11 px).
   static const chartLabelSize = 11.0;
   static const minTarget = 48.0;
-  static const appBarHeight = 64.0;
+  static const appBarHeight = 56.0;
 
   /// Primary action fill (WQA-01: Field `#FF0000` with black text).
   final Color action;
@@ -119,7 +117,7 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
   /// Timeline astronomical twilight.
   final Color skyAstronomical;
 
-  /// Timeline dark time: black in every theme (owner).
+  /// Timeline dark interval; a semantic fill, not a quality score.
   final Color skyDark;
 
   /// Moon-above-horizon lane.
@@ -175,34 +173,34 @@ class HybridTokens extends ThemeExtension<HybridTokens> {
   );
 
   static const dark = HybridTokens(
-    action: Color(0xFFEBEBEA),
-    onAction: Color(0xFF191919),
-    selection: Color(0xFF343432),
-    selectedHourFill: Color(0xFF004074),
-    selectedHourText: Color(0xFFC2E6FF),
-    selectedHourRule: Color(0xFF70B8FF),
-    surfaceSubtle: Color(0xFF202020),
-    surfaceSunken: Color(0xFF141414),
-    accent: Color(0xFF62AFF3),
-    success: Color(0xFF99C5A6),
-    successWash: Color(0xFF2B352E),
-    caution: Color(0xFFFFCA70),
-    cautionWash: Color(0xFF3B3222),
-    errorText: Color(0xFFFF9592),
-    errorWash: Color(0xFF3C2929),
-    hourBackground: Color(0xFF152D40),
-    hourText: Color(0xFFA6D2F3),
-    gainStart: Color(0xFF62AFF3),
-    gainEnd: Color(0xFFA6D2F3),
-    skyDay: Color(0xFFA6D2F3),
-    skyCivil: Color(0xFF78B5E5),
-    skyNautical: Color(0xFF4388BD),
-    skyAstronomical: Color(0xFF244F7A),
-    skyDark: Color(0xFF000000),
-    moonUp: Color(0xFFB0BEC5),
-    moonFree: Color(0xFFEBEBEA),
-    weatherCaution: Color(0xFFFFCA70),
-    weatherNotice: Color(0xFFFFB74D),
+    action: Color(0xFF2783DE),
+    onAction: Color(0xFF101010),
+    selection: Color(0xFF262626),
+    selectedHourFill: Color(0xFF313B49),
+    selectedHourText: Color(0xFFD8E7FF),
+    selectedHourRule: Color(0xFF75B6FF),
+    surfaceSubtle: Color(0xFF262626),
+    surfaceSunken: Color(0xFF1A1A1A),
+    accent: Color(0xFF2783DE),
+    success: Color(0xFF8EC7A7),
+    successWash: Color(0xFF27382F),
+    caution: Color(0xFFE6C17A),
+    cautionWash: Color(0xFF3B3326),
+    errorText: Color(0xFFF39B95),
+    errorWash: Color(0xFF402D2C),
+    hourBackground: Color(0xFF262626),
+    hourText: Color(0xFFC4C1BC),
+    gainStart: Color(0xFF90B7CB),
+    gainEnd: Color(0xFFB5D6B6),
+    skyDay: Color(0xFF77705E),
+    skyCivil: Color(0xFF66576D),
+    skyNautical: Color(0xFF4E4B70),
+    skyAstronomical: Color(0xFF393E58),
+    skyDark: Color(0xFF262D3C),
+    moonUp: Color(0xFFD5C8AD),
+    moonFree: Color(0xFF86BAD0),
+    weatherCaution: Color(0xFFE6C17A),
+    weatherNotice: Color(0xFFA9C3DA),
   );
 
   static const field = HybridTokens(

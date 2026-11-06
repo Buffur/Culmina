@@ -1,0 +1,135 @@
+{
+  "scope": "Completed repository cleanup. External UI fixes are attributed to the UI chat, not cleanup. Verification receipts below record exact command/input scopes.",
+  "docs": [
+    {
+      "path": "AGENTS.md",
+      "before_bytes": 14077,
+      "after_bytes": 13985,
+      "before_lines": 181,
+      "after_lines": 178,
+      "backup_kind": "reconstructed LF pre-index edit; not initial byte identity"
+    },
+    {
+      "path": "design/figma/WORKFLOW.md",
+      "before_bytes": 48470,
+      "after_bytes": 12262,
+      "before_lines": 216,
+      "after_lines": 52,
+      "backup_kind": "exact original bytes"
+    },
+    {
+      "path": "design/figma/REDESIGN_RUN.md",
+      "before_bytes": 124901,
+      "after_bytes": 38561,
+      "before_lines": 550,
+      "after_lines": 283,
+      "backup_kind": "exact original bytes"
+    }
+  ],
+  "archived_artifact_files": 584,
+  "archived_artifact_bytes": 11976284,
+  "archived_completed_doc_files": 3,
+  "archived_completed_doc_bytes": 20596,
+  "disk_space_freed_bytes": 0,
+  "dependency_declarations": 22,
+  "dependencies_removed": 0,
+  "lib_files_moved": 0,
+  "assets_moved": 0,
+  "config_changes": [
+    "analysis_options.yaml: exclude _archive/** historical evidence",
+    "gitignore: ignore cleanup logs and raw machine inventories",
+    "codex/config.toml: refresh two absent 2.8.0 exclusion paths to installed 2.10.0; disabled flags retained"
+  ],
+  "verification": {
+    "flutter_pub_get": "passed; pubspec.lock byte-identical",
+    "flutter_analyze_initial": "12 issues in concurrently changing source/test files; exit 1",
+    "flutter_test_initial": "blocked by in-use build/native_assets/windows/sqlite3.dll; exit 1",
+    "instructions": "PASS:27 skills/49 Markdown,9 unit tests,contract validator,diff check",
+    "local_heading_links": "90 checked;zero broken",
+    "archive_hashes": "587 relocations verified: 584 artifacts + 3 documents; 11,996,880 bytes",
+    "figma_contract": "passed after compaction; zero errors",
+    "parallel_tasks": "UI confirmed code/tests frozen. Cleanup final check still matches824verified inputs; no further source work required for cleanup.",
+    "flutter_pub_get_repeat": "passed; pubspec.yaml/pubspec.lock remain byte-identical to initial inputs",
+    "flutter_analyze_repeat": "3 curly_braces_in_flow_control_structures infos in active UI tests; exit 1. Weather boundary test changed during run, so this is not a final stable verification.",
+    "flutter_test_complete": "Completed: 3811 passed,7 skipped,15 failed across clock invariant, forecast label, ViewModel physical LOC,12 weather table cast cases. Two UI test files changed during run; not final stable verification.",
+    "owner_decision": "User directed UI chat to fix test blockers; cleanup applied no Flutter/source/test/native changes. UI applied its own fixes.",
+    "flutter_pub_get_final": "PASS; declarations and lockfile byte-identical to initial inputs",
+    "flutter_analyze_final": "PASS,0 issues after latest Android-only guard additions (--no-pub)",
+    "flutter_test_final": "PASS:3835 passed,7 skipped,0 failed; full Flutter host suite",
+    "post_guard_recheck": "PASS: all4 clock tests after Android-only guard/fixture changes. Identified affected host check: clock_test scans these source files; no host imports of new guard; two integration imports verified.",
+    "final_input_stability": "824 static inputs byte-identical across latest analyze/clock recheck; no additions/removals/changes",
+    "full_suite_input_delta": "During passing full suite: added test/support/native_verification_guard.dart and changed only integration_test/hybrid_migration_smoke_test.dart and integration_test/perf_scenarios_test.dart. lib,existing host tests,assets,native/CI config,declarations/lock unchanged. New helper imports are integration-only; relevant clock source scan rerun afterward."
+  },
+  "archived_completed_doc_lines": 129,
+  "active_document_lines_reduced": 434,
+  "active_document_lines_relocated": 129,
+  "followup": {
+    "date": "2026-11-06",
+    "scope": "Completed previously interrupted build-script reference search; archived additional confirmed obsolete outputs; compared instruction architecture with official OpenAI/Anthropic/Google Gemini CLI docs and corrected source-description drift. No runtime-code/test/native/config changes.",
+    "read_coverage": {
+      "unique_text_script_inputs": 34178,
+      "build_scripts": 1159,
+      "archived_scripts": 93,
+      "primary_active_inputs": 1233,
+      "primary_history_inputs": 27216,
+      "supplemental_text_recipes": 4477,
+      "unresolved_read_errors": 0,
+      "named_reference_edges": 59340,
+      "dynamic_path_matches": 55,
+      "retention_entries": 266,
+      "binary_and_non_script_files_separately_classified": 5192,
+      "retained_non_script_stateful_paths": [
+        "build/.last_build_id",
+        "build/penpot-20261029/local-instance/.env",
+        "build/penpot-20261029/combined/interrupted-encoding.partial"
+      ]
+    },
+    "additional_relocations": {
+      "files": 10,
+      "bytes": 322926,
+      "original": "build/refinement-shot-smoke"
+    },
+    "instructions": {
+      "corrected_owners": [
+        ".agents/skills/culmina-design-spacing/SKILL.md",
+        ".agents/skills/culmina-design-components/references/data-display.md",
+        ".agents/skills/culmina-design-tokens/references/semantic-map.md",
+        "docs/DESIGN_SYSTEM.md"
+      ],
+      "before_versions": "instruction-followup-before-manifest.json",
+      "facts": "Named spacing/radius/default-padding source owners; qualified uncalled weather tokens; replaced stale palette/base-typography/app-bar index with installed runtime owners.",
+      "policies_unchanged": [
+        "Context7 lookup scope",
+        "mandatory four-line delivery audit",
+        "Figma access/quota restrictions",
+        "native client configuration/discovery"
+      ]
+    },
+    "assessment": "Architecture broadly follows shared-entrypoint and progressive-disclosure practices. Current source facts reconciled. Native Claude project-skill discovery and cross-client behavior remain untested.",
+    "checks": {
+      "instructions": "27 skills / 49 Markdown / zero errors",
+      "instruction_unit_tests": "9 passed",
+      "modified_skill_validation": "PASS",
+      "figma_contract": "PASS",
+      "changed_owner_local_links": "30 checked / zero errors",
+      "semantic_review": "Inspected current AppSpacing, AppRadius, DocumentSection, HybridTokens, AppTypography, AppTextTheme, AppTheme and weather callers; source descriptions aligned without new product values."
+    },
+    "app_checks": "No Flutter suite rerun for artifact/Markdown-only follow-up. Prior Flutter results remain dated receipts for their exact source scope."
+  },
+  "publication_verification": {
+    "date": "2026-11-06T15:33:02+02:00",
+    "authorization": "User explicitly requested all current changes on develop, including other chats.",
+    "verified_index_tree_before_receipt": "a28d6173a8dfc30609b40f87076af2bf326ba6d9",
+    "staged_files": 269,
+    "pub_get": "PASS; no declaration or lockfile changes",
+    "analyze": "PASS; zero issues (124.1 seconds)",
+    "flutter_test": "PASS; 3835 passed, 7 skipped, 0 failed (7 minutes 20 seconds)",
+    "format": "PASS; 196 Dart files, zero changes",
+    "instructions": "PASS; 27 skills, 49 Markdown, zero errors; 9 instruction tests",
+    "ci_logic": "PASS; 8 tests",
+    "figma_contract": "PASS",
+    "diff_check": "PASS",
+    "input_stability": "No unstaged tracked or untracked nonignored files after full gate; staged tree unchanged.",
+    "limits": "Android device suite and remote CI not run locally in this push turn. Ignored archive logs and binaries remain local."
+  }
+}

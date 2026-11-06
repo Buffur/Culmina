@@ -1,0 +1,35 @@
+{
+  "roots": [
+    "lib",
+    "test",
+    "integration_test",
+    "test_driver",
+    "assets",
+    "tool",
+    "drift_schemas",
+    "android",
+    ".github"
+  ],
+  "exclude_dirs": [
+    "build",
+    ".gradle",
+    ".dart_tool",
+    "__pycache__",
+    "node_modules",
+    ".git",
+    "failures"
+  ],
+  "exclude_secret_names": [
+    "key.properties"
+  ],
+  "exclude_secret_suffixes": [
+    ".jks",
+    ".keystore"
+  ],
+  "root_files": [
+    "pubspec.yaml",
+    "pubspec.lock",
+    "analysis_options.yaml",
+    "build.yaml"
+  ]
+}

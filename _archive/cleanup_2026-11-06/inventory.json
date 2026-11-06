@@ -1,0 +1,3422 @@
+{
+  "scope": "Complete top-level entries of build, .audit and design/figma/research, plus root log/text/JSON files. Recursive static file counts exclude symlinks; named runtime/cache directories excluded. Markdown references searched outside build and archive. Existing archive separately inventoried by its manifests. Inventory captured after first four archived batches and before fifteen further batch moves; moved entries are marked archived. Penpot aggregate includes local runtime dependencies. Later review archived 426 individual historical .audit/logs traces and 12 older standalone build logs; see manifest for individual movements. Referenced .audit report files and other log types retained. Historical build scan was interrupted; static project text and audit report filenames were searched, and build doc-compaction references remain historical.",
+  "markdown_files_scanned": 94,
+  "entries": [
+    {
+      "path": "build/.last_build_id",
+      "classification": "runtime metadata",
+      "reason": "Retained regenerable runtime metadata.",
+      "files": 1,
+      "bytes": 32,
+      "extensions": {
+        "[none]": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/038e73cf314d0ddab7bcdad1c01ebb97.cache.dill.track.dill",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/4189cf65caed1f673f0abbe75cfabebb.cache.dill.track.dill",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/53d97955e5631c59a4129c481e9004a1.cache.dill.track.dill",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/76d47982dbbd449c0d550f888f059262",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/analyzer-archive-checks.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 564,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/android_file_picker",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/app",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": [
+        "docs/RELEASE.md"
+      ]
+    },
+    {
+      "path": "build/archive-before-analyzer.json",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 2853190,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/atlas-freshness-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 92,
+      "bytes": 112256621,
+      "extensions": {
+        ".json": 44,
+        ".apk": 1,
+        ".png": 44,
+        ".xml": 1,
+        ".log": 2
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/atlas-repair",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 2,
+      "bytes": 64980,
+      "extensions": {
+        ".json": 1,
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/atlas-repair-all",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 81,
+      "bytes": 2537879,
+      "extensions": {
+        ".json": 40,
+        ".png": 40,
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/atlas-repair-checks.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 1409172,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/bbb4c0f89fe934879820f9b8b676e861.cache.dill.track.dill",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/bootstrap-config-validation.json",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 336,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/bootstrap-renders",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 12,
+      "bytes": 332053,
+      "extensions": {
+        ".json": 6,
+        ".png": 6
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/ci-storage-recheck.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 2471,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/ci-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1253,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/create_safety_snapshot.py",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 1280,
+      "extensions": {
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/design-guidance-cleanup-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 18,
+      "bytes": 60417,
+      "extensions": {
+        ".json": 3,
+        ".md": 11,
+        ".py": 2,
+        ".txt": 1,
+        ".yml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/design-refinement-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 180,
+      "bytes": 7463576,
+      "extensions": {
+        ".log": 9,
+        ".png": 93,
+        ".py": 3,
+        ".json": 71,
+        ".dart": 3,
+        ".html": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/design-rules-web",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 1,
+      "bytes": 334,
+      "extensions": {
+        ".html": 1
+      },
+      "references": [
+        "design/reference/README.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/doc-01-contract-validation.json",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 8351,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/doc-compaction-20261104",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 8,
+      "bytes": 8455009,
+      "extensions": {
+        ".json": 6,
+        ".zip": 1,
+        ".patch": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/equipment-before.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 4875,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/equipment-release-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 4835,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-a-context",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 7,
+      "bytes": 52548,
+      "extensions": {
+        ".js": 6,
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-a-integrate",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 5,
+      "bytes": 13469,
+      "extensions": {
+        ".js": 5
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-a-refinement",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 4,
+      "bytes": 18195,
+      "extensions": {
+        ".js": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-all-hierarchy",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 4,
+      "bytes": 7576,
+      "extensions": {
+        ".js": 3,
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-audit-fixes-20261106",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 63,
+      "bytes": 2868515,
+      "extensions": {
+        ".py": 1,
+        ".json": 22,
+        ".js": 11,
+        ".png": 29
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-authoring-sync-20261104",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 26,
+      "bytes": 2355056,
+      "extensions": {
+        ".png": 9,
+        ".js": 6,
+        ".json": 11
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-block-contrast",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 4,
+      "bytes": 9574,
+      "extensions": {
+        ".js": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-candidates-a-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 12,
+      "bytes": 1263517,
+      "extensions": {
+        ".js": 5,
+        ".png": 7
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-candidates-geometry-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 12,
+      "bytes": 1443971,
+      "extensions": {
+        ".js": 4,
+        ".png": 8
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-candidates-notion-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 12,
+      "bytes": 2154650,
+      "extensions": {
+        ".js": 4,
+        ".png": 8
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-candidates-qa2-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 4,
+      "bytes": 888758,
+      "extensions": {
+        ".js": 2,
+        ".png": 2
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-capture-fill",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 4,
+      "bytes": 18289,
+      "extensions": {
+        ".js": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-consolidation-20261104",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 28,
+      "bytes": 4573834,
+      "extensions": {
+        ".png": 10,
+        ".js": 8,
+        ".json": 10
+      },
+      "references": [
+        "design/figma/research/consolidation_2026-11-04.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-estimate-quiet",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 2,
+      "bytes": 5852,
+      "extensions": {
+        ".js": 2
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-f01",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 522,
+      "bytes": 58806985,
+      "extensions": {
+        ".js": 245,
+        ".png": 97,
+        ".txt": 7,
+        ".jpg": 156,
+        ".json": 4,
+        ".md": 11,
+        ".cjs": 1,
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-f01-r",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 17,
+      "bytes": 271448,
+      "extensions": {
+        ".js": 8,
+        ".json": 5,
+        ".png": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-field-conditions",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 5,
+      "bytes": 14026,
+      "extensions": {
+        ".js": 5
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-flutter-anchor-parity-20261106",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 0,
+      "bytes": 0,
+      "extensions": {},
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-hierarchy-rollout",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 2,
+      "bytes": 11490,
+      "extensions": {
+        ".js": 2
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-integrate-concepts",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 2,
+      "bytes": 7017,
+      "extensions": {
+        ".js": 2
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-mobile-blocks",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 4,
+      "bytes": 22003,
+      "extensions": {
+        ".js": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-moon-20261104",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 8,
+      "bytes": 288197,
+      "extensions": {
+        ".json": 2,
+        ".dart": 1,
+        ".png": 5
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-moon-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 4,
+      "bytes": 161246,
+      "extensions": {
+        ".json": 1,
+        ".png": 2,
+        ".js": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-nav-icons-20261104",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 7,
+      "bytes": 65225,
+      "extensions": {
+        ".js": 2,
+        ".png": 4,
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-next-06-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 8,
+      "bytes": 1190719,
+      "extensions": {
+        ".js": 3,
+        ".png": 4,
+        ".json": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-night-20261104",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 9,
+      "bytes": 307787,
+      "extensions": {
+        ".json": 3,
+        ".png": 6
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-owner-density",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 13,
+      "bytes": 74699,
+      "extensions": {
+        ".js": 13
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-20261029",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 6131194,
+      "extensions": {
+        ".fig": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-analyze-delivery-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-analyze-delivery.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 319,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-analyze-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-analyze-verified.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 632,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-delivery-receipt.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 9175,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-delivery-receipt.py",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 12859,
+      "extensions": {
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-delivery-report.md",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7896,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-final-night-a11y.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 86317,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-final-renders",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 124,
+      "bytes": 3273531,
+      "extensions": {
+        ".json": 62,
+        ".png": 62
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-final-renders.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7303,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-final-weather",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 4,
+      "bytes": 129023,
+      "extensions": {
+        ".json": 2,
+        ".png": 2
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-large-renders.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 586,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-longread",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 6,
+      "bytes": 473429,
+      "extensions": {
+        ".json": 3,
+        ".png": 3
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-longread-home.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 224,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-longread-plan.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 224,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-longread-weather_charts.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 234,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-native",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 42,
+      "bytes": 1272071,
+      "extensions": {
+        ".json": 21,
+        ".png": 21
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-palette-renders.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 913,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-field.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 185894,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-final.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 237062,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-light.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 264445,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-observed-final.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 232750,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-run-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 152915,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-run.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 406869,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-settings.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 234678,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone-window-final.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 11569,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-phone.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 214160,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-recovery",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 60266,
+      "extensions": {
+        ".dart": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-renders.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1264,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-selected-weather",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 4,
+      "bytes": 771769,
+      "extensions": {
+        ".png": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-source-manifest-delivery.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 93606,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-source-manifest-final.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 91852,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-source-manifest-verified.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 93606,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-source-manifest.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 91852,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-targeted-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7296,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests-clean-interrupted.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 660319,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests-clean.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1093041,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests-delivery.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1078933,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1141841,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests-gate.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1095539,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests-verified.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1083567,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1271878,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-tracking-fallback-test.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 334,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-weather-large.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 234,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-weather-longread",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 2,
+      "bytes": 159323,
+      "extensions": {
+        ".json": 1,
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-weather-longread.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 234,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-weather-viewport.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 234,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-parity-window.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 10749,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-pilot-longreads",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 17,
+      "bytes": 1386287,
+      "extensions": {
+        ".js": 7,
+        ".json": 1,
+        ".jpg": 9
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-plan-transfer-20261104",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 13,
+      "bytes": 1235040,
+      "extensions": {
+        ".json": 3,
+        ".js": 2,
+        ".png": 8
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-polish-20261104",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 17,
+      "bytes": 489255,
+      "extensions": {
+        ".json": 2,
+        ".png": 15
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-remaining-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 417,
+      "bytes": 20138118,
+      "extensions": {
+        ".js": 33,
+        ".json": 27,
+        ".png": 354,
+        ".py": 3
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-review-03-06-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 6,
+      "bytes": 307410,
+      "extensions": {
+        ".js": 4,
+        ".png": 2
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-save-action",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 2,
+      "bytes": 2640,
+      "extensions": {
+        ".js": 2
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-section-hierarchy",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 4,
+      "bytes": 10152,
+      "extensions": {
+        ".js": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-ssot-audit-20261104",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 45,
+      "bytes": 1764091,
+      "extensions": {
+        ".png": 38,
+        ".py": 1,
+        ".json": 4,
+        ".js": 2
+      },
+      "references": [
+        "design/figma/research/ssot_audit_2026-11-04.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-stage-c-batch1-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 44,
+      "bytes": 2053181,
+      "extensions": {
+        ".png": 20,
+        ".js": 19,
+        ".json": 5
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-tab-groups-20261106",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 5,
+      "bytes": 27399,
+      "extensions": {
+        ".py": 1,
+        ".js": 2,
+        ".json": 2
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-timeline-study",
+      "classification": "archived",
+      "reason": "Moved to logs preserving relative path; see SHA-256 manifest",
+      "files": 6,
+      "bytes": 16891,
+      "extensions": {
+        ".js": 6
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-transfer-20261029",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 3,
+      "bytes": 2830,
+      "extensions": {
+        ".js": 1,
+        ".json": 1,
+        ".html": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 9,
+      "bytes": 395721,
+      "extensions": {
+        ".png": 5,
+        ".js": 3,
+        ".json": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-copy-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 9,
+      "bytes": 726142,
+      "extensions": {
+        ".js": 1,
+        ".png": 7,
+        ".json": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-correction-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 815,
+      "bytes": 39509844,
+      "extensions": {
+        ".js": 532,
+        ".zip": 6,
+        ".json": 17,
+        ".png": 21,
+        ".txt": 3,
+        "[none]": 4,
+        ".md": 2,
+        ".ts": 87,
+        ".css": 74,
+        ".ttf": 1,
+        ".html": 5,
+        ".svg": 18,
+        ".tsx": 1,
+        ".sh": 13,
+        ".map": 2,
+        ".wasm": 1,
+        ".jpg": 1,
+        ".tsv": 1,
+        ".woff": 8,
+        ".woff2": 18
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-g2-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 8,
+      "bytes": 528378,
+      "extensions": {
+        ".js": 2,
+        ".png": 5,
+        ".json": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-hourly-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 8,
+      "bytes": 513351,
+      "extensions": {
+        ".js": 3,
+        ".png": 4,
+        ".json": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-reference-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 18,
+      "bytes": 1259928,
+      "extensions": {
+        ".js": 5,
+        ".png": 12,
+        ".json": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/figma-weather-v2-20261105",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 43,
+      "bytes": 2271323,
+      "extensions": {
+        ".json": 10,
+        ".js": 12,
+        ".png": 18,
+        ".dart": 1,
+        ".py": 1,
+        ".html": 1
+      },
+      "references": [
+        "design/figma/REDESIGN_RUN.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/final-repository-check",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 2159,
+      "bytes": 47038101,
+      "extensions": {
+        ".log": 11,
+        ".json": 269,
+        "[none]": 11,
+        ".md": 66,
+        ".yaml": 3,
+        ".lock": 1,
+        ".txt": 20,
+        ".cpp": 4,
+        ".h": 8,
+        ".manifest": 1,
+        ".rc": 1,
+        ".ico": 1,
+        ".cmake": 2,
+        ".cc": 4,
+        ".png": 819,
+        ".html": 106,
+        ".dart": 693,
+        ".py": 19,
+        ".cjs": 4,
+        ".mjs": 5,
+        ".js": 13,
+        ".swift": 7,
+        ".xcworkspacedata": 3,
+        ".plist": 7,
+        ".pbxproj": 2,
+        ".xcscheme": 2,
+        ".entitlements": 2,
+        ".xcconfig": 8,
+        ".xib": 1,
+        ".xcsettings": 2,
+        ".storyboard": 2,
+        ".jpg": 20,
+        ".css": 4,
+        ".ttf": 4,
+        ".kts": 3,
+        ".properties": 2,
+        ".kt": 4,
+        ".xml": 24,
+        ".yml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/fit-before.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1334,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/fit-startup-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 13023,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/flutter_timezone",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/geolocator_android",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/instruction-check.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 59,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/instruction-tools-venv",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/integration_test",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/jni",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/jni_flutter",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/native_assets",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/package_info_plus",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/penpot-20261029",
+      "classification": "mixed evidence and local runtime",
+      "reason": "Retained: includes exports, reports and local-instance/tooling; file total includes runtime dependencies.",
+      "files": 34214,
+      "bytes": 3074328475,
+      "extensions": {
+        ".json": 1117,
+        ".py": 29,
+        ".mjs": 2710,
+        ".png": 40,
+        ".cljs": 14,
+        ".pyc": 3,
+        ".sh": 4,
+        ".fig": 1,
+        ".gz": 8,
+        ".cjs": 227,
+        ".js": 11945,
+        ".cljc": 4,
+        ".jsonl": 8,
+        ".penpot": 10,
+        ".yaml": 8,
+        ".ps1": 43,
+        "[none]": 877,
+        ".md": 861,
+        ".ts": 6759,
+        ".example": 1,
+        ".tsx": 19,
+        ".html": 8,
+        ".css": 51,
+        ".svg": 1,
+        ".jpeg": 1,
+        ".txt": 20,
+        ".yml": 128,
+        ".cts": 75,
+        ".lock": 1,
+        ".map": 8988,
+        ".mts": 99,
+        ".exe": 3,
+        ".flow": 7,
+        ".bnf": 5,
+        ".xml": 19,
+        ".iml": 2,
+        ".markdown": 6,
+        ".coffee": 2,
+        ".cmd": 42,
+        ".node": 2,
+        ".1": 2,
+        ".php": 1,
+        ".go": 1,
+        ".bsd": 3,
+        ".closure-compiler": 1,
+        ".esprima": 1,
+        ".gif": 1,
+        ".tsbuildinfo": 2,
+        ".jst": 25,
+        ".def": 5,
+        ".idx": 1,
+        ".pack": 1,
+        ".rev": 1,
+        ".sample": 14,
+        ".clj": 5,
+        ".partial": 1,
+        ".csv": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-analyze-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-anchor-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 11778,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-final-fixes-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 68803,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-full-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1187323,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-phone-final.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 10215,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-phone-plan.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 241331,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-phone-target.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 281671,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-phone-target.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 9526,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-phone.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 233148,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-phone.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 10215,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-relevant-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 188309,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-renders",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 18,
+      "bytes": 539498,
+      "extensions": {
+        ".json": 9,
+        ".png": 9
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase1-renders.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 622,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-analyze-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-baseline.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 4701,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-candidates-gate.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 364,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 3273,
+      "bytes": 75733047,
+      "extensions": {
+        ".json": 1508,
+        ".py": 1,
+        ".log": 2,
+        ".png": 1761,
+        ".tar": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package1-boundary-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 9453,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package1-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 26667,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package1-first.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 10179,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package1-owned.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 408783,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package1-repair.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 17539,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package1-second.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7246,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package2-first.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 49366,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package3-counts-repair.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1567,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package3-first.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 111618,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package3-second.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 143413,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package4-settings.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 71778,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package4-startup-repair.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 642,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-package4-startup.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 33522,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-parent-preflight-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-parent-preflight.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 207,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-records-startup-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 18674,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-settings-adapters-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 33609,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-site-pending-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 80,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-site-pending-test-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 724,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-completion-site-pending-test.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 6939,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-critical-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7722,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-delivery-receipt.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1493,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-device-preservation.py",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1716,
+      "extensions": {
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-full-tests-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1081568,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-full-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1376104,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-package1-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-package2-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 98,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-package3-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 98,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-package4-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone-logbook.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 215003,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone-moon.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 232452,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone-night.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 266484,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone-planning.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 242820,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone-rig.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 263243,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone-weather.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 309512,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-phone.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 8963,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-release-gate-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1085110,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-release-source-hashes.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 85020,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-renders",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 30,
+      "bytes": 968511,
+      "extensions": {
+        ".json": 15,
+        ".png": 15
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-renders.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 953,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-settings-snapshots.py",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 637,
+      "extensions": {
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-source-audit.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 9569,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/phase2-wrap-settings.py",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 872,
+      "extensions": {
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/plan-density-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 67,
+      "bytes": 4238911,
+      "extensions": {
+        ".dart": 2,
+        ".html": 1,
+        ".json": 33,
+        ".log": 1,
+        ".png": 30
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/plan-night-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 29,
+      "bytes": 6172533,
+      "extensions": {
+        ".log": 6,
+        ".png": 13,
+        ".json": 5,
+        ".md": 1,
+        ".dart": 4
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/plan-refinement",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 100,
+      "bytes": 6362524,
+      "extensions": {
+        ".log": 9,
+        ".py": 2,
+        ".json": 34,
+        ".png": 55
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/planning-context-20261030",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 1,
+      "bytes": 2103,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [
+        "docs/PLANNING_CONTEXT_2026-10-30.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/refinement-after-renders.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 2665,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-analysis-final.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-analysis.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 100,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-baseline.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 1794,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-device.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 21862,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-focused.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 7018,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-full-tests-final.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 1073302,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-full-tests.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 1094869,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-regressions.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 11606,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-shot-smoke",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 10,
+      "bytes": 322926,
+      "extensions": {
+        ".json": 5,
+        ".png": 5
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/refinement-tonight-plan-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 176,
+      "bytes": 6165897,
+      "extensions": {
+        ".html": 1,
+        ".md": 1,
+        ".json": 77,
+        ".xml": 14,
+        ".png": 83
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/release-signing-guard.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7520,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/reports",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/responsive-analyze.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 99,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-before.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 12663,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-library-after.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 149294,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-library-after.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 8890,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-logbook-after.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 232204,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-logbook-after.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 12663,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-logbook-before.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 232080,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-navigation-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 942,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-renders-320",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 80,
+      "bytes": 2005137,
+      "extensions": {
+        ".json": 40,
+        ".png": 40
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-renders-320-completed.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1308,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-renders-320.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 47182,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-renders-800",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 80,
+      "bytes": 2341509,
+      "extensions": {
+        ".json": 40,
+        ".png": 40
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-renders-800.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 8119,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-report.py",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 4373,
+      "extensions": {
+        ".py": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-settings-after.png",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 183081,
+      "extensions": {
+        ".png": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-settings-after.xml",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 10027,
+      "extensions": {
+        ".xml": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/responsive-verification.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 27338,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/restore-safety-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 1501,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/scoped-analysis.log",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 1,
+      "bytes": 485,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/shared_preferences_android",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/share_plus",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/skill-evals",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 2,
+      "bytes": 17274,
+      "extensions": {
+        ".json": 1,
+        ".py": 1
+      },
+      "references": [
+        "tool/skill_evals/README.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/snapshot_blob.bin.d",
+      "classification": "runtime metadata",
+      "reason": "Retained regenerable runtime metadata.",
+      "files": 1,
+      "bytes": 361482,
+      "extensions": {
+        ".d": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/source-audit-20261028",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 82,
+      "bytes": 2450591,
+      "extensions": {
+        ".jpg": 2,
+        ".py": 1,
+        ".md": 3,
+        ".html": 1,
+        ".log": 2,
+        ".json": 37,
+        ".png": 36
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/ssot",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 85,
+      "bytes": 3138381,
+      "extensions": {
+        ".log": 10,
+        ".py": 1,
+        ".json": 38,
+        ".png": 36
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/startup-final.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 8811,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/startup-safety.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 2621,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/target-card-review",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 6,
+      "bytes": 177946,
+      "extensions": {
+        ".json": 3,
+        ".png": 3
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/test_cache",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/tonight-refinement-before",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 81,
+      "bytes": 2251654,
+      "extensions": {
+        ".log": 3,
+        ".json": 39,
+        ".png": 39
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/typography-migration",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 6,
+      "bytes": 63322,
+      "extensions": {
+        ".log": 4,
+        ".py": 1,
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/ui-lab-20261029",
+      "classification": "static artifact",
+      "reason": "Historical artifact; retained pending cross-artifact reference review",
+      "files": 109,
+      "bytes": 42173466,
+      "extensions": {
+        ".json": 19,
+        ".js": 28,
+        ".md": 4,
+        ".zip": 10,
+        ".html": 6,
+        ".py": 5,
+        ".png": 37
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/ui-renders",
+      "classification": "static artifact",
+      "reason": "Referenced in project Markdown; retained",
+      "files": 130,
+      "bytes": 3648937,
+      "extensions": {
+        ".json": 65,
+        ".png": 65
+      },
+      "references": [
+        "AGENTS.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "build/unit_test_assets",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/url_launcher_android",
+      "classification": "excluded runtime/cache",
+      "reason": "Regenerable runtime/build cache; retained",
+      "files": null,
+      "bytes": null,
+      "extensions": {},
+      "references": []
+    },
+    {
+      "path": "build/weather-before.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7740,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/weather-correction-contract-check.json",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 7890,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "build/weather-tests.log",
+      "classification": "static artifact",
+      "reason": "Recent delivery or active work evidence; retained",
+      "files": 1,
+      "bytes": 13093,
+      "extensions": {
+        ".log": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": ".audit/active_processes.json",
+      "classification": "static artifact",
+      "reason": "Historical audit/atlas retained as an evidence collection",
+      "files": 1,
+      "bytes": 1714,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": ".audit/app-map-20261028",
+      "classification": "static artifact",
+      "reason": "Historical audit/atlas retained as an evidence collection",
+      "files": 1,
+      "bytes": 334,
+      "extensions": {
+        ".html": 1
+      },
+      "references": [
+        "design/reference/README.md"
+      ],
+      "error": null
+    },
+    {
+      "path": ".audit/atlas",
+      "classification": "static artifact",
+      "reason": "Historical audit/atlas retained as an evidence collection",
+      "files": 1,
+      "bytes": 312,
+      "extensions": {
+        ".html": 1
+      },
+      "references": [
+        "AGENTS.md",
+        ".impeccable/critique/2026-10-20T15-11-56Z__design-home-lab-index-html.md",
+        ".impeccable/critique/2026-10-20T12-13-28Z__design-home-lab-index-html.md",
+        ".impeccable/critique/2026-10-18T20-27-16Z__ain-res-drawable-splash-icon-animated-xml-e59c97fb.md",
+        "design/reference/README.md"
+      ],
+      "error": null
+    },
+    {
+      "path": ".audit/audit_progress.md",
+      "classification": "static artifact",
+      "reason": "Historical audit/atlas retained as an evidence collection",
+      "files": 1,
+      "bytes": 5088,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": ".audit/logs",
+      "classification": "static artifact",
+      "reason": "Historical audit/atlas retained as an evidence collection",
+      "files": 451,
+      "bytes": 247448,
+      "extensions": {
+        ".log": 188,
+        ".json": 67,
+        ".txt": 196
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": ".audit/reports",
+      "classification": "static artifact",
+      "reason": "Historical audit/atlas retained as an evidence collection",
+      "files": 43,
+      "bytes": 16158492,
+      "extensions": {
+        ".json": 29,
+        ".md": 14
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "design/figma/research/consolidation_2026-11-04.md",
+      "classification": "static artifact",
+      "reason": "Research retained as project source/evidence",
+      "files": 1,
+      "bytes": 8991,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "design/figma/research/consolidation_bindings_2026-11-04.json",
+      "classification": "static artifact",
+      "reason": "Research retained as project source/evidence",
+      "files": 1,
+      "bytes": 18303,
+      "extensions": {
+        ".json": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "design/figma/research/icons_2026-11-01.md",
+      "classification": "static artifact",
+      "reason": "Research retained as project source/evidence",
+      "files": 1,
+      "bytes": 10136,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "design/figma/research/pilot_readiness_2026-11-04.md",
+      "classification": "static artifact",
+      "reason": "Research retained as project source/evidence",
+      "files": 1,
+      "bytes": 16267,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "design/figma/research/ssot_audit_2026-11-04.md",
+      "classification": "static artifact",
+      "reason": "Research retained as project source/evidence",
+      "files": 1,
+      "bytes": 15180,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [
+        "AGENTS.md"
+      ],
+      "error": null
+    },
+    {
+      "path": "design/figma/research/workflow_and_timeline_2026-11-01.md",
+      "classification": "static artifact",
+      "reason": "Research retained as project source/evidence",
+      "files": 1,
+      "bytes": 6574,
+      "extensions": {
+        ".md": 1
+      },
+      "references": [],
+      "error": null
+    },
+    {
+      "path": "skills-lock.json",
+      "classification": "root file",
+      "reason": "Retained; root files not moved",
+      "files": 1,
+      "bytes": 5734,
+      "extensions": {
+        ".json": 1
+      },
+      "references": []
+    }
+  ]
+}

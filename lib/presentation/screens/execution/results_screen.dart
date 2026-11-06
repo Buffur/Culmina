@@ -1,7 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/action_row.dart';
 
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/services.dart';
@@ -21,7 +22,6 @@ import '../../shared/app_words.dart';
 import '../../shared/entry_text.dart';
 import '../../shared/field_mode_button.dart';
 import '../../shared/hybrid_icon.dart';
-import '../../shared/hybrid_parts.dart';
 import '../../shared/confirmation_patterns.dart';
 import '../../shared/deleted_plan_fallback.dart';
 import '../../shared/failure_feedback.dart';
@@ -291,7 +291,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       String label,
       Widget input, {
       String? hint,
-      double top = AppSpacing.gutter,
+      double top = AppSpacing.md,
     }) => Padding(
       padding: EdgeInsets.only(top: top),
       child: Column(
@@ -312,13 +312,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
         ],
       ),
     );
-    Widget heading(String text, {double top = AppSpacing.gutter}) => Padding(
+    Widget heading(String text, {double top = AppSpacing.md}) => Padding(
       padding: EdgeInsets.only(top: top, bottom: AppSpacing.xs),
       child: Semantics(
         header: true,
         child: Text(
           text,
-          style: AppTextTheme.of(context).itemTitle
+          style: AppTextTheme.of(context).screenTitle
               .copyWith(color: p.textPrimary),
         ),
       ),
@@ -443,7 +443,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               .resolve(legend, AppTextGeometry.supporting),
                         ),
                       ),
-                    DocumentSection(
+                    SectionCard(
                       key: const Key('results.outcomeGroup'),
                       children: [
                         heading('Outcome', top: 0),
@@ -473,7 +473,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         _outcome == ResultOutcome.notDone)
                       const SizedBox(height: AppSpacing.md),
                     if (_outcome == ResultOutcome.partly)
-                      DocumentSection(
+                      SectionCard(
                         key: const Key('results.framesGroup'),
                         children: [
                           heading('Light frames you took', top: 0),
@@ -494,12 +494,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               hint:
                                   '${b.frameCount} planned · a whole number, 0 or '
                                   'more',
-                              top: i == 0 ? 0 : AppSpacing.gutter,
+                              top: i == 0 ? 0 : AppSpacing.md,
                             ),
                         ],
                       ),
                     if (_outcome == ResultOutcome.notDone)
-                      DocumentSection(
+                      SectionCard(
                         key: const Key('results.reasonGroup'),
                         children: [
                           heading('Why? (optional)', top: 0),
@@ -509,8 +509,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           ),
                         ],
                       ),
-                    const SizedBox(height: 16),
-                    DocumentSection(
+                    const SizedBox(height: AppSpacing.md),
+                    SectionCard(
                       key: const Key('results.notesGroup'),
                       children: [
                         heading('Notes (optional)', top: 0),
@@ -537,8 +537,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    DocumentSection(
+                    const SizedBox(height: AppSpacing.md),
+                    SectionCard(
                       key: const Key('results.conditionsGroup'),
                       children: [
                         heading('Conditions (optional)', top: 0),
@@ -630,7 +630,7 @@ class _ReviewState extends State<_Review> {
     final night = snap?.eveningDate ?? (working ? null : s.eveningDate);
     final target = snap?.targetName ?? (working ? null : s.record.targetName);
     final small = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.compact)
         .copyWith(color: p.textSecondary);
     final planned = SessionReconciliation.plannedOnly(vm.lightBlocks)
         .plannedIntegration;
@@ -816,7 +816,7 @@ class _PendingChanges extends StatelessWidget {
             header: true,
             child: Text(
               'This plan changed since it was saved',
-              style: AppTextTheme.of(context).itemTitle
+              style: AppTextTheme.of(context).screenTitle
                   .copyWith(color: p.textPrimary),
             ),
           ),
@@ -905,8 +905,7 @@ class _SoFar extends StatelessWidget {
   }
 }
 
-/// A radio row (logbook.css `.logbook-choice`): the 24 px radio 5 in, its
-/// 14 px label (600 when chosen) 15 after; 48 tall with a subtle rule below.
+/// A canonical radio action preserving result-choice disabled semantics.
 class _Choice extends StatelessWidget {
   const _Choice({
     super.key,
@@ -921,46 +920,15 @@ class _Choice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    return MergeSemantics(
-      child: Semantics(
-        inMutuallyExclusiveGroup: true,
-        checked: selected,
-        enabled: onTap != null,
-        child: InkWell(
+    return Semantics(
+      enabled: onTap != null,
+      child: Opacity(
+        opacity: onTap == null ? 0.5 : 1,
+        child: ActionRow(
+          title: label,
+          variant: ActionRowVariant.radio,
+          selected: selected,
           onTap: onTap,
-          child: Opacity(
-            opacity: onTap == null ? 0.5 : 1,
-            child: Container(
-              constraints: const BoxConstraints(
-                minHeight: HybridTokens.minTarget,
-              ),
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: p.border)),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 5),
-                  HybridRadio(checked: selected, size: 24),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: AppTextTheme.of(context)
-                          .resolve(
-                            AppTextTheme.of(context).body,
-                            AppTextGeometry.standard,
-                          )
-                          .copyWith(
-                            fontWeight: selected ? FontWeight.w600 : null,
-                            color: p.textPrimary,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
       ),
     );

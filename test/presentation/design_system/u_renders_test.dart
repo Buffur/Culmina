@@ -486,6 +486,7 @@ void main() {
           await _settle(tester);
           unawaited(AppRouter.router.push(AppRouter.session()));
           await _settle(tester);
+          await tap(find.byKey(const Key('capture.menu.0')));
           await tap(find.byKey(const Key('capture.edit.0')));
           tester.view.physicalSize = const Size(412, 915);
           await shot('plan_editor');

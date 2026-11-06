@@ -1,139 +1,35 @@
-# Release build and signing (Android)
+# Android release and signing
 
-> **Distribution changed, 2026-10-17 (DECISIONS E.1, "Distribution: GitHub Releases only"):** Culmina is released as a signed APK on GitHub Releases. The Google Play procedure below (upload key, App Bundle, `tool/check_bundle.dart`, Play's rules) is **deferred**: it describes the current build setup and a possible future store release, not the release path. S17.6 (`refinement/POST_ROADMAP_PLAN.md` §5) rewrites this document for the GitHub APK release: versioning, the APK check, checksums, installation and update instructions.
+Distribution: signed APKs on GitHub Releases. Google Play/App Bundle publication is deferred, not the current release path. This runbook grants no signing, installation or publication authorization. Version/signing facts below are source-backed; historical build results are not current qualification.
 
-> Written for TASK 16.2 (2026-09-24). Follows Flutter's Android deployment guide
-> (<https://docs.flutter.dev/deployment/android>). The upload key and its passwords are
-> the owner's: they are created and kept by the owner, never committed, and never given
-> to an agent (MASTER_ROADMAP 16.2).
+## Data migration from Astro Planner
 
-## Moving from Astro Planner (the earlier id)
+Culmina (`io.github.buffur.culmina`) installs beside the earlier `io.github.chacha12.astroplanner` with an empty database; Android Auto Backup does not transfer data between app IDs. In Astro Planner, use Settings → Back up now; keep the `.astroplan` file. Install Culmina, use Settings → Restore, confirm the backup date and reopen. Check sessions/sites/rigs/targets before manually uninstalling the old app. Older backups can migrate forward; newer unsupported backups are refused. Include this in the first Culmina release notes.
 
-Culmina has a new application id, so Android installs it **beside** Astro Planner with an empty
-database; Android's Auto Backup is per app and carries nothing over. To move your data:
+## Signing and version invariants
 
-1. In Astro Planner: Settings → Back up now; keep the `.astroplan` file.
-2. Install Culmina.
-3. In Culmina: Settings → Restore, pick that file, confirm (the confirmation shows when the backup
-   was made), and reopen the app.
-4. Check your sessions, sites, rigs and targets, then uninstall Astro Planner yourself.
+- `android/app/build.gradle.kts` requires complete `android/key.properties` for release packaging and rejects an Android Debug certificate. There is no debug-signing fallback. Local development uses `flutter run --debug` or `flutter run --profile` without a distribution key.
+- The signing key, passwords and backups belong to the owner. Never commit or request these secrets from the owner; `key.properties`, `*.jks` and `*.keystore` stay ignored. Keep the key and recovery copy outside the repository.
+- Owner-local `android/key.properties` supplies `storePassword`, `keyPassword`, `keyAlias` and `storeFile`. GitHub Releases serves the resulting owner-signed APK directly; no store re-signs it. Keep the same distribution key for updates.
+- Increment `pubspec.yaml` version `X.Y.Z+N`; keep `AppIdentity.version` in `lib/core/config/app_identity.dart` equal to `X.Y.Z`. Android version code `N` must exceed previously distributed builds (and all uploads if a store is later used).
+- SDK defaults come from the selected Flutter SDK; inspect current build/CI configuration rather than copying old numeric API requirements. R8/shrinking and native-symbol output follow the Flutter Gradle plugin; add ProGuard rules only for a demonstrated release failure.
 
-A backup from an older version restores into a newer one; a backup from a newer version is refused
-with an explanation. Use these steps in the release notes of the first Culmina release.
+## Authorized release procedure
 
-## What is set up in the repository
+1. Run the applicable final quality gate, `dart run tool/check.dart`, and satisfy named release/device/owner criteria. Reuse unchanged-input evidence only with its baseline recorded.
+2. Build with `flutter build apk --release`; resolve dependencies/plugin registration before the build. A prior dev integration-test registrant can cause release compilation failure; do not preserve stale generated registration merely to avoid dependency resolution.
+3. Verify the actual APK using the installed Android SDK Build Tools: `apksigner verify --verbose --print-certs build/app/outputs/flutter-apk/app-release.apk`. Compare its certificate SHA-256 with the owner's expected distribution certificate and the previously published APK; reject Android Debug. Retain the APK SHA-256, version and install/update-test evidence, and exercise the core loop on the authorized device. Build success alone does not prove installation, startup, data compatibility or release readiness.
+4. Preserve release notes, APK, checksum and matching source/CI/verification references. Publish to GitHub Releases only under the applicable owner task; keep signing material private.
 
-- `android/app/build.gradle.kts` signs release builds with the upload key described by
-  `android/key.properties`. Without that file the release build is signed with the
-  **debug** key and Gradle warns — Google Play rejects a debug-signed bundle, so such a
-  build cannot be uploaded by mistake.
-- `key.properties`, `*.jks` and `*.keystore` are gitignored (root and `android/`).
-- Application id `io.github.buffur.culmina`, label "Culmina" (RA.D ID-1 to ID-3; S13.2). Builds
-  before S13.2 used `io.github.chacha12.astroplanner` ("Astro Planner"); see "Moving from Astro
-  Planner" below.
-- `minSdk` 24 and `targetSdk` 36 come from Flutter 3.47.8's defaults. Google Play requires
-  target API 36 for new apps and updates from 31 August 2026.
-- R8 (code and resource shrinking) is on for release builds, as the Flutter Gradle plugin
-  sets it; the mapping file and native debug symbols go into the bundle's
-  `BUNDLE-METADATA`, where Play reads them for crash reports. No custom ProGuard rules
-  are needed today (the app uses no reflection-based libraries); add
-  `android/app/proguard-rules.pro` only if a release build misbehaves.
-- `tool/check_bundle.dart` checks a bundle before upload (below).
+App Bundle tooling remains available for a separately authorized store task: `flutter build appbundle --release` produces `build/app/outputs/bundle/release/app-release.aab`; `dart run tool/check_bundle.dart` checks bundle libraries/symbols and rejects the Android Debug signer. That checker is not APK qualification. Store accounts, upload keys, API deadlines, Data Safety and signing-service configuration require a fresh scoped review before use.
 
-## One-time setup (owner)
+## Completed historical measurements
 
-1. **Android SDK command-line tools.** In Android Studio: *Settings → Languages &
-   Frameworks → Android SDK → SDK Tools → Android SDK Command-line Tools (latest)*.
-   Without them `flutter build appbundle` builds the bundle but then reports "failed to
-   strip debug symbols", because its check needs `apkanalyzer` (the bundle itself is
-   fine — `tool/check_bundle.dart` confirms it). `flutter doctor` should then show no
-   Android toolchain issue.
-2. **Create the upload key** — once, outside the repository, with the JDK that ships with
-   Android Studio:
+### Superseded signing policy (2026-11-06)
 
-   ```
-   "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkey -v -keystore %USERPROFILE%\keys\astro-planner-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
-   ```
+Previously, missing `key.properties` selected the debug key for release builds, relying on Google Play to reject the artifact. That protection did not apply to GitHub Releases. The current packaging guard replaces that fallback; the measurements below remain historical evidence only.
 
-   Choose strong passwords and keep them, and a copy of the `.jks` file, in your password
-   manager or another safe place. If the upload key is lost, Play support can reset it
-   (Play App Signing), but it takes time.
-3. **Create `android/key.properties`** (never commit it; it is gitignored):
+- [DONE] 2026-09-24: Built a debug-signed release bundle; alignment/symbol checks passed and the signer check rejected it as intended (files: `android/app/build.gradle.kts`, `tool/check_bundle.dart`; historical artifact, not current release evidence).
+- [DONE] 2026-09-30: Recorded 68.5 MB multi-ABI bundle, about 24.8 MB arm64 APK and 27.8 MB installed; debug size was substantially larger (files: local `archive/evidence/STAGE_10_MEASUREMENTS.md`; measurements apply only to that build).
 
-   ```
-   storePassword=<your keystore password>
-   keyPassword=<your key password>
-   keyAlias=upload
-   storeFile=C:\\Users\\<you>\\keys\\astro-planner-upload.jks
-   ```
-
-4. **Play App Signing.** When the app is first created in the Play Console, keep the
-   default: Google generates and keeps the *app signing key*; your key above is only the
-   *upload key*. Upload bundles (`.aab`), not APKs.
-
-## Each release
-
-1. **Version.** In `pubspec.yaml`, `version: X.Y.Z+N`:
-   - `N` (the Android `versionCode`) must be **higher than every build ever uploaded**,
-     including internal tests — increase it for every upload;
-   - `X.Y.Z` is the version users see; update `AppIdentity.version` in
-     `lib/core/config/app_identity.dart` to the same `X.Y.Z` (a test keeps them equal).
-2. **Quality gate:** `dart run tool/check.dart` must pass.
-3. **Build** (do **not** pass `--no-pub`: without it, `flutter build` regenerates the
-   plugin registrant for release, leaving out the dev-only `integration_test` plugin;
-   with `--no-pub` after a debug build or test run the release compile fails with
-   "package dev.flutter.plugins.integration_test does not exist"):
-
-   ```
-   flutter build appbundle --release
-   ```
-
-   Output: `build/app/outputs/bundle/release/app-release.aab`.
-4. **Check the bundle:**
-
-   ```
-   dart run tool/check_bundle.dart
-   ```
-
-   It must end with "Bundle check passed": every native library 16 KB aligned, no debug
-   sections left in them, and a signer that is **not** `CN=Android Debug`.
-5. **Install test** (the roadmap's test for 16.2): on a device, `flutter build apk
-   --release` and `flutter install`, or upload to an internal testing track and install
-   from Play. Open the app and run the core loop once.
-6. **Upload** the `.aab` to the Play Console (internal testing first). Check its App
-   Bundle Explorer for warnings (16 KB, target API, permissions).
-
-## Size (Stage 10, 2026-09-30)
-
-Measured in `refinement/evidence/STAGE_10_MEASUREMENTS.md`: the release bundle is 68.5 MB (three ABIs
-plus the symbols Play keeps); an arm64 phone receives about 24.8 MB (the arm64-v8a release APK) and
-the app takes 27.8 MB installed. A **debug** build is 184 MB and about 314 MB installed; never judge
-the app's size from a debug install.
-
-**Optional, not adopted (the owner's call at release time):** `--split-debug-info=<dir>` makes the
-app 1.3 MB smaller (−5 %). Then each release's symbols file (about 4 MB) must be kept outside the
-repository, or that release's Dart stack traces cannot be read again (`flutter symbolize -i <trace>
--d <symbols file>`). `--obfuscate` saves 0.2 MB more and is not recommended for this open-source app.
-
-## Build notes (a development machine)
-
-- **An antivirus that inspects HTTPS** (for example Avast) makes Gradle's downloads fail with "PKIX
-  path building failed", because the JDK Flutter uses (Android Studio's JBR) does not trust the
-  antivirus's root. Run the first build, which downloads Gradle and the plugins, with a JDK that has
-  the Windows trust store (for example Oracle JDK 25) from `android/`:
-  `JAVA_HOME=<that JDK> JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStoreType=Windows-ROOT gradlew.bat
-  bundleRelease`. Later builds work offline through `flutter build`. No system setting needs
-  changing.
-- **The project and the pub cache on different drives** (for example `D:` and `C:`) make Kotlin's
-  incremental compiler fail in a plugin ("Could not close incremental caches"). Add
-  `--android-project-arg=kotlin.incremental=false` to `flutter build`, or `-Pkotlin.incremental=false`
-  to `gradlew`.
-
-## Status (2026-09-24)
-
-- A release bundle was built on the development machine (66.5 MB; 15 native libraries
-  for arm64-v8a, armeabi-v7a and x86_64, all aligned to 16 KB or 64 KB, symbols moved to
-  `BUNDLE-METADATA`, R8 mapping present). It is **debug-signed** — the upload key does
-  not exist yet — so `tool/check_bundle.dart` fails on the signer, as it should.
-- Not done yet (owner): install cmdline-tools, create the upload key and
-  `key.properties`, build the signed bundle, install a release build on a device.
+Do not adopt optional obfuscation/split-symbol changes from historical size experiments automatically: split symbols require preserving each release's external symbol files, and obfuscation was not recommended for this open-source project. Cross-drive Kotlin incremental-cache failures require a reproduced environment-specific diagnosis, not a permanent application workaround.

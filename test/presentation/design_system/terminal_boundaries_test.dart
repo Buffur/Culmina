@@ -233,27 +233,30 @@ void main() {
     );
   });
 
-  testWidgets('Logbook Progress is standalone while entry boundaries remain', (
-    t,
-  ) async {
-    final fixture = await setup(t);
-    await show(t, fixture, const LogbookScreen());
-    expect(bottomRule(t, find.byKey(const Key('logbook.progress'))), isFalse);
-    final entry = find
-        .byWidgetPredicate(
-          (w) =>
-              w.key is ValueKey<String> &&
-              (w.key! as ValueKey<String>).value.startsWith('logbook.entry.'),
-        )
-        .first;
-    // The DecoratedBox is the entry InkWell's parent; check the enclosing
-    // SwipeToDelete via its key rather than assuming the rule is a child.
-    final row = find
-        .ancestor(of: entry, matching: find.byType(DecoratedBox))
-        .first;
-    final decoration = t.widget<DecoratedBox>(row).decoration as BoxDecoration;
-    expect((decoration.border! as Border).bottom.style, BorderStyle.solid);
-  });
+  testWidgets(
+    'Logbook groups keep flat entries and independent swipe boundaries',
+    (t) async {
+      final fixture = await setup(t);
+      await show(t, fixture, const LogbookScreen());
+      expect(bottomRule(t, find.byKey(const Key('logbook.progress'))), isFalse);
+      final entry = find
+          .byWidgetPredicate(
+            (w) =>
+                w.key is ValueKey<String> &&
+                (w.key! as ValueKey<String>).value.startsWith('logbook.entry.'),
+          )
+          .first;
+      expect(find.text('Progress'), findsOneWidget);
+      expect(find.text('Entries'), findsOneWidget);
+      expect(find.byKey(const Key('logbook.resultCount')), findsOneWidget);
+      expect(bottomRule(t, entry), isFalse);
+      expect(
+        find.ancestor(of: entry, matching: find.byType(Dismissible)),
+        findsOneWidget,
+        reason: 'flat styling preserves the independent deletion gesture',
+      );
+    },
+  );
 
   testWidgets('entry root disclosures omit first rules; gain boundary stays', (
     t,

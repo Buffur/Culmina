@@ -176,7 +176,8 @@ class OpportunityList extends StatelessWidget {
           ),
         const SizedBox(height: 4),
         Text(
-          'Times in ${NightTimeFormatter.zoneCaption(o.night.startUtc, zoneId: zoneId)}.',
+          'Times in ${NightTimeFormatter.zoneCaption(o.night.startUtc, zoneId: zoneId)}. '
+          'Windows and altitude peaks use a 5-minute sampling grid.',
           style: theme.textTheme.bodySmall?.copyWith(
             color: palette.textTertiary,
           ),

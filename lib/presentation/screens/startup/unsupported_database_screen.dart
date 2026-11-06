@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '../../../core/config/app_identity.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/confirmation_patterns.dart';
+import '../../shared/section_card.dart';
+import '../../../core/theme/app_spacing.dart';
 
 /// Shown instead of the app when the database file is at a schema version
 /// this build cannot open (ADR-008 §2; TASK 3.2, TD-047, S1.5).
@@ -73,7 +76,7 @@ class _UnsupportedDatabaseScreenState extends State<UnsupportedDatabaseScreen> {
   Future<void> _confirmReset() async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => ConfirmationDialog(
         title: const Text('Start with fresh data?'),
         content: const Text(
           'Your old sites, rigs, targets and plans will no longer be shown '
@@ -111,40 +114,45 @@ class _UnsupportedDatabaseScreenState extends State<UnsupportedDatabaseScreen> {
       appBar: hybridAppBar(context, title: Text(name)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSpacing.gutter),
           children: [
-            Text(
-              widget.newerThanApp
-                  ? 'Your data needs a newer version'
-                  : "Your data can't be upgraded",
-              key: const Key('unsupportedDb.title'),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              widget.newerThanApp
-                  ? 'Your planner data was saved by a newer version of $name '
-                        '(data version $version). This version cannot open '
-                        'it. Install the latest version of $name to continue. '
-                        'Nothing has been changed.'
-                  : 'Your planner data comes from a pre-release build of '
-                        '$name (data version $version) and cannot be '
-                        'upgraded. Nothing has been changed. You can start '
-                        'with fresh data; the old file is kept on this '
-                        'device, not deleted.',
-              key: const Key('unsupportedDb.message'),
-            ),
-            if (!widget.newerThanApp) ...[
-              const SizedBox(height: 24),
-              FilledButton(
-                key: const Key('unsupportedDb.reset'),
-                onPressed: _busy ? null : _confirmReset,
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(48),
+            SectionCard(
+              key: const Key('unsupportedDb.recoveryGroup'),
+              children: [
+                Text(
+                  widget.newerThanApp
+                      ? 'Your data needs a newer version'
+                      : "Your data can't be upgraded",
+                  key: const Key('unsupportedDb.title'),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                child: const Text('Start with fresh data'),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Text(
+                  widget.newerThanApp
+                      ? 'Your planner data was saved by a newer version of $name '
+                            '(data version $version). This version cannot open '
+                            'it. Install the latest version of $name to continue. '
+                            'Nothing has been changed.'
+                      : 'Your planner data comes from a pre-release build of '
+                            '$name (data version $version) and cannot be '
+                            'upgraded. Nothing has been changed. You can start '
+                            'with fresh data; the old file is kept on this '
+                            'device, not deleted.',
+                  key: const Key('unsupportedDb.message'),
+                ),
+                if (!widget.newerThanApp) ...[
+                  const SizedBox(height: 24),
+                  FilledButton(
+                    key: const Key('unsupportedDb.reset'),
+                    onPressed: _busy ? null : _confirmReset,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                    ),
+                    child: const Text('Start with fresh data'),
+                  ),
+                ],
+              ],
+            ),
           ],
         ),
       ),

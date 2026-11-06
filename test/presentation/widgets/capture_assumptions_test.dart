@@ -14,6 +14,7 @@ import 'package:astroplan/domain/services/capture_budget_calculator.dart';
 import 'package:astroplan/domain/services/fit_analyzer.dart';
 import 'package:astroplan/domain/models/visibility_window.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/capture_assumptions_panel.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:astroplan/presentation/widgets/capture_plan_widget.dart';
 import 'package:astroplan/presentation/widgets/planner_sections.dart';
 import 'package:drift/native.dart';
@@ -78,20 +79,22 @@ void main() {
   }
 
   String row(WidgetTester tester, String label) {
-    // The panel's rows (Budget and assumptions also lists Setup above it).
-    final r = find.ancestor(
-      of: find.descendant(
-        of: find.byKey(const Key('capturePlan.assumptionsBody')),
-        matching: find.text(label),
+    // Pair values by their semantic fact owner, independent of whether the
+    // shared layout can keep this full label/value pair on one line.
+    final fact = find.descendant(
+      of: find.byKey(const Key('capturePlan.assumptionsBody')),
+      matching: find.byWidgetPredicate(
+        (widget) => widget is HybridFact && widget.label == label,
       ),
-      matching: find.byType(Row),
     );
-    return tester
-        .widgetList<Text>(
-          find.descendant(of: r.first, matching: find.byType(Text)),
-        )
-        .last
-        .data!;
+    expect(fact, findsOneWidget, reason: label);
+    final value = tester.widget<HybridFact>(fact).value;
+    final rendered = find.descendant(of: fact, matching: find.text(value));
+    expect(rendered, findsOneWidget, reason: label);
+    final text = tester.widget<Text>(rendered);
+    expect(text.maxLines, isNull, reason: label);
+    expect(text.overflow, isNot(TextOverflow.ellipsis), reason: label);
+    return text.data!;
   }
 
   testWidgets('A1: the effective values, written exactly, with how often '

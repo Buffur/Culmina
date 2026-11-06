@@ -123,7 +123,7 @@ void main() {
         final measured = tester.widget<Text>(find.text(verdict));
         expect(
           measured.style!.color,
-          theme.extension<AppPalette>()!.statusFits,
+          theme.extension<AppPalette>()!.textPrimary,
         );
         expect(tester.takeException(), isNull);
       });

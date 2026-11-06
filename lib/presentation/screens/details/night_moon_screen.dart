@@ -1,7 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../../core/theme/app_radius.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import '../../../domain/models/calendar_date.dart';
 import '../../../core/theme/app_text_theme.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/hybrid_view_entrance.dart';
+import '../../../core/theme/hybrid_tokens.dart';
 import '../../../core/utils/quantity_text.dart';
 import '../../../domain/models/moon_conditions.dart';
 import '../../../domain/models/night_timeline.dart';
@@ -95,7 +97,6 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
   Widget build(BuildContext context) {
     final site = context.watch<SiteViewModel>();
     final browser = context.watch<NightBrowserViewModel>();
-    final text = Theme.of(context).textTheme;
     final p = AppPalette.of(context);
     final quiet = AppTextTheme.of(context)
         .resolve(AppTextTheme.of(context).caption, AppTextGeometry.explanatory)
@@ -108,35 +109,53 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
       child: Scaffold(
         appBar: hybridAppBar(
           context,
-          titleSpacing: Navigator.of(context).canPop() ? 8 : 16,
+          titleSpacing: Navigator.of(context).canPop() ? 8 : 24,
           title: Text(page == 2 ? 'Weather' : 'Night & Moon'),
           actions: const [FieldModeButton()],
           bottom: TabBar(
             // Large text: the three labels scroll instead of being clipped.
             isScrollable: largeTabs,
             tabAlignment: largeTabs ? TabAlignment.start : null,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(
-                width: 2,
-                color: AppPalette.of(context).textPrimary,
-              ),
-              insets: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm + AppSpacing.xs,
-              ),
+            indicatorSize: TabBarIndicatorSize.label,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.gutter),
+            // 36px visual inside each independent 48px tab target.
+            dividerColor: HybridTokens.transparent,
+            indicatorPadding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.peerTabInset,
+            ),
+            indicator: BoxDecoration(
+              color:
+                  Theme.of(context).extension<HybridTokens>()?.selection ??
+                  p.surfaceRaised,
+              borderRadius: BorderRadius.circular(AppRadius.small),
             ),
             labelColor: p.textPrimary,
             unselectedLabelColor: p.textSecondary,
-            labelStyle: AppTextTheme.of(context)
-                .resolve(text.bodySmall, AppTextGeometry.formLabel)
-                .copyWith(fontWeight: FontWeight.w600),
-            unselectedLabelStyle: AppTextTheme.of(context)
-                .resolve(text.bodySmall, AppTextGeometry.formLabel),
+            labelStyle: AppTextTheme.of(context).navigationLabel,
+            unselectedLabelStyle: AppTextTheme.of(context).navigationLabel,
             onTap: (value) => setState(() => page = value),
             tabs: const [
-              Tab(text: 'Night'),
-              Tab(text: 'Moon'),
-              Tab(text: 'Weather'),
+              Tab(
+                height: 48,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  child: Text('Night'),
+                ),
+              ),
+              Tab(
+                height: 48,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  child: Text('Moon'),
+                ),
+              ),
+              Tab(
+                height: 48,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  child: Text('Weather'),
+                ),
+              ),
             ],
           ),
         ),
@@ -166,7 +185,7 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                         'substituted.',
                         style: quiet,
                       ),
-                      const SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.itemGap),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: OutlinedButton(
@@ -188,13 +207,13 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                           ? ((constraints.maxWidth -
                                         MoonCalendarSection.minMonthWidth) /
                                     2)
-                                .clamp(0.0, AppSpacing.gutter)
-                          : AppSpacing.gutter;
+                                .clamp(0.0, 24.0)
+                          : 24.0;
                       return ListView(
                         key: ValueKey('conditions.page.$page'),
                         padding: EdgeInsets.fromLTRB(
                           gutter,
-                          AppSpacing.md,
+                          AppSpacing.itemGap,
                           gutter,
                           AppSpacing.xl,
                         ),
@@ -202,7 +221,7 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              DocumentSection(
+                              SectionCard(
                                 key: const Key('conditions.contextGroup'),
                                 children: [
                                   // conditions.js browseHeader: "Kyiv outskirts ·
@@ -230,21 +249,22 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                                   const _ViewedNightHeader(),
                                 ],
                               ),
-                              const SizedBox(height: 24),
+                              const SizedBox(height: AppSpacing.itemGap),
                               if (page == 0) ...[
-                                const DocumentSection(
+                                const SectionCard(
                                   key: Key('nightMoon.answerGroup'),
                                   children: [_NightAnswer()],
                                 ),
-                                const SizedBox(height: 16),
-                                const DocumentSection(
+                                const SizedBox(height: AppSpacing.itemGap),
+                                const SectionCard(
                                   key: Key('nightMoon.timelineGroup'),
                                   children: [NightBarSection(compact: true)],
                                 ),
                                 const SizedBox(height: 12),
-                                DocumentSection(
+                                SectionCard(
                                   key: const Key('nightMoon.readingGroup'),
                                   children: [
+                                    const _DetailGroupHeading('Night details'),
                                     const _ReadingDisclosure(topRule: false),
                                     _ConditionsDisclosure(
                                       id: 'moonIntervals',
@@ -265,7 +285,7 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                                   ],
                                 ),
                               ] else if (page == 1) ...[
-                                DocumentSection(
+                                SectionCard(
                                   key: const Key('moon.answerGroup'),
                                   children: [
                                     _MoonAnswer(
@@ -293,8 +313,8 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 16),
-                                const DocumentSection(
+                                const SizedBox(height: AppSpacing.itemGap),
+                                const SectionCard(
                                   key: Key('moon.calendarGroup'),
                                   padding: EdgeInsets.symmetric(
                                     vertical: AppSpacing.md,
@@ -303,20 +323,21 @@ class _NightMoonBodyState extends State<_NightMoonBody> {
                                     MoonCalendarSection(insetHeader: true),
                                   ],
                                 ),
-                                const SizedBox(height: 28),
+                                const SizedBox(height: AppSpacing.itemGap),
                                 Focus(
                                   key: moonTimelineKey,
                                   focusNode: moonTimelineFocus,
                                   skipTraversal: true,
-                                  child: const DocumentSection(
+                                  child: const SectionCard(
                                     key: Key('moon.timelineGroup'),
                                     children: [NightBarSection(compact: true)],
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                DocumentSection(
+                                SectionCard(
                                   key: const Key('moon.readingGroup'),
                                   children: [
+                                    const _DetailGroupHeading('Details'),
                                     const _ReadingDisclosure(),
                                     _ConditionsDisclosure(
                                       id: 'moonDetails',
@@ -921,7 +942,7 @@ class _SunEvents extends StatelessWidget {
       key: const Key('nightMoon.sunEvents'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.itemGap),
         _ConditionFacts([
           ('Sunset', dusk(timeline.sunriseSunset)),
           (AppWords.civilDusk, dusk(timeline.civilTwilight)),
@@ -1001,7 +1022,7 @@ class _MoonSummary extends StatelessWidget {
       key: const Key('nightMoon.moonSummary'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.itemGap),
         Row(
           children: [
             SizedBox.square(
@@ -1128,4 +1149,14 @@ class _MoonSummary extends StatelessWidget {
       ],
     );
   }
+}
+
+class _DetailGroupHeading extends StatelessWidget {
+  const _DetailGroupHeading(this.label);
+  final String label;
+  @override
+  Widget build(BuildContext context) => Semantics(
+    header: true,
+    child: Text(label, style: AppTextTheme.of(context).screenTitle),
+  );
 }

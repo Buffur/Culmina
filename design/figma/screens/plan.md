@@ -1,6 +1,12 @@
 # Plan pilot
 
-Revision: AFTER-DARK-1.0.
+Canonical instance bindings and retained state/route boundaries are recorded in the [2026-11-04 consolidation matrix](../research/consolidation_2026-11-04.md). Screen root `84:34506`, approved appearance/content and the separate Conditions pattern are preserved.
+
+Revision: AFTER-DARK-1.2.
+
+Owner designation, 2026-11-04: this Longread is an approved **Dark composition reference** for subsequent mockups, together with Tonight and the current Design System state catalog. The current appearance is icon-only centered Moon with no visible Field caption, retaining the historical caption hidden for recovery. It adds an 8px Night ahead bottom inset and uses SemiBold for explicit actions, including Save plan and Capture commands. Conditions remains a separate card and now hugs its contents. The older TEST name remains a stable Figma identity; it does not cancel this composition decision. See [WORKFLOW](../WORKFLOW.md) for actual verification and the distinct state, viewport, scaling and native limits. The historical entries below retain their chronology.
+
+Historical integration chronology (superseded appearance wording retained as evidence): [Plan](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=84-34506). On 2026-11-01 the owner authorized integration of the amended Fits, movable Capture/separate Tracking/contextual Fill, and quieter four-card Estimate concepts. The current dots specification contains Edit block / Remove only; hold-to-reorder replaces the frozen source's positional move controls. Gesture behavior is specified, not implemented. On 2026-11-03 the owner accepted A updated / Prototype Preview states; Night ahead now adds Dark, Moon-free dark and source-backed Imaging window lanes with event-linked Preview and optional Exact times. The subsequent owner correction gives the local Save plan action the same light fill/dark text as Open planner. The owner subsequently approved a separate Conditions card containing Weather and Sky darkness; Night ahead retains Night & Moon, the accepted timeline and Exact times. The app-bar Field control uses a labeled Eye instead of the crescent, with local Off/On prototype states. The parity inventory below describes the frozen source; see [workflow](../WORKFLOW.md) for the adopted treatment and verification limits.
 
 ## Frozen BEFORE
 
@@ -45,4 +51,10 @@ Read tests [plan_identity_actions_test](../../../test/presentation/screens/home/
 
 ## After composition intent / limits
 
-Use a clear identity line, a plain fit answer, an input group, then the capture record and supporting estimate. Keep all sections/actions, including less prominent assumptions and rig data. The proposed visual hierarchy may change; domain truth may not. F01 must compare full longread and 375 × 812 first viewport, including footer clearance. Dialogs, menu-open states, invalid inputs, no-site and failed Save are source-backed requirements, not live-inspected alternative BEFORE frames.
+Use clear identity and fit blocks, a coherent input group, then the capture record and supporting estimate. The owner-requested block composition keeps the supporting disclosures inside the Estimate group. Keep all sections/actions, including less prominent assumptions and rig data. The proposed visual hierarchy may change; domain truth may not. Historical F01 scope called for full longread and 375 × 812 first-viewport comparison, including footer clearance. The current [base-screen run](../REDESIGN_RUN.md) requires one full Longread and defers the second viewport unless separately requested. Dialogs, menu-open states, invalid inputs, no-site and failed Save remain source-backed requirements for a separately authorized state pass, not additional frames to build in this base-only run or live-inspected alternative BEFORE frames.
+
+## Experimental Longread — 2026-10-31
+
+Owner update 2026-11-01: restore the compact night/end-date/Saved identity, preserve the manually tightened input group and apply matching wrapper density to Night ahead. Fits/Capture plan alternatives and an Estimate row proposal remain on a separate review board, not adopted here. See [workflow](../WORKFLOW.md) for current evidence and owner-review status.
+
+Owner-authorized [After V1 test Longread](https://www.figma.com/design/OeDvjQ58cWoHOCSMd69GCG/Culmina?node-id=84-34506) uses 1.2 in the existing UI Lab. See [workflow](../WORKFLOW.md) for exact source parity, measured fact-slot adaptations, the named scientific source-geometry adapter, verification and remaining acceptance limits. The immutable BEFORE is unchanged. No first-viewport or Flutter result is implied.

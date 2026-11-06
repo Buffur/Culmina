@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 
@@ -109,8 +109,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
   Widget build(BuildContext context) {
     final r = _rig;
     final p = AppPalette.of(context);
-    final caption = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.standard)
+    final caption = AppTextTheme.of(context).caption
         .copyWith(color: p.textSecondary);
     final camera = r.cameraClass == CameraClass.unknown
         ? 'Unknown'
@@ -129,7 +128,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
         child: Text(
           text,
           style: small
-              ? AppTextTheme.of(context).itemTitle
+              ? AppTextTheme.of(context).nestedTitle
                     .copyWith(color: p.textPrimary)
               : AppTextTheme.of(context).sectionHeading
                     .copyWith(color: p.textPrimary),
@@ -146,10 +145,12 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
         key: const Key('rigDetail.scroll'),
         padding: settingsPagePadding,
         children: [
-          DocumentSection(
+          SectionCard(
             key: const Key('rigDetail.identityGroup'),
             children: [
               LibraryRecordHeader(
+                title: 'Your rig',
+                snapshotAsCaption: true,
                 caption: r.isExample
                     ? 'Example rig · not a measurement'
                     : 'Your rig · editable',
@@ -163,7 +164,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('rigDetail.cameraGroup'),
             children: [
               heading('Camera'),
@@ -180,7 +181,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('rigDetail.opticsGroup'),
             children: [
               heading('Optics'),
@@ -198,7 +199,7 @@ class _RigDetailScreenState extends State<RigDetailScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('rigDetail.sourcesGroup'),
             children: [
               Padding(

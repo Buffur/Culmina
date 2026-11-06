@@ -53,21 +53,29 @@ abstract final class OpenMeteoForecastParser {
       return const WeatherFetchFailed(WeatherFailure.malformed, 'no hourly');
     }
     final times = hourly['time'];
-    if (times is! List) {
+    if (times is! List || times.isEmpty) {
       return const WeatherFetchFailed(WeatherFailure.malformed, 'no time');
     }
 
     double? value(String variable, int i) {
       final list = hourly[variable];
       if (list is! List || i >= list.length) return null;
-      final v = list[i];
-      return v is num && v.isFinite ? v.toDouble() : null;
+      return WeatherHour.value(
+        list[i],
+        percent:
+            variable.startsWith('cloud_cover') ||
+            variable == 'precipitation_probability' ||
+            variable == 'relative_humidity_2m',
+        nonNegative: variable.startsWith('wind_') || variable == 'visibility',
+      );
     }
 
     final hours = <WeatherHour>[];
+    final seenTimes = <int>{};
     for (var i = 0; i < times.length; i++) {
       final t = times[i];
-      if (t is! int) {
+      // DateTime supports at most 100 million days from the epoch.
+      if (t is! int || t.abs() > 8640000000000 || !seenTimes.add(t)) {
         return WeatherFetchFailed(WeatherFailure.malformed, 'time[$i]');
       }
       hours.add(

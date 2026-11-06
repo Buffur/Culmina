@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../domain/models/camera_class.dart';
 import '../../shared/rig_input_text.dart';
+import '../../shared/action_row.dart';
+import '../../../core/theme/app_text_theme.dart';
 
 /// How a new rig starts (F05; S14.2, CA-02): the camera class first, with
 /// "Not sure" as an explicit Unknown, then two equally visible choices.
@@ -58,21 +60,19 @@ class _AddRigPanelState extends State<AddRigPanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(RigInputText.classQuestion, style: theme.textTheme.titleMedium),
-        const SizedBox(height: AppSpacing.sm),
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
-          children: [
-            for (final c in AddRigPanel.classes)
-              ChoiceChip(
-                key: Key('addRig.class.${c.name}'),
-                label: Text(RigInputText.classLabel(c)),
-                selected: _class == c,
-                onSelected: (_) => setState(() => _class = c),
-              ),
-          ],
+        Text(
+          RigInputText.classQuestion,
+          style: AppTextTheme.of(context).screenTitle,
         ),
+        const SizedBox(height: AppSpacing.sm),
+        for (final c in AddRigPanel.classes)
+          ActionRow(
+            key: Key('addRig.class.${c.name}'),
+            title: RigInputText.classLabel(c),
+            variant: ActionRowVariant.radio,
+            selected: _class == c,
+            onTap: () => setState(() => _class = c),
+          ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           switch (chosen) {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/action_row.dart';
+import '../../shared/search_filter_bar.dart';
+import '../../shared/content_states.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +52,8 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
   bool _withWindowOnly = true;
   bool _ownOnly = false;
   String? _type;
+  String _query = '';
+  bool _filtersOpen = false;
 
   /// The header names the order in use (RD-10 = O1, S6.14): the default
   /// breaks ties by frame fill; every order falls back to the name. The
@@ -141,8 +146,8 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                         final refreshing =
                             snapshot.connectionState != ConnectionState.done;
                         if (refreshing && !snapshot.hasData) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return const LoadingState(
+                            message: 'Evaluating targets…',
                           );
                         }
                         if (snapshot.error case final error?) {
@@ -153,8 +158,8 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                         }
                         final all = snapshot.data;
                         if (all == null) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return const LoadingState(
+                            message: 'Evaluating targets…',
                           );
                         }
                         return _buildList(
@@ -199,7 +204,13 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         withWindowOnly: _withWindowOnly,
         type: _type,
         ownOnly: _ownOnly,
-      ),
+      ).where((row) {
+        final query = _query.trim().toLowerCase();
+        return query.isEmpty ||
+            '${row.target.commonName ?? ''} ${row.target.catalogId}'
+                .toLowerCase()
+                .contains(query);
+      }).toList(),
       _sort,
     );
     String at(DateTime t) => NightTimeFormatter.instant(
@@ -214,10 +225,20 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         .copyWith(color: p.textPrimary);
 
     final header = <Widget>[
-      DocumentSection(
+      SectionCard(
         key: const Key('candidates.contextGroup'),
         children: [
           _Title(title),
+          const SizedBox(height: AppSpacing.sm),
+          SearchFilterBar(
+            textFieldKey: const Key('tonight.search'),
+            hintText: 'Name or catalogue number',
+            onChanged: (value) => setState(() => _query = value),
+            filterKey: const Key('tonight.filterToggle'),
+            filtersActive:
+                _filtersOpen || _ownOnly || !_withWindowOnly || _type != null,
+            onFilter: () => setState(() => _filtersOpen = !_filtersOpen),
+          ),
           if (refreshing) ...[
             const LinearProgressIndicator(
               semanticsLabel: 'Refreshing candidates',
@@ -240,76 +261,80 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         ],
       ),
       const SizedBox(height: AppSpacing.md),
-      DocumentSection(
-        key: const Key('candidates.filtersGroup'),
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BlockField(
-                label: 'Sort by',
-                child: DropdownButtonFormField<CandidateSort>(
-                  key: const Key('tonight.sort'),
-                  isExpanded: true,
-                  initialValue: _sort,
-                  style: select,
-                  icon: hybridSelectIcon(context),
-                  decoration: const InputDecoration(
-                    contentPadding: hybridSelectPadding,
-                  ),
-                  items: [
-                    for (final e in _sortLabels.entries)
-                      DropdownMenuItem(
-                        value: e.key,
-                        child: Text(e.value, overflow: TextOverflow.ellipsis),
-                      ),
-                  ],
-                  onChanged: (v) => setState(() => _sort = v ?? _sort),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.itemGap),
-              BlockField(
-                label: 'Type',
-                child: DropdownButtonFormField<String?>(
-                  key: const Key('tonight.type'),
-                  isExpanded: true,
-                  initialValue: _type,
-                  style: select,
-                  icon: hybridSelectIcon(context),
-                  decoration: const InputDecoration(
-                    contentPadding: hybridSelectPadding,
-                  ),
-                  items: [
-                    const DropdownMenuItem(
-                      value: null,
-                      child: Text('All types', overflow: TextOverflow.ellipsis),
+      if (_filtersOpen)
+        SectionCard(
+          key: const Key('candidates.filtersGroup'),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlockField(
+                  label: 'Sort by',
+                  child: DropdownButtonFormField<CandidateSort>(
+                    key: const Key('tonight.sort'),
+                    isExpanded: true,
+                    initialValue: _sort,
+                    style: select,
+                    icon: hybridSelectIcon(context),
+                    decoration: const InputDecoration(
+                      contentPadding: hybridSelectPadding,
                     ),
-                    for (final t in types)
-                      DropdownMenuItem(
-                        value: t,
-                        child: Text(t, overflow: TextOverflow.ellipsis),
-                      ),
-                  ],
-                  onChanged: (v) => setState(() => _type = v),
+                    items: [
+                      for (final e in _sortLabels.entries)
+                        DropdownMenuItem(
+                          value: e.key,
+                          child: Text(e.value, overflow: TextOverflow.ellipsis),
+                        ),
+                    ],
+                    onChanged: (v) => setState(() => _sort = v ?? _sort),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          HybridCheckRow.plan(
-            key: const Key('tonight.own'),
-            label: 'Targets you added',
-            checked: _ownOnly,
-            onChanged: (v) => setState(() => _ownOnly = v),
-          ),
-          HybridCheckRow.plan(
-            key: const Key('tonight.all'),
-            label: 'Show targets without a window',
-            checked: !_withWindowOnly,
-            onChanged: (v) => setState(() => _withWindowOnly = !v),
-          ),
-        ],
-      ),
+                const SizedBox(height: AppSpacing.itemGap),
+                BlockField(
+                  label: 'Type',
+                  child: DropdownButtonFormField<String?>(
+                    key: const Key('tonight.type'),
+                    isExpanded: true,
+                    initialValue: _type,
+                    style: select,
+                    icon: hybridSelectIcon(context),
+                    decoration: const InputDecoration(
+                      contentPadding: hybridSelectPadding,
+                    ),
+                    items: [
+                      const DropdownMenuItem(
+                        value: null,
+                        child: Text(
+                          'All types',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      for (final t in types)
+                        DropdownMenuItem(
+                          value: t,
+                          child: Text(t, overflow: TextOverflow.ellipsis),
+                        ),
+                    ],
+                    onChanged: (v) => setState(() => _type = v),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            HybridCheckRow.plan(
+              key: const Key('tonight.own'),
+              label: 'Targets you added',
+              checked: _ownOnly,
+              onChanged: (v) => setState(() => _ownOnly = v),
+            ),
+            HybridCheckRow.plan(
+              key: const Key('tonight.all'),
+              label: 'Show targets without a window',
+              checked: !_withWindowOnly,
+              onChanged: (v) => setState(() => _withWindowOnly = !v),
+            ),
+          ],
+        ),
       const SizedBox(height: AppSpacing.md),
       if (rows.isEmpty)
         Padding(
@@ -327,15 +352,13 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
         'Times in ${NightTimeFormatter.zoneCaption(night.startUtc, zoneId: zoneId)}. '
         "Tap a target to make it the plan's target.",
         style: AppTextTheme.of(context)
-            .resolve(
-              AppTextTheme.of(context).caption,
-              AppTextGeometry.supporting,
-            )
+            .resolve(AppTextTheme.of(context).caption, AppTextGeometry.compact)
             .copyWith(color: p.textSecondary),
       ),
     );
 
     return ListView.builder(
+      key: const Key('candidates.scroll'),
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.gutter,
         AppSpacing.itemGap,
@@ -364,7 +387,7 @@ class _TonightCandidatesScreenState extends State<TonightCandidatesScreen> {
                   CapabilityText.frameFillOf(f),
               ].join(' · ');
         final index = i - header.length;
-        return DocumentSection(
+        return SectionCard(
           joinPrevious: index > 0,
           joinNext: index < rows.length - 1,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -432,81 +455,31 @@ class _CandidateRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return Semantics(
-      button: true,
       label: '$title, $caption, $usable usable',
       excludeSemantics: true,
-      enabled: true,
+      button: true,
       onTap: onTap,
-      child: InkWell(
+      child: ActionRow(
+        title: title,
+        description: caption,
         onTap: onTap,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 56),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final scaler = MediaQuery.textScalerOf(context);
-                final durationStyle = AppTextTheme.of(context).caption.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: p.textPrimary,
-                );
-                final durationWidth = TextPainter(
-                  text: TextSpan(text: usable, style: durationStyle),
-                  textDirection: Directionality.of(context),
-                  textScaler: scaler,
-                )..layout();
-                final iconSize = scaler.scale(18);
-                final below =
-                    durationWidth.width +
-                        AppSpacing.itemGap +
-                        AppSpacing.sm +
-                        iconSize >=
-                    constraints.maxWidth;
-                durationWidth.dispose();
-                final duration = Text(usable, style: durationStyle);
-                return Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: AppTextTheme.of(context)
-                                .resolve(
-                                  AppTextTheme.of(context).body,
-                                  AppTextGeometry.standard,
-                                )
-                                .copyWith(color: p.textPrimary),
-                          ),
-                          Text(
-                            caption,
-                            style: AppTextTheme.of(context)
-                                .resolve(
-                                  AppTextTheme.of(context).dense,
-                                  AppTextGeometry.standard,
-                                )
-                                .copyWith(color: p.textSecondary),
-                          ),
-                          if (below) duration,
-                        ],
-                      ),
-                    ),
-                    if (!below) ...[
-                      const SizedBox(width: AppSpacing.itemGap),
-                      duration,
-                    ],
-                    const SizedBox(width: AppSpacing.sm),
-                    HybridIcon(
-                      HybridIcons.chevron,
-                      size: iconSize,
-                      color: p.textSecondary,
-                    ),
-                  ],
-                );
-              },
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                usable,
+                style: AppTextTheme.of(context).value
+                    .copyWith(color: p.textPrimary),
+              ),
             ),
-          ),
+            const SizedBox(width: AppSpacing.sm),
+            HybridIcon(
+              HybridIcons.rowChevron,
+              size: 16,
+              color: p.textSecondary,
+            ),
+          ],
         ),
       ),
     );

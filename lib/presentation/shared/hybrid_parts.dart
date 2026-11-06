@@ -5,6 +5,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_theme.dart';
 import '../../core/theme/hybrid_tokens.dart';
 import 'hybrid_icon.dart';
+import 'fact_row.dart';
 
 /// Shared pieces of the accepted Hybrid reference (design/home-lab 86873ce;
 /// plan.css, hybrid-refinement.css, hybrid-data-tokens.css), so the screens
@@ -50,8 +51,8 @@ class HybridSectionTitle extends StatelessWidget {
   }
 }
 
-/// A disclosure fact with equal label/value columns and natural wrapping.
-/// Compact widths or large text stack the value beneath its label.
+/// A disclosure fact using the shared trailing-value layout in every theme.
+/// Values stack beneath their labels when the complete pair cannot fit.
 class HybridFact extends StatelessWidget {
   const HybridFact(this.label, this.value, {super.key, this.emphasis = false});
 
@@ -63,49 +64,7 @@ class HybridFact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    return MergeSemantics(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final name = Text(
-            label,
-            style: AppTextTheme.of(context).caption.copyWith(
-              color: emphasis ? p.textPrimary : p.textSecondary,
-              fontWeight: emphasis ? FontWeight.w600 : FontWeight.w400,
-            ),
-          );
-          final data = Text(
-            value,
-            style: AppTextTheme.of(context).caption.copyWith(
-              color: p.textPrimary,
-              fontWeight: emphasis ? FontWeight.w600 : FontWeight.w500,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
-          );
-          final captionSize = AppTextTheme.of(context).caption.fontSize!;
-          final textScale =
-              MediaQuery.textScalerOf(context).scale(captionSize) / captionSize;
-          if (constraints.maxWidth < 240 * textScale) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                name,
-                const SizedBox(height: AppSpacing.xs),
-                data,
-              ],
-            );
-          }
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: name),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(child: data),
-            ],
-          );
-        },
-      ),
-    );
+    return FactRow(label: label, value: value, emphasis: emphasis);
   }
 }
 
@@ -139,7 +98,7 @@ class HybridFactList extends StatelessWidget {
   );
 }
 
-/// An explanatory note in a disclosure: 13/400 secondary at 1.7.
+/// An explanatory note in a disclosure using the 13/18 caption role.
 class HybridNote extends StatelessWidget {
   const HybridNote(this.text, {super.key, this.tertiary = false});
 
@@ -151,15 +110,14 @@ class HybridNote extends StatelessWidget {
     final p = AppPalette.of(context);
     return Text(
       text,
-      style: AppTextTheme.of(context)
-          .resolve(AppTextTheme.of(context).caption, AppTextGeometry.emptyState)
+      style: AppTextTheme.of(context).caption
           .copyWith(color: tertiary ? p.textTertiary : p.textSecondary),
     );
   }
 }
 
 /// A plan row (plan.js `rowButton`; hybrid-refinement.css `.plan-row`): the
-/// 16/600 label over the 15/400 value and a 13 px tertiary caption, 1 apart,
+/// 13/18 label over the 15/24 value and a 13/18 tertiary caption,
 /// a 16 px chevron centred; 12 above and below, no rule.
 class HybridPlanRow extends StatelessWidget {
   const HybridPlanRow({
@@ -205,32 +163,20 @@ class HybridPlanRow extends StatelessWidget {
                     children: [
                       Text(
                         label,
-                        style: AppTextTheme.of(context)
-                            .resolve(
-                              AppTextTheme.of(context).itemTitle,
-                              AppTextGeometry.supporting,
-                            )
+                        style: AppTextTheme.of(context).caption
                             .copyWith(color: p.textPrimary),
                       ),
-                      const SizedBox(height: 1),
+                      const SizedBox(height: AppSpacing.xs),
                       Text(
                         value,
-                        style: AppTextTheme.of(context)
-                            .resolve(
-                              AppTextTheme.of(context).value,
-                              AppTextGeometry.standard,
-                            )
+                        style: AppTextTheme.of(context).rowTitle
                             .copyWith(color: valueColor ?? p.textPrimary),
                       ),
                       if (caption != null) ...[
-                        const SizedBox(height: 1),
+                        const SizedBox(height: AppSpacing.xs),
                         Text(
                           caption!,
-                          style: AppTextTheme.of(context)
-                              .resolve(
-                                AppTextTheme.of(context).caption,
-                                AppTextGeometry.supporting,
-                              )
+                          style: AppTextTheme.of(context).caption
                               .copyWith(color: p.textTertiary),
                         ),
                       ],
@@ -285,43 +231,25 @@ class HybridNightRow extends StatelessWidget {
       enabled: true,
       onTap: onTap,
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: p.border)),
-        ),
+        decoration: BoxDecoration(),
         child: InkWell(
           onTap: onTap,
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 64),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
               child: Row(
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            HybridIcon(
-                              icon,
-                              size: 20,
-                              color: iconColor ?? p.textPrimary,
-                            ),
-                            const SizedBox(width: 10),
-                            Flexible(
-                              child: Text(
-                                label,
-                                style: AppTextTheme.of(context)
-                                    .resolve(
-                                      AppTextTheme.of(context).itemTitle,
-                                      AppTextGeometry.standard,
-                                    )
-                                    .copyWith(color: p.textPrimary),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          label,
+                          style: AppTextTheme.of(context).nestedTitle
+                              .copyWith(color: p.textPrimary),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSpacing.xs),
                         Text(
                           value,
                           style: AppTextTheme.of(context)
@@ -337,7 +265,7 @@ class HybridNightRow extends StatelessWidget {
                               ),
                         ),
                         if (extra != null) ...[
-                          const SizedBox(height: 2),
+                          const SizedBox(height: AppSpacing.xs),
                           Text(
                             extra!,
                             style: AppTextTheme.of(context).caption
@@ -348,11 +276,16 @@ class HybridNightRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  HybridIcon(
-                    HybridIcons.rowChevron,
-                    size: 16,
-                    strokeWidth: 1.6,
-                    color: p.textSecondary,
+                  SizedBox.square(
+                    dimension: 48,
+                    child: Center(
+                      child: HybridIcon(
+                        HybridIcons.rowChevron,
+                        size: 16,
+                        strokeWidth: 1.6,
+                        color: p.textSecondary,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -391,7 +324,12 @@ class HybridApplyBar extends StatelessWidget {
       shape: Border(top: BorderSide(color: p.border)),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.gutter,
+            AppSpacing.md,
+            AppSpacing.gutter,
+            AppSpacing.sm,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -403,7 +341,7 @@ class HybridApplyBar extends StatelessWidget {
                   style: AppTextTheme.of(context)
                       .resolve(
                         AppTextTheme.of(context).caption,
-                        AppTextGeometry.supporting,
+                        AppTextGeometry.compact,
                       )
                       .copyWith(color: p.textSecondary),
                 ),
@@ -418,10 +356,7 @@ class HybridApplyBar extends StatelessWidget {
                     horizontal: 20,
                     vertical: 12,
                   ),
-                  textStyle: AppTextTheme.of(context).resolve(
-                    AppTextTheme.of(context).itemTitle,
-                    AppTextGeometry.standard,
-                  ),
+                  textStyle: AppTextTheme.of(context).actionLabel,
                 ),
                 child: Text(label),
               ),
@@ -438,7 +373,7 @@ class HybridApplyBar extends StatelessWidget {
 /// 2 px red ring and dot (hybrid-refinement.css). Decorative: the row
 /// carries the semantics.
 class HybridRadio extends StatelessWidget {
-  const HybridRadio({super.key, required this.checked, this.size = 18});
+  const HybridRadio({super.key, required this.checked, this.size = 24});
 
   final bool checked;
 
@@ -478,22 +413,18 @@ class _RadioPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final c = size.center(Offset.zero);
-    // Drawn for 18 px and scaled, as the browser scales its radio.
-    final k = size.shortestSide / 18;
-    if (!checked) {
-      canvas.drawCircle(
-        c,
-        8.5 * k,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = k
-          ..color = off,
-      );
-      return;
+    // Adopted Choice: quiet one-pixel ring and an independent selected dot.
+    canvas.drawCircle(
+      c,
+      (size.shortestSide - 1) / 2,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1
+        ..color = off,
+    );
+    if (checked) {
+      canvas.drawCircle(c, size.shortestSide / 6, Paint()..color = on);
     }
-    canvas.drawCircle(c, 9 * k, Paint()..color = on);
-    canvas.drawCircle(c, 7 * k, Paint()..color = surface);
-    canvas.drawCircle(c, 4.5 * k, Paint()..color = on);
   }
 
   @override
@@ -696,7 +627,12 @@ class HybridSwitch extends StatelessWidget {
             width: 20,
             height: 20,
             decoration: BoxDecoration(
-              color: value ? h.onAction : p.textSecondary,
+              // The After toggle thumb is independent of dark ink on blue actions.
+              color: value
+                  ? (!p.fieldMode && p.brightness == Brightness.dark
+                        ? p.textPrimary
+                        : h.onAction)
+                  : p.textSecondary,
               shape: BoxShape.circle,
             ),
           ),
@@ -776,7 +712,7 @@ class HybridSwitchRow extends StatelessWidget {
                           style: AppTextTheme.of(context)
                               .resolve(
                                 AppTextTheme.of(context).caption,
-                                AppTextGeometry.supporting,
+                                AppTextGeometry.compact,
                               )
                               .copyWith(color: p.textSecondary),
                         ),

@@ -7,6 +7,7 @@
 // unsaved, with Retry.
 
 import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:astroplan/presentation/shared/section_card.dart';
 import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
@@ -98,6 +99,7 @@ void main() {
     await settle(tester);
     await tester.tap(find.byKey(Key('settings.open.$section')));
     await settle(tester);
+    if (section == 'appearance') expect(find.text('Theme'), findsOneWidget);
   }
 
   MaterialApp app(WidgetTester tester) =>
@@ -122,15 +124,22 @@ void main() {
     await settle(tester);
     final choices = find.byKey(const Key('settings.appearance'));
     final bounds = tester.getRect(choices);
-    // settings.css at 200 %: one choice per line, the column's full width
-    // (412 less two 20 px gutters and two 16 px section insets),
-    // each a 6 px-rounded outline. Text scaling remains uncapped.
-    expect(bounds.width, 340);
+    // Every choice fills the owning SectionCard's actual content column.
+    // Section insets belong to the shared component; text stays uncapped.
+    final group = find.byKey(const Key('settings.themeGroup'));
+    final card = tester.widget<SectionCard>(group);
+    final insets = card.padding.resolve(
+      Directionality.of(tester.element(group)),
+    );
+    final contentBounds = insets.deflateRect(tester.getRect(group));
+    expect(bounds.left, closeTo(contentBounds.left, .01));
+    expect(bounds.right, closeTo(contentBounds.right, .01));
     for (final value in ['system', 'light', 'dark']) {
       final choice = tester.getRect(
         find.byKey(Key('settings.appearance.$value')),
       );
-      expect(choice.width, closeTo(340, 0.5), reason: value);
+      expect(choice.left, closeTo(contentBounds.left, .01), reason: value);
+      expect(choice.right, closeTo(contentBounds.right, .01), reason: value);
     }
     for (final label in ['System', 'Light', 'Dark']) {
       final text = find.descendant(of: choices, matching: find.text(label));

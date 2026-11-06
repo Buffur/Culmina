@@ -49,6 +49,64 @@ FitResult _fit(
 );
 
 void main() {
+  group('flip after moving an atomic frame across a window gap', () {
+    const overheads = CaptureOverheads(perFrameMs: 0, meridianFlipMs: 60000);
+    for (final (seconds, expected) in [
+      (240, FitState.fits),
+      (180, FitState.tight),
+      (150, FitState.doesNotFit),
+    ]) {
+      test('$expected includes the flip before the post-transit frame', () {
+        final windows = [
+          _w(_t(21), _t(21, 0, 30)),
+          _w(_t(22), _t(22).add(Duration(seconds: seconds))),
+        ];
+        final result = _fit(
+          [_light(60, 2)],
+          overheads,
+          windows,
+          transit: _t(21, 0, 20),
+          transitInWindow: true,
+        );
+        expect(result.state, expected);
+        expect(result.flipApplied, isTrue);
+        expect(result.flipDropped, isFalse);
+        expect(
+          result.placedMs,
+          expected == FitState.doesNotFit ? 120000 : 180000,
+        );
+        expect(
+          result.endUtc,
+          _t(
+            22,
+          ).add(Duration(seconds: expected == FitState.doesNotFit ? 120 : 180)),
+        );
+        expect(
+          FitAnalyzer.maxFramesForBlock(
+            blocks: [_light(60, 2)],
+            blockIndex: 0,
+            windows: windows,
+            overheads: overheads,
+            targetTransitsInWindow: true,
+            transitUtc: _t(21, 0, 20),
+          ),
+          seconds ~/ 60 - 1,
+        );
+      });
+    }
+    test('a required flip that cannot fit is not reported as unnecessary', () {
+      final result = _fit(
+        [_light(60, 1)],
+        const CaptureOverheads(perFrameMs: 0, meridianFlipMs: 120000),
+        [_w(_t(21), _t(21, 0, 30)), _w(_t(22), _t(22, 1))],
+        transit: _t(21, 0, 20),
+        transitInWindow: true,
+      );
+      expect(result.state, FitState.doesNotFit);
+      expect(result.flipApplied, isFalse);
+      expect(result.flipDropped, isFalse);
+    });
+  });
   final w1 = [_w(_t(21), _t(3))];
   final w2 = [_w(_t(22), _t(23, 30)), _w(_t(1), _t(4))];
   const e1 = CaptureOverheads(

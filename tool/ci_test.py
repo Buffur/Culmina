@@ -15,10 +15,10 @@ import ci
 class CiTest(unittest.TestCase):
     def test_required_check_fails_closed_for_every_job_state(self):
         states = ["success", "failure", "cancelled", "skipped", ""]
-        for changes, full, checks, unit, host in itertools.product(states, ["true", "false", ""], states, states, states):
-            expected = changes == "success" and (full, checks, unit, host) in [
-                ("true", "success", "success", "success"), ("false", "skipped", "skipped", "skipped")]
-            self.assertEqual(ci.required_jobs_pass(changes, full, checks, unit, host), expected)
+        for changes, full, checks, unit, host, android in itertools.product(states, ["true", "false", ""], states, states, states, states):
+            expected = changes == "success" and (full, checks, unit, host, android) in [
+                ("true", "success", "success", "success", "success"), ("false", "skipped", "skipped", "skipped", "skipped")]
+            self.assertEqual(ci.required_jobs_pass(changes, full, checks, unit, host, android), expected)
 
     def test_docs_class_and_unknown_executables(self):
         docs = ["AGENTS.md", "GEMINI.md", "nested/AGENTS.override.md",

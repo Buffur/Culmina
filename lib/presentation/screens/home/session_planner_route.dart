@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/deleted_plan_fallback.dart';
+import '../../shared/content_states.dart';
+import '../../shared/section_card.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/field_mode_button.dart';
 import '../../shared/hybrid_app_bar.dart';
@@ -154,7 +156,11 @@ class _SessionPlannerRouteState extends State<SessionPlannerRoute>
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(
+              child: SectionCard(
+                children: [LoadingState(message: 'Opening the plan…')],
+              ),
+            ),
           );
         }
         if (!snapshot.hasError && snapshot.data == _PlannerOpenResult.ready) {
@@ -175,14 +181,14 @@ class _SessionPlannerRouteState extends State<SessionPlannerRoute>
               : Center(
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.gutter),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    child: SectionCard(
                       children: [
-                        const Text('This plan could not be found.'),
-                        const SizedBox(height: AppSpacing.sm),
-                        TextButton(
-                          onPressed: () => context.go(AppRouter.tonight),
-                          child: const Text('Back to Tonight'),
+                        EmptyState(
+                          title: 'This plan could not be found.',
+                          action: TextButton(
+                            onPressed: () => context.go(AppRouter.tonight),
+                            child: const Text('Back to Tonight'),
+                          ),
                         ),
                       ],
                     ),

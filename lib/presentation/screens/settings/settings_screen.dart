@@ -1,7 +1,7 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -193,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (!overPlan && section == SettingsSection.appearance)
                 const _AppearancePage(),
               if (!overPlan && section == SettingsSection.privacy) ...[
-                DocumentSection(
+                SectionCard(
                   key: const Key('settings.placeNamesGroup'),
                   children: [
                     const SettingsHeading('Place names', top: 0),
@@ -229,7 +229,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('settings.privacyInfoGroup'),
                   children: [
                     const CollapsibleSection(
@@ -353,7 +353,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       primary: true,
     ),
     const SizedBox(height: AppSpacing.md),
-    DocumentSection(
+    SectionCard(
       key: const Key('settings.budgetGroup'),
       children: [
         const SettingsHeading('Capture budget', top: 0),
@@ -416,7 +416,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ],
     ),
     const SizedBox(height: AppSpacing.md),
-    DocumentSection(
+    SectionCard(
       key: const Key('settings.windowGroup'),
       children: [
         const SettingsHeading('Imaging window', top: 0),
@@ -455,7 +455,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ],
     ),
     const SizedBox(height: AppSpacing.md),
-    DocumentSection(
+    SectionCard(
       key: const Key('settings.gatesGroup'),
       children: [
         // F12 (AM-01; SP11): the optional gates and times, collapsed.
@@ -665,7 +665,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ],
     ),
     const SizedBox(height: AppSpacing.md),
-    DocumentSection(
+    SectionCard(
       key: const Key('settings.guidanceGroup'),
       children: [
         const SettingsHeading('Guidance', top: 0),
@@ -746,7 +746,7 @@ class _SettingsIndex extends StatelessWidget {
       body: ListView(
         padding: settingsPagePadding,
         children: [
-          DocumentSection(
+          SectionCard(
             key: const Key('settings.preferencesGroup'),
             children: [
               const SettingsHeading('Preferences', top: 0),
@@ -782,8 +782,8 @@ class _SettingsIndex extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          DocumentSection(
+          const SizedBox(height: AppSpacing.md),
+          SectionCard(
             key: const Key('settings.dataGroup'),
             children: [
               const SettingsHeading('Data and about', top: 0),
@@ -831,15 +831,14 @@ class _AppearancePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DocumentSection(
+        SectionCard(
           key: const Key('settings.themeGroup'),
           children: [
-            const SettingsHeading('Theme', top: 0),
             if (vm != null) ...[
               HybridSegmented<Appearance>.settings(
                 key: const Key('settings.appearance'),
                 legend: 'Theme',
-                showLegend: false,
+                showLegend: true,
                 keyPrefix: 'settings.appearance',
                 options: [
                   for (final a in Appearance.values) (a, a.label, a.name),
@@ -847,7 +846,7 @@ class _AppearancePage extends StatelessWidget {
                 value: vm.appearance,
                 onChanged: (a) => change(() => vm.setAppearance(a)),
               ),
-              SettingsHint(
+              SettingsCopy(
                 'System follows this device’s light or dark setting (now '
                 '$system).${fieldMode ? ' Applies when red field mode is off.' : ''}',
                 top: AppSpacing.xs,
@@ -857,7 +856,7 @@ class _AppearancePage extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        DocumentSection(
+        SectionCard(
           key: const Key('settings.textGroup'),
           children: [
             const SettingsHeading('Text size', top: 0),
@@ -871,7 +870,7 @@ class _AppearancePage extends StatelessWidget {
         ),
         if (vm != null && units != null) ...[
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('settings.unitsGroup'),
             children: [
               const SettingsHeading('Units', top: 0),
@@ -921,7 +920,7 @@ class _AppearancePage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('settings.weatherGroup'),
             children: [
               // HT-W04: how the Weather page shows the night's hours.
@@ -940,8 +939,8 @@ class _AppearancePage extends StatelessWidget {
               ),
               const SettingsHint(
                 'Choose the Weather detail view. Both use the same forecast. '
-                'Tonight keeps its compact weather summary; the night timeline '
-                'keeps its gradient.',
+                'Tonight keeps its compact weather summary; Night keeps its '
+                'calculated dark and Moon-free intervals.',
                 top: AppSpacing.xs,
               ),
             ],

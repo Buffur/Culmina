@@ -1,3 +1,6 @@
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
+
 import 'dart:async';
 import 'dart:io';
 
@@ -18,133 +21,205 @@ import 'package:provider/provider.dart';
 import '../../../support/hybrid_transfer_fixture.dart';
 import '../../../support/hybrid_transfer_shots.dart';
 
+late String _phase2Theme;
+
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  const pathProvider = MethodChannel('plugins.flutter.io/path_provider');
-  setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          pathProvider,
-          (_) async => Directory.systemTemp.path,
-        );
-  });
-  tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(pathProvider, null);
-  });
-  for (final mode in ['map', 'dialog', 'latitude', 'cancel']) {
-    testWidgets('SiteEditor exact coordinate roundtrip $mode', (t) async {
-      late HybridTransferFixture fixture;
-      late LocationProfile original;
-      await t.runAsync(() async {
-        fixture = await HybridTransferFixture.create(
-          AppDatabase(NativeDatabase.memory()),
-        );
-        await fixture.vm.site.saveSite(
-          LocationProfile(
-            id: 0,
-            name: 'Synthetic precise site',
-            latitude: 12.345678901,
-            longitude: -23.456789012,
-            timeZoneId: 'Europe/Kyiv',
-          ),
-          activate: false,
-        );
-        original = fixture.vm.site.sites.singleWhere(
-          (s) => s.name == 'Synthetic precise site',
-        );
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      TestWidgetsFlutterBinding.ensureInitialized();
+      const pathProvider = MethodChannel('plugins.flutter.io/path_provider');
+      setUp(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              pathProvider,
+              (_) async => Directory.systemTemp.path,
+            );
       });
-      t.view.physicalSize = const Size(375, 812);
-      t.view.devicePixelRatio = 1;
-      addTearDown(t.view.reset);
-      final router = GoRouter(
-        routes: [
-          GoRoute(path: '/', builder: (_, _) => const Scaffold()),
-          GoRoute(
-            path: AppRouter.siteEdit,
-            builder: (_, state) =>
-                SiteEditorScreen(args: state.extra! as SiteEditorArgs),
-          ),
-          GoRoute(
-            path: AppRouter.sitePick,
-            builder: (_, state) => LocationPickerScreen(
-              pickOnly: true,
-              initial: state.extra as LatLng?,
-            ),
-          ),
-        ],
-      );
-      addTearDown(() async {
-        await t.pumpWidget(const SizedBox.shrink());
-        router.dispose();
-        fixture.vm.dispose();
-        await t.runAsync(fixture.db.close);
+      tearDown(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(pathProvider, null);
       });
-      await t.pumpWidget(
-        MultiProvider(
-          providers: fixture.vm.providers,
-          child: MaterialApp.router(routerConfig: router),
-        ),
-      );
-      unawaited(
-        router.push(
-          AppRouter.siteEdit,
-          extra: SiteEditorArgs(site: original, activate: false),
-        ),
-      );
-      await hybridSettle(t);
-      await t.tap(find.byKey(const Key('siteEditor.pickOnMap')));
-      await t.pumpAndSettle();
-      var point = t
-          .widget<MarkerLayer>(find.byType(MarkerLayer))
-          .markers
-          .single
-          .point;
-      expect(
-        point.latitude,
-        original.latitude,
-        reason: 'Map initial must not parse rounded display',
-      );
-      expect(point.longitude, original.longitude);
-      if (mode != 'map') {
-        await t.tap(find.byKey(const Key('location.coordinates')));
-        await t.pumpAndSettle();
-        if (mode == 'latitude' || mode == 'cancel') {
-          final fields = find.descendant(
-            of: find.byType(AlertDialog),
-            matching: find.byType(TextFormField),
+      for (final mode in ['map', 'dialog', 'latitude', 'cancel', 'map-back']) {
+        testWidgets('SiteEditor exact coordinate roundtrip $mode', (t) async {
+          late HybridTransferFixture fixture;
+          late LocationProfile original;
+          await t.runAsync(() async {
+            fixture = await HybridTransferFixture.create(
+              AppDatabase(NativeDatabase.memory()),
+            );
+            await fixture.vm.site.saveSite(
+              LocationProfile(
+                id: 0,
+                name: 'Synthetic precise site',
+                latitude: 12.345678901,
+                longitude: -23.456789012,
+                timeZoneId: 'Europe/Kyiv',
+              ),
+              activate: false,
+            );
+            original = fixture.vm.site.sites.singleWhere(
+              (s) => s.name == 'Synthetic precise site',
+            );
+          });
+          t.view.physicalSize = const Size(375, 812);
+          t.view.devicePixelRatio = 1;
+          addTearDown(t.view.reset);
+          final router = GoRouter(
+            routes: [
+              GoRoute(path: '/', builder: (_, _) => const Scaffold()),
+              GoRoute(
+                path: AppRouter.siteEdit,
+                builder: (_, state) =>
+                    SiteEditorScreen(args: state.extra! as SiteEditorArgs),
+              ),
+              GoRoute(
+                path: AppRouter.sitePick,
+                builder: (_, state) => LocationPickerScreen(
+                  pickOnly: true,
+                  initial: state.extra as LatLng?,
+                ),
+              ),
+            ],
           );
-          await t.enterText(fields.at(0), '-11.123456789');
-        }
-        await t.tap(find.text(mode == 'cancel' ? 'Cancel' : 'Use'));
-        await t.pumpAndSettle();
+          addTearDown(() async {
+            await t.pumpWidget(const SizedBox.shrink());
+            router.dispose();
+            fixture.vm.dispose();
+            await t.runAsync(fixture.db.close);
+          });
+          await t.pumpWidget(
+            MultiProvider(
+              providers: fixture.vm.providers,
+              child: MaterialApp.router(
+                theme: phase2Theme(_phase2Theme),
+                builder: (_, child) =>
+                    phase2Frame(child: child!, theme: _phase2Theme),
+                routerConfig: router,
+              ),
+            ),
+          );
+          unawaited(
+            router.push(
+              AppRouter.siteEdit,
+              extra: SiteEditorArgs(site: original, activate: false),
+            ),
+          );
+          await hybridSettle(t);
+          final beforeLatitude = t
+              .widget<TextFormField>(
+                find.byKey(const Key('siteEditor.latitude')),
+              )
+              .controller!
+              .text;
+          final beforeLongitude = t
+              .widget<TextFormField>(
+                find.byKey(const Key('siteEditor.longitude')),
+              )
+              .controller!
+              .text;
+          final beforePosition = (
+            fixture.vm.site.latitude,
+            fixture.vm.site.longitude,
+          );
+          await t.tap(find.byKey(const Key('siteEditor.pickOnMap')));
+          await t.pumpAndSettle();
+          var point = t
+              .widget<MarkerLayer>(find.byType(MarkerLayer))
+              .markers
+              .single
+              .point;
+          expect(
+            point.latitude,
+            original.latitude,
+            reason: 'Map initial must not parse rounded display',
+          );
+          expect(point.longitude, original.longitude);
+          if (mode == 'map-back') {
+            await t.pageBack();
+            await hybridSettle(t);
+            expect(find.byType(LocationPickerScreen), findsNothing);
+            expect(find.byType(SiteEditorScreen), findsOneWidget);
+            expect(
+              t
+                  .widget<TextFormField>(
+                    find.byKey(const Key('siteEditor.latitude')),
+                  )
+                  .controller!
+                  .text,
+              beforeLatitude,
+            );
+            expect(
+              t
+                  .widget<TextFormField>(
+                    find.byKey(const Key('siteEditor.longitude')),
+                  )
+                  .controller!
+                  .text,
+              beforeLongitude,
+            );
+            expect((
+              fixture.vm.site.latitude,
+              fixture.vm.site.longitude,
+            ), beforePosition);
+            final unchanged = fixture.vm.site.sites.singleWhere(
+              (s) => s.id == original.id,
+            );
+            expect(unchanged.latitude, original.latitude);
+            expect(unchanged.longitude, original.longitude);
+            await capturePhase2State(
+              t,
+              package: 'package3',
+              state: 'map-route-cancel-editor-unchanged',
+              theme: _phase2Theme,
+            );
+            expect(t.takeException(), isNull);
+            return;
+          }
+          if (mode != 'map') {
+            await t.tap(find.byKey(const Key('location.coordinates')));
+            await t.pumpAndSettle();
+            if (mode == 'latitude' || mode == 'cancel') {
+              final fields = find.descendant(
+                of: find.byType(AlertDialog),
+                matching: find.byType(TextFormField),
+              );
+              await t.enterText(fields.at(0), '-11.123456789');
+            }
+            await t.tap(find.text(mode == 'cancel' ? 'Cancel' : 'Use'));
+            await t.pumpAndSettle();
+          }
+          point = t
+              .widget<MarkerLayer>(find.byType(MarkerLayer))
+              .markers
+              .single
+              .point;
+          expect(
+            point.latitude,
+            mode == 'latitude' ? -11.123456789 : original.latitude,
+          );
+          expect(point.longitude, original.longitude);
+          await t.tap(find.byKey(const Key('location.usePoint')));
+          await hybridSettle(t);
+          await t.ensureVisible(find.byKey(const Key('siteEditor.save')));
+          await t.pumpAndSettle();
+          await t.tap(find.byKey(const Key('siteEditor.save')));
+          await hybridSettle(t);
+          final saved = fixture.vm.site.sites.singleWhere(
+            (s) => s.id == original.id,
+          );
+          expect(
+            saved.latitude,
+            mode == 'latitude' ? -11.123456789 : original.latitude,
+          );
+          expect(saved.longitude, original.longitude);
+          expect(saved.timeZoneId, original.timeZoneId);
+          expect(saved.name, original.name);
+          expect(find.byType(SiteEditorScreen), findsNothing);
+          expect(t.takeException(), isNull);
+        });
       }
-      point = t
-          .widget<MarkerLayer>(find.byType(MarkerLayer))
-          .markers
-          .single
-          .point;
-      expect(
-        point.latitude,
-        mode == 'latitude' ? -11.123456789 : original.latitude,
-      );
-      expect(point.longitude, original.longitude);
-      await t.tap(find.byKey(const Key('location.usePoint')));
-      await hybridSettle(t);
-      await t.tap(find.byKey(const Key('siteEditor.save')));
-      await hybridSettle(t);
-      final saved = fixture.vm.site.sites.singleWhere(
-        (s) => s.id == original.id,
-      );
-      expect(
-        saved.latitude,
-        mode == 'latitude' ? -11.123456789 : original.latitude,
-      );
-      expect(saved.longitude, original.longitude);
-      expect(saved.timeZoneId, original.timeZoneId);
-      expect(saved.name, original.name);
-      expect(find.byType(SiteEditorScreen), findsNothing);
-      expect(t.takeException(), isNull);
     });
   }
 }

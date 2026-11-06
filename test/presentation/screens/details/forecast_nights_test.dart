@@ -8,6 +8,7 @@
 // and stays as it was. Through the real app and database.
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -123,6 +124,13 @@ class _Sessions extends DriftSessionRepository {
       : super.savePlan(id, plan, snapshot);
 }
 
+Future<void> _openForecastDetails(WidgetTester tester) async {
+  if (find.byKey(const Key('weather.model')).evaluate().isNotEmpty) return;
+  await tester.ensureVisible(find.byKey(const Key('weather.details')));
+  await tester.tap(find.text('Forecast details'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   late AppDatabase db;
   late PlannerHarness vm;
@@ -196,21 +204,89 @@ void main() {
   }
 
   final tonight = CalendarDate(2026, 11, 10);
-  String key(CalendarDate d, [String suffix = '']) =>
-      'weather.night.${d.toIso8601String()}$suffix';
   final planBar = find.byKey(const Key('nightMoon.planThisNight'));
 
-  /// "View this night" on the night's card: browsing only.
-  Future<void> viewNight(WidgetTester tester, CalendarDate d) async {
-    final view = find.byKey(Key(key(d, '.view')));
-    await tester.ensureVisible(view);
-    await tester.tap(view);
+  // The ordinary shared date browser replaces the removed comparison cards.
+  // Use its existing previous/next actions, preserving real button activation.
+  Future<void> viewNight(WidgetTester tester, CalendarDate date) async {
+    final context = tester.element(find.byKey(const Key('weather.hybrid')));
+    final browser = context.read<NightBrowserViewModel>();
+    while (browser.viewedDate != date) {
+      final next =
+          browser.viewedDate.toIso8601String().compareTo(
+            date.toIso8601String(),
+          ) <
+          0;
+      final button = find.byTooltip(next ? 'Next night' : 'Previous night');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+      await settle(tester);
+    }
+    await tester.runAsync(() => context.read<NightConditionsViewModel>().idle);
     await settle(tester);
   }
 
-  /// The coverage line of the card for [d], as rendered.
-  String coverageOf(WidgetTester tester, CalendarDate d) =>
-      tester.widget<Text>(find.byKey(Key(key(d, '.coverage')))).data!;
+  Future<String> coverageOf(WidgetTester tester, CalendarDate date) async {
+    await viewNight(tester, date);
+    final coverage = find.byKey(const Key('weather.coverage'));
+    return tester
+        .widget<Text>(
+          coverage.evaluate().isEmpty
+              ? find.byKey(const Key('weather.facts'))
+              : coverage,
+        )
+        .data!;
+  }
+
+  for (final mode in ['light', 'dark', 'field']) {
+    testWidgets('Phase2 V2 Appearance keeps viewed night $mode', (
+      tester,
+    ) async {
+      tester.platformDispatcher.platformBrightnessTestValue = mode == 'dark'
+          ? Brightness.dark
+          : Brightness.light;
+      addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+      await start(tester);
+      if (mode == 'field') await tester.runAsync(vm.theme.toggleFieldMode);
+      await tester.runAsync(
+        () => vm.vms.displaySettings.setWeatherView(WeatherView.charts),
+      );
+      await settle(tester);
+      final viewed = tonight.addDays(1);
+      await viewNight(tester, viewed);
+      final context = tester.element(find.byKey(const Key('weather.hybrid')));
+      final browser = context.read<NightBrowserViewModel>();
+      final planDate = vm.eveningDate;
+      final sessionID = vm.activeSession?.id;
+      await _openForecastDetails(tester);
+      final action = find.byKey(const Key('weather.changeView'));
+      expect(action, findsOneWidget);
+      await tester.ensureVisible(action);
+      await tester.tap(action);
+      await settle(tester);
+      expect(find.byKey(const Key('settings.weatherView')), findsOneWidget);
+      final rows = find.byKey(const Key('settings.weatherView.rows'));
+      await tester.ensureVisible(rows);
+      await tester.tap(rows);
+      await settle(tester);
+      expect(vm.vms.displaySettings.weatherView, WeatherView.rows);
+      await tester.pageBack();
+      await settle(tester);
+      final returned = tester
+          .element(find.byKey(const Key('weather.hybrid')))
+          .read<NightBrowserViewModel>();
+      expect(
+        returned,
+        same(browser),
+        reason: 'Appearance overlays the same browser',
+      );
+      expect(returned.viewedDate, viewed);
+      expect(vm.eveningDate, planDate);
+      expect(vm.activeSession?.id, sessionID);
+      expect(find.byKey(const Key('weather.rows')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('A3/A5: the night\'s answer first; an hour shows its exact '
       'values; the seeing limitation and a link; the table in Details', (
@@ -219,7 +295,7 @@ void main() {
     await start(tester, cloudGapAt: DateTime.utc(2026, 11, 10, 22));
     final s = vm.conditions.nightWeatherSummary!;
     expect(find.byKey(const Key('weather.span')), findsOneWidget);
-    expect(find.text('Cloud 30% in known dark hours'), findsOneWidget);
+    expect(find.text('Cloud cover 30% in known dark hours'), findsOneWidget);
     // W2: the unknown cloud value is a gap, never 0 %.
     expect(
       tester
@@ -228,34 +304,30 @@ void main() {
       '10 of 11 hourly cloud samples known · gaps stay unknown.',
     );
     expect(find.text('Temperature'), findsOneWidget);
-    expect(find.text('3 °C · dew point -1 °C'), findsOneWidget);
+    expect(find.text('3 °C'), findsOneWidget);
+    expect(find.text('Dew point -1 °C'), findsOneWidget);
     expect(find.byKey(const Key('weather.updated')), findsOneWidget);
-    // Inspect an hour: the slider picks one; its exact values open below.
-    final slider = tester.widget<Slider>(
-      find.byKey(const Key('weather.hourSlider')),
-    );
-    slider.onChanged!(1);
-    await settle(tester);
-    await tester.ensureVisible(find.text('Hourly values'));
-    await tester.tap(find.text('Hourly values'));
-    await settle(tester);
-    final hour = find.byKey(const Key('weather.hourDetails'));
-    for (final value in ['10% / 15% / 25%', '75%', '24 km', 'Gusts: 20 km/h']) {
+    expect(find.byKey(const Key('weather.table')), findsNothing);
+    // Complete exact-hour readings remain in the pinned-time table.
+    await _openForecastDetails(tester);
+    final table = find.byKey(const Key('weather.table'));
+    expect(table, findsOneWidget);
+    for (final value in ['10 / 15 / 25', '75', '24', '8 / 20']) {
       expect(
-        find.descendant(of: hour, matching: find.textContaining(value)),
+        find.descendant(of: table, matching: find.text(value)),
         findsWidgets,
-        reason: value,
+        reason:
+            'source-backed cloud layers, humidity, visibility and wind/gusts',
       );
     }
+    expect(find.byKey(const Key('weather.hourSlider')), findsNothing);
+    expect(find.byKey(const Key('weather.tableKey')), findsOneWidget);
     expect(s.slots, isNotEmpty);
     // Q3: the limitation, and a page the user opens.
     expect(find.byKey(const Key('weather.notSeeing')), findsOneWidget);
     expect(find.byKey(const Key('weather.clearOutside')), findsOneWidget);
-    // Details: the full table, the lead and the model.
-    expect(find.byKey(const Key('weather.table')), findsNothing);
-    await tester.ensureVisible(find.byKey(const Key('weather.details')));
-    await tester.tap(find.text('Forecast details'));
-    await settle(tester);
+    // Details keeps the full table, the lead and the model beside inspection.
+    await _openForecastDetails(tester);
     expect(find.byKey(const Key('weather.table')), findsOneWidget);
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.partial'))).data,
@@ -272,16 +344,17 @@ void main() {
     expect(find.textContaining('SNR'), findsNothing);
     expect(
       find.textContaining('score'),
-      findsOneWidget,
-      reason: 'only "No reliability score."',
+      findsNothing,
+      reason: 'no invented reliability score',
     );
   });
 
-  testWidgets('A1: one card per night the forecast serves, with its own '
+  testWidgets('A1: selected date preserves each forecast night with its own '
       'coverage and lead; later nights are beyond it; one request', (
     tester,
   ) async {
     await start(tester); // rows until 21:00 UTC on the 12th
+    await _openForecastDetails(tester);
     final overview = vm.conditions.forecastNights!;
     expect(weather.calls, 1);
     expect(overview.nights.map((n) => n.eveningDate), [
@@ -296,21 +369,24 @@ void main() {
     expect(third.coverage, ForecastCoverage.partial);
     expect(third.missingAfter, greaterThan(0), reason: 'ends before dawn');
     for (final n in [first, second]) {
-      expect(coverageOf(tester, n.eveningDate), 'Full dark-time coverage');
+      expect(
+        await coverageOf(tester, n.eveningDate),
+        'Dark-time coverage: ${n.summary.coveredHours}/${n.summary.totalHours} hourly samples',
+      );
     }
     expect(
-      coverageOf(tester, third.eveningDate),
-      'Partial dark-time coverage · ${third.summary.coveredHours} of '
-      '${third.summary.totalHours} dark hours (the forecast ends before '
-      'dawn)',
+      await coverageOf(tester, third.eveningDate),
+      'Dark-time coverage: ${third.summary.coveredHours}/${third.summary.totalHours} hourly samples',
     );
     expect([for (final n in overview.nights) n.leadDays], [0, 1, 2]);
-    expect(find.textContaining(' · your plan'), findsOneWidget);
-    expect(find.byKey(const Key('weather.nights.beyond')), findsOneWidget);
+    expect(find.byKey(const Key('nightMoon.viewing')), findsOneWidget);
+    await _openForecastDetails(tester);
+    expect(find.byKey(const Key('weather.nights.beyond')), findsNothing);
+    expect(find.byKey(const Key('weather.nights')), findsNothing);
     expect(find.textContaining('16 nights'), findsNothing);
   });
 
-  testWidgets('A6: opening a card changes nothing; Plan this night moves a '
+  testWidgets('A6: browsing a night changes nothing; Plan this night moves a '
       'never-saved draft', (tester) async {
     await start(tester);
     final next = tonight.addDays(1);
@@ -412,11 +488,13 @@ void main() {
       ],
     );
     expect(
-      coverageOf(tester, tonight),
-      'Partial dark-time coverage · 9 of 11 dark hours (the forecast '
-      'starts later)',
+      await coverageOf(tester, tonight),
+      'Dark-time coverage: 9/11 hourly samples',
     );
-    expect(coverageOf(tester, tonight.addDays(1)), 'Full dark-time coverage');
+    expect(
+      await coverageOf(tester, tonight.addDays(1)),
+      'Dark-time coverage: 11/11 hourly samples',
+    );
   });
 
   testWidgets('A1: rows around a night that miss its dark span: "No '
@@ -429,18 +507,15 @@ void main() {
       ],
     );
     expect(vm.conditions.forecastNights!.nights, hasLength(1));
-    expect(coverageOf(tester, tonight), 'No forecast for the dark hours');
-    final card = find.byKey(Key(key(tonight)));
     expect(
-      find.descendant(of: card, matching: find.textContaining('%')),
-      findsNothing,
-      reason: 'no cloud range without a covered hour',
+      await coverageOf(tester, tonight),
+      'Dark-time coverage: 0/11 hourly samples',
     );
-    expect(
-      find.descendant(of: card, matching: find.text('Cloud unknown')),
-      findsOneWidget,
-    );
-    expect(find.byKey(const Key('weather.nights.beyond')), findsOneWidget);
+    expect(find.text('Cloud cover unknown'), findsOneWidget);
+    expect(find.byKey(const Key('weather.gaps')), findsOneWidget);
+    await _openForecastDetails(tester);
+    expect(find.byKey(const Key('weather.nights.beyond')), findsNothing);
+    expect(find.byKey(const Key('weather.nights')), findsNothing);
   });
 
   testWidgets('A1: a June night at 60° N: "No dark time this night"', (
@@ -455,7 +530,10 @@ void main() {
     final nights = vm.conditions.forecastNights!.nights;
     expect(nights, isNotEmpty);
     for (final n in nights) {
-      expect(coverageOf(tester, n.eveningDate), 'No dark time this night');
+      expect(
+        await coverageOf(tester, n.eveningDate),
+        'No dark hours to summarize',
+      );
     }
     expect(nights.first.eveningDate, june);
   });
@@ -474,9 +552,7 @@ void main() {
           .take(2),
       [2, 3],
     );
-    await tester.ensureVisible(find.byKey(const Key('weather.details')));
-    await tester.tap(find.text('Forecast details'));
-    await settle(tester);
+    await _openForecastDetails(tester);
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.lead'))).data,
       contains('Forecast made 2 days ahead'),

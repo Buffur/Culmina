@@ -9,6 +9,25 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('resolveAperture', () {
+    test(
+      'a supplied nonfinite focal ratio is never accepted with a diameter',
+      () {
+        for (final n in [
+          double.nan,
+          double.infinity,
+          double.negativeInfinity,
+        ]) {
+          expect(
+            resolveAperture(
+              focalLengthMm: 400,
+              focalRatio: n,
+              diameterMm: 80,
+            ).isValid,
+            isFalse,
+          );
+        }
+      },
+    );
     test('a focal ratio alone is kept; the diameter stays unknown', () {
       final r = resolveAperture(focalLengthMm: 6.86, focalRatio: 1.78);
       expect(r.isValid, isTrue);

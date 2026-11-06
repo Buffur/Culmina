@@ -7,10 +7,12 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/details/weather_detail_screen.dart';
 import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:astroplan/presentation/shared/night_text.dart';
-import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:astroplan/presentation/widgets/capture_plan/capture_block_dialog.dart';
+import 'package:astroplan/presentation/viewmodels/night_browser_viewmodel.dart';
+import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import '../../support/block_editor_finders.dart';
 import '../../support/hybrid_transfer_fixture.dart';
@@ -21,6 +23,7 @@ import '../../support/wave2_fixture.dart';
 class _ShortForecast extends HybridTransferForecast {
   _ShortForecast(this.hours) : super(FixedClock(hybridTransferNow));
   final int hours;
+  WeatherSnapshot? _snapshot;
   @override
   Future<WeatherFetch> fetchSnapshot({
     required double latitude,
@@ -28,24 +31,33 @@ class _ShortForecast extends HybridTransferForecast {
     required DateTime startUtc,
     required DateTime endUtc,
   }) async {
+    // One immutable provider horizon, rather than a new horizon starting at
+    // every browsed night. The requested fixture lengths must actually differ.
+    if (_snapshot case final snapshot?) {
+      if (!snapshot.hours.any(
+        (h) => !h.timeUtc.isBefore(startUtc) && h.timeUtc.isBefore(endUtc),
+      )) {
+        return const WeatherFetchFailed(WeatherFailure.outOfRange);
+      }
+      return WeatherFetched(snapshot);
+    }
     final result = await super.fetchSnapshot(
       latitude: latitude,
       longitude: longitude,
       startUtc: startUtc,
-      endUtc: endUtc,
+      endUtc: startUtc.add(Duration(hours: hours)),
     );
     if (result is! WeatherFetched) return result;
     final s = result.snapshot;
-    return WeatherFetched(
-      WeatherSnapshot(
-        provider: s.provider,
-        model: s.model,
-        fetchedAtUtc: s.fetchedAtUtc,
-        latitude: s.latitude,
-        longitude: s.longitude,
-        hours: s.hours.take(hours).toList(),
-      ),
+    _snapshot = WeatherSnapshot(
+      provider: s.provider,
+      model: s.model,
+      fetchedAtUtc: s.fetchedAtUtc,
+      latitude: s.latitude,
+      longitude: s.longitude,
+      hours: s.hours.take(hours).toList(),
     );
+    return WeatherFetched(_snapshot!);
   }
 }
 
@@ -134,27 +146,72 @@ void main() {
             screen: (_) => const WeatherDetailScreen(),
             weather: forecast,
           );
-          await t.runAsync(f.vm.refreshWeather);
+          final context = t.element(find.byKey(const Key('weather.hybrid')));
+          final browser = context.read<NightBrowserViewModel>();
+          final conditions = context.read<NightConditionsViewModel>();
+          // mountWave2 seeds a separate current snapshot before installing this
+          // repository. Refresh the displayed scoped browser, rather than the
+          // plan's conditions, so assertions read the actual new fixture.
+          await t.runAsync(conditions.refreshWeather);
           await hybridSettle(t);
-          final overview = f.vm.conditions.forecastNights!;
+          final overview = conditions.forecastNights!;
           final beforePlan = f.vm.plan.activeSession!;
           final boundary = overview.firstBeyond;
-          final copy = find.byKey(const Key('weather.nights.beyond'));
+          final removedCards = find.byKey(const Key('weather.nights.beyond'));
+          expect(
+            removedCards,
+            findsNothing,
+            reason: 'The header date browser replaces Coming nights cards.',
+          );
+          final snapshot =
+              (conditions.nightWeather as NightWeatherAvailable).snapshot;
+          expect(snapshot.hours, hasLength(hours));
+          expect(snapshot.fetchedAtUtc, hybridTransferNow.subtract(age));
+          final storedBefore = (await t.runAsync(
+            () => f.seed.sessions.get(beforePlan.id),
+          ))!;
           if (boundary != null) {
-            await revealWave2(t, copy);
+            // Activate the actual shared header, never adopt the viewed date.
+            while (browser.viewedDate != boundary) {
+              final next = browser.viewedDate.compareTo(boundary) < 0;
+              await t.tap(
+                find.byTooltip(next ? 'Next night' : 'Previous night'),
+              );
+              await hybridSettle(t);
+            }
+            await t.runAsync(() => conditions.idle);
+            await hybridSettle(t);
+            expect(browser.viewedDate, boundary);
+            expect(conditions.nightWeather, isA<NightWeatherOutOfRange>());
+            expect(find.byKey(const Key('weather.outOfRange')), findsOneWidget);
+            expect(find.text('No forecast yet'), findsOneWidget);
+            expect(find.byKey(const Key('weather.coverage')), findsNothing);
+            expect(find.byKey(const Key('weather.table')), findsNothing);
             expect(
-              t.widget<Text>(copy).data,
-              'No forecast in this snapshot from ${NightTimeFormatter.eveningDate(boundary)}. Night and Moon browsing remain available.',
+              find.byKey(const Key('nightMoon.planThisNight')),
+              findsOneWidget,
             );
-            await captureWave1(t, 'wave2-coming-$theme-$hours-${age.inHours}');
-          } else {
-            expect(copy, findsNothing);
+            expect(find.byTooltip('Previous night'), findsOneWidget);
+            expect(find.byTooltip('Next night'), findsOneWidget);
+            await captureWave1(
+              t,
+              'wave2-boundary-$theme-$hours-${age.inHours}',
+            );
           }
           expect(f.vm.plan.activeSessionId, beforePlan.id);
           expect(
             f.vm.plan.activeSession!.planSnapshot!.json,
             beforePlan.planSnapshot!.json,
           );
+          final storedAfter = (await t.runAsync(
+            () => f.seed.sessions.get(beforePlan.id),
+          ))!;
+          expect(storedAfter.eveningDate, storedBefore.eveningDate);
+          expect(
+            storedAfter.planSnapshot!.json,
+            storedBefore.planSnapshot!.json,
+          );
+          expect(storedAfter.updatedAtUtc, storedBefore.updatedAtUtc);
           await f.close(t);
           AppRouter.router.go(AppRouter.tonight);
         }

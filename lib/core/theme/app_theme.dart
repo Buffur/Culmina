@@ -40,9 +40,9 @@ class AppTheme {
           // Owner-selected bundled family, including Ukrainian glyphs.
           fontFamily: _family,
           color: AppColors.lightTextPrimary,
-          fontSize: 22,
-          height: 1.25,
-          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          height: 1.3,
+          fontWeight: FontWeight.w600,
         ),
       ),
       colorScheme: const ColorScheme.light(
@@ -85,7 +85,7 @@ class AppTheme {
     ThemeData(
       fontFamily: _family,
       brightness: Brightness.dark,
-      primaryColor: AppColors.darkTextPrimary,
+      primaryColor: HybridTokens.dark.action,
       scaffoldBackgroundColor: AppColors.darkBackground,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.darkBackground,
@@ -98,21 +98,24 @@ class AppTheme {
           // Owner-selected bundled family, including Ukrainian glyphs.
           fontFamily: _family,
           color: AppColors.darkTextPrimary,
-          fontSize: 22,
-          height: 1.25,
-          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          height: 1.3,
+          fontWeight: FontWeight.w600,
         ),
       ),
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.darkTextPrimary,
-        onPrimary: AppColors.darkBackground,
+      focusColor: const Color(0xFFB8D4FF),
+      hoverColor: const Color(0xFF303030),
+      highlightColor: const Color(0xFF3A3A3A),
+      colorScheme: ColorScheme.dark(
+        primary: HybridTokens.dark.action,
+        onPrimary: HybridTokens.dark.onAction,
         secondaryContainer: AppColors.darkSelection,
         onSecondaryContainer: AppColors.darkTextPrimary,
         secondary: AppColors.darkTextSecondary,
         surface: AppColors.darkSurface,
         onSurface: AppColors.darkTextPrimary,
         onSurfaceVariant: AppColors.darkTextSecondary,
-        surfaceContainerHigh: AppColors.darkSurfaceRaised,
+        surfaceContainerHigh: AppColors.darkSurface,
         // S5.2: Material falls back to white for both.
         outline: AppColors.darkControlBorder,
         outlineVariant: AppColors.darkBorder,
@@ -125,7 +128,7 @@ class AppTheme {
         space: 1,
       ),
       cardTheme: CardThemeData(
-        color: AppColors.darkSurface,
+        color: AppColors.darkSurfaceRaised,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.small),
@@ -206,9 +209,9 @@ class AppTheme {
           // Owner-selected bundled family, including Ukrainian glyphs.
           fontFamily: _family,
           color: AppColors.fieldTextPrimary,
-          fontSize: 22,
-          height: 1.25,
-          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          height: 1.3,
+          fontWeight: FontWeight.w600,
         ),
       ),
       dividerTheme: const DividerThemeData(
@@ -255,7 +258,7 @@ class AppTheme {
     0, 0, 0, 1, 0, //
   ];
 
-  /// Adds the palette and the shared type scale (no text under 12 sp).
+  /// Adds the palette and the adopted type scale shared by all appearances.
   /// The scale's sizes and weights override Material's geometry; the
   /// colours stay the theme's.
   static ThemeData _withTokens(
@@ -269,8 +272,9 @@ class AppTheme {
         : base.brightness == Brightness.dark
         ? HybridTokens.dark
         : HybridTokens.light;
+    // Appearance changes color roles; content keeps the adopted geometry.
     TextTheme readable(TextTheme t) {
-      final scaled = t.merge(AppTypography.scale);
+      final scaled = t.merge(AppTypography.afterDarkScale);
       return textColor == null
           ? scaled
           : scaled.apply(bodyColor: textColor, displayColor: textColor);
@@ -281,7 +285,7 @@ class AppTheme {
         extensions: [
           palette,
           hybrid,
-          AppTextTheme.standard,
+          AppTextTheme.afterDark,
           field
               ? CulminaMarkColors.field
               : base.brightness == Brightness.dark
@@ -316,6 +320,9 @@ class AppTheme {
     final s = t.colorScheme;
     final hybrid = t.extension<HybridTokens>()!;
     final text = t.textTheme;
+    final afterDark = !field && t.brightness == Brightness.dark;
+    final actionFill = afterDark ? p.textPrimary : hybrid.action;
+    final roles = t.extension<AppTextTheme>()!;
     final shape = WidgetStatePropertyAll(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.small),
@@ -372,24 +379,27 @@ class AppTheme {
       ),
     );
 
-    // Primary action (styles.css, hybrid-refinement.css): the action fill
-    // with its on-action text in every theme. WQA-01 (owner-accepted web
+    // Current Dark commit actions use the adopted light fill; the blue
+    // action role stays independent for controls and scientific accents. WQA-01 (owner-accepted web
     // reference 86873ce): field mode's action is the bright red role with
     // black text (5.25:1), replacing the D-06 red outline; hover underlines
     // instead of darkening. Pressed: every Hybrid button takes the selection
     // fill with primary text (`button:active`). Disabled: opacity .55.
-    // The label is `.primary-button`'s 16/600 (QA-04).
-    final field = identical(hybrid, HybridTokens.field);
+    // Explicit command typography comes from actionLabel.
     Color disabled(Color c) => c.withValues(alpha: c.a * 0.55);
     return t.copyWith(
+      datePickerTheme: t.datePickerTheme.copyWith(
+        dayStyle: roles.caption.copyWith(
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
+        weekdayStyle: roles.dense,
+      ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           minimumSize: tall,
           shape: shape,
           textStyle: WidgetStateProperty.resolveWith(
-            (states) => text.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-              height: 1.5,
+            (states) => roles.actionLabel.copyWith(
               decoration: field && states.contains(WidgetState.hovered)
                   ? TextDecoration.underline
                   : TextDecoration.none,
@@ -401,13 +411,13 @@ class AppTheme {
           animationDuration: AppMotion.short,
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return disabled(hybrid.action);
+              return disabled(actionFill);
             }
             if (states.contains(WidgetState.pressed)) return hybrid.selection;
             if (!field && states.contains(WidgetState.hovered)) {
-              return Color.lerp(hybrid.action, const Color(0xFF000000), 0.13);
+              return Color.lerp(actionFill, const Color(0xFF000000), 0.13);
             }
-            return hybrid.action;
+            return actionFill;
           }),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
@@ -495,7 +505,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.small),
-          borderSide: BorderSide(color: p.textPrimary, width: 2),
+          borderSide: BorderSide(
+            color: afterDark ? t.focusColor : p.textPrimary,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.small),
@@ -529,7 +542,7 @@ class AppTheme {
       // outline, no shadow, 24 padding; the title 22/500, the message
       // 14 secondary 16 below it, the actions 24 below, 8 apart, at the end.
       dialogTheme: DialogThemeData(
-        backgroundColor: p.surfaceRaised,
+        backgroundColor: s.surfaceContainerHigh,
         surfaceTintColor: HybridTokens.transparent,
         elevation: 0,
         insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -538,22 +551,13 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.large),
           side: BorderSide(color: p.controlBorder),
         ),
-        titleTextStyle: text.titleLarge?.copyWith(
-          fontSize: 22,
-          height: 1.25,
-          fontWeight: FontWeight.w500,
-          color: p.textPrimary,
-        ),
-        contentTextStyle: text.bodyMedium?.copyWith(
-          fontSize: 14,
-          height: 1.5,
-          color: p.textSecondary,
-        ),
+        titleTextStyle: roles.screenTitle.copyWith(color: p.textPrimary),
+        contentTextStyle: roles.body.copyWith(color: p.textSecondary),
         actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: p.surfaceRaised,
-        modalBackgroundColor: p.surfaceRaised,
+        backgroundColor: s.surfaceContainerHigh,
+        modalBackgroundColor: s.surfaceContainerHigh,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(AppRadius.large),
@@ -564,7 +568,7 @@ class AppTheme {
       // control-border outline at radius 8, 4 above and below, 48 px items
       // of 14 px text.
       popupMenuTheme: PopupMenuThemeData(
-        color: p.surfaceRaised,
+        color: s.surfaceContainerHigh,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         position: PopupMenuPosition.under,
@@ -574,7 +578,7 @@ class AppTheme {
           side: BorderSide(color: p.controlBorder),
         ),
         labelTextStyle: WidgetStatePropertyAll(
-          AppTypography.body.copyWith(height: 1.5, color: p.textPrimary),
+          roles.rowTitle.copyWith(color: p.textPrimary),
         ),
       ),
       menuTheme: MenuThemeData(
@@ -584,7 +588,9 @@ class AppTheme {
       ),
       // Field mode keeps its dim red message; light and dark invert.
       snackBarTheme: field
-          ? t.snackBarTheme
+          ? t.snackBarTheme.copyWith(
+              contentTextStyle: text.bodyMedium?.copyWith(color: p.textPrimary),
+            )
           : SnackBarThemeData(
               backgroundColor: p.textPrimary,
               contentTextStyle: text.bodyMedium?.copyWith(

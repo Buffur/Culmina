@@ -220,6 +220,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('capture.menu.0')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('capture.edit.0')));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('blockDialog.count')), '30');

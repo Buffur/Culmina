@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_spacing.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 
@@ -222,7 +222,7 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  DocumentSection(
+                  SectionCard(
                     key: const Key('targetEditor.identityGroup'),
                     children: [
                       SettingsCopy(
@@ -278,9 +278,11 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  DocumentSection(
+                  SectionCard(
                     key: const Key('targetEditor.positionGroup'),
                     children: [
+                      const SettingsHeading('J2000 coordinates', top: 0),
+                      const SizedBox(height: AppSpacing.sm),
                       LibraryField(
                         label: 'Right ascension (J2000)',
                         top: 0,
@@ -315,9 +317,11 @@ class _TargetEditorScreenState extends State<TargetEditorScreen> {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  DocumentSection(
+                  SectionCard(
                     key: const Key('targetEditor.optionalGroup'),
                     children: [
+                      const SettingsHeading('Optional characteristics', top: 0),
+                      const SizedBox(height: AppSpacing.sm),
                       LibraryField(
                         label: 'Apparent size (arcmin, optional)',
                         top: 0,

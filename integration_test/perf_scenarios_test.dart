@@ -52,6 +52,7 @@ import '../test/support/in_memory_display_preferences.dart';
 import '../test/support/in_memory_first_run.dart';
 import '../test/support/library_finders.dart';
 import '../test/support/planner_harness.dart';
+import '../test/support/native_verification_guard.dart';
 
 /// Whether timings are recorded: only on a device (profile mode gives
 /// meaningful numbers); the host run is a smoke test.
@@ -177,6 +178,7 @@ Future<void> _seedHistory(DriftSessionRepository repo, int count) async {
 }
 
 void main() {
+  setUpAll(requireIsolatedAndroidVerification);
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -354,6 +356,7 @@ void main() {
     // The first block's Edit (plan.js block row).
     final firstBlock = find.byKey(const Key('capture.edit.0'));
     await watch('planner.blockDialog', () async {
+      await tap(tester, find.byKey(const Key('capture.menu.0')));
       await tap(tester, firstBlock);
       final count = find.byKey(const Key('blockDialog.count'));
       await tap(tester, count);

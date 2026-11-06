@@ -23,18 +23,19 @@ class AppColors {
   static const Color lightControlBorder = Color(0xFF8F8E8A); // 3.1:1
   static const Color lightError = Color(0xFFB00020); // 6.8:1
 
-  // Dark Theme
-  static const Color darkBackground = Color(0xFF191919);
+  // AFTER-DARK-1.2 (design/figma/tokens_semantic.md).
+  // Canvas and bounded record surfaces retain independent semantic roles.
+  static const Color darkBackground = Color(0xFF202020);
   static const Color darkSurface = Color(0xFF202020);
-  static const Color darkSurfaceRaised = Color(0xFF252525);
-  static const Color darkTextPrimary = Color(0xFFEBEBEA); // 12.8:1
-  static const Color darkTextSecondary = Color(0xFFA5A5A3); // 6.2:1
-  static const Color darkTextTertiary = Color(0xFF8F8F8D); // 4.7:1
-  static const Color darkTextDisabled = Color(0xFF6B6B69);
-  static const Color darkSelection = Color(0xFF343432);
-  static const Color darkBorder = Color(0xFF2F2F2F);
-  static const Color darkControlBorder = Color(0xFF6F6F6D); // 3.0:1
-  static const Color darkError = Color(0xFFF28B82); // 6.4:1
+  static const Color darkSurfaceRaised = Color(0xFF262626);
+  static const Color darkTextPrimary = Color(0xFFF0EFED); // 13.17:1 on raised
+  static const Color darkTextSecondary = Color(0xFFC4C1BC); // 8.43:1 on raised
+  static const Color darkTextTertiary = Color(0xFFADA9A3); // 6.47:1 on raised
+  static const Color darkTextDisabled = Color(0xFF737373);
+  static const Color darkSelection = Color(0xFF262626);
+  static const Color darkBorder = Color(0xFF414141);
+  static const Color darkControlBorder = Color(0xFF8B8F93); // control boundary
+  static const Color darkError = Color(0xFFF39B95); // validation text
 
   // Field Mode (Red): brightness, not hue, separates the roles.
   static const Color fieldBackground = Color(0xFF000000);

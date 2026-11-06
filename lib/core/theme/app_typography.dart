@@ -98,6 +98,72 @@ abstract final class AppTypography {
 
   static final TextStyle homeWelcome = _style(13, 17.55, FontWeight.w400);
 
+  /// Adopted Dark role metrics. Colors remain independently theme-bound.
+  static final Map<String, TextStyle> afterDarkRoles = {
+    'homeHeading': _style(36, 42, FontWeight.w600),
+    'nightHeading': _style(
+      24,
+      30,
+      FontWeight.w600,
+    ).copyWith(letterSpacing: -0.3),
+    'answerHeading': _style(
+      24,
+      32,
+      FontWeight.w600,
+    ).copyWith(letterSpacing: -0.3),
+    'screenTitle': _style(
+      20,
+      26,
+      FontWeight.w600,
+    ).copyWith(letterSpacing: -0.2),
+    // Current resolver: parent groups use screenTitle, not the legacy 14px role.
+    'sectionHeading': _style(
+      20,
+      26,
+      FontWeight.w600,
+    ).copyWith(letterSpacing: -0.2),
+    'nestedTitle': _style(18, 26, FontWeight.w500),
+    'actionLabel': _style(15, 24, FontWeight.w600),
+    'sectionSubject': _style(16, 22, FontWeight.w600),
+    'itemTitle': _style(18, 26, FontWeight.w400),
+    'rowTitle': _style(15, 24, FontWeight.w400),
+    'value': _style(
+      16,
+      24,
+      FontWeight.w600,
+    ).copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
+    'body': _style(15, 24, FontWeight.w400),
+    'support': _style(14, 20, FontWeight.w400),
+    'caption': _style(13, 18, FontWeight.w400),
+    'dense': _style(12, 16, FontWeight.w400),
+    'navigationLabel': _style(12, 16, FontWeight.w500),
+    'homePlanHeading': _style(14, 20, FontWeight.w500),
+    'homeTarget': _style(20, 28, FontWeight.w600).copyWith(letterSpacing: -0.2),
+    'homeWordmark': _style(
+      20,
+      26,
+      FontWeight.w600,
+    ).copyWith(letterSpacing: -0.2),
+    'homeWelcome': _style(
+      28,
+      34,
+      FontWeight.w600,
+    ).copyWith(letterSpacing: -0.4),
+    'inherited': const TextStyle(),
+  };
+
+  static final TextTheme afterDarkScale = scale.copyWith(
+    titleLarge: afterDarkRoles['screenTitle'],
+    titleMedium: afterDarkRoles['nestedTitle'],
+    titleSmall: afterDarkRoles['rowTitle'],
+    bodyLarge: afterDarkRoles['body'],
+    bodyMedium: afterDarkRoles['body'],
+    bodySmall: afterDarkRoles['caption'],
+    labelLarge: afterDarkRoles['actionLabel'],
+    labelMedium: afterDarkRoles['rowTitle'],
+    labelSmall: afterDarkRoles['caption'],
+  );
+
   static final TextTheme scale = TextTheme(
     displayLarge: _style(57, 64, FontWeight.w400),
     displayMedium: _style(45, 52, FontWeight.w400),

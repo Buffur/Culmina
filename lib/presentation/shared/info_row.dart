@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_palette.dart';
-
 import '../../core/theme/app_spacing.dart';
+import 'fact_row.dart';
 
 class InfoRow extends StatelessWidget {
   final String label;
@@ -18,35 +17,18 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // S6.6: the text roles (S5.1), not the scheme's primary and secondary.
-    final palette = AppPalette.of(context);
-    final textTheme = Theme.of(context).textTheme;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: textTheme.bodyMedium?.copyWith(
-                color: palette.textSecondary,
-              ),
-            ),
+            child: FactRow(label: label, value: value),
           ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              value,
-              style: textTheme.bodyMedium?.copyWith(
-                color: palette.textPrimary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          ?trailing,
+          if (trailing != null) ...[
+            const SizedBox(width: AppSpacing.sm),
+            trailing!,
+          ],
         ],
       ),
     );

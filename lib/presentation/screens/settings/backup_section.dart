@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 
@@ -9,6 +9,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/app_button_styles.dart';
 import '../../../domain/services/backup_service.dart';
 import '../../shared/app_messages.dart';
+import '../../shared/confirmation_patterns.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/night_time_formatter.dart';
 import '../../viewmodels/backup_viewmodel.dart';
@@ -69,7 +70,7 @@ class BackupSection extends StatelessWidget {
   Future<_RestoreChoice> _confirm(BuildContext context, BackupPreview p) async {
     final choice = await showDialog<_RestoreChoice>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) => ConfirmationDialog(
         title: const Text('Restore this backup?'),
         content: SingleChildScrollView(
           child: Text(
@@ -114,6 +115,7 @@ class BackupSection extends StatelessWidget {
         ..showMessage(SnackBar(content: Text(text), persist: true));
 
   Future<void> _restore(BuildContext context, BackupViewModel vm) async {
+    if (vm.busy || !context.mounted) return;
     final ({BackupPreview preview, Object file})? picked;
     try {
       picked = await vm.pick();
@@ -171,7 +173,7 @@ class BackupSection extends StatelessWidget {
           primary: true,
         ),
         const SizedBox(height: AppSpacing.md),
-        DocumentSection(
+        SectionCard(
           key: const Key('backup.backUpGroup'),
           children: [
             const SettingsHeading('Back up', top: 0),
@@ -185,6 +187,7 @@ class BackupSection extends StatelessWidget {
               onPressed: vm.busy
                   ? null
                   : () async {
+                      if (vm.busy) return;
                       var shared = false;
                       final done = await runWithFeedback(
                         context,
@@ -200,7 +203,7 @@ class BackupSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
-        DocumentSection(
+        SectionCard(
           key: const Key('backup.restoreGroup'),
           children: [
             const SettingsHeading('Restore', top: 0),

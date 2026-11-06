@@ -2,6 +2,8 @@
 // came from per spec (ADR-018 §5). A rig-wide `user` never presents an
 // imported or estimated value as the user's own, and unknown stays unknown.
 
+import '../../../support/phase2_state_capture.dart';
+
 import 'package:astroplan/data/services/equipment_seeder.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/models/spec_provenance.dart';
@@ -57,6 +59,8 @@ Future<String> _provenanceText(
     ChangeNotifierProvider(
       create: (_) => GearViewModel(InMemoryEquipmentRepository()),
       child: MaterialApp(
+        theme: _phase2ThemeData,
+        builder: _phase2Builder,
         home: Scaffold(
           body: Builder(
             builder: (context) => TextButton(
@@ -75,101 +79,122 @@ Future<String> _provenanceText(
   return tester.widget<Text>(line).data!;
 }
 
+late String _phase2Theme;
+
+ThemeData get _phase2ThemeData => phase2Theme(_phase2Theme);
+
+Widget _phase2Builder(BuildContext context, Widget? child) =>
+    phase2Frame(child: child!, theme: _phase2Theme);
+
 void main() {
-  testWidgets('an imported rig: estimates read as estimated, file values as '
-      'from the file, nothing as the user\'s', (tester) async {
-    final text = await _provenanceText(tester, _imported());
-    expect(text, isNot(contains('user')));
-    expect(text, contains('Sensor size: estimated (derived:calc-40/'));
-    expect(text, contains('Pixel size: estimated (derived:calc-40/'));
-    expect(text, contains('Resolution: reported (metadata:jpeg)'));
-    expect(text, contains('Optics: reported (metadata:jpeg)'));
-  });
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      testWidgets(
+        'an imported rig: estimates read as estimated, file values as '
+        'from the file, nothing as the user\'s',
+        (tester) async {
+          final text = await _provenanceText(tester, _imported());
+          expect(text, isNot(contains('user')));
+          expect(text, contains('Sensor size: estimated (derived:calc-40/'));
+          expect(text, contains('Pixel size: estimated (derived:calc-40/'));
+          expect(text, contains('Resolution: reported (metadata:jpeg)'));
+          expect(text, contains('Optics: reported (metadata:jpeg)'));
+        },
+      );
 
-  testWidgets('a rig typed by hand reads as before', (tester) async {
-    final hand = _saved(
-      const EquipmentProfile(
-        id: 0,
-        name: 'Hand rig',
-        sensorWidthMm: 23.5,
-        sensorHeightMm: 15.6,
-        pixelPitchUm: 3.76,
-        resolutionWidthPx: 6248,
-        resolutionHeightPx: 4176,
-        focalLengthMm: 400,
-        focalRatio: 5,
-      ).withEditProvenance(null),
-    );
-    expect(
-      await _provenanceText(tester, hand),
-      'Camera specs: reported (user) · Optics: reported (user)',
-    );
-  });
+      testWidgets('a rig typed by hand reads as before', (tester) async {
+        final hand = _saved(
+          const EquipmentProfile(
+            id: 0,
+            name: 'Hand rig',
+            sensorWidthMm: 23.5,
+            sensorHeightMm: 15.6,
+            pixelPitchUm: 3.76,
+            resolutionWidthPx: 6248,
+            resolutionHeightPx: 4176,
+            focalLengthMm: 400,
+            focalRatio: 5,
+          ).withEditProvenance(null),
+        );
+        expect(
+          await _provenanceText(tester, hand),
+          'Camera specs: reported (user) · Optics: reported (user)',
+        );
+      });
 
-  testWidgets('the verified seed with its pixel size edited: only that spec '
-      'is the user\'s', (tester) async {
-    final seed = EquipmentSeeder.defaults.single;
-    final edited = _saved(
-      EquipmentProfile(
-        id: 0,
-        name: seed.name,
-        sensorWidthMm: seed.sensorWidthMm,
-        sensorHeightMm: seed.sensorHeightMm,
-        pixelPitchUm: seed.pixelPitchUm + 0.1,
-        resolutionWidthPx: seed.resolutionWidthPx,
-        resolutionHeightPx: seed.resolutionHeightPx,
-        focalLengthMm: seed.focalLengthMm,
-        focalRatio: seed.focalRatio,
-        apertureDiameterMm: seed.apertureDiameterMm,
-        cameraSource: seed.cameraSource,
-        cameraConfidence: seed.cameraConfidence,
-        opticsSource: seed.opticsSource,
-        opticsConfidence: seed.opticsConfidence,
-      ).withEditProvenance(seed),
-    );
-    final text = await _provenanceText(tester, edited);
-    expect(text, contains('Resolution: verified (${seed.cameraSource})'));
-    expect(text, contains('Sensor size: verified (${seed.cameraSource})'));
-    expect(text, contains('Pixel size: reported (user)'));
-    expect(text, contains('Optics: estimated (${seed.opticsSource})'));
-  });
+      testWidgets(
+        'the verified seed with its pixel size edited: only that spec '
+        'is the user\'s',
+        (tester) async {
+          final seed = EquipmentSeeder.defaults.single;
+          final edited = _saved(
+            EquipmentProfile(
+              id: 0,
+              name: seed.name,
+              sensorWidthMm: seed.sensorWidthMm,
+              sensorHeightMm: seed.sensorHeightMm,
+              pixelPitchUm: seed.pixelPitchUm + 0.1,
+              resolutionWidthPx: seed.resolutionWidthPx,
+              resolutionHeightPx: seed.resolutionHeightPx,
+              focalLengthMm: seed.focalLengthMm,
+              focalRatio: seed.focalRatio,
+              apertureDiameterMm: seed.apertureDiameterMm,
+              cameraSource: seed.cameraSource,
+              cameraConfidence: seed.cameraConfidence,
+              opticsSource: seed.opticsSource,
+              opticsConfidence: seed.opticsConfidence,
+            ).withEditProvenance(seed),
+          );
+          final text = await _provenanceText(tester, edited);
+          expect(text, contains('Resolution: verified (${seed.cameraSource})'));
+          expect(
+            text,
+            contains('Sensor size: verified (${seed.cameraSource})'),
+          );
+          expect(text, contains('Pixel size: reported (user)'));
+          expect(text, contains('Optics: estimated (${seed.opticsSource})'));
+        },
+      );
 
-  testWidgets('a legacy rig with an edited field: the untouched specs stay '
-      'unknown', (tester) async {
-    const legacy = EquipmentProfile(
-      id: 3,
-      name: 'Legacy',
-      sensorWidthMm: 23.5,
-      sensorHeightMm: 15.6,
-      pixelPitchUm: 3.76,
-      resolutionWidthPx: 6248,
-      resolutionHeightPx: 4176,
-      focalLengthMm: 400,
-      focalRatio: 5,
-    );
-    final edited = _saved(
-      EquipmentProfile(
-        id: 3,
-        name: 'Legacy',
-        sensorWidthMm: 23.5,
-        sensorHeightMm: 15.6,
-        pixelPitchUm: 3.8,
-        resolutionWidthPx: 6248,
-        resolutionHeightPx: 4176,
-        focalLengthMm: 400,
-        focalRatio: 5,
-      ).withEditProvenance(legacy),
-      id: 3,
-    );
-    expect(
-      edited.provenanceOf(EquipmentSpec.resolution),
-      isNull,
-      reason: 'S3.V2 keeps it unknown',
-    );
-    final text = await _provenanceText(tester, edited);
-    expect(text, contains('Resolution: source unknown'));
-    expect(text, contains('Sensor size: source unknown'));
-    expect(text, contains('Pixel size: reported (user)'));
-    expect(text, contains('Optics: source unknown'));
-  });
+      testWidgets('a legacy rig with an edited field: the untouched specs stay '
+          'unknown', (tester) async {
+        const legacy = EquipmentProfile(
+          id: 3,
+          name: 'Legacy',
+          sensorWidthMm: 23.5,
+          sensorHeightMm: 15.6,
+          pixelPitchUm: 3.76,
+          resolutionWidthPx: 6248,
+          resolutionHeightPx: 4176,
+          focalLengthMm: 400,
+          focalRatio: 5,
+        );
+        final edited = _saved(
+          EquipmentProfile(
+            id: 3,
+            name: 'Legacy',
+            sensorWidthMm: 23.5,
+            sensorHeightMm: 15.6,
+            pixelPitchUm: 3.8,
+            resolutionWidthPx: 6248,
+            resolutionHeightPx: 4176,
+            focalLengthMm: 400,
+            focalRatio: 5,
+          ).withEditProvenance(legacy),
+          id: 3,
+        );
+        expect(
+          edited.provenanceOf(EquipmentSpec.resolution),
+          isNull,
+          reason: 'S3.V2 keeps it unknown',
+        );
+        final text = await _provenanceText(tester, edited);
+        expect(text, contains('Resolution: source unknown'));
+        expect(text, contains('Sensor size: source unknown'));
+        expect(text, contains('Pixel size: reported (user)'));
+        expect(text, contains('Optics: source unknown'));
+      });
+    });
+  }
 }

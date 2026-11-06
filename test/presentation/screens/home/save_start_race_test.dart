@@ -78,18 +78,20 @@ void main() {
     await settle(tester);
   }
 
-  // plan.js blockRow: each block's Remove.
-  final deleteBlock = find.byKey(const Key('capture.delete.0'));
-
   testWidgets('Save, then an edit: the planner and the stored session agree, '
       'and the edit counts as unsaved', (tester) async {
     await start(tester);
     final saveButton = find.text('Save plan');
-    await tester.ensureVisible(deleteBlock.first);
+    await tester.ensureVisible(find.byKey(const Key('capture.menu.0')));
     final before = vm.captureBlocks.length;
+    final menu = tester.widget<PopupMenuButton<String>>(
+      find.byKey(const Key('capture.menu.0')),
+    );
 
     await tester.tap(saveButton);
-    await tester.tap(deleteBlock.first); // before Save has finished
+    // Dispatch the menu's real Remove callback without pumping a popup
+    // animation: the edit must still race the pending Save.
+    menu.onSelected!('remove');
     await settle(tester);
     await tester.runAsync(() => vm.plan.idle);
 

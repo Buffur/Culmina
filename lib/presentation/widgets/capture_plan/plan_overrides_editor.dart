@@ -232,19 +232,23 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // plan.css `.screen-intro`: 14 at 1.6, secondary.
-                      Text(
-                        _inherit
-                            ? 'Apply removes plan overrides. Sources below '
-                                  'show what will apply.'
-                            : 'Overrides for this plan only. Leave a field '
-                                  'empty to use its default.',
-                        key: const Key('planOverride.intro'),
-                        style: AppTextTheme.of(context)
-                            .resolve(
-                              AppTextTheme.of(context).body,
-                              AppTextGeometry.reading,
-                            )
-                            .copyWith(color: p.textSecondary),
+                      DocumentSection(
+                        children: [
+                          Text(
+                            _inherit
+                                ? 'Apply removes plan overrides. Sources below '
+                                      'show what will apply.'
+                                : 'Overrides for this plan only. Leave a field '
+                                      'empty to use its default.',
+                            key: const Key('planOverride.intro'),
+                            style: AppTextTheme.of(context)
+                                .resolve(
+                                  AppTextTheme.of(context).body,
+                                  AppTextGeometry.reading,
+                                )
+                                .copyWith(color: p.textSecondary),
+                          ),
+                        ],
                       ),
                       for (final indices in const [
                         [0, 1, 2],
@@ -274,6 +278,7 @@ class _PlanOverridesEditorState extends State<PlanOverridesEditor> {
                                     label: labels[i],
                                     hint: hints[i],
                                     note: source(i),
+                                    noteStyle: AppTextTheme.of(context).body,
                                     noteKey: Key('planOverride.source.$i'),
                                     child: TextFormField(
                                       key: Key('planOverride.$i'),

@@ -4,7 +4,9 @@
 // Save stores one rig. Cancel stores nothing. A real astro-camera FITS
 // remains the owner-sample row (NEEDS ATTENTION).
 
-import 'package:astroplan/core/theme/app_theme.dart';
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
+
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
@@ -37,97 +39,117 @@ class _Planner extends ChangeNotifier implements SessionPlanViewModel {
 }
 
 void main() {
-  testWidgets('a FITS sub-frame proposes a rig with its native geometry; '
-      'Cancel stores nothing, Save one rig', (t) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    final repo = DriftEquipmentRepository(db);
-    addTearDown(() => t.runAsync(db.close));
-    final files = FakeCaptureFileAccess();
-    final vm = MetadataImportViewModel(files, repo);
-    final gear = GearViewModel(repo);
-    addTearDown(vm.dispose);
-    addTearDown(gear.dispose);
-    final router = GoRouter(
-      routes: [
-        GoRoute(path: '/', builder: (_, _) => const EquipmentSelectionScreen()),
-        GoRoute(
-          path: AppRouter.metadata,
-          builder: (_, state) => MetadataImportScreen(
-            args: state.extra as NewRigArgs? ?? const NewRigArgs(),
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      testWidgets('a FITS sub-frame proposes a rig with its native geometry; '
+          'Cancel stores nothing, Save one rig', (t) async {
+        final db = AppDatabase(NativeDatabase.memory());
+        final repo = DriftEquipmentRepository(db);
+        addTearDown(() => t.runAsync(db.close));
+        final files = FakeCaptureFileAccess();
+        final vm = MetadataImportViewModel(files, repo);
+        final gear = GearViewModel(repo);
+        addTearDown(vm.dispose);
+        addTearDown(gear.dispose);
+        final router = GoRouter(
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (_, _) => const EquipmentSelectionScreen(),
+            ),
+            GoRoute(
+              path: AppRouter.metadata,
+              builder: (_, state) => MetadataImportScreen(
+                args: state.extra as NewRigArgs? ?? const NewRigArgs(),
+              ),
+            ),
+          ],
+        );
+        addTearDown(router.dispose);
+        t.view.physicalSize = const Size(800, 4000);
+        t.view.devicePixelRatio = 1;
+        addTearDown(t.view.reset);
+        await t.pumpWidget(
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider.value(value: gear),
+              ChangeNotifierProvider<SessionPlanViewModel>.value(
+                value: _Planner(),
+              ),
+              ChangeNotifierProvider<MetadataImportViewModel?>.value(value: vm),
+            ],
+            child: MaterialApp.router(
+              theme: phase2Theme(theme),
+              builder: (_, child) => phase2Frame(child: child!, theme: theme),
+              routerConfig: router,
+            ),
           ),
-        ),
-      ],
-    );
-    addTearDown(router.dispose);
-    t.view.physicalSize = const Size(800, 4000);
-    t.view.devicePixelRatio = 1;
-    addTearDown(t.view.reset);
-    await t.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: gear),
-          ChangeNotifierProvider<SessionPlanViewModel>.value(value: _Planner()),
-          ChangeNotifierProvider<MetadataImportViewModel?>.value(value: vm),
-        ],
-        child: MaterialApp.router(theme: AppTheme.light, routerConfig: router),
-      ),
-    );
-    Future<void> settle() async {
-      for (var i = 0; i < 8; i++) {
-        await t.runAsync(() => Future<void>.delayed(Duration.zero));
-        await t.pump();
-      }
-      await t.pumpAndSettle();
-    }
+        );
+        Future<void> settle() async {
+          for (var i = 0; i < 8; i++) {
+            await t.runAsync(() => Future<void>.delayed(Duration.zero));
+            await t.pump();
+          }
+          await t.pumpAndSettle();
+        }
 
-    await settle();
-    // A4: the add-rig panel names FITS for an astro camera.
-    await t.tap(find.byKey(const Key('addRig.class.astroMono')));
-    await t.pumpAndSettle();
-    expect(find.textContaining('FITS sub-frame'), findsOneWidget);
-    await t.tap(find.byKey(const Key('addRig.fromPhoto')));
-    await settle();
-    expect(find.textContaining('FITS'), findsWidgets);
+        await settle();
+        // A4: the add-rig panel names FITS for an astro camera.
+        await t.tap(find.byKey(const Key('addRig.class.astroMono')));
+        await t.pumpAndSettle();
+        expect(find.textContaining('FITS sub-frame'), findsOneWidget);
+        await t.tap(find.byKey(const Key('addRig.fromPhoto')));
+        await settle();
+        expect(find.textContaining('FITS'), findsWidgets);
 
-    files.file('L_0001.fits', fitsFile(ninaLight()), length: 13049280);
-    await t.tap(find.byKey(const Key('metadata.pick')));
-    await settle();
-    expect(find.text('FITS'), findsOneWidget);
-    expect(find.text('Ha'), findsOneWidget);
+        files.file('L_0001.fits', fitsFile(ninaLight()), length: 13049280);
+        await t.tap(find.byKey(const Key('metadata.pick')));
+        await settle();
+        expect(find.text('FITS'), findsOneWidget);
+        expect(find.text('Ha'), findsOneWidget);
+        await capturePhase2State(
+          t,
+          package: 'package3',
+          state: 'metadata-fits-native-geometry',
+          theme: theme,
+        );
 
-    await t.tap(find.byKey(const Key('import.new')));
-    await settle();
-    String text(String label) => t
-        .widget<EditableText>(
-          find.descendant(
-            of: fieldLabeled(label),
-            matching: find.byType(EditableText),
-          ),
-        )
-        .controller
-        .text;
-    expect(text('Pixel size (µm)'), '3.76');
-    expect(text('Effective focal length (mm)'), '400');
-    await t.tap(find.byKey(const Key('rigEditor.cancel')));
-    await settle();
-    expect(await t.runAsync(repo.getAllEquipment), isEmpty);
+        await t.tap(find.byKey(const Key('import.new')));
+        await settle();
+        String text(String label) => t
+            .widget<EditableText>(
+              find.descendant(
+                of: fieldLabeled(label),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .controller
+            .text;
+        expect(text('Pixel size (µm)'), '3.76');
+        expect(text('Effective focal length (mm)'), '400');
+        await t.tap(find.byKey(const Key('rigEditor.cancel')));
+        await settle();
+        expect(await t.runAsync(repo.getAllEquipment), isEmpty);
 
-    await t.tap(find.byKey(const Key('import.new')));
-    await settle();
-    await t.enterText(fieldLabeled('Focal ratio (f/)'), '5');
-    await t.ensureVisible(find.byKey(const Key('rigEditor.save')));
-    await t.tap(find.byKey(const Key('rigEditor.save')));
-    await settle();
-    final rigs = (await t.runAsync(repo.getAllEquipment))!;
-    expect(rigs, hasLength(1));
-    final rig = rigs.single;
-    expect((rig.resolutionWidthPx, rig.resolutionHeightPx), (6248, 4176));
-    expect(rig.pixelPitchUm, 3.76);
-    expect(rig.focalLengthMm, 400);
-    expect(rig.cameraClass.name, 'astroMono');
-    expect(
-      rig.provenanceOf(EquipmentSpec.focalLength)?.source,
-      'metadata:fits',
-    );
-  });
+        await t.tap(find.byKey(const Key('import.new')));
+        await settle();
+        await t.enterText(fieldLabeled('Focal ratio (f/)'), '5');
+        await t.ensureVisible(find.byKey(const Key('rigEditor.save')));
+        await t.tap(find.byKey(const Key('rigEditor.save')));
+        await settle();
+        final rigs = (await t.runAsync(repo.getAllEquipment))!;
+        expect(rigs, hasLength(1));
+        final rig = rigs.single;
+        expect((rig.resolutionWidthPx, rig.resolutionHeightPx), (6248, 4176));
+        expect(rig.pixelPitchUm, 3.76);
+        expect(rig.focalLengthMm, 400);
+        expect(rig.cameraClass.name, 'astroMono');
+        expect(
+          rig.provenanceOf(EquipmentSpec.focalLength)?.source,
+          'metadata:fits',
+        );
+      });
+    });
+  }
 }

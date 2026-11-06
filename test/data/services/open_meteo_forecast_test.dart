@@ -30,6 +30,52 @@ WeatherSnapshot _snapshot(WeatherFetch f) => (f as WeatherFetched).snapshot;
 
 void main() {
   group('parser', () {
+    test(
+      'invalid physical values stay unknown, valid cold temperatures survive',
+      () {
+        final s = _snapshot(
+          _parse({
+            'hourly': {
+              'time': [1790265600],
+              'cloud_cover': [-1],
+              'cloud_cover_low': [101],
+              'precipitation_probability': [-5],
+              'relative_humidity_2m': [120],
+              'wind_speed_10m': [-2],
+              'wind_gusts_10m': [-3],
+              'visibility': [-10],
+              'temperature_2m': [-20],
+              'dew_point_2m': [-23],
+            },
+          }),
+        );
+        final h = s.hours.single;
+        expect(h.cloudCoverPct, isNull);
+        expect(h.cloudCoverLowPct, isNull);
+        expect(h.precipitationProbabilityPct, isNull);
+        expect(h.relativeHumidityPct, isNull);
+        expect(h.windSpeedKmh, isNull);
+        expect(h.windGustsKmh, isNull);
+        expect(h.visibilityM, isNull);
+        expect(h.temperatureC, -20);
+        expect(h.dewPointC, -23);
+      },
+    );
+
+    test('empty, duplicate and unrepresentable times are typed failures', () {
+      for (final times in [
+        <int>[],
+        [1790265600, 1790265600],
+        [8640000000001],
+      ]) {
+        expect(
+          _parse({
+            'hourly': {'time': times},
+          }),
+          isA<WeatherFetchFailed>(),
+        );
+      }
+    });
     test('a recorded response: UTC hours with every variable', () {
       final raw = _fixture('open_meteo_ljubljana_best_match.json')! as Map;
       final s = _snapshot(_parse(raw));

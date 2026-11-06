@@ -31,17 +31,17 @@ void main() {
         ),
       ),
     );
-    // Hybrid `.plan-measures`: 13 px captions, 15 px/500 values,
+    // Adopted paired metrics: 13 px captions, 16 px/600 values,
     // tabular numerals, 4 px label/value gap and 24 px between measures.
     final caption = find.text('Needed in imaging window');
     final value = find.text('2 h 5 min');
     expect(tester.widget<Text>(caption).style?.fontSize, 13);
     final style = tester.widget<Text>(value).style!;
-    expect(style.fontSize, 15);
-    expect(style.fontWeight, FontWeight.w500);
+    expect(style.fontSize, 16);
+    expect(style.fontWeight, FontWeight.w600);
     expect(style.fontFeatures, contains(const FontFeature.tabularFigures()));
     expect(tester.getTopLeft(value).dy - tester.getBottomLeft(caption).dy, 4);
-    expect(tester.widget<Wrap>(find.byType(Wrap)).spacing, 24);
+    expect(tester.widget<Wrap>(find.byType(Wrap)).spacing, 12);
   });
 
   group('the headline', () {
@@ -93,7 +93,7 @@ void main() {
       testWidgets('$name: each state draws its status token', (tester) async {
         final p = t.extension<AppPalette>()!;
         final expected = {
-          FitState.fits: p.statusFits,
+          FitState.fits: p.textPrimary,
           FitState.tight: p.statusTight,
           FitState.doesNotFit: p.statusDoesNotFit,
           FitState.noWindow: p.statusNoWindow,
@@ -156,7 +156,8 @@ void main() {
     expect(
       tester.getSemantics(find.byKey(const Key('status.headline'))),
       matchesSemantics(
-        label: 'Fits: 2 h 5 min needed of 4 h 20 min usable',
+        label:
+            'Imaging-window fit: Fits: 2 h 5 min needed of 4 h 20 min usable',
         isHeader: true,
       ),
     );

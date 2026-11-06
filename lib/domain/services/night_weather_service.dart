@@ -50,7 +50,8 @@ class NightWeatherService {
       model: model,
       forecastDays: forecastDays,
     );
-    final cached = await _readSafely(key);
+    final stored = await _readSafely(key);
+    final cached = stored != null && _covers(stored, night) ? stored : null;
     final now = _clock.nowUtc();
 
     // One snapshot serves every night of its horizon (N7); one without a
@@ -68,6 +69,16 @@ class NightWeatherService {
     );
     switch (fetched) {
       case WeatherFetched(:final snapshot):
+        if (!_covers(snapshot, night)) {
+          return cached == null
+              ? const NightWeatherUnavailable(WeatherFailure.malformed)
+              : _available(
+                  cached,
+                  _clock.nowUtc(),
+                  true,
+                  refreshFailed: WeatherFailure.malformed,
+                );
+        }
         try {
           await _store.write(key, snapshot);
         } catch (e) {
@@ -79,7 +90,12 @@ class NightWeatherService {
         return const NightWeatherOutOfRange();
       case WeatherFetchFailed(:final failure):
         if (cached == null) return NightWeatherUnavailable(failure);
-        return _available(cached, now, true, refreshFailed: failure);
+        return _available(
+          cached,
+          _clock.nowUtc(),
+          true,
+          refreshFailed: failure,
+        );
     }
   }
 

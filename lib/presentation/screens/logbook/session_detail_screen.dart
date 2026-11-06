@@ -4,7 +4,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/fact_row.dart';
+import '../../shared/content_states.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +44,7 @@ import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/plan_lifecycle_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/confirmation_patterns.dart';
 import '../execution/results_screen.dart';
 import 'progress_screen.dart';
 import 'logbook_screen.dart';
@@ -95,7 +98,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         if (snapshot.connectionState != ConnectionState.done) {
           return Scaffold(
             appBar: hybridAppBar(context, title: const Text(AppWords.logbook)),
-            body: const Center(child: CircularProgressIndicator()),
+            body: const LoadingState(message: 'Loading saved entry…'),
           );
         }
         if (snapshot.error case final error?) {
@@ -148,7 +151,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               AppSpacing.xl,
             ),
             children: [
-              DocumentSection(
+              SectionCard(
                 key: const Key('detail.outcomeGroup'),
                 children: [
                   if ([if (s.name != null) targetAndNight(s), ?site].join(' · ')
@@ -184,7 +187,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               if (!s.legacy)
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.md),
-                  child: DocumentSection(
+                  child: SectionCard(
                     key: const Key('detail.snapshotGroup'),
                     children: [_SnapshotSections(session: s)],
                   ),
@@ -203,7 +206,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                 },
               ),
               const SizedBox(height: AppSpacing.md),
-              DocumentSection(
+              SectionCard(
                 key: const Key('detail.actionsGroup'),
                 children: [
                   _Export(session: s, reconciliation: data.reconciliation),
@@ -273,7 +276,7 @@ class _Block extends StatelessWidget {
     final p = AppPalette.of(context);
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.md),
-      child: DocumentSection(
+      child: SectionCard(
         children: [
           Semantics(
             header: true,
@@ -344,48 +347,13 @@ class _Facts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    final label = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).body, AppTextGeometry.standard)
-        .copyWith(color: p.textPrimary);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (final MapEntry(:key, :value) in rows.entries)
           Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: MergeSemantics(
-              child: stacked
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          key,
-                          style: AppTextTheme.of(context).caption
-                              .copyWith(color: p.textSecondary),
-                        ),
-                        Text(value, style: label),
-                      ],
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: Text(key, style: label)),
-                        const SizedBox(width: AppSpacing.itemGap),
-                        Flexible(
-                          child: Text(
-                            value,
-                            textAlign: TextAlign.end,
-                            style: label.copyWith(
-                              fontFeatures: const [
-                                FontFeature.tabularFigures(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: FactRow(label: key, value: value, stacked: stacked),
           ),
       ],
     );
@@ -523,7 +491,7 @@ class _Result extends StatelessWidget {
               style: AppTextTheme.of(context)
                   .resolve(
                     AppTextTheme.of(context).caption,
-                    AppTextGeometry.supporting,
+                    AppTextGeometry.compact,
                   )
                   .copyWith(color: p.textSecondary),
             ),
@@ -1149,7 +1117,7 @@ class _NameDialogState extends State<_NameDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => ConfirmationDialog(
     title: const Text(AppWords.nameOptional),
     content: TextField(
       key: const Key('detail.nameField'),

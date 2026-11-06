@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_palette.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_theme.dart';
 import '../../../domain/services/capture_budget_calculator.dart';
 import '../../shared/app_words.dart';
@@ -71,19 +73,19 @@ class CaptureBudgetSummary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const HybridSectionTitle('Estimate'),
-        const SizedBox(height: 10),
-        // plan.js `estimate-grid`: two columns 20 apart, rows 16 apart.
+        const SizedBox(height: AppSpacing.sm),
+        // Paired metrics share the compact record grid and stack as text grows.
         LayoutBuilder(
           builder: (context, constraints) {
             final singleColumn =
-                MediaQuery.textScalerOf(context).scale(14) >= 24 ||
-                constraints.maxWidth < 280;
+                constraints.maxWidth <
+                240 * MediaQuery.textScalerOf(context).scale(1);
             final width = singleColumn
                 ? constraints.maxWidth
-                : (constraints.maxWidth - 20) / 2;
+                : (constraints.maxWidth - AppSpacing.md) / 2;
             return Wrap(
-              spacing: 20,
-              runSpacing: 16,
+              spacing: AppSpacing.md,
+              runSpacing: AppSpacing.md,
               children: [
                 SizedBox(
                   width: width,
@@ -455,8 +457,7 @@ class _GainTable extends StatelessWidget {
   }
 }
 
-/// One estimate cell (plan.js `estimate-grid`): a subtle rule, 10 above the
-/// 13 px label, the 20/500 value 2 below it, and a 13 px tertiary note.
+/// A quiet paired metric with a label, value and complete evidence caption.
 class _Estimate extends StatelessWidget {
   const _Estimate({
     super.key,
@@ -474,10 +475,11 @@ class _Estimate extends StatelessWidget {
     final palette = AppPalette.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: palette.border)),
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(AppRadius.small),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.all(AppSpacing.sm),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -486,21 +488,16 @@ class _Estimate extends StatelessWidget {
               style: AppTextTheme.of(context).caption
                   .copyWith(color: palette.textSecondary),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               value,
-              style: AppTextTheme.of(context)
-                  .resolve(
-                    AppTextTheme.of(context).sectionHeading,
-                    AppTextGeometry.answerNeutralTracking,
-                  )
-                  .copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: palette.textPrimary,
-                  ),
+              style: AppTextTheme.of(context).value.copyWith(
+                color: palette.textPrimary,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
             if (note.isNotEmpty) ...[
-              const SizedBox(height: 2),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 note,
                 style: AppTextTheme.of(context)

@@ -6,6 +6,7 @@
 // validation and origins are unchanged (their own tests).
 
 import 'package:astroplan/core/theme/app_theme.dart';
+import 'package:astroplan/core/theme/app_spacing.dart';
 import 'package:astroplan/domain/models/camera_class.dart';
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/presentation/shared/block_text.dart';
@@ -273,9 +274,9 @@ void main() {
       find.text('Apply updates the draft. Save plan records it.'),
       findsOneWidget,
     );
-    // plan.css `.plan-savebar`: 20 at the sides.
+    // The footer uses the shared page gutters.
     final apply = tester.getRect(find.byKey(const Key('blockDialog.submit')));
-    expect(apply.width, closeTo(412 - 40, 1));
+    expect(apply.width, closeTo(412 - 2 * AppSpacing.gutter, 1));
     expect(apply.height, greaterThanOrEqualTo(48));
     expect(find.byKey(const Key('blockDialog.cancel')), findsOneWidget);
   });

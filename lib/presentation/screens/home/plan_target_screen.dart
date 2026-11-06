@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_spacing.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +16,10 @@ import '../../navigation/app_router.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/hybrid_app_bar.dart';
 import '../../shared/hybrid_parts.dart';
+import '../../shared/action_row.dart';
+import '../../shared/content_states.dart';
+import '../../shared/catalog_scaffold.dart';
+import '../../shared/search_filter_bar.dart';
 import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 
@@ -135,7 +139,7 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
     final p = AppPalette.of(context);
     final selected = _chosen;
     final note = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.compact)
         .copyWith(color: p.textSecondary);
     return Scaffold(
       appBar: hybridAppBar(
@@ -155,19 +159,15 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
             AppSpacing.lg,
           ),
           children: [
-            DocumentSection(
+            SectionCard(
               key: const Key('planTarget.searchGroup'),
               children: [
                 const HybridFieldLabel('Search targets'),
                 const SizedBox(height: 4),
-                TextField(
-                  key: const Key('planTarget.search'),
+                SearchFilterBar(
+                  textFieldKey: const Key('planTarget.search'),
                   controller: _query,
-                  autocorrect: false,
-                  textInputAction: TextInputAction.search,
-                  decoration: const InputDecoration(
-                    hintText: 'Name, M31 or NGC 224',
-                  ),
+                  hintText: 'Name, M31 or NGC 224',
                   onChanged: (_) => _load(),
                 ),
                 const SizedBox(height: 20),
@@ -199,14 +199,11 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            DocumentSection(
+            SectionCard(
               joinNext: true,
               children: [
                 if (_loading)
-                  const SizedBox(
-                    height: 48,
-                    child: Center(child: CircularProgressIndicator()),
-                  )
+                  const LoadingState(message: 'Searching…')
                 else if (_error != null)
                   LoadFailureView(
                     action: 'load the targets',
@@ -214,36 +211,36 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
                     onRetry: _load,
                   )
                 else if (!_loading && _found.isEmpty)
-                  Text(
-                    'No matches. Try a catalogue number or another name.',
-                    style: AppTextTheme.of(context).body
-                        .copyWith(color: p.textPrimary),
+                  const EmptyState(
+                    title:
+                        'No matches. Try a catalogue number or another name.',
                   )
                 else ...[
-                  const HybridFieldLabel('Choose a target'),
+                  const HybridSectionTitle('Choose a target'),
                   const SizedBox(height: 6),
                 ],
               ],
             ),
             if (_error == null && !_loading)
               for (final t in _found)
-                DocumentSection(
+                SectionCard(
                   joinPrevious: true,
                   joinNext: true,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
+                    horizontal: AppSpacing.sm,
                   ),
                   children: [
-                    HybridChoiceRow(
+                    ActionRow(
+                      variant: ActionRowVariant.radio,
                       key: Key('planTarget.choice.${t.id}'),
                       title: title(t),
-                      caption: _caption(t),
+                      description: _caption(t),
                       selected: t.id == _chosen?.id,
                       onTap: () => setState(() => _chosen = t),
                     ),
                   ],
                 ),
-            DocumentSection(
+            SectionCard(
               joinPrevious: true,
               children: [
                 const SizedBox(height: AppSpacing.xs),
@@ -267,10 +264,13 @@ class _PlanTargetScreenState extends State<PlanTargetScreen> {
         padding: EdgeInsets.only(
           bottom: MediaQuery.viewInsetsOf(context).bottom,
         ),
-        child: HybridApplyBar(
-          buttonKey: const Key('planTarget.apply'),
-          label: 'Apply changes',
-          onPressed: _apply,
+        child: StickyBottomAction(
+          note: const Text('Apply updates the draft. Save plan records it.'),
+          child: FilledButton(
+            key: const Key('planTarget.apply'),
+            onPressed: _apply,
+            child: const Text('Apply changes'),
+          ),
         ),
       ),
     );

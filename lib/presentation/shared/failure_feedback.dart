@@ -6,6 +6,7 @@ import '../../domain/models/session_result.dart';
 import '../../domain/repositories/storage_failure.dart';
 import '../../domain/repositories/location_repository.dart';
 import 'app_messages.dart';
+import 'async_state_view.dart';
 
 /// User-facing wording for a failed action (TASK 15.1). The error itself
 /// goes to the log ([AppLog]), never onto the screen.
@@ -92,22 +93,10 @@ class LoadFailureView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              FailureText.message(action, error),
-              key: const Key('loadFailure.message'),
-              textAlign: TextAlign.center,
-            ),
-            if (onRetry != null) ...[
-              const SizedBox(height: 12),
-              OutlinedButton(onPressed: onRetry, child: const Text('Retry')),
-            ],
-          ],
-        ),
+      child: AsyncStateView.error(
+        title: FailureText.message(action, error),
+        titleKey: const Key('loadFailure.message'),
+        onRetry: onRetry,
       ),
     );
   }

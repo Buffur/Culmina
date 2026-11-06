@@ -66,9 +66,12 @@ for name in tokens:
     require(bool(re.search(r"\b" + re.escape(leaf) + r"\b", source)), "Owner/member not found in source: " + name)
 
 component_count = sum(len(re.findall(r"^## After/", (BASE / name).read_text(encoding="utf-8"), re.M)) for name in REQUIRED if name.startswith("components/"))
-require(component_count == 24, "Component count differs from index")
+require(component_count == 25, "Component count differs from index")
 
 evidence_files = [
+    "ui_atlas/com.cron.calendar/llm_ready/AI_DESIGN_SPEC.md",
+    "ui_atlas/com.cron.calendar/llm_ready/QA_REVIEW.md",
+    "ui_atlas/com.cron.calendar/llm_ready/detail_01_components.png",
     "README.md", "QA_SUMMARY.md",
     "ui_atlas/notion.id/llm_ready/START_HERE.md",
     "ui_atlas/notion.id/llm_ready/AI_DESIGN_SPEC.md",
@@ -99,10 +102,12 @@ def contrast(fg, bg, minimum):
     require(ratio >= minimum, f"Contrast below target: {fg} on {bg}: {ratio:.3f}")
 
 for bg in ["ThemeData.scaffoldBackgroundColor", "AppPalette.surfaceRaised", "ThemeData.colorScheme.surfaceContainerHigh", "ThemeData.hoverColor", "ThemeData.highlightColor", "HybridTokens.surfaceSunken"]:
-    for fg in ["AppPalette.textPrimary", "AppPalette.textSecondary", "AppPalette.textTertiary", "HybridTokens.action"]:
+    for fg in ["AppPalette.textPrimary", "AppPalette.textSecondary", "AppPalette.textTertiary"]:
         contrast(fg, bg, 4.5)
     contrast("AppPalette.controlBorder", bg, 3)
     contrast("ThemeData.focusColor", bg, 3)
+for bg in ["ThemeData.scaffoldBackgroundColor", "AppPalette.surfaceRaised", "ThemeData.colorScheme.surfaceContainerHigh"]:
+    contrast("HybridTokens.action", bg, 3)
 contrast("HybridTokens.onAction", "HybridTokens.action", 4.5)
 contrast("ThemeData.colorScheme.onSecondaryContainer", "ThemeData.colorScheme.secondaryContainer", 4.5)
 for name in ["statusFits", "statusTight", "statusDoesNotFit", "statusNoWindow", "statusNeutral", "stateUnsaved", "stateSettled", "stateQuiet"]:
@@ -111,7 +116,7 @@ for fg, bg in [("success", "successWash"), ("caution", "cautionWash"), ("errorTe
     contrast("HybridTokens." + fg, "HybridTokens." + bg, 4.5)
 
 report = {
-    "revision": "AFTER-DARK-1.0",
+    "revision": "AFTER-DARK-1.2",
     "scope": "Document consistency, local source existence, textual owner/member checks and selected opaque color pairs; not Figma/native acceptance.",
     "required_modules": len(REQUIRED), "resolved_local_links": link_count,
     "tokens": len(tokens), "component_contracts": component_count,

@@ -9,13 +9,13 @@ import '../../shared/hybrid_parts.dart';
 import '../library/library_parts.dart';
 import '../settings/settings_parts.dart';
 import '../../shared/app_words.dart';
-import '../../shared/geo_controls.dart';
+import '../../shared/hybrid_icon.dart';
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -488,7 +488,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
       _offeredAt = point;
       final on = await showDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => ConfirmationDialog(
           key: const Key('siteEditor.placeNameOffer'),
           title: const Text('Use place names automatically?'),
           content: const Text(
@@ -553,7 +553,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   /// Back with changes (UX-21, S5.8's prompt): Cancel stays, Discard leaves,
   /// Save saves and leaves when it succeeds.
   Future<void> _onBack() async {
-    if (_leaving) return;
+    if (_saving || _leaving) return;
     if (!_changed) {
       setState(() => _leaving = true);
       context.pop();
@@ -576,6 +576,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   }
 
   Future<void> _save() async {
+    if (_saving || _leaving) return;
     // A hidden (collapsed) SQM field is not validated by the form: open the
     // section so the message shows next to the value.
     if (SiteFormInput.validateSqm(_sqm.text) != null) {
@@ -646,7 +647,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         autofocus: true,
         skipTraversal: true,
         child: PopScope(
-          canPop: _leaving || !_builtChanged,
+          canPop: _leaving || (!_saving && !_builtChanged),
           onPopInvokedWithResult: (didPop, _) {
             if (!didPop) _onBack();
           },
@@ -659,9 +660,6 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
   Widget _form(BuildContext context, TextInputType numberKeyboard) {
     final p = AppPalette.of(context);
     final style = libraryInputStyle(context);
-    final stacked =
-        MediaQuery.textScalerOf(context).scale(1) >= 1.5 ||
-        MediaQuery.sizeOf(context).width < 360;
     final latitude = LibraryField(
       label: 'Latitude (°)',
       top: 0,
@@ -689,14 +687,6 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
         context,
         title: Text(_isNew ? AppWords.newSite : AppWords.editSite),
       ),
-      // library.js `saveBar`: Cancel and Save site, always in reach.
-      bottomNavigationBar: LibrarySaveBar(
-        saveKey: const Key('siteEditor.save'),
-        cancelKey: const Key('siteEditor.cancel'),
-        saveLabel: AppWords.saveSite,
-        onCancel: _saving ? null : _onBack,
-        onSave: _saving ? null : _save,
-      ),
       body: Form(
         key: _formKey,
         child: HybridPlanInputs(
@@ -707,15 +697,29 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                DocumentSection(
+                SectionCard(
                   key: const Key('siteEditor.positionGroup'),
                   children: [
-                    const GeoHeading('Position'),
+                    const SettingsHeading('Position', top: 0),
                     const SizedBox(height: AppSpacing.sm),
-                    GeoPositionActions(
-                      locating: _locating,
-                      onLocate: _useCurrentPosition,
-                      onMap: _pickOnMap,
+                    OutlinedButton(
+                      key: const Key('siteEditor.useCurrentPosition'),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      onPressed: _locating ? null : _useCurrentPosition,
+                      child: Text(
+                        _locating ? 'Getting position…' : 'Current position',
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    OutlinedButton(
+                      key: const Key('siteEditor.pickOnMap'),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      onPressed: _pickOnMap,
+                      child: const Text('Map'),
                     ),
                     const SizedBox(height: AppSpacing.itemGap),
                     if (_positionSource.startsWith('From device GPS') ||
@@ -723,26 +727,16 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                       SettingsCopy(_positionSource),
                       const SizedBox(height: AppSpacing.sm),
                     ],
-                    if (stacked) ...[
-                      latitude,
-                      const SizedBox(height: AppSpacing.itemGap),
-                      longitude,
-                    ] else
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: AppSpacing.itemGap,
-                        children: [
-                          Expanded(child: latitude),
-                          Expanded(child: longitude),
-                        ],
-                      ),
+                    latitude,
+                    const SizedBox(height: AppSpacing.itemGap),
+                    longitude,
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                const SizedBox(height: AppSpacing.itemGap),
+                SectionCard(
                   key: const Key('siteEditor.identityGroup'),
                   children: [
-                    const GeoHeading('Site name and time zone'),
+                    const SettingsHeading('Site name and time zone', top: 0),
                     const SizedBox(height: AppSpacing.sm),
                     LibraryField(
                       label: 'Name',
@@ -775,37 +769,59 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                         validator: SiteFormInput.validateName,
                       ),
                     ),
-                    LibraryField(
-                      label: 'Time zone',
-                      top: AppSpacing.itemGap,
-                      hint: _zoneFromDevice
-                          ? 'From device — check for this site.'
-                          : 'Used for local dates and daylight-saving changes.',
-                      // A select that opens the searchable zone list.
-                      child: Semantics(
-                        button: true,
-                        child: InkWell(
-                          key: const Key('siteEditor.zone'),
-                          borderRadius: BorderRadius.circular(6),
-                          onTap: _pickZone,
-                          child: InputDecorator(
-                            decoration: const InputDecoration(
-                              contentPadding: hybridSelectPadding,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    _zoneId ??
-                                        'Unknown — night uses mean solar time',
-                                    style: style,
+                    Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.itemGap),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Time zone',
+                            style: AppTextTheme.of(context).caption
+                                .copyWith(color: p.textSecondary),
+                          ),
+                          Semantics(
+                            button: true,
+                            child: InkWell(
+                              key: const Key('siteEditor.zone'),
+                              onTap: _pickZone,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          _zoneId ?? 'Unknown — night uses mean solar time',
+                                          style: style,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        SettingsHint(
+                                          _zoneFromDevice
+                                              ? 'From device — check for this site.'
+                                              : 'Used for local dates and daylight-saving changes.',
+                                          top: 0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                hybridSelectIcon(context),
-                              ],
+                                  SizedBox(
+                                    width: 48,
+                                    height: 48,
+                                    child: Center(
+                                      child: HybridIcon(
+                                        HybridIcons.rowChevron,
+                                        size: 16,
+                                        color: p.textSecondary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -820,8 +836,8 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                 ),
                 // RG-08 = E2, RG-09 = S3: optional, without prominence; empty
                 // is unknown. One remembered section (library.js More).
-                const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                const SizedBox(height: AppSpacing.itemGap),
+                SectionCard(
                   key: const Key('siteEditor.moreGroup'),
                   children: [
                     CollapsibleSection(
@@ -829,7 +845,7 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                       sectionKey: SiteEditorScreen.skyDarknessSection,
                       title: 'More (optional)',
                       topRule: false,
-                      titleStyle: AppTextTheme.of(context).body.copyWith(
+                      titleStyle: AppTextTheme.of(context).nestedTitle.copyWith(
                         fontWeight: FontWeight.w600,
                         color: p.textPrimary,
                       ),
@@ -868,6 +884,30 @@ class _SiteEditorScreenState extends State<SiteEditorScreen> {
                           ),
                         ],
                       ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.itemGap),
+                SectionCard(
+                  key: const Key('siteEditor.actionsGroup'),
+                  children: [
+                    const SettingsHeading('Site actions', top: 0),
+                    TextButton(
+                      key: const Key('siteEditor.cancel'),
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      onPressed: _saving ? null : _onBack,
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    FilledButton(
+                      key: const Key('siteEditor.save'),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      onPressed: _saving ? null : _save,
+                      child: const Text(AppWords.saveSite),
                     ),
                   ],
                 ),

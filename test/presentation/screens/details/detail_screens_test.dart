@@ -105,6 +105,13 @@ class _Weather implements WeatherRepository {
   }
 }
 
+Future<void> _openForecastDetails(WidgetTester tester) async {
+  if (find.byKey(const Key('weather.model')).evaluate().isNotEmpty) return;
+  await tester.ensureVisible(find.byKey(const Key('weather.details')));
+  await tester.tap(find.text('Forecast details'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   late AppDatabase db;
   late PlannerHarness vm;
@@ -276,9 +283,7 @@ void main() {
     // Forecast details, one tap away.
     expect(find.byKey(const Key('weather.facts')), findsOneWidget);
     expect(find.byKey(const Key('weather.table')), findsNothing);
-    await tester.ensureVisible(find.byKey(const Key('weather.details')));
-    await tester.tap(find.text('Forecast details'));
-    await settle(tester);
+    await _openForecastDetails(tester);
     expect(find.byKey(const Key('weather.table')), findsOneWidget);
     expect(find.byKey(const Key('weather.attribution')), findsOneWidget);
     expect(
@@ -324,7 +329,9 @@ void main() {
     expect(
       find.descendant(
         of: rows,
-        matching: find.text('${s.totalHours}/${s.totalHours} known'),
+        matching: find.text(
+          'All metrics: ${s.totalHours}/${s.totalHours} known samples',
+        ),
       ),
       findsWidgets,
     );
@@ -349,14 +356,27 @@ void main() {
       () => vm.vms.displaySettings.setWeatherView(WeatherView.charts),
     );
     await settle(tester);
-    final hours = find.bySemanticsLabel(RegExp(r'^Select '));
-    expect(hours, findsWidgets);
-    for (final e in hours.evaluate()) {
+    final panels = find.bySemanticsLabel(RegExp(r'selected forecast hour'));
+    expect(panels, findsNWidgets(5));
+    final panel = find.byKey(const Key('weather.chart.Temperature'));
+    final before = tester.getSemantics(panel).getSemanticsData();
+    expect(before.hasAction(SemanticsAction.increase), isTrue);
+    tester.binding.performSemanticsAction(
+      SemanticsActionEvent(
+        viewId: tester.view.viewId,
+        nodeId: tester.getSemantics(panel).id,
+        type: SemanticsAction.increase,
+      ),
+    );
+    await tester.pump();
+    final after = tester.getSemantics(panel).getSemanticsData();
+    expect(after.value, isNot(before.value));
+    for (final element in panels.evaluate()) {
       final data = tester
-          .getSemantics(find.byWidget(e.widget))
+          .getSemantics(find.byWidget(element.widget))
           .getSemanticsData();
-      expect(data.hasAction(SemanticsAction.tap), isTrue, reason: data.label);
-      expect(data.flagsCollection.isButton, isTrue);
+      expect(data.value, after.value);
+      expect(data.hasAction(SemanticsAction.decrease), isTrue);
     }
     handle.dispose();
   });
@@ -426,22 +446,24 @@ void main() {
       ),
       findsOneWidget,
     );
-    // The hour itself says Unknown.
+    // That exact hour stays readable in the full pinned-time table.
     final unknown = slots.indexWhere((s) => s.timeUtc.hour == 22);
-    final slider = tester.widget<Slider>(
-      find.byKey(const Key('weather.hourSlider')),
+    await _openForecastDetails(tester);
+    expect(find.byKey(const Key('weather.hourSlider')), findsNothing);
+    final table = tester.widget<Table>(
+      find.descendant(
+        of: find.byKey(const Key('weather.table')),
+        matching: find.byWidgetPredicate((widget) => widget is Table),
+      ),
     );
-    slider.onChanged!(unknown.toDouble());
-    await settle(tester);
-    await tester.ensureVisible(find.text('Hourly values'));
-    await tester.tap(find.text('Hourly values'));
-    await settle(tester);
-    final hour = find.byKey(const Key('weather.hourDetails'));
-    expect(
-      find.descendant(of: hour, matching: find.text('Unknown')),
-      findsWidgets,
+    final cells = table.children[unknown + 1].children;
+    final cloud = tester.widget<Text>(
+      find.descendant(of: find.byWidget(cells[1]), matching: find.byType(Text)),
     );
-    expect(find.descendant(of: hour, matching: find.text('0%')), findsNothing);
+    expect(cloud.data, 'Unknown');
+    expect(cloud.data, isNot('0'));
+    expect(cloud.textAlign, TextAlign.center);
+    expect(find.byKey(const Key('weather.tableKey')), findsOneWidget);
   });
 
   // F14 A3: a gap is its own row with no values; the preceding-hour values
@@ -458,23 +480,10 @@ void main() {
     expect(slots.first.timeUtc, DateTime.utc(2026, 11, 10, 18));
     expect(slots.first.partial, isTrue);
 
-    // The inspected gap says so.
-    final slider = tester.widget<Slider>(
-      find.byKey(const Key('weather.hourSlider')),
-    );
-    slider.onChanged!(gap.toDouble());
-    await settle(tester);
-    await tester.ensureVisible(find.text('Hourly values'));
-    await tester.tap(find.text('Hourly values'));
-    await settle(tester);
-    expect(
-      find.text('No sample at this hour. Missing values are unknown.'),
-      findsOneWidget,
-    );
-
-    await tester.ensureVisible(find.byKey(const Key('weather.details')));
-    await tester.tap(find.text('Forecast details'));
-    await settle(tester);
+    // Every exact hour remains readable without the superseded inspector.
+    await _openForecastDetails(tester);
+    expect(find.byKey(const Key('weather.hourSlider')), findsNothing);
+    expect(find.byKey(const Key('weather.tableKey')), findsOneWidget);
     final table = tester.widget<Table>(
       find.descendant(
         of: find.byKey(const Key('weather.table')),
@@ -483,10 +492,17 @@ void main() {
     );
     List<String> row(int i) => [
       for (final cell in table.children[i + 1].children)
-        ((cell as Padding).child! as Text).data!,
+        tester
+            .widget<Text>(
+              find.descendant(
+                of: find.byWidget(cell),
+                matching: find.byType(Text),
+              ),
+            )
+            .data!,
     ];
-    // The gap: every value is "—", never invented.
-    expect(row(gap).skip(1), everyElement(matches(r'^—( / —)*$')));
+    // Eligible missing values are Unknown; only exclusions use the dash.
+    expect(row(gap).skip(1), everyElement(matches(r'^Unknown( / Unknown)*$')));
     // The dusk hour: starred, its gust and precipitation chance kept.
     expect(row(0).first, endsWith(' *'));
     expect(row(0)[5], '8 / 15');
@@ -502,7 +518,14 @@ void main() {
     expect(
       [
         for (final cell in table.children.first.children)
-          ((cell as Padding).child! as Text).data!,
+          tester
+              .widget<Text>(
+                find.descendant(
+                  of: find.byWidget(cell),
+                  matching: find.byType(Text),
+                ),
+              )
+              .data!,
       ],
       containsAll([
         'Cloud %',

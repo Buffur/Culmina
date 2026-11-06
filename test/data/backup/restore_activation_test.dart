@@ -419,6 +419,8 @@ void main() {
       'swap',
       'preferences',
       'commit',
+      'cleanupPreferences',
+      'cleanupJournal',
     ]) {
       test('killed at "$step": the next start completes the restore', () async {
         await stage();
@@ -453,6 +455,56 @@ void main() {
         await expectNewState();
       });
     }
+
+    test(
+      'a committed restore only cleans up; it never rewrites newer data',
+      () async {
+        await stage();
+        await expectLater(
+          BackupStaging.apply(
+            phone,
+            nowUtc: _clock.nowUtc(),
+            onStep: (s) async {
+              if (s == 'cleanupJournal') throw _Killed();
+            },
+          ),
+          throwsA(isA<_Killed>()),
+        );
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('activeLocationId', 99);
+        await prefs.setInt('editedSessionId', 88);
+        await BackupStaging.apply(phone, nowUtc: _clock.nowUtc());
+        expect(prefs.getInt('activeLocationId'), 99);
+        expect(prefs.getInt('editedSessionId'), 88);
+        expect(await _siteNames(live.path), ['Backup site']);
+      },
+    );
+
+    test(
+      'an unreadable journal fails closed without touching live files',
+      () async {
+        await stage();
+        await File(p.join(phone.path, BackupStaging.journal))
+            .writeAsString('{');
+        await expectLater(
+          BackupStaging.apply(phone, nowUtc: _clock.nowUtc()),
+          throwsFormatException,
+        );
+        expect(await live.readAsBytes(), liveBefore);
+        expect(await _settingsNow(), _deviceSettings);
+        expect(await BackupStaging.isStaged(phone), isTrue);
+      },
+    );
+
+    test('malformed staged preferences refuse the restore unchanged', () async {
+      await stage();
+      await File(p.join(phone.path, BackupStaging.stagedPreferences))
+          .writeAsString('{');
+      final outcome = await BackupStaging.apply(phone, nowUtc: _clock.nowUtc());
+      expect(outcome!.result, RestoreResult.refused);
+      expect(await live.readAsBytes(), liveBefore);
+      expect(await _settingsNow(), _deviceSettings);
+    });
 
     for (final step in ['moveLive', 'moveSide', 'swap', 'preferences']) {
       test(

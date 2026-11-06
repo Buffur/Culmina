@@ -107,14 +107,17 @@ void main() {
         final s = t.colorScheme;
         expect(s.onSurface, palette.textPrimary);
         expect(s.onSurfaceVariant, palette.textSecondary);
-        expect(s.surfaceContainerHigh, palette.surfaceRaised);
+        expect(
+          s.surfaceContainerHigh,
+          name == 'dark' ? s.surface : palette.surfaceRaised,
+        );
         if (name != 'field') expect(s.secondary, palette.textSecondary);
       });
 
       test('every style has the scale\'s size, line height and weight', () {
         final shown = ThemeData.localize(t, t.typography.englishLike);
         final actual = _styles(shown.textTheme);
-        final expected = _styles(AppTypography.scale);
+        final expected = _styles(AppTypography.afterDarkScale);
         for (var i = 0; i < actual.length; i++) {
           expect(actual[i]!.fontSize, expected[i]!.fontSize);
           expect(actual[i]!.height, expected[i]!.height);

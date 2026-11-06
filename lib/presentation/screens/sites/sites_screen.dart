@@ -1,7 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/action_row.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -108,37 +109,14 @@ class _SitesScreenState extends State<SitesScreen> {
         key: const Key('sites.list'),
         padding: settingsPagePadding,
         children: [
-          DocumentSection(
+          SectionCard(
             key: const Key('sites.searchGroup'),
             children: [
-              LayoutBuilder(
-                builder: (context, box) {
-                  final heading = const GeoHeading('Sites');
-                  final button = TextButton(
-                    key: const Key('sites.add'),
-                    onPressed: add,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const HybridIcon(HybridIcons.plus, size: 18),
-                        const SizedBox(width: 8),
-                        const Text('Add site'),
-                      ],
-                    ),
-                  );
-                  if (MediaQuery.textScalerOf(context).scale(1) >= 1.5) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [heading, button],
-                    );
-                  }
-                  return Row(
-                    children: [
-                      Expanded(child: heading),
-                      button,
-                    ],
-                  );
-                },
+              const GeoHeading('Sites'),
+              TextButton(
+                key: const Key('sites.add'),
+                onPressed: add,
+                child: const Text('Add site'),
               ),
               if (sites.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.sm),
@@ -171,19 +149,25 @@ class _SitesScreenState extends State<SitesScreen> {
           ),
           if (showTransient || shown.isNotEmpty)
             const SizedBox(height: AppSpacing.itemGap),
+          if (showTransient || shown.isNotEmpty)
+            const SectionCard(
+              joinNext: true,
+              children: [SettingsHeading('Saved sites', top: 0)],
+            ),
           if (showTransient)
-            DocumentSection(
+            SectionCard(
+              joinPrevious: true,
               joinNext: shown.isNotEmpty,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               children: [
                 _transientRow(siteVm, choosing, divider: shown.isNotEmpty),
               ],
             ),
           for (final (i, site) in shown.indexed)
-            DocumentSection(
-              joinPrevious: showTransient || i > 0,
+            SectionCard(
+              joinPrevious: true,
               joinNext: i < shown.length - 1,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               children: [
                 _siteRow(
                   site,
@@ -196,7 +180,7 @@ class _SitesScreenState extends State<SitesScreen> {
             ),
           if (choosing) ...[
             const SizedBox(height: AppSpacing.md),
-            DocumentSection(
+            SectionCard(
               children: [
                 GeoHeading(
                   siteVm.isDefaultLocation
@@ -312,88 +296,26 @@ class _SitesScreenState extends State<SitesScreen> {
     SiteViewModel vm, {
     required bool divider,
   }) {
-    final p = AppPalette.of(context);
     final caption =
         '${siteDegrees(site.latitude)}, ${siteDegrees(site.longitude)} · ${site.timeZoneId ?? 'zone unknown'}';
     return SwipeToDelete(
       itemKey: ValueKey('site-swipe-${site.id}'),
       onDelete: () => deleteSite(context, site),
       child: choosing
-          ? Container(
+          ? ActionRow(
               key: ValueKey('site-${site.id}'),
-              constraints: const BoxConstraints(minHeight: 72),
-              foregroundDecoration: !divider
-                  ? null
-                  : BoxDecoration(
-                      border: Border(bottom: BorderSide(color: p.border)),
-                    ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Semantics(
-                      button: true,
-                      selected: site.id == activeId,
-                      child: InkWell(
-                        onTap: () => runWithFeedback(
-                          context,
-                          'select the site',
-                          () => vm.selectSite(site.id),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.itemGap + AppSpacing.xs / 2,
-                          ),
-                          child: Row(
-                            children: [
-                              HybridRadio(
-                                checked: site.id == activeId,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      SiteLabel.displayName(site.name),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppTextTheme.of(context).rowTitle
-                                          .copyWith(color: p.textPrimary),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      caption,
-                                      style: AppTextTheme.of(context)
-                                          .resolve(
-                                            AppTextTheme.of(context).body,
-                                            AppTextGeometry.standard,
-                                          )
-                                          .copyWith(color: p.textSecondary),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  IconButton(
-                    key: ValueKey('site-manage-${site.id}'),
-                    tooltip: 'Manage site: ${site.name}',
-                    onPressed: () => _open(site),
-                    icon: HybridIcon(
-                      HybridIcons.edit,
-                      size: 20,
-                      color: p.textSecondary,
-                    ),
-                  ),
-                ],
+              title: SiteLabel.displayName(site.name),
+              description: caption,
+              variant: ActionRowVariant.radio,
+              selected: site.id == activeId,
+              onTap: () => runWithFeedback(
+                context,
+                'select the site',
+                () => vm.selectSite(site.id),
               ),
+              editKey: ValueKey('site-manage-${site.id}'),
+              editTooltip: 'Manage site: ${site.name}',
+              onEdit: () => _open(site),
             )
           : LibraryRow(
               divider: divider,

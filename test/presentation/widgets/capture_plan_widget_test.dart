@@ -224,6 +224,9 @@ void main() {
       expect(find.text('Light · L'), findsOneWidget);
       expect(find.text('30 × 60 s = 30 min integration'), findsOneWidget);
 
+      await tester.tap(find.byKey(const Key('capture.menu.0')));
+
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('capture.edit.0')));
       await tester.pumpAndSettle();
 

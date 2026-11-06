@@ -14,6 +14,7 @@ analyzer:
     # Historical evidence and standalone snippets are not application sources.
     # Git ignore rules do not define the analyzer's scope.
     - docs/archive/**
+    - _archive/**
     - .audit/**
     - build/**
     - android/**

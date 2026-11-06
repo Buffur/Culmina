@@ -2,7 +2,7 @@ import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +14,9 @@ import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
 import '../../viewmodels/plan_lifecycle_viewmodel.dart';
 import '../../viewmodels/night_conditions_viewmodel.dart';
+import '../../viewmodels/night_browser_viewmodel.dart';
+import '../../viewmodels/settings_viewmodel.dart';
+import '../../widgets/night_browser_sections.dart';
 import '../../viewmodels/capture_analysis_viewmodel.dart';
 import '../../widgets/planner_sections.dart';
 import '../../shared/example_text.dart';
@@ -100,25 +103,29 @@ class HomeScreen extends StatelessWidget {
                   // stays, with a neutral status.
                   child: ListView(
                     key: const Key('planner.scroll'),
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.gutter,
+                      AppSpacing.sm,
+                      AppSpacing.gutter,
+                      AppSpacing.xl,
+                    ),
                     children: [
-                      DocumentSection(
+                      SectionCard(
                         key: const Key('planner.identityGroup'),
                         children: const [_PlanIdentity()],
                       ),
-                      const SizedBox(height: AppSpacing.itemGap),
-                      DocumentSection(
+                      const SizedBox(height: AppSpacing.md),
+                      SectionCard(
                         key: const Key('planner.statusGroup'),
                         children: const [PlanStatus(showFillAction: false)],
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.md),
                       // plan.js `rowButton` (Hybrid): the plan's context,
                       // target and rig, each opening its scoped chooser.
-                      DocumentSection(
+                      SectionCard(
                         key: const Key('planner.inputsGroup'),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.sm,
+                          horizontal: AppSpacing.sm,
                         ),
                         children: [
                           HybridPlanRow(
@@ -220,9 +227,10 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
-                      DocumentSection(
+                      const SizedBox(height: AppSpacing.md),
+                      Column(
                         key: const Key('planner.captureGroup'),
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           HybridSectionTitle(
                             AppWords.capturePlan,
@@ -238,8 +246,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      DocumentSection(
+                      const SizedBox(height: AppSpacing.md),
+                      SectionCard(
                         key: const Key('planner.estimateGroup'),
                         children: [
                           const CaptureBudgetSummary(),
@@ -260,19 +268,16 @@ class HomeScreen extends StatelessWidget {
                       // are on their detail screens; here one factual row
                       // each (plan.js night rows). Without a site the
                       // location row is shown (ADR-012).
-                      const SizedBox(height: 16),
-                      DocumentSection(
+                      const SizedBox(height: AppSpacing.md),
+                      SectionCard(
                         key: const Key('planner.nightGroup'),
+                        padding: const EdgeInsets.all(AppSpacing.sm),
                         children: [
                           Semantics(
                             header: true,
                             child: Text(
                               'The night ahead',
-                              style: AppTextTheme.of(context)
-                                  .resolve(
-                                    AppTextTheme.of(context).nightHeading,
-                                    AppTextGeometry.tightTracking,
-                                  )
+                              style: AppTextTheme.of(context).screenTitle
                                   .copyWith(
                                     color: AppPalette.of(context).textPrimary,
                                   ),
@@ -299,16 +304,15 @@ class HomeScreen extends StatelessWidget {
                               ),
                               onTap: () => context.push(AppRouter.nightMoon),
                             ),
-                            HybridNightRow(
-                              key: const Key('planner.weather'),
-                              icon: HybridIcons.lucideCloud,
-                              iconColor: Theme.of(context)
-                                  .extension<HybridTokens>()
-                                  ?.accent,
-                              label: 'Weather',
-                              value: _weatherValue(conditionsVm),
-                              extra: _weatherExtra(conditionsVm),
-                              onTap: () => context.push(AppRouter.weather),
+                            ChangeNotifierProvider(
+                              create: (c) => NightBrowserViewModel(
+                                site: c.read<SiteViewModel>(),
+                                plan: c.read<SessionPlanViewModel>(),
+                                settings: c.read<SettingsViewModel>(),
+                                nowUtc: () =>
+                                    c.read<NightConditionsViewModel>().nowUtc,
+                              ),
+                              child: const NightBarSection(plan: true),
                             ),
                           ] else
                             HybridPlanRow(
@@ -322,6 +326,26 @@ class HomeScreen extends StatelessWidget {
                                   '${siteVm.longitude.toStringAsFixed(4)}'
                                   '${siteVm.locationNameAttribution == null ? '' : ' · ${siteVm.locationNameAttribution}'}',
                               onTap: () => context.push(AppRouter.selectSite),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      SectionCard(
+                        key: const Key('planner.conditionsGroup'),
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        children: [
+                          const HybridSectionTitle('Conditions'),
+                          if (planVm.sessionNight != null)
+                            HybridNightRow(
+                              key: const Key('planner.weather'),
+                              icon: HybridIcons.lucideCloud,
+                              iconColor: Theme.of(context)
+                                  .extension<HybridTokens>()
+                                  ?.accent,
+                              label: 'Weather',
+                              value: _weatherValue(conditionsVm),
+                              extra: _weatherExtra(conditionsVm),
+                              onTap: () => context.push(AppRouter.weather),
                             ),
                           const SkyDarknessWidget(embedded: true),
                         ],
@@ -347,7 +371,12 @@ class HomeScreen extends StatelessWidget {
               ),
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.gutter,
+                    AppSpacing.md,
+                    AppSpacing.gutter,
+                    AppSpacing.sm,
+                  ),
                   child: _SaveBar(words: words),
                 ),
               ),
@@ -402,9 +431,7 @@ class _SaveBar extends StatelessWidget {
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(48),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        textStyle: AppTextTheme.of(
-          context,
-        ).resolve(AppTextTheme.of(context).itemTitle, AppTextGeometry.standard),
+        textStyle: AppTextTheme.of(context).actionLabel,
       ),
       child: const Text(AppWords.savePlan),
     );
@@ -427,7 +454,7 @@ class _SaveBar extends StatelessWidget {
                   style: AppTextTheme.of(context)
                       .resolve(
                         AppTextTheme.of(context).caption,
-                        AppTextGeometry.supporting,
+                        AppTextGeometry.compact,
                       )
                       .copyWith(color: AppPalette.of(context).textSecondary),
                 ),
@@ -473,7 +500,7 @@ class _BootstrapErrorView extends StatelessWidget {
               size: 48,
               color: Theme.of(context).colorScheme.error,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             Text(
               "Couldn't load your site, settings and current plan.",
               textAlign: TextAlign.center,
@@ -701,9 +728,7 @@ class _PlanIdentity extends StatelessWidget {
             children: [
               Expanded(child: dates),
               const SizedBox(width: AppSpacing.itemGap),
-              Expanded(
-                child: Align(alignment: Alignment.centerRight, child: state),
-              ),
+              state,
             ],
           );
         },

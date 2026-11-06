@@ -1,7 +1,9 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/action_row.dart';
+import '../../shared/content_states.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_theme.dart';
-import '../../shared/hybrid_icon.dart';
 import '../settings/settings_parts.dart';
 import '../../navigation/app_router.dart';
 import '../../shared/app_words.dart';
@@ -77,45 +78,40 @@ class _LibraryScreenState extends State<LibraryScreen> {
           final sites = startup.isLoading || startup.hasBootstrapError
               ? 'Count unavailable'
               : '${siteVm.sites.length} saved';
-          final caption = AppTextTheme.of(context)
-              .resolve(
-                AppTextTheme.of(context).caption,
-                AppTextGeometry.supporting,
-              )
+          final caption = AppTextTheme.of(context).caption
               .copyWith(color: p.textSecondary);
           // library.js `rootView`.
           return ListView(
             padding: settingsPagePadding,
             children: [
-              DocumentSection(
+              SectionCard(
                 key: const Key('library.collectionsGroup'),
                 children: [
-                  SettingsRow(
+                  const SettingsHeading('Collections', top: 0),
+                  ActionRow(
                     key: const Key('library.rigs'),
-                    icon: HybridIcons.camera,
                     title: AppWords.rigs,
-                    summary: counts == null
+                    description: counts == null
                         ? 'Your cameras with their lenses or telescopes'
                         : '${counts[0]} ${counts[0] == 1 ? 'rig' : 'rigs'} · your '
                               'cameras with their lenses or telescopes',
                     onTap: () => context.push(AppRouter.libraryRigs),
                   ),
-                  SettingsRow(
+                  const SizedBox(height: AppSpacing.sm),
+                  ActionRow(
                     key: const Key('library.targets'),
-                    icon: HybridIcons.target,
                     title: AppWords.targets,
-                    summary: counts == null
+                    description: counts == null
                         ? 'The catalogue and the targets you added'
                         : '${counts[1]} ${counts[1] == 1 ? 'target' : 'targets'}'
                               ' · the catalogue and the targets you added',
                     onTap: () => context.push(AppRouter.libraryTargets),
                   ),
-                  SettingsRow(
+                  const SizedBox(height: AppSpacing.sm),
+                  ActionRow(
                     key: const Key('library.sites'),
-                    divider: false,
-                    icon: HybridIcons.pin,
                     title: AppWords.sites,
-                    summary: '$sites · choose the planning site in Plan',
+                    description: '$sites · choose the planning site in Plan',
                     onTap: () => context.push(AppRouter.librarySites),
                   ),
                 ],
@@ -130,9 +126,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 Text('Loading library counts…', style: caption),
               ] else if (snapshot.hasError) ...[
                 const SizedBox(height: AppSpacing.itemGap),
-                Text(
-                  "Couldn't load library counts. Lists remain available.",
-                  style: caption,
+                const ErrorState(
+                  title:
+                      "Couldn't load library counts. Lists remain available.",
                 ),
                 Align(
                   alignment: Alignment.centerLeft,

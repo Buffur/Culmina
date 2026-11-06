@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/domain/models/astro_target.dart';
@@ -101,6 +100,24 @@ void main() {
           'Submitted',
         );
         if (creating) {
+          expect(
+            t
+                .widget<TextFormField>(
+                  find.byKey(const Key('targetEditor.size')),
+                )
+                .controller!
+                .text,
+            isEmpty,
+          );
+          expect(
+            t
+                .widget<TextFormField>(
+                  find.byKey(const Key('targetEditor.magnitude')),
+                )
+                .controller!
+                .text,
+            isEmpty,
+          );
           await t.enterText(
             find.byKey(const Key('targetEditor.ra')),
             '5.588 h',
@@ -170,6 +187,10 @@ void main() {
           expect(stored.commonName, 'Submitted');
           expect(stored.rightAscension, repo.submitted.single.rightAscension);
           expect(stored.declination, repo.submitted.single.declination);
+          if (creating) {
+            expect(stored.angularSizeArcmin, isNull);
+            expect(stored.magnitude, isNull);
+          }
           if (!creating) {
             expect(stored.catalogId, original.catalogId);
             expect(stored.source, original.source);
@@ -181,93 +202,98 @@ void main() {
     );
   }
 
-  testWidgets(
-    'UIA-0003: failure keeps draft, retry writes only visible input',
-    (t) async {
-      final db = AppDatabase(NativeDatabase.memory());
-      final repo = _HeldTargets(db);
-      final vm = TargetsViewModel(repo);
-      addTearDown(() => t.runAsync(db.close));
-      addTearDown(vm.dispose);
-      late AstroTarget original;
-      await t.runAsync(() async {
-        final id = await repo.insertTarget(
-          const AstroTarget(
-            id: 0,
-            catalogId: 'QA',
-            commonName: 'Original',
-            type: 'Galaxy',
-            rightAscension: 1.123456789,
-            declination: 2.987654321,
-            source: 'user',
-          ),
-        );
-        original = (await repo.getTargetById(id))!;
-      });
-      await t.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: vm,
-          child: MaterialApp(
-            theme: AppTheme.light,
-            home: Builder(
-              builder: (context) => Scaffold(
-                body: TextButton(
-                  onPressed: () =>
-                      showTargetEditor(context, existing: original),
-                  child: const Text('Open'),
+  for (final theme in ['light', 'dark', 'field']) {
+    testWidgets(
+      'UIA-0003 $theme: failure keeps draft, retry writes only visible input',
+      (t) async {
+        final db = AppDatabase(NativeDatabase.memory());
+        final repo = _HeldTargets(db);
+        final vm = TargetsViewModel(repo);
+        addTearDown(() => t.runAsync(db.close));
+        addTearDown(vm.dispose);
+        late AstroTarget original;
+        await t.runAsync(() async {
+          final id = await repo.insertTarget(
+            const AstroTarget(
+              id: 0,
+              catalogId: 'QA',
+              commonName: 'Original',
+              type: 'Galaxy',
+              rightAscension: 1.123456789,
+              declination: 2.987654321,
+              source: 'user',
+            ),
+          );
+          original = (await repo.getTargetById(id))!;
+        });
+        await t.pumpWidget(
+          ChangeNotifierProvider.value(
+            value: vm,
+            child: wave1App(
+              theme,
+              home: Builder(
+                builder: (context) => Scaffold(
+                  body: TextButton(
+                    onPressed: () =>
+                        showTargetEditor(context, existing: original),
+                    child: const Text('Open'),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-      await t.tap(find.text('Open'));
-      await t.pumpAndSettle();
-      final name = find.byKey(const Key('targetEditor.name'));
-      await t.enterText(name, 'First attempt');
-      repo.gate = Completer<void>();
-      await t.tap(find.byKey(const Key('targetEditor.save')));
-      await t.pump();
-      await t.runAsync(() async {
-        repo.gate!.completeError(StateError('synthetic failed write'));
-        await Future<void>.delayed(const Duration(milliseconds: 50));
-        expect((await repo.getTargetById(original.id))!.commonName, 'Original');
-      });
-      await t.pumpAndSettle();
-      expect(t.widget<TextFormField>(name).enabled, isTrue);
-      expect(t.widget<TextFormField>(name).controller!.text, 'First attempt');
-      await t.enterText(name, 'Retry visible draft');
-      repo.gate = null;
-      await t.tap(find.byKey(const Key('targetEditor.save')));
-      await t.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 80)),
-      );
-      await t.pumpAndSettle();
-      expect(find.byType(TargetEditorScreen), findsNothing);
-      expect(repo.submitted.map((e) => e.commonName), [
-        'First attempt',
-        'Retry visible draft',
-      ]);
-      await t.runAsync(
-        () async => expect(
-          (await repo.getTargetById(original.id))!.commonName,
+        );
+        await t.tap(find.text('Open'));
+        await t.pumpAndSettle();
+        final name = find.byKey(const Key('targetEditor.name'));
+        await t.enterText(name, 'First attempt');
+        repo.gate = Completer<void>();
+        await t.tap(find.byKey(const Key('targetEditor.save')));
+        await t.pump();
+        await t.runAsync(() async {
+          repo.gate!.completeError(StateError('synthetic failed write'));
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          expect(
+            (await repo.getTargetById(original.id))!.commonName,
+            'Original',
+          );
+        });
+        await t.pumpAndSettle();
+        expect(t.widget<TextFormField>(name).enabled, isTrue);
+        expect(t.widget<TextFormField>(name).controller!.text, 'First attempt');
+        await t.enterText(name, 'Retry visible draft');
+        repo.gate = null;
+        await t.tap(find.byKey(const Key('targetEditor.save')));
+        await t.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 80)),
+        );
+        await t.pumpAndSettle();
+        expect(find.byType(TargetEditorScreen), findsNothing);
+        expect(repo.submitted.map((e) => e.commonName), [
+          'First attempt',
           'Retry visible draft',
-        ),
-      );
-      await t.tap(find.text('Open'));
-      await t.pumpAndSettle();
-      await t.enterText(name, 'Discard me');
-      await t.tap(find.byKey(const Key('targetEditor.cancel')));
-      await t.pumpAndSettle();
-      await t.tap(find.text('Cancel').last);
-      await t.pumpAndSettle();
-      expect(t.widget<TextFormField>(name).controller!.text, 'Discard me');
-      await t.binding.handlePopRoute();
-      await t.pumpAndSettle();
-      await t.tap(find.text('Discard'));
-      await t.pumpAndSettle();
-      expect(find.byType(TargetEditorScreen), findsNothing);
-      expect(repo.submitted, hasLength(2));
-    },
-  );
+        ]);
+        await t.runAsync(
+          () async => expect(
+            (await repo.getTargetById(original.id))!.commonName,
+            'Retry visible draft',
+          ),
+        );
+        await t.tap(find.text('Open'));
+        await t.pumpAndSettle();
+        await t.enterText(name, 'Discard me');
+        await t.tap(find.byKey(const Key('targetEditor.cancel')));
+        await t.pumpAndSettle();
+        await t.tap(find.text('Cancel').last);
+        await t.pumpAndSettle();
+        expect(t.widget<TextFormField>(name).controller!.text, 'Discard me');
+        await t.binding.handlePopRoute();
+        await t.pumpAndSettle();
+        await t.tap(find.text('Discard'));
+        await t.pumpAndSettle();
+        expect(find.byType(TargetEditorScreen), findsNothing);
+        expect(repo.submitted, hasLength(2));
+      },
+    );
+  }
 }

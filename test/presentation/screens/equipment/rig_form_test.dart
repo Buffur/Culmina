@@ -4,7 +4,8 @@
 // (optional)", collapsed, with a summary of what is set; nothing stored is
 // lost or reinterpreted; the glossary title and a primary Save.
 
-import 'package:astroplan/core/theme/app_theme.dart';
+import '../../../support/phase2_state_capture.dart';
+
 import 'package:astroplan/domain/models/equipment_profile.dart';
 import 'package:astroplan/domain/models/tracking_type.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_editor.dart';
@@ -37,171 +38,194 @@ const _rig = EquipmentProfile(
 
 const _more = Key('section.$rigEditorMoreSection');
 
+late String _phase2Theme;
+
+ThemeData get _phase2ThemeData => phase2Theme(_phase2Theme);
+
+Widget _phase2Builder(BuildContext context, Widget? child) =>
+    phase2Frame(child: child!, theme: _phase2Theme);
+
 void main() {
-  Future<InMemoryEquipmentRepository> open(
-    WidgetTester tester, {
-    EquipmentProfile? existing,
-    double textScale = 1,
-  }) async {
-    tester.view.physicalSize = const Size(412, 1600);
-    tester.view.devicePixelRatio = 1;
-    tester.platformDispatcher.textScaleFactorTestValue = textScale;
-    addTearDown(tester.view.reset);
-    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-    final repo = InMemoryEquipmentRepository();
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (_) => GearViewModel(repo),
-        child: MaterialApp(
-          theme: AppTheme.light,
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => TextButton(
-                onPressed: () => showEquipmentEditor(
-                  context,
-                  draft: EquipmentDraft.fromProfile(existing),
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      Future<InMemoryEquipmentRepository> open(
+        WidgetTester tester, {
+        EquipmentProfile? existing,
+        double textScale = 1,
+      }) async {
+        tester.view.physicalSize = const Size(412, 1600);
+        tester.view.devicePixelRatio = 1;
+        tester.platformDispatcher.textScaleFactorTestValue = textScale;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final repo = InMemoryEquipmentRepository();
+        await tester.pumpWidget(
+          ChangeNotifierProvider(
+            create: (_) => GearViewModel(repo),
+            child: MaterialApp(
+              theme: _phase2ThemeData,
+              builder: _phase2Builder,
+              home: Scaffold(
+                body: Builder(
+                  builder: (context) => TextButton(
+                    onPressed: () => showEquipmentEditor(
+                      context,
+                      draft: EquipmentDraft.fromProfile(existing),
+                    ),
+                    child: const Text('open'),
+                  ),
                 ),
-                child: const Text('open'),
               ),
             ),
           ),
-        ),
-      ),
-    );
-    await tester.tap(find.text('open'));
-    await tester.pumpAndSettle();
-    return repo;
-  }
+        );
+        await tester.tap(find.text('open'));
+        await tester.pumpAndSettle();
+        return repo;
+      }
 
-  Future<void> tapMore(WidgetTester tester) async {
-    await tester.ensureVisible(find.byKey(_more));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(_more));
-    await tester.pumpAndSettle();
-  }
+      Future<void> tapMore(WidgetTester tester) async {
+        await tester.ensureVisible(find.byKey(_more));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(_more));
+        await tester.pumpAndSettle();
+      }
 
-  Future<void> save(WidgetTester tester) async {
-    final button = find.byType(FilledButton);
-    await tester.ensureVisible(button);
-    await tester.pumpAndSettle();
-    await tester.tap(button);
-    await tester.pumpAndSettle();
-  }
+      Future<void> save(WidgetTester tester) async {
+        final button = find.byType(FilledButton);
+        await tester.ensureVisible(button);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+      }
 
-  testWidgets('the glossary title and a primary Save', (tester) async {
-    await open(tester);
-    expect(find.text('Add rig'), findsOneWidget);
-    expect(find.widgetWithText(FilledButton, 'Save rig'), findsOneWidget);
-    expect(find.byType(ElevatedButton), findsNothing);
-    expect(find.textContaining('Equipment'), findsNothing);
-  });
+      testWidgets('the glossary title and a primary Save', (tester) async {
+        await open(tester);
+        expect(find.text('Add rig'), findsOneWidget);
+        expect(find.widgetWithText(FilledButton, 'Save rig'), findsOneWidget);
+        expect(find.byType(ElevatedButton), findsNothing);
+        expect(find.textContaining('Equipment'), findsNothing);
+      });
 
-  testWidgets('the pixel size is asked once and derives the sensor size', (
-    tester,
-  ) async {
-    await open(tester);
-    expect(fieldLabeled('Pixel size (µm)'), findsOne);
-    expect(find.widgetWithText(TextFormField, '3.76'), findsOneWidget);
-    await tester.enterText(find.widgetWithText(TextFormField, '6248'), '6000');
-    await tester.enterText(find.widgetWithText(TextFormField, '4176'), '4000');
-    await tester.enterText(fieldLabeled('Pixel size (µm)'), '4');
-    await tester.pump();
-    // Derived, shown as text (library.js `library-derived`).
-    expect(
-      tester
-          .widget<Text>(find.byKey(const Key('rigEditor.sensorSizeValue')))
-          .data,
-      '24.00 × 16.00 mm',
-    );
-  });
+      testWidgets('the pixel size is asked once and derives the sensor size', (
+        tester,
+      ) async {
+        await open(tester);
+        expect(fieldLabeled('Pixel size (µm)'), findsOne);
+        expect(find.widgetWithText(TextFormField, '3.76'), findsOneWidget);
+        await tester.enterText(
+          find.widgetWithText(TextFormField, '6248'),
+          '6000',
+        );
+        await tester.enterText(
+          find.widgetWithText(TextFormField, '4176'),
+          '4000',
+        );
+        await tester.enterText(fieldLabeled('Pixel size (µm)'), '4');
+        await tester.pump();
+        // Derived, shown as text (library.js `library-derived`).
+        expect(
+          tester
+              .widget<Text>(find.byKey(const Key('rigEditor.sensorSizeValue')))
+              .data,
+          '24.00 × 16.00 mm',
+        );
+      });
 
-  testWidgets('"More (optional)" is collapsed; its summary states what is '
-      'set; one tap shows the fields', (tester) async {
-    await open(tester, existing: _rig);
-    expect(find.text('Edit rig'), findsOneWidget);
-    expect(find.text('maximum 300 s · RAW 50 MB · rotation 90°'), findsOne);
-    expect(fieldLabeled('Maximum sub-exposure (s)'), findsNothing);
-    await tapMore(tester);
-    for (final label in [
-      'Maximum sub-exposure (s)',
-      'Average RAW file size (MB)',
-      'Rotation (°)',
-    ]) {
-      expect(fieldLabeled(label), findsOneWidget);
-    }
-  });
+      testWidgets('"More (optional)" is collapsed; its summary states what is '
+          'set; one tap shows the fields', (tester) async {
+        await open(tester, existing: _rig);
+        expect(find.text('Edit rig'), findsOneWidget);
+        expect(find.text('maximum 300 s · RAW 50 MB · rotation 90°'), findsOne);
+        expect(fieldLabeled('Maximum sub-exposure (s)'), findsNothing);
+        await tapMore(tester);
+        for (final label in [
+          'Maximum sub-exposure (s)',
+          'Average RAW file size (MB)',
+          'Rotation (°)',
+        ]) {
+          expect(fieldLabeled(label), findsOneWidget);
+        }
+      });
 
-  testWidgets('a new rig: nothing set', (tester) async {
-    await open(tester);
-    expect(
-      find.text('Maximum exposure, RAW size, format, rotation: not set'),
-      findsOneWidget,
-    );
-  });
+      testWidgets('a new rig: nothing set', (tester) async {
+        await open(tester);
+        expect(
+          find.text('Maximum exposure, RAW size, format, rotation: not set'),
+          findsOneWidget,
+        );
+      });
 
-  testWidgets('saved unchanged with the section closed: every value kept, '
-      'none reinterpreted', (tester) async {
-    final repo = await open(tester, existing: _rig);
-    await save(tester);
-    final saved = repo.updated.single;
-    expect(
-      (
-        saved.maxExposureS,
-        saved.averageRawFileSizeMB,
-        saved.rotationDeg,
-        saved.pixelPitchUm,
-        saved.focalRatio,
-        saved.apertureDiameterMm,
-        saved.trackingType,
-      ),
-      (300.0, 50.0, 90.0, 3.76, 5.0, 80.0, TrackingType.guided),
-    );
-  });
+      testWidgets('saved unchanged with the section closed: every value kept, '
+          'none reinterpreted', (tester) async {
+        final repo = await open(tester, existing: _rig);
+        await save(tester);
+        final saved = repo.updated.single;
+        expect(
+          (
+            saved.maxExposureS,
+            saved.averageRawFileSizeMB,
+            saved.rotationDeg,
+            saved.pixelPitchUm,
+            saved.focalRatio,
+            saved.apertureDiameterMm,
+            saved.trackingType,
+          ),
+          (300.0, 50.0, 90.0, 3.76, 5.0, 80.0, TrackingType.guided),
+        );
+      });
 
-  testWidgets('an invalid value in the closed section: Save opens it, shows '
-      'why, and saves nothing', (tester) async {
-    final repo = await open(tester, existing: _rig);
-    await tapMore(tester);
-    await tester.enterText(fieldLabeled('Rotation (°)'), '999');
-    await tapMore(tester); // closed again
-    expect(fieldLabeled('Rotation (°)'), findsNothing);
-    await save(tester);
-    expect(fieldLabeled('Rotation (°)'), findsOneWidget);
-    expect(find.textContaining('Must be'), findsOneWidget);
-    expect(repo.updated, isEmpty);
-  });
+      testWidgets(
+        'an invalid value in the closed section: Save opens it, shows '
+        'why, and saves nothing',
+        (tester) async {
+          final repo = await open(tester, existing: _rig);
+          await tapMore(tester);
+          await tester.enterText(fieldLabeled('Rotation (°)'), '999');
+          await tapMore(tester); // closed again
+          expect(fieldLabeled('Rotation (°)'), findsNothing);
+          await save(tester);
+          expect(fieldLabeled('Rotation (°)'), findsOneWidget);
+          expect(find.textContaining('Must be'), findsOneWidget);
+          expect(repo.updated, isEmpty);
+        },
+      );
 
-  testWidgets('no overflow at 200 % text, open or closed', (tester) async {
-    await open(tester, existing: _rig, textScale: 2);
-    expect(tester.takeException(), isNull);
-    await tapMore(tester);
-    expect(tester.takeException(), isNull);
-  });
+      testWidgets('no overflow at 200 % text, open or closed', (tester) async {
+        await open(tester, existing: _rig, textScale: 2);
+        expect(tester.takeException(), isNull);
+        await tapMore(tester);
+        expect(tester.takeException(), isNull);
+      });
 
-  testWidgets('CollapsibleSection, controlled: no DisclosureViewModel, the '
-      'caller holds the state', (tester) async {
-    var open = false;
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: Scaffold(
-          body: StatefulBuilder(
-            builder: (context, setState) => CollapsibleSection(
-              sectionKey: 'test.controlled',
-              title: 'Title',
-              summary: 'Summary',
-              open: open,
-              onToggle: () => setState(() => open = !open),
-              child: const Text('Body'),
+      testWidgets('CollapsibleSection, controlled: no DisclosureViewModel, the '
+          'caller holds the state', (tester) async {
+        var open = false;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: _phase2ThemeData,
+            builder: _phase2Builder,
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) => CollapsibleSection(
+                  sectionKey: 'test.controlled',
+                  title: 'Title',
+                  summary: 'Summary',
+                  open: open,
+                  onToggle: () => setState(() => open = !open),
+                  child: const Text('Body'),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
-    expect(find.text('Body'), findsNothing);
-    await tester.tap(find.byKey(const Key('section.test.controlled')));
-    await tester.pumpAndSettle();
-    expect(open, isTrue);
-    expect(find.text('Body'), findsOneWidget);
-  });
+        );
+        expect(find.text('Body'), findsNothing);
+        await tester.tap(find.byKey(const Key('section.test.controlled')));
+        await tester.pumpAndSettle();
+        expect(open, isTrue);
+        expect(find.text('Body'), findsOneWidget);
+      });
+    });
+  }
 }

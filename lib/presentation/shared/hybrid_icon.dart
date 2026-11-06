@@ -18,16 +18,16 @@ class HybridIconData {
 abstract final class HybridIcons {
   // workspace.js `paths` (root navigation, Library, Logbook, Settings).
   static const moon = HybridIconData(
-    '<path d="M20 15a8 8 0 0 1-11-11 8 8 0 1 0 11 11Z"/>',
+    '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>',
   );
   static const book = HybridIconData(
-    '<path d="M4 3h15v18H4V3Zm0 14h15M8 3v14"/>',
+    '<path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4M2 10h4M2 14h4M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>',
   );
   static const library = HybridIconData(
-    '<path d="M4 7h16v14H4V7Zm-1-4h18v4H3V3Zm6 8h6"/>',
+    '<rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/>',
   );
   static const settings = HybridIconData(
-    '<path d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6m-6 0v6"/>',
+    '<path d="M10 5H3M12 19H3M14 3v4M16 17v4M21 12h-9M21 19h-5M21 5h-7M8 10v4M8 12H3"/>',
   );
   static const plus = HybridIconData('<path d="M12 5v14M5 12h14"/>');
   static const back = HybridIconData('<path d="M20 12H4m7-7-7 7 7 7"/>');
@@ -64,9 +64,7 @@ abstract final class HybridIcons {
   static const filter = HybridIconData('<path d="M4 6h16M7 12h10M10 18h4"/>');
 
   // app.js `paths` (Tonight).
-  static const homeMoon = HybridIconData(
-    '<path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/>',
-  );
+  static const homeMoon = moon;
   static const homeSun = HybridIconData(
     '<path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6 7 7m10 10 1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>',
   );

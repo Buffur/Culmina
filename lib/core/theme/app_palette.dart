@@ -63,7 +63,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
   final Color textTertiary;
   final Color textDisabled;
 
-  /// Dialogs, menus and sheets: one level above the card surface.
+  /// Bounded record surface. Overlays use colorScheme.surfaceContainerHigh.
   final Color surfaceRaised;
 
   /// Card and section outlines; dividers (decorative).
@@ -134,7 +134,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
 
   // The accepted web cascade's caution role (notion-hybrid.css, 86873ce).
   static const _lightCaution = Color(0xFF754600); // 8.0:1 on white
-  static const _darkCaution = Color(0xFFFFCA70); // 11.7:1 on #191919
+  static const _darkCaution = Color(0xFFE6C17A); // AFTER-DARK-1.2 caution
 
   static const light = AppPalette(
     statusFits: AppColors.lightTextPrimary,
@@ -176,14 +176,14 @@ class AppPalette extends ThemeExtension<AppPalette> {
 
   static const dark = AppPalette(
     brightness: Brightness.dark,
-    statusFits: AppColors.darkTextPrimary,
+    statusFits: Color(0xFF8EC7A7),
     statusTight: _darkCaution,
     statusDoesNotFit: AppColors.darkError,
-    statusNoWindow: AppColors.darkError,
+    statusNoWindow: Color(0xFFC0ACC9),
     statusNeutral: AppColors.darkTextSecondary,
     stateUnsaved: _darkCaution,
-    stateSettled: AppColors.darkTextPrimary,
-    stateQuiet: AppColors.darkTextSecondary,
+    stateSettled: Color(0xFF8EC7A7),
+    stateQuiet: AppColors.darkTextTertiary,
     textPrimary: AppColors.darkTextPrimary,
     textSecondary: AppColors.darkTextSecondary,
     textTertiary: AppColors.darkTextTertiary,
@@ -191,24 +191,24 @@ class AppPalette extends ThemeExtension<AppPalette> {
     surfaceRaised: AppColors.darkSurfaceRaised,
     border: AppColors.darkBorder,
     controlBorder: AppColors.darkControlBorder,
-    muted: Colors.grey,
+    muted: AppColors.darkTextTertiary,
     caution: _darkCaution,
-    sunEvent: Colors.orange,
-    twilightEvent: Colors.indigo,
-    moon: Colors.blueGrey,
-    selected: Colors.blue,
-    chartDay: Color(0xFF37474F), // blueGrey.shade800
-    chartTwilight: Color(0xFF1A237E), // indigo.shade900
-    chartDark: Colors.black,
-    chartWindow: Color(0x6600C853),
-    chartTarget: Colors.amber,
-    chartMoon: Color(0xFFB0BEC5),
-    chartMinAltitude: Colors.redAccent,
-    chartNow: Colors.redAccent,
-    chartNowCentre: Colors.white,
-    chartGrid: Colors.white30,
-    chartLabel: Colors.white70,
-    swatchBorder: Color(0xFFBDBDBD),
+    sunEvent: Color(0xFFE6C17A),
+    twilightEvent: Color(0xFFB3A6D8),
+    moon: Color(0xFFD5C8AD),
+    selected: Color(0xFF75B6FF),
+    chartDay: Color(0xFF77705E),
+    chartTwilight: Color(0xFF524B69),
+    chartDark: Color(0xFF262D3C),
+    chartWindow: Color(0xFF86BAD0),
+    chartTarget: Color(0xFFB5D6B6),
+    chartMoon: Color(0xFFD5C8AD),
+    chartMinAltitude: Color(0xFFD8A98E),
+    chartNow: AppColors.darkTextPrimary,
+    chartNowCentre: AppColors.darkBackground,
+    chartGrid: Color(0xFF515151),
+    chartLabel: AppColors.darkTextSecondary,
+    swatchBorder: Color(0xFF7B7F83),
     bortle: _bortleColours,
     onBortle: _onBortleColours,
   );

@@ -32,6 +32,7 @@ import 'package:astroplan/presentation/shared/app_words.dart';
 import 'package:astroplan/presentation/shared/night_text.dart';
 import 'package:astroplan/presentation/shared/night_time_formatter.dart';
 import 'package:astroplan/presentation/navigation/app_shell.dart';
+import 'package:astroplan/presentation/shared/fact_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -172,6 +173,20 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const Key('tonight.moon')), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('tonight.nightGroup')),
+        matching: find.byKey(const Key('tonight.moon')),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('tonight.conditionsGroup')),
+        matching: find.byKey(const Key('tonight.moon')),
+      ),
+      findsOneWidget,
+    );
     // app.js conditions: the phase and the night's illumination; the hour
     // it applies to is on Night & Moon (SCI-09).
     expect(
@@ -203,47 +218,48 @@ void main() {
     );
   });
 
-  testWidgets('Tonight preview result stays above expanded exact times', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(375, 812);
-    tester.view.devicePixelRatio = 1;
-    tester.platformDispatcher.textScaleFactorTestValue = 1;
-    addTearDown(tester.view.reset);
-    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-    await start(tester, lightFrames: 10);
-    await reveal(tester, 'nightMoon.exactToggle');
-    final toggle = find.byKey(const Key('nightMoon.exactToggle'));
-    final summary = find.byKey(const Key('nightMoon.cursorSummary'));
-    final state = find.byKey(const Key('nightMoon.cursorState'));
-    final browser = tester
-        .element(find.byKey(const Key('nightMoon.slider')))
-        .read<NightBrowserViewModel>();
-    final preview = browser.cursor.instantUtc;
-    final eveningDate = vm.plan.eveningDate;
-    expect(tester.getSize(toggle).height, greaterThanOrEqualTo(48));
-    expect(
-      tester.getBottomRight(summary).dy,
-      lessThan(tester.getTopLeft(toggle).dy),
-    );
-    expect(find.byKey(const Key('nightMoon.legend')), findsNothing);
-    await tester.tap(toggle);
-    await settle(tester);
-    expect(find.byKey(const Key('nightMoon.legend')), findsOneWidget);
-    expect(
-      tester.getBottomRight(state).dy,
-      lessThan(tester.getTopLeft(summary).dy),
-    );
-    expect(
-      tester.getBottomRight(summary).dy,
-      lessThan(tester.getTopLeft(toggle).dy),
-    );
-    expect(tester.getSize(toggle).height, greaterThanOrEqualTo(48));
-    expect(browser.cursor.instantUtc, preview);
-    expect(vm.plan.eveningDate, eveningDate);
-    expect(find.text('Drag to preview the night.'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'Tonight preview result follows the adopted exact-times disclosure',
+    (tester) async {
+      tester.view.physicalSize = const Size(375, 812);
+      tester.view.devicePixelRatio = 1;
+      tester.platformDispatcher.textScaleFactorTestValue = 1;
+      addTearDown(tester.view.reset);
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await start(tester, lightFrames: 10);
+      await reveal(tester, 'nightMoon.exactToggle');
+      final toggle = find.byKey(const Key('nightMoon.exactToggle'));
+      final summary = find.byKey(const Key('nightMoon.cursorSummary'));
+      final state = find.byKey(const Key('nightMoon.cursorState'));
+      final browser = tester
+          .element(find.byKey(const Key('nightMoon.slider')))
+          .read<NightBrowserViewModel>();
+      final preview = browser.cursor.instantUtc;
+      final eveningDate = vm.plan.eveningDate;
+      expect(tester.getSize(toggle).height, greaterThanOrEqualTo(48));
+      expect(
+        tester.getTopLeft(state).dy,
+        greaterThanOrEqualTo(tester.getBottomRight(toggle).dy),
+      );
+      expect(find.byKey(const Key('nightMoon.legend')), findsNothing);
+      await tester.tap(toggle);
+      await settle(tester);
+      expect(find.byKey(const Key('nightMoon.legend')), findsOneWidget);
+      expect(
+        tester.getBottomRight(state).dy,
+        lessThan(tester.getTopLeft(summary).dy),
+      );
+      expect(
+        tester.getTopLeft(state).dy,
+        greaterThanOrEqualTo(tester.getBottomRight(toggle).dy),
+      );
+      expect(tester.getSize(toggle).height, greaterThanOrEqualTo(48));
+      expect(browser.cursor.instantUtc, preview);
+      expect(vm.plan.eveningDate, eveningDate);
+      expect(find.byKey(const Key('nightMoon.slider')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   // S6.13: the plan card's status says what is missing, in the planner's
   // words, and offers the picker (before: its own "No rig chosen" line).
@@ -277,7 +293,10 @@ void main() {
       find.text(QuantityText.duration(Duration(milliseconds: fit.availableMs))),
       findsOneWidget,
     );
-    expect(find.text(fit.reason), findsOneWidget);
+    expect(
+      find.text(fit.reason.replaceFirst('Everything fits with ', 'Fits with ')),
+      findsOneWidget,
+    );
   });
 
   testWidgets("a huge plan doesn't fit, with the reason", (tester) async {
@@ -292,7 +311,10 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text(fit.reason), findsOneWidget);
+    expect(
+      find.text(fit.reason.replaceFirst('Everything fits with ', 'Fits with ')),
+      findsOneWidget,
+    );
   });
 
   group('200 % text on a 360 × 640 dp phone: no overflow', () {
@@ -389,7 +411,7 @@ void main() {
       expect(title, findsOneWidget);
       expect(
         tester.widget<Text>(title).style?.fontSize,
-        AppTypography.homeHeading.fontSize,
+        AppTypography.afterDarkRoles['homeHeading']!.fontSize,
       );
       expect(
         tester.getSemantics(title),
@@ -415,12 +437,11 @@ void main() {
       final heading = find.byKey(const Key('tonight.planHeading'));
       final style = tester.widget<Text>(heading).style!;
       expect(tester.widget<Text>(heading).data, AppWords.yourPlan);
-      // Approved Hybrid (hybrid-refinement.css): the section heading role,
-      // 20/600 at 1.4, -0.15.
+      // Adopted parent heading: 20/26 Semibold, tracking -0.2.
       expect(style.fontSize, 20);
       expect(style.fontWeight, FontWeight.w600);
-      expect(style.height, 1.4);
-      expect(style.letterSpacing, -0.15);
+      expect(style.height, 1.3);
+      expect(style.letterSpacing, -0.2);
       expect(
         tester.getSemantics(heading),
         matchesSemantics(label: AppWords.yourPlan, isHeader: true),
@@ -432,18 +453,18 @@ void main() {
       // The section subject role, 18/500 at 1.3.
       expect(target.fontSize, 18);
       expect(target.fontWeight, FontWeight.w500);
-      expect(target.height, closeTo(1.3, 0.001));
+      expect(target.height, closeTo(26 / 18, 0.001));
       expect(target.letterSpacing, 0);
       final rig = tester.widget<Text>(find.byKey(const Key('tonight.planRig')));
-      expect(rig.style?.fontSize, 14);
-      expect(rig.style?.height, 1.55);
+      expect(rig.style?.fontSize, 15);
+      expect(rig.style?.height, 24 / 15);
       final nightHeading = tester.widget<Text>(find.text('The night ahead'));
-      expect(nightHeading.style?.fontSize, 25);
+      expect(nightHeading.style?.fontSize, 20);
       expect(nightHeading.style?.fontFamily, 'Geist');
-      expect(nightHeading.style?.fontWeight, FontWeight.w500);
-      expect(nightHeading.style?.letterSpacing, -0.5);
+      expect(nightHeading.style?.fontWeight, FontWeight.w600);
+      expect(nightHeading.style?.letterSpacing, -0.2);
       final title = tester.widget<Text>(find.byKey(const Key('tonight.title')));
-      expect(title.style?.height, closeTo(1.2, 0.001));
+      expect(title.style?.height, closeTo(42 / 36, 0.001));
       // The accepted Home has no wordmark and no Welcome link (contract
       // §2; first-run onboarding stays).
       expect(find.text('culmina'), findsNothing);
@@ -462,8 +483,14 @@ void main() {
             ),
           )
           .style!;
-      expect(verdict.fontSize, AppTypography.itemTitle.fontSize);
-      expect(verdict.fontWeight, AppTypography.itemTitle.fontWeight);
+      expect(
+        verdict.fontSize,
+        AppTypography.afterDarkRoles['itemTitle']!.fontSize,
+      );
+      expect(
+        verdict.fontWeight,
+        AppTypography.afterDarkRoles['nestedTitle']!.fontWeight,
+      );
     });
 
     for (final chosen in [true, false]) {
@@ -1102,14 +1129,13 @@ void main() {
       addTearDown(tester.view.reset);
       await start(tester, site: false, firstRunDone: false);
       String status(String step) => tester
-          .widgetList<Text>(
+          .widget<FactRow>(
             find.descendant(
               of: find.byKey(Key('welcome.$step')),
-              matching: find.byType(Text),
+              matching: find.byType(FactRow),
             ),
           )
-          .elementAt(1)
-          .data!;
+          .value;
       expect(status('site'), 'Not set');
       expect(status('rig'), 'Not chosen');
 

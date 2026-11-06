@@ -191,6 +191,10 @@ void main() {
           await t.pumpAndSettle();
           await t.tap(find.byKey(const Key('nightPicker.year')));
           await t.pumpAndSettle();
+          await captureWave1(
+            t,
+            'wave4-date-$theme-${width.toInt()}-year-picker',
+          );
           await t.tap(find.text('2028'));
           await t.pumpAndSettle();
           expect(find.text('October 2028'), findsOneWidget);
@@ -202,15 +206,27 @@ void main() {
           expect(find.text('October 2028'), findsOneWidget);
           await t.tap(find.byKey(const Key('nightPicker.inputMode')));
           await t.pumpAndSettle();
+          await captureWave1(
+            t,
+            'wave4-date-$theme-${width.toInt()}-input-valid',
+          );
           await t.enterText(find.byType(TextFormField), 'invalid');
           await t.tap(find.widgetWithText(TextButton, 'OK'));
           await t.pumpAndSettle();
           expect(find.byType(NightPickerDialog), findsOneWidget);
           expect(probe.completed, isFalse);
+          await captureWave1(
+            t,
+            'wave4-date-$theme-${width.toInt()}-input-invalid',
+          );
           await t.enterText(find.byType(TextFormField), '02/29/2028');
           await t.tap(find.byKey(const Key('nightPicker.inputMode')));
           await t.pumpAndSettle();
           expect(find.text('February 2028'), findsOneWidget);
+          await captureWave1(
+            t,
+            'wave4-date-$theme-${width.toInt()}-valid-leap-date',
+          );
           _target(t, _day(t, DateTime(2028, 2, 29)));
           await t.tap(find.widgetWithText(TextButton, 'OK'));
           await t.pumpAndSettle();
@@ -290,5 +306,54 @@ void main() {
         expect(t.takeException(), isNull);
       },
     );
+  }
+  for (final theme in ['light', 'dark', 'field']) {
+    testWidgets('Phase2 date picker valid out of range $theme', (t) async {
+      final probe = await _open(
+        t,
+        theme,
+        375,
+        firstDate: DateTime(2026, 10, 15),
+        lastDate: DateTime(2026, 10, 20),
+      );
+      await t.tap(find.byKey(const Key('nightPicker.inputMode')));
+      await t.pumpAndSettle();
+      await t.enterText(find.byType(TextFormField), '10/21/2026');
+      await t.tap(find.widgetWithText(TextButton, 'OK'));
+      await t.pumpAndSettle();
+      expect(
+        probe.completed,
+        isFalse,
+        reason: 'valid format outside allowed dates cannot commit',
+      );
+      final localizations = MaterialLocalizations.of(
+        t.element(find.byType(InputDatePickerFormField)),
+      );
+      final field = t.state<FormFieldState<String>>(find.byType(TextFormField));
+      expect(field.errorText, localizations.dateOutOfRangeLabel);
+      await captureWave1(t, 'phase2-date-$theme-out-of-range');
+      await t.tap(find.widgetWithText(TextButton, 'Cancel'));
+      await t.pumpAndSettle();
+      expect(probe.result, isNull);
+      expect(t.takeException(), isNull);
+    });
+    testWidgets('Phase2 date picker native text scale $theme', (t) async {
+      final probe = await _open(t, theme, 375);
+      await t.tap(find.widgetWithText(TextButton, 'Cancel'));
+      await t.pumpAndSettle();
+      t.platformDispatcher.textScaleFactorTestValue = 2;
+      await t.tap(find.byKey(const Key('wave4.openPicker')));
+      await t.pumpAndSettle();
+      expect(find.byType(DatePickerDialog), findsOneWidget);
+      expect(find.byKey(const Key('nightPicker.content')), findsNothing);
+      await captureWave1(t, 'phase2-date-$theme-native-200');
+      await t.tap(find.text('20'));
+      await t.pumpAndSettle();
+      await t.tap(find.widgetWithText(TextButton, 'OK'));
+      await t.pumpAndSettle();
+      expect(probe.result, DateTime(2026, 10, 20));
+      expect(probe.result!.isUtc, isFalse);
+      expect(t.takeException(), isNull);
+    });
   }
 }

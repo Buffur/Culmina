@@ -8,6 +8,9 @@
 // test without real time leaves that cache never ready, and no later map in
 // the same process would request a tile.
 
+import '../../../support/phase2_state_capture.dart';
+import '../../../support/wave1_capture.dart';
+
 import 'dart:io';
 
 import 'package:astroplan/data/database/app_database.dart';
@@ -56,143 +59,170 @@ class _OfflineHttp extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext? context) => client;
 }
 
+late String _phase2Theme;
+
 void main() {
-  // The host has no path_provider plugin; a device has it.
-  const pathProvider = MethodChannel('plugins.flutter.io/path_provider');
-  late Directory cache;
-  late _OfflineHttpClient http;
-  HttpOverrides? previous;
+  setUpAll(loadWave1Font);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      // The host has no path_provider plugin; a device has it.
+      const pathProvider = MethodChannel('plugins.flutter.io/path_provider');
+      late Directory cache;
+      late _OfflineHttpClient http;
+      HttpOverrides? previous;
 
-  setUp(() {
-    SharedPreferences.setMockInitialValues({});
-    cache = Directory.systemTemp.createTempSync('picker_tiles_');
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(pathProvider, (call) async => cache.path);
-    http = _OfflineHttpClient();
-    previous = HttpOverrides.current;
-    HttpOverrides.global = _OfflineHttp(http);
-  });
+      setUp(() {
+        SharedPreferences.setMockInitialValues({});
+        cache = Directory.systemTemp.createTempSync('picker_tiles_');
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(pathProvider, (call) async => cache.path);
+        http = _OfflineHttpClient();
+        previous = HttpOverrides.current;
+        HttpOverrides.global = _OfflineHttp(http);
+      });
 
-  tearDown(() {
-    HttpOverrides.global = previous;
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(pathProvider, null);
-    // Windows keeps flutter_map's process-wide tile cache file open until the
-    // test process exits, so the folder may not be deletable yet; it is in
-    // the system temp folder. Cleanup only: no assertion depends on it.
-    try {
-      cache.deleteSync(recursive: true);
-    } on FileSystemException {
-      // Left for the OS temp cleanup.
-    }
-  });
+      tearDown(() {
+        HttpOverrides.global = previous;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(pathProvider, null);
+        // Windows keeps flutter_map's process-wide tile cache file open until the
+        // test process exits, so the folder may not be deletable yet; it is in
+        // the system temp folder. Cleanup only: no assertion depends on it.
+        try {
+          cache.deleteSync(recursive: true);
+        } on FileSystemException {
+          // Left for the OS temp cleanup.
+        }
+      });
 
-  // The tile loads need real time (the cache folder, the requests) and frames
-  // in between to start and fail: wait for new requests to start (up to
-  // 10 s), then a little longer for them to fail.
-  Future<void> letTilesFail(WidgetTester tester) async {
-    Future<void> step() async {
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 100)),
-      );
-      await tester.pump(const Duration(milliseconds: 100));
-    }
+      // The tile loads need real time (the cache folder, the requests) and frames
+      // in between to start and fail: wait for new requests to start (up to
+      // 10 s), then a little longer for them to fail.
+      Future<void> letTilesFail(WidgetTester tester) async {
+        Future<void> step() async {
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 100)),
+          );
+          await tester.pump(const Duration(milliseconds: 100));
+        }
 
-    final before = http.requests;
-    for (var i = 0; i < 100 && http.requests == before; i++) {
-      await step();
-    }
-    for (var i = 0; i < 5; i++) {
-      await step();
-    }
-  }
+        final before = http.requests;
+        for (var i = 0; i < 100 && http.requests == before; i++) {
+          await step();
+        }
+        for (var i = 0; i < 5; i++) {
+          await step();
+        }
+      }
 
-  testWidgets('the map and its controls stay usable, and a typed position '
-      'is shown and used', (tester) async {
-    late AppDatabase database;
-    late PlannerHarness vm;
-    await tester.runAsync(() async {
-      database = AppDatabase(NativeDatabase.memory());
-      vm = PlannerHarness(
-        DriftTargetRepository(database),
-        DriftEquipmentRepository(database),
-        _NoWeather(),
-        DriftLocationRepository(database),
-        locationService: FakeLocationService(),
-        reverseGeocoder: FakeReverseGeocoder(),
-      );
-      await vm.ready;
-    });
-    addTearDown(() => tester.runAsync(database.close));
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: vm.providers,
-        child: MaterialApp.router(
-          routerConfig: GoRouter(
-            initialLocation: '/pick',
-            routes: [
-              GoRoute(
-                path: '/',
-                builder: (_, _) => const Text('caller'),
+      testWidgets('the map and its controls stay usable, and a typed position '
+          'is shown and used', (tester) async {
+        late AppDatabase database;
+        late PlannerHarness vm;
+        await tester.runAsync(() async {
+          database = AppDatabase(NativeDatabase.memory());
+          vm = PlannerHarness(
+            DriftTargetRepository(database),
+            DriftEquipmentRepository(database),
+            _NoWeather(),
+            DriftLocationRepository(database),
+            locationService: FakeLocationService(),
+            reverseGeocoder: FakeReverseGeocoder(),
+          );
+          await vm.ready;
+        });
+        addTearDown(() => tester.runAsync(database.close));
+        await tester.pumpWidget(
+          MultiProvider(
+            providers: vm.providers,
+            child: MaterialApp.router(
+              theme: phase2Theme(_phase2Theme),
+              builder: (_, child) =>
+                  phase2Frame(child: child!, theme: _phase2Theme),
+              routerConfig: GoRouter(
+                initialLocation: '/pick',
                 routes: [
                   GoRoute(
-                    path: 'pick',
-                    builder: (_, _) => const LocationPickerScreen(),
+                    path: '/',
+                    builder: (_, _) => const Text('caller'),
+                    routes: [
+                      GoRoute(
+                        path: 'pick',
+                        builder: (_, _) => const LocationPickerScreen(),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-    await letTilesFail(tester);
+        );
+        await letTilesFail(tester);
 
-    final requested = http.requests;
-    expect(requested, greaterThan(0), reason: 'tiles were requested');
-    expect(tester.takeException(), isNull);
-    expect(find.byType(TileLayer), findsOneWidget);
-    expect(find.text('OpenStreetMap contributors'), findsOneWidget);
-    expect(
-      tester
-          .widget<TextButton>(find.byKey(const Key('location.coordinates')))
-          .onPressed,
-      isNotNull,
-    );
-    expect(
-      tester
-          .widget<FilledButton>(find.byKey(const Key('location.usePoint')))
-          .onPressed,
-      isNotNull,
-    );
-    expect(
-      tester
-          .widget<IconButton>(
-            find.byKey(const Key('location.useCurrentPosition')),
-          )
-          .onPressed,
-      isNotNull,
-    );
-    await tester.tap(find.byKey(const Key('location.coordinates')));
-    await tester.pumpAndSettle();
-    final fields = find.byType(TextFormField);
-    await tester.enterText(fields.at(0), '46.05');
-    await tester.enterText(fields.at(1), '14.51');
-    await tester.tap(find.text('Use'));
-    await tester.pumpAndSettle();
-    await letTilesFail(tester);
-    expect(http.requests, greaterThan(requested), reason: 'new tiles failed');
+        final requested = http.requests;
+        expect(requested, greaterThan(0), reason: 'tiles were requested');
+        await capturePhase2State(
+          tester,
+          package: 'package3',
+          state: 'map-tiles-offline-controls-available',
+          theme: _phase2Theme,
+        );
+        expect(tester.takeException(), isNull);
+        expect(find.byType(TileLayer), findsOneWidget);
+        expect(find.text('OpenStreetMap contributors'), findsOneWidget);
+        expect(
+          tester
+              .widget<TextButton>(find.byKey(const Key('location.coordinates')))
+              .onPressed,
+          isNotNull,
+        );
+        expect(
+          tester
+              .widget<FilledButton>(find.byKey(const Key('location.usePoint')))
+              .onPressed,
+          isNotNull,
+        );
+        expect(
+          tester
+              .widget<IconButton>(
+                find.byKey(const Key('location.useCurrentPosition')),
+              )
+              .onPressed,
+          isNotNull,
+        );
+        await tester.tap(find.byKey(const Key('location.coordinates')));
+        await tester.pumpAndSettle();
+        final fields = find.byType(TextFormField);
+        await tester.enterText(fields.at(0), '46.05');
+        await tester.enterText(fields.at(1), '14.51');
+        await tester.tap(find.text('Use'));
+        await tester.pumpAndSettle();
+        await letTilesFail(tester);
+        expect(
+          http.requests,
+          greaterThan(requested),
+          reason: 'new tiles failed',
+        );
 
-    final marker = tester.widget<MarkerLayer>(find.byType(MarkerLayer));
-    expect(marker.markers.single.point.latitude, 46.05);
-    expect(marker.markers.single.point.longitude, 14.51);
-    expect(tester.takeException(), isNull);
+        final marker = tester.widget<MarkerLayer>(find.byType(MarkerLayer));
+        expect(marker.markers.single.point.latitude, 46.05);
+        expect(marker.markers.single.point.longitude, 14.51);
+        await capturePhase2State(
+          tester,
+          package: 'package3',
+          state: 'map-offline-typed-position-staged',
+          theme: _phase2Theme,
+        );
+        expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const Key('location.usePoint')));
-    await tester.runAsync(() => vm.plan.idle);
-    await tester.pumpAndSettle();
-    expect((vm.latitude, vm.longitude), (46.05, 14.51));
-    expect(find.text('caller'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+        await tester.tap(find.byKey(const Key('location.usePoint')));
+        await tester.runAsync(() => vm.plan.idle);
+        await tester.pumpAndSettle();
+        expect((vm.latitude, vm.longitude), (46.05, 14.51));
+        expect(find.text('caller'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    });
+  }
 }

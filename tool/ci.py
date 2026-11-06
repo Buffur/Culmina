@@ -16,6 +16,7 @@ import time
 
 ROOT = Path(__file__).resolve().parent.parent
 ANDROID_ONLY = {
+    "integration_test/native_restore_safety_test.dart",
     "integration_test/hybrid_migration_smoke_test.dart",
     "integration_test/hybrid_transfer_capture_test.dart",
 }
@@ -54,10 +55,10 @@ def documentation_only(paths):
     )
 
 
-def required_jobs_pass(changes, full, checks, unit, host):
+def required_jobs_pass(changes, full, checks, unit, host, android):
     return changes == "success" and (
-        (full == "true" and checks == unit == host == "success") or
-        (full == "false" and checks == unit == host == "skipped")
+        (full == "true" and checks == unit == host == android == "success") or
+        (full == "false" and checks == unit == host == android == "skipped")
     )
 
 
@@ -211,7 +212,7 @@ def main():
     p.add_argument("directory")
     p.add_argument("--shards", type=int, default=3)
     p = sub.add_parser("require-jobs")
-    for name in ("changes", "full", "checks", "unit", "host"):
+    for name in ("changes", "full", "checks", "unit", "host", "android"):
         p.add_argument(name)
     args = parser.parse_args()
     if args.action == "profile":
@@ -228,7 +229,7 @@ def main():
     elif args.action == "run":
         return execute(args)
     elif args.action == "require-jobs":
-        return int(not required_jobs_pass(args.changes, args.full, args.checks, args.unit, args.host))
+        return int(not required_jobs_pass(args.changes, args.full, args.checks, args.unit, args.host, args.android))
     else:
         result = aggregate(args.directory, args.shards)
         write_json(Path(args.directory) / "summary.json", result)

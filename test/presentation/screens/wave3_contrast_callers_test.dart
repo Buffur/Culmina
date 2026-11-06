@@ -62,7 +62,7 @@ Future<Map<String, Object?>> _graph(Wave2Fixture f) async => {
 void main() {
   setUpAll(loadWave1Font);
   for (final theme in ['light', 'dark', 'field']) {
-    testWidgets('UIA-0013 C03 $theme: selected hourly time held ink', (
+    testWidgets('UIA-0013 C03 $theme: Forecast details disclosure held ink', (
       t,
     ) async {
       final f = await mountWave2(t, theme);
@@ -71,11 +71,15 @@ void main() {
       await revealWave2(t, weather);
       await t.tap(weather);
       await hybridSettle(t);
-      final label = find.byKey(const Key('weather.hourLabel'));
-      await revealWave2(t, label);
-      final header = find
-          .ancestor(of: label, matching: find.byType(InkWell))
-          .first;
+      final forecastDetails = find.byKey(const Key('weather.details'));
+      await revealWave2(t, forecastDetails);
+      // The removed selected-hour inspector is not an interactive owner.
+      // Exercise the retained disclosure's actual label and ink instead.
+      final label = find.descendant(
+        of: forecastDetails,
+        matching: find.text('Forecast details'),
+      );
+      final header = _headerInk(forecastDetails);
       final before = f.vm.plan.activeSession!;
       await wave3HeldContrast(t, header, label, 'wave3-C03-$theme-held', theme);
       expect(f.vm.plan.activeSessionId, before.id);
@@ -221,7 +225,7 @@ void main() {
         final date = CalendarDate(2026, 10, 1);
         final day = find.byKey(Key('nightMoon.day.${date.toIso8601String()}'));
         await revealWave2(t, day);
-        final duration = find.descendant(of: day, matching: find.text('5 min'));
+        final duration = find.descendant(of: day, matching: find.text('5m'));
         expect(duration, findsOneWidget);
         await wave3HeldContrast(
           t,
@@ -238,7 +242,7 @@ void main() {
         await revealWave2(t, next);
         await t.tap(next);
         await hybridSettle(t);
-        final monthRetry = find.widgetWithText(TextButton, 'Retry month');
+        final monthRetry = find.widgetWithText(OutlinedButton, 'Retry month');
         await revealWave2(t, monthRetry);
         final beforeRetry = requests;
         await wave3HeldContrast(

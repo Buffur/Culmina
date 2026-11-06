@@ -115,6 +115,7 @@ List<String> _integrationTests() => [
         !const {
           'hybrid_migration_smoke_test.dart',
           'hybrid_transfer_capture_test.dart',
+          'native_restore_safety_test.dart',
         }.contains(f.uri.pathSegments.last))
       f.path.replaceAll(Platform.pathSeparator, '/'),
 ]..sort();

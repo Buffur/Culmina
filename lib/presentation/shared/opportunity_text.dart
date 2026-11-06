@@ -74,10 +74,10 @@ abstract final class OpportunityText {
         '${sep == null ? '' : ', at least ${_deg(sep)} from the target'}';
   }
 
-  /// The forecast during a window; null when no forecast was supplied.
+  /// Forecast evidence during a time window, with missing coverage explicit.
   static String? weather(OpportunityWindow w) {
     final x = w.weather;
-    if (x == null) return null;
+    if (x == null) return 'Weather unknown';
     final parts = <String>[];
     final lo = x.cloudMinPct;
     final hi = x.cloudMaxPct;
@@ -92,9 +92,16 @@ abstract final class OpportunityText {
     if (x.dewKnownHours > 0) {
       parts.add(
         x.dewRiskHours == 0
-            ? 'no dew risk (heuristic)'
+            ? 'no dew risk in ${x.dewKnownHours} known forecast hours (heuristic)'
             : 'dew risk ${x.dewRiskHours} h (heuristic)',
       );
+      if (x.dewKnownHours < x.hours) {
+        parts.add(
+          'dew risk unknown for ${x.hours - x.dewKnownHours} forecast hours',
+        );
+      }
+    } else {
+      parts.add('dew risk unknown');
     }
     final age = switch (x.age) {
       WeatherAge.current => null,
@@ -102,6 +109,7 @@ abstract final class OpportunityText {
       WeatherAge.stale => 'stale forecast',
     };
     if (age != null) parts.add(age);
+    if (x.refreshFailed) parts.add('refresh failed, cached forecast');
     return parts.join(', ');
   }
 }

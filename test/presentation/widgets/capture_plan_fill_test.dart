@@ -107,10 +107,7 @@ void main() {
     expect(target, inInclusiveRange(1, 499));
     final button = find.byKey(const Key('capturePlan.fillWindow'));
     expect(button, findsOneWidget);
-    expect(
-      find.textContaining('Trim Ha 300 s to $target frames'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Ha 300 s · $target frames'), findsOneWidget);
 
     await tester.tap(button);
     await tester.runAsync(() => Future<void>.delayed(Duration.zero));
@@ -134,9 +131,6 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(vm.fitAnalysis.state, FitState.fits);
-    expect(
-      find.textContaining("Fill tonight's window: Ha 300 s ×"),
-      findsOneWidget,
-    );
+    expect(find.text('Fill the window'), findsOneWidget);
   });
 }

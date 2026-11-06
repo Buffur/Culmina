@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/theme/app_motion.dart';
+import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_palette.dart';
 import '../../core/theme/app_text_theme.dart';
+import '../../core/theme/hybrid_tokens.dart';
 import '../../core/utils/quantity_text.dart';
-import '../shared/hybrid_icon.dart';
 import '../../domain/models/camera_class.dart';
 import '../../domain/models/capture_block.dart';
 import '../../core/config/feature_scope.dart';
@@ -60,7 +60,7 @@ class CapturePlanWidget extends StatelessWidget {
             blockActions!,
           ],
           if (includeSummary) ...[
-            const SizedBox(height: 28),
+            const SizedBox(height: AppSpacing.md),
             const CaptureBudgetSummary(),
           ],
         ],
@@ -353,7 +353,7 @@ class _BlockListState extends State<_BlockList> {
               TextStyle small(Color c) => AppTextTheme.of(context)
                   .resolve(
                     AppTextTheme.of(context).caption,
-                    AppTextGeometry.supporting,
+                    AppTextGeometry.compact,
                   )
                   .copyWith(color: c);
               return _ChangeMark(
@@ -369,260 +369,233 @@ class _BlockListState extends State<_BlockList> {
                   final n => ValueKey((identityHashCode(block), n)),
                 },
                 fresh: fresh,
-                // plan.js `.capture-block`: a subtle rule above, 14 above
-                // and 10 below the content.
-                builder: (tint) => ColoredBox(
-                  color: tint,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      border: Border(top: BorderSide(color: palette.border)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 14, bottom: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Semantics(
-                            header: true,
-                            child: Text(
-                              BlockText.title(block),
-                              key: Key('capture.title.$index'),
-                              style: AppTextTheme.of(context).itemTitle
-                                  .copyWith(color: palette.textPrimary),
+                // Keep capture records flat inside their owning plan block.
+                builder: (tint) => ReorderableDelayedDragStartListener(
+                  index: index,
+                  child: ColoredBox(
+                    color: tint,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: palette.surfaceRaised,
+                            borderRadius: BorderRadius.circular(
+                              AppRadius.small,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            BlockText.math(block),
-                            style: AppTextTheme.of(context)
-                                .resolve(
-                                  AppTextTheme.of(context).value,
-                                  AppTextGeometry.supporting,
-                                )
-                                .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: palette.textPrimary,
-                                ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            _records(block, cameraClass),
-                            key: Key('capture.records.$index'),
-                            style: small(palette.textSecondary),
-                          ),
-                          if (source != null) ...[
-                            const SizedBox(height: 2),
-                            Text(source, style: small(palette.textTertiary)),
-                          ],
-                          if (fits != null) ...[
-                            const SizedBox(height: 2),
-                            Text(
-                              fits,
-                              key: Key('capture.whatFits.$index'),
-                              style: small(
-                                unplaced > 0
-                                    ? palette.statusDoesNotFit
-                                    : palette.textSecondary,
-                              ),
-                            ),
-                          ],
-                          // S6.9 (UX-15 (1); RD-08): a known tracking's
-                          // exceedance is a warning, in words and the
-                          // status colour; unknown tracking is a missing
-                          // input, neutral, with the way to set it.
-                          if (exceeds &&
-                              !capability.recommendationIsConditional) ...[
-                            const SizedBox(height: 2),
-                            Text(
-                              CapabilityText.subWarningFor(
-                                capability,
-                                viewModel.effectiveTracking,
-                              ),
-                              key: const Key('capture.subWarning'),
-                              style: small(palette.statusDoesNotFit),
-                            ),
-                          ],
-                          if (exceeds &&
-                              capability.recommendationIsConditional) ...[
-                            const SizedBox(height: 2),
-                            Text(
-                              CapabilityText.unknownTracking(capability),
-                              key: const Key('capture.trackingUnknown'),
-                              style: small(palette.statusNeutral),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                key: const Key('capture.setTracking'),
-                                onPressed: () => pickPlanTracking(context),
-                                child: const Text(
-                                  'Set the tracking for this plan',
-                                ),
-                              ),
-                            ),
-                          ],
-                          for (final m in mismatch) ...[
-                            const SizedBox(height: 2),
-                            Text(
-                              CalibrationText.mismatch(m, block.frameType),
-                              key: Key('capture.mismatch.$index.${m.name}'),
-                              style: small(palette.statusTight),
-                            ),
-                          ],
-                          if (mismatch.any((m) => m.fixable) &&
-                              CalibrationMatch.defaultSource(block, blocks) !=
-                                  null)
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                key: Key('capture.match.$index'),
-                                onPressed: () => _match(index, block),
-                                child: Text(
-                                  CalibrationText.match(block.frameType),
-                                ),
-                              ),
-                            ),
-                          const SizedBox(height: 8),
-                          LayoutBuilder(
-                            builder: (context, constraints) {
-                              final theme = Theme.of(context);
-                              final direction = Directionality.of(context);
-                              final scaler = MediaQuery.textScalerOf(context);
-                              double labelWidth(String value, TextStyle style) {
-                                final painter = TextPainter(
-                                  text: TextSpan(text: value, style: style),
-                                  textDirection: direction,
-                                  textScaler: scaler,
-                                )..layout();
-                                final width = painter.width;
-                                painter.dispose();
-                                return width;
-                              }
-
-                              final editStyle = theme.outlinedButtonTheme.style;
-                              final editPadding =
-                                  editStyle?.padding
-                                      ?.resolve(const <WidgetState>{})
-                                      ?.resolve(direction)
-                                      .horizontal ??
-                                  32;
-                              final editMinimum = math.max(
-                                48.0,
-                                labelWidth(
-                                      'Edit',
-                                      editStyle?.textStyle?.resolve(
-                                            const <WidgetState>{},
-                                          ) ??
-                                          theme.textTheme.labelLarge!,
-                                    ) +
-                                    editPadding,
-                              );
-                              final trailingWidth =
-                                  2 * 48 +
-                                  2 * 8 +
-                                  math.max(
-                                    48.0,
-                                    labelWidth(
-                                          'Remove',
-                                          theme.textButtonTheme.style?.textStyle
-                                                  ?.resolve(
-                                                    const <WidgetState>{},
-                                                  ) ??
-                                              theme.textTheme.labelLarge!,
-                                        ) +
-                                        24,
-                                  );
-                              final fits =
-                                  constraints.maxWidth >=
-                                  editMinimum + 8 + trailingWidth;
-                              final editWidth = fits
-                                  ? constraints.maxWidth - trailingWidth - 8
-                                  : math.min(
-                                      constraints.maxWidth,
-                                      math.max(120.0, editMinimum),
-                                    );
-                              return Wrap(
-                                alignment: WrapAlignment.spaceBetween,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: [
-                                  SizedBox(
-                                    width: editWidth,
-                                    child: OutlinedButton(
-                                      key: Key('capture.edit.$index'),
-                                      onPressed: () => _edit(index, block),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.sm),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
                                       child: Semantics(
-                                        label:
-                                            'Edit block ${index + 1}, ${BlockText.type(block.frameType)}',
-                                        excludeSemantics: true,
-                                        child: const Text('Edit'),
+                                        header: true,
+                                        child: Text(
+                                          BlockText.title(block),
+                                          key: Key('capture.title.$index'),
+                                          style: AppTextTheme.of(context)
+                                              .nestedTitle
+                                              .copyWith(
+                                                color: palette.textPrimary,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                    PopupMenuButton<String>(
+                                      key: Key('capture.menu.$index'),
+                                      tooltip: 'Block ${index + 1} actions',
+                                      onSelected: (action) {
+                                        if (action == 'edit') {
+                                          _edit(index, block);
+                                        }
+                                        if (action == 'remove') {
+                                          _delete(index, block);
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          key: Key('capture.edit.$index'),
+                                          value: 'edit',
+                                          child: const Text('Edit block'),
+                                        ),
+                                        PopupMenuItem(
+                                          key: Key('capture.delete.$index'),
+                                          value: 'remove',
+                                          child: const Text('Remove'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  BlockText.math(block),
+                                  style: AppTextTheme.of(context)
+                                      .resolve(
+                                        AppTextTheme.of(context).value,
+                                        AppTextGeometry.supporting,
+                                      )
+                                      .copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: palette.textPrimary,
+                                      ),
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  _records(block, cameraClass),
+                                  key: Key('capture.records.$index'),
+                                  style: small(palette.textSecondary),
+                                ),
+                                if (source != null) ...[
+                                  const SizedBox(height: AppSpacing.xs),
+                                  Text(
+                                    source,
+                                    style: small(palette.textTertiary),
+                                  ),
+                                ],
+                                if (fits != null) ...[
+                                  const SizedBox(height: AppSpacing.xs),
+                                  Text(
+                                    fits,
+                                    key: Key('capture.whatFits.$index'),
+                                    style: small(
+                                      unplaced > 0
+                                          ? palette.statusDoesNotFit
+                                          : palette.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                                // S6.9 (UX-15 (1); RD-08): a known tracking's
+                                // exceedance is a warning, in words and the
+                                // status colour; unknown tracking is a missing
+                                // input, neutral, with the way to set it.
+                                if (exceeds &&
+                                    !capability
+                                        .recommendationIsConditional) ...[
+                                  const SizedBox(height: AppSpacing.xs),
+                                  Text(
+                                    CapabilityText.subWarningFor(
+                                      capability,
+                                      viewModel.effectiveTracking,
+                                    ),
+                                    key: const Key('capture.subWarning'),
+                                    style: small(palette.statusDoesNotFit),
+                                  ),
+                                ],
+                                for (final m in mismatch) ...[
+                                  const SizedBox(height: AppSpacing.xs),
+                                  Text(
+                                    CalibrationText.mismatch(
+                                      m,
+                                      block.frameType,
+                                    ),
+                                    key: Key(
+                                      'capture.mismatch.$index.${m.name}',
+                                    ),
+                                    style: small(palette.statusTight),
+                                  ),
+                                ],
+                                if (mismatch.any((m) => m.fixable) &&
+                                    CalibrationMatch.defaultSource(
+                                          block,
+                                          blocks,
+                                        ) !=
+                                        null)
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: TextButton(
+                                      key: Key('capture.match.$index'),
+                                      onPressed: () => _match(index, block),
+                                      child: Text(
+                                        CalibrationText.match(block.frameType),
                                       ),
                                     ),
                                   ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      _MoveButton(
-                                        key: Key('capture.moveUp.$index'),
-                                        icon: HybridIcons.up,
-                                        tooltip: 'Move block ${index + 1} up',
-                                        onPressed: index == 0
-                                            ? null
-                                            : () => viewModel
-                                                  .reorderCaptureBlocks(
-                                                    index,
-                                                    index - 1,
-                                                  ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      _MoveButton(
-                                        key: Key('capture.moveDown.$index'),
-                                        icon: HybridIcons.downArrow,
-                                        tooltip: 'Move block ${index + 1} down',
-                                        onPressed: index == blocks.length - 1
-                                            ? null
-                                            : () => viewModel
-                                                  .reorderCaptureBlocks(
-                                                    index,
-                                                    index + 1,
-                                                  ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      TextButton(
-                                        key: Key('capture.delete.$index'),
-                                        onPressed: () => _delete(index, block),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor:
-                                              palette.textSecondary,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 8,
-                                          ),
-                                          minimumSize: const Size(48, 48),
-                                        ),
-                                        child: Semantics(
-                                          label:
-                                              'Remove block ${index + 1}, ${BlockText.type(block.frameType)}',
-                                          excludeSemantics: true,
-                                          child: const Text('Remove'),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            },
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                        if (exceeds && capability.recommendationIsConditional)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: palette.surfaceRaised,
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.small,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.warning_amber_rounded,
+                                          size: 16,
+                                          color:
+                                              (Theme.of(context)
+                                                          .extension<
+                                                            HybridTokens
+                                                          >() ??
+                                                      HybridTokens.light)
+                                                  .caution,
+                                        ),
+                                        const SizedBox(width: AppSpacing.sm),
+                                        Expanded(
+                                          child: Text(
+                                            'Tracking',
+                                            style: AppTextTheme.of(context)
+                                                .nestedTitle
+                                                .copyWith(
+                                                  color: palette.textPrimary,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      CapabilityText.unknownTracking(
+                                        capability,
+                                      ),
+                                      key: const Key('capture.trackingUnknown'),
+                                      style: small(
+                                        (Theme.of(
+                                                  context,
+                                                ).extension<HybridTokens>() ??
+                                                HybridTokens.light)
+                                            .caution,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      key: const Key('capture.setTracking'),
+                                      onPressed: () =>
+                                          pickPlanTracking(context),
+                                      child: const Text(
+                                        'Set the tracking for this plan',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
               );
             },
           ),
-        // Keep paired actions equal-width. At large text they stack so
+        // Match the compact Add / wider calibration pair. At large text stack so
         // calibration words can wrap at spaces within the document group.
         if (blocks.isNotEmpty)
           DecoratedBox(
@@ -672,7 +645,7 @@ class _BlockListState extends State<_BlockList> {
                         Expanded(child: actions.first),
                         if (actions.length > 1) ...[
                           const SizedBox(width: 8),
-                          Expanded(child: actions.last),
+                          Expanded(flex: 2, child: actions.last),
                         ],
                       ],
                     ),
@@ -693,45 +666,12 @@ class _BlockListState extends State<_BlockList> {
               style: AppTextTheme.of(context)
                   .resolve(
                     AppTextTheme.of(context).caption,
-                    AppTextGeometry.supporting,
+                    AppTextGeometry.compact,
                   )
                   .copyWith(color: palette.statusTight),
             ),
           ),
       ],
-    );
-  }
-}
-
-/// A block move (plan.js `.block-actions .android-icon-button`): a 48 px
-/// round target with a 20 px arrow at stroke 1.8; disabled at .3 opacity.
-class _MoveButton extends StatelessWidget {
-  const _MoveButton({
-    super.key,
-    required this.icon,
-    required this.tooltip,
-    required this.onPressed,
-  });
-
-  final HybridIconData icon;
-  final String tooltip;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
-    return IconButton(
-      tooltip: tooltip,
-      onPressed: onPressed,
-      icon: Opacity(
-        opacity: onPressed == null ? 0.3 : 1,
-        child: HybridIcon(
-          icon,
-          size: MediaQuery.textScalerOf(context).scale(20),
-          strokeWidth: 1.8,
-          color: p.textPrimary,
-        ),
-      ),
     );
   }
 }

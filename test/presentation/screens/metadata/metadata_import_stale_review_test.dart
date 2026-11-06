@@ -2,7 +2,8 @@
 // revert Equipment changes made since, unless the user explicitly chooses
 // to replace a value. Real routes, real screens and a real SQLite database.
 
-import 'package:astroplan/core/theme/app_theme.dart';
+import '../../../support/phase2_state_capture.dart';
+
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/domain/models/equipment_profile.dart';
@@ -116,7 +117,11 @@ Future<_App> _start(WidgetTester t) async {
         ChangeNotifierProvider<SessionPlanViewModel>.value(value: planner),
         ChangeNotifierProvider<MetadataImportViewModel?>.value(value: vm),
       ],
-      child: MaterialApp.router(theme: AppTheme.light, routerConfig: router),
+      child: MaterialApp.router(
+        theme: phase2Theme(_phase2Theme),
+        builder: (_, child) => phase2Frame(child: child!, theme: _phase2Theme),
+        routerConfig: router,
+      ),
     ),
   );
   await _settle(t);
@@ -163,103 +168,117 @@ Future<void> _editElsewhere(
   await _settle(t);
 }
 
+late String _phase2Theme;
+
 void main() {
-  testWidgets('an edit made elsewhere survives reopening the review, Open '
-      'and Save (the validation\'s P8)', (t) async {
-    final app = await _start(t);
-    await _editElsewhere(t, app, from: '30', to: '45');
-    expect((await app.rig(t)).averageRawFileSizeMB, 45);
+  for (final theme in ['light', 'dark', 'field']) {
+    group('Phase2 $theme', () {
+      setUp(() => _phase2Theme = theme);
+      testWidgets('an edit made elsewhere survives reopening the review, Open '
+          'and Save (the validation\'s P8)', (t) async {
+        final app = await _start(t);
+        await _editElsewhere(t, app, from: '30', to: '45');
+        expect((await app.rig(t)).averageRawFileSizeMB, 45);
 
-    await startAddRig(t, fromPhoto: true);
-    await _settle(t);
-    await t.tap(find.byKey(const Key('import.open.1')));
-    await _settle(t);
-    await _openMore(t); // S7.6: the rig's own RAW size, one tap away
-    expect(find.widgetWithText(TextFormField, '45'), findsOneWidget);
-    await t.tap(find.text('Save rig'));
-    await _settle(t);
+        await startAddRig(t, fromPhoto: true);
+        await _settle(t);
+        await t.tap(find.byKey(const Key('import.open.1')));
+        await _settle(t);
+        await _openMore(t); // S7.6: the rig's own RAW size, one tap away
+        expect(find.widgetWithText(TextFormField, '45'), findsOneWidget);
+        await t.tap(find.text('Save rig'));
+        await _settle(t);
 
-    expect((await app.rig(t)).averageRawFileSizeMB, 45);
-  });
+        expect((await app.rig(t)).averageRawFileSizeMB, 45);
+      });
 
-  testWidgets('a change saved while the review stays open is not reverted by '
-      'its Open button', (t) async {
-    final app = await _start(t);
-    final current = await app.rig(t);
-    await t.runAsync(
-      () => app.repo.updateEquipment(
-        EquipmentProfile(
-          id: current.id,
-          name: current.name,
-          manufacturer: current.manufacturer,
-          cameraModel: current.cameraModel,
-          sensorWidthMm: current.sensorWidthMm,
-          sensorHeightMm: current.sensorHeightMm,
-          pixelPitchUm: current.pixelPitchUm,
-          resolutionWidthPx: current.resolutionWidthPx,
-          resolutionHeightPx: current.resolutionHeightPx,
-          focalLengthMm: current.focalLengthMm,
-          focalRatio: current.focalRatio,
-          averageRawFileSizeMB: 45,
-        ).withEditProvenance(current),
-      ),
-    );
+      testWidgets(
+        'a change saved while the review stays open is not reverted by '
+        'its Open button',
+        (t) async {
+          final app = await _start(t);
+          final current = await app.rig(t);
+          await t.runAsync(
+            () => app.repo.updateEquipment(
+              EquipmentProfile(
+                id: current.id,
+                name: current.name,
+                manufacturer: current.manufacturer,
+                cameraModel: current.cameraModel,
+                sensorWidthMm: current.sensorWidthMm,
+                sensorHeightMm: current.sensorHeightMm,
+                pixelPitchUm: current.pixelPitchUm,
+                resolutionWidthPx: current.resolutionWidthPx,
+                resolutionHeightPx: current.resolutionHeightPx,
+                focalLengthMm: current.focalLengthMm,
+                focalRatio: current.focalRatio,
+                averageRawFileSizeMB: 45,
+              ).withEditProvenance(current),
+            ),
+          );
 
-    await t.tap(find.byKey(const Key('import.open.1')));
-    await _settle(t);
-    await t.tap(find.text('Save rig'));
-    await _settle(t);
+          await t.tap(find.byKey(const Key('import.open.1')));
+          await _settle(t);
+          await t.tap(find.text('Save rig'));
+          await _settle(t);
 
-    expect((await app.rig(t)).averageRawFileSizeMB, 45);
-  });
+          expect((await app.rig(t)).averageRawFileSizeMB, 45);
+        },
+      );
 
-  testWidgets('a "use the file\'s value" choice made before a newer edit is '
-      'withdrawn; replacing needs a fresh, explicit choice', (t) async {
-    final app = await _start(t);
-    final take = find.byKey(const Key('import.take.1.pixelPitch'));
-    await t.tap(take);
-    await _settle(t);
-    expect(t.widget<SwitchListTile>(take).value, isTrue);
+      testWidgets(
+        'a "use the file\'s value" choice made before a newer edit is '
+        'withdrawn; replacing needs a fresh, explicit choice',
+        (t) async {
+          final app = await _start(t);
+          final take = find.byKey(const Key('import.take.1.pixelPitch'));
+          await t.tap(take);
+          await _settle(t);
+          expect(t.widget<SwitchListTile>(take).value, isTrue);
 
-    // The user then types their own pixel size in the Equipment editor.
-    await _editElsewhere(t, app, from: '2.4', to: '2.5');
-    expect((await app.rig(t)).pixelPitchUm, 2.5);
+          // The user then types their own pixel size in the Equipment editor.
+          await _editElsewhere(t, app, from: '2.4', to: '2.5');
+          expect((await app.rig(t)).pixelPitchUm, 2.5);
 
-    await startAddRig(t, fromPhoto: true);
-    await _settle(t);
-    expect(
-      t.widget<SwitchListTile>(take).value,
-      isFalse,
-      reason: 'the choice was made against 2.4 µm, not the newer 2.5 µm',
-    );
-    await t.tap(find.byKey(const Key('import.open.1')));
-    await _settle(t);
-    await t.tap(find.text('Save rig'));
-    await _settle(t);
-    expect((await app.rig(t)).pixelPitchUm, 2.5);
+          await startAddRig(t, fromPhoto: true);
+          await _settle(t);
+          expect(
+            t.widget<SwitchListTile>(take).value,
+            isFalse,
+            reason: 'the choice was made against 2.4 µm, not the newer 2.5 µm',
+          );
+          await t.tap(find.byKey(const Key('import.open.1')));
+          await _settle(t);
+          await t.tap(find.text('Save rig'));
+          await _settle(t);
+          expect((await app.rig(t)).pixelPitchUm, 2.5);
 
-    // An explicit choice made now does replace it.
-    await t.tap(take);
-    await _settle(t);
-    await t.tap(find.byKey(const Key('import.open.1')));
-    await _settle(t);
-    await t.tap(find.text('Save rig'));
-    await _settle(t);
-    expect((await app.rig(t)).pixelPitchUm, 2.414);
-  });
+          // An explicit choice made now does replace it.
+          await t.tap(take);
+          await _settle(t);
+          await t.tap(find.byKey(const Key('import.open.1')));
+          await _settle(t);
+          await t.tap(find.text('Save rig'));
+          await _settle(t);
+          expect((await app.rig(t)).pixelPitchUm, 2.414);
+        },
+      );
 
-  testWidgets('a rig deleted elsewhere is no longer offered by the review', (
-    t,
-  ) async {
-    final app = await _start(t);
-    await t.runAsync(() => app.repo.deleteEquipment(1));
+      testWidgets(
+        'a rig deleted elsewhere is no longer offered by the review',
+        (t) async {
+          final app = await _start(t);
+          await t.runAsync(() => app.repo.deleteEquipment(1));
 
-    await t.tap(find.byKey(const Key('import.open.1')));
-    await _settle(t);
+          await t.tap(find.byKey(const Key('import.open.1')));
+          await _settle(t);
 
-    expect(find.text('Edit rig'), findsNothing);
-    expect(find.text('No saved rig has this camera.'), findsOneWidget);
-    expect(find.byKey(const Key('import.open.1')), findsNothing);
-    expect(await t.runAsync(() => app.repo.getAllEquipment()), isEmpty);
-  });
+          expect(find.text('Edit rig'), findsNothing);
+          expect(find.text('No saved rig has this camera.'), findsOneWidget);
+          expect(find.byKey(const Key('import.open.1')), findsNothing);
+          expect(await t.runAsync(() => app.repo.getAllEquipment()), isEmpty);
+        },
+      );
+    });
+  }
 }

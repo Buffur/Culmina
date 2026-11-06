@@ -123,9 +123,37 @@ void main() {
       expect(OpportunityText.moon(w), 'Moon down (85% lit at midnight)');
       expect(
         OpportunityText.weather(w),
-        'cloud 10–30%, 1 h without forecast, stale forecast',
+        'cloud 10–30%, 1 h without forecast, dew risk unknown, stale forecast',
       );
     });
+
+    test(
+      'missing weather is explicit and partial dew coverage is not all-clear',
+      () {
+        final w = _v3().windows.single;
+        expect(OpportunityText.weather(w), 'Weather unknown');
+        final withWeather = OpportunityWindow(
+          window: w.window,
+          maxAltitudeDeg: w.maxAltitudeDeg,
+          maxAltitudeAtUtc: w.maxAltitudeAtUtc,
+          moon: w.moon,
+          weather: const WeatherWindowAnnotation(
+            age: WeatherAge.current,
+            refreshFailed: true,
+            hours: 3,
+            hoursWithoutForecast: 2,
+            cloudMinPct: 10,
+            cloudMaxPct: 10,
+            dewRiskHours: 0,
+            dewKnownHours: 1,
+          ),
+        );
+        final text = OpportunityText.weather(withWeather)!;
+        expect(text, contains('no dew risk in 1 known forecast hours'));
+        expect(text, contains('dew risk unknown for 2 forecast hours'));
+        expect(text, contains('refresh failed, cached forecast'));
+      },
+    );
 
     test('every no-window reason has its own sentence', () {
       final o = _v3();
@@ -146,6 +174,7 @@ void main() {
   ) async {
     final o = _v3();
     await _pump(tester, o);
+    expect(find.textContaining('5-minute sampling grid'), findsOneWidget);
 
     expect(
       find.text('02:00 (+1) – 04:00 (+1) · 2 h · max 40° at 02:00 (+1)'),

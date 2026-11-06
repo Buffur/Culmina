@@ -5,12 +5,12 @@
 // Forecast details; stale / unavailable / out-of-range states stay explicit.
 
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:astroplan/core/utils/quantity_text.dart';
 import 'package:astroplan/core/time/clock.dart';
 import 'package:astroplan/core/theme/app_theme.dart';
-import 'package:astroplan/core/theme/app_palette.dart';
-import 'package:astroplan/core/theme/hybrid_tokens.dart';
 import 'package:astroplan/data/database/app_database.dart';
 import 'package:astroplan/data/repositories/drift_equipment_repository.dart';
 import 'package:astroplan/data/repositories/drift_location_repository.dart';
@@ -62,6 +62,7 @@ class _Weather implements WeatherRepository {
   final _Clock clock;
   WeatherFailure? failWith;
   bool empty = false;
+  bool unknownCloud = false;
   double temperatureC = 10;
   double windSpeedKmh = 8;
   double? windGustsKmh;
@@ -85,8 +86,19 @@ class _Weather implements WeatherRepository {
         fetchedAtUtc: clock.nowUtc(),
         latitude: latitude,
         longitude: longitude,
+        // Empty dark-time coverage still needs a daylight row in this
+        // SessionNight: an entirely empty response is correctly malformed.
         hours: empty
-            ? const []
+            ? [
+                WeatherHour(
+                  timeUtc: DateTime.utc(
+                    startUtc.year,
+                    startUtc.month,
+                    startUtc.day,
+                    startUtc.hour + 1,
+                  ),
+                ),
+              ]
             : [
                 for (
                   var t = DateTime.utc(
@@ -100,7 +112,7 @@ class _Weather implements WeatherRepository {
                 )
                   WeatherHour(
                     timeUtc: t,
-                    cloudCoverPct: cloudAt?.call(t) ?? 20,
+                    cloudCoverPct: unknownCloud ? null : cloudAt?.call(t) ?? 20,
                     windSpeedKmh: windSpeedKmh,
                     windGustsKmh: windGustsKmh,
                     temperatureC: temperatureC,
@@ -110,6 +122,13 @@ class _Weather implements WeatherRepository {
       ),
     );
   }
+}
+
+Future<void> _openForecastDetails(WidgetTester tester) async {
+  if (find.byKey(const Key('weather.model')).evaluate().isNotEmpty) return;
+  await tester.ensureVisible(find.byKey(const Key('weather.details')));
+  await tester.tap(find.text('Forecast details'));
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -167,13 +186,23 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: vm.providers,
-        child: MaterialApp(
-          theme: theme,
-          home: tonight
-              ? const TonightHomeScreen()
-              : Scaffold(
-                  body: SingleChildScrollView(child: HybridWeatherView()),
-                ),
+        child: RepaintBoundary(
+          key: const Key('phase2.weather.capture'),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: theme,
+            builder: (context, child) => theme == AppTheme.fieldTheme
+                ? ColorFiltered(
+                    colorFilter: AppTheme.fieldFilter,
+                    child: child!,
+                  )
+                : child!,
+            home: tonight
+                ? const TonightHomeScreen()
+                : const Scaffold(
+                    body: SingleChildScrollView(child: HybridWeatherView()),
+                  ),
+          ),
         ),
       ),
     );
@@ -183,6 +212,111 @@ void main() {
   Future<void> run(WidgetTester tester, Future<void> Function() f) async {
     await tester.runAsync(f);
     await tester.pump();
+  }
+
+  // Source-backed state matrix: every fixture is the production weather view,
+  // real summary calculator and current theme. Captures are optional derivatives.
+  for (final (mode, theme) in [
+    ('light', AppTheme.light),
+    ('dark', AppTheme.dark),
+    ('field', AppTheme.fieldTheme),
+  ]) {
+    for (final state in [
+      'rows',
+      'charts',
+      'empty',
+      'cloud-unknown',
+      'unavailable',
+      'malformed',
+      'out-of-range',
+      'aging-cache',
+      'stale-cache',
+    ]) {
+      testWidgets('Phase2 weather $state $mode', (tester) async {
+        await (FontLoader(
+          'Geist',
+        )..addFont(rootBundle.load('assets/fonts/Geist.ttf'))).load();
+        weather.empty = state == 'empty';
+        weather.unknownCloud = state == 'cloud-unknown';
+        weather.failWith = switch (state) {
+          'unavailable' => WeatherFailure.unavailable,
+          'malformed' => WeatherFailure.malformed,
+          'out-of-range' => WeatherFailure.outOfRange,
+          _ => null,
+        };
+        await pump(tester, theme: theme);
+        tester.view.physicalSize = const Size(375, 812);
+        if (state == 'charts') {
+          await run(
+            tester,
+            () => vm.vms.displaySettings.setWeatherView(WeatherView.charts),
+          );
+        }
+        if (state.endsWith('-cache')) {
+          weather.failWith = WeatherFailure.unavailable;
+          clock.now = clock.now.add(
+            Duration(hours: state == 'stale-cache' ? 15 : 5),
+          );
+          await run(tester, vm.refreshWeather);
+          expect(
+            find.byKey(const Key('weather.refreshFailed')),
+            findsOneWidget,
+          );
+          expect(
+            find.byKey(const Key('weather.freshnessNotice')),
+            findsOneWidget,
+          );
+        }
+        await tester.pump();
+        expect(find.byKey(const Key('weather.facts')), findsOneWidget);
+        expect(find.byKey(const Key('weather.notSeeing')), findsOneWidget);
+        if (state == 'empty' || state == 'cloud-unknown') {
+          expect(find.text('Cloud cover unknown'), findsOneWidget);
+          expect(
+            find.byKey(const Key('weather.gaps')),
+            state == 'empty' ? findsOneWidget : findsNothing,
+          );
+        }
+        if (state == 'out-of-range') {
+          expect(find.byKey(const Key('weather.refresh')), findsNothing);
+        }
+        if (state == 'unavailable' || state == 'malformed') {
+          expect(find.text('Retry forecast'), findsOneWidget);
+          expect(find.byKey(const Key('weather.details')), findsNothing);
+        }
+        Future<void> capture(String suffix) async {
+          final output = Platform.environment['CULMINA_PHASE2_RENDERS'];
+          if (output == null || output.isEmpty) return;
+          final boundary = tester.renderObject<RenderRepaintBoundary>(
+            find.byKey(const Key('phase2.weather.capture')),
+          );
+          await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: 1);
+            final bytes = await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            final file = File(
+              '$output/package1/weather-$state-$mode$suffix.png',
+            );
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(bytes!.buffer.asUint8List());
+            image.dispose();
+          });
+        }
+
+        await capture('');
+        if (state == 'rows' || state == 'charts') {
+          await _openForecastDetails(tester);
+          expect(find.byKey(const Key('weather.table')), findsOneWidget);
+          expect(find.byKey(const Key('weather.tableKey')), findsOneWidget);
+          expect(find.text('Inspect an hour'), findsNothing);
+          expect(find.byKey(const Key('weather.nights')), findsNothing);
+          expect(find.text('Unknown'), findsWidgets);
+          await capture('-details');
+        }
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 
   testWidgets(
@@ -250,28 +384,33 @@ void main() {
         ]) {
           await run(tester, () => vm.vms.displaySettings.setUnits(units));
           for (final label in ['Temperature', 'Wind / gusts']) {
-            final value = find.byKey(Key('weather.range.$label'));
-            final text = tester.widget<Text>(value).data!;
-            final paragraph = tester.renderObject<RenderParagraph>(
-              find.descendant(of: value, matching: find.byType(RichText)),
-            );
-            // Each whole measurement (including its unit) stays on one line.
-            for (final chunk in text.split(' · ')) {
-              final start = text.indexOf(chunk);
-              expect(
-                paragraph.getBoxesForSelection(
-                  TextSelection(
-                    baseOffset: start,
-                    extentOffset: start + chunk.length,
-                  ),
-                ),
-                hasLength(1),
-                reason: '$label: $chunk at $width',
+            for (final valueKey in [
+              'weather.range.$label',
+              'weather.secondary.$label',
+            ]) {
+              final value = find.byKey(Key(valueKey));
+              final text = tester.widget<Text>(value).data!;
+              final paragraph = tester.renderObject<RenderParagraph>(
+                find.descendant(of: value, matching: find.byType(RichText)),
               );
+              // Each whole measurement (including its unit) stays on one line.
+              for (final chunk in text.split(' · ')) {
+                final start = text.indexOf(chunk);
+                expect(
+                  paragraph.getBoxesForSelection(
+                    TextSelection(
+                      baseOffset: start,
+                      extentOffset: start + chunk.length,
+                    ),
+                  ),
+                  hasLength(1),
+                  reason: '$label: $chunk at $width',
+                );
+              }
+              final bounds = tester.getRect(value);
+              expect(bounds.left, greaterThanOrEqualTo(0));
+              expect(bounds.right, lessThanOrEqualTo(width));
             }
-            final bounds = tester.getRect(value);
-            expect(bounds.left, greaterThanOrEqualTo(0));
-            expect(bounds.right, lessThanOrEqualTo(width));
           }
           expect(find.text('Unknown'), findsWidgets);
           expect(tester.takeException(), isNull);
@@ -288,7 +427,7 @@ void main() {
   ) async {
     await pump(tester);
 
-    expect(find.text('Cloud 20% in the dark'), findsOneWidget);
+    expect(find.text('Cloud cover 20%'), findsOneWidget);
     expect(find.byKey(const Key('weather.refresh')), findsOneWidget);
     expect(find.text('Refresh forecast'), findsOneWidget);
     expect(
@@ -299,21 +438,47 @@ void main() {
     expect(find.byKey(const Key('weather.updated')), findsOneWidget);
     expect(find.byKey(const Key('weather.freshnessNotice')), findsNothing);
     expect(find.byKey(const Key('weather.rows')), findsOneWidget);
-    expect(find.text('A · Compact rows · '), findsOneWidget);
+    for (final metric in [
+      'Temperature',
+      'Relative humidity',
+      'Cloud cover',
+      'Wind / gusts',
+      'Precipitation probability',
+    ]) {
+      expect(find.byKey(Key('weather.metric.$metric')), findsOneWidget);
+    }
+    final cloudValue = find.byKey(const Key('weather.range.Cloud cover'));
+    final evidence = find.byKey(const Key('weather.coverage.Cloud cover'));
+    expect(
+      tester.getBottomLeft(cloudValue).dy,
+      lessThanOrEqualTo(tester.getTopLeft(evidence).dy),
+    );
+    expect(
+      find.byKey(const Key('weather.commonCoverage')),
+      findsNothing,
+      reason:
+          'Unknown humidity, gust and precipitation retain individual counts',
+    );
+    expect(find.text('View: Compact rows'), findsOneWidget);
+    expect(find.text('Change view in Appearance'), findsOneWidget);
+    expect(find.text('A · Compact rows · '), findsNothing);
     // A 1 °C spread: every known sample is a dew caution, not a forecast.
     expect(
       find.textContaining('A caution, not a condensation forecast.'),
       findsOneWidget,
     );
     expect(find.text('20%'), findsOneWidget); // cloud cover range
-    expect(find.text('10 °C · dew point 9 °C'), findsOneWidget);
-    expect(find.text('8 km/h · gusts Unknown'), findsOneWidget);
+    expect(find.text('10 °C'), findsOneWidget);
+    expect(find.text('Dew point 9 °C'), findsOneWidget);
+    expect(find.text('8 km/h'), findsOneWidget);
+    expect(find.text('Gusts Unknown'), findsOneWidget);
     // Unknown variables are "Unknown", never 0.
     expect(find.text('Unknown'), findsWidgets);
     expect(find.byKey(const Key('weather.model')), findsNothing);
     await tester.ensureVisible(find.byKey(const Key('weather.details')));
     await tester.tap(find.text('Forecast details'));
     await tester.pumpAndSettle();
+    expect(find.text('View: Compact rows'), findsOneWidget);
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.model'))).data,
       startsWith('Model: open-meteo / best_match.'),
@@ -348,16 +513,16 @@ void main() {
     final trend = tester
         .widget<Text>(find.byKey(const Key('weather.trend')))
         .data!;
-    expect(trend, startsWith('Clearest around '));
-    expect(
-      trend,
-      contains('(${QuantityText.percent(min)}) · cloudiest around'),
-    );
-    expect(trend, endsWith('(${QuantityText.percent(max)})'));
+    expect(trend, startsWith('Lowest hourly cloud: '));
+    expect(trend, endsWith(' · ${QuantityText.percent(min)}'));
+    final highest = tester
+        .widget<Text>(find.byKey(const Key('weather.highestCloud')))
+        .data!;
+    expect(highest, startsWith('Highest hourly cloud: '));
+    expect(highest, endsWith(' · ${QuantityText.percent(max)}'));
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.coverage'))).data,
-      'Coverage: ${s.coveredHours}/${s.totalHours} hourly samples in dark '
-      'time',
+      'Dark-time coverage: ${s.coveredHours}/${s.totalHours} hourly samples',
     );
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.span'))).data,
@@ -400,8 +565,10 @@ void main() {
     weather.temperatureC = -2.5;
     weather.windSpeedKmh = 9.25;
     await pump(tester);
-    expect(find.text('-2.5 °C · dew point 9 °C'), findsOneWidget);
-    expect(find.text('9.3 km/h · gusts Unknown'), findsOneWidget);
+    expect(find.text('-2.5 °C'), findsOneWidget);
+    expect(find.text('Dew point 9 °C'), findsOneWidget);
+    expect(find.text('9.3 km/h'), findsOneWidget);
+    expect(find.text('Gusts Unknown'), findsOneWidget);
     expect(
       tester.getTopLeft(find.byKey(const Key('weather.facts'))).dy,
       lessThan(tester.getTopLeft(find.byKey(const Key('weather.span'))).dy),
@@ -419,7 +586,8 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('27.5 °F · dew point 48.2 °F'), findsOneWidget);
+    expect(find.text('27.5 °F'), findsOneWidget);
+    expect(find.text('Dew point 48.2 °F'), findsOneWidget);
   });
 
   for (final entry in [
@@ -433,9 +601,9 @@ void main() {
     (
       'dark',
       AppTheme.dark,
-      const Color(0xFF004074),
-      const Color(0xFFC2E6FF),
-      const Color(0xFF70B8FF),
+      const Color(0xFF313B49),
+      const Color(0xFFD8E7FF),
+      const Color(0xFF75B6FF),
     ),
     (
       'field',
@@ -453,36 +621,36 @@ void main() {
         () => vm.vms.displaySettings.setWeatherView(WeatherView.charts),
       );
       await tester.pump();
-      Container cell(int index) => tester.widget<Container>(
-        find.descendant(
-          of: find.byKey(Key('weather.hour.$index')),
-          matching: find.byType(Container),
-        ),
-      );
-      void expectSelected(int index) {
-        final container = cell(index);
-        final decoration = container.decoration! as BoxDecoration;
-        final text = container.child! as Text;
-        expect(decoration.color, entry.$3);
-        expect(text.style!.color, entry.$4);
-        expect((decoration.border! as Border).bottom.color, entry.$5);
-        expect((decoration.border! as Border).bottom.width, 2);
-      }
-
-      expectSelected(0);
-      await tester.ensureVisible(find.byKey(const Key('weather.hour.2')));
-      await tester.tap(find.byKey(const Key('weather.hour.2')));
+      final panels = [
+        for (final name in [
+          'Temperature',
+          'Relative humidity',
+          'Cloud cover',
+          'Wind / gusts',
+          'Precipitation probability',
+        ])
+          find.byKey(Key('weather.chart.$name')),
+      ];
+      String value(Finder panel) =>
+          tester.widget<Semantics>(panel).properties.value!;
+      final before = value(panels.first);
+      await tester.ensureVisible(panels[2]);
+      final rect = tester.getRect(panels[2]);
+      await tester.tapAt(Offset(rect.right - 2, rect.center.dy));
       await tester.pump();
-      expectSelected(2);
-      final previous = cell(0);
-      expect(
-        (previous.decoration! as BoxDecoration).color,
-        HybridTokens.transparent,
+      final after = value(panels.first);
+      expect(after, isNot(before));
+      for (final panel in panels) {
+        expect(value(panel), after);
+      }
+      expect(find.byKey(const Key('weather.selectedTime')), findsOneWidget);
+      final next = tester.widget<IconButton>(
+        find.byKey(const Key('weather.nextHour')),
       );
-      expect(
-        (previous.child! as Text).style!.color,
-        entry.$2.extension<AppPalette>()!.textSecondary,
-      );
+      expect(next.onPressed, isNull, reason: 'selected last eligible hour');
+      await _openForecastDetails(tester);
+      expect(find.byKey(const Key('weather.hourSlider')), findsNothing);
+      expect(find.byKey(const Key('weather.table')), findsOneWidget);
     });
   }
 
@@ -497,17 +665,27 @@ void main() {
     await tester.pump();
     expect(find.byKey(const Key('weather.rows')), findsNothing);
     expect(find.byKey(const Key('weather.charts')), findsOneWidget);
-    expect(find.text('B · Hourly charts · '), findsOneWidget);
+    expect(find.text('B · Hourly charts · '), findsNothing);
+    final panel = find.byKey(const Key('weather.chart.Cloud cover'));
+    await tester.ensureVisible(panel);
+    await tester.tapAt(tester.getRect(panel).center);
+    await tester.pump();
     final before = tester
-        .widget<Text>(find.byKey(const Key('weather.hourLabel')))
+        .widget<Text>(find.byKey(const Key('weather.selectedTime')))
         .data;
-    await tester.ensureVisible(find.byKey(const Key('weather.hour.2')));
-    await tester.tap(find.byKey(const Key('weather.hour.2')));
+    await tester.ensureVisible(find.byKey(const Key('weather.nextHour')));
+    await tester.tap(find.byKey(const Key('weather.nextHour')));
     await tester.pump();
     expect(
-      tester.widget<Text>(find.byKey(const Key('weather.hourLabel'))).data,
+      tester.widget<Text>(find.byKey(const Key('weather.selectedTime'))).data,
       isNot(before),
     );
+    await tester.tap(find.byKey(const Key('weather.resetSelection')));
+    await tester.pump();
+    expect(find.byKey(const Key('weather.selectionControls')), findsNothing);
+    await _openForecastDetails(tester);
+    expect(find.byKey(const Key('weather.table')), findsOneWidget);
+    expect(find.byKey(const Key('weather.hourSlider')), findsNothing);
   });
 
   testWidgets('offline with nothing cached: unavailable with a retry', (
@@ -550,7 +728,7 @@ void main() {
     expect(find.text('Cloud cover unknown'), findsOneWidget);
     expect(
       tester.widget<Text>(find.byKey(const Key('weather.coverage'))).data,
-      'Coverage: 0/${s.totalHours} hourly samples in dark time',
+      'Dark-time coverage: 0/${s.totalHours} hourly samples',
     );
     expect(find.byKey(const Key('weather.gaps')), findsOneWidget);
   });

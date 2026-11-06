@@ -445,10 +445,12 @@ final _auditShots = <String, HybridStep>{
     await c.tapKey('detail.astrobin');
   },
   'weather_hour_open': (c) async {
+    // Historical shot alias retained for callers: the canonical full hourly
+    // table in Forecast details replaces the removed single-hour inspector.
     await c.push(AppRouter.weather);
-    await c.tapKey('weather.hourDetails');
+    await c.tapKey('weather.details');
     await Scrollable.ensureVisible(
-      c.tester.element(find.byKey(const Key('weather.hourDetails'))),
+      c.tester.element(find.byKey(const Key('weather.table'))),
       alignment: .12,
     );
     await c.settle();
@@ -768,13 +770,17 @@ void main() {
   final scale = double.parse(
     Platform.environment['CULMINA_AUDIT_SCALE'] ?? '1',
   );
-  const width = 375.0;
-  const height = 812.0;
+  final width = double.parse(
+    Platform.environment['CULMINA_AUDIT_WIDTH'] ?? '375',
+  );
+  final height = double.parse(
+    Platform.environment['CULMINA_AUDIT_HEIGHT'] ?? '812',
+  );
   for (final theme in themes) {
     for (final name in names) {
       testWidgets('Concept B app audit: $name $theme $scale', (tester) async {
         await tester.runAsync(_loadFonts);
-        tester.view.physicalSize = const Size(width, height);
+        tester.view.physicalSize = Size(width, height);
         tester.view.devicePixelRatio = 1;
         tester.platformDispatcher.platformBrightnessTestValue = theme == 'light'
             ? Brightness.light

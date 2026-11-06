@@ -85,8 +85,14 @@ void main() {
         source.reads.single.complete([row]);
         await hybridSettle(t);
         expect(find.textContaining('1 of 1 targets'), findsOneWidget);
+        await revealCandidateControl(
+          t,
+          find.byKey(const Key('tonight.filterToggle')),
+        );
+        await t.tap(find.byKey(const Key('tonight.filterToggle')));
+        await hybridSettle(t);
         final sort = find.byType(DropdownButtonFormField<CandidateSort>);
-        await revealWave2(t, sort);
+        await revealCandidateControl(t, sort);
         await t.tap(sort);
         await t.pumpAndSettle();
         await t.tap(find.text('Name').last);
@@ -154,18 +160,30 @@ void main() {
         expect(row.hasWindow, isTrue);
         source.reads.single.complete([row]);
         await hybridSettle(t);
+        await revealCandidateControl(
+          t,
+          find.byKey(const Key('tonight.filterToggle')),
+        );
+        await t.tap(find.byKey(const Key('tonight.filterToggle')));
+        await hybridSettle(t);
         for (final windowless in [false, true]) {
           if (windowless) {
-            await revealWave2(t, find.byKey(const Key('tonight.all')));
+            await revealCandidateControl(
+              t,
+              find.byKey(const Key('tonight.all')),
+            );
             await t.tap(find.byKey(const Key('tonight.all')));
             await hybridSettle(t);
           } else {
-            await revealWave2(t, find.byKey(const Key('tonight.own')));
+            await revealCandidateControl(
+              t,
+              find.byKey(const Key('tonight.own')),
+            );
             await t.tap(find.byKey(const Key('tonight.own')));
             await hybridSettle(t);
           }
           final empty = find.byKey(const Key('tonight.empty'));
-          await revealWave2(t, empty);
+          await revealCandidateControl(t, empty);
           expect(
             t.widget<Text>(empty).data,
             'No targets match these filters. Try changing the filters.',
@@ -321,4 +339,21 @@ void main() {
     expect(find.text('Retry'), findsNothing);
     expect(repo.reads.every((r) => r.id == id), isTrue);
   });
+}
+
+Future<void> revealCandidateControl(WidgetTester tester, Finder target) async {
+  if (target.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      target,
+      300,
+      scrollable: find
+          .descendant(
+            of: find.byKey(const Key('candidates.scroll')),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+  }
+  await tester.ensureVisible(target);
+  await hybridSettle(tester);
 }

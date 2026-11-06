@@ -1,6 +1,20 @@
 /// One forecast hour (ADR-012 §3), at a UTC instant. Every value is nullable:
 /// a value the provider did not return is **unknown**, never 0 (SI-008).
 class WeatherHour {
+  /// Shared input boundary for provider responses and persisted forecasts.
+  /// Invalid measurements remain unknown; negative temperatures are valid.
+  static double? value(
+    Object? raw, {
+    bool percent = false,
+    bool nonNegative = false,
+  }) {
+    if (raw is! num || !raw.isFinite) return null;
+    if ((percent && (raw < 0 || raw > 100)) || (nonNegative && raw < 0)) {
+      return null;
+    }
+    return raw.toDouble();
+  }
+
   const WeatherHour({
     required this.timeUtc,
     this.cloudCoverPct,

@@ -611,6 +611,7 @@ void main() {
         // The block editor.
         AppRouter.router.go(AppRouter.session());
         await _settle(tester);
+        await tap(find.byKey(const Key('capture.menu.0')));
         await tap(find.byKey(const Key('capture.edit.0')));
         expect(find.byKey(const Key('blockDialog.cancel')), findsOneWidget);
         await check('block editor');
@@ -686,7 +687,21 @@ void main() {
       reason: '$label / $value',
     );
     // S1.13 (SCI-02): precipitation covers the preceding hour.
-    expect(find.text('Precipitation probability'), findsOneWidget);
+    final precipitation = find.byKey(
+      const Key('weather.metric.Precipitation probability'),
+    );
+    expect(precipitation, findsOneWidget);
+    expect(
+      find.descendant(of: precipitation, matching: find.text('Precipitation')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: precipitation,
+        matching: find.text('Probability \u00b7 preceding hour'),
+      ),
+      findsOneWidget,
+    );
     expect(find.textContaining('preceding hour'), findsWidgets);
     expect(find.byKey(const Key('weather.precipNote')), findsOneWidget);
     // F14 A3: the full table is in Forecast details.

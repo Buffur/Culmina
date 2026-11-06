@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/site_label.dart';
-import '../../shared/document_section.dart';
+import '../../shared/action_row.dart';
+import '../../shared/section_card.dart';
 import '../../../core/theme/app_palette.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_theme.dart';
@@ -38,14 +39,11 @@ import '../../viewmodels/site_viewmodel.dart';
 import '../../viewmodels/startup_viewmodel.dart';
 import 'home_context_sheets.dart';
 
-/// The Tonight tab's root (ADR-015, TASK 12.5; plan first since S6.13,
-/// ADR-019 §5), in the accepted Hybrid composition (design/home-lab
-/// 86873ce, app.js `plan`/`conditions`): the title and the site and night,
-/// then four document sections divided by thin rules — Your plan, The night
-/// ahead (Night with its time browser, Moon, Weather), and the next actions
-/// (a result due, the candidates). A summary only: every value comes from
-/// the ViewModels. The first-run Welcome is reached on first launch; Home
-/// no longer links it (owner-accepted reference).
+/// Tonight summary using the AFTER-DARK-1.2 anchor composition.
+///
+/// Plan/fit/action, Night/time browser and Moon/Weather each form a coherent
+/// record group. Values and conditional result actions remain source-backed;
+/// timeline preview changes viewing state only.
 class TonightHomeScreen extends StatelessWidget {
   const TonightHomeScreen({super.key});
 
@@ -60,7 +58,12 @@ class TonightHomeScreen extends StatelessWidget {
       final p = AppPalette.of(context);
       body = ListView(
         key: const Key('tonight.loadError'),
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          AppSpacing.lg,
+          AppSpacing.gutter,
+          AppSpacing.xl,
+        ),
         children: [
           Align(
             alignment: AlignmentDirectional.centerStart,
@@ -114,9 +117,13 @@ class TonightHomeScreen extends StatelessWidget {
       // the plan; no night is computed for the default location (ADR-007
       // §9).
       final noSite = context.watch<SiteViewModel>().isDefaultLocation;
-      // styles.css `.app-content` (Hybrid): 20 px on every side.
       body = ListView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.gutter,
+          AppSpacing.lg,
+          AppSpacing.gutter,
+          AppSpacing.xl,
+        ),
         children: [
           const _Title(),
           const _Context(),
@@ -166,6 +173,7 @@ class _Title extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           'A clear plan for the night ahead.',
           style: AppTextTheme.of(context).body.copyWith(color: p.textTertiary),
@@ -187,16 +195,19 @@ class _Context extends StatelessWidget {
     final planVm = context.watch<SessionPlanViewModel>();
     return KeyedSubtree(
       key: const Key('tonight.context'),
-      child: ContextLine(
-        siteName: siteVm.isDefaultLocation ? null : SiteLabel.compact(siteVm),
-        siteDescription: SiteLabel.of(siteVm),
-        compact: true,
-        noSiteLabel: ContextLine.setSite,
-        night: planVm.eveningDate,
-        zoneId: siteVm.displayZoneId,
-        // Owner refinement: direct calendar and combined site management.
-        onSite: () => showHomeSiteSheet(context),
-        onNight: () => showHomeNightSheet(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        child: ContextLine(
+          siteName: siteVm.isDefaultLocation ? null : SiteLabel.compact(siteVm),
+          siteDescription: SiteLabel.of(siteVm),
+          compact: true,
+          noSiteLabel: ContextLine.setSite,
+          night: planVm.eveningDate,
+          zoneId: siteVm.displayZoneId,
+          // Owner refinement: direct calendar and combined site management.
+          onSite: () => showHomeSiteSheet(context),
+          onNight: () => showHomeNightSheet(context),
+        ),
       ),
     );
   }
@@ -210,7 +221,7 @@ class _Section extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DocumentSection(children: [child]);
+    return SectionCard(children: [child]);
   }
 }
 
@@ -355,7 +366,7 @@ class _PlanSection extends StatelessWidget {
                 child: Text(
                   AppWords.yourPlan,
                   key: const Key('tonight.planHeading'),
-                  style: AppTextTheme.of(context).homePlanHeading
+                  style: AppTextTheme.of(context).screenTitle
                       .copyWith(color: palette.textPrimary),
                 ),
               ),
@@ -376,7 +387,8 @@ class _PlanSection extends StatelessWidget {
                 ? 'No target chosen'
                 : target.commonName ?? target.catalogId,
             key: const Key('tonight.planTarget'),
-            style: AppTextTheme.of(context).homeTarget.copyWith(
+            style: AppTextTheme.of(context).nestedTitle.copyWith(
+              fontWeight: FontWeight.w500,
               color: target == null
                   ? palette.textSecondary
                   : palette.textPrimary,
@@ -399,13 +411,13 @@ class _PlanSection extends StatelessWidget {
                   .copyWith(color: palette.textTertiary),
             ),
           ],
-          const SizedBox(height: 18),
+          const SizedBox(height: 6),
           StatusBlock(
             key: const Key('tonight.status'),
-            headingStyle: AppTextTheme.of(context).itemTitle,
+            headingStyle: AppTextTheme.of(context).nestedTitle,
             separateFigures: true,
-            figuresBeforeReason: false,
-            fitLine: true,
+            figuresBeforeReason: true,
+            fitLine: false,
             state: missing != null ? FitState.needsInput : fit.state,
             missing: missing?.headline,
             needed: measured ? Duration(milliseconds: fit.windowLoadMs) : null,
@@ -438,18 +450,14 @@ class _PlanSection extends StatelessWidget {
               onTap: () => context.push(AppRouter.candidates),
             ),
           ],
-          const SizedBox(height: 18),
-          FilledButton.icon(
+          const SizedBox(height: AppSpacing.sm),
+          FilledButton(
             key: const Key('tonight.openPlanner'),
             onPressed: () => context.push(AppRouter.session()),
-            icon: HybridIcon(
-              HybridIcons.planner,
-              size: MediaQuery.textScalerOf(context).scale(17),
-            ),
-            label: const Text('Open planner'),
             style: FilledButton.styleFrom(
               minimumSize: const Size.fromHeight(48),
             ),
+            child: const Text('Open planner'),
           ),
         ],
       ),
@@ -488,7 +496,7 @@ class _NightSection extends StatelessWidget {
       header: true,
       child: Text(
         'The night ahead',
-        style: AppTextTheme.of(context).nightHeading
+        style: AppTextTheme.of(context).screenTitle
             .copyWith(color: p.textPrimary),
       ),
     );
@@ -505,6 +513,7 @@ class _NightSection extends StatelessWidget {
       plan.tonightKey,
     );
     final rows = <Widget>[];
+    final conditionRows = <Widget>[];
     if (timeline != null) {
       String at(DateTime utc) => NightTimeFormatter.instant(
         context,
@@ -550,20 +559,15 @@ class _NightSection extends StatelessWidget {
           ),
           // night.css `.night-slider.compact` under the row it explains,
           // 16 above its bottom rule.
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: p.border)),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(bottom: AppSpacing.md),
-              child: NightBarSection(home: true),
-            ),
+          child: const Padding(
+            padding: EdgeInsets.only(bottom: AppSpacing.sm),
+            child: NightBarSection(home: true),
           ),
         ),
       );
       if (moon != null) {
         final free = conditions.moonFree;
-        rows.add(
+        conditionRows.add(
           _ConditionRow(
             key: const Key('tonight.moon'),
             icon: HybridIcons.homeMoon,
@@ -581,7 +585,7 @@ class _NightSection extends StatelessWidget {
       }
     }
     final (headline, detail) = _weather(context, conditions, phrase);
-    rows.add(
+    conditionRows.add(
       _ConditionRow(
         key: const Key('tonight.weather'),
         icon: HybridIcons.homeCloud,
@@ -589,22 +593,31 @@ class _NightSection extends StatelessWidget {
         value: headline,
         extra: detail,
         onTap: () => context.push(AppRouter.weather),
-        bottomPadding: 0,
+        topRule: false,
+        bottomPadding: AppSpacing.sm,
       ),
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
-      child: _Section(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: AppSpacing.md),
+        SectionCard(
+          key: const Key('tonight.nightGroup'),
+          padding: const EdgeInsets.all(AppSpacing.sm),
           children: [
             heading,
             const SizedBox(height: AppSpacing.xs),
             ...rows,
           ],
         ),
-      ),
+        const SizedBox(height: AppSpacing.md),
+        SectionCard(
+          key: const Key('tonight.conditionsGroup'),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          children: conditionRows,
+        ),
+      ],
     );
   }
 
@@ -708,6 +721,7 @@ class _NextActions extends StatelessWidget {
       if (!_offersTargets(plan))
         _ActionRow(
           key: const Key('tonight.candidates'),
+          heading: 'Discover',
           title: _candidatesLabel(plan),
           onTap: () => context.push(AppRouter.candidates),
         ),
@@ -734,68 +748,59 @@ class _ActionRow extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.caption,
+    this.heading,
     this.semanticsLabel,
   });
 
   final String title;
+  final String? heading;
   final String? caption;
   final String? semanticsLabel;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
     return Semantics(
       button: true,
       label: semanticsLabel ?? [title, ?caption].join(', '),
       excludeSemantics: true,
       enabled: true,
       onTap: onTap,
-      child: InkWell(
-        onTap: onTap,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 48),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        title,
-                        style: AppTextTheme.of(context)
-                            .resolve(
-                              AppTextTheme.of(context).itemTitle,
-                              AppTextGeometry.dialogTitle,
-                            )
-                            .copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: p.textPrimary,
-                            ),
+      child: heading == null
+          ? ActionRow(title: title, description: caption, onTap: onTap)
+          : InkWell(
+              onTap: onTap,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 48),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            heading!,
+                            style: AppTextTheme.of(context).screenTitle,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(title, style: AppTextTheme.of(context).body),
+                        ],
                       ),
-                      if (caption != null)
-                        Text(
-                          caption!,
-                          style: AppTextTheme.of(context).caption
-                              .copyWith(color: p.textSecondary),
+                    ),
+                    SizedBox.square(
+                      dimension: 24,
+                      child: Center(
+                        child: HybridIcon(
+                          HybridIcons.rowChevron,
+                          size: 16,
+                          color: AppPalette.of(context).textSecondary,
                         ),
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                HybridIcon(
-                  HybridIcons.chevron,
-                  size: 18,
-                  color: p.textSecondary,
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -813,7 +818,7 @@ class _ConditionRow extends StatelessWidget {
     required this.extra,
     required this.onTap,
     this.topRule = true,
-    this.bottomPadding = 12,
+    this.bottomPadding = AppSpacing.sm,
   });
 
   final HybridIconData icon;
@@ -830,43 +835,31 @@ class _ConditionRow extends StatelessWidget {
     final row = InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.only(top: 12, bottom: bottomPadding),
+        padding: EdgeInsets.only(top: AppSpacing.sm, bottom: bottomPadding),
         child: Row(
           children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      HybridIcon(icon, size: 20, color: p.textPrimary),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          label,
-                          style: AppTextTheme.of(context).itemTitle
-                              .copyWith(color: p.textPrimary),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    label,
+                    style: AppTextTheme.of(context).nestedTitle
+                        .copyWith(color: p.textPrimary),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.xs),
                   Text(
                     value,
-                    style: AppTextTheme.of(context).value.copyWith(
+                    style: AppTextTheme.of(context).body.copyWith(
                       color: p.textPrimary,
                       fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
                   if (extra.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       extra,
-                      style: AppTextTheme.of(context)
-                          .resolve(
-                            AppTextTheme.of(context).caption,
-                            AppTextGeometry.supporting,
-                          )
+                      style: AppTextTheme.of(context).caption
                           .copyWith(color: p.textSecondary),
                     ),
                   ],

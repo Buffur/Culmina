@@ -97,7 +97,13 @@ abstract final class BackupStaging {
     final journalFile = _file(dir, journal);
     final live = _file(dir, database);
     final next = _file(dir, staged);
-    Map<String, Object?>? started = await _readJson(journalFile);
+    Map<String, Object?>? started = await _readJson(journalFile, strict: true);
+    if (started != null &&
+        (started['stamp'] is! String ||
+            !RegExp(r'^[0-9TZ-]+$').hasMatch(started['stamp']! as String) ||
+            started['previous_preferences'] is! Map)) {
+      throw const FormatException('Invalid restore journal');
+    }
 
     if (started == null) {
       final part = File('${next.path}.part');
@@ -105,8 +111,10 @@ abstract final class BackupStaging {
       if (!await next.exists()) return null;
       // Activation repeats the pick-time check, on the staged file itself,
       // before anything live changes (F01 A1).
+      Map<String, Object?>? carried;
       try {
         await check(next);
+        carried = await _readStagedPreferences(dir);
       } on BackupException catch (e) {
         await cancel(dir);
         return _report(
@@ -131,6 +139,8 @@ abstract final class BackupStaging {
         // interrupted must know whether the file at the live path is the
         // old database or the new one.
         'had_live': await live.exists(),
+        // Retain the activation input until the durable terminal marker.
+        'preferences': carried,
       };
       await step('journal');
       await _writeJson(journalFile, started);
@@ -142,6 +152,20 @@ abstract final class BackupStaging {
         putBackPreferences: putBackPreferences,
         step: step,
       );
+    }
+    if (started['finished'] == true) {
+      // Only cleanup remains. Replaying preference writes could erase a
+      // restored site or overwrite changes made after a completed restore.
+      if (started['rolling_back'] != true && !await live.exists()) {
+        throw const FileSystemException('Committed restore database missing');
+      }
+      final outcome = started['rolling_back'] == true
+          ? const RestoreOutcome(
+              RestoreResult.refused,
+              problem: BackupProblem.notApplied,
+            )
+          : const RestoreOutcome(RestoreResult.completedAfterInterruption);
+      return _finish(dir, started, outcome, step);
     }
     // A journal: the last start stopped in the middle of a checked
     // restore. Finish it; the candidate was checked before the journal
@@ -210,7 +234,13 @@ abstract final class BackupStaging {
         await next.rename(live.path);
       }
       await step('preferences');
-      await restorePreferences(await _readStagedPreferences(dir));
+      await restorePreferences(
+        started.containsKey('preferences')
+            ? started['preferences'] == null
+                  ? null
+                  : BackupPreferences.parse(started['preferences'])
+            : await _readStagedPreferences(dir),
+      );
     } on Exception catch (e, s) {
       AppLog.error('backup', 'Restore not applied', error: e, stackTrace: s);
       return _rollBack(dir, started, putBackPreferences, e, step);
@@ -221,10 +251,27 @@ abstract final class BackupStaging {
           ? RestoreResult.completedAfterInterruption
           : RestoreResult.applied,
     );
+    await _writeJson(_file(dir, journal), {...started, 'finished': true});
+    return _finish(dir, started, outcome, step);
+  }
+
+  static Future<RestoreOutcome> _finish(
+    Directory dir,
+    Map<String, Object?> started,
+    RestoreOutcome outcome,
+    Future<void> Function(String) step,
+  ) async {
     await _writeOutcome(dir, outcome);
+    await step('cleanupPreferences');
     await _deleteIfExists(_file(dir, stagedPreferences));
+    await step('cleanupJournal');
     await _deleteIfExists(_file(dir, journal));
-    await _pruneSafetyCopies(dir, keep: safety);
+    if (started['rolling_back'] != true) {
+      await _pruneSafetyCopies(
+        dir,
+        keep: _safety(dir, started['stamp']! as String),
+      );
+    }
     return outcome;
   }
 
@@ -291,9 +338,9 @@ abstract final class BackupStaging {
       problem: BackupProblem.notApplied,
     );
     AppLog.warning('backup', 'Restore rolled back: $reason');
-    await _writeOutcome(dir, outcome);
-    await _deleteIfExists(_file(dir, journal));
-    return outcome;
+    final finished = {...started, 'rolling_back': true, 'finished': true};
+    await _writeJson(_file(dir, journal), finished);
+    return _finish(dir, finished, outcome, step);
   }
 
   static File _safety(Directory dir, String stamp) =>
@@ -361,12 +408,18 @@ abstract final class BackupStaging {
     await tmp.rename(file.path);
   }
 
-  static Future<Map<String, Object?>?> _readJson(File file) async {
+  static Future<Map<String, Object?>?> _readJson(
+    File file, {
+    bool strict = false,
+  }) async {
     if (!await file.exists()) return null;
     try {
       final json = jsonDecode(await file.readAsString());
-      return json is Map ? Map<String, Object?>.from(json) : null;
+      if (json is Map) return Map<String, Object?>.from(json);
+      if (strict) throw const FormatException('Invalid restore journal');
+      return null;
     } on FormatException catch (e) {
+      if (strict) rethrow;
       AppLog.warning('backup', '${p.basename(file.path)} unreadable', error: e);
       return null;
     }
@@ -376,19 +429,13 @@ abstract final class BackupStaging {
     if (await file.exists()) await file.delete();
   }
 
-  /// The staged settings; null when none were staged, or (logged) when
-  /// they cannot be read: the restore then keeps the device's settings
-  /// and still clears its stale ids, as for a version 1 archive.
+  /// Null only for an archive without settings. Corruption must refuse
+  /// activation rather than silently apply a different preference policy.
   static Future<Map<String, Object?>?> _readStagedPreferences(
     Directory dir,
   ) async {
     final settings = _file(dir, stagedPreferences);
     if (!await settings.exists()) return null;
-    try {
-      return BackupPreferences.parse(jsonDecode(await settings.readAsString()));
-    } on FormatException catch (e) {
-      AppLog.warning('backup', 'Staged settings unreadable', error: e);
-      return null;
-    }
+    return BackupPreferences.parse(jsonDecode(await settings.readAsString()));
   }
 }

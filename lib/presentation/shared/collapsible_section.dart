@@ -31,7 +31,7 @@ class CollapsibleSection extends StatelessWidget {
     this.titleStyle,
     this.icon,
     this.iconColor,
-    this.readableFeedback = false,
+    this.readableFeedback = true,
   });
 
   /// A data icon before the title (conditions.css `.condition-data-heading`:
@@ -39,7 +39,7 @@ class CollapsibleSection extends StatelessWidget {
   final HybridIconData? icon;
   final Color? iconColor;
 
-  /// Local opt-in for confirmed quiet-label interaction states.
+  /// Quiet headers retain readable foreground contrast during interaction.
   final bool readableFeedback;
 
   /// The Hybrid disclosure's thin rule above it (`.plan-disclosure`).
@@ -123,11 +123,7 @@ class CollapsibleSection extends StatelessWidget {
                               title,
                               style:
                                   (titleStyle ??
-                                          AppTextTheme.of(context).resolve(
-                                            AppTextTheme.of(context)
-                                                .sectionHeading,
-                                            AppTextGeometry.badge,
-                                          ))
+                                          AppTextTheme.of(context).nestedTitle)
                                       .copyWith(color: p.textPrimary),
                             ),
                           ),

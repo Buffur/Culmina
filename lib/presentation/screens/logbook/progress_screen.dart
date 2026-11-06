@@ -1,7 +1,8 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
+import '../../shared/fact_row.dart';
 
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ import '../../shared/night_time_formatter.dart';
 import '../../shared/opportunity_text.dart';
 import '../../viewmodels/library_viewmodels.dart';
 import '../../shared/failure_feedback.dart';
+import '../../shared/content_states.dart';
 
 /// Progress by target (TASK 14.2, CALC-38; in the Logbook since S8.5, RD-07):
 /// integration so far across nights, from logged results only (completed
@@ -53,7 +55,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         future: _progress,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingState(message: 'Loading progress…');
           }
           final list = snapshot.data;
           if (snapshot.error case final error?) {
@@ -64,7 +66,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
             );
           }
           if (list == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingState(message: 'Loading progress…');
           }
           // logbook.js `progressView`.
           return ListView(
@@ -79,18 +81,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
               if (list.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: AppSpacing.md),
-                  child: Text(
-                    'No results yet. Integration adds up here once you '
-                    'record how a saved plan went.',
-                    key: const Key('progress.empty'),
-                    style: copy,
+                  child: const EmptyState(
+                    title:
+                        'No results yet. Integration adds up here once you '
+                        'record how a saved plan went.',
+                    key: Key('progress.empty'),
                   ),
                 )
               else ...[
                 for (final (i, t) in list.indexed)
                   Padding(
                     padding: const EdgeInsets.only(top: AppSpacing.md),
-                    child: DocumentSection(
+                    child: SectionCard(
                       children: [
                         TargetProgressCard(
                           progress: t,
@@ -101,7 +103,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     ),
                   ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('progress.guideGroup'),
                   children: [
                     Padding(
@@ -163,7 +165,7 @@ class TargetProgressCard extends StatelessWidget {
     final p = AppPalette.of(context);
     final night = t.lastNight;
     final caption = AppTextTheme.of(context)
-        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.supporting)
+        .resolve(AppTextTheme.of(context).caption, AppTextGeometry.compact)
         .copyWith(color: p.textSecondary);
     final rule = BorderSide(color: p.border);
     Widget heading(String name, String total, TextStyle style, Key? key) =>
@@ -211,12 +213,10 @@ class TargetProgressCard extends StatelessWidget {
           for (final MapEntry(key: filter, value: total)
               in t.perFilter.entries) ...[
             const SizedBox(height: AppSpacing.md),
-            heading(
-              filter,
-              OpportunityText.duration(total),
-              AppTextTheme.of(context).body
-                  .copyWith(fontWeight: FontWeight.w600, color: p.textPrimary),
-              null,
+            FactRow(
+              label: filter,
+              value: OpportunityText.duration(total),
+              emphasis: true,
             ),
             for (final g in t.groups[filter] ?? const <ProgressGroup>[])
               Container(

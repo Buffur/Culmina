@@ -39,7 +39,7 @@ Future<UnsavedChoice> askUnsavedChanges(
   );
   final choice = await showDialog<UnsavedChoice>(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (context) => ConfirmationDialog(
       title: const Text('Unsaved changes'),
       content: Text(
         message.isNotEmpty
@@ -111,7 +111,7 @@ class _WideActions extends StatelessWidget {
 Future<bool> askDiscardEdit(BuildContext context) async {
   final discard = await showDialog<bool>(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (context) => ConfirmationDialog(
       title: const Text('Discard this edit?'),
       content: const Text(
         'Unapplied fields in this editor will be discarded. Changes you '
@@ -150,7 +150,7 @@ Future<bool> confirmDestructive(
 }) async {
   final confirmed = await showDialog<bool>(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (context) => ConfirmationDialog(
       title: Text(title),
       content: Text(message),
       // library.js / logbook.js `choiceDialog`: Cancel and the destructive
@@ -189,4 +189,25 @@ Future<bool> confirmDestructive(
     ),
   );
   return confirmed ?? false;
+}
+
+/// One scrollable confirmation shell; callers retain every result and action.
+class ConfirmationDialog extends StatelessWidget {
+  const ConfirmationDialog({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.actions,
+  });
+  final Widget title;
+  final Widget content;
+  final List<Widget> actions;
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    scrollable: true,
+    title: title,
+    content: content,
+    actions: actions,
+  );
 }

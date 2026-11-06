@@ -875,6 +875,9 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                 HybridSegmented<FrameType>(
                                   key: const Key('blockDialog.frameType'),
                                   legend: 'Frame type',
+                                  legendStyle: AppTextTheme.of(context)
+                                      .rowTitle,
+                                  stacked: true,
                                   keyPrefix: 'blockDialog.frameType',
                                   value: _type,
                                   options: [
@@ -1015,6 +1018,14 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                         DocumentSection(
                           key: const Key('blockDialog.captureGroup'),
                           children: [
+                            Semantics(
+                              header: true,
+                              child: Text(
+                                'Capture settings',
+                                style: AppTextTheme.of(context).screenTitle,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               spacing: AppSpacing.gutter,
@@ -1120,7 +1131,11 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                     child: DropdownButtonFormField<String>(
                                       key: const Key('blockDialog.filter'),
                                       decoration: const InputDecoration(
-                                        contentPadding: hybridSelectPadding,
+                                        contentPadding: EdgeInsets.zero,
+                                        border: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        filled: false,
                                       ),
                                       initialValue: _filter,
                                       isExpanded:
@@ -1128,7 +1143,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge,
-                                      icon: hybridSelectIcon(context),
+                                      icon: const Icon(Icons.chevron_right),
                                       items: [
                                         for (final f in _filterOptions)
                                           DropdownMenuItem(
@@ -1253,7 +1268,10 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
                                               icon: hybridSelectIcon(context),
                                               decoration: const InputDecoration(
                                                 contentPadding:
-                                                    hybridSelectPadding,
+                                                    EdgeInsets.symmetric(
+                                                      horizontal: AppSpacing.sm,
+                                                      vertical: AppSpacing.md,
+                                                    ),
                                                 helperText:
                                                     'Proposed: outside the window, so '
                                                     'calibration doesn’t use imaging time.',
@@ -1547,6 +1565,8 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
       HybridSegmented<FocusMode?>(
         key: const Key('blockDialog.focus'),
         legend: 'Focus mode (optional)',
+        legendStyle: AppTextTheme.of(context).nestedTitle,
+        stacked: true,
         keyPrefix: 'blockDialog.focus',
         value: _focus,
         options: const [
@@ -1568,7 +1588,7 @@ class _CaptureBlockDialogState extends State<_CaptureBlockDialog> {
           style: AppTextTheme.of(context)
               .resolve(
                 AppTextTheme.of(context).caption,
-                AppTextGeometry.supporting,
+                AppTextGeometry.compact,
               )
               .copyWith(color: palette.textSecondary),
         ),

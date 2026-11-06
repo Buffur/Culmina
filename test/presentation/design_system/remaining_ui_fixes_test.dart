@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:astroplan/core/units/display_units.dart';
+import 'package:astroplan/core/theme/app_spacing.dart';
 import 'package:astroplan/data/database/app_database.dart' show AppDatabase;
 import 'package:astroplan/domain/models/capture_block.dart';
 import 'package:astroplan/main.dart';
@@ -173,7 +174,7 @@ void main() {
       expect(find.byKey(const Key('nightMoon.month')), findsNothing);
       expect(
         tester.getRect(find.byKey(const Key('moon.answerGroup'))).left,
-        closeTo(20, .01),
+        closeTo(AppSpacing.gutter, .01),
       );
       expect(tester.takeException(), isNull);
     });

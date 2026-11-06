@@ -60,3 +60,10 @@ docs/design/tooling-update-2026-10-20/codex-health-stderr.txt
 
 # Archive
 /docs/archive/
+
+# Cleanup evidence: preserve local logs, binaries and raw machine inventories.
+/_archive/cleanup_2026-11-06/logs/
+/_archive/cleanup_2026-11-06/*-audit.json
+/_archive/cleanup_2026-11-06/*-hashes.json
+/_archive/cleanup_2026-11-06/initial-git-status.json
+/_archive/cleanup_2026-11-06/docs/.codex/

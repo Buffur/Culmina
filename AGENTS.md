@@ -14,6 +14,27 @@ The app does not control cameras or mounts.
 - Keep new or substantially revised project documentation in English.
 - Preserve unrelated local changes and historical evidence; report checks actually performed.
 
+### Directive maintenance
+
+- Keep one owner for each mutable fact or rule; other entrypoints link to it. Read only the current task's checkpoint and relevant modules, not the full historical record by default.
+- When an authorized decision supersedes a directive, update its owning rule and the affected active entrypoints together. Preserve the previous decision, scope, date and evidence under an explicit Historical/Superseded heading in existing documents; do not leave old imperatives presented as current work.
+- Separate current requirements, dated verification receipts and deferred criteria. A historical count is not a live inventory; an unchecked future criterion does not expand the current task or become a pass through deferral.
+- For the After base-screen run, [REDESIGN_RUN](design/figma/REDESIGN_RUN.md) alone owns mutable screen status, output IDs and the next authorized step; [AUTHORING_PROFILE](design/figma/AUTHORING_PROFILE.md) owns canonical selection; [REDESIGN_STRATEGY](design/figma/REDESIGN_STRATEGY.md) owns the iteration procedure/stages; the [numbered queue](design/figma/research/ssot_audit_2026-11-04.md#numbered-base-screen-queue) owns stable numbering/source contexts; [WORKFLOW](design/figma/WORKFLOW.md) retains dated decisions and verification evidence. Value modules retain ownership of their values.
+- Before completing a directive change, inspect affected links and entrypoints for conflicting current commands, then run the applicable document/instruction checks. Report semantic review separately: structural validators do not establish instruction consistency. Preserve IDs, evidence, authorization limits and unrelated dirty work; do not create another instruction file merely to repeat an existing owner.
+
+### Mandatory Delivery Audit (Step 7 Control)
+
+Every completed screen or code task MUST end with this exact 4-line audit block, as the last substantive content of its delivery. Required platform metadata may follow without changing these four lines.
+
+- **Source & Canonical Owners:** [exact Flutter files read + DS master components used]
+- **Unapproved Decisions Made:** [any layout, UX, or logic choice made without explicit owner instruction — write "None" only if 100% matched]
+- **Assumptions vs. Code Facts:** [what was inferred rather than proven from `BEFORE` / fixtures]
+- **Unverified / Remaining Limits:** [what could not be checked in this turn]
+
+Use exact file paths and component IDs actually inspected or used; mark an inapplicable category explicitly instead of inventing evidence. For a code task without Figma, DS owners may be Not applicable. Disclose judgment calls not explicitly prescribed by the owner, including choices made within an authorized task; "None" is not a substitute for that assessment. Separate current source/fixture facts from inference and dated evidence. For an incomplete delivery, state the remaining work without claiming completion.
+
+This audit reports decisions and verification; it does not create an additional approval gate or require asking about every implementation detail. Structural questions still follow the [Step 4 exploration gate](design/figma/REDESIGN_STRATEGY.md#ux-exploration--structural-alternatives-extension-of-step-4-gate); normal spacing, hierarchy, typography and sizing QA remains directly executable. The After strategy links to this shared rule rather than owning a duplicate template.
+
 ## Architecture map
 
 - `lib/main.dart`: startup, catalog seeding and concrete dependency composition.
@@ -141,37 +162,12 @@ Generic design/audit, brand and palette playbooks are archived for this project.
 See [agent tooling](docs/AGENT_TOOLING.md) for retained helpers, archive and plugin evidence.
 Installed or enabled plugins do not prove authentication, invocation or acceptance.
 
-Entrypoints are `.agents/skills/<name>/SKILL.md`; the [skill index](.agents/skills/README.md) links them.
-Upstream metadata and lock hashes describe acquisition provenance, not current local hashes.
+For Figma work, use **Web Figma + Scripter through native desktop/computer-use**.
+The Figma MCP quota is exhausted (owner report, 2026-11-04); do not spend calls
+on MCP discovery, access probes or retries unless the owner explicitly requests
+a recheck. Follow the [Figma execution route](docs/AGENT_TOOLING.md#figma-execution-route).
 
-| Skill | Invoke for |
-| --- | --- |
-| culmina-design-components | Existing components, variants, callbacks and adopters |
-| culmina-design-rules | Product meaning, missing data and scientific invariants |
-| culmina-design-spacing | Local density, alignment, shape and motion |
-| culmina-design-tokens | Semantic colors/surfaces across all three themes |
-| culmina-design-typography | Text roles, weight, wrapping and numeric readability |
-| dart-add-unit-test | Focused domain/data regressions with existing fakes |
-| dart-build-cli-app | Existing Dart utilities under tool/ |
-| dart-collect-coverage | A specifically scoped coverage question |
-| dart-fix-runtime-errors | A reproduced exception and stack trace |
-| dart-generate-test-mocks | Handwritten fakes; generated mocks only if adopted |
-| dart-resolve-package-conflicts | A concrete dependency resolution conflict |
-| dart-run-static-analysis | Scoped analyzer diagnostics and corrections |
-| dart-use-doc-examples | External Dartdoc examples for a documentation task |
-| dart-use-path-package | Existing path-package callers and file-path behavior |
-| dart-use-pattern-matching | A named refactor preserving cases and null semantics |
-| dart-use-primary-constructors | Explicit syntax evaluation after SDK verification |
-| dart-write-documentation | Dart API documentation and doc comments |
-| flutter-add-integration-test | Existing host/device integration flows |
-| flutter-add-widget-preview | A specifically requested isolated widget preview |
-| flutter-add-widget-test | Component rendering and interaction regressions |
-| flutter-apply-architecture-best-practices | Existing layer/ViewModel boundaries |
-| flutter-build-responsive-layout | A named adaptive layout task and its sizes |
-| flutter-fix-layout-issues | A specific overflow, constraint or ParentData failure |
-| flutter-implement-json-serialization | Model/backup JSON contracts and round trips |
-| flutter-setup-declarative-routing | Routes, shell, Back behavior and draft guards |
-| flutter-use-http-package | Injected HTTP services and provider contracts |
+The [skill index](.agents/skills/README.md) lists purposes, scopes and `.agents/skills/<name>/SKILL.md` entrypoints; each SKILL.md remains the execution authority for its task. Upstream metadata and lock hashes describe acquisition provenance, not current local hashes.
 
 ## Current external documentation
 

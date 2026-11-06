@@ -38,6 +38,24 @@ void main() {
           for (final role in (json['themes'][entry.key] as Map).keys)
             role: cascade['--$role'] ?? json['themes'][entry.key][role],
         };
+        // Dark migrated from the dated web fixture to the owner-selected 1.2 contract.
+        if (entry.key == 'dark') {
+          expected.addAll({
+            'surface-default': '#202020',
+            'surface-subtle': '#202020',
+            'surface-raised': '#262626',
+            'surface-sunken': '#1A1A1A',
+            'text-primary': '#F0EFED',
+            'text-secondary': '#C4C1BC',
+            'text-tertiary': '#ADA9A3',
+            'border-subtle': '#414141',
+            'border-control': '#8B8F93',
+            'action': '#2783DE',
+            'on-action': '#101010',
+            'selection': '#262626',
+            'error': '#F39B95',
+          });
+        }
         final actual = <String, Color>{
           'surface-default': theme.scaffoldBackgroundColor,
           'surface-subtle': entry.key == 'field'
@@ -73,7 +91,7 @@ void main() {
         // its on-action text (field: black on #FF0000).
         expect(
           theme.filledButtonTheme.style!.backgroundColor!.resolve({}),
-          h.action,
+          entry.key == 'dark' ? p.textPrimary : h.action,
         );
         expect(
           theme.filledButtonTheme.style!.foregroundColor!.resolve({}),
@@ -81,9 +99,9 @@ void main() {
         );
         expect(theme.colorScheme.secondaryContainer, h.selection);
         expect(theme.textTheme.bodyMedium!.fontFamily, 'Geist');
-        expect(theme.textTheme.bodyMedium!.fontSize, 16);
+        expect(theme.textTheme.bodyMedium!.fontSize, 15);
         expect(theme.textTheme.bodySmall!.fontSize, 13);
-        expect(theme.textTheme.labelLarge!.fontSize, 14);
+        expect(theme.textTheme.labelLarge!.fontSize, 15);
         expect(
           theme.inputDecorationTheme.enabledBorder,
           isA<OutlineInputBorder>(),

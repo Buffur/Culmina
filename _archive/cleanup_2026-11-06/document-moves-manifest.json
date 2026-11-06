@@ -1,0 +1,26 @@
+[
+  {
+    "original": "design/figma/research/icons_2026-11-01.md",
+    "destination": "_archive/cleanup_2026-11-06/docs/design/figma/research/icons_2026-11-01.md",
+    "bytes": 10136,
+    "lines": 66,
+    "sha256": "71e0268e9522b80785a03c6cbfd393fd2cc6527c1071ff6841c992c657c9264c",
+    "reason": "Superseded 2026-11-01 icon/timeline research. No inbound reference in active project text; old Eye/Field/check adoption and timeline alternatives are superseded by current profile, navigation and data-display owners."
+  },
+  {
+    "original": "design/figma/research/workflow_and_timeline_2026-11-01.md",
+    "destination": "_archive/cleanup_2026-11-06/docs/design/figma/research/workflow_and_timeline_2026-11-01.md",
+    "bytes": 6574,
+    "lines": 37,
+    "sha256": "a20c07e89f4544b990cb038d4336e00b367a66378e45d4d67a30a9767e009466",
+    "reason": "Superseded 2026-11-01 icon/timeline research. No inbound reference in active project text; old Eye/Field/check adoption and timeline alternatives are superseded by current profile, navigation and data-display owners."
+  },
+  {
+    "original": "docs/DOCUMENTATION_COMPACTION.md",
+    "destination": "_archive/cleanup_2026-11-06/docs/docs/DOCUMENTATION_COMPACTION.md",
+    "bytes": 3886,
+    "lines": 26,
+    "sha256": "517db67f2d5cdcfb5aaba664690034bc6a239e04162ed6cf1278473dbf0a6fc7",
+    "reason": "Completed documentation-compaction receipt; moved earlier in this cleanup; no inbound active reference found."
+  }
+]

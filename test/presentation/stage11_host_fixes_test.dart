@@ -20,6 +20,8 @@ import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/equipment/equipment_editor.dart';
 import 'package:astroplan/presentation/screens/sites/zone_picker_dialog.dart';
 import 'package:astroplan/presentation/shared/equipment_draft.dart';
+import 'package:astroplan/presentation/shared/action_row.dart';
+import 'package:astroplan/presentation/shared/hybrid_parts.dart';
 import 'package:astroplan/presentation/viewmodels/library_viewmodels.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -210,36 +212,53 @@ void main() {
     expect(caption, contains("now $degrees (not the plan's night)"));
   });
 
-  testWidgets('S11H-03: the zone picker marks the current zone with a check, '
-      'not colour alone', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) => TextButton(
-              onPressed: () =>
-                  showZonePicker(context, current: 'Europe/Ljubljana'),
-              child: const Text('open'),
+  testWidgets(
+    'S11H-03: the zone picker marks the current zone with a checked radio, '
+    'not colour alone',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () =>
+                    showZonePicker(context, current: 'Europe/Ljubljana'),
+                child: const Text('open'),
+              ),
             ),
           ),
         ),
-      ),
-    );
-    await tester.tap(find.text('open'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField), 'Ljubljana');
-    await tester.pumpAndSettle();
-    final row = find.widgetWithText(ListTile, 'Europe/Ljubljana');
-    expect(
-      find.descendant(of: row, matching: find.byIcon(Icons.check)),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: find.widgetWithText(ListTile, 'Unknown'),
-        matching: find.byIcon(Icons.check),
-      ),
-      findsNothing,
-    );
-  });
+      );
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'Ljubljana');
+      await tester.pumpAndSettle();
+      final row = find.widgetWithText(ActionRow, 'Europe/Ljubljana');
+      final unknown = find.widgetWithText(ActionRow, 'Unknown');
+      expect(tester.widget<ActionRow>(row).variant, ActionRowVariant.radio);
+      expect(tester.widget<ActionRow>(row).selected, isTrue);
+      expect(tester.widget<ActionRow>(unknown).selected, isFalse);
+      expect(
+        tester
+            .widget<HybridRadio>(
+              find.descendant(of: row, matching: find.byType(HybridRadio)),
+            )
+            .checked,
+        isTrue,
+      );
+      expect(
+        tester
+            .widget<HybridRadio>(
+              find.descendant(of: unknown, matching: find.byType(HybridRadio)),
+            )
+            .checked,
+        isFalse,
+      );
+      final semantics = tester.widget<Semantics>(
+        find.descendant(of: row, matching: find.byType(Semantics)).first,
+      );
+      expect(semantics.properties.checked, isTrue);
+      expect(semantics.properties.inMutuallyExclusiveGroup, isTrue);
+    },
+  );
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:provider/provider.dart';
 
@@ -81,9 +81,9 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
         null,
       ),
     ];
-    final plan = OutlinedButton(
+    final plan = TextButton(
       key: const Key('targetDetail.plan'),
-      style: OutlinedButton.styleFrom(
+      style: TextButton.styleFrom(
         minimumSize: const Size.fromHeight(HybridTokens.minTarget),
       ),
       onPressed: () => widget.onPlan(t),
@@ -124,7 +124,7 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
         padding: settingsPagePadding,
         children: catalogue
             ? [
-                DocumentSection(
+                SectionCard(
                   key: const Key('targetDetail.identityGroup'),
                   children: [
                     if (widget.onEdit == null) ...const [
@@ -139,9 +139,11 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('targetDetail.factsGroup'),
                   children: [
+                    const SettingsHeading('Record', top: 0),
+                    const SizedBox(height: AppSpacing.sm),
                     FutureBuilder<Map<String, List<TargetAlias>>>(
                       future: _aliases,
                       builder: (context, snapshot) {
@@ -215,9 +217,10 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('targetDetail.actionsGroup'),
                   children: [
+                    const SettingsHeading('Actions', top: 0),
                     SettingsCopy(
                       widget.onEdit == null
                           ? 'For different values, add your own target. The '
@@ -233,7 +236,7 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                 ),
               ]
             : [
-                DocumentSection(
+                SectionCard(
                   key: const Key('targetDetail.identityGroup'),
                   children: [
                     LibraryRecordHeader(
@@ -244,9 +247,11 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('targetDetail.factsGroup'),
                   children: [
+                    const SettingsHeading('Record', top: 0),
+                    const SizedBox(height: AppSpacing.sm),
                     FactRows(key: const Key('targetDetail.facts'), [
                       if (t.catalogId != name)
                         (
@@ -274,9 +279,13 @@ class _TargetDetailScreenState extends State<TargetDetailScreen> {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                DocumentSection(
+                SectionCard(
                   key: const Key('targetDetail.actionsGroup'),
-                  children: [plan, ...delete],
+                  children: [
+                    const SettingsHeading('Actions', top: 0),
+                    plan,
+                    ...delete,
+                  ],
                 ),
               ],
       ),

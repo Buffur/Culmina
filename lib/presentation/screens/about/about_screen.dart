@@ -1,7 +1,7 @@
 import 'package:astroplan/presentation/shared/hybrid_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -48,7 +48,7 @@ class AboutScreen extends StatelessWidget {
       body: ListView(
         padding: settingsPagePadding,
         children: [
-          DocumentSection(
+          SectionCard(
             key: const Key('about.identityGroup'),
             children: [
               // S9.5 (08 §23): the author, prominent and first.
@@ -78,7 +78,7 @@ class AboutScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          const DocumentSection(
+          const SectionCard(
             joinNext: true,
             padding: EdgeInsets.fromLTRB(
               AppSpacing.md,
@@ -88,7 +88,7 @@ class AboutScreen extends StatelessWidget {
             ),
             children: [SettingsHeading('Data sources in the app', top: 0)],
           ),
-          const DocumentSection(
+          const SectionCard(
             joinPrevious: true,
             joinNext: true,
             padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -105,7 +105,7 @@ class AboutScreen extends StatelessWidget {
           ),
           // The catalog notice in full, as its licence asks (COMPLIANCE).
           // The catalog notice in full, as its licence asks (COMPLIANCE).
-          DocumentSection(
+          SectionCard(
             joinPrevious: true,
             joinNext: true,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -116,7 +116,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ],
           ),
-          const DocumentSection(
+          const SectionCard(
             joinPrevious: true,
             joinNext: true,
             padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -131,7 +131,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ],
           ),
-          const DocumentSection(
+          const SectionCard(
             joinPrevious: true,
             joinNext: true,
             padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -146,7 +146,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ],
           ),
-          const DocumentSection(
+          const SectionCard(
             joinPrevious: true,
             joinNext: false,
             padding: EdgeInsets.fromLTRB(
@@ -167,7 +167,7 @@ class AboutScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('about.privacyGroup'),
             children: [
               const SettingsHeading('Privacy', top: 0),
@@ -189,7 +189,7 @@ class AboutScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DocumentSection(
+          SectionCard(
             key: const Key('about.licenceGroup'),
             children: [
               const SettingsHeading('Licence', top: 0),
@@ -268,34 +268,11 @@ class _Source extends StatelessWidget {
         .copyWith(color: AppPalette.of(context).textPrimary);
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // The list's disc: 5 px, centred on the first line.
-          SizedBox(
-            width: AppSpacing.gutter,
-            height: 21,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                width: 5,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: style.color,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(text, style: style),
-                SettingsLink(label: label, url: url),
-              ],
-            ),
-          ),
+          Text(text, style: style),
+          SettingsLink(label: label, url: url),
         ],
       ),
     );
@@ -319,7 +296,7 @@ class _NoticeState extends State<_Notice> {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: AppSpacing.gutter),
+    padding: EdgeInsets.zero,
     child: CollapsibleSection(
       key: const Key('about.notice'),
       sectionKey: 'about.openngcNotice',
@@ -329,7 +306,7 @@ class _NoticeState extends State<_Notice> {
       open: _open,
       onToggle: () => setState(() => _open = !_open),
       child: FutureBuilder<String>(
-        future: _text,
+        future: _open ? _text : null,
         // TASK 15.3: selectable text is a long-press target (48 px).
         builder: (context, snapshot) => ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 48),
@@ -338,7 +315,7 @@ class _NoticeState extends State<_Notice> {
                 (snapshot.hasError
                     ? 'Target catalog: adapted from OpenNGC by Mattia '
                           'Verga, CC BY-SA 4.0.'
-                    : ''),
+                    : 'Loading OpenNGC notice…'),
             key: const Key('about.noticeText'),
             style: widget.style,
           ),

@@ -33,6 +33,7 @@ class _Weather implements WeatherRepository {
   _Weather(this.clock);
   final _Clock clock;
   WeatherFailure? failWith;
+  bool unrelated = false;
   int calls = 0;
 
   @override
@@ -52,7 +53,14 @@ class _Weather implements WeatherRepository {
         fetchedAtUtc: clock.nowUtc(),
         latitude: latitude,
         longitude: longitude,
-        hours: [WeatherHour(timeUtc: startUtc, cloudCoverPct: 10)],
+        hours: [
+          WeatherHour(
+            timeUtc: unrelated
+                ? startUtc.subtract(const Duration(days: 3))
+                : startUtc,
+            cloudCoverPct: 10,
+          ),
+        ],
       ),
     );
   }
@@ -104,6 +112,28 @@ void main() {
     expect(weather.calls, 1);
     expect(store.data, hasLength(1));
   });
+
+  test(
+    'a snapshot for other nights is never available for this night',
+    () async {
+      weather.unrelated = true;
+      expect(await load(), isA<NightWeatherUnavailable>());
+      weather.failWith = WeatherFailure.unavailable;
+      expect(await load(), isA<NightWeatherUnavailable>());
+    },
+  );
+
+  test(
+    'a non-covering refresh preserves a relevant cached forecast with failure',
+    () async {
+      await load();
+      weather.unrelated = true;
+      final result = await load(force: true) as NightWeatherAvailable;
+      expect(result.fromCache, isTrue);
+      expect(result.refreshFailed, WeatherFailure.malformed);
+      expect(result.snapshot.hours.single.timeUtc, night.startUtc);
+    },
+  );
 
   test('a current cache is used without a request', () async {
     await load();

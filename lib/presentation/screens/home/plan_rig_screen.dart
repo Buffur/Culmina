@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_spacing.dart';
 
-import '../../shared/document_section.dart';
+import '../../shared/section_card.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +15,9 @@ import '../../shared/app_words.dart';
 import '../../shared/failure_feedback.dart';
 import '../../shared/hybrid_app_bar.dart';
 import '../../shared/hybrid_parts.dart';
+import '../../shared/action_row.dart';
+import '../../shared/content_states.dart';
+import '../../shared/catalog_scaffold.dart';
 import '../../shared/rig_summary_text.dart';
 import '../../viewmodels/library_viewmodels.dart';
 import '../../viewmodels/session_plan_viewmodel.dart';
@@ -116,7 +119,6 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final p = AppPalette.of(context);
     return Scaffold(
       appBar: hybridAppBar(
         context,
@@ -134,20 +136,13 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
           AppSpacing.lg,
         ),
         children: [
-          DocumentSection(
+          SectionCard(
             joinNext: true,
             children: [
               if (_loading)
-                Semantics(
-                  liveRegion: true,
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LinearProgressIndicator(key: Key('planRig.loading')),
-                      SizedBox(height: AppSpacing.sm),
-                      Text('Loading rigs…'),
-                    ],
-                  ),
+                const LoadingState(
+                  key: Key('planRig.loading'),
+                  message: 'Loading rigs…',
                 )
               else if (_error != null)
                 LoadFailureView(
@@ -156,35 +151,34 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
                   onRetry: _load,
                 )
               else if (_rigs.isEmpty)
-                Text(
-                  AppWords.noRigs,
-                  key: const Key('planRig.empty'),
-                  style: AppTextTheme.of(context).body
-                      .copyWith(color: p.textPrimary),
+                const EmptyState(
+                  key: Key('planRig.empty'),
+                  title: AppWords.noRigs,
                 )
               else ...[
-                const HybridFieldLabel('Choose a rig'),
+                const HybridSectionTitle('Choose a rig'),
                 const SizedBox(height: 6),
               ],
             ],
           ),
           if (!_loading && _error == null)
             for (final r in _rigs)
-              DocumentSection(
+              SectionCard(
                 joinPrevious: true,
                 joinNext: true,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                 children: [
-                  HybridChoiceRow(
+                  ActionRow(
+                    variant: ActionRowVariant.radio,
                     key: Key('planRig.choice.${r.id}'),
                     title: r.name,
-                    caption: RigSummaryText.of(r),
+                    description: RigSummaryText.of(r),
                     selected: r.id == _chosen,
                     onTap: () => setState(() => _chosen = r.id),
                   ),
                 ],
               ),
-          DocumentSection(
+          SectionCard(
             joinPrevious: true,
             children: [
               const SizedBox(height: 4),
@@ -217,10 +211,13 @@ class _PlanRigScreenState extends State<PlanRigScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: HybridApplyBar(
-        buttonKey: const Key('planRig.apply'),
-        label: 'Apply changes',
-        onPressed: _rigs.isEmpty ? null : _apply,
+      bottomNavigationBar: StickyBottomAction(
+        note: const Text('Apply updates the draft. Save plan records it.'),
+        child: FilledButton(
+          key: const Key('planRig.apply'),
+          onPressed: _rigs.isEmpty ? null : _apply,
+          child: const Text('Apply changes'),
+        ),
       ),
     );
   }

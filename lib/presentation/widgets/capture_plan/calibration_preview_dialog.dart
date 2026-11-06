@@ -291,11 +291,12 @@ class _CalibrationPreviewState extends State<_CalibrationPreview> {
                             const SizedBox(
                               height: AppSpacing.md + AppSpacing.hair,
                             ),
-                            HybridCheckRow.plan(
+                            SwitchListTile.adaptive(
                               key: Key('calibration.toggle.$i'),
-                              label:
-                                  'Add ${_legend(_rows[i].type).toLowerCase()}',
-                              checked: _kept[i],
+                              title: Text(
+                                'Add ${_legend(_rows[i].type).toLowerCase()}',
+                              ),
+                              value: _kept[i],
                               onChanged: (v) => setState(() {
                                 _kept[i] = v;
                                 _changed = true;
@@ -394,20 +395,10 @@ class _Legend extends StatelessWidget {
     final p = AppPalette.of(context);
     return Semantics(
       header: true,
-      child: Row(
-        children: [
-          Text(
-            text,
-            style: AppTextTheme.of(context)
-                .resolve(
-                  AppTextTheme.of(context).caption,
-                  AppTextGeometry.standard,
-                )
-                .copyWith(color: p.textSecondary),
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          Expanded(child: Divider(height: 1, thickness: 1, color: p.border)),
-        ],
+      child: Text(
+        text,
+        style: AppTextTheme.of(context).screenTitle
+            .copyWith(color: p.textPrimary),
       ),
     );
   }

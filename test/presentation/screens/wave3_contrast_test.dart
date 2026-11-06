@@ -67,7 +67,9 @@ void main() {
       await t.tap(find.byKey(const Key('tonight.openPlanner')));
       await hybridSettle(t);
       final edit = find.byKey(const Key('capture.edit.0'));
-      await revealWave2(t, edit);
+      await revealWave2(t, find.byKey(const Key('capture.menu.0')));
+      await t.tap(find.byKey(const Key('capture.menu.0')));
+      await hybridSettle(t);
       await t.tap(edit);
       await hybridSettle(t);
       final details = find.byKey(const Key('blockDialog.details'));

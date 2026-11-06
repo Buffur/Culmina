@@ -1,4 +1,4 @@
-// Android emulator evidence for the Hybrid migration. Real Flutter widgets,
+// Android device evidence for the Hybrid migration. Real Flutter widgets,
 // router, ViewModels, astronomy and SQLite; explicit isolated test data.
 // Network, GPS, preferences and first-run state are controlled fixtures.
 // This does not exercise native file providers, share sheets or permissions.
@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:astroplan/core/time/clock.dart';
+import 'package:astroplan/core/theme/app_theme.dart';
 import 'package:astroplan/core/units/display_units.dart';
 import 'package:astroplan/data/backup/backup_staging.dart';
 import 'package:astroplan/data/backup/file_backup_service.dart';
@@ -18,6 +19,7 @@ import 'package:astroplan/data/repositories/drift_session_repository.dart';
 import 'package:astroplan/data/repositories/drift_target_repository.dart';
 import 'package:astroplan/data/services/catalog_seeder.dart';
 import 'package:astroplan/data/services/equipment_seeder.dart';
+import 'package:astroplan/data/services/launch_channel.dart';
 import 'package:astroplan/domain/metadata/capture_metadata.dart';
 import 'package:astroplan/domain/metadata/capture_metadata_reader.dart';
 import 'package:astroplan/domain/metadata/metadata_format.dart';
@@ -33,9 +35,12 @@ import 'package:astroplan/domain/services/session_exporter.dart';
 import 'package:astroplan/main.dart';
 import 'package:astroplan/presentation/navigation/app_router.dart';
 import 'package:astroplan/presentation/screens/library/library_parts.dart';
+import 'package:astroplan/presentation/shared/section_card.dart';
+import 'package:astroplan/presentation/shared/launch_gate.dart';
 import 'package:astroplan/presentation/viewmodels/night_conditions_viewmodel.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:path/path.dart' as p;
@@ -50,6 +55,7 @@ import '../test/support/fits_fixture.dart';
 import '../test/support/in_memory_first_run.dart';
 import '../test/support/in_memory_privacy_preferences.dart';
 import '../test/support/planner_harness.dart';
+import '../test/support/native_verification_guard.dart';
 
 class _Forecast implements WeatherRepository {
   _Forecast(this.clock);
@@ -114,6 +120,115 @@ Future<void> _settle(WidgetTester tester) async {
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final nativeLaunch = Platform.isAndroid ? LaunchChannel() : null;
+  setUpAll(requireIsolatedAndroidVerification);
+  var surfaceConverted = false;
+  setUp(() => surfaceConverted = false);
+  Future<void> prepareSurface(WidgetTester tester) async {
+    if (surfaceConverted) return;
+    await binding.convertFlutterSurfaceToImage();
+    surfaceConverted = true;
+    // Android's image-view conversion needs a new rendered frame before capture.
+    await tester.pump();
+  }
+
+  testWidgets(
+    'Android launch channel and controlled missing-callback fallback',
+    (tester) async {
+      final evidence = <Map<String, Object?>>[];
+      var nativeSplashGone = false;
+      unawaited(nativeLaunch!.splashGone.then((_) => nativeSplashGone = true));
+      Future<void> showGate(String theme, {required bool realNative}) async {
+        var shown = 0;
+        final handover = Completer<void>();
+        final field = theme == 'field';
+        final appTheme = field
+            ? AppTheme.fieldTheme
+            : theme == 'light'
+            ? AppTheme.light
+            : AppTheme.dark;
+        final watch = Stopwatch()..start();
+        await tester.pumpWidget(
+          LaunchGate(
+            key: ValueKey('android-launch-$theme-$realNative'),
+            look: LaunchLook(
+              fieldMode: field,
+              appearance: theme == 'light' ? Appearance.light : Appearance.dark,
+            ),
+            splashGone: realNative ? nativeLaunch.splashGone : handover.future,
+            onShown: () => shown++,
+            initialize: () async => MaterialApp(
+              theme: appTheme,
+              builder: (_, child) => field
+                  ? ColorFiltered(
+                      colorFilter: AppTheme.fieldFilter,
+                      child: child!,
+                    )
+                  : child!,
+              home: const Scaffold(
+                body: Center(child: Text('Launch destination')),
+              ),
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        if (!realNative) {
+          expect(
+            shown,
+            0,
+            reason: 'The missing native callback must hold the still mark before the safety limit',
+          );
+          expect(find.byKey(const Key('launch.mark')), findsOneWidget);
+          await prepareSurface(tester);
+          await binding.takeScreenshot('launch-held-$theme');
+        }
+        for (var attempt = 0; attempt < 10 && shown == 0; attempt++) {
+          await _settle(tester);
+        }
+        expect(shown, 1);
+        await tester.pump();
+        expect(find.text('Launch destination').hitTestable(), findsOneWidget);
+        if (realNative &&
+            const bool.fromEnvironment('CULMINA_REQUIRE_NATIVE_SPLASH')) {
+          expect(
+            nativeSplashGone,
+            isTrue,
+            reason: 'Current API31+ phone must deliver actual MainActivity splashGone',
+          );
+        }
+        if (!realNative) {
+          expect(handover.isCompleted, isFalse);
+          expect(watch.elapsedMilliseconds, greaterThanOrEqualTo(600));
+        }
+        await const MethodChannel(LaunchChannel.name)
+            .invokeMethod<void>('appShown');
+        await prepareSurface(tester);
+        await binding.takeScreenshot(
+          'launch-${realNative ? 'native-channel' : 'timeout'}-$theme',
+        );
+        evidence.add({
+          'theme': theme,
+          'realNativeChannel': realNative,
+          'nativeSplashGone': nativeSplashGone,
+          'appShownAcknowledged': true,
+          'shownCount': shown,
+          'elapsedMs': watch.elapsedMilliseconds,
+          'missingCallbackIsControlledFixture': !realNative,
+        });
+      }
+
+      // Matches the current owner's stored Dark launch; never changes preferences.
+      await showGate('dark', realNative: true);
+      for (final theme in ['light', 'dark', 'field']) {
+        await showGate(theme, realNative: false);
+      }
+      binding.reportData ??= <String, dynamic>{};
+      binding.reportData!['launchHandover'] = evidence;
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+    skip: !Platform.isAndroid,
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 
   testWidgets(
     'Hybrid native roots, save/reopen, settings and night browsing',
@@ -192,7 +307,7 @@ void main() {
         ),
       );
       await _settle(tester);
-      await binding.convertFlutterSurfaceToImage();
+      await prepareSurface(tester);
       await tester.pump();
 
       Future<void> at(String route) async {
@@ -254,9 +369,14 @@ void main() {
         await tap(find.byKey(const Key('settings.open.appearance')));
         await shot('settings-appearance-$suffix');
         final choice = find.byKey(const Key('settings.appearance'));
+        final group = find.byKey(const Key('settings.themeGroup'));
+        final insets = tester
+            .widget<SectionCard>(group)
+            .padding
+            .resolve(Directionality.of(tester.element(group)));
         expect(
           tester.getSize(choice).width,
-          closeTo(MediaQuery.sizeOf(tester.element(choice)).width - 32, 1),
+          closeTo(tester.getSize(group).width - insets.horizontal, 1),
         );
         await tester.pageBack();
         await _settle(tester);
@@ -299,6 +419,7 @@ void main() {
       // Exercise the visible Save action, then read the actual repository.
       await at(AppRouter.session());
       final originalCount = vm.plan.captureBlocks.first.frameCount;
+      await tap(find.byKey(const Key('capture.menu.0')));
       await tap(find.byKey(const Key('capture.edit.0')));
       expect(find.byKey(const Key('blockEditor.screen')), findsOneWidget);
       final countField = find.byKey(const Key('blockDialog.count'));
@@ -331,6 +452,7 @@ void main() {
       expect(vm.plan.captureBlocks.first.frameCount, originalCount);
       expect(find.byKey(const Key('blockEditor.screen')), findsNothing);
       // The explicit Cancel on a dirty edit leaves the plan unchanged too.
+      await tap(find.byKey(const Key('capture.menu.0')));
       await tap(find.byKey(const Key('capture.edit.0')));
       await reveal(countField);
       await tester.enterText(countField, '${originalCount + 2}');
@@ -432,7 +554,10 @@ void main() {
       );
 
       // All eight native roots, in the three supported themes at both scales.
-      for (final field in [false, true]) {
+      for (final field
+          in const bool.fromEnvironment('CULMINA_SKIP_ROOT_CAPTURES')
+              ? <bool>[]
+              : [false, true]) {
         for (final appearance
             in field
                 ? [Appearance.dark]
@@ -494,6 +619,53 @@ void main() {
       await shot('moon-preview-jump-light_100');
       await tap(find.text('Moon details'));
       await shot('moon-details-disclosure-light_100');
+      for (final theme in ['light', 'dark', 'field']) {
+        await tester.runAsync(() async {
+          if (vm.theme.isFieldMode != (theme == 'field')) {
+            await vm.theme.toggleFieldMode();
+          }
+          await vm.vms.displaySettings.setAppearance(
+            theme == 'light' ? Appearance.light : Appearance.dark,
+          );
+          await vm.vms.displaySettings.setWeatherView(WeatherView.charts);
+        });
+        await at(AppRouter.weather);
+        final browserConditions = tester
+            .element(find.byKey(const Key('weather.refresh')))
+            .read<NightConditionsViewModel>();
+        // This fixture caches one requested night, so a reused partially
+        // overlapping snapshot can legitimately contain no dark-hour rows.
+        // Request this browser's window explicitly before testing charts.
+        await tester.runAsync(browserConditions.refreshWeather);
+        await _settle(tester);
+        expect(
+          browserConditions.nightWeatherSummary!.coveredHours,
+          greaterThan(0),
+        );
+        await reveal(find.byKey(const Key('weather.charts')));
+        expect(find.byKey(const Key('weather.charts')), findsOneWidget);
+        await shot('weather-charts-final-$theme');
+        await tap(find.byKey(const Key('weather.details')));
+        await tap(find.byKey(const Key('weather.changeView')));
+        await tap(find.byKey(const Key('settings.weatherView.rows')));
+        expect(vm.vms.displaySettings.weatherView, WeatherView.rows);
+        await tester.binding.handlePopRoute();
+        await _settle(tester);
+        expect(find.byKey(const Key('weather.rows')), findsOneWidget);
+        expect(
+          tester
+              .element(find.byKey(const Key('weather.refresh')))
+              .read<NightConditionsViewModel>(),
+          same(browserConditions),
+          reason: 'Appearance return must keep the viewed-night browser.',
+        );
+        expect(vm.plan.activeSessionId, savedId);
+        await shot('weather-change-view-return-$theme');
+      }
+      await tester.runAsync(() async {
+        if (vm.theme.isFieldMode) await vm.theme.toggleFieldMode();
+        await vm.vms.displaySettings.setAppearance(Appearance.light);
+      });
       await at(AppRouter.weather);
       final refresh = find.byKey(const Key('weather.refresh'));
       await reveal(refresh);
@@ -583,7 +755,9 @@ void main() {
       await tap(find.byKey(const Key('planOverride.edit')));
       await reveal(find.byKey(const Key('planOverride.0')));
       await shot('plan-overrides-reopened-light_200');
-      await tester.pageBack();
+      // The long 200% editor has scrolled its app bar out of the viewport.
+      // Exercise Android's route-pop message instead of searching a Back icon.
+      await tester.binding.handlePopRoute();
       await _settle(tester);
       tester.platformDispatcher.textScaleFactorTestValue = 1;
       await _settle(tester);
@@ -674,7 +848,8 @@ void main() {
 
       final siteBeforeUndo = vm.site.activeSite!;
       await at(AppRouter.librarySites);
-      await tap(find.byTooltip('Delete site'));
+      await tap(find.byKey(ValueKey('site-${siteBeforeUndo.id}')));
+      await tap(find.byKey(const Key('siteDetail.delete')));
       await tap(find.byKey(const Key('confirm.action')));
       expect(find.text('Site deleted'), findsOneWidget);
       expect(
@@ -805,9 +980,13 @@ void main() {
       });
       binding.reportData ??= <String, dynamic>{};
       binding.reportData!['evidence'] = {
-        'type': 'Android emulator integration test with controlled fixtures',
+        'type':
+            '${const String.fromEnvironment('CULMINA_NATIVE_DEVICE', defaultValue: 'Android emulator')} integration test with controlled fixtures',
         'fixture':
             'Ljubljana / 2026-11-10 18:00 UTC / M42 / example rig and blocks',
+        'rootCaptureSkipped': const bool.fromEnvironment(
+          'CULMINA_SKIP_ROOT_CAPTURES',
+        ),
         'savedRecordId': savedId,
         'fileEvidence': fileEvidence,
         'checks': [
@@ -821,7 +1000,8 @@ void main() {
           'Night browsing leaves active and stored plan date unchanged',
           'Settings unit selection changes display state',
           'Planning draft leaves globals/budget unchanged; Cancel discards; Save updates working budget without rewriting saved snapshot',
-          'Eight real routes in light/dark/field at 100%/200%',
+          if (!const bool.fromEnvironment('CULMINA_SKIP_ROOT_CAPTURES'))
+            'Eight real routes in light/dark/field at 100%/200%',
           'Night reading/Sun disclosures and Moon preview jump/details remain reachable',
           'Cached forecast retains typed refresh failure; out-of-range is explicit',
           'Per-plan buffer, Apply, defaults reset, Save and reopen preserve overrides without changing globals',
@@ -832,7 +1012,6 @@ void main() {
           'Backup roundtrip preserves saved snapshot, result, blocks and event count',
         ],
         'exclusions': [
-          'physical device',
           'live weather or GPS',
           'native file providers, permissions or share sheet',
           'real camera-file metadata',
@@ -842,7 +1021,7 @@ void main() {
       };
     },
     // The host quality gate discovers this file too. Android surface capture
-    // and file-I/O evidence require the explicitly selected isolated emulator.
+    // and file-I/O evidence require an explicitly selected Android device.
     skip: !Platform.isAndroid,
     timeout: const Timeout(Duration(minutes: 12)),
   );

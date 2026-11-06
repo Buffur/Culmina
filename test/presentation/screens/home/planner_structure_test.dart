@@ -188,7 +188,13 @@ void main() {
       );
       await settle(tester);
       // 6. The main reason.
-      onFirstScreen(tester, find.text(fit.reason), 'the main reason');
+      onFirstScreen(
+        tester,
+        find.text(
+          fit.reason.replaceFirst('Everything fits with ', 'Fits with '),
+        ),
+        'the main reason',
+      );
       // 7. The next useful action: Save plan, always in reach.
       expect(find.byKey(const Key('planner.save')), findsOneWidget);
     });
@@ -239,7 +245,12 @@ void main() {
           findsOneWidget,
         );
       }
-      expect(find.text(fit.reason), findsOneWidget);
+      expect(
+        find.text(
+          fit.reason.replaceFirst('Everything fits with ', 'Fits with '),
+        ),
+        findsOneWidget,
+      );
     }
     expect(seen, containsAll([FitState.fits, FitState.doesNotFit]));
 

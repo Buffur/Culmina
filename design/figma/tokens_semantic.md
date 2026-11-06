@@ -1,6 +1,6 @@
 # Dark semantic tokens
 
-Revision: AFTER-DARK-1.0 (D01, 2026-10-30). These are **chosen After targets**, not measurements of Culmina or a recovered Notion theme. Single value authority for colors and reusable geometry. Opaque HEX is #RRGGBB; dp maps to Figma logical px at 1:1. Typography has its own authority in [typography](typography.md).
+Revision: AFTER-DARK-1.2 (Notion alignment, 2026-10-30). These are **chosen After targets**, not measurements of Culmina or a recovered Notion theme. Single value authority for colors and reusable geometry. Opaque HEX is #RRGGBB; dp maps to Figma logical px at 1:1. Typography has its own authority in [typography](typography.md).
 
 Keep every semantic role independent even when its value equals another role. Do not alias fit, persistence, selection and action roles merely because they share a color. Only roles applied by this pilot contract are included; unlisted production roles remain outside After coverage.
 
@@ -10,11 +10,11 @@ Keep every semantic role independent even when its value equals another role. Do
 | ThemeData.colorScheme.surface | #202020 | Base Material surface; keep a separate binding from the page canvas. |
 | ThemeData.colorScheme.onSurface | #F0EFED | Default readable content on a surface. |
 | ThemeData.colorScheme.onSurfaceVariant | #C4C1BC | Secondary Material content, never disabled content. |
-| ThemeData.colorScheme.primary | #75B6FF | Material primary action and selection affordances. |
-| ThemeData.colorScheme.onPrimary | #142238 | Text and icons on a primary filled action. |
-| ThemeData.colorScheme.secondaryContainer | #313B49 | Selected navigation and choice container. |
-| ThemeData.colorScheme.onSecondaryContainer | #D8E7FF | Content on a selected navigation or choice container. |
-| ThemeData.colorScheme.surfaceContainerHigh | #303030 | Menu and modal surface above the reading canvas. |
+| ThemeData.colorScheme.primary | #2783DE | Material primary action and selection affordances. |
+| ThemeData.colorScheme.onPrimary | #101010 | Text and icons on a primary filled action. |
+| ThemeData.colorScheme.secondaryContainer | #262626 | Selected navigation and choice container. |
+| ThemeData.colorScheme.onSecondaryContainer | #F0EFED | Content on a selected navigation or choice container. |
+| ThemeData.colorScheme.surfaceContainerHigh | #202020 | Menu and modal surface above the reading canvas. |
 | ThemeData.colorScheme.outline | #8B8F93 | Control boundaries necessary to identify an input. |
 | ThemeData.colorScheme.outlineVariant | #414141 | Nonessential separators between already grouped content. |
 | ThemeData.colorScheme.error | #F39B95 | Material validation error; retain message and remedy. |
@@ -26,7 +26,7 @@ Keep every semantic role independent even when its value equals another role. Do
 | ThemeData.appBarTheme.elevation | 0 dp | Top navigation stays flat. |
 | AppPalette.textPrimary | #F0EFED | Primary text, values and headings. |
 | AppPalette.textSecondary | #C4C1BC | Supporting descriptions and labels. |
-| AppPalette.textTertiary | #ABA8A3 | Metadata that still must be readable. |
+| AppPalette.textTertiary | #ADA9A3 | Metadata that still must be readable. |
 | AppPalette.textDisabled | #737373 | Unavailable controls only; never missing measurements. |
 | AppPalette.surfaceRaised | #262626 | Bounded record groups, including the saved plan. |
 | AppPalette.border | #414141 | Quiet group outline or divider, never an input boundary. |
@@ -38,8 +38,8 @@ Keep every semantic role independent even when its value equals another role. Do
 | AppPalette.statusNeutral | #C4C1BC | Needs input or nothing to fit; no implied failure. |
 | AppPalette.stateUnsaved | #E6C17A | Unsaved or changed persistence state, separate from fit. |
 | AppPalette.stateSettled | #8EC7A7 | Saved/completed lifecycle state, separate from fit. |
-| AppPalette.stateQuiet | #ABA8A3 | Quiet lifecycle state; retain the state label. |
-| AppPalette.muted | #ABA8A3 | Secondary noninteractive symbols. |
+| AppPalette.stateQuiet | #ADA9A3 | Quiet lifecycle state; retain the state label. |
+| AppPalette.muted | #ADA9A3 | Secondary noninteractive symbols. |
 | AppPalette.caution | #E6C17A | Scientific or capability limitation, accompanied by explanation. |
 | AppPalette.sunEvent | #E6C17A | Sun event marker with time/name. |
 | AppPalette.twilightEvent | #B3A6D8 | Twilight event marker with phase label. |
@@ -57,15 +57,15 @@ Keep every semantic role independent even when its value equals another role. Do
 | AppPalette.chartGrid | #515151 | Chart grid only; never substitute for data. |
 | AppPalette.chartLabel | #C4C1BC | Chart axis and legend text. |
 | AppPalette.swatchBorder | #7B7F83 | Boundary of a scientific swatch. |
-| HybridTokens.action | #75B6FF | Application action affordance. |
-| HybridTokens.onAction | #142238 | Content on an action fill. |
-| HybridTokens.selection | #313B49 | Selection background distinct from action fill. |
+| HybridTokens.action | #2783DE | Notion-sampled action fill/graphic accent; small action text uses textPrimary. |
+| HybridTokens.onAction | #101010 | Dark label on the sampled blue fill, selected to retain text contrast; not sampled Notion label ink. |
+| HybridTokens.selection | #262626 | Selection background distinct from action fill. |
 | HybridTokens.selectedHourFill | #313B49 | Selected weather hour surface. |
 | HybridTokens.selectedHourText | #D8E7FF | Selected weather hour label. |
 | HybridTokens.selectedHourRule | #75B6FF | Selected hour rule; keep the selection marker. |
 | HybridTokens.surfaceSubtle | #262626 | Document or record grouping surface. |
 | HybridTokens.surfaceSunken | #1A1A1A | Inset input/readout well, never an extra nested card layer. |
-| HybridTokens.accent | #75B6FF | Existing accent role for intentional emphasis only. |
+| HybridTokens.accent | #2783DE | Existing accent role for intentional emphasis only. |
 | HybridTokens.success | #8EC7A7 | Positive feedback with a textual outcome. |
 | HybridTokens.successWash | #27382F | Background behind positive feedback. |
 | HybridTokens.caution | #E6C17A | Caution feedback ink. |
@@ -89,16 +89,22 @@ Keep every semantic role independent even when its value equals another role. Do
 | HybridTokens.appBarHeight | 56 dp | Minimum app-bar content height, excluding system insets. |
 | AppSpacing.xs | 4 dp | Label-to-value and icon-caption micro gap. |
 | AppSpacing.sm | 8 dp | Related inline elements and compact row padding. |
-| AppSpacing.md | 16 dp | Bounded group and control horizontal inset. |
-| AppSpacing.itemGap | 12 dp | Between related rows or blocks. |
-| AppSpacing.gutter | 20 dp | Page side gutter at pilot width. |
+| AppSpacing.md | 12 dp | Bounded group and control horizontal inset. |
+| AppSpacing.itemGap | 8 dp | Between related rows or blocks. |
+| AppSpacing.gutter | 24 dp | Page side gutter at pilot width. |
 | AppSpacing.section | 32 dp | Between independent document sections. |
 | AppSpacing.cellY | 8 dp | Weather table vertical cell inset. |
 | AppSpacing.notes | 12 dp | Chart-to-explanation gap. |
 | AppRadius.small | 8 dp | Inputs, buttons and bounded record groups. |
 | AppRadius.menu | 12 dp | Popover corners. |
 | AppRadius.large | 20 dp | Dialog and sheet outer corners. |
-| AppRadius.pill | 999 dp | Selected tab capsule and compact noninteractive status capsule only. |
+| AppRadius.pill | 999 dp | Explicit retained non-root/historical capsules and compact status only; new RootTabs use small radius. |
 | AfterGeometry.focusRingWidth | 2 dp | NEW proposed shared focus outline width; use with ThemeData.focusColor. |
 
 `AfterGeometry.focusRingWidth` is a proposed design role, not an existing Dart class/member. All other owner/member names map in [flutter_mapping](flutter_mapping.md). No production value changes are authorized.
+
+## Notion alignment evidence
+
+AFTER-DARK-1.2 uses sampled Notion blue, muted text and overlay shell colors. Existing canvas/record/primary-text matches remain. Geist and screenshot-based type/spacing reconstruction are deliberate approximations; scientific semantic colors and minimum hit targets are retained. See [reference mapping](reference_mapping.md) for the delta and limits.
+
+The 1.2 generic selected surface is neutral, informed by Calendar C03. Scientific selected-hour roles remain separate and unchanged. A selected menu item may remain transparent with a visible check, following Notion C10. The Toggle light thumb uses textPrimary independently of onAction.

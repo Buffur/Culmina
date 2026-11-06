@@ -21,6 +21,81 @@ void main() {
     await database.close();
   });
 
+  test(
+    'save boundary rejects invalid quantities without partially writing a rig',
+    () async {
+      domain.EquipmentProfile profile({
+        double sensor = 10,
+        double? raw,
+        double? diameter,
+        double ratio = 5,
+      }) => domain.EquipmentProfile(
+        id: 0,
+        name: 'Boundary',
+        sensorWidthMm: sensor,
+        sensorHeightMm: 10,
+        pixelPitchUm: 2,
+        resolutionWidthPx: 5000,
+        resolutionHeightPx: 5000,
+        focalLengthMm: 400,
+        focalRatio: ratio,
+        averageRawFileSizeMB: raw,
+        apertureDiameterMm: diameter,
+      );
+      for (final bad in [
+        profile(sensor: double.infinity),
+        profile(sensor: 0),
+        profile(sensor: -1),
+        profile(raw: double.nan),
+        profile(raw: -1),
+        profile(diameter: 80, ratio: 8),
+      ]) {
+        await expectLater(repository.insertEquipment(bad), throwsArgumentError);
+        expect(await database.select(database.devices).get(), isEmpty);
+        expect(await repository.getAllEquipment(), isEmpty);
+      }
+      final id = await repository.insertEquipment(profile());
+      final invalidEdit = domain.EquipmentProfile(
+        id: id,
+        name: 'Invalid edit',
+        sensorWidthMm: 10,
+        sensorHeightMm: 10,
+        pixelPitchUm: -2,
+        resolutionWidthPx: 5000,
+        resolutionHeightPx: 5000,
+        focalLengthMm: 400,
+        focalRatio: 5,
+      );
+      await expectLater(
+        repository.updateEquipment(invalidEdit),
+        throwsArgumentError,
+      );
+      expect((await repository.getEquipmentById(id))!.pixelPitchUm, 2);
+    },
+  );
+
+  test('positive legacy specs, independent sensor geometry and unknown optional values survive saves', () async {
+    final id = await repository.insertEquipment(
+      const domain.EquipmentProfile(
+        id: 0,
+        name: 'Legacy specs',
+        sensorWidthMm: 12,
+        sensorHeightMm: 8,
+        pixelPitchUm: 2,
+        resolutionWidthPx: 5000,
+        resolutionHeightPx: 5000,
+        focalLengthMm: 400,
+        focalRatio: 72,
+      ),
+    );
+    final back = (await repository.getEquipmentById(id))!;
+    await repository.updateEquipment(back);
+    expect(back.needsApertureReview, isTrue);
+    expect(back.sensorWidthMm, 12);
+    expect(back.averageRawFileSizeMB, isNull);
+    expect(back.maxExposureS, isNull);
+  });
+
   test('can insert and retrieve equipment profiles', () async {
     await repository.insertEquipment(
       const domain.EquipmentProfile(
